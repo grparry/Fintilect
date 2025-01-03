@@ -1,0 +1,146 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - dev
+
+pool: $(agent-pool)
+
+name: '$(date:yyyy).$(date:MM).$(date:dd).$(Rev:rr)'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  appVersion: '$(Build.BuildNumber)'
+
+steps:
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: '>=5.9.1'
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+    feedsToUse: 'config'
+    nugetConfigPath: 'NuGet.config'
+
+- task: Assembly-Info-NetCore@3
+  displayName: 'Set Assembly Metadata'
+  inputs:
+    Path: '$(Build.SourcesDirectory)'
+    FileNames: '**/*.csproj'
+    InsertAttributes: true
+    FileEncoding: 'auto'
+    WriteBOM: true
+    FailOnWarning: true
+    Authors: 'ConnectFSS'
+    Company: 'ConnectFSS'
+    Product: 'Connect BillPay Admin CU API'
+    Description: 'Connect BillPay Admin CU API'
+    Copyright: 'Copyright © $(date:YYYY) ConnectFSS'
+    VersionNumber: '$(BuildName)_v$(appVersion)'
+    PackageVersion: '$(appVersion)'
+    FileVersionNumber: '$(appVersion)'
+    InformationalVersion: '$(appVersion)_$(Build.SourceBranchName)'
+    AddBuildTag: '$(Build.SourceBranchName)_v$(appVersion)'
+    DisableTelemetry: true
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:PublishProfile=CIBuild'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    testRunTitle: '$(BuildName) - $(Build.BuildNumber)'
+
+- task: XplatGenerateReleaseNotes@4
+  displayName: 'Create Release Notes'
+  condition: and(succeeded(), in(variables['Build.SourceBranchName'], variables['CI.Master']))
+  inputs:
+    outputfile: '$(BuildPublishedLocation)\MiniNotes.md'
+    templateLocation: 'File'
+    templatefile: '$(MiniNotesTemplate)'
+    dumpPayloadToConsole: true
+    dumpPayloadToFile: false
+    replaceFile: True
+    getParentsAndChildren: True
+    getAllParents: True
+    getIndirectPullRequests: False
+    stopOnError: False
+    considerPartiallySuccessfulReleases: False
+    checkForManuallyLinkedWI: False
+
+- task: WikiUpdaterTask@3
+  displayName: 'Post Release Notes to Wiki'
+  condition: and(succeeded(), in(variables['Build.SourceBranchName'], variables['CI.Master']))
+  inputs:
+    repo: 'https://ConnectFSS2@dev.azure.com/ConnectFSS2/PSITP/_git/PSITP.wiki'
+    filename: 'Build-Generated-Release-Notes/$(ApplicationType)/$(Build.SourceBranchName)-Branch/Version-$(Build.BuildNumber).md'
+    dataIsFile: True
+    sourceFile: '$(BuildPublishedLocation)\MiniNotes.md'
+    replaceFile: True
+    localpath: '$(System.DefaultWorkingDirectory)\repo'
+    message: 'Update from Build $(BuildName) $(Build.BuildNumber)'
+    useAgentToken: True
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(BuildPublishedLocation)'
+    archiveFile: '$(Arg.TempLocation)\$(BuildPackageName).zip'
+    includeRootFolder: false
+    replaceExistingArchive: true
+
+- task: CopyFiles@2
+  displayName: 'Copy ArchiveFiles to : $(build.artifactstagingdirectory)'
+  condition: and(succeeded(), in(variables['Build.SourceBranchName'], variables['CI.Dev']))
+  inputs:
+    SourceFolder: '$(Arg.TempLocation)'
+    Contents: |
+      $(BuildPackageName).zip
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact : $(Build.DeployName)-$(Build.BuildNumber)'
+  condition: and(succeeded(), in(variables['Build.SourceBranchName'], variables['CI.Dev']))
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+    artifactName: '$(Build.SourceBranchName)'
+
+- task: BatchScript@1
+  displayName: 'ArchiveProject CBP Admin CU Api'
+  condition: and(succeeded(), in(variables['Build.SourceBranchName'], variables['CI.Master'], variables['CI.Hotfix'], variables['CI.Dev']))
+  inputs:
+    filename: '"C:\Tools\ArchiveProject\ArchiveProject.exe"'
+    arguments: '-version:$(Build.BuildNumber) -buildname:"$(BuildName)" -source:"$(Arg.TempLocation)\$(BuildPackageName).zip" -applicationtype:$(ApplicationType) -details:"RequestedFor: $(Build.RequestedFor): $(Build.Reason)" -versionRelease:"$(alphaVersionRelease)"'
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to Output Location'
+  condition: and(succeeded(), in(variables['Build.SourceBranchName'], variables['CI.Master'], variables['CI.Hotfix'], variables['CI.Dev']))
+  inputs:
+    SourceFolder: '$(Arg.TempLocation)'
+    Contents: '*.zip'
+    TargetFolder: '$(Arg.OutputLocation)'
+
+- task: DeleteFiles@1
+  displayName: 'Cleanup Temp Folder'
+  condition: and(succeeded(), in(variables['Build.SourceBranchName'], variables['CI.Master'], variables['CI.Hotfix'], variables['CI.Dev']))
+  inputs:
+    SourceFolder: '$(Arg.TempLocation)'
+    Contents: '**'
+    RemoveSourceFolder: true
+
+- task: BatchScript@1
+  displayName: 'UpdateDBJobStatus CBP Admin CU Api'
+  condition: and(always(), in(variables['Build.SourceBranchName'], variables['CI.Master'], variables['CI.Hotfix'], variables['CI.Dev']))
+  inputs:
+    filename: '"C:\Tools\UpdateDB\UpdateDBForBuild.exe"'
+    arguments: '"b:$(BuildName)" "f:$(Build.RequestedFor)" "v:$(Build.BuildNumber)" "p:$(Agent.JobStatus)" "a:$(Agent.JobStatus)" "c:$(Build.SourceVersion)" "k:$(Agent.JobStatus)" "d:$(Agent.JobStatus)" "n:" "g:CBP" "t:$(system.teamProject)" "r:$(RepoName)" "z:$(RepoType)"'

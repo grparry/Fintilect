@@ -1,0 +1,31 @@
+{
+	"info": {
+		"_postman_id": "9cdd44de-c834-4e89-b342-b906b6a2731b",
+		"name": "ConnectBillPay - FIS Exceptions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetExceptionsBySingleDate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/exception/05-20-2021",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"exception",
+						"05-20-2021"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

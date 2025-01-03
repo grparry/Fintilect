@@ -1,0 +1,32 @@
+{
+	"info": {
+		"_postman_id": "d1b2b6c4-e2e5-4039-a902-7c2f59309689",
+		"name": "ConnectBillPay - Bad Records",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Bad Records From Date",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/badrecord/from-date/2021-01-01",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"badrecord",
+						"from-date",
+						"2021-01-01"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

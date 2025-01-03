@@ -1,0 +1,172 @@
+{
+	"info": {
+		"_postman_id": "f9aa49e4-0c4c-4408-bd83-22002ea27e0b",
+		"name": "ConnectBillPay - On Us Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"payeeId\": \"123457\",\r\n    \"payeeName\": \"Test Payee 2\",\r\n    \"addressLine1\": \"123 Test Drive\",\r\n    \"addressLine2\": \"123 Test Drive 2\",\r\n    \"city\": \"Demo\",\r\n    \"state\": \"UT\",\r\n    \"zipCode\": \"12345\",\r\n    \"countryCode\": \"1\",\r\n    \"phoneNumber\": \"9995554321\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/onus/payee",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"onus",
+						"payee"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"950CC55C-9B24-47FE-A22A-3E5145C16F1D\",\r\n    \"payeeName\": \"Test Payee Updated\",\r\n    \"addressLine1\": \"123 Test Drive\",\r\n    \"addressLine2\": \"123 Test Drive 2\",\r\n    \"city\": \"Demo\",\r\n    \"state\": \"UT\",\r\n    \"zipCode\": \"12345\",\r\n    \"countryCode\": \"1\",\r\n    \"phoneNumber\": \"9995554321\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/onus/payee",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"onus",
+						"payee"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/onus/all",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"onus",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/onus/payee/950CC55C-9B24-47FE-A22A-3E5145C16F1D",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"onus",
+						"payee",
+						"950CC55C-9B24-47FE-A22A-3E5145C16F1D"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/onus/payee/e9746676-c4e0-46a5-bc9c-81de205bfec5",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"onus",
+						"payee",
+						"e9746676-c4e0-46a5-bc9c-81de205bfec5"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

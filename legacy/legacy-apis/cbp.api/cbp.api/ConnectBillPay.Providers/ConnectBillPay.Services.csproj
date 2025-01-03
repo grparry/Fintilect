@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="ConnectBillPay.Core" Version="1.3.1" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.5.1" />
+    <PackageReference Include="RestSharp" Version="112.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConnectBillPay.Requests\ConnectBillPay.Requests.csproj" />
+    <ProjectReference Include="..\ConnectBillPay.Responses\ConnectBillPay.Responses.csproj" />
+  </ItemGroup>
+</Project>

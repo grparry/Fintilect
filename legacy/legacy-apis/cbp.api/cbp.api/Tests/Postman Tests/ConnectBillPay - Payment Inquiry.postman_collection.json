@@ -1,0 +1,47 @@
+{
+	"info": {
+		"_postman_id": "289e5443-52f6-45d9-82e1-1d410886c1b5",
+		"name": "ConnectBillPay - Payment Inquiry",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ok Response\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/paymenthistory/member/4321/payment/DE480815-5678-4282-AAE8-7DCC415AB481",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"paymenthistory",
+						"member",
+						"4321",
+						"payment",
+						"DE480815-5678-4282-AAE8-7DCC415AB481"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "863e0c34-312e-42a2-9508-680593ce50c4",
+		"name": "ConnectBillPay - Create Institution Information",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create InstitutionInfo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"afterHoursContactFirstName\" : \"After Hours Contact First Name 2\",\r\n    \"afterHoursContactLastName\" : \"After Hours Contact Last Name 2\",\r\n    \"afterHoursContactPhone\" : \"5555555555\",\r\n    \"cuId\" : \"1234567890\",\r\n    \"isActive\" : true,\r\n    \"name\" : \"Institution Name 2\",\r\n    \"notes\" : \"Some notes for Institution Name 2\",\r\n    \"primaryHours\" : \"M-F 08:00 AM - 05:00 PM\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/institutioninfo/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"institutioninfo",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

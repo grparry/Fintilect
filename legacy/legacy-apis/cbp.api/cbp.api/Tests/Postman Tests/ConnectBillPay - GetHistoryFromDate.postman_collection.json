@@ -1,0 +1,47 @@
+{
+	"info": {
+		"_postman_id": "8ebbd99d-65a3-476b-9522-7afd7930e321",
+		"name": "ConnectBillPay - GetHistoryFromDate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get History From Date",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ok Response\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/paymenthistory/member/4321/fromDate/05-1-2021",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"paymenthistory",
+						"member",
+						"4321",
+						"fromDate",
+						"05-1-2021"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

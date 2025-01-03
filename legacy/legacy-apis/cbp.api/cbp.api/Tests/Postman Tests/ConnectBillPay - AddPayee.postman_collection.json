@@ -1,0 +1,133 @@
+{
+	"info": {
+		"_postman_id": "7cc146aa-99f5-4309-b65e-b1116de95397",
+		"name": "ConnectBillPay - AddPayee",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AddPayee - Personal - No Match",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"memberId\" : \"789\",\r\n        \"name\" : \"TestPayeeName1\",\r\n        \"payeeType\" : \"G\",\r\n        \"address1\" : \"123 Main Street\",\r\n        \"address2\" : \"Suite 321\",\r\n        \"address3\" : \"\",\r\n        \"city\" : \"Some City\",\r\n        \"state\" : \"UT\",\r\n        \"postalCode\" : \"84000\",\r\n        \"country\" : \"USA\",\r\n        \"phone\" : \"5555555555\",\r\n        \"usersAccountAtPayee\" : \"12345\",\r\n        \"nameOnAccount\" : \"Test Name\",\r\n        \"nickName\" : \"\",\r\n        \"active\" : true,\r\n        \"favorite\" : false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/payee/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"payee",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddPayee - Global - Match 3 Factor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"memberId\" : \"789\",\r\n        \"name\" : \"Sears Credit Card\",\r\n        \"payeeType\" : \"G\",\r\n        \"address1\" : \"PO Box 183081\",\r\n        \"address2\" : \"\",\r\n        \"address3\" : \"\",\r\n        \"city\" : \"Columbus\",\r\n        \"state\" : \"OH\",\r\n        \"postalCode\" : \"432182149\",\r\n        \"country\" : \"USA\",\r\n        \"phone\" : \"5555555555\",\r\n        \"usersAccountAtPayee\" : \"5049941234567890\",\r\n        \"nameOnAccount\" : \"Name\",\r\n        \"nickName\" : \"\",\r\n        \"active\" : true,\r\n        \"favorite\" : false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/payee/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"payee",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddPayee - Global - No Address Info",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"memberId\" : \"789\",\r\n        \"name\" : \"Sears Credit Card\",\r\n        \"payeeType\" : \"G\",\r\n        \"address1\" : \"\",\r\n        \"address2\" : \"\",\r\n        \"address3\" : \"\",\r\n        \"city\" : \"\",\r\n        \"state\" : \"\",\r\n        \"postalCode\" : \"\",\r\n        \"country\" : \"\",\r\n        \"phone\" : \"5555555555\",\r\n        \"usersAccountAtPayee\" : \"5049941234567890\",\r\n        \"nameOnAccount\" : \"Name\",\r\n        \"nickName\" : \"\",\r\n        \"active\" : true,\r\n        \"favorite\" : false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/payee/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"payee",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddPayee - OnUs",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"payeeId\" : \"33333333\",\r\n        \"memberId\" : \"789\",\r\n        \"name\" : \"TestOnUsPayeeName1\",\r\n        \"payeeType\" : \"O\",\r\n        \"address1\" : \"345 State Street\",\r\n        \"address2\" : \"Suite 123\",\r\n        \"address3\" : \"\",\r\n        \"city\" : \"Some City\",\r\n        \"state\" : \"UT\",\r\n        \"postalCode\" : \"84000\",\r\n        \"country\" : \"USA\",\r\n        \"phone\" : \"5555555555\",\r\n        \"usersAccountAtPayee\" : \"12345\",\r\n        \"nameOnAccount\" : \"Test Name\",\r\n        \"nickName\" : \"\",\r\n        \"active\" : true,\r\n        \"favorite\" : false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/payee/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"payee",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,122 @@
+{
+	"info": {
+		"_postman_id": "f15dc9cb-2141-491c-9de9-87952ce2d6c1",
+		"name": "ConnectBillPay - Search  Name/Zip",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Search By Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ok Response\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/payee/global-payee/name/Test",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"payee",
+						"global-payee",
+						"name",
+						"Test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search By Zip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ok Response\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/payee/global-payee/zip/84",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"payee",
+						"global-payee",
+						"zip",
+						"84"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search By Name and Zip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ok Response\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/payee/global-payee/name/Test/zip/84",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"payee",
+						"global-payee",
+						"name",
+						"Test",
+						"zip",
+						"84"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

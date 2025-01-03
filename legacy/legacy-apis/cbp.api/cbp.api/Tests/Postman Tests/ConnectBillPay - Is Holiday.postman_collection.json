@@ -1,0 +1,45 @@
+{
+	"info": {
+		"_postman_id": "9b6b6a4c-52d4-48c0-9d16-8d9434740f21",
+		"name": "ConnectBillPay - Is Holiday",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Is Holiday",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ok Response\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/calendar/v1/holiday/05-20-2021",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"calendar",
+						"v1",
+						"holiday",
+						"05-20-2021"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

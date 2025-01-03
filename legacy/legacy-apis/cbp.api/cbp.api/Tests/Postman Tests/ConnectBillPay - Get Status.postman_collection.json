@@ -1,0 +1,30 @@
+{
+	"info": {
+		"_postman_id": "b008c220-9bc1-4957-9ca3-19dd44dd55ba",
+		"name": "ConnectBillPay - Get Status",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/status",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"status"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

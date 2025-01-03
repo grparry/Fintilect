@@ -1,0 +1,45 @@
+{
+	"info": {
+		"_postman_id": "25b41703-e93a-4d7b-a204-670e5f8c29bc",
+		"name": "ConnectBillPay2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Payee GetLastPayments",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"payeeId\" : \"1234\",\r\n    \"accountName\" : \"Connect Updated Account\",\r\n    \"accountNumber\" : \"987654\",\r\n    \"active\": true,\r\n    \"favorite\" : true,\r\n    \"nickname\" : \"My New Nickname\",\r\n    \"memberId\": \"4321\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/payment/v1/payee-history/ee86e961-504c-465a-ba44-c776d93698d6/4321",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"payment",
+						"v1",
+						"payee-history",
+						"ee86e961-504c-465a-ba44-c776d93698d6",
+						"4321"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Customer\" />
+    <Folder Include="Notification\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ConnectBillPay.Core" Version="1.3.1" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.5.1" />
+  </ItemGroup>
+</Project>

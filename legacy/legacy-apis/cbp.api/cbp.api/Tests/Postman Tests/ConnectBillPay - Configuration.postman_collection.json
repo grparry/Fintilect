@@ -1,0 +1,137 @@
+{
+	"info": {
+		"_postman_id": "45333867-ed00-4f2d-bbe5-d567d219149f",
+		"name": "ConnectBillPay - Configuration",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Config",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/configuration/Test.Config",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"configuration",
+						"Test.Config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Configs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/configuration/all",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"configuration",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Config",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"configName\": \"CbpPaymentProcessor.SiteName\",\r\n    \"configValue\": \"Test Site\",\r\n    \"description\": \"Sitename to send to FIS\",\r\n    \"datatype\": \"String\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/configuration/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"configuration",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Config",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"configName\": \"Test.Config\",\r\n    \"configValue\": \"Test Value\",\r\n    \"description\": \"Test Description\",\r\n    \"datatype\": \"String\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/configuration/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"configuration",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Config",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/configuration/Test.Config",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"configuration",
+						"Test.Config"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

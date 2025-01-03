@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "263b2fce-77c6-451f-ab82-37f75d6807b6",
+		"name": "ConnectBillPay - Create Contact",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Contact",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"test4@test.com\",\r\n    \"firstName\" : \"FirstName4\",\r\n    \"lastName\" : \"LastName4\",\r\n    \"phone\" : \"5555555555\",\r\n    \"phoneExt\" : \"1234\",\r\n    \"Title\" : \"Title4\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/contact/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"contact",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

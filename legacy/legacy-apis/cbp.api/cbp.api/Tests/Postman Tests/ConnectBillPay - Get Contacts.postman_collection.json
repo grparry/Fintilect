@@ -1,0 +1,31 @@
+{
+	"info": {
+		"_postman_id": "0cca9914-4387-4f76-8107-d19cc7c1df2d",
+		"name": "ConnectBillPay - Get Contacts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "All Contacts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/v1/contact/all",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"contact",
+						"all"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
