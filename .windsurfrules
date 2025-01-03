@@ -1,0 +1,12 @@
+context:
+  core_rules: ".cascade/core/RULES.md"
+  drift_prevention: ".cascade/core/DRIFT.md"
+  shared_patterns: ".cascade/patterns/ESSENTIAL.md"
+  ai_context: ".cascade/AI_CONTEXT.md"
+  
+optimization:
+  load_order:
+    - ".cascade/AI_CONTEXT.md"    # Load AI context first
+    - ".cascade/core/RULES.md"    # Then core rules
+    - ".cascade/core/DRIFT.md"    # Then drift prevention
+    - ".cascade/patterns/ESSENTIAL.md"  # Finally patterns

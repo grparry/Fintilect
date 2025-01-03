@@ -1,0 +1,1739 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ConnectBillPay Admin.Api",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "//globalcbpadmin"
+    }
+  ],
+  "paths": {
+    "/api/v1/BadRecord/date/{date}": {
+      "get": {
+        "tags": [
+          "BadRecord"
+        ],
+        "summary": "Gets all Bad Records on the given search date",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "description": "The date to search on",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRecordListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRecordListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRecordListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      }
+    },
+    "/api/v1/Configuration/refresh": {
+      "post": {
+        "tags": [
+          "Configuration"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigurationRefreshRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigurationRefreshRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigurationRefreshRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigurationRefreshRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/CreditUnion/{sponsorId}": {
+      "get": {
+        "tags": [
+          "CreditUnion"
+        ],
+        "summary": "Gets a Credit Union by a given SponsorId",
+        "parameters": [
+          {
+            "name": "sponsorId",
+            "in": "path",
+            "description": "The sponsor Id of the Credit Union to get",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditUnionResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditUnionResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditUnionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Credit Union at the given sponsorId"
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CreditUnion"
+        ],
+        "summary": "Deletes a credit union",
+        "parameters": [
+          {
+            "name": "sponsorId",
+            "in": "path",
+            "description": "The sponsorId of the credit union to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid request syntax."
+          },
+          "404": {
+            "description": "The requested holiday could not be found"
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      }
+    },
+    "/api/v1/CreditUnion/all": {
+      "get": {
+        "tags": [
+          "CreditUnion"
+        ],
+        "summary": "Gets all Credit Unions",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditUnionListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditUnionListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditUnionListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      }
+    },
+    "/api/v1/CreditUnion": {
+      "post": {
+        "tags": [
+          "CreditUnion"
+        ],
+        "summary": "Adds a new credit union",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditUnionAddRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditUnionAddRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditUnionAddRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditUnionAddRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Invalid request syntax."
+          },
+          "409": {
+            "description": "The requested credit union conflicts with an existing credit union."
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "CreditUnion"
+        ],
+        "summary": "Edits an existing credit union",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditUnionEditRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditUnionEditRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditUnionEditRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditUnionEditRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid request syntax."
+          },
+          "404": {
+            "description": "The requested credit union could not be found"
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      }
+    },
+    "/api/v1/Exception/search": {
+      "post": {
+        "tags": [
+          "Exception"
+        ],
+        "summary": "Search exceptions based on request parameters",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExceptionSearchRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExceptionSearchRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExceptionSearchRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExceptionSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      }
+    },
+    "/api/v1/Exception": {
+      "put": {
+        "tags": [
+          "Exception"
+        ],
+        "summary": "Update exception correction to set a correction made",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExceptionUpdateRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExceptionUpdateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExceptionUpdateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExceptionUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      }
+    },
+    "/api/v1/Payee/global/{internalPayeeId}": {
+      "get": {
+        "tags": [
+          "Payee"
+        ],
+        "summary": "Gets a global payee from the given Internal Payee Id",
+        "parameters": [
+          {
+            "name": "internalPayeeId",
+            "in": "path",
+            "description": "The Internal Payee Id of the global payee",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GlobalPayeeResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GlobalPayeeResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GlobalPayeeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Internal Payee Id."
+          },
+          "404": {
+            "description": "Unable to find global payee at the given Internal Payee Id."
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      }
+    },
+    "/api/v1/Payee/fis-payee": {
+      "post": {
+        "tags": [
+          "Payee"
+        ],
+        "summary": "Gets a global payee from FIS Web Service",
+        "requestBody": {
+          "description": "request to send to fis(Name, Address1, City, State, PostalCode, UsersAccountAtPayee)",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPayeeRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPayeeRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPayeeRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPayeeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPayeeResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPayeeResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPayeeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Payee."
+          },
+          "404": {
+            "description": "Unable to find global payee."
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      }
+    },
+    "/api/v1/Run/manual": {
+      "post": {
+        "tags": [
+          "Run"
+        ],
+        "summary": "Creates a manual payment processing run for a given CU",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualRunCreateRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualRunCreateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualRunCreateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualRunCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Given sponsorId or date is invalid"
+          },
+          "404": {
+            "description": "No CU found at the given sponsorId"
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      }
+    },
+    "/api/v1/Search/payment-information": {
+      "post": {
+        "tags": [
+          "Search"
+        ],
+        "summary": "Search payments based on request parameters",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentInformationSearchRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentInformationSearchRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentInformationSearchRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentInformationSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInformationSearchResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInformationSearchResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInformationSearchResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      }
+    },
+    "/api/v1/SupportNotification": {
+      "post": {
+        "tags": [
+          "SupportNotification"
+        ],
+        "summary": "Creates a new Support Notification",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupportNotificationCreateRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupportNotificationCreateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupportNotificationCreateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupportNotificationCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "No status code provided in the request"
+          },
+          "409": {
+            "description": "A support notification already exists at the given status code"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "SupportNotification"
+        ],
+        "summary": "Updates a Support Notification at the given Id",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupportNotificationUpdateRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupportNotificationUpdateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupportNotificationUpdateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupportNotificationUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid Id or status code given"
+          },
+          "409": {
+            "description": "A support notification already exists at the given status code"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
+    "/api/v1/SupportNotification/{id}": {
+      "get": {
+        "tags": [
+          "SupportNotification"
+        ],
+        "summary": "Get a Support Notification at a given Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the support notification to get",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportNotificationResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportNotificationResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportNotificationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Id given"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
+    "/api/v1/SupportNotification/all": {
+      "get": {
+        "tags": [
+          "SupportNotification"
+        ],
+        "summary": "Gets all Support Notifications",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportNotificationListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportNotificationListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportNotificationListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
+    "/api/v1/Test": {
+      "get": {
+        "tags": [
+          "Test"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/Version": {
+      "get": {
+        "tags": [
+          "Version"
+        ],
+        "summary": "Gets versions of all Global services",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminVersionResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminVersionResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminVersionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AdminVersionResponse": {
+        "type": "object",
+        "properties": {
+          "adminApi": {
+            "type": "string",
+            "nullable": true
+          },
+          "fisPaymentProcessor": {
+            "type": "string",
+            "nullable": true
+          },
+          "fisIncoming": {
+            "type": "string",
+            "nullable": true
+          },
+          "fisApi": {
+            "type": "string",
+            "nullable": true
+          },
+          "merchantDetailProcessing": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BadRecordListResponse": {
+        "type": "object",
+        "properties": {
+          "badRecords": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BadRecordResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BadRecordResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "recordType": {
+            "type": "string",
+            "nullable": true
+          },
+          "badRecordSequenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "fileType": {
+            "type": "string",
+            "nullable": true
+          },
+          "batchNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "lineNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "columnNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "missingFieldValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConfigurationRefreshRequest": {
+        "type": "object",
+        "properties": {
+          "sponsorId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreditUnionAddRequest": {
+        "type": "object",
+        "properties": {
+          "sponsorId": {
+            "type": "string",
+            "nullable": true
+          },
+          "sponsorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "directoryPath": {
+            "type": "string",
+            "nullable": true
+          },
+          "routingId": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "adminUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "wrgAccountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreditUnionEditRequest": {
+        "type": "object",
+        "properties": {
+          "sponsorId": {
+            "type": "string",
+            "nullable": true
+          },
+          "sponsorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "directoryPath": {
+            "type": "string",
+            "nullable": true
+          },
+          "routingId": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "adminUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "wrgAccountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreditUnionListResponse": {
+        "type": "object",
+        "properties": {
+          "creditUnions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditUnionResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreditUnionResponse": {
+        "type": "object",
+        "properties": {
+          "sponsorId": {
+            "type": "string",
+            "nullable": true
+          },
+          "sponsorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "directoryPath": {
+            "type": "string",
+            "nullable": true
+          },
+          "routingId": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "adminUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "wrgAccountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExceptionCorrectionType": {
+        "enum": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "ExceptionListResponse": {
+        "type": "object",
+        "properties": {
+          "exceptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExceptionResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExceptionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "payeeAttentionLine": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeTelephoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeAddress1": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeAddress2": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeState": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeZip": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeNickname": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerPayeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerPayeeAccountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "confirmationNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionAmount": {
+            "type": "string",
+            "nullable": true
+          },
+          "memoLineInfo": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceRequestNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceRequestDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "serviceRequestTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceRequestType": {
+            "type": "string",
+            "nullable": true
+          },
+          "problemCauseType": {
+            "type": "string",
+            "nullable": true
+          },
+          "effectiveDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliverByDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeChangeIndicator": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerTelephone": {
+            "type": "string",
+            "nullable": true
+          },
+          "recordType": {
+            "type": "string",
+            "nullable": true
+          },
+          "sponsorTransactionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "sponsorId": {
+            "type": "string",
+            "nullable": true
+          },
+          "sponsorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerChangeIndicator": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryCustomerFirstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryCustomerLastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryCustomerSsn": {
+            "type": "string",
+            "nullable": true
+          },
+          "secondaryCustomerFirstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "secondaryCustomerLastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "secondaryCustomerSsn": {
+            "type": "string",
+            "nullable": true
+          },
+          "businessName": {
+            "type": "string",
+            "nullable": true
+          },
+          "federalTaxId": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerAddress1": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerAddress2": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerState": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerZip": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "internalPayeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "correctionMade": {
+            "type": "boolean"
+          },
+          "correctionType": {
+            "$ref": "#/components/schemas/ExceptionCorrectionType"
+          },
+          "manualCorrectionDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "reprocessed": {
+            "type": "boolean"
+          },
+          "reprocessedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExceptionSearchRequest": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "sponsorIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "correctionMade": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExceptionUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "correctionType": {
+            "$ref": "#/components/schemas/ExceptionCorrectionType"
+          },
+          "usersAccountAtPayee": {
+            "type": "string",
+            "nullable": true
+          },
+          "manualDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "fisPayeeId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetPayeeRequest": {
+        "type": "object",
+        "properties": {
+          "address1": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "usersAccountAtPayee": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetPayeeResponse": {
+        "type": "object",
+        "properties": {
+          "payeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GlobalPayeeResponse": {
+        "type": "object",
+        "properties": {
+          "recordType": {
+            "type": "string",
+            "nullable": true
+          },
+          "internalPayeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "attentionLine": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine1": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine2": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "zipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "disbursementType": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeLevelType": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "string",
+            "nullable": true
+          },
+          "positionHolder1": {
+            "type": "string",
+            "nullable": true
+          },
+          "electronicLeadTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkLeadTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "positionHolder2": {
+            "type": "string",
+            "nullable": true
+          },
+          "ofacStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "closeReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "fileCreatorCutoffTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "industryCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ManualRunCreateRequest": {
+        "type": "object",
+        "properties": {
+          "sponsorId": {
+            "type": "string",
+            "nullable": true
+          },
+          "processDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reprocessOnly": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentInformationReport": {
+        "type": "object",
+        "properties": {
+          "sponsorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberId": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "willProcessDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userPayeeListId": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeType": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkClearedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "resolutionType": {
+            "type": "string",
+            "nullable": true
+          },
+          "problemCauseType": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentMethod": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fisPayeeId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentInformationSearchRequest": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "sponsorIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "paymentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberId": {
+            "type": "string",
+            "nullable": true
+          },
+          "userPayeeListId": {
+            "type": "string",
+            "nullable": true
+          },
+          "fisPayeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCodes": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "resolutionTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "problemCauseTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentInformationSearchResponse": {
+        "type": "object",
+        "properties": {
+          "paymentInformationList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentInformationReport"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupportNotificationCreateRequest": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "messageSubject": {
+            "type": "string",
+            "nullable": true
+          },
+          "messageBody": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupportNotificationListResponse": {
+        "type": "object",
+        "properties": {
+          "supportNotifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupportNotificationResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupportNotificationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "messageSubject": {
+            "type": "string",
+            "nullable": true
+          },
+          "messageBody": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupportNotificationUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "messageSubject": {
+            "type": "string",
+            "nullable": true
+          },
+          "messageBody": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
