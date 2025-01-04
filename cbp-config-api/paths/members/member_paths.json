@@ -1,0 +1,316 @@
+{
+  "/member": {
+    "post": {
+      "summary": "Create new member",
+      "description": "Creates a new member in the bill pay system",
+      "operationId": "createMember",
+      "tags": ["Members"],
+      "security": [{ "AdminAuth": [] }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/members/member_schemas.json#/MemberRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Member created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/members/member_schemas.json#/MemberResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/member/{memberId}": {
+    "get": {
+      "summary": "Get member details",
+      "operationId": "getMember",
+      "tags": ["Members"],
+      "parameters": [
+        {
+          "name": "memberId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "include",
+          "in": "query",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["payees", "payments", "accounts", "activity"]
+            }
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Member details retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/members/member_schemas.json#/MemberResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update member",
+      "operationId": "updateMember",
+      "tags": ["Members"],
+      "parameters": [
+        {
+          "name": "memberId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/members/member_schemas.json#/MemberRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Member updated successfully"
+        }
+      }
+    }
+  },
+  "/member/{memberId}/account": {
+    "post": {
+      "summary": "Add funding account",
+      "operationId": "addFundingAccount",
+      "tags": ["Members"],
+      "parameters": [
+        {
+          "name": "memberId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/members/member_schemas.json#/FundingAccount"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Funding account added successfully"
+        }
+      }
+    },
+    "get": {
+      "summary": "List funding accounts",
+      "operationId": "listFundingAccounts",
+      "tags": ["Members"],
+      "parameters": [
+        {
+          "name": "memberId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "status",
+          "in": "query",
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Funding accounts retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "../schemas/members/member_schemas.json#/FundingAccount"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/member/{memberId}/account/{accountId}": {
+    "get": {
+      "summary": "Get funding account details",
+      "operationId": "getFundingAccount",
+      "tags": ["Members"],
+      "parameters": [
+        {
+          "name": "memberId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "accountId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Funding account details retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/members/member_schemas.json#/FundingAccount"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update funding account",
+      "operationId": "updateFundingAccount",
+      "tags": ["Members"],
+      "parameters": [
+        {
+          "name": "memberId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "accountId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/members/member_schemas.json#/FundingAccount"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Funding account updated successfully"
+        }
+      }
+    },
+    "delete": {
+      "summary": "Remove funding account",
+      "operationId": "removeFundingAccount",
+      "tags": ["Members"],
+      "parameters": [
+        {
+          "name": "memberId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "accountId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Funding account removed successfully"
+        }
+      }
+    }
+  },
+  "/member/{memberId}/activity": {
+    "get": {
+      "summary": "Get member activity log",
+      "operationId": "getMemberActivity",
+      "tags": ["Members"],
+      "parameters": [
+        {
+          "name": "memberId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "startDate",
+          "in": "query",
+          "schema": { "type": "string", "format": "date" }
+        },
+        {
+          "name": "endDate",
+          "in": "query",
+          "schema": { "type": "string", "format": "date" }
+        },
+        {
+          "name": "category",
+          "in": "query",
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "schema": { "type": "integer" }
+        },
+        {
+          "name": "pageSize",
+          "in": "query",
+          "schema": { "type": "integer" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Activity log retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "activities": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../schemas/members/member_schemas.json#/MemberActivityLog"
+                    }
+                  },
+                  "totalCount": { "type": "integer" },
+                  "page": { "type": "integer" },
+                  "pageSize": { "type": "integer" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

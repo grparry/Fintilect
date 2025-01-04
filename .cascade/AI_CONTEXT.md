@@ -44,27 +44,7 @@ file_purposes:
   RULES.md: "Contains all workspace rules and validation requirements"
   DRIFT.md: "Contains drift prevention and consistency mechanisms"
   ESSENTIAL.md: "Contains inheritable patterns"
-
-load_order:
-  1: "RULES.md - Contains all workspace rules and validation requirements"
-  2: "DRIFT.md - Contains drift prevention and consistency mechanisms"
-  3: "ESSENTIAL.md - Contains inheritable patterns"
-  4: "Project-specific meta layers (as defined in META_CONFIG.md)"
-  5: "META_CONFIG.md - Load configuration for meta layer structure and project integration"
-
-meta_layer_loading:
-  config_file: "META_CONFIG.md"
-  load_timing: "last"
-  purpose: "Define meta layer structure and relationships"
-  rationale: |
-    Loading META_CONFIG.md last ensures all core files are loaded
-    before attempting to integrate project-specific meta layers.
-    This prevents any premature loading of project rules.
-  responsibilities:
-    - "Project meta layer integration"
-    - "Load order management"
-    - "Inheritance rules"
-    - "Validation requirements"
+  "legacy/legacy-analysis/README.md": "Documents legacy analysis structure and usage"
 
 validation_process:
   - "Check rules before suggesting changes"
@@ -72,29 +52,62 @@ validation_process:
   - "Consult patterns for implementation guidance"
 ```
 
+## Meta Layer Events
+```yaml
+event_logging:
+  location: ".cascade/metrics/tracker.jsonl"
+  events:
+    meta_load: "[META_LOAD] {component} loaded at {timestamp}"
+    meta_ref: "[META_REF] Applying {component}:{rule} at {timestamp}"
+```
+
+## Template Usage
+```yaml
+template_application:
+  directory: ".cascade/templates"
+  when_to_use:
+    - "Creating new patterns"
+    - "Documenting architectural decisions"
+    - "Defining pattern relationships"
+    - "Requesting new patterns"
+
+  validation_requirements:
+    pattern.md:
+      - "Use for all new pattern definitions"
+      - "Ensure all required frontmatter fields"
+      - "Include clear purpose and context"
+      - "Define relationships with other patterns"
+    
+    decision.md:
+      - "Use for architectural decisions"
+      - "Include impact analysis"
+      - "Reference affected patterns"
+      - "Document alternatives considered"
+    
+    relationship.md:
+      - "Use when defining pattern interactions"
+      - "Ensure bidirectional relationships"
+      - "Document impact and constraints"
+    
+    PATTERN_NEEDED.md:
+      - "Use when identifying pattern gaps"
+      - "Document use cases and requirements"
+      - "Justify pattern necessity"
+
+  enforcement:
+    strict_requirements:
+      - "Always use appropriate template"
+      - "Fill all required sections"
+      - "Maintain consistent format"
+      - "Include all metadata"
+    
+    exceptions:
+      - "Emergency hotfixes (temporary)"
+      - "Debugging patterns (temporary)"
+```
+
 ## Debug Mode
 ```yaml
 temporary_debug:
   enabled: true
-  purpose: "Verify meta layer loading behavior"
-  required_acknowledgments:
-    - type: "load_confirmation"
-      format: "[META_LOAD] {component} loaded at {timestamp}"
-      components:
-        - "RULES.md"
-        - "DRIFT.md"
-        - "ESSENTIAL.md"
-        - "META_CONFIG.md"
-        - "Project meta layers"
-      log_to: ".cascade/metrics/tracker.jsonl"
-    
-    - type: "component_reference"
-      format: "[META_REF] Applying {component}:{rule} at {timestamp}"
-      when: "Any meta layer component is referenced or applied"
-      log_to: ".cascade/metrics/tracker.jsonl"
-
-  removal_criteria:
-    - "Consistent loading patterns observed"
-    - "No unexpected load order issues"
-    - "Proper component referencing verified"
-    - "Project meta layer integration confirmed"
+  purpose: "Track meta layer events"

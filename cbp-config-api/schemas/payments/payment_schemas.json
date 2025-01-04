@@ -1,0 +1,116 @@
+{
+  "OneTimePaymentRequest": {
+    "type": "object",
+    "required": ["userPayeeListId", "memberId", "fundingAccount", "amount", "processDate"],
+    "properties": {
+      "userPayeeListId": { "type": "string" },
+      "memberId": { "type": "string" },
+      "fundingAccount": { "type": "string" },
+      "amount": { "type": "number", "format": "double" },
+      "processDate": { "type": "string", "format": "date" },
+      "deliveryDate": { "type": "string", "format": "date" },
+      "memo": { "type": "string" },
+      "paymentType": { "type": "string", "enum": ["standard", "expedited", "overnight"] },
+      "notificationPreference": { "type": "string", "enum": ["email", "sms", "none"] }
+    }
+  },
+  "RecurringPaymentRequest": {
+    "allOf": [
+      { "$ref": "#/components/schemas/OneTimePaymentRequest" },
+      {
+        "type": "object",
+        "required": ["frequency", "endDate"],
+        "properties": {
+          "frequency": {
+            "type": "string",
+            "enum": ["weekly", "biweekly", "monthly", "quarterly", "annually"]
+          },
+          "endDate": { "type": "string", "format": "date" },
+          "numPayments": { "type": "integer", "minimum": 1 },
+          "dayOfMonth": { "type": "integer", "minimum": 1, "maximum": 31 },
+          "weekOfMonth": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "dayOfWeek": { "type": "integer", "minimum": 0, "maximum": 6 }
+        }
+      }
+    ]
+  },
+  "PaymentResponse": {
+    "type": "object",
+    "properties": {
+      "paymentId": { "type": "string" },
+      "status": {
+        "type": "string",
+        "enum": [
+          "scheduled",
+          "processing",
+          "completed",
+          "failed",
+          "cancelled",
+          "pending_approval",
+          "on_hold"
+        ]
+      },
+      "amount": { "type": "number", "format": "double" },
+      "processDate": { "type": "string", "format": "date" },
+      "deliveryDate": { "type": "string", "format": "date" },
+      "createdDate": { "type": "string", "format": "date-time" },
+      "lastModified": { "type": "string", "format": "date-time" },
+      "paymentType": { "type": "string" },
+      "errorCode": { "type": "string" },
+      "errorMessage": { "type": "string" },
+      "batchId": { "type": "string" },
+      "confirmationNumber": { "type": "string" }
+    }
+  },
+  "PaymentHistoryItem": {
+    "type": "object",
+    "properties": {
+      "paymentId": { "type": "string" },
+      "userPayeeListId": { "type": "string" },
+      "memberId": { "type": "string" },
+      "status": { "type": "string" },
+      "amount": { "type": "number" },
+      "processDate": { "type": "string", "format": "date" },
+      "completedDate": { "type": "string", "format": "date-time" },
+      "errorCode": { "type": "string" },
+      "errorMessage": { "type": "string" },
+      "modifiedBy": { "type": "string" },
+      "modificationReason": { "type": "string" }
+    }
+  },
+  "PaymentUpdateRequest": {
+    "type": "object",
+    "properties": {
+      "amount": { "type": "number" },
+      "processDate": { "type": "string", "format": "date" },
+      "deliveryDate": { "type": "string", "format": "date" },
+      "memo": { "type": "string" },
+      "status": { "type": "string" },
+      "reason": { "type": "string" }
+    }
+  },
+  "PaymentReprocessRequest": {
+    "type": "object",
+    "required": ["paymentId"],
+    "properties": {
+      "paymentId": { "type": "string" },
+      "newProcessDate": { "type": "string", "format": "date" },
+      "reason": { "type": "string" }
+    }
+  },
+  "BatchPaymentRequest": {
+    "type": "object",
+    "required": ["payments"],
+    "properties": {
+      "payments": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            { "$ref": "#/components/schemas/OneTimePaymentRequest" },
+            { "$ref": "#/components/schemas/RecurringPaymentRequest" }
+          ]
+        }
+      }
+    }
+  }
+}

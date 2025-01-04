@@ -1,0 +1,220 @@
+{
+  "/system/config": {
+    "get": {
+      "summary": "Get system configuration",
+      "operationId": "getSystemConfig",
+      "tags": ["System", "Configuration"],
+      "security": [{ "AdminAuth": [] }],
+      "responses": {
+        "200": {
+          "description": "System configuration retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/system/system_schemas.json#/SystemConfigRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update system configuration",
+      "operationId": "updateSystemConfig",
+      "tags": ["System", "Configuration"],
+      "security": [{ "AdminAuth": [] }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/system/system_schemas.json#/SystemConfigRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "System configuration updated successfully"
+        }
+      }
+    }
+  },
+  "/system/health": {
+    "get": {
+      "summary": "Check system health",
+      "operationId": "checkSystemHealth",
+      "tags": ["System", "Monitoring"],
+      "parameters": [
+        {
+          "name": "component",
+          "in": "query",
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Health check successful",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/system/system_schemas.json#/HealthCheckResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/system/status": {
+    "get": {
+      "summary": "Get system status",
+      "operationId": "getSystemStatus",
+      "tags": ["System", "Monitoring"],
+      "security": [{ "AdminAuth": [] }],
+      "responses": {
+        "200": {
+          "description": "System status retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/system/system_schemas.json#/SystemStatus"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/system/maintenance": {
+    "post": {
+      "summary": "Schedule system maintenance",
+      "operationId": "scheduleSystemMaintenance",
+      "tags": ["System", "Maintenance"],
+      "security": [{ "AdminAuth": [] }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/system/system_schemas.json#/MaintenanceConfig"
+            }
+          }
+        }
+      },
+      "responses": {
+        "202": {
+          "description": "Maintenance scheduled successfully"
+        }
+      }
+    }
+  },
+  "/system/backup": {
+    "post": {
+      "summary": "Trigger system backup",
+      "operationId": "triggerSystemBackup",
+      "tags": ["System", "Maintenance"],
+      "security": [{ "AdminAuth": [] }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["full", "incremental", "configuration"]
+                },
+                "description": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "202": {
+          "description": "Backup initiated successfully"
+        }
+      }
+    }
+  },
+  "/system/cache": {
+    "delete": {
+      "summary": "Clear system cache",
+      "operationId": "clearSystemCache",
+      "tags": ["System", "Maintenance"],
+      "security": [{ "AdminAuth": [] }],
+      "parameters": [
+        {
+          "name": "type",
+          "in": "query",
+          "schema": {
+            "type": "string",
+            "enum": ["all", "config", "session", "data"]
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Cache cleared successfully"
+        }
+      }
+    }
+  },
+  "/system/metrics": {
+    "get": {
+      "summary": "Get system metrics",
+      "operationId": "getSystemMetrics",
+      "tags": ["System", "Monitoring"],
+      "security": [{ "AdminAuth": [] }],
+      "parameters": [
+        {
+          "name": "startTime",
+          "in": "query",
+          "schema": { "type": "string", "format": "date-time" }
+        },
+        {
+          "name": "endTime",
+          "in": "query",
+          "schema": { "type": "string", "format": "date-time" }
+        },
+        {
+          "name": "metrics",
+          "in": "query",
+          "schema": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "System metrics retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "metrics": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "timestamp": { "type": "string", "format": "date-time" },
+                          "value": { "type": "number" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

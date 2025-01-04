@@ -1,0 +1,260 @@
+{
+  "CreditUnionRequest": {
+    "type": "object",
+    "required": ["creditUnionId", "name"],
+    "properties": {
+      "creditUnionId": { "type": "string" },
+      "name": { "type": "string" },
+      "status": {
+        "type": "string",
+        "enum": ["active", "inactive", "suspended", "pending"]
+      },
+      "profile": { "$ref": "#/CreditUnionProfile" },
+      "configuration": { "$ref": "#/CreditUnionConfig" },
+      "features": { "$ref": "#/FeatureFlags" },
+      "limits": { "$ref": "#/CreditUnionLimits" },
+      "integrations": { "$ref": "#/IntegrationSettings" }
+    }
+  },
+  "CreditUnionProfile": {
+    "type": "object",
+    "properties": {
+      "legalName": { "type": "string" },
+      "taxId": { "type": "string" },
+      "charter": { "type": "string" },
+      "address": { "$ref": "../payees/payee_schemas.json#/Address" },
+      "contact": { "$ref": "../payees/payee_schemas.json#/ContactInfo" },
+      "timezone": { "type": "string" },
+      "businessHours": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "day": { "type": "string" },
+            "open": { "type": "string" },
+            "close": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "CreditUnionConfig": {
+    "type": "object",
+    "properties": {
+      "processingCutoffTime": { "type": "string" },
+      "defaultPaymentMethod": { "type": "string" },
+      "supportedPaymentMethods": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["ach", "check", "wire", "card"]
+        }
+      },
+      "holidaySchedule": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "date": { "type": "string", "format": "date" },
+            "name": { "type": "string" },
+            "type": { "type": "string" }
+          }
+        }
+      },
+      "notificationTemplates": {
+        "type": "object",
+        "properties": {
+          "paymentConfirmation": { "type": "string" },
+          "paymentReminder": { "type": "string" },
+          "paymentFailed": { "type": "string" },
+          "securityAlert": { "type": "string" }
+        }
+      },
+      "branding": {
+        "type": "object",
+        "properties": {
+          "logo": { "type": "string" },
+          "colors": {
+            "type": "object",
+            "properties": {
+              "primary": { "type": "string" },
+              "secondary": { "type": "string" },
+              "accent": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "FeatureFlags": {
+    "type": "object",
+    "properties": {
+      "expeditedPayments": { "type": "boolean" },
+      "recurringPayments": { "type": "boolean" },
+      "ebillPresentation": { "type": "boolean" },
+      "mobileApp": { "type": "boolean" },
+      "fraudDetection": { "type": "boolean" },
+      "multipleAccounts": { "type": "boolean" },
+      "internationalPayments": { "type": "boolean" }
+    }
+  },
+  "CreditUnionLimits": {
+    "type": "object",
+    "properties": {
+      "maxMemberLimit": { "type": "integer" },
+      "maxPayeeLimit": { "type": "integer" },
+      "paymentLimits": {
+        "type": "object",
+        "properties": {
+          "singlePayment": { "type": "number" },
+          "dailyAggregate": { "type": "number" },
+          "monthlyAggregate": { "type": "number" }
+        }
+      },
+      "processingLimits": {
+        "type": "object",
+        "properties": {
+          "maxBatchSize": { "type": "integer" },
+          "maxDailyTransactions": { "type": "integer" }
+        }
+      }
+    }
+  },
+  "IntegrationSettings": {
+    "type": "object",
+    "properties": {
+      "coreSystem": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "version": { "type": "string" },
+          "endpoint": { "type": "string" },
+          "credentials": {
+            "type": "object",
+            "properties": {
+              "clientId": { "type": "string" },
+              "encryptedSecret": { "type": "string" }
+            }
+          }
+        }
+      },
+      "paymentProcessor": {
+        "type": "object",
+        "properties": {
+          "provider": { "type": "string" },
+          "merchantId": { "type": "string" },
+          "endpoint": { "type": "string" }
+        }
+      },
+      "notificationService": {
+        "type": "object",
+        "properties": {
+          "provider": { "type": "string" },
+          "apiKey": { "type": "string" },
+          "configurations": { "type": "object" }
+        }
+      }
+    }
+  },
+  "AdminUserRequest": {
+    "type": "object",
+    "required": ["username", "role"],
+    "properties": {
+      "username": { "type": "string" },
+      "email": { "type": "string" },
+      "role": {
+        "type": "string",
+        "enum": ["super_admin", "admin", "support", "auditor"]
+      },
+      "permissions": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "creditUnionId": { "type": "string" },
+      "status": {
+        "type": "string",
+        "enum": ["active", "inactive", "suspended"]
+      },
+      "mfaRequired": { "type": "boolean" }
+    }
+  },
+  "AuditLogEntry": {
+    "type": "object",
+    "properties": {
+      "timestamp": { "type": "string", "format": "date-time" },
+      "actor": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string" },
+          "username": { "type": "string" },
+          "role": { "type": "string" }
+        }
+      },
+      "action": { "type": "string" },
+      "resource": { "type": "string" },
+      "resourceId": { "type": "string" },
+      "changes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "field": { "type": "string" },
+            "oldValue": { "type": "string" },
+            "newValue": { "type": "string" }
+          }
+        }
+      },
+      "metadata": { "type": "object" }
+    }
+  },
+  "BatchProcessRequest": {
+    "type": "object",
+    "required": ["type"],
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": ["payment_processing", "account_verification", "report_generation"]
+      },
+      "parameters": { "type": "object" },
+      "schedule": {
+        "type": "object",
+        "properties": {
+          "startTime": { "type": "string" },
+          "priority": { "type": "integer" },
+          "retryPolicy": {
+            "type": "object",
+            "properties": {
+              "maxAttempts": { "type": "integer" },
+              "backoffMultiplier": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "SystemMetrics": {
+    "type": "object",
+    "properties": {
+      "activeMembers": { "type": "integer" },
+      "pendingPayments": { "type": "integer" },
+      "processingErrors": { "type": "integer" },
+      "systemHealth": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string" },
+          "uptime": { "type": "number" },
+          "responseTime": { "type": "number" },
+          "errorRate": { "type": "number" }
+        }
+      },
+      "resourceUtilization": {
+        "type": "object",
+        "properties": {
+          "cpu": { "type": "number" },
+          "memory": { "type": "number" },
+          "storage": { "type": "number" }
+        }
+      }
+    }
+  }
+}

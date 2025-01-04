@@ -1,0 +1,124 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Connect Bill Pay Unified API",
+    "version": "2.0.0",
+    "description": "Unified API for Connect Bill Pay system, combining member, admin, and credit union functionality",
+    "contact": {
+      "name": "Fintilect Support",
+      "email": "support@fintilect.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/v2",
+      "description": "API v2"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Payments",
+      "description": "Payment operations including one-time, recurring, and batch payments"
+    },
+    {
+      "name": "Payees",
+      "description": "Payee management including global and personal payees"
+    },
+    {
+      "name": "Members",
+      "description": "Member management and account operations"
+    },
+    {
+      "name": "Administration",
+      "description": "Administrative operations for system management"
+    },
+    {
+      "name": "Credit Union",
+      "description": "Credit union specific operations and configurations"
+    },
+    {
+      "name": "System",
+      "description": "System operations, configurations, and utilities"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/payment": { "$ref": "paths/payments/payment_paths.json#/~1payment" },
+    "/payment/batch": { "$ref": "paths/payments/payment_paths.json#/~1payment~1batch" },
+    "/payment/{paymentId}": { "$ref": "paths/payments/payment_paths.json#/~1payment~1{paymentId}" },
+    "/payment/reprocess": { "$ref": "paths/payments/payment_paths.json#/~1payment~1reprocess" },
+    
+    "/payee/global": { "$ref": "paths/payees/payee_paths.json#/~1payee~1global" },
+    "/payee/global/{internalPayeeId}": { "$ref": "paths/payees/payee_paths.json#/~1payee~1global~1{internalPayeeId}" },
+    "/payee/user": { "$ref": "paths/payees/payee_paths.json#/~1payee~1user" },
+    "/payee/user/{userPayeeListId}": { "$ref": "paths/payees/payee_paths.json#/~1payee~1user~1{userPayeeListId}" },
+    "/payee/user/member/{memberId}": { "$ref": "paths/payees/payee_paths.json#/~1payee~1user~1member~1{memberId}" },
+    
+    "/member": { "$ref": "paths/members/member_paths.json#/~1member" },
+    "/member/{memberId}": { "$ref": "paths/members/member_paths.json#/~1member~1{memberId}" },
+    "/member/{memberId}/account": { "$ref": "paths/members/member_paths.json#/~1member~1{memberId}~1account" },
+    "/member/{memberId}/account/{accountId}": { "$ref": "paths/members/member_paths.json#/~1member~1{memberId}~1account~1{accountId}" },
+    "/member/{memberId}/activity": { "$ref": "paths/members/member_paths.json#/~1member~1{memberId}~1activity" },
+    
+    "/admin/credit-union": { "$ref": "paths/admin/admin_paths.json#/~1admin~1credit-union" },
+    "/admin/credit-union/{creditUnionId}": { "$ref": "paths/admin/admin_paths.json#/~1admin~1credit-union~1{creditUnionId}" },
+    "/admin/user": { "$ref": "paths/admin/admin_paths.json#/~1admin~1user" },
+    "/admin/audit": { "$ref": "paths/admin/admin_paths.json#/~1admin~1audit" },
+    "/admin/batch": { "$ref": "paths/admin/admin_paths.json#/~1admin~1batch" },
+    "/admin/metrics": { "$ref": "paths/admin/admin_paths.json#/~1admin~1metrics" },
+    
+    "/system/config": { "$ref": "paths/system/system_paths.json#/~1system~1config" },
+    "/system/health": { "$ref": "paths/system/system_paths.json#/~1system~1health" },
+    "/system/status": { "$ref": "paths/system/system_paths.json#/~1system~1status" },
+    "/system/maintenance": { "$ref": "paths/system/system_paths.json#/~1system~1maintenance" },
+    "/system/backup": { "$ref": "paths/system/system_paths.json#/~1system~1backup" },
+    "/system/cache": { "$ref": "paths/system/system_paths.json#/~1system~1cache" },
+    "/system/metrics": { "$ref": "paths/system/system_paths.json#/~1system~1metrics" }
+  },
+  "components": {
+    "schemas": {
+      "Payment": { "$ref": "schemas/payments/payment_schemas.json#/PaymentResponse" },
+      "OneTimePayment": { "$ref": "schemas/payments/payment_schemas.json#/OneTimePaymentRequest" },
+      "RecurringPayment": { "$ref": "schemas/payments/payment_schemas.json#/RecurringPaymentRequest" },
+      "BatchPayment": { "$ref": "schemas/payments/payment_schemas.json#/BatchPaymentRequest" },
+      
+      "Payee": { "$ref": "schemas/payees/payee_schemas.json#/PayeeResponse" },
+      "GlobalPayee": { "$ref": "schemas/payees/payee_schemas.json#/GlobalPayeeRequest" },
+      "UserPayee": { "$ref": "schemas/payees/payee_schemas.json#/UserPayeeRequest" },
+      
+      "Member": { "$ref": "schemas/members/member_schemas.json#/MemberResponse" },
+      "MemberRequest": { "$ref": "schemas/members/member_schemas.json#/MemberRequest" },
+      "FundingAccount": { "$ref": "schemas/members/member_schemas.json#/FundingAccount" },
+      
+      "CreditUnion": { "$ref": "schemas/admin/admin_schemas.json#/CreditUnionRequest" },
+      "AdminUser": { "$ref": "schemas/admin/admin_schemas.json#/AdminUserRequest" },
+      "AuditLog": { "$ref": "schemas/admin/admin_schemas.json#/AuditLogEntry" },
+      "BatchProcess": { "$ref": "schemas/admin/admin_schemas.json#/BatchProcessRequest" },
+      
+      "SystemConfig": { "$ref": "schemas/system/system_schemas.json#/SystemConfigRequest" },
+      "HealthCheck": { "$ref": "schemas/system/system_schemas.json#/HealthCheckResponse" },
+      "SystemStatus": { "$ref": "schemas/system/system_schemas.json#/SystemStatus" }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "AdminAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "CreditUnionAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

@@ -1,0 +1,276 @@
+{
+  "/admin/credit-union": {
+    "post": {
+      "summary": "Create credit union",
+      "operationId": "createCreditUnion",
+      "tags": ["Admin", "Credit Union"],
+      "security": [{ "AdminAuth": [] }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/admin/admin_schemas.json#/CreditUnionRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Credit union created successfully"
+        }
+      }
+    },
+    "get": {
+      "summary": "List credit unions",
+      "operationId": "listCreditUnions",
+      "tags": ["Admin", "Credit Union"],
+      "security": [{ "AdminAuth": [] }],
+      "parameters": [
+        {
+          "name": "status",
+          "in": "query",
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "schema": { "type": "integer" }
+        },
+        {
+          "name": "pageSize",
+          "in": "query",
+          "schema": { "type": "integer" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Credit unions retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "../schemas/admin/admin_schemas.json#/CreditUnionRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/admin/credit-union/{creditUnionId}": {
+    "get": {
+      "summary": "Get credit union details",
+      "operationId": "getCreditUnion",
+      "tags": ["Admin", "Credit Union"],
+      "security": [{ "AdminAuth": [] }],
+      "parameters": [
+        {
+          "name": "creditUnionId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Credit union details retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/admin/admin_schemas.json#/CreditUnionRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update credit union",
+      "operationId": "updateCreditUnion",
+      "tags": ["Admin", "Credit Union"],
+      "security": [{ "AdminAuth": [] }],
+      "parameters": [
+        {
+          "name": "creditUnionId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/admin/admin_schemas.json#/CreditUnionRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Credit union updated successfully"
+        }
+      }
+    }
+  },
+  "/admin/user": {
+    "post": {
+      "summary": "Create admin user",
+      "operationId": "createAdminUser",
+      "tags": ["Admin", "Users"],
+      "security": [{ "AdminAuth": [] }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/admin/admin_schemas.json#/AdminUserRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Admin user created successfully"
+        }
+      }
+    },
+    "get": {
+      "summary": "List admin users",
+      "operationId": "listAdminUsers",
+      "tags": ["Admin", "Users"],
+      "security": [{ "AdminAuth": [] }],
+      "parameters": [
+        {
+          "name": "role",
+          "in": "query",
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "creditUnionId",
+          "in": "query",
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Admin users retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "../schemas/admin/admin_schemas.json#/AdminUserRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/admin/audit": {
+    "get": {
+      "summary": "Get audit logs",
+      "operationId": "getAuditLogs",
+      "tags": ["Admin", "Audit"],
+      "security": [{ "AdminAuth": [] }],
+      "parameters": [
+        {
+          "name": "startDate",
+          "in": "query",
+          "schema": { "type": "string", "format": "date-time" }
+        },
+        {
+          "name": "endDate",
+          "in": "query",
+          "schema": { "type": "string", "format": "date-time" }
+        },
+        {
+          "name": "action",
+          "in": "query",
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "resource",
+          "in": "query",
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "userId",
+          "in": "query",
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Audit logs retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "../schemas/admin/admin_schemas.json#/AuditLogEntry"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/admin/batch": {
+    "post": {
+      "summary": "Create batch process",
+      "operationId": "createBatchProcess",
+      "tags": ["Admin", "Batch"],
+      "security": [{ "AdminAuth": [] }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/admin/admin_schemas.json#/BatchProcessRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "202": {
+          "description": "Batch process accepted"
+        }
+      }
+    }
+  },
+  "/admin/metrics": {
+    "get": {
+      "summary": "Get system metrics",
+      "operationId": "getSystemMetrics",
+      "tags": ["Admin", "Monitoring"],
+      "security": [{ "AdminAuth": [] }],
+      "parameters": [
+        {
+          "name": "creditUnionId",
+          "in": "query",
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "System metrics retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/admin/admin_schemas.json#/SystemMetrics"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

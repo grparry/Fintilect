@@ -1,0 +1,180 @@
+{
+  "MemberRequest": {
+    "type": "object",
+    "required": ["memberId", "creditUnionId"],
+    "properties": {
+      "memberId": { "type": "string" },
+      "creditUnionId": { "type": "string" },
+      "status": {
+        "type": "string",
+        "enum": ["active", "inactive", "suspended", "pending"]
+      },
+      "type": {
+        "type": "string",
+        "enum": ["individual", "business", "trust"]
+      },
+      "profile": { "$ref": "#/MemberProfile" },
+      "preferences": { "$ref": "#/MemberPreferences" },
+      "securitySettings": { "$ref": "#/SecuritySettings" },
+      "limits": { "$ref": "#/MemberLimits" }
+    }
+  },
+  "MemberProfile": {
+    "type": "object",
+    "properties": {
+      "firstName": { "type": "string" },
+      "lastName": { "type": "string" },
+      "businessName": { "type": "string" },
+      "taxId": { "type": "string" },
+      "dateOfBirth": { "type": "string", "format": "date" },
+      "address": { "$ref": "../payees/payee_schemas.json#/Address" },
+      "contact": { "$ref": "../payees/payee_schemas.json#/ContactInfo" },
+      "language": { "type": "string", "default": "en-US" },
+      "timezone": { "type": "string" }
+    }
+  },
+  "MemberPreferences": {
+    "type": "object",
+    "properties": {
+      "defaultFundingAccount": { "type": "string" },
+      "defaultPaymentMethod": { "type": "string" },
+      "notificationPreferences": {
+        "type": "object",
+        "properties": {
+          "paymentConfirmation": { "type": "boolean" },
+          "paymentReminder": { "type": "boolean" },
+          "paymentFailed": { "type": "boolean" },
+          "lowBalance": { "type": "boolean" },
+          "securityAlerts": { "type": "boolean" },
+          "marketingCommunications": { "type": "boolean" },
+          "method": {
+            "type": "string",
+            "enum": ["email", "sms", "both", "none"]
+          }
+        }
+      },
+      "displayPreferences": {
+        "type": "object",
+        "properties": {
+          "dateFormat": { "type": "string" },
+          "timeFormat": { "type": "string" },
+          "currencyFormat": { "type": "string" },
+          "defaultView": { "type": "string" }
+        }
+      }
+    }
+  },
+  "SecuritySettings": {
+    "type": "object",
+    "properties": {
+      "mfaEnabled": { "type": "boolean" },
+      "mfaMethods": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["sms", "email", "authenticator", "security_questions"]
+        }
+      },
+      "ipRestrictions": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "lastPasswordChange": { "type": "string", "format": "date-time" },
+      "securityQuestions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "question": { "type": "string" },
+            "answer": { "type": "string" }
+          }
+        }
+      },
+      "sessionTimeout": { "type": "integer" }
+    }
+  },
+  "MemberLimits": {
+    "type": "object",
+    "properties": {
+      "dailyLimit": { "type": "number" },
+      "weeklyLimit": { "type": "number" },
+      "monthlyLimit": { "type": "number" },
+      "singlePaymentLimit": { "type": "number" },
+      "recurringPaymentLimit": { "type": "number" },
+      "expeditedPaymentLimit": { "type": "number" },
+      "payeeLimit": { "type": "integer" }
+    }
+  },
+  "FundingAccount": {
+    "type": "object",
+    "required": ["accountNumber", "accountType"],
+    "properties": {
+      "accountId": { "type": "string" },
+      "accountNumber": { "type": "string" },
+      "accountType": {
+        "type": "string",
+        "enum": ["checking", "savings", "money_market", "line_of_credit"]
+      },
+      "status": {
+        "type": "string",
+        "enum": ["active", "inactive", "suspended", "pending_verification"]
+      },
+      "nickname": { "type": "string" },
+      "routingNumber": { "type": "string" },
+      "validationStatus": {
+        "type": "string",
+        "enum": ["verified", "pending", "failed"]
+      },
+      "limits": {
+        "type": "object",
+        "properties": {
+          "dailyLimit": { "type": "number" },
+          "monthlyLimit": { "type": "number" },
+          "minimumBalance": { "type": "number" }
+        }
+      }
+    }
+  },
+  "MemberActivityLog": {
+    "type": "object",
+    "properties": {
+      "timestamp": { "type": "string", "format": "date-time" },
+      "action": { "type": "string" },
+      "category": { "type": "string" },
+      "status": { "type": "string" },
+      "details": { "type": "object" },
+      "ipAddress": { "type": "string" },
+      "userAgent": { "type": "string" },
+      "location": { "type": "string" }
+    }
+  },
+  "MemberResponse": {
+    "type": "object",
+    "properties": {
+      "memberId": { "type": "string" },
+      "creditUnionId": { "type": "string" },
+      "status": { "type": "string" },
+      "type": { "type": "string" },
+      "profile": { "$ref": "#/MemberProfile" },
+      "preferences": { "$ref": "#/MemberPreferences" },
+      "limits": { "$ref": "#/MemberLimits" },
+      "fundingAccounts": {
+        "type": "array",
+        "items": { "$ref": "#/FundingAccount" }
+      },
+      "statistics": {
+        "type": "object",
+        "properties": {
+          "totalPayees": { "type": "integer" },
+          "activePayees": { "type": "integer" },
+          "pendingPayments": { "type": "integer" },
+          "lastPaymentDate": { "type": "string", "format": "date-time" },
+          "totalPaymentsAmount": { "type": "number" }
+        }
+      },
+      "createdDate": { "type": "string", "format": "date-time" },
+      "lastModified": { "type": "string", "format": "date-time" },
+      "lastLogin": { "type": "string", "format": "date-time" }
+    }
+  }
+}

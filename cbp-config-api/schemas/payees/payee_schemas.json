@@ -1,0 +1,180 @@
+{
+  "GlobalPayeeRequest": {
+    "type": "object",
+    "required": ["payeeName"],
+    "properties": {
+      "payeeName": { "type": "string" },
+      "payeeType": { 
+        "type": "string",
+        "enum": ["business", "individual", "financial_institution"]
+      },
+      "status": {
+        "type": "string",
+        "enum": ["active", "inactive", "pending", "suspended"]
+      },
+      "address": { "$ref": "#/Address" },
+      "contact": { "$ref": "#/ContactInfo" },
+      "paymentMethods": {
+        "type": "array",
+        "items": { "$ref": "#/PaymentMethod" }
+      },
+      "fisPayeeId": { "type": "string" },
+      "routingNumber": { "type": "string" },
+      "validationRules": { "$ref": "#/PayeeValidationRules" }
+    }
+  },
+  "UserPayeeRequest": {
+    "type": "object",
+    "required": ["memberId", "internalPayeeId", "accountNumber"],
+    "properties": {
+      "memberId": { "type": "string" },
+      "internalPayeeId": { "type": "string" },
+      "accountNumber": { "type": "string" },
+      "nickname": { "type": "string" },
+      "status": {
+        "type": "string",
+        "enum": ["active", "inactive", "pending_verification", "suspended"]
+      },
+      "paymentPreferences": { "$ref": "#/PaymentPreferences" },
+      "notificationPreferences": { "$ref": "#/NotificationPreferences" }
+    }
+  },
+  "PayeeResponse": {
+    "type": "object",
+    "properties": {
+      "internalPayeeId": { "type": "string" },
+      "payeeName": { "type": "string" },
+      "payeeType": { "type": "string" },
+      "status": { "type": "string" },
+      "address": { "$ref": "#/Address" },
+      "contact": { "$ref": "#/ContactInfo" },
+      "paymentMethods": {
+        "type": "array",
+        "items": { "$ref": "#/PaymentMethod" }
+      },
+      "createdDate": { "type": "string", "format": "date-time" },
+      "lastModified": { "type": "string", "format": "date-time" },
+      "lastUsed": { "type": "string", "format": "date-time" }
+    }
+  },
+  "UserPayeeResponse": {
+    "type": "object",
+    "properties": {
+      "userPayeeListId": { "type": "string" },
+      "memberId": { "type": "string" },
+      "internalPayeeId": { "type": "string" },
+      "accountNumber": { "type": "string" },
+      "nickname": { "type": "string" },
+      "status": { "type": "string" },
+      "payeeDetails": { "$ref": "#/PayeeResponse" },
+      "lastPaymentDate": { "type": "string", "format": "date-time" },
+      "nextScheduledPayment": { "$ref": "../payments/payment_schemas.json#/PaymentResponse" }
+    }
+  },
+  "Address": {
+    "type": "object",
+    "properties": {
+      "street1": { "type": "string" },
+      "street2": { "type": "string" },
+      "city": { "type": "string" },
+      "state": { "type": "string" },
+      "zipCode": { "type": "string" },
+      "country": { "type": "string", "default": "USA" }
+    }
+  },
+  "ContactInfo": {
+    "type": "object",
+    "properties": {
+      "phone": { "type": "string" },
+      "email": { "type": "string" },
+      "website": { "type": "string" },
+      "contactName": { "type": "string" }
+    }
+  },
+  "PaymentMethod": {
+    "type": "object",
+    "required": ["type"],
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": ["ach", "check", "wire", "card"]
+      },
+      "processingTime": { "type": "integer" },
+      "fees": { "type": "number" },
+      "limits": { "$ref": "#/PaymentLimits" }
+    }
+  },
+  "PaymentLimits": {
+    "type": "object",
+    "properties": {
+      "minAmount": { "type": "number" },
+      "maxAmount": { "type": "number" },
+      "dailyLimit": { "type": "number" },
+      "monthlyLimit": { "type": "number" }
+    }
+  },
+  "PayeeValidationRules": {
+    "type": "object",
+    "properties": {
+      "accountNumberFormat": { "type": "string" },
+      "accountNumberLength": {
+        "type": "object",
+        "properties": {
+          "min": { "type": "integer" },
+          "max": { "type": "integer" }
+        }
+      },
+      "requiresVerification": { "type": "boolean" },
+      "verificationMethod": {
+        "type": "string",
+        "enum": ["microdeposit", "instant", "manual"]
+      }
+    }
+  },
+  "PaymentPreferences": {
+    "type": "object",
+    "properties": {
+      "defaultPaymentMethod": { "type": "string" },
+      "defaultAmount": { "type": "number" },
+      "preferredProcessingDay": { "type": "integer" },
+      "autoPayEnabled": { "type": "boolean" },
+      "autoPayThreshold": { "type": "number" }
+    }
+  },
+  "NotificationPreferences": {
+    "type": "object",
+    "properties": {
+      "paymentConfirmation": { "type": "boolean" },
+      "paymentReminder": { "type": "boolean" },
+      "paymentFailed": { "type": "boolean" },
+      "method": {
+        "type": "string",
+        "enum": ["email", "sms", "both", "none"]
+      }
+    }
+  },
+  "PayeeSearchRequest": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string" },
+      "zipCode": { "type": "string" },
+      "type": { "type": "string" },
+      "status": { "type": "string" },
+      "page": { "type": "integer" },
+      "pageSize": { "type": "integer" }
+    }
+  },
+  "PayeeSearchResponse": {
+    "type": "object",
+    "properties": {
+      "payees": {
+        "type": "array",
+        "items": { "$ref": "#/PayeeResponse" }
+      },
+      "totalCount": { "type": "integer" },
+      "page": { "type": "integer" },
+      "pageSize": { "type": "integer" },
+      "hasMore": { "type": "boolean" }
+    }
+  }
+}

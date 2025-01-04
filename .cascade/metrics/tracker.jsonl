@@ -1,1 +1,8 @@
 {"timestamp":"2025-01-02T18:42:50-07:00","type":"system_init","metrics_version":"1.0","context":"meta_migration"}
+{"timestamp":"2025-01-02T20:37:49-07:00","type":"meta_load","component":"RULES.md"}
+{"timestamp":"2025-01-02T20:37:49-07:00","type":"meta_ref","component":"RULES.md","rule":"meta_layer_metrics"}
+{"timestamp":"2025-01-02T20:37:49-07:00","type":"meta_load","component":"DRIFT.md"}
+{"timestamp":"2025-01-02T20:37:49-07:00","type":"meta_ref","component":"DRIFT.md","rule":"selective_logging"}
+{"timestamp":"2025-01-02T20:39:04-07:00","type":"meta_load","component":"RULES.md"}
+{"timestamp":"2025-01-02T20:39:04-07:00","type":"meta_ref","component":"RULES.md","rule":"meta_layer_metrics"}
+{"timestamp":"2025-01-02T20:39:04-07:00","type":"meta_ref","component":"DRIFT.md","rule":"selective_logging"}

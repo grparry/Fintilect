@@ -1,0 +1,281 @@
+{
+  "/payee/global": {
+    "post": {
+      "summary": "Create a new global payee",
+      "description": "Creates a new payee in the global payee directory",
+      "operationId": "createGlobalPayee",
+      "tags": ["Payees"],
+      "security": [{ "AdminAuth": [] }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/payees/payee_schemas.json#/GlobalPayeeRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Payee created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/payees/payee_schemas.json#/PayeeResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "get": {
+      "summary": "Search global payees",
+      "description": "Search for payees in the global directory",
+      "operationId": "searchGlobalPayees",
+      "tags": ["Payees"],
+      "parameters": [
+        {
+          "name": "name",
+          "in": "query",
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "zipCode",
+          "in": "query",
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "type",
+          "in": "query",
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "status",
+          "in": "query",
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "schema": { "type": "integer" }
+        },
+        {
+          "name": "pageSize",
+          "in": "query",
+          "schema": { "type": "integer" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Search results",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/payees/payee_schemas.json#/PayeeSearchResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/payee/global/{internalPayeeId}": {
+    "get": {
+      "summary": "Get global payee details",
+      "operationId": "getGlobalPayee",
+      "tags": ["Payees"],
+      "parameters": [
+        {
+          "name": "internalPayeeId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Payee details retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/payees/payee_schemas.json#/PayeeResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update global payee",
+      "operationId": "updateGlobalPayee",
+      "tags": ["Payees"],
+      "security": [{ "AdminAuth": [] }],
+      "parameters": [
+        {
+          "name": "internalPayeeId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/payees/payee_schemas.json#/GlobalPayeeRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Payee updated successfully"
+        }
+      }
+    }
+  },
+  "/payee/user": {
+    "post": {
+      "summary": "Add payee to user's list",
+      "operationId": "addUserPayee",
+      "tags": ["Payees"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/payees/payee_schemas.json#/UserPayeeRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Payee added to user's list",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/payees/payee_schemas.json#/UserPayeeResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/payee/user/{userPayeeListId}": {
+    "get": {
+      "summary": "Get user payee details",
+      "operationId": "getUserPayee",
+      "tags": ["Payees"],
+      "parameters": [
+        {
+          "name": "userPayeeListId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "User payee details retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/payees/payee_schemas.json#/UserPayeeResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update user payee",
+      "operationId": "updateUserPayee",
+      "tags": ["Payees"],
+      "parameters": [
+        {
+          "name": "userPayeeListId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/payees/payee_schemas.json#/UserPayeeRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "User payee updated successfully"
+        }
+      }
+    },
+    "delete": {
+      "summary": "Remove payee from user's list",
+      "operationId": "removeUserPayee",
+      "tags": ["Payees"],
+      "parameters": [
+        {
+          "name": "userPayeeListId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Payee removed from user's list"
+        }
+      }
+    }
+  },
+  "/payee/user/member/{memberId}": {
+    "get": {
+      "summary": "Get member's payees",
+      "operationId": "getMemberPayees",
+      "tags": ["Payees"],
+      "parameters": [
+        {
+          "name": "memberId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "status",
+          "in": "query",
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "includePayments",
+          "in": "query",
+          "schema": { "type": "boolean" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Member's payees retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "../schemas/payees/payee_schemas.json#/UserPayeeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
