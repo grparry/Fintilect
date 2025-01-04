@@ -1,1 +1,0 @@
-Archive this conversation in .cascade/conversation logs.  Be sure to include findings about effectivness of the AI and how different approaches might have been more effective.  Every conversation must be saved with a unique name, so don't update an existing file.

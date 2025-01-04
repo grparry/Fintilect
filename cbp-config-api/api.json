@@ -46,12 +46,7 @@
       "BearerAuth": []
     }
   ],
-  "paths": {
-    "/payment": { "$ref": "paths/payments/payment_paths.json#/~1payment" },
-    "/payment/batch": { "$ref": "paths/payments/payment_paths.json#/~1payment~1batch" },
-    "/payment/{paymentId}": { "$ref": "paths/payments/payment_paths.json#/~1payment~1{paymentId}" },
-    "/payment/reprocess": { "$ref": "paths/payments/payment_paths.json#/~1payment~1reprocess" },
-    
+  "paths": {    
     "/payee/global": { "$ref": "paths/payees/payee_paths.json#/~1payee~1global" },
     "/payee/global/{internalPayeeId}": { "$ref": "paths/payees/payee_paths.json#/~1payee~1global~1{internalPayeeId}" },
     "/payee/user": { "$ref": "paths/payees/payee_paths.json#/~1payee~1user" },
