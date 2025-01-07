@@ -1,47 +1,38 @@
 # Test Layer Refactoring Plan
 
 > Status: In Progress  
-> Last Updated: 2025-01-06T21:23:12-07:00
+> Last Updated: 2025-01-07T07:36:35-07:00
 
 ## File Changes by Phase
 
 ### Phase 1: Core Infrastructure
-1. `src/__tests__/utils/TestDb.ts` (New File)
-   - [ ] Create TestDb class
-   - [ ] Add mock response handling
-   - [ ] Add response validation
-   - [ ] Add error simulation
-   - [ ] Add transaction support
 
-2. `src/__tests__/utils/ResponseValidator.ts` (New File)
-   - [ ] Create validation helpers
+1. `src/__tests__/integration/helpers/ResponseValidator.ts` (Update)
+   - [ ] Enhance validation helpers for common patterns
    - [ ] Add pagination validation
    - [ ] Add SQL response validation
+   - [ ] Add error case validation
 
-3. `src/types/database.ts` (New File)
-   - [ ] Add SqlResponse interface
-   - [ ] Add PaginatedResponse interface
-   - [ ] Add error types
-
-4. `src/__tests__/integration/context/TestContext.ts` (Update)
-   - [ ] Update to use new TestDb
-   - [ ] Add response validation
-   - [ ] Update mock tracking
+2. `src/__tests__/integration/context/TestContext.ts` (Update)
+   - [ ] Streamline mock tracking
    - [ ] Add cleanup procedures
-   - [ ] Add transaction support
+   - [ ] Improve error reporting
 
-5. `src/__tests__/integration/fixtures/mockData.ts` (Update)
-   - [ ] Update mock data structures
-   - [ ] Add pagination support
-   - [ ] Add SQL response wrapping
-   - [ ] Update factory methods
-   - [ ] Add new mock types
+3. `src/__tests__/integration/fixtures/mockData.ts` (Update)
+   - [ ] Ensure consistent mock response patterns
+   - [ ] Add common error cases
+   - [ ] Update factory methods as needed
 
-6. `src/__tests__/integration/helpers/ResponseValidator.ts` (Update)
-   - [ ] Update validation rules
-   - [ ] Add pagination checks
-   - [ ] Add SQL response validation
-   - [ ] Add error validation
+### Success Criteria for Phase 1
+1. Test Reliability
+   - [ ] All tests pass consistently
+   - [ ] Clear error messages on validation failures
+   - [ ] No false positives in test results
+
+2. Response Validation
+   - [ ] All responses properly validated
+   - [ ] Pagination handling verified
+   - [ ] Error cases properly caught
 
 ### Phase 2: Payment Service Migration
 1. `src/__tests__/services/payment.service.test.ts`
@@ -142,6 +133,19 @@
      - [ ] Add validation for settings structure
      - [ ] Standardize error handling
 
+## Success Criteria
+
+### Phase 1 Success Criteria
+1. Test Reliability
+   - [ ] All tests pass consistently
+   - [ ] Clear error messages on validation failures
+   - [ ] No false positives in test results
+
+2. Response Validation
+   - [ ] All responses properly validated
+   - [ ] Pagination handling verified
+   - [ ] Error cases properly caught
+
 ## Standard Implementation Patterns
 
 ### TestDb Usage
@@ -165,7 +169,6 @@ describe('Service Tests', () => {
         });
     });
 });
-```
 
 ### Response Types
 ```typescript
@@ -185,7 +188,6 @@ export interface PaginatedResponse<T> {
         pageSize: number;
     };
 }
-```
 
 ## Current Status
 
