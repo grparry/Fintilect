@@ -1,11 +1,50 @@
 import { Router } from 'express';
 import { TrackingController } from '../controllers/tracking.controller';
-import { validateRequest } from '../middleware';
-import { trackingSchemas } from '../validators/tracking.validator';
+import { db } from '../config/db';
+import { validateRequest } from '../middleware/validation.middleware';
+import { z } from 'zod';
+import { authMiddleware } from '../middleware/auth.middleware';
 import { cacheMiddleware } from '../middleware/cache.middleware';
 
 const router = Router();
-const controller = new TrackingController();
+const trackingController = new TrackingController();
+
+const trackingValidation = {
+  eventCreate: z.object({
+    body: z.object({
+      type: z.enum(['page_view', 'click', 'error', 'custom']),
+      data: z.record(z.any()),
+      timestamp: z.coerce.date().optional(),
+      userId: z.string().optional()
+    })
+  }),
+  eventQuery: z.object({
+    query: z.object({
+      from: z.coerce.date(),
+      to: z.coerce.date(),
+      type: z.enum(['page_view', 'click', 'error', 'custom']).optional(),
+      userId: z.string().optional()
+    })
+  }),
+  changeQuery: z.object({
+    query: z.object({
+      from: z.coerce.date(),
+      to: z.coerce.date(),
+      type: z.enum(['create', 'update', 'delete']).optional(),
+      entity: z.string().optional(),
+      userId: z.string().optional()
+    })
+  }),
+  paymentQuery: z.object({
+    query: z.object({
+      from: z.coerce.date(),
+      to: z.coerce.date(),
+      status: z.enum(['pending', 'completed', 'failed']).optional(),
+      type: z.enum(['credit', 'debit']).optional(),
+      userId: z.string().optional()
+    })
+  })
+};
 
 /**
  * @openapi
@@ -31,8 +70,9 @@ const controller = new TrackingController();
  *         $ref: '#/components/responses/Unauthorized'
  */
 router.post('/events',
-  validateRequest(trackingSchemas.trackEvent),
-  controller.trackEvent
+  authMiddleware,
+  validateRequest(trackingValidation.eventCreate),
+  trackingController.createEvent
 );
 
 /**
@@ -85,28 +125,40 @@ router.post('/events',
  *         $ref: '#/components/responses/Unauthorized'
  */
 router.get('/events',
-  validateRequest(trackingSchemas.getEvents),
-  controller.getEvents
+  authMiddleware,
+  validateRequest(trackingValidation.eventQuery),
+  trackingController.queryEvents
 );
 
 // List change history with pagination
 router.get('/changes',
-  validateRequest(trackingSchemas.queryParams),
-  controller.listChangeHistory
+  authMiddleware,
+  validateRequest(trackingValidation.changeQuery),
+  trackingController.getChanges
 );
 
 // List on-us payments with pagination
 router.get('/onus',
-  validateRequest(trackingSchemas.queryParams),
+  authMiddleware,
+  validateRequest(trackingValidation.paymentQuery),
   cacheMiddleware(5 * 60), // Cache for 5 minutes
-  controller.listOnUsPayments
+  trackingController.listOnUsPayments
 );
 
 // List courtesy payments with pagination
 router.get('/courtesy',
-  validateRequest(trackingSchemas.queryParams),
+  authMiddleware,
+  validateRequest(trackingValidation.paymentQuery),
   cacheMiddleware(5 * 60), // Cache for 5 minutes
-  controller.listCourtesyPayments
+  trackingController.listCourtesyPayments
+);
+
+// Get payment tracking
+router.get('/payments',
+  authMiddleware,
+  validateRequest(trackingValidation.paymentQuery),
+  trackingController.getPaymentTracking
 );
 
 export { router as trackingRouter };
+export default router;

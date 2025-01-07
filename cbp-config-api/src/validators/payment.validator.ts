@@ -1,5 +1,8 @@
-import Joi from 'joi';
 import { z } from 'zod';
+
+const PAYMENT_METHODS = ['ACH', 'WIRE', 'CHECK'] as const;
+const PAYMENT_STATUSES = ['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED'] as const;
+const PAYMENT_FREQUENCIES = ['ONE_TIME', 'WEEKLY', 'BI_WEEKLY', 'MONTHLY', 'QUARTERLY', 'ANNUALLY'] as const;
 
 /**
  * @openapi
@@ -101,56 +104,89 @@ import { z } from 'zod';
  */
 
 export const paymentSchemas = {
-  listPayments: z.object({
-    page: z.coerce.number().int().min(1).optional().default(1),
-    limit: z.coerce.number().int().min(1).max(100).optional().default(20),
-    status: z.enum(['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED']).optional(),
-    fromDate: z.string().datetime().optional(),
-    toDate: z.string().datetime().optional()
-  }),
-
   paymentId: z.object({
-    id: z.string().min(1)
-  }),
-
-  createPayment: z.object({
-    amount: z.number().positive(),
-    currency: z.string().length(3),
-    payeeId: z.string().min(1),
-    paymentMethod: z.enum(['ACH', 'WIRE', 'CHECK']),
-    scheduledDate: z.string().datetime(),
-    metadata: z.record(z.unknown()).optional()
-  }),
-
-  updatePayment: z.object({
-    amount: z.number().positive().optional(),
-    status: z.enum(['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED']).optional(),
-    scheduledDate: z.string().datetime().optional(),
-    metadata: z.record(z.unknown()).optional()
-  }),
-
-  createPaymentJoi: Joi.object({
-    payeeId: Joi.string().required(),
-    amount: Joi.number().positive().required(),
-    scheduledDate: Joi.date().min('now').required(),
-    memo: Joi.string().max(255),
-    recurring: Joi.boolean().default(false),
-    frequency: Joi.string().valid('once', 'weekly', 'biweekly', 'monthly').when('recurring', {
-      is: true,
-      then: Joi.required()
-    }),
-    endDate: Joi.date().min(Joi.ref('scheduledDate')).when('recurring', {
-      is: true,
-      then: Joi.required()
+    params: z.object({
+      id: z.string()
     })
   }),
 
-  updatePaymentJoi: Joi.object({
-    amount: Joi.number().positive(),
-    scheduledDate: Joi.date().min('now'),
-    memo: Joi.string().max(255),
-    recurring: Joi.boolean(),
-    frequency: Joi.string().valid('once', 'weekly', 'biweekly', 'monthly'),
-    endDate: Joi.date().min(Joi.ref('scheduledDate'))
-  }).min(1) // At least one field must be provided
+  listPayments: z.object({
+    query: z.object({
+      page: z.number().optional(),
+      limit: z.number().optional(),
+      status: z.enum(PAYMENT_STATUSES).optional(),
+      paymentMethod: z.enum(PAYMENT_METHODS).optional(),
+      startDate: z.string().optional(),
+      endDate: z.string().optional()
+    })
+  }),
+
+  getPayment: z.object({
+    params: z.object({
+      id: z.string()
+    })
+  }),
+
+  createPayment: z.object({
+    body: z.object({
+      amount: z.number().positive(),
+      currency: z.string().length(3),
+      payeeId: z.string(),
+      paymentMethod: z.enum(PAYMENT_METHODS),
+      frequency: z.enum(PAYMENT_FREQUENCIES).optional(),
+      scheduledDate: z.string().optional(),
+      description: z.string().optional()
+    })
+  }),
+
+  updatePayment: z.object({
+    params: z.object({
+      id: z.string()
+    }),
+    body: z.object({
+      amount: z.number().positive().optional(),
+      currency: z.string().length(3).optional(),
+      paymentMethod: z.enum(PAYMENT_METHODS).optional(),
+      frequency: z.enum(PAYMENT_FREQUENCIES).optional(),
+      scheduledDate: z.string().optional(),
+      description: z.string().optional()
+    })
+  }),
+
+  updatePaymentStatus: z.object({
+    params: z.object({
+      id: z.string()
+    }),
+    body: z.object({
+      status: z.enum(PAYMENT_STATUSES)
+    })
+  }),
+
+  cancelPayment: z.object({
+    params: z.object({
+      id: z.string()
+    }),
+    body: z.object({
+      reason: z.string().max(500)
+    })
+  }),
+
+  retryPayment: z.object({
+    params: z.object({
+      id: z.string()
+    })
+  }),
+
+  bulkPayments: z.object({
+    body: z.object({
+      payments: z.array(z.object({
+        amount: z.number().positive(),
+        currency: z.string().length(3),
+        payeeId: z.string(),
+        paymentMethod: z.enum(PAYMENT_METHODS),
+        scheduledDate: z.string().optional(),
+        description: z.string().optional()
+      })).min(1).max(100)
+    })
+  })
 };

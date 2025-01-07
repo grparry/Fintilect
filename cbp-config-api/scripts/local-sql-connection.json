@@ -1,0 +1,11 @@
+{
+  "name": "Local Development",
+  "server": "localhost,1433",
+  "database": "",
+  "authenticationType": "SqlLogin",
+  "user": "sa",
+  "password": "DevPassword123!",
+  "connectTimeout": 30,
+  "applicationName": "Azure Data Studio",
+  "encrypt": false
+}

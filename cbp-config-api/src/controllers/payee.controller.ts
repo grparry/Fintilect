@@ -1,70 +1,79 @@
 import { Request, Response, NextFunction } from 'express';
 import { PayeeService } from '../services/payee.service';
-import { HttpError } from '../middleware/error.middleware';
-import { logger } from '../config/logger';
+import { HttpError } from '../utils/errors';
 
 export class PayeeController {
-  private service: PayeeService;
+  constructor(private payeeService: PayeeService) {}
 
-  constructor() {
-    this.service = new PayeeService();
+  async listPayees(req: Request, res: Response, next: NextFunction) {
+    try {
+      const page = Number(req.query.page) || 1;
+      const pageSize = Number(req.query.pageSize) || 10;
+
+      if (isNaN(page) || page < 1) {
+        throw new HttpError(400, 'Invalid page number');
+      }
+
+      if (isNaN(pageSize) || pageSize < 1 || pageSize > 100) {
+        throw new HttpError(400, 'Invalid page size');
+      }
+
+      const result = await this.payeeService.listPayees(page, pageSize);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
   }
 
-  listPayees = async (req: Request, res: Response, next: NextFunction) => {
+  async getPayee(req: Request, res: Response, next: NextFunction) {
     try {
-      const payees = await this.service.listPayees();
-      res.json(payees);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getPayee = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const payee = await this.service.getPayee(req.params.id);
+      const { id } = req.params;
+      const payee = await this.payeeService.getPayee(id);
       if (!payee) {
         throw new HttpError(404, 'Payee not found');
       }
-      res.json(payee);
+      res.json({ data: payee });
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  createPayee = async (req: Request, res: Response, next: NextFunction) => {
+  async createPayee(req: Request, res: Response, next: NextFunction) {
     try {
-      const payee = await this.service.createPayee(req.body);
-      res.status(201).json(payee);
+      const payeeData = req.body;
+      const result = await this.payeeService.createPayee(payeeData);
+      res.status(201).json({ data: result });
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  updatePayee = async (req: Request, res: Response, next: NextFunction) => {
+  async updatePayee(req: Request, res: Response, next: NextFunction) {
     try {
-      const payee = await this.service.updatePayee(req.params.id, req.body);
-      if (!payee) {
-        throw new HttpError(404, 'Payee not found');
-      }
-      res.json(payee);
+      const { id } = req.params;
+      const updates = req.body;
+      const result = await this.payeeService.updatePayee(id, updates);
+      res.json({ data: result });
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  removePayee = async (req: Request, res: Response, next: NextFunction) => {
+  async deletePayee(req: Request, res: Response, next: NextFunction) {
     try {
-      await this.service.removePayee(req.params.id);
+      const { id } = req.params;
+      await this.payeeService.deletePayee(id);
       res.status(204).send();
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  listUserPayees = async (req: Request, res: Response, next: NextFunction) => {
+  async listUserPayees(req: Request, res: Response, next: NextFunction) {
     try {
-      const payees = await this.service.listUserPayees(req.params.userId);
-      res.json(payees);
+      const { userId } = req.params;
+      const payees = await this.payeeService.listUserPayees(userId);
+      res.json({ data: payees });
     } catch (error) {
       next(error);
     }

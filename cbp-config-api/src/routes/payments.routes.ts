@@ -1,17 +1,72 @@
 import { Router } from 'express';
-import { validateRequest } from '../middleware';
 import { PaymentController } from '../controllers/payment.controller';
-import { paymentSchemas } from '../validators/payment.validator';
+import { PaymentService } from '../services/payment.service';
+import { db } from '../config/db';
+import { validateRequest } from '../middleware/validation.middleware';
+import { paymentSchemas as paymentValidators } from '../validators/payment.validator';
+import { cacheMiddleware } from '../middleware/cache.middleware';
+import { z } from 'zod';
 
 const router = Router();
-const controller = new PaymentController();
+const paymentService = new PaymentService(db);
+const controller = new PaymentController(paymentService);
+
+const paymentSchemas = {
+  listPayments: z.object({
+    query: z.object({
+      page: z.coerce.number().optional(),
+      pageSize: z.coerce.number().optional()
+    })
+  }),
+  paymentId: z.object({
+    params: z.object({
+      id: z.string()
+    })
+  }),
+  createPayment: z.object({
+    body: z.object({
+      payeeId: z.string(),
+      amount: z.coerce.number(),
+      currency: z.string(),
+      effectiveDate: z.coerce.date().optional(),
+      description: z.string().optional(),
+      reference: z.string().optional()
+    })
+  }),
+  updatePayment: z.object({
+    params: z.object({
+      id: z.string()
+    }),
+    body: z.object({
+      amount: z.coerce.number().optional(),
+      currency: z.string().optional(),
+      effectiveDate: z.coerce.date().optional(),
+      description: z.string().optional(),
+      reference: z.string().optional()
+    })
+  }),
+  rejectPayment: z.object({
+    params: z.object({
+      id: z.string()
+    }),
+    body: z.object({
+      reason: z.string()
+    })
+  }),
+  clearedPayments: z.object({
+    query: z.object({
+      startDate: z.coerce.date(),
+      endDate: z.coerce.date()
+    })
+  })
+};
 
 /**
  * @openapi
  * /payments:
  *   get:
  *     summary: List payments
- *     description: Retrieve a paginated list of payments with optional filters
+ *     description: Retrieve a paginated list of payments
  *     tags: [Payments]
  *     parameters:
  *       - in: query
@@ -20,63 +75,26 @@ const controller = new PaymentController();
  *           type: integer
  *           minimum: 1
  *           default: 1
- *         description: Page number
  *       - in: query
- *         name: limit
+ *         name: pageSize
  *         schema:
  *           type: integer
  *           minimum: 1
  *           maximum: 100
- *           default: 20
- *         description: Items per page
- *       - in: query
- *         name: status
- *         schema:
- *           type: string
- *           enum: [PENDING, PROCESSING, COMPLETED, FAILED]
- *         description: Filter by payment status
- *       - in: query
- *         name: fromDate
- *         schema:
- *           type: string
- *           format: date
- *         description: Filter payments from this date
- *       - in: query
- *         name: toDate
- *         schema:
- *           type: string
- *           format: date
- *         description: Filter payments until this date
- *     responses:
- *       200:
- *         description: List of payments
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Payment'
- *                 pagination:
- *                   $ref: '#/components/schemas/Pagination'
- *       401:
- *         $ref: '#/components/responses/Unauthorized'
- *       403:
- *         $ref: '#/components/responses/Forbidden'
+ *           default: 10
  */
-router.get('/', 
+router.get(
+  '/',
   validateRequest(paymentSchemas.listPayments),
-  controller.listPayments
+  controller.listPayments.bind(controller)
 );
 
 /**
  * @openapi
  * /payments/{id}:
  *   get:
- *     summary: Get payment details
- *     description: Retrieve detailed information about a specific payment
+ *     summary: Get payment by ID
+ *     description: Retrieve a payment by its ID
  *     tags: [Payments]
  *     parameters:
  *       - in: path
@@ -84,20 +102,11 @@ router.get('/',
  *         required: true
  *         schema:
  *           type: string
- *         description: Payment ID
- *     responses:
- *       200:
- *         description: Payment details
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Payment'
- *       404:
- *         $ref: '#/components/responses/NotFound'
  */
-router.get('/:id', 
+router.get(
+  '/:id',
   validateRequest(paymentSchemas.paymentId),
-  controller.getPayment
+  controller.getPayment.bind(controller)
 );
 
 /**
@@ -113,21 +122,11 @@ router.get('/:id',
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/CreatePayment'
- *     responses:
- *       201:
- *         description: Payment created
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Payment'
- *       400:
- *         $ref: '#/components/responses/BadRequest'
- *       401:
- *         $ref: '#/components/responses/Unauthorized'
  */
-router.post('/', 
+router.post(
+  '/',
   validateRequest(paymentSchemas.createPayment),
-  controller.createPayment
+  controller.createPayment.bind(controller)
 );
 
 /**
@@ -143,37 +142,118 @@ router.post('/',
  *         required: true
  *         schema:
  *           type: string
- *         description: Payment ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/UpdatePayment'
- *     responses:
- *       200:
- *         description: Payment updated
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Payment'
- *       400:
- *         $ref: '#/components/responses/BadRequest'
- *       404:
- *         $ref: '#/components/responses/NotFound'
  */
-router.put('/:id',
+router.put(
+  '/:id',
   validateRequest(paymentSchemas.updatePayment),
-  controller.updatePayment
+  controller.updatePayment.bind(controller)
 );
 
-// Cancel payment
-router.delete('/:id', controller.cancelPayment);
+/**
+ * @openapi
+ * /payments/{id}:
+ *   delete:
+ *     summary: Delete payment
+ *     description: Delete an existing payment
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ */
+router.delete(
+  '/:id',
+  validateRequest(paymentSchemas.paymentId),
+  controller.deletePayment.bind(controller)
+);
 
-// Get payment status
-router.get('/status/:id', controller.getPaymentStatus);
+/**
+ * @openapi
+ * /payments/{id}/status:
+ *   get:
+ *     summary: Get payment status
+ *     description: Get the status of a payment
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ */
+router.get(
+  '/:id/status',
+  validateRequest(paymentSchemas.paymentId),
+  controller.getPaymentStatus.bind(controller)
+);
 
-// List cleared payments
-router.get('/clear', controller.listClearedPayments);
+/**
+ * @openapi
+ * /payments/cleared:
+ *   get:
+ *     summary: Get cleared payments
+ *     description: Get payments that have been cleared within a date range
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: query
+ *         name: startDate
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: endDate
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date
+ */
+router.get(
+  '/cleared',
+  validateRequest(paymentSchemas.clearedPayments),
+  controller.getClearedPayments.bind(controller)
+);
 
-export { router as paymentsRouter };
+/**
+ * @openapi
+ * /payments/{id}/approve:
+ *   post:
+ *     summary: Approve payment
+ *     description: Approve a payment
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ */
+router.post(
+  '/:id/approve',
+  validateRequest(paymentSchemas.paymentId),
+  controller.approvePayment.bind(controller)
+);
+
+/**
+ * @openapi
+ * /payments/{id}/reject:
+ *   post:
+ *     summary: Reject payment
+ *     description: Reject a payment with a reason
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ */
+router.post(
+  '/:id/reject',
+  validateRequest(paymentSchemas.rejectPayment),
+  controller.rejectPayment.bind(controller)
+);
+
+export default router;

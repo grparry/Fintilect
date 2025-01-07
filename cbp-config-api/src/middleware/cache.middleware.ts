@@ -9,22 +9,23 @@ const cache = new NodeCache({
   useClones: false
 });
 
-export const cacheMiddleware = (ttlSeconds: number) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+export const cacheMiddleware = <T>(ttlSeconds: number) => {
+  return (req: Request, res: Response<T>, next: NextFunction) => {
     try {
       // Create a cache key from the request path and query parameters
       const key = `${req.originalUrl || req.url}`;
-      const cachedResponse = cache.get(key);
+      const cachedResponse = cache.get<T>(key);
 
       if (cachedResponse) {
         logger.debug(`Cache hit for ${key}`);
-        return res.json(cachedResponse);
+        res.json(cachedResponse);
+        return;
       }
 
       // Override res.json to cache the response before sending
       const originalJson = res.json;
-      res.json = function(body) {
-        if (res.statusCode === 200) {
+      res.json = function(body: T | undefined) {
+        if (res.statusCode === 200 && body !== undefined) {
           logger.debug(`Caching response for ${key}`);
           cache.set(key, body, ttlSeconds);
         }

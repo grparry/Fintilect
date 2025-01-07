@@ -1,6 +1,8 @@
 import * as mssql from 'mssql';
 import { executeQuery, executeStoredProcedure, withTransaction } from '../config/database';
 import { logger } from '../config/logger';
+import { IResult } from 'mssql';
+import { Database } from '../database';
 
 export interface QueryOptions {
   transaction?: mssql.Transaction;
@@ -9,25 +11,23 @@ export interface QueryOptions {
 
 export class BaseRepository {
   protected tableName: string;
+  protected db: Database;
 
-  constructor(tableName: string) {
+  constructor(tableName: string, db: Database) {
     this.tableName = tableName;
+    this.db = db;
   }
 
   /**
    * Execute a stored procedure
    */
-  protected async callProcedure<T>(
+  protected async executeProc<T>(
     procedureName: string,
     params: { [key: string]: any } = {},
     options: QueryOptions = {}
-  ): Promise<T[]> {
+  ): Promise<IResult<T>> {
     try {
-      return await executeStoredProcedure<T>(
-        procedureName,
-        params,
-        options.transaction
-      );
+      return await this.db.executeProc<T>(procedureName, params);
     } catch (error) {
       logger.error('Error executing stored procedure:', {
         procedure: procedureName,
@@ -44,16 +44,31 @@ export class BaseRepository {
     query: string,
     params: { [key: string]: any } = {},
     options: QueryOptions = {}
-  ): Promise<T[]> {
+  ): Promise<IResult<T>> {
     try {
-      return await executeQuery<T>(
-        query,
-        params,
-        options.transaction
-      );
+      return await this.db.executeQuery<T>(query, params);
     } catch (error) {
       logger.error('Error executing query:', {
         query,
+        error
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Execute a stored procedure within a transaction
+   */
+  protected async executeProcWithTransaction<T>(
+    procedureName: string,
+    params: { [key: string]: any } = {},
+    options: QueryOptions = {}
+  ): Promise<IResult<T>> {
+    try {
+      return await this.db.executeProcWithTransaction<T>(procedureName, params);
+    } catch (error) {
+      logger.error('Error executing stored procedure with transaction:', {
+        procedure: procedureName,
         error
       });
       throw error;
@@ -125,6 +140,6 @@ export class BaseRepository {
       parameters,
       options
     );
-    return result[0]?.total || 0;
+    return result.rowsAffected[0] || 0;
   }
 }

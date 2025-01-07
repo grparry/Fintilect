@@ -1,5 +1,9 @@
 import Joi from 'joi';
-import { z } from 'zod';
+
+const PAYEE_TYPES = ['INDIVIDUAL', 'BUSINESS'] as const;
+const PAYEE_STATUSES = ['ACTIVE', 'INACTIVE', 'PENDING_VERIFICATION', 'BLOCKED'] as const;
+const PAYMENT_METHODS = ['ACH', 'WIRE', 'CHECK'] as const;
+const BANK_ACCOUNT_TYPES = ['CHECKING', 'SAVINGS'] as const;
 
 /**
  * @openapi
@@ -17,7 +21,7 @@ import { z } from 'zod';
  *           description: Type of payee
  *         status:
  *           type: string
- *           enum: [ACTIVE, INACTIVE, PENDING_VERIFICATION]
+ *           enum: [ACTIVE, INACTIVE, PENDING_VERIFICATION, BLOCKED]
  *           description: Payee status
  *         name:
  *           type: string
@@ -93,7 +97,7 @@ import { z } from 'zod';
  *           description: Contact phone number
  *         status:
  *           type: string
- *           enum: [ACTIVE, INACTIVE, PENDING_VERIFICATION]
+ *           enum: [ACTIVE, INACTIVE, PENDING_VERIFICATION, BLOCKED]
  *           description: Payee status
  *         bankAccount:
  *           $ref: '#/components/schemas/BankAccount'
@@ -156,86 +160,93 @@ import { z } from 'zod';
  */
 
 export const payeeSchemas = {
+  payeeId: Joi.object({
+    id: Joi.string().required()
+  }),
+
+  listPayees: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20),
+    status: Joi.string().valid(...PAYEE_STATUSES),
+    type: Joi.string().valid(...PAYEE_TYPES),
+    search: Joi.string().max(100)
+  }),
+
+  getPayee: Joi.object({
+    id: Joi.string().required()
+  }),
+
   createPayee: Joi.object({
-    name: Joi.string().required().max(100),
-    accountNumber: Joi.string().required().max(50),
-    routingNumber: Joi.string().length(9),
-    address1: Joi.string().max(100),
-    address2: Joi.string().max(100).allow('', null),
-    city: Joi.string().max(50),
-    state: Joi.string().length(2),
-    zipCode: Joi.string().pattern(/^\d{5}(-\d{4})?$/),
-    phone: Joi.string().pattern(/^\+?1?\d{10}$/),
-    email: Joi.string().email().max(100),
-    paymentMethod: Joi.string().valid('ACH', 'CHECK').required(),
-    status: Joi.string().valid('ACTIVE', 'INACTIVE').default('ACTIVE'),
-    notes: Joi.string().max(500).allow('', null)
+    type: Joi.string().valid(...PAYEE_TYPES).required(),
+    name: Joi.string().min(2).max(100).required(),
+    email: Joi.string().email().required(),
+    phone: Joi.string().pattern(/^\+?[1-9]\d{1,14}$/),
+    taxId: Joi.string().pattern(/^\d{9}$/).when('type', {
+      is: 'BUSINESS',
+      then: Joi.required()
+    }),
+    address: Joi.object({
+      street1: Joi.string().required(),
+      street2: Joi.string(),
+      city: Joi.string().required(),
+      state: Joi.string().length(2).required(),
+      zipCode: Joi.string().pattern(/^\d{5}(-\d{4})?$/).required(),
+      country: Joi.string().length(2).required()
+    }).required(),
+    bankAccounts: Joi.array().items(Joi.object({
+      accountType: Joi.string().valid(...BANK_ACCOUNT_TYPES).required(),
+      accountNumber: Joi.string().pattern(/^\d{4,17}$/).required(),
+      routingNumber: Joi.string().pattern(/^\d{9}$/).required(),
+      bankName: Joi.string().required(),
+      primary: Joi.boolean().default(false)
+    })).min(1).required(),
+    preferredPaymentMethod: Joi.string().valid(...PAYMENT_METHODS).required(),
+    metadata: Joi.object({
+      category: Joi.string(),
+      department: Joi.string(),
+      notes: Joi.string().max(1000)
+    })
   }),
 
   updatePayee: Joi.object({
-    name: Joi.string().max(100),
-    accountNumber: Joi.string().max(50),
-    routingNumber: Joi.string().length(9),
-    address1: Joi.string().max(100),
-    address2: Joi.string().max(100).allow('', null),
-    city: Joi.string().max(50),
-    state: Joi.string().length(2),
-    zipCode: Joi.string().pattern(/^\d{5}(-\d{4})?$/),
-    phone: Joi.string().pattern(/^\+?1?\d{10}$/),
-    email: Joi.string().email().max(100),
-    paymentMethod: Joi.string().valid('ACH', 'CHECK'),
-    status: Joi.string().valid('ACTIVE', 'INACTIVE'),
-    notes: Joi.string().max(500).allow('', null)
-  }).min(1) // At least one field must be provided
-};
+    name: Joi.string().min(2).max(100),
+    email: Joi.string().email(),
+    phone: Joi.string().pattern(/^\+?[1-9]\d{1,14}$/),
+    status: Joi.string().valid(...PAYEE_STATUSES),
+    address: Joi.object({
+      street1: Joi.string(),
+      street2: Joi.string(),
+      city: Joi.string(),
+      state: Joi.string().length(2),
+      zipCode: Joi.string().pattern(/^\d{5}(-\d{4})?$/),
+      country: Joi.string().length(2)
+    }),
+    preferredPaymentMethod: Joi.string().valid(...PAYMENT_METHODS),
+    metadata: Joi.object({
+      category: Joi.string(),
+      department: Joi.string(),
+      notes: Joi.string().max(1000)
+    })
+  }).min(1),
 
-export const zPayeeSchemas = {
-  listPayees: z.object({
-    page: z.coerce.number().int().min(1).optional().default(1),
-    limit: z.coerce.number().int().min(1).max(100).optional().default(20),
-    status: z.enum(['ACTIVE', 'INACTIVE', 'PENDING_VERIFICATION']).optional(),
-    type: z.enum(['INDIVIDUAL', 'BUSINESS']).optional()
+  addBankAccount: Joi.object({
+    payeeId: Joi.string().required(),
+    accountType: Joi.string().valid(...BANK_ACCOUNT_TYPES).required(),
+    accountNumber: Joi.string().pattern(/^\d{4,17}$/).required(),
+    routingNumber: Joi.string().pattern(/^\d{9}$/).required(),
+    bankName: Joi.string().required(),
+    primary: Joi.boolean().default(false)
   }),
 
-  payeeId: z.object({
-    id: z.string().min(1)
-  }),
+  updateBankAccount: Joi.object({
+    payeeId: Joi.string().required(),
+    accountId: Joi.string().required(),
+    accountType: Joi.string().valid(...BANK_ACCOUNT_TYPES),
+    primary: Joi.boolean()
+  }).min(1),
 
-  bankAccount: z.object({
-    accountNumber: z.string().min(1),
-    routingNumber: z.string().length(9),
-    accountType: z.enum(['CHECKING', 'SAVINGS']),
-    bankName: z.string().min(1),
-    accountHolderName: z.string().min(1)
-  }),
-
-  address: z.object({
-    street1: z.string().min(1),
-    street2: z.string().optional(),
-    city: z.string().min(1),
-    state: z.string().length(2),
-    postalCode: z.string().regex(/^\d{5}(-\d{4})?$/),
-    country: z.string().length(2)
-  }),
-
-  createPayee: z.object({
-    type: z.enum(['INDIVIDUAL', 'BUSINESS']),
-    name: z.string().min(1),
-    email: z.string().email(),
-    phone: z.string().regex(/^\+?[1-9]\d{1,14}$/).optional(),
-    taxId: z.string().optional(),
-    bankAccount: z.lazy(() => zPayeeSchemas.bankAccount),
-    address: z.lazy(() => zPayeeSchemas.address),
-    metadata: z.record(z.unknown()).optional()
-  }),
-
-  updatePayee: z.object({
-    name: z.string().min(1).optional(),
-    email: z.string().email().optional(),
-    phone: z.string().regex(/^\+?[1-9]\d{1,14}$/).optional(),
-    status: z.enum(['ACTIVE', 'INACTIVE', 'PENDING_VERIFICATION']).optional(),
-    bankAccount: z.lazy(() => zPayeeSchemas.bankAccount).optional(),
-    address: z.lazy(() => zPayeeSchemas.address).optional(),
-    metadata: z.record(z.unknown()).optional()
+  deleteBankAccount: Joi.object({
+    payeeId: Joi.string().required(),
+    accountId: Joi.string().required()
   })
 };

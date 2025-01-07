@@ -1,35 +1,109 @@
 import { Request, Response, NextFunction } from 'express';
-import { HostService } from '../services/host.service';
-import { HttpError } from '../middleware/error.middleware';
+import { HttpError } from '../utils/errors';
 import { logger } from '../config/logger';
+import { Database } from '../config/db';
+import { JwtUser } from '../types/user';
+
+declare module 'express' {
+  interface Request {
+    user?: JwtUser;
+  }
+}
 
 export class HostController {
-  private service: HostService;
+  private db: Database;
 
-  constructor() {
-    this.service = new HostService();
+  constructor(db: Database) {
+    this.db = db;
   }
 
-  getConnection = async (req: Request, res: Response, next: NextFunction) => {
+  async getHostInfo(req: Request, res: Response, next: NextFunction) {
     try {
-      const connection = await this.service.getConnection();
-      res.json(connection);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  updateConnection = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      // Check for required permissions
-      if (!req.user?.hasPermission('MANAGE_HOST_CONNECTION')) {
-        throw new HttpError(403, 'Insufficient permissions to update host connection');
+      if (!req.user?.id) {
+        throw new HttpError(401, 'User not authenticated');
       }
 
-      const connection = await this.service.updateConnection(req.body);
-      res.json(connection);
+      const result = await this.db.executeProc('GetHostInfo', {
+        userId: req.user.id
+      });
+
+      if (!result.recordset.length) {
+        throw new HttpError(404, 'Host information not found');
+      }
+
+      res.json({
+        data: result.recordset[0]
+      });
     } catch (error) {
       next(error);
     }
-  };
+  }
+
+  async updateHostInfo(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user?.id) {
+        throw new HttpError(401, 'User not authenticated');
+      }
+
+      const result = await this.db.executeProc('UpdateHostInfo', {
+        userId: req.user.id,
+        ...req.body
+      });
+
+      if (!result.recordset.length) {
+        throw new HttpError(404, 'Host information not found');
+      }
+
+      res.json({
+        data: result.recordset[0]
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getHostSettings(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user?.id) {
+        throw new HttpError(401, 'User not authenticated');
+      }
+
+      const result = await this.db.executeProc('GetHostSettings', {
+        userId: req.user.id
+      });
+
+      if (!result.recordset.length) {
+        throw new HttpError(404, 'Host settings not found');
+      }
+
+      res.json({
+        data: result.recordset[0]
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateHostSettings(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user?.id) {
+        throw new HttpError(401, 'User not authenticated');
+      }
+
+      const result = await this.db.executeProc('UpdateHostSettings', {
+        userId: req.user.id,
+        ...req.body
+      });
+
+      if (!result.recordset.length) {
+        throw new HttpError(404, 'Host settings not found');
+      }
+
+      res.json({
+        data: result.recordset[0]
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

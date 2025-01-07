@@ -1,37 +1,89 @@
 import { Request, Response } from 'express';
-import { HttpError } from '../../middleware/error.middleware';
+import { HttpError } from '../../utils/errors';
 
-export const mockRequest = (data?: any): Partial<Request> => ({
-  body: data?.body || {},
-  query: data?.query || {},
-  params: data?.params || {},
-  headers: data?.headers || {},
-  user: data?.user || undefined
-});
+export class MockRequest {
+  public body: any;
+  public params: any;
+  public query: any;
+  public headers: any;
+  public user: any;
 
-export const mockResponse = (): Partial<Response> => {
-  const res: Partial<Response> = {};
-  res.status = jest.fn().mockReturnValue(res);
-  res.json = jest.fn().mockReturnValue(res);
-  res.send = jest.fn().mockReturnValue(res);
-  return res;
+  constructor(options: {
+    body?: any;
+    params?: any;
+    query?: any;
+    headers?: any;
+    user?: any;
+  } = {}) {
+    this.body = options.body || {};
+    this.params = options.params || {};
+    this.query = options.query || {};
+    this.headers = options.headers || {};
+    this.user = options.user || null;
+  }
+}
+
+export class MockResponse {
+  public statusCode: number;
+  private jsonData: any;
+  private endCalled: boolean;
+
+  constructor() {
+    this.statusCode = 200;
+    this.jsonData = null;
+    this.endCalled = false;
+  }
+
+  status(code: number) {
+    this.statusCode = code;
+    return this;
+  }
+
+  json(data: any) {
+    this.jsonData = data;
+    return this;
+  }
+
+  end() {
+    this.endCalled = true;
+    return this;
+  }
+
+  getJsonData() {
+    return this.jsonData;
+  }
+
+  hasEnded() {
+    return this.endCalled;
+  }
+}
+
+export class MockDatabase {
+  public executeProc: jest.Mock;
+
+  constructor() {
+    this.executeProc = jest.fn();
+  }
+
+  async close(): Promise<void> {
+    // Mock implementation
+  }
+}
+
+export const createMockRequest = (options: {
+  body?: any;
+  params?: any;
+  query?: any;
+  headers?: any;
+  user?: any;
+} = {}): Request => {
+  return new MockRequest(options) as unknown as Request;
 };
 
-export const mockNext = jest.fn();
-
-export const mockHttpError = (statusCode: number, message: string): HttpError => {
-  return new HttpError(statusCode, message);
+export const createMockResponse = (): Response => {
+  return new MockResponse() as unknown as Response;
 };
 
-export const mockRepository = {
-  executeProc: jest.fn(),
-  query: jest.fn(),
-  transaction: jest.fn()
-};
-
-export const mockLogger = {
-  info: jest.fn(),
-  error: jest.fn(),
-  warn: jest.fn(),
-  debug: jest.fn()
+export const createHttpError = (status: number, message: string): HttpError => {
+  return new HttpError(status, message);
 };

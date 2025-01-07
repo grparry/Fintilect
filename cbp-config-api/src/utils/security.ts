@@ -30,7 +30,7 @@ export function maskSensitiveData(text: string | any): string {
   }
 
   Object.entries(PATTERNS).forEach(([key, pattern]) => {
-    text = text.replace(pattern, (match) => {
+    text = text.replace(pattern, (match: string) => {
       return MASK_REPLACEMENTS[key as keyof typeof MASK_REPLACEMENTS](match);
     });
   });
@@ -101,4 +101,30 @@ export function hashSensitiveValue(value: string): string {
     .createHash('sha256')
     .update(value)
     .digest('hex');
+}
+
+/**
+ * Masks account number
+ * @param accountNumber - Account number to mask
+ * @returns Masked account number
+ */
+export function maskAccountNumber(accountNumber: string): string {
+  if (!accountNumber) return '';
+  const matches = accountNumber.match(/^(\d{0,4})(\d{4})$/);
+  if (!matches) return accountNumber;
+  const [_full, prefix, lastFour] = matches;
+  return '*'.repeat(prefix.length) + lastFour;
+}
+
+/**
+ * Masks SSN
+ * @param ssn - SSN to mask
+ * @returns Masked SSN
+ */
+export function maskSSN(ssn: string): string {
+  if (!ssn) return '';
+  const matches = ssn.match(/^(\d{0,5})(\d{4})$/);
+  if (!matches) return ssn;
+  const [_full, prefix, lastFour] = matches;
+  return '*'.repeat(prefix.length) + lastFour;
 }

@@ -1,15 +1,22 @@
 import * as sql from 'mssql';
-import { HttpError } from '../middleware/error.middleware';
-import { logger } from '../config/logger';
+import { Database, db } from '../config/db';
 import { BaseRepository } from '../repositories/base.repository';
+import { HttpError } from '../utils/errors';
+import { logger } from '../config/logger';
 
 interface QueryParams {
   page: number;
   limit: number;
   startDate?: string;
   endDate?: string;
-  entityType?: string;
-  status?: string;
+  type?: string;
+}
+
+interface TrackingEvent {
+  type: string;
+  data: any;
+  userId: string;
+  timestamp: string;
 }
 
 interface PaginatedResponse<T> {
@@ -18,25 +25,65 @@ interface PaginatedResponse<T> {
     page: number;
     limit: number;
     total: number;
-    totalPages: number;
   };
 }
 
-export class TrackingService {
-  private repository: BaseRepository;
-
+export class TrackingService extends BaseRepository {
   constructor() {
-    this.repository = new BaseRepository();
+    super('tracking', db);
+  }
+
+  async trackEvent(event: TrackingEvent): Promise<void> {
+    try {
+      await this.executeProc('sp_TrackEvent', {
+        type: event.type,
+        data: JSON.stringify(event.data),
+        userId: event.userId,
+        timestamp: event.timestamp
+      });
+      logger.info('Event tracked successfully', { type: event.type });
+    } catch (error) {
+      logger.error('Error tracking event:', error);
+      throw new HttpError(500, 'Failed to track event');
+    }
+  }
+
+  async getEvents(params: QueryParams): Promise<PaginatedResponse<TrackingEvent>> {
+    try {
+      const result = await this.executeProc<TrackingEvent>('sp_GetEvents', {
+        page: params.page || 1,
+        limit: params.limit || 10,
+        startDate: params.startDate,
+        endDate: params.endDate,
+        type: params.type
+      });
+
+      const total = result.recordset.length;
+      const offset = (params.page - 1) * params.limit;
+      const data = result.recordset.slice(offset, offset + params.limit);
+
+      return {
+        data,
+        pagination: {
+          page: params.page,
+          limit: params.limit,
+          total
+        }
+      };
+    } catch (error) {
+      logger.error('Error getting events:', error);
+      throw new HttpError(500, 'Failed to get events');
+    }
   }
 
   async listChangeHistory(params: QueryParams): Promise<PaginatedResponse<any>> {
     try {
-      const result = await this.repository.executeProc('CHANGE_HISTORY', {
+      const result: sql.IResult<any> = await this.executeProc('CHANGE_HISTORY', {
         Offset: (params.page - 1) * params.limit,
         Limit: params.limit,
         StartDate: params.startDate,
         EndDate: params.endDate,
-        EntityType: params.entityType
+        EntityType: ''
       });
 
       return this.buildPaginatedResponse(
@@ -52,12 +99,12 @@ export class TrackingService {
 
   async listOnUsPayments(params: QueryParams): Promise<PaginatedResponse<any>> {
     try {
-      const result = await this.repository.executeProc('ONUSPAYMENTS', {
+      const result: sql.IResult<any> = await this.executeProc('ONUSPAYMENTS', {
         Offset: (params.page - 1) * params.limit,
         Limit: params.limit,
         StartDate: params.startDate,
         EndDate: params.endDate,
-        Status: params.status
+        Status: ''
       });
 
       const transformedData = result.recordset.map(payment => ({
@@ -84,12 +131,12 @@ export class TrackingService {
 
   async listCourtesyPayments(params: QueryParams): Promise<PaginatedResponse<any>> {
     try {
-      const result = await this.repository.executeProc('COURTESY_PAY', {
+      const result: sql.IResult<any> = await this.executeProc('COURTESY_PAY', {
         Offset: (params.page - 1) * params.limit,
         Limit: params.limit,
         StartDate: params.startDate,
         EndDate: params.endDate,
-        Status: params.status
+        Status: ''
       });
 
       const transformedData = result.recordset.map(payment => ({
@@ -115,6 +162,37 @@ export class TrackingService {
     }
   }
 
+  async getPaymentTracking(params: QueryParams): Promise<PaginatedResponse<any>> {
+    try {
+      const result: sql.IResult<any> = await this.executeProc('sp_GetPaymentTracking', {
+        Offset: (params.page - 1) * params.limit,
+        Limit: params.limit,
+        StartDate: params.startDate,
+        EndDate: params.endDate,
+        Status: params.type
+      });
+
+      const transformedData = result.recordset.map(tracking => ({
+        id: tracking.TrackingId,
+        paymentId: tracking.PaymentId,
+        status: tracking.Status,
+        timestamp: tracking.Timestamp,
+        details: tracking.Details,
+        amount: tracking.Amount,
+        accountNumber: this.maskAccountNumber(tracking.AccountNumber)
+      }));
+
+      return this.buildPaginatedResponse(
+        transformedData,
+        params,
+        result.recordset[0]?.TotalCount || 0
+      );
+    } catch (error) {
+      logger.error('Error getting payment tracking:', error);
+      throw new HttpError(500, 'Failed to get payment tracking');
+    }
+  }
+
   private buildPaginatedResponse<T>(
     data: T[],
     params: QueryParams,
@@ -125,8 +203,7 @@ export class TrackingService {
       pagination: {
         page: params.page,
         limit: params.limit,
-        total,
-        totalPages: Math.ceil(total / params.limit)
+        total
       }
     };
   }

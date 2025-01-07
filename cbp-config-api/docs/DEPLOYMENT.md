@@ -2,6 +2,65 @@
 
 This document outlines the deployment configuration and procedures for the CBP Config API.
 
+## Harmonization Considerations
+
+### Deployment Constraints
+- Full continuous deployment (CD) is not possible due to harmonization requirements
+- Database state must be coordinated across environments
+- Changes require controlled rollout process
+- Some deployment steps must remain manual
+
+### Automatable Components
+1. **Build and Packaging**
+   - Dependency installation
+   - Code compilation
+   - Container image creation
+   - Test execution
+   - Static analysis
+
+2. **Environment Setup**
+   - Configuration deployment
+   - Container orchestration
+   - Health check verification
+   - Monitoring setup
+
+3. **Database Operations**
+   - Schema validation
+   - Migration dry-runs
+   - Backup procedures
+   - Connection testing
+
+### Manual Control Points
+1. **Database Harmonization**
+   - State verification
+   - Data synchronization
+   - Schema alignment
+   - Migration timing
+
+2. **Deployment Coordination**
+   - Release timing
+   - Environment readiness
+   - State verification
+   - Rollback decisions
+
+3. **Verification Steps**
+   - Data consistency checks
+   - Integration verification
+   - State validation
+   - User acceptance
+
+### Deployment Pipeline Design
+```mermaid
+graph TD
+    A[Development] -->|Automated| B[Build & Test]
+    B -->|Automated| C[Package]
+    C -->|Manual Check| D[Harmonization Review]
+    D -->|Manual| E[Database Sync]
+    E -->|Manual| F[Deploy]
+    F -->|Automated| G[Health Check]
+    G -->|Manual| H[Verification]
+```
+
 ## Environment Configuration
 
 ### Configuration Files

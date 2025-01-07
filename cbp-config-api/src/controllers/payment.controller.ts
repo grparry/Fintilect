@@ -1,27 +1,25 @@
 import { Request, Response, NextFunction } from 'express';
 import { PaymentService } from '../services/payment.service';
-import { HttpError } from '../middleware/error.middleware';
-import { logger } from '../config/logger';
+import { HttpError } from '../utils/errors';
 
 export class PaymentController {
-  private service: PaymentService;
+  constructor(private paymentService: PaymentService) {}
 
-  constructor() {
-    this.service = new PaymentService();
+  async listPayments(req: Request, res: Response, next: NextFunction) {
+    try {
+      const page = req.query.page ? Number(req.query.page) : 1;
+      const pageSize = req.query.pageSize ? Number(req.query.pageSize) : 10;
+      const result = await this.paymentService.listPayments(page, pageSize);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
   }
 
-  listPayments = async (req: Request, res: Response, next: NextFunction) => {
+  async getPayment(req: Request, res: Response, next: NextFunction) {
     try {
-      const payments = await this.service.listPayments();
-      res.json(payments);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getPayment = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const payment = await this.service.getPayment(req.params.id);
+      const { id } = req.params;
+      const payment = await this.paymentService.getPayment(id);
       if (!payment) {
         throw new HttpError(404, 'Payment not found');
       }
@@ -29,56 +27,92 @@ export class PaymentController {
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  createPayment = async (req: Request, res: Response, next: NextFunction) => {
+  async createPayment(req: Request, res: Response, next: NextFunction) {
     try {
-      const payment = await this.service.createPayment(req.body);
-      res.status(201).json(payment);
+      const paymentData = req.body;
+      const result = await this.paymentService.createPayment(paymentData);
+      res.status(201).json(result);
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  updatePayment = async (req: Request, res: Response, next: NextFunction) => {
+  async updatePayment(req: Request, res: Response, next: NextFunction) {
     try {
-      const payment = await this.service.updatePayment(req.params.id, req.body);
-      if (!payment) {
+      const { id } = req.params;
+      const updates = req.body;
+      const result = await this.paymentService.updatePayment(id, updates);
+      if (!result) {
         throw new HttpError(404, 'Payment not found');
       }
-      res.json(payment);
+      res.json(result);
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  cancelPayment = async (req: Request, res: Response, next: NextFunction) => {
+  async deletePayment(req: Request, res: Response, next: NextFunction) {
     try {
-      await this.service.cancelPayment(req.params.id);
-      res.status(204).send();
+      const { id } = req.params;
+      await this.paymentService.deletePayment(id);
+      res.json({ success: true });
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  getPaymentStatus = async (req: Request, res: Response, next: NextFunction) => {
+  async getPaymentStatus(req: Request, res: Response, next: NextFunction) {
     try {
-      const status = await this.service.getPaymentStatus(req.params.id);
+      const { id } = req.params;
+      const status = await this.paymentService.getPaymentStatus(id);
       if (!status) {
-        throw new HttpError(404, 'Payment status not found');
+        throw new HttpError(404, 'Payment not found');
       }
       res.json(status);
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  listClearedPayments = async (req: Request, res: Response, next: NextFunction) => {
+  async getClearedPayments(req: Request, res: Response, next: NextFunction) {
     try {
-      const payments = await this.service.listClearedPayments();
+      const { startDate, endDate } = req.query;
+      const payments = await this.paymentService.getClearedPayments(
+        new Date(startDate as string),
+        new Date(endDate as string)
+      );
       res.json(payments);
     } catch (error) {
       next(error);
     }
-  };
+  }
+
+  async approvePayment(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const result = await this.paymentService.approvePayment(id);
+      if (!result) {
+        throw new HttpError(404, 'Payment not found');
+      }
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async rejectPayment(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { reason } = req.body;
+      const result = await this.paymentService.rejectPayment(id, reason);
+      if (!result) {
+        throw new HttpError(404, 'Payment not found');
+      }
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

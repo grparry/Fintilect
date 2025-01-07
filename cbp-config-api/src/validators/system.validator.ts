@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import Joi from 'joi';
 
 /**
  * @openapi
@@ -121,37 +121,93 @@ import { z } from 'zod';
  *                 format: date-time
  */
 
+const HOLIDAY_TYPES = ['BANK', 'FEDERAL', 'ALL'] as const;
+const ERROR_SEVERITIES = ['INFO', 'WARN', 'ERROR', 'CRITICAL'] as const;
+
 export const systemSchemas = {
-  calendarQuery: z.object({
-    year: z.coerce
-      .number()
-      .int()
-      .min(2020)
-      .max(2030),
-    month: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(12)
-      .optional()
+  calendarQuery: Joi.object({
+    year: Joi.number().integer().min(2000).max(2100).required(),
+    month: Joi.number().integer().min(1).max(12)
   }),
 
-  holidayQuery: z.object({
-    year: z.coerce
-      .number()
-      .int()
-      .min(2020)
-      .max(2030),
-    type: z.enum(['BANK', 'FEDERAL', 'ALL'])
-      .optional()
-      .default('ALL')
+  holidayQuery: Joi.object({
+    year: Joi.number().integer().min(2000).max(2100).required(),
+    type: Joi.string().valid(...HOLIDAY_TYPES).default('ALL')
   }),
 
-  errorQuery: z.object({
-    from: z.string().datetime(),
-    to: z.string().datetime(),
-    severity: z.enum(['INFO', 'WARN', 'ERROR', 'CRITICAL'])
-      .optional()
-      .default('ERROR')
+  statusQuery: Joi.object({
+    service: Joi.string().optional(),
+    detail: Joi.boolean().optional()
+  }),
+
+  errorQuery: Joi.object({
+    from: Joi.date().iso().required(),
+    to: Joi.date().iso().required(),
+    severity: Joi.string().valid(...ERROR_SEVERITIES).default('ERROR')
+  }),
+
+  getHolidays: Joi.object({
+    year: Joi.number().integer().min(2000).max(2100).required(),
+    month: Joi.number().integer().min(1).max(12),
+    type: Joi.string().valid(...HOLIDAY_TYPES).default('ALL')
+  }),
+
+  addHoliday: Joi.object({
+    name: Joi.string().required().max(100),
+    date: Joi.date().iso().required(),
+    type: Joi.string().valid(...HOLIDAY_TYPES).required(),
+    description: Joi.string().max(500)
+  }),
+
+  updateHoliday: Joi.object({
+    id: Joi.string().required(),
+    name: Joi.string().max(100),
+    date: Joi.date().iso(),
+    type: Joi.string().valid(...HOLIDAY_TYPES),
+    description: Joi.string().max(500)
+  }).min(1),
+
+  deleteHoliday: Joi.object({
+    id: Joi.string().required()
+  }),
+
+  getSystemErrors: Joi.object({
+    from: Joi.date().iso().required(),
+    to: Joi.date().iso().required(),
+    severity: Joi.string().valid(...ERROR_SEVERITIES).default('ERROR'),
+    service: Joi.string(),
+    component: Joi.string(),
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20)
+  }),
+
+  getErrorSummary: Joi.object({
+    from: Joi.date().iso().required(),
+    to: Joi.date().iso().required(),
+    severity: Joi.string().valid(...ERROR_SEVERITIES).default('ERROR')
+  }),
+
+  getSystemMetrics: Joi.object({
+    from: Joi.date().iso().required(),
+    to: Joi.date().iso().required(),
+    metrics: Joi.array().items(Joi.string().valid(
+      'cpu_usage',
+      'memory_usage',
+      'disk_usage',
+      'network_io',
+      'api_latency',
+      'error_rate',
+      'request_rate'
+    )).min(1).required()
+  }),
+
+  getSystemHealth: Joi.object({
+    components: Joi.array().items(Joi.string().valid(
+      'database',
+      'cache',
+      'queue',
+      'storage',
+      'api'
+    )).default(['database', 'api'])
   })
 };

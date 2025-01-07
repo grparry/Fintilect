@@ -1,11 +1,37 @@
 import { Router } from 'express';
 import { UtilityController } from '../controllers/utility.controller';
-import { validateRequest } from '../middleware';
-import { utilitySchemas } from '../validators/utility.validator';
+import { db } from '../config/db';
+import { validateRequest } from '../middleware/validation.middleware';
+import { z } from 'zod';
+import { authMiddleware } from '../middleware/auth.middleware';
 import { cacheMiddleware } from '../middleware/cache.middleware';
 
+const utilityController = new UtilityController(db);
 const router = Router();
-const controller = new UtilityController();
+
+const utilitySchemas = {
+  healthCheck: z.object({
+    service: z.string(),
+    type: z.enum(['basic', 'detailed']).optional()
+  }),
+  metricsQuery: z.object({
+    period: z.enum(['1h', '24h', '7d', '30d'])
+  }),
+  versionQuery: z.object({}),
+  logsQuery: z.object({
+    level: z.enum(['debug', 'info', 'warn', 'error']).optional(),
+    from: z.string().optional(),
+    to: z.string().optional(),
+    service: z.string().optional()
+  }),
+  deliveryDateQuery: z.object({
+    orderDate: z.string(),
+    postalCode: z.string(),
+    serviceLevel: z.enum(['STANDARD', 'EXPRESS', 'PRIORITY'])
+  }),
+  nsfFeeQuery: z.object({}),
+  savedEmailsQuery: z.object({})
+};
 
 /**
  * @openapi
@@ -22,7 +48,10 @@ const controller = new UtilityController();
  *             schema:
  *               $ref: '#/components/schemas/HealthCheck'
  */
-router.get('/health', controller.healthCheck);
+router.get('/health',
+  validateRequest(utilitySchemas.healthCheck),
+  utilityController.healthCheck
+);
 
 /**
  * @openapi
@@ -50,7 +79,8 @@ router.get('/health', controller.healthCheck);
  */
 router.get('/metrics',
   validateRequest(utilitySchemas.metricsQuery),
-  controller.getMetrics
+  cacheMiddleware(60), // Cache for 1 minute
+  utilityController.getMetrics
 );
 
 /**
@@ -68,7 +98,11 @@ router.get('/metrics',
  *             schema:
  *               $ref: '#/components/schemas/VersionInfo'
  */
-router.get('/version', controller.getVersion);
+router.get('/version',
+  validateRequest(utilitySchemas.versionQuery),
+  cacheMiddleware(60 * 60), // Cache for 1 hour
+  utilityController.getVersion
+);
 
 /**
  * @openapi
@@ -112,8 +146,9 @@ router.get('/version', controller.getVersion);
  *         $ref: '#/components/responses/BadRequest'
  */
 router.get('/logs',
+  authMiddleware,
   validateRequest(utilitySchemas.logsQuery),
-  controller.getLogs
+  utilityController.getLogs
 );
 
 /**
@@ -175,21 +210,21 @@ router.get('/logs',
 router.get('/delivery-dates',
   validateRequest(utilitySchemas.deliveryDateQuery),
   cacheMiddleware(5 * 60), // Cache for 5 minutes
-  controller.getDeliveryDates
+  utilityController.getDeliveryDates
 );
 
 // Get NSF fees
 router.get('/nsf-fees',
   validateRequest(utilitySchemas.nsfFeeQuery),
   cacheMiddleware(60 * 60), // Cache for 1 hour
-  controller.getNsfFees
+  utilityController.getNsfFees
 );
 
 // List saved emails
 router.get('/saved-emails',
-  validateRequest(utilitySchemas.emailQuery),
+  validateRequest(utilitySchemas.savedEmailsQuery),
   cacheMiddleware(15 * 60), // Cache for 15 minutes
-  controller.listSavedEmails
+  utilityController.listSavedEmails
 );
 
-export { router as utilityRouter };
+export default router;

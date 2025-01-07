@@ -1,49 +1,84 @@
-import { HttpError, errorHandler } from '../../middleware/error.middleware';
-import { mockRequest, mockResponse, mockNext } from '../helpers/testUtils';
+import { Request, Response, NextFunction } from 'express';
+import { errorMiddleware } from '../../middleware/error.middleware';
+import { HttpError } from '../../utils/errors';
+import { logger } from '../../config/logger';
+
+jest.mock('../../config/logger');
 
 describe('Error Middleware', () => {
-  describe('HttpError', () => {
-    it('should create an HttpError with status and message', () => {
-      const error = new HttpError(404, 'Not Found');
-      expect(error.status).toBe(404);
-      expect(error.message).toBe('Not Found');
-      expect(error instanceof Error).toBe(true);
+  let mockRequest: Partial<Request>;
+  let mockResponse: Partial<Response>;
+  let nextFunction: NextFunction = jest.fn();
+
+  beforeEach(() => {
+    mockRequest = {};
+    mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should handle HttpError', () => {
+    const error = new HttpError(400, 'Bad Request');
+    
+    errorMiddleware(error, mockRequest as Request, mockResponse as Response, nextFunction);
+
+    expect(mockResponse.status).toHaveBeenCalledWith(400);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      message: 'Bad Request'
     });
   });
 
-  describe('errorHandler', () => {
-    it('should handle HttpError', () => {
-      const error = new HttpError(400, 'Bad Request');
-      const req = mockRequest();
-      const res = mockResponse();
-      const next = mockNext;
+  it('should handle invalid page number error', () => {
+    const error = new Error('Invalid page number');
+    
+    errorMiddleware(error, mockRequest as Request, mockResponse as Response, nextFunction);
 
-      errorHandler(error, req as any, res as any, next);
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({
-        error: {
-          status: 400,
-          message: 'Bad Request'
-        }
-      });
+    expect(mockResponse.status).toHaveBeenCalledWith(400);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      message: 'Invalid page number'
     });
+  });
 
-    it('should handle generic Error', () => {
-      const error = new Error('Internal Error');
-      const req = mockRequest();
-      const res = mockResponse();
-      const next = mockNext;
+  it('should handle invalid page size error', () => {
+    const error = new Error('Invalid page size');
+    
+    errorMiddleware(error, mockRequest as Request, mockResponse as Response, nextFunction);
 
-      errorHandler(error, req as any, res as any, next);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({
-        error: {
-          status: 500,
-          message: 'Internal Server Error'
-        }
-      });
+    expect(mockResponse.status).toHaveBeenCalledWith(400);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      message: 'Invalid page size'
     });
+  });
+
+  it('should handle generic errors', () => {
+    const error = new Error('Something went wrong');
+    
+    errorMiddleware(error, mockRequest as Request, mockResponse as Response, nextFunction);
+
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      message: 'Internal server error'
+    });
+  });
+
+  it('should log errors', () => {
+    const error = new Error('Test error');
+    mockRequest = {
+      path: '/test',
+      method: 'GET'
+    };
+    
+    errorMiddleware(error, mockRequest as Request, mockResponse as Response, nextFunction);
+
+    expect(logger.error).toHaveBeenCalledWith('Error:', expect.objectContaining({
+      message: 'Test error',
+      path: '/test',
+      method: 'GET'
+    }));
   });
 });

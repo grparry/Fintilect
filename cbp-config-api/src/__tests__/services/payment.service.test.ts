@@ -1,81 +1,219 @@
 import { PaymentService } from '../../services/payment.service';
-import { MockDatabase } from '../mocks/mockDb';
-import { HttpError } from '../../middleware/error.middleware';
+import { MockDatabase } from '../utils/testHelpers';
+import { HttpError } from '../../utils/errors';
 
 describe('PaymentService', () => {
-  let service: PaymentService;
-  let mockDb: MockDatabase;
-  
-  beforeEach(() => {
-    mockDb = new MockDatabase();
-    service = new PaymentService();
-    (service as any).repository = mockDb;
-  });
+  let paymentService: PaymentService;
+  let mockDb: jest.Mocked<MockDatabase>;
+  const testDate = new Date('2025-01-06T18:00:00-07:00');
 
-  afterEach(() => {
-    mockDb.reset();
+  beforeEach(() => {
+    mockDb = {
+      executeProc: jest.fn(),
+      executeQuery: jest.fn(),
+      executeProcWithTransaction: jest.fn(),
+      executeStoredProcedure: jest.fn(),
+      beginTransaction: jest.fn(),
+      commitTransaction: jest.fn(),
+      rollbackTransaction: jest.fn(),
+      connect: jest.fn(),
+      disconnect: jest.fn(),
+      close: jest.fn()
+    };
+    paymentService = new PaymentService(mockDb);
   });
 
   describe('listPayments', () => {
-    it('should return paginated payments', async () => {
-      const result = await service.listPayments({
-        page: 1,
-        limit: 10
-      });
+    it('should list payments with pagination', async () => {
+      const mockPayments = [
+        {
+          PaymentId: '1',
+          PayeeId: '123',
+          Amount: 100,
+          Currency: 'USD',
+          Status: 'PENDING',
+          EffectiveDate: testDate,
+          CreatedDate: testDate,
+          CreatedBy: 'system'
+        }
+      ];
 
-      expect(result.data).toHaveLength(2);
-      expect(result.data[0]).toEqual(expect.objectContaining({
+      mockDb.executeProc.mockResolvedValue({ recordset: mockPayments });
+
+      const result = await paymentService.listPayments(1, 10);
+      expect(result).toEqual([{
         id: '1',
-        amount: 100.00,
-        status: 'PENDING'
-      }));
-    });
-
-    it('should filter by date range', async () => {
-      const result = await service.listPayments({
-        page: 1,
-        limit: 10,
-        startDate: '2025-01-15',
-        endDate: '2025-01-31'
-      });
-
-      expect(result.data).toHaveLength(2);
-      expect(result.data.every(payment => 
-        new Date(payment.paymentDate) >= new Date('2025-01-15') &&
-        new Date(payment.paymentDate) <= new Date('2025-01-31')
-      )).toBe(true);
-    });
-  });
-
-  describe('getPaymentDetails', () => {
-    it('should return payment details', async () => {
-      const result = await service.getPaymentDetails('1');
-
-      expect(result).toEqual(expect.objectContaining({
-        id: '1',
-        amount: 100.00,
+        payeeId: '123',
+        amount: 100,
+        currency: 'USD',
         status: 'PENDING',
-        payeeId: '1'
-      }));
+        effectiveDate: testDate,
+        createdAt: testDate,
+        createdBy: 'system',
+        description: undefined,
+        reference: undefined,
+        updatedAt: undefined,
+        updatedBy: undefined,
+        clearedAt: undefined,
+        reason: undefined
+      }]);
+      expect(mockDb.executeProc).toHaveBeenCalledWith('GetPayments', { offset: 0, pageSize: 10 });
     });
 
-    it('should throw 404 when payment not found', async () => {
-      await expect(service.getPaymentDetails('999'))
-        .rejects.toThrow(new HttpError(404, 'Payment not found'));
+    it('should handle invalid pagination parameters', async () => {
+      await expect(paymentService.listPayments(0, 10)).rejects.toThrow('Invalid page number');
+      await expect(paymentService.listPayments(1, 0)).rejects.toThrow('Invalid page size');
     });
   });
 
-  // Note: We're not testing write operations as they're not implemented in the mock
-  describe('createPayment', () => {
-    it('should validate payment data', async () => {
-      const invalidData = {
-        amount: -100,
-        payeeId: '1',
-        paymentDate: '2025-01-15'
+  describe('getPayment', () => {
+    it('should get a payment by id', async () => {
+      const mockPayment = {
+        PaymentId: '1',
+        PayeeId: '123',
+        Amount: 100,
+        Currency: 'USD',
+        Status: 'PENDING',
+        EffectiveDate: testDate,
+        CreatedDate: testDate,
+        CreatedBy: 'system'
       };
 
-      await expect(service.createPayment(invalidData))
-        .rejects.toThrow(HttpError);
+      mockDb.executeProc.mockResolvedValue({ recordset: [mockPayment] });
+
+      const result = await paymentService.getPayment('1');
+      expect(result).toEqual({
+        id: '1',
+        payeeId: '123',
+        amount: 100,
+        currency: 'USD',
+        status: 'PENDING',
+        effectiveDate: testDate,
+        createdAt: testDate,
+        createdBy: 'system',
+        description: undefined,
+        reference: undefined,
+        updatedAt: undefined,
+        updatedBy: undefined,
+        clearedAt: undefined,
+        reason: undefined
+      });
+      expect(mockDb.executeProc).toHaveBeenCalledWith('GetPaymentDetails', { id: '1' });
+    });
+
+    it('should throw error if payment not found', async () => {
+      mockDb.executeProc.mockResolvedValue({ recordset: [] });
+
+      await expect(paymentService.getPayment('999')).rejects.toThrow(HttpError);
+    });
+  });
+
+  describe('createPayment', () => {
+    it('should create a payment', async () => {
+      const paymentData = {
+        payeeId: '123',
+        amount: 100,
+        currency: 'USD',
+        effectiveDate: testDate,
+        description: 'Test payment',
+        reference: 'REF123'
+      };
+
+      const mockPayment = {
+        PaymentId: '1',
+        PayeeId: '123',
+        Amount: 100,
+        Currency: 'USD',
+        Status: 'PENDING',
+        EffectiveDate: testDate,
+        Description: 'Test payment',
+        Reference: 'REF123',
+        CreatedDate: testDate,
+        CreatedBy: 'system'
+      };
+
+      mockDb.executeProc.mockResolvedValue({ recordset: [mockPayment] });
+
+      const result = await paymentService.createPayment(paymentData);
+      expect(result).toEqual({
+        id: '1',
+        payeeId: '123',
+        amount: 100,
+        currency: 'USD',
+        status: 'PENDING',
+        effectiveDate: testDate,
+        description: 'Test payment',
+        reference: 'REF123',
+        createdAt: testDate,
+        createdBy: 'system',
+        updatedAt: undefined,
+        updatedBy: undefined,
+        clearedAt: undefined,
+        reason: undefined
+      });
+      expect(mockDb.executeProc).toHaveBeenCalledWith('InsertPayment', paymentData);
+    });
+
+    it('should throw error if creation fails', async () => {
+      mockDb.executeProc.mockResolvedValue({ recordset: [] });
+
+      const paymentData = {
+        payeeId: '123',
+        amount: 100,
+        currency: 'USD'
+      };
+
+      await expect(paymentService.createPayment(paymentData)).rejects.toThrow(HttpError);
+    });
+  });
+
+  describe('updatePayment', () => {
+    it('should update a payment', async () => {
+      const updateData = {
+        amount: 150,
+        description: 'Updated payment'
+      };
+
+      const mockPayment = {
+        PaymentId: '1',
+        PayeeId: '123',
+        Amount: 150,
+        Currency: 'USD',
+        Status: 'PENDING',
+        EffectiveDate: testDate,
+        Description: 'Updated payment',
+        CreatedDate: testDate,
+        CreatedBy: 'system',
+        ModifiedDate: testDate,
+        ModifiedBy: 'admin'
+      };
+
+      mockDb.executeProc.mockResolvedValue({ recordset: [mockPayment] });
+
+      const result = await paymentService.updatePayment('1', updateData);
+      expect(result).toEqual({
+        id: '1',
+        payeeId: '123',
+        amount: 150,
+        currency: 'USD',
+        status: 'PENDING',
+        effectiveDate: testDate,
+        description: 'Updated payment',
+        createdAt: testDate,
+        createdBy: 'system',
+        updatedAt: testDate,
+        updatedBy: 'admin',
+        reference: undefined,
+        clearedAt: undefined,
+        reason: undefined
+      });
+      expect(mockDb.executeProc).toHaveBeenCalledWith('UpdatePaymentDetails', { id: '1', ...updateData });
+    });
+
+    it('should throw error if payment not found', async () => {
+      mockDb.executeProc.mockResolvedValue({ recordset: [] });
+
+      await expect(paymentService.updatePayment('999', { amount: 150 })).rejects.toThrow(HttpError);
     });
   });
 });

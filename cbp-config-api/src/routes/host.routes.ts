@@ -1,60 +1,35 @@
 import { Router } from 'express';
 import { HostController } from '../controllers/host.controller';
-import { validateRequest } from '../middleware';
-import { hostSchemas } from '../validators/host.validator';
+import { db } from '../config/db';
+import { validateRequest } from '../middleware/validation.middleware';
+import { z } from 'zod';
+import { authMiddleware } from '../middleware/auth.middleware';
 
+const hostController = new HostController(db);
 const router = Router();
-const controller = new HostController();
 
-// Get host connection info
-router.get('/connection', controller.getConnection);
+const hostSchemas = {
+  updateHostInfo: z.object({
+    name: z.string().optional(),
+    description: z.string().optional(),
+    status: z.enum(['active', 'inactive', 'maintenance']).optional()
+  }),
+  updateSettings: z.object({
+    settings: z.record(z.any()),
+    environment: z.enum(['development', 'staging', 'production'])
+  })
+};
 
-// Update host connection
-router.put('/connection',
-  validateRequest(hostSchemas.updateConnection),
-  controller.updateConnection
-);
+// Get host info
+router.get('/', hostController.getHostInfo);
 
-/**
- * @openapi
- * /host/info:
- *   get:
- *     summary: Get host information
- *     description: Retrieve information about the host environment
- *     tags: [Host]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Host information
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/HostInfo'
- *       401:
- *         $ref: '#/components/responses/Unauthorized'
- */
-router.get('/info', controller.getHostInfo);
+// Update host info
+router.put('/', validateRequest(hostSchemas.updateHostInfo), hostController.updateHostInfo);
 
-/**
- * @openapi
- * /host/config:
- *   get:
- *     summary: Get host configuration
- *     description: Retrieve host configuration settings
- *     tags: [Host]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Host configuration
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/HostConfig'
- *       401:
- *         $ref: '#/components/responses/Unauthorized'
- */
-router.get('/config', controller.getHostConfig);
+// Get host settings
+router.get('/settings', hostController.getHostSettings);
 
-export { router as hostRouter };
+// Update host settings
+router.put('/settings', validateRequest(hostSchemas.updateSettings), hostController.updateHostSettings);
+
+export default router;

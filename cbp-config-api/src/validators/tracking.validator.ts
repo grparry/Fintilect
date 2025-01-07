@@ -1,5 +1,8 @@
 import Joi from 'joi';
-import { z } from 'zod';
+
+const EVENT_TYPES = ['PAGE_VIEW', 'CLICK', 'FORM_SUBMIT', 'API_CALL', 'ERROR', 'CUSTOM'] as const;
+const EVENT_STATUSES = ['SUCCESS', 'FAILURE', 'PENDING'] as const;
+const PLATFORMS = ['WEB', 'MOBILE', 'API'] as const;
 
 /**
  * @openapi
@@ -8,27 +11,39 @@ import { z } from 'zod';
  *     TrackEvent:
  *       type: object
  *       properties:
- *         type:
+ *         eventType:
  *           type: string
  *           description: Event type identifier
- *         action:
+ *         eventName:
  *           type: string
- *           description: Action performed
- *         category:
+ *           description: Event name
+ *         timestamp:
  *           type: string
- *           description: Event category
- *         label:
+ *           format: date-time
+ *           description: Event timestamp
+ *         userId:
  *           type: string
- *           description: Event label
- *         value:
- *           type: number
- *           description: Numeric value associated with event
+ *           description: User who triggered the event
+ *         sessionId:
+ *           type: string
+ *           description: Session identifier
+ *         platform:
+ *           type: string
+ *           description: Event platform (web, mobile, api)
+ *         status:
+ *           type: string
+ *           description: Event status (success, failure, pending)
+ *         duration:
+ *           type: integer
+ *           description: Event duration
  *         metadata:
  *           type: object
  *           description: Additional event data
  *       required:
- *         - type
- *         - action
+ *         - eventType
+ *         - eventName
+ *         - timestamp
+ *         - platform
  *     Event:
  *       type: object
  *       properties:
@@ -76,29 +91,96 @@ import { z } from 'zod';
  */
 
 export const trackingSchemas = {
-  trackEvent: z.object({
-    type: z.string().min(1),
-    action: z.string().min(1),
-    category: z.string().optional(),
-    label: z.string().optional(),
-    value: z.number().optional(),
-    metadata: z.record(z.unknown()).optional()
+  queryParams: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20),
+    eventType: Joi.string().valid(...EVENT_TYPES),
+    fromDate: Joi.date().iso(),
+    toDate: Joi.date().iso(),
+    platform: Joi.string().valid(...PLATFORMS)
   }),
 
-  getEvents: z.object({
-    from: z.string().datetime(),
-    to: z.string().datetime(),
-    type: z.string().optional(),
-    userId: z.string().optional(),
-    page: z.coerce.number().int().min(1).optional().default(1),
-    limit: z.coerce.number().int().min(1).max(100).optional().default(20)
+  trackEvent: Joi.object({
+    eventType: Joi.string().valid(...EVENT_TYPES).required(),
+    eventName: Joi.string().max(100).required(),
+    timestamp: Joi.date().iso().required(),
+    userId: Joi.string(),
+    sessionId: Joi.string(),
+    platform: Joi.string().valid(...PLATFORMS).required(),
+    status: Joi.string().valid(...EVENT_STATUSES).default('SUCCESS'),
+    duration: Joi.number().integer().min(0),
+    metadata: Joi.object({
+      url: Joi.string().uri(),
+      component: Joi.string(),
+      action: Joi.string(),
+      errorMessage: Joi.string(),
+      customData: Joi.object()
+    })
   }),
 
-  queryParams: z.object({
-    page: z.coerce.number().int().min(1).optional().default(1),
-    limit: z.coerce.number().int().min(1).max(100).optional().default(20),
-    type: z.string().optional(),
-    from: z.string().datetime().optional(),
-    to: z.string().datetime().optional()
+  getEvents: Joi.object({
+    fromDate: Joi.date().iso().required(),
+    toDate: Joi.date().iso().required(),
+    eventType: Joi.string().valid(...EVENT_TYPES),
+    eventName: Joi.string(),
+    userId: Joi.string(),
+    sessionId: Joi.string(),
+    platform: Joi.string().valid(...PLATFORMS),
+    status: Joi.string().valid(...EVENT_STATUSES),
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20)
+  }),
+
+  getEventSummary: Joi.object({
+    fromDate: Joi.date().iso().required(),
+    toDate: Joi.date().iso().required(),
+    groupBy: Joi.array().items(
+      Joi.string().valid('eventType', 'eventName', 'platform', 'status', 'userId')
+    ).min(1).required()
+  }),
+
+  getUserActivity: Joi.object({
+    userId: Joi.string().required(),
+    fromDate: Joi.date().iso(),
+    toDate: Joi.date().iso(),
+    eventTypes: Joi.array().items(Joi.string().valid(...EVENT_TYPES)),
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20)
+  }),
+
+  getSessionActivity: Joi.object({
+    sessionId: Joi.string().required(),
+    eventTypes: Joi.array().items(Joi.string().valid(...EVENT_TYPES))
+  }),
+
+  eventCreate: Joi.object({
+    type: Joi.string().required(),
+    data: Joi.object().required(),
+    userId: Joi.string().required(),
+    timestamp: Joi.date().iso()
+  }),
+
+  eventQuery: Joi.object({
+    startDate: Joi.date().iso().required(),
+    endDate: Joi.date().iso().required(),
+    type: Joi.string().optional(),
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20)
+  }),
+
+  changeQuery: Joi.object({
+    startDate: Joi.date().iso().required(),
+    endDate: Joi.date().iso().required(),
+    entityType: Joi.string().optional(),
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20)
+  }),
+
+  paymentQuery: Joi.object({
+    startDate: Joi.date().iso().required(),
+    endDate: Joi.date().iso().required(),
+    status: Joi.string().optional(),
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20)
   })
 };

@@ -118,6 +118,10 @@ import { z } from 'zod';
  *           type: string
  */
 
+const USER_ROLES = ['ADMIN', 'USER', 'VIEWER'] as const;
+const THEME_OPTIONS = ['light', 'dark', 'system'] as const;
+const NOTIFICATION_TYPES = ['payment', 'security', 'system', 'maintenance'] as const;
+
 export const userSchemas = {
   updatePayeeOptions: Joi.object({
     defaultPaymentMethod: Joi.string().valid('ACH', 'CHECK').required(),
@@ -138,25 +142,70 @@ export const userSchemas = {
     reminderDays: Joi.number().min(0).max(30)
   }),
 
-  updateUser: z.object({
-    firstName: z.string().min(1).optional(),
-    lastName: z.string().min(1).optional(),
-    email: z.string().email().optional()
-  }).refine(data => Object.keys(data).length > 0, {
-    message: "At least one field must be provided"
+  updateUser: Joi.object({
+    firstName: Joi.string().min(2).max(50),
+    lastName: Joi.string().min(2).max(50),
+    email: Joi.string().email(),
+    role: Joi.string().valid(...USER_ROLES)
+  }).min(1),
+
+  updatePreferences: Joi.object({
+    theme: Joi.string().valid(...THEME_OPTIONS),
+    notifications: Joi.object({
+      email: Joi.boolean(),
+      push: Joi.boolean(),
+      types: Joi.array().items(Joi.string().valid(...NOTIFICATION_TYPES))
+    }),
+    timezone: Joi.string(),
+    language: Joi.string().length(2),
+    dateFormat: Joi.string().valid('MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY-MM-DD'),
+    timeFormat: Joi.string().valid('12h', '24h'),
+    currency: Joi.string().length(3)
+  }).min(1),
+
+  changePassword: Joi.object({
+    currentPassword: Joi.string().required(),
+    newPassword: Joi.string()
+      .min(8)
+      .max(128)
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
+      .required()
+      .messages({
+        'string.pattern.base': 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+      }),
+    confirmPassword: Joi.string()
+      .valid(Joi.ref('newPassword'))
+      .required()
+      .messages({
+        'any.only': 'Passwords do not match'
+      })
   }),
 
-  updatePreferences: z.object({
-    theme: z.enum(['light', 'dark', 'system']).optional(),
-    notifications: z.object({
-      email: z.boolean().optional(),
-      push: z.boolean().optional(),
-      types: z.array(z.enum(['PAYMENT', 'SYSTEM', 'SECURITY'])).optional()
-    }).optional(),
-    timezone: z.string().optional(),
-    language: z.string().length(2).optional(),
-    dateFormat: z.string().optional()
-  }).refine(data => Object.keys(data).length > 0, {
-    message: "At least one preference must be provided"
+  resetPassword: Joi.object({
+    token: Joi.string().required(),
+    newPassword: Joi.string()
+      .min(8)
+      .max(128)
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
+      .required()
+      .messages({
+        'string.pattern.base': 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+      }),
+    confirmPassword: Joi.string()
+      .valid(Joi.ref('newPassword'))
+      .required()
+      .messages({
+        'any.only': 'Passwords do not match'
+      })
+  }),
+
+  login: Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+    rememberMe: Joi.boolean()
+  }),
+
+  forgotPassword: Joi.object({
+    email: Joi.string().email().required()
   })
 };

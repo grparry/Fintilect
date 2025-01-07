@@ -1,117 +1,193 @@
 import * as sql from 'mssql';
-import { HttpError } from '../middleware/error.middleware';
+import { Database } from '../config/db';
+import { HttpError } from '../utils/errors';
 import { logger } from '../config/logger';
 import { BaseRepository } from '../repositories/base.repository';
 
-export class PayeeService {
-  private repository: BaseRepository;
+interface PayeeRecord {
+  PayeeId: string;
+  Name: string;
+  AccountNumber: string;
+  Status: string;
+  CreatedBy?: string;
+  CreatedDate?: Date;
+  ModifiedBy?: string;
+  ModifiedDate?: Date;
+  DeletedBy?: string;
+  DeletedDate?: Date;
+}
 
-  constructor() {
-    this.repository = new BaseRepository();
+interface PayeeCreateData {
+  name: string;
+  accountNumber: string;
+  status?: string;
+}
+
+interface PayeeUpdateData {
+  name?: string;
+  accountNumber?: string;
+  status?: string;
+}
+
+interface PayeePaymentCheck {
+  hasPayments: boolean;
+}
+
+interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  };
+}
+
+export class PayeeService extends BaseRepository {
+  constructor(db: Database) {
+    super('payees', db);
   }
 
-  async listPayees() {
+  async listPayees(page = 1, pageSize = 10): Promise<PaginatedResponse<PayeeRecord>> {
     try {
-      const result = await this.repository.executeProc('PAYEE');
-      return result.recordset;
+      const result = await this.db.executeProc<PayeeRecord & { TotalCount: number }>('PAYEE', {
+        page,
+        pageSize
+      });
+      if (!result.recordset) {
+        throw new HttpError(500, 'Invalid response from database');
+      }
+
+      const total = result.recordset[0]?.TotalCount || 0;
+      const totalPages = Math.ceil(total / pageSize);
+
+      return {
+        data: result.recordset,
+        pagination: {
+          total,
+          page,
+          pageSize,
+          totalPages
+        }
+      };
     } catch (error) {
+      if (error instanceof HttpError) throw error;
       logger.error('Error listing payees:', error);
       throw new HttpError(500, 'Failed to list payees');
     }
   }
 
-  async getPayee(id: string) {
+  async getPayee(id: string): Promise<PayeeRecord> {
     try {
-      const result = await this.repository.executeProc('PAYEE_GET', {
-        PayeeId: id
-      });
+      const result = await this.db.executeProc<PayeeRecord>('PAYEE_GET', { id });
+      if (!result.recordset || !result.recordset.length) {
+        throw new HttpError(404, 'Payee not found');
+      }
       return result.recordset[0];
     } catch (error) {
+      if (error instanceof HttpError) throw error;
       logger.error(`Error getting payee ${id}:`, error);
-      throw new HttpError(500, 'Failed to get payee details');
+      throw new HttpError(500, 'Failed to get payee');
     }
   }
 
-  async createPayee(payeeData: any) {
+  async createPayee(data: PayeeCreateData): Promise<PayeeRecord> {
     try {
-      // Validate required fields
-      if (!payeeData.name || !payeeData.accountNumber) {
-        throw new HttpError(400, 'Name and account number are required');
-      }
-
-      const result = await this.repository.executeProc('PAYEE_CREATE', {
-        ...payeeData,
-        CreatedBy: 'system', // TODO: Get from auth context
+      const result = await this.db.executeProc<PayeeRecord>('PAYEE_CREATE', {
+        Name: data.name,
+        AccountNumber: data.accountNumber,
+        Status: data.status || 'ACTIVE',
+        CreatedBy: 'system',
         CreatedDate: new Date()
       });
+
+      if (!result.recordset || !result.recordset.length) {
+        throw new HttpError(500, 'Failed to create payee');
+      }
+
       return result.recordset[0];
     } catch (error) {
       logger.error('Error creating payee:', error);
-      if (error instanceof HttpError) {
-        throw error;
-      }
       throw new HttpError(500, 'Failed to create payee');
     }
   }
 
-  async updatePayee(id: string, payeeData: any) {
+  async updatePayee(id: string, data: PayeeUpdateData): Promise<PayeeRecord> {
     try {
-      const result = await this.repository.executeProc('PAYEE_UPDATE', {
-        PayeeId: id,
-        ...payeeData,
-        ModifiedBy: 'system', // TODO: Get from auth context
+      const result = await this.db.executeProc<PayeeRecord>('PAYEE_UPDATE', {
+        id,
+        Name: data.name,
+        AccountNumber: data.accountNumber,
+        Status: data.status,
+        ModifiedBy: 'system',
         ModifiedDate: new Date()
       });
+
+      if (!result.recordset || !result.recordset.length) {
+        throw new HttpError(404, 'Payee not found');
+      }
+
       return result.recordset[0];
     } catch (error) {
+      if (error instanceof HttpError) throw error;
       logger.error(`Error updating payee ${id}:`, error);
       throw new HttpError(500, 'Failed to update payee');
     }
   }
 
-  async removePayee(id: string) {
+  async deletePayee(id: string): Promise<void> {
     try {
-      // Check if payee has associated payments
-      const hasPayments = await this.checkPayeePayments(id);
-      if (hasPayments) {
-        throw new HttpError(409, 'Cannot delete payee with existing payments');
+      // First check if payee has any payments
+      const paymentCheck = await this.db.executeProc<PayeePaymentCheck>('PAYEE_CHECK_PAYMENTS', { id });
+      if (paymentCheck.recordset?.[0]?.hasPayments) {
+        throw new HttpError(400, 'Cannot delete payee with existing payments');
       }
 
-      await this.repository.executeProc('PAYEE_DELETE', {
-        PayeeId: id,
-        DeletedBy: 'system', // TODO: Get from auth context
+      // Then delete the payee
+      const result = await this.db.executeProc('PAYEE_DELETE', {
+        id,
+        DeletedBy: 'system',
         DeletedDate: new Date()
       });
-    } catch (error) {
-      logger.error(`Error removing payee ${id}:`, error);
-      if (error instanceof HttpError) {
-        throw error;
+
+      if (!result.recordset || !result.recordset.length) {
+        throw new HttpError(404, 'Payee not found');
       }
-      throw new HttpError(500, 'Failed to remove payee');
+    } catch (error) {
+      if (error instanceof HttpError) throw error;
+      logger.error(`Error deleting payee ${id}:`, error);
+      throw new HttpError(500, 'Failed to delete payee');
     }
   }
 
-  async listUserPayees(userId: string) {
+  async listUserPayees(userId: string, page = 1, pageSize = 10): Promise<PaginatedResponse<PayeeRecord>> {
     try {
-      const result = await this.repository.executeProc('USER_PAYEE', {
-        UserId: userId
+      const result = await this.db.executeProc<PayeeRecord & { TotalCount: number }>('USER_PAYEE', {
+        UserId: userId,
+        page,
+        pageSize
       });
-      return result.recordset;
+
+      if (!result.recordset) {
+        throw new HttpError(500, 'Invalid response from database');
+      }
+
+      const total = result.recordset[0]?.TotalCount || 0;
+      const totalPages = Math.ceil(total / pageSize);
+
+      return {
+        data: result.recordset,
+        pagination: {
+          total,
+          page,
+          pageSize,
+          totalPages
+        }
+      };
     } catch (error) {
-      logger.error(`Error listing payees for user ${userId}:`, error);
+      logger.error(`Error listing user payees for user ${userId}:`, error);
+      if (error instanceof HttpError) throw error;
       throw new HttpError(500, 'Failed to list user payees');
-    }
-  }
-
-  private async checkPayeePayments(payeeId: string): Promise<boolean> {
-    try {
-      const result = await this.repository.executeProc('PAYEE_CHECK_PAYMENTS', {
-        PayeeId: payeeId
-      });
-      return result.recordset[0]?.hasPayments || false;
-    } catch (error) {
-      logger.error(`Error checking payee payments ${payeeId}:`, error);
-      throw new HttpError(500, 'Failed to check payee payments');
     }
   }
 }

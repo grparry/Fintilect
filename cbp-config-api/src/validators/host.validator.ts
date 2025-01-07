@@ -117,33 +117,121 @@ import { z } from 'zod';
  *         - security
  */
 
+const HOST_TYPES = ['PHYSICAL', 'VIRTUAL', 'CONTAINER'] as const;
+const HOST_STATUSES = ['RUNNING', 'STOPPED', 'MAINTENANCE', 'ERROR'] as const;
+const OPERATING_SYSTEMS = ['LINUX', 'WINDOWS', 'MACOS'] as const;
+const ENVIRONMENT_TYPES = ['DEVELOPMENT', 'STAGING', 'PRODUCTION'] as const;
+
 export const hostSchemas = {
   updateConnection: Joi.object({
     name: Joi.string().max(100),
-    status: Joi.string().valid('ACTIVE', 'INACTIVE', 'MAINTENANCE'),
-    hostUrl: Joi.string().uri(),
-    port: Joi.number().integer().min(1).max(65535),
-    protocol: Joi.string().valid('FTP', 'SFTP', 'HTTP', 'HTTPS'),
-    username: Joi.string().max(100),
-    certificate: Joi.string(),
-    maintenanceWindow: Joi.object({
-      start: Joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d)$/),
-      end: Joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d)$/),
-      timezone: Joi.string()
-    }),
-    retryPolicy: Joi.object({
+    host: Joi.string().hostname(),
+    port: Joi.number().port(),
+    username: Joi.string(),
+    password: Joi.string(),
+    database: Joi.string(),
+    options: Joi.object({
+      encrypt: Joi.boolean(),
+      trustServerCertificate: Joi.boolean(),
+      connectionTimeout: Joi.number().integer().min(1000).max(60000),
+      requestTimeout: Joi.number().integer().min(1000).max(300000),
+      maxConnections: Joi.number().integer().min(1).max(1000),
+      minConnections: Joi.number().integer().min(0).max(100),
+      maxRetries: Joi.number().integer().min(0).max(10),
       maxAttempts: Joi.number().integer().min(1).max(10),
       backoffInterval: Joi.number().integer().min(1000).max(300000)
     })
-  }).min(1) // At least one field must be provided
-};
+  }).min(1),
 
-export const hostZodSchemas = {
-  updateConnection: z.object({
-    maxConnections: z.number().int().min(1).max(1000).optional(),
-    timeout: z.number().int().min(1000).max(60000).optional(),
-    keepAlive: z.boolean().optional()
-  }).refine(data => Object.keys(data).length > 0, {
-    message: "At least one connection parameter must be provided"
+  listHosts: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20),
+    type: Joi.string().valid(...HOST_TYPES),
+    status: Joi.string().valid(...HOST_STATUSES),
+    environment: Joi.string().valid(...ENVIRONMENT_TYPES),
+    search: Joi.string().max(100)
+  }),
+
+  getHost: Joi.object({
+    id: Joi.string().required()
+  }),
+
+  createHost: Joi.object({
+    name: Joi.string().min(2).max(100).required(),
+    type: Joi.string().valid(...HOST_TYPES).required(),
+    operatingSystem: Joi.string().valid(...OPERATING_SYSTEMS).required(),
+    environment: Joi.string().valid(...ENVIRONMENT_TYPES).required(),
+    ipAddress: Joi.string().ip(),
+    hostname: Joi.string().hostname(),
+    specs: Joi.object({
+      cpu: Joi.string().required(),
+      memory: Joi.string().required(),
+      storage: Joi.string().required(),
+      network: Joi.string()
+    }).required(),
+    location: Joi.object({
+      datacenter: Joi.string().required(),
+      rack: Joi.string(),
+      position: Joi.string()
+    }),
+    metadata: Joi.object({
+      department: Joi.string(),
+      owner: Joi.string(),
+      project: Joi.string(),
+      notes: Joi.string().max(1000)
+    })
+  }),
+
+  updateHost: Joi.object({
+    name: Joi.string().min(2).max(100),
+    status: Joi.string().valid(...HOST_STATUSES),
+    ipAddress: Joi.string().ip(),
+    hostname: Joi.string().hostname(),
+    specs: Joi.object({
+      cpu: Joi.string(),
+      memory: Joi.string(),
+      storage: Joi.string(),
+      network: Joi.string()
+    }),
+    location: Joi.object({
+      datacenter: Joi.string(),
+      rack: Joi.string(),
+      position: Joi.string()
+    }),
+    metadata: Joi.object({
+      department: Joi.string(),
+      owner: Joi.string(),
+      project: Joi.string(),
+      notes: Joi.string().max(1000)
+    })
+  }).min(1),
+
+  deleteHost: Joi.object({
+    id: Joi.string().required()
+  }),
+
+  getHostMetrics: Joi.object({
+    id: Joi.string().required(),
+    metrics: Joi.array().items(Joi.string().valid(
+      'cpu_usage',
+      'memory_usage',
+      'disk_usage',
+      'network_io',
+      'process_count',
+      'uptime'
+    )).min(1).required(),
+    fromDate: Joi.date().iso(),
+    toDate: Joi.date().iso(),
+    interval: Joi.string().valid('1m', '5m', '15m', '1h', '1d').default('5m')
+  }),
+
+  getHostLogs: Joi.object({
+    id: Joi.string().required(),
+    fromDate: Joi.date().iso(),
+    toDate: Joi.date().iso(),
+    level: Joi.string().valid('debug', 'info', 'warn', 'error').default('info'),
+    service: Joi.string(),
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20)
   })
 };

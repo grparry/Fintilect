@@ -1,7 +1,8 @@
 import * as sql from 'mssql';
-import { HttpError } from '../middleware/error.middleware';
+import { HttpError } from '../utils/errors';
 import { logger } from '../config/logger';
 import { BaseRepository } from '../repositories/base.repository';
+import { Database } from '../database';
 import { clearCache } from '../middleware/cache.middleware';
 
 interface HostConnection {
@@ -26,16 +27,33 @@ interface HostConnection {
   };
 }
 
-export class HostService {
-  private repository: BaseRepository;
+interface HostInfo {
+  name: string;
+  version: string;
+  status: string;
+  uptime: number;
+}
 
-  constructor() {
-    this.repository = new BaseRepository();
+interface HostConfig {
+  settings: {
+    maxConnections: number;
+    timeout: number;
+    retryAttempts: number;
+  };
+  security: {
+    encryption: boolean;
+    certificateExpiry: string;
+  };
+}
+
+export class HostService extends BaseRepository {
+  constructor(db: Database) {
+    super('host', db);
   }
 
   async getConnection(): Promise<HostConnection> {
     try {
-      const result = await this.repository.executeProc('HOSTCONNECTION', {
+      const result = await this.executeProc('HOSTCONNECTION', {
         Action: 'GET'
       });
 
@@ -55,7 +73,7 @@ export class HostService {
       // Validate the connection before updating
       await this.validateConnection(connectionData);
 
-      const result = await this.repository.executeProc('HOSTCONNECTION', {
+      const result = await this.executeProc('HOSTCONNECTION', {
         Action: 'UPDATE',
         ...connectionData,
         ModifiedBy: 'system', // TODO: Get from auth context
@@ -79,6 +97,34 @@ export class HostService {
         throw error;
       }
       throw new HttpError(500, 'Failed to update host connection');
+    }
+  }
+
+  async getHostInfo(): Promise<HostInfo> {
+    try {
+      const result = await this.executeProc<HostInfo>('GET_HOST_INFO');
+      const info = result.recordset[0] as HostInfo;
+      if (!info) {
+        throw new HttpError(404, 'Host info not found');
+      }
+      return info;
+    } catch (error) {
+      logger.error('Error getting host info:', error);
+      throw new HttpError(500, 'Failed to get host info');
+    }
+  }
+
+  async getHostConfig(): Promise<HostConfig> {
+    try {
+      const result = await this.executeProc<HostConfig>('GET_HOST_CONFIG');
+      const config = result.recordset[0] as HostConfig;
+      if (!config) {
+        throw new HttpError(404, 'Host config not found');
+      }
+      return config;
+    } catch (error) {
+      logger.error('Error getting host config:', error);
+      throw new HttpError(500, 'Failed to get host config');
     }
   }
 
@@ -123,7 +169,7 @@ export class HostService {
 
   private async testConnection(connection: any): Promise<void> {
     try {
-      await this.repository.executeProc('HOSTCONNECTION_TEST', {
+      await this.executeProc('HOSTCONNECTION_TEST', {
         ConnectionId: connection.id
       });
     } catch (error) {

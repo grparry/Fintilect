@@ -1,10 +1,81 @@
 import { Router } from 'express';
-import { validateRequest } from '../middleware';
+import { validateRequest } from '../middleware/validation.middleware';
 import { PayeeController } from '../controllers/payee.controller';
-import { payeeSchemas } from '../validators/payee.validator';
+import { PayeeService } from '../services/payee.service';
+import { z } from 'zod';
+import { cacheMiddleware } from '../middleware/cache.middleware';
+import { db } from '../config/db';
 
 const router = Router();
-const controller = new PayeeController();
+const payeeService = new PayeeService(db);
+const controller = new PayeeController(payeeService);
+
+const payeeSchemas = {
+  listPayees: z.object({
+    query: z.object({
+      page: z.coerce.number().optional(),
+      pageSize: z.coerce.number().optional()
+    })
+  }),
+  payeeId: z.object({
+    params: z.object({
+      id: z.string()
+    })
+  }),
+  createPayee: z.object({
+    body: z.object({
+      name: z.string(),
+      email: z.string().email(),
+      phone: z.string(),
+      taxId: z.string(),
+      bankInfo: z.object({
+        bankName: z.string(),
+        accountNumber: z.string(),
+        routingNumber: z.string(),
+        accountType: z.string()
+      }),
+      address: z.object({
+        street: z.string(),
+        city: z.string(),
+        state: z.string(),
+        zipCode: z.string(),
+        country: z.string()
+      })
+    })
+  }),
+  updatePayee: z.object({
+    params: z.object({
+      id: z.string()
+    }),
+    body: z.object({
+      name: z.string().optional(),
+      email: z.string().email().optional(),
+      phone: z.string().optional(),
+      taxId: z.string().optional(),
+      bankInfo: z.object({
+        bankName: z.string(),
+        accountNumber: z.string(),
+        routingNumber: z.string(),
+        accountType: z.string()
+      }).optional(),
+      address: z.object({
+        street: z.string(),
+        city: z.string(),
+        state: z.string(),
+        zipCode: z.string(),
+        country: z.string()
+      }).optional()
+    })
+  }),
+  rejectPayee: z.object({
+    params: z.object({
+      id: z.string()
+    }),
+    body: z.object({
+      reason: z.string()
+    })
+  })
+};
 
 /**
  * @openapi
@@ -60,9 +131,10 @@ const controller = new PayeeController();
  *       403:
  *         $ref: '#/components/responses/Forbidden'
  */
-router.get('/',
+router.get(
+  '/',
   validateRequest(payeeSchemas.listPayees),
-  controller.listPayees
+  controller.listPayees.bind(controller)
 );
 
 /**
@@ -89,9 +161,10 @@ router.get('/',
  *       404:
  *         $ref: '#/components/responses/NotFound'
  */
-router.get('/:id',
+router.get(
+  '/:id',
   validateRequest(payeeSchemas.payeeId),
-  controller.getPayee
+  controller.getPayee.bind(controller)
 );
 
 /**
@@ -119,9 +192,10 @@ router.get('/:id',
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-router.post('/',
+router.post(
+  '/',
   validateRequest(payeeSchemas.createPayee),
-  controller.createPayee
+  controller.createPayee.bind(controller)
 );
 
 /**
@@ -156,15 +230,23 @@ router.post('/',
  *       404:
  *         $ref: '#/components/responses/NotFound'
  */
-router.put('/:id',
+router.put(
+  '/:id',
   validateRequest(payeeSchemas.updatePayee),
-  controller.updatePayee
+  controller.updatePayee.bind(controller)
 );
 
 // Remove payee
-router.delete('/:id', controller.removePayee);
+router.delete(
+  '/:id',
+  validateRequest(payeeSchemas.payeeId),
+  controller.deletePayee.bind(controller)
+);
 
 // List user's payees
-router.get('/user/:userId', controller.listUserPayees);
+router.get(
+  '/user/:userId',
+  controller.listUserPayees.bind(controller)
+);
 
-export { router as payeesRouter };
+export default router;

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import Joi from 'joi';
 
 /**
  * @openapi
@@ -128,53 +128,59 @@ import { z } from 'zod';
  *               description: Types of alerts to receive
  */
 
+const CLIENT_TYPES = ['ENTERPRISE', 'SMB', 'STARTUP'] as const;
+const CLIENT_STATUSES = ['ACTIVE', 'INACTIVE', 'SUSPENDED'] as const;
+const CLIENT_ENVIRONMENTS = ['PRODUCTION', 'STAGING', 'DEVELOPMENT'] as const;
+const DATE_FORMATS = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY-MM-DD'] as const;
+const TIME_FORMATS = ['12h', '24h'] as const;
+
 export const clientSchemas = {
-  listClientsQuery: z.object({
-    page: z.coerce.number().int().min(1).optional().default(1),
-    limit: z.coerce.number().int().min(1).max(100).optional().default(20),
-    status: z.enum(['ACTIVE', 'INACTIVE', 'SUSPENDED']).optional(),
-    type: z.enum(['ENTERPRISE', 'SMB', 'STARTUP']).optional()
+  listClientsQuery: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20),
+    status: Joi.string().valid(...CLIENT_STATUSES),
+    type: Joi.string().valid(...CLIENT_TYPES)
   }),
 
-  clientIdParam: z.object({
-    id: z.string().min(1)
+  clientIdParam: Joi.object({
+    id: Joi.string().required().min(1)
   }),
 
-  updateClientSettings: z.object({
-    general: z.object({
-      timezone: z.string(),
-      dateFormat: z.enum(['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY-MM-DD']),
-      timeFormat: z.enum(['12h', '24h']),
-      currency: z.string().length(3),
-      language: z.string().length(2)
-    }).partial(),
+  updateClientSettings: Joi.object({
+    general: Joi.object({
+      timezone: Joi.string(),
+      dateFormat: Joi.string().valid(...DATE_FORMATS),
+      timeFormat: Joi.string().valid(...TIME_FORMATS),
+      currency: Joi.string().length(3),
+      language: Joi.string().length(2)
+    }).unknown(true),
 
-    security: z.object({
-      passwordPolicy: z.object({
-        minLength: z.number().int().min(8).max(32),
-        requireUppercase: z.boolean(),
-        requireLowercase: z.boolean(),
-        requireNumbers: z.boolean(),
-        requireSpecialChars: z.boolean(),
-        expirationDays: z.number().int().min(0)
-      }).partial(),
+    security: Joi.object({
+      passwordPolicy: Joi.object({
+        minLength: Joi.number().integer().min(8).max(32),
+        requireUppercase: Joi.boolean(),
+        requireLowercase: Joi.boolean(),
+        requireNumbers: Joi.boolean(),
+        requireSpecialChars: Joi.boolean(),
+        expirationDays: Joi.number().integer().min(0)
+      }).unknown(true),
 
-      loginPolicy: z.object({
-        maxAttempts: z.number().int().min(1),
-        lockoutDuration: z.number().int().min(1)
-      }).partial(),
+      loginPolicy: Joi.object({
+        maxAttempts: Joi.number().integer().min(1),
+        lockoutDuration: Joi.number().integer().min(1)
+      }).unknown(true),
 
-      sessionTimeout: z.number().int().min(1),
-      mfaEnabled: z.boolean(),
-      ipWhitelist: z.array(z.string().ip())
-    }).partial(),
+      sessionTimeout: Joi.number().integer().min(1),
+      mfaEnabled: Joi.boolean(),
+      ipWhitelist: Joi.array().items(Joi.string().ip())
+    }).unknown(true),
 
-    notifications: z.object({
-      emailEnabled: z.boolean(),
-      smsEnabled: z.boolean(),
-      pushEnabled: z.boolean(),
-      frequency: z.enum(['realtime', 'daily', 'weekly', 'monthly']),
-      alertTypes: z.array(z.enum(['payment', 'security', 'system']))
-    }).partial()
-  }).partial()
+    notifications: Joi.object({
+      emailEnabled: Joi.boolean(),
+      smsEnabled: Joi.boolean(),
+      pushEnabled: Joi.boolean(),
+      frequency: Joi.string().valid('realtime', 'daily', 'weekly', 'monthly'),
+      alertTypes: Joi.array().items(Joi.string().valid('payment', 'security', 'system'))
+    }).unknown(true)
+  }).unknown(true)
 };

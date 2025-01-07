@@ -1,186 +1,97 @@
 import { Router } from 'express';
-import { validateRequest } from '../middleware';
 import { ClientController } from '../controllers/client.controller';
-import { clientSchemas } from '../validators/client.validator';
-import { cacheMiddleware } from '../middleware/cache.middleware';
+import { ClientService } from '../services/client.service';
+import { db } from '../config/db';
+import { validateRequest } from '../middleware/validation.middleware';
+import { z } from 'zod';
+import { authorize } from '../middleware/auth.middleware';
+
+const clientService = new ClientService(db);
+const clientController = new ClientController(clientService);
+
+const clientSchemas = {
+  listClients: z.object({}),
+  clientId: z.object({
+    id: z.string()
+  }),
+  createClient: z.object({
+    name: z.string(),
+    email: z.string().email(),
+    phone: z.string().optional(),
+    address: z.string().optional()
+  }),
+  updateClient: z.object({
+    name: z.string().optional(),
+    email: z.string().email().optional(),
+    phone: z.string().optional(),
+    address: z.string().optional()
+  }),
+  updateSettings: z.object({
+    notifications: z.boolean(),
+    language: z.string(),
+    theme: z.string()
+  }),
+  rejectClient: z.object({
+    reason: z.string()
+  })
+};
 
 const router = Router();
-const controller = new ClientController();
 
-/**
- * @openapi
- * /clients:
- *   get:
- *     summary: List clients
- *     description: Retrieve a list of clients with optional filtering and pagination
- *     tags: [Clients]
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           minimum: 1
- *           default: 1
- *         description: Page number
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           minimum: 1
- *           maximum: 100
- *           default: 20
- *         description: Items per page
- *       - in: query
- *         name: status
- *         schema:
- *           type: string
- *           enum: [ACTIVE, INACTIVE, SUSPENDED]
- *         description: Filter by client status
- *       - in: query
- *         name: type
- *         schema:
- *           type: string
- *           enum: [ENTERPRISE, SMB, STARTUP]
- *         description: Filter by client type
- *     responses:
- *       200:
- *         description: List of clients
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Client'
- *                 pagination:
- *                   $ref: '#/components/schemas/Pagination'
- *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       403:
- *         description: Forbidden
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.get('/',
-  validateRequest(clientSchemas.listClientsQuery),
-  controller.listClients
+// List all clients
+router.get(
+  '/',
+  authorize(['user', 'admin']),
+  validateRequest(clientSchemas.listClients),
+  clientController.listClients.bind(clientController)
 );
 
-/**
- * @openapi
- * /clients/{id}:
- *   get:
- *     summary: Get client details
- *     description: Retrieve detailed information about a specific client
- *     tags: [Clients]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Client ID
- *     responses:
- *       200:
- *         description: Client details
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Client'
- *       404:
- *         description: Client not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.get('/:id',
-  validateRequest(clientSchemas.clientIdParam),
-  controller.getClientDetails
+// Get specific client
+router.get(
+  '/:id',
+  authorize(['user', 'admin']),
+  validateRequest(clientSchemas.clientId),
+  clientController.getClient.bind(clientController)
 );
 
-/**
- * @openapi
- * /clients/{id}/settings:
- *   get:
- *     summary: Get client settings
- *     description: Retrieve settings for a specific client
- *     tags: [Clients]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Client ID
- *     responses:
- *       200:
- *         description: Client settings
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ClientSettings'
- *       404:
- *         description: Client settings not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *   put:
- *     summary: Update client settings
- *     description: Update settings for a specific client
- *     tags: [Clients]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Client ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/ClientSettings'
- *     responses:
- *       200:
- *         description: Updated client settings
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ClientSettings'
- *       400:
- *         description: Invalid settings
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       404:
- *         description: Client not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.get('/:id/settings',
-  validateRequest(clientSchemas.clientIdParam),
-  cacheMiddleware(5 * 60), // Cache for 5 minutes
-  controller.getClientSettings
+// Create new client
+router.post(
+  '/',
+  authorize(['admin']),
+  validateRequest(clientSchemas.createClient),
+  clientController.createClient.bind(clientController)
 );
 
-router.put('/:id/settings',
-  validateRequest(clientSchemas.clientIdParam),
-  validateRequest(clientSchemas.updateClientSettings),
-  controller.updateClientSettings
+// Update client
+router.put(
+  '/:id',
+  authorize(['admin']),
+  validateRequest(clientSchemas.updateClient),
+  clientController.updateClient.bind(clientController)
 );
 
-export { router as clientsRouter };
+// Delete client
+router.delete(
+  '/:id',
+  authorize(['admin']),
+  validateRequest(clientSchemas.clientId),
+  clientController.deleteClient.bind(clientController)
+);
+
+// Get client settings
+router.get(
+  '/:id/settings',
+  authorize(['user', 'admin']),
+  validateRequest(clientSchemas.clientId),
+  clientController.getClientSettings.bind(clientController)
+);
+
+// Update client settings
+router.put(
+  '/:id/settings',
+  authorize(['admin']),
+  validateRequest(clientSchemas.updateSettings),
+  clientController.updateClientSettings.bind(clientController)
+);
+
+export default router;

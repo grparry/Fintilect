@@ -1,14 +1,29 @@
-import { authRequest, testUsers, clearTestData } from './helpers';
+import request from 'supertest';
+import {
+  testApp,
+  createTestUser,
+  createTestAdmin,
+  getAuthHeader,
+  setupTestDb,
+  cleanupTestDb
+} from './helpers';
 
 describe('User Routes', () => {
-  beforeEach(async () => {
-    await clearTestData();
+  beforeAll(async () => {
+    await setupTestDb();
+  });
+
+  afterAll(async () => {
+    await cleanupTestDb();
   });
 
   describe('GET /api/users/payee-options/:payeeId', () => {
     it('should return user payee options', async () => {
-      const response = await authRequest()
-        .get('/api/users/payee-options/1');
+      const { token } = await createTestUser();
+
+      const response = await request(testApp)
+        .get('/api/users/payee-options/1')
+        .set(getAuthHeader(token));
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(expect.objectContaining({
@@ -23,8 +38,11 @@ describe('User Routes', () => {
     });
 
     it('should return 404 for non-existent payee', async () => {
-      const response = await authRequest()
-        .get('/api/users/payee-options/999999');
+      const { token } = await createTestUser();
+
+      const response = await request(testApp)
+        .get('/api/users/payee-options/999999')
+        .set(getAuthHeader(token));
 
       expect(response.status).toBe(404);
     });
@@ -47,8 +65,11 @@ describe('User Routes', () => {
     };
 
     it('should update payee options', async () => {
-      const response = await authRequest()
+      const { token } = await createTestUser();
+
+      const response = await request(testApp)
         .put('/api/users/payee-options/1')
+        .set(getAuthHeader(token))
         .send(updateOptions);
 
       expect(response.status).toBe(200);
@@ -61,8 +82,11 @@ describe('User Routes', () => {
     });
 
     it('should validate payment limits hierarchy', async () => {
-      const response = await authRequest()
+      const { token } = await createTestUser();
+
+      const response = await request(testApp)
         .put('/api/users/payee-options/1')
+        .set(getAuthHeader(token))
         .send({
           ...updateOptions,
           paymentLimits: {
@@ -78,27 +102,38 @@ describe('User Routes', () => {
 
   describe('GET /api/users/host-info', () => {
     it('should return host information', async () => {
-      const response = await authRequest()
-        .get('/api/users/host-info');
+      const { token } = await createTestUser();
+
+      const response = await request(testApp)
+        .get('/api/users/host-info')
+        .set(getAuthHeader(token));
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.objectContaining({
-        name: expect.any(String),
+      expect(response.body).toEqual({
+        name: 'Test Host',
         connectionStatus: expect.any(String),
-        lastConnectionTime: expect.any(String)
-      }));
+        lastConnectionTime: expect.any(String),
+        features: {
+          payments: expect.any(Boolean),
+          reporting: expect.any(Boolean),
+          automation: expect.any(Boolean)
+        }
+      });
     });
 
     it('should include feature flags', async () => {
-      const response = await authRequest()
-        .get('/api/users/host-info');
+      const { token } = await createTestUser();
+
+      const response = await request(testApp)
+        .get('/api/users/host-info')
+        .set(getAuthHeader(token));
 
       expect(response.status).toBe(200);
-      expect(response.body.features).toEqual(
-        expect.arrayContaining([
-          expect.any(String)
-        ])
-      );
+      expect(response.body.features).toEqual({
+        payments: expect.any(Boolean),
+        reporting: expect.any(Boolean),
+        automation: expect.any(Boolean)
+      });
     });
   });
 });

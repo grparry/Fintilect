@@ -1,11 +1,35 @@
 import { Router } from 'express';
+import { validateRequest } from '../middleware/validation.middleware';
 import { SystemController } from '../controllers/system.controller';
 import { cacheMiddleware } from '../middleware/cache.middleware';
-import { validateRequest } from '../middleware';
-import { systemSchemas } from '../validators/system.validator';
+import { db } from '../config/db';
+import { z } from 'zod';
 
 const router = Router();
-const controller = new SystemController();
+const controller = new SystemController(db);
+
+const systemSchemas = {
+  calendarQuery: z.object({
+    year: z.number(),
+    month: z.number().optional(),
+    country: z.string().optional()
+  }),
+  holidayQuery: z.object({
+    country: z.string(),
+    year: z.number(),
+    month: z.number().optional(),
+    type: z.string().optional()
+  }),
+  statusQuery: z.object({
+    service: z.string().optional(),
+    component: z.string().optional()
+  }),
+  errorQuery: z.object({
+    from: z.string(),
+    to: z.string(),
+    severity: z.enum(['INFO', 'WARN', 'ERROR', 'CRITICAL']).optional()
+  })
+};
 
 /**
  * @openapi
@@ -105,7 +129,8 @@ router.get('/holidays',
  *               $ref: '#/components/schemas/SystemStatus'
  */
 router.get('/status',
-  controller.getGeneratorStatus
+  validateRequest(systemSchemas.statusQuery),
+  controller.getSystemStatus
 );
 
 /**
@@ -150,4 +175,4 @@ router.get('/errors',
   controller.getErrorSummary
 );
 
-export { router as systemRouter };
+export default router;

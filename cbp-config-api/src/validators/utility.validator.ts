@@ -135,22 +135,31 @@ import { z } from 'zod';
  *         - pagination
  */
 
+const UTILITY_TYPES = ['ELECTRICITY', 'GAS', 'WATER', 'INTERNET', 'PHONE', 'CABLE', 'OTHER'] as const;
+const UTILITY_STATUSES = ['ACTIVE', 'INACTIVE', 'PENDING', 'SUSPENDED'] as const;
+const BILLING_CYCLES = ['MONTHLY', 'QUARTERLY', 'ANNUAL'] as const;
+const PAYMENT_METHODS = ['ACH', 'WIRE', 'CHECK'] as const;
+
 export const utilitySchemas = {
-  metricsQuery: z.object({
-    period: z.enum(['1h', '24h', '7d', '30d'])
-      .optional()
-      .default('24h')
+  healthCheck: Joi.object({
+    service: Joi.string().optional()
   }),
 
-  logsQuery: z.object({
-    level: z.enum(['debug', 'info', 'warn', 'error'])
-      .optional()
-      .default('info'),
-    from: z.string().datetime(),
-    to: z.string().datetime(),
-    service: z.string().optional(),
-    page: z.coerce.number().int().min(1).optional().default(1),
-    limit: z.coerce.number().int().min(1).max(100).optional().default(20)
+  versionQuery: Joi.object({
+    format: Joi.string().valid('short', 'full').optional()
+  }),
+
+  metricsQuery: Joi.object({
+    period: Joi.string().valid('1h', '24h', '7d', '30d').optional().default('24h')
+  }),
+
+  logsQuery: Joi.object({
+    level: Joi.string().valid('debug', 'info', 'warn', 'error').optional().default('info'),
+    from: Joi.string().isoDate(),
+    to: Joi.string().isoDate(),
+    service: Joi.string().optional(),
+    page: Joi.number().integer().min(1).optional().default(1),
+    limit: Joi.number().integer().min(1).max(100).optional().default(20)
   }),
 
   deliveryDateQuery: Joi.object({
@@ -169,9 +178,139 @@ export const utilitySchemas = {
     status: Joi.string().valid('ACTIVE', 'INACTIVE', 'DRAFT')
   }),
 
-  deliveryDateQueryZod: z.object({
-    orderDate: z.string().datetime(),
-    postalCode: z.string().regex(/^\d{5}(-\d{4})?$/),
-    serviceLevel: z.enum(['STANDARD', 'EXPRESS', 'PRIORITY'])
+  deliveryDateQueryZod: Joi.object({
+    orderDate: Joi.string().isoDate(),
+    postalCode: Joi.string().pattern(/^\d{5}(-\d{4})?$/),
+    serviceLevel: Joi.string().valid('STANDARD', 'EXPRESS', 'PRIORITY')
+  }),
+
+  listUtilities: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20),
+    type: Joi.string().valid(...UTILITY_TYPES),
+    status: Joi.string().valid(...UTILITY_STATUSES),
+    search: Joi.string().max(100)
+  }),
+
+  getUtility: Joi.object({
+    id: Joi.string().required()
+  }),
+
+  createUtility: Joi.object({
+    name: Joi.string().min(2).max(100).required(),
+    type: Joi.string().valid(...UTILITY_TYPES).required(),
+    provider: Joi.string().min(2).max(100).required(),
+    accountNumber: Joi.string().max(50).required(),
+    billingCycle: Joi.string().valid(...BILLING_CYCLES).required(),
+    paymentMethod: Joi.string().valid(...PAYMENT_METHODS).required(),
+    autopay: Joi.boolean().default(false),
+    dueDay: Joi.number().integer().min(1).max(31).required(),
+    payeeId: Joi.string().required(),
+    serviceAddress: Joi.object({
+      street1: Joi.string().required(),
+      street2: Joi.string(),
+      city: Joi.string().required(),
+      state: Joi.string().length(2).required(),
+      zipCode: Joi.string().pattern(/^\d{5}(-\d{4})?$/).required(),
+      country: Joi.string().length(2).required()
+    }).required(),
+    billingAddress: Joi.object({
+      street1: Joi.string().required(),
+      street2: Joi.string(),
+      city: Joi.string().required(),
+      state: Joi.string().length(2).required(),
+      zipCode: Joi.string().pattern(/^\d{5}(-\d{4})?$/).required(),
+      country: Joi.string().length(2).required()
+    }),
+    metadata: Joi.object({
+      department: Joi.string(),
+      costCenter: Joi.string(),
+      notes: Joi.string().max(1000)
+    })
+  }),
+
+  updateUtility: Joi.object({
+    name: Joi.string().min(2).max(100),
+    provider: Joi.string().min(2).max(100),
+    accountNumber: Joi.string().max(50),
+    billingCycle: Joi.string().valid(...BILLING_CYCLES),
+    paymentMethod: Joi.string().valid(...PAYMENT_METHODS),
+    autopay: Joi.boolean(),
+    dueDay: Joi.number().integer().min(1).max(31),
+    status: Joi.string().valid(...UTILITY_STATUSES),
+    serviceAddress: Joi.object({
+      street1: Joi.string(),
+      street2: Joi.string(),
+      city: Joi.string(),
+      state: Joi.string().length(2),
+      zipCode: Joi.string().pattern(/^\d{5}(-\d{4})?$/),
+      country: Joi.string().length(2)
+    }),
+    billingAddress: Joi.object({
+      street1: Joi.string(),
+      street2: Joi.string(),
+      city: Joi.string(),
+      state: Joi.string().length(2),
+      zipCode: Joi.string().pattern(/^\d{5}(-\d{4})?$/),
+      country: Joi.string().length(2)
+    }),
+    metadata: Joi.object({
+      department: Joi.string(),
+      costCenter: Joi.string(),
+      notes: Joi.string().max(1000)
+    })
+  }).min(1),
+
+  addBill: Joi.object({
+    utilityId: Joi.string().required(),
+    billDate: Joi.date().iso().required(),
+    dueDate: Joi.date().iso().required(),
+    amount: Joi.number().positive().required(),
+    period: Joi.object({
+      startDate: Joi.date().iso().required(),
+      endDate: Joi.date().iso().required()
+    }).required(),
+    billNumber: Joi.string().max(50),
+    metadata: Joi.object({
+      usage: Joi.number().positive(),
+      rate: Joi.number().positive(),
+      notes: Joi.string().max(1000)
+    })
+  }),
+
+  updateBill: Joi.object({
+    utilityId: Joi.string().required(),
+    billId: Joi.string().required(),
+    billDate: Joi.date().iso(),
+    dueDate: Joi.date().iso(),
+    amount: Joi.number().positive(),
+    period: Joi.object({
+      startDate: Joi.date().iso(),
+      endDate: Joi.date().iso()
+    }),
+    billNumber: Joi.string().max(50),
+    metadata: Joi.object({
+      usage: Joi.number().positive(),
+      rate: Joi.number().positive(),
+      notes: Joi.string().max(1000)
+    })
+  }).min(1),
+
+  deleteBill: Joi.object({
+    utilityId: Joi.string().required(),
+    billId: Joi.string().required()
+  }),
+
+  getBillHistory: Joi.object({
+    utilityId: Joi.string().required(),
+    fromDate: Joi.date().iso(),
+    toDate: Joi.date().iso(),
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20)
+  }),
+
+  savedEmailsQuery: Joi.object({
+    type: Joi.string().optional(),
+    status: Joi.string().optional()
   })
 };

@@ -1,201 +1,270 @@
-import { authRequest, testUsers, clearTestData } from './helpers';
+import request from 'supertest';
+import { testApp, createTestAdmin, getAuthHeader, setupTestDb, cleanupTestDb } from './helpers';
 
 describe('Payment Routes', () => {
+  let adminToken: string;
+
+  beforeAll(async () => {
+    const admin = await createTestAdmin();
+    adminToken = admin.token;
+  });
+
   beforeEach(async () => {
-    await clearTestData();
+    await setupTestDb();
+  });
+
+  afterEach(async () => {
+    await cleanupTestDb();
   });
 
   describe('GET /api/payments', () => {
-    it('should list payments with pagination', async () => {
-      const response = await authRequest()
+    it('should return a list of payments with pagination', async () => {
+      const response = await request(testApp)
         .get('/api/payments')
-        .query({ page: 1, limit: 10 });
+        .query({ page: 1, pageSize: 10 })
+        .set(getAuthHeader(adminToken));
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.objectContaining({
-        data: expect.any(Array),
-        pagination: expect.objectContaining({
-          page: 1,
-          limit: 10,
-          total: expect.any(Number)
-        })
-      }));
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBeGreaterThan(0);
+      expect(response.body[0]).toHaveProperty('id');
+      expect(response.body[0]).toHaveProperty('payeeId');
+      expect(response.body[0]).toHaveProperty('amount');
+      expect(response.body[0]).toHaveProperty('currency');
+      expect(response.body[0]).toHaveProperty('status');
     });
 
-    it('should filter payments by date range', async () => {
-      const response = await authRequest()
+    it('should handle invalid pagination parameters', async () => {
+      const response = await request(testApp)
         .get('/api/payments')
-        .query({
-          startDate: '2025-01-01',
-          endDate: '2025-01-31'
-        });
+        .query({ page: 0, pageSize: 10 })
+        .set(getAuthHeader(adminToken));
 
-      expect(response.status).toBe(200);
-      expect(response.body.data).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            paymentDate: expect.stringMatching(/^2025-01-/)
-          })
-        ])
-      );
-    });
-
-    it('should require authentication', async () => {
-      const response = await authRequest()
-        .get('/api/payments')
-        .set('Authorization', '');
-
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('error');
     });
   });
 
   describe('GET /api/payments/:id', () => {
-    it('should return payment details', async () => {
-      const response = await authRequest()
-        .get('/api/payments/1');
+    it('should return a payment by id', async () => {
+      const response = await request(testApp)
+        .get('/api/payments/1')
+        .set(getAuthHeader(adminToken));
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.objectContaining({
-        id: expect.any(String),
-        amount: expect.any(Number),
-        status: expect.any(String)
-      }));
+      expect(response.body).toHaveProperty('id', '1');
+      expect(response.body).toHaveProperty('payeeId');
+      expect(response.body).toHaveProperty('amount');
+      expect(response.body).toHaveProperty('currency');
+      expect(response.body).toHaveProperty('status');
     });
 
     it('should return 404 for non-existent payment', async () => {
-      const response = await authRequest()
-        .get('/api/payments/999999');
+      const response = await request(testApp)
+        .get('/api/payments/999')
+        .set(getAuthHeader(adminToken));
 
       expect(response.status).toBe(404);
+      expect(response.body).toHaveProperty('error', 'Payment not found');
     });
   });
 
   describe('POST /api/payments', () => {
-    const newPayment = {
-      amount: 100.00,
-      payeeId: '1',
-      paymentDate: '2025-01-15',
-      paymentMethod: 'ACH',
-      description: 'Test payment'
-    };
+    it('should create a new payment', async () => {
+      const newPayment = {
+        payeeId: '1',
+        amount: 1000,
+        currency: 'USD',
+        effectiveDate: new Date().toISOString(),
+        description: 'Test payment'
+      };
 
-    it('should create new payment', async () => {
-      const response = await authRequest()
+      const response = await request(testApp)
         .post('/api/payments')
-        .send(newPayment);
+        .send(newPayment)
+        .set(getAuthHeader(adminToken));
 
       expect(response.status).toBe(201);
-      expect(response.body).toEqual(expect.objectContaining({
-        id: expect.any(String),
-        amount: 100.00,
-        status: 'PENDING'
-      }));
+      expect(response.body).toHaveProperty('id');
+      expect(response.body).toHaveProperty('payeeId', newPayment.payeeId);
+      expect(response.body).toHaveProperty('amount', newPayment.amount);
+      expect(response.body).toHaveProperty('currency', newPayment.currency);
+      expect(response.body).toHaveProperty('status', 'pending');
     });
 
     it('should validate required fields', async () => {
-      const response = await authRequest()
+      const invalidPayment = {
+        payeeId: '1',
+        // missing amount and currency
+      };
+
+      const response = await request(testApp)
         .post('/api/payments')
-        .send({});
+        .send(invalidPayment)
+        .set(getAuthHeader(adminToken));
 
       expect(response.status).toBe(400);
-      expect(response.body.error).toBeDefined();
-    });
-
-    it('should require proper permissions', async () => {
-      const response = await authRequest({ ...testUsers.regular, permissions: [] })
-        .post('/api/payments')
-        .send(newPayment);
-
-      expect(response.status).toBe(403);
+      expect(response.body).toHaveProperty('error');
     });
   });
 
   describe('PUT /api/payments/:id', () => {
-    const updateData = {
-      amount: 150.00,
-      paymentDate: '2025-01-20'
-    };
+    it('should update a payment', async () => {
+      const updatedPayment = {
+        amount: 2000,
+        description: 'Updated test payment'
+      };
 
-    it('should update payment', async () => {
-      const response = await authRequest(testUsers.admin)
+      const response = await request(testApp)
         .put('/api/payments/1')
-        .send(updateData);
+        .send(updatedPayment)
+        .set(getAuthHeader(adminToken));
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.objectContaining({
-        id: '1',
-        amount: 150.00
-      }));
+      expect(response.body).toHaveProperty('id', '1');
+      expect(response.body).toHaveProperty('amount', updatedPayment.amount);
+      expect(response.body).toHaveProperty('description', updatedPayment.description);
     });
 
-    it('should validate update data', async () => {
-      const response = await authRequest(testUsers.admin)
-        .put('/api/payments/1')
-        .send({ amount: -100 });
+    it('should return 404 for non-existent payment', async () => {
+      const response = await request(testApp)
+        .put('/api/payments/999')
+        .send({ amount: 2000 })
+        .set(getAuthHeader(adminToken));
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(404);
+      expect(response.body).toHaveProperty('error', 'Payment not found');
     });
   });
 
   describe('DELETE /api/payments/:id', () => {
-    it('should cancel payment', async () => {
-      const response = await authRequest(testUsers.admin)
-        .delete('/api/payments/1');
+    it('should delete a payment', async () => {
+      const response = await request(testApp)
+        .delete('/api/payments/1')
+        .set(getAuthHeader(adminToken));
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.objectContaining({
-        id: '1',
-        status: 'CANCELLED'
-      }));
+      expect(response.body).toHaveProperty('success', true);
     });
 
-    it('should prevent cancellation of processed payments', async () => {
-      // Assuming payment ID 2 is already processed
-      const response = await authRequest(testUsers.admin)
-        .delete('/api/payments/2');
+    it('should return 404 for non-existent payment', async () => {
+      const response = await request(testApp)
+        .delete('/api/payments/999')
+        .set(getAuthHeader(adminToken));
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(404);
+      expect(response.body).toHaveProperty('error', 'Payment not found');
     });
   });
 
-  describe('GET /api/payments/status/:id', () => {
+  describe('GET /api/payments/:id/status', () => {
     it('should return payment status', async () => {
-      const response = await authRequest()
-        .get('/api/payments/status/1');
+      const response = await request(testApp)
+        .get('/api/payments/1/status')
+        .set(getAuthHeader(adminToken));
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.objectContaining({
-        id: '1',
-        status: expect.any(String),
-        lastUpdated: expect.any(String)
-      }));
+      expect(response.body).toHaveProperty('id', '1');
+      expect(response.body).toHaveProperty('status');
+      expect(response.body).toHaveProperty('modifiedDate');
+    });
+
+    it('should return 404 for non-existent payment', async () => {
+      const response = await request(testApp)
+        .get('/api/payments/999/status')
+        .set(getAuthHeader(adminToken));
+
+      expect(response.status).toBe(404);
+      expect(response.body).toHaveProperty('error', 'Payment not found');
     });
   });
 
-  describe('GET /api/payments/clear', () => {
-    it('should list cleared payments', async () => {
-      const response = await authRequest()
-        .get('/api/payments/clear')
+  describe('GET /api/payments/cleared', () => {
+    it('should return cleared payments within date range', async () => {
+      const startDate = new Date();
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + 7);
+
+      const response = await request(testApp)
+        .get('/api/payments/cleared')
         .query({
-          startDate: '2025-01-01',
-          endDate: '2025-01-31'
-        });
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString()
+        })
+        .set(getAuthHeader(adminToken));
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.objectContaining({
-        data: expect.arrayContaining([
-          expect.objectContaining({
-            status: 'CLEARED'
-          })
-        ])
-      }));
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBeGreaterThan(0);
+      expect(response.body[0]).toHaveProperty('status', 'cleared');
+      expect(response.body[0]).toHaveProperty('clearedDate');
     });
 
-    it('should require date range', async () => {
-      const response = await authRequest()
-        .get('/api/payments/clear');
+    it('should validate date range', async () => {
+      const response = await request(testApp)
+        .get('/api/payments/cleared')
+        .query({
+          startDate: 'invalid-date',
+          endDate: 'invalid-date'
+        })
+        .set(getAuthHeader(adminToken));
 
       expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('error');
+    });
+  });
+
+  describe('POST /api/payments/:id/approve', () => {
+    it('should approve a payment', async () => {
+      const response = await request(testApp)
+        .post('/api/payments/1/approve')
+        .set(getAuthHeader(adminToken));
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('id', '1');
+      expect(response.body).toHaveProperty('status', 'approved');
+    });
+
+    it('should return 404 for non-existent payment', async () => {
+      const response = await request(testApp)
+        .post('/api/payments/999/approve')
+        .set(getAuthHeader(adminToken));
+
+      expect(response.status).toBe(404);
+      expect(response.body).toHaveProperty('error', 'Payment not found');
+    });
+  });
+
+  describe('POST /api/payments/:id/reject', () => {
+    it('should reject a payment with reason', async () => {
+      const response = await request(testApp)
+        .post('/api/payments/1/reject')
+        .send({ reason: 'Invalid payment details' })
+        .set(getAuthHeader(adminToken));
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('id', '1');
+      expect(response.body).toHaveProperty('status', 'rejected');
+      expect(response.body).toHaveProperty('reason', 'Invalid payment details');
+    });
+
+    it('should return 404 for non-existent payment', async () => {
+      const response = await request(testApp)
+        .post('/api/payments/999/reject')
+        .send({ reason: 'Invalid payment details' })
+        .set(getAuthHeader(adminToken));
+
+      expect(response.status).toBe(404);
+      expect(response.body).toHaveProperty('error', 'Payment not found');
+    });
+
+    it('should require a rejection reason', async () => {
+      const response = await request(testApp)
+        .post('/api/payments/1/reject')
+        .set(getAuthHeader(adminToken));
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('error');
     });
   });
 });

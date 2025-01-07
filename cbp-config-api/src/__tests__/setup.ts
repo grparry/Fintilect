@@ -3,6 +3,9 @@ import dotenv from 'dotenv';
 // Load environment variables from .env.test if it exists, otherwise from .env
 dotenv.config({ path: '.env.test' });
 
+// Set NODE_ENV to test
+process.env.NODE_ENV = 'test';
+
 // Global test timeout
 jest.setTimeout(30000);
 
