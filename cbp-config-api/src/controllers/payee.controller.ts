@@ -1,81 +1,125 @@
 import { Request, Response, NextFunction } from 'express';
 import { PayeeService } from '../services/payee.service';
+import type { PayeeQueryResult } from '../services/payee.service';
 import { HttpError } from '../utils/errors';
+import { validatePayeeData } from '../utils/validation';
+import { CreatePayeeRequest, UpdatePayeeRequest } from '../types/payee';
 
 export class PayeeController {
   constructor(private payeeService: PayeeService) {}
 
-  async listPayees(req: Request, res: Response, next: NextFunction) {
+  async listPayees(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const page = Number(req.query.page) || 1;
-      const pageSize = Number(req.query.pageSize) || 10;
+      const page = parseInt(req.query.page as string) || 1;
+      const pageSize = parseInt(req.query.pageSize as string) || 10;
 
-      if (isNaN(page) || page < 1) {
+      if (page < 1) {
         throw new HttpError(400, 'Invalid page number');
       }
-
-      if (isNaN(pageSize) || pageSize < 1 || pageSize > 100) {
+      if (pageSize < 1) {
         throw new HttpError(400, 'Invalid page size');
       }
 
-      const result = await this.payeeService.listPayees(page, pageSize);
-      res.json(result);
+      const payees = await this.payeeService.listPayees(page, pageSize);
+      if (!payees?.recordset) {
+        throw new HttpError(500, 'Failed to fetch payees');
+      }
+
+      res.json({
+        data: payees.recordset,
+        pagination: {
+          page,
+          pageSize,
+          total: payees.recordset[0]?.TotalCount || 0,
+        },
+      });
     } catch (error) {
       next(error);
     }
   }
 
-  async getPayee(req: Request, res: Response, next: NextFunction) {
+  async getPayeeById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const payee = await this.payeeService.getPayee(id);
       if (!payee) {
         throw new HttpError(404, 'Payee not found');
       }
-      res.json({ data: payee });
+      res.json(payee);
     } catch (error) {
       next(error);
     }
   }
 
-  async createPayee(req: Request, res: Response, next: NextFunction) {
+  async createPayee(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const payeeData = req.body;
-      const result = await this.payeeService.createPayee(payeeData);
-      res.status(201).json({ data: result });
+      const payeeData = req.body as CreatePayeeRequest;
+      const validationErrors = validatePayeeData(payeeData);
+      if (validationErrors.length > 0) {
+        throw new HttpError(400, 'Invalid payee data', validationErrors);
+      }
+
+      const payee = await this.payeeService.createPayee({
+        Name: payeeData.name,
+        Email: payeeData.email,
+        Phone: payeeData.phone,
+        BankAccounts: payeeData.bankAccounts
+      });
+
+      if (!payee) {
+        throw new HttpError(500, 'Failed to create payee');
+      }
+
+      res.status(201).json(payee);
     } catch (error) {
       next(error);
     }
   }
 
-  async updatePayee(req: Request, res: Response, next: NextFunction) {
+  async updatePayee(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const updates = req.body;
-      const result = await this.payeeService.updatePayee(id, updates);
-      res.json({ data: result });
+      const updateData = req.body as UpdatePayeeRequest;
+
+      // Check for empty update data
+      if (!updateData || Object.keys(updateData).length === 0) {
+        throw new HttpError(400, 'Invalid update data');
+      }
+
+      const validationErrors = validatePayeeData(updateData);
+      if (validationErrors.length > 0) {
+        throw new HttpError(400, 'Invalid update data', validationErrors);
+      }
+
+      const payee = await this.payeeService.updatePayee(id, {
+        Name: updateData.name,
+        Email: updateData.email,
+        Phone: updateData.phone,
+        Status: updateData.status,
+        BankAccounts: updateData.bankAccounts
+      });
+
+      if (!payee) {
+        throw new HttpError(404, 'Payee not found');
+      }
+
+      res.json(payee);
     } catch (error) {
       next(error);
     }
   }
 
-  async deletePayee(req: Request, res: Response, next: NextFunction) {
+  async deletePayee(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       await this.payeeService.deletePayee(id);
       res.status(204).send();
     } catch (error) {
-      next(error);
+      if (error instanceof HttpError) {
+        next(error);
+      } else {
+        next(new HttpError(500, 'Failed to delete payee'));
+      }
     }
   }
-
-  async listUserPayees(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { userId } = req.params;
-      const payees = await this.payeeService.listUserPayees(userId);
-      res.json({ data: payees });
-    } catch (error) {
-      next(error);
-    }
-  };
 }

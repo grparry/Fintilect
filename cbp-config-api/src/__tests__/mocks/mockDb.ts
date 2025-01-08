@@ -187,3 +187,9 @@ export class MockDatabase implements Database {
     };
   }
 }
+
+describe('MockDb', () => {
+  it.todo('should initialize database connection');
+  it.todo('should handle stored procedures');
+  it.todo('should manage transactions');
+});

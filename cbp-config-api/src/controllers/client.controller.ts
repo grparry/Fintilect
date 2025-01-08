@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ClientService } from '../services/client.service';
+import { ClientService, CreateClientRequest, UpdateClientRequest } from '../services/client.service';
 import { HttpError } from '../utils/errors';
 
 export class ClientController {
@@ -27,11 +27,11 @@ export class ClientController {
 
   async getClient(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = Number(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         throw new HttpError(400, 'Invalid client ID');
       }
-      const client = await this.clientService.getClient(id);
+      const client = await this.clientService.getClient(String(id));
       if (!client) {
         throw new HttpError(404, 'Client not found');
       }
@@ -43,11 +43,11 @@ export class ClientController {
 
   async createClient(req: Request, res: Response, next: NextFunction) {
     try {
-      const clientData = {
+      const clientData: CreateClientRequest = {
         name: req.body.name,
         email: req.body.email,
-        phone: req.body.phone,
-        address: req.body.address
+        clientType: req.body.clientType || 'standard',
+        settings: req.body.settings
       };
       const result = await this.clientService.createClient(clientData);
       res.status(201).json(result);
@@ -58,17 +58,17 @@ export class ClientController {
 
   async updateClient(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = Number(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         throw new HttpError(400, 'Invalid client ID');
       }
-      const updates = {
+      const updates: UpdateClientRequest = {
         name: req.body.name,
         email: req.body.email,
-        phone: req.body.phone,
-        address: req.body.address
+        status: req.body.status,
+        clientType: req.body.clientType
       };
-      const result = await this.clientService.updateClient(id, updates);
+      const result = await this.clientService.updateClient(String(id), updates);
       res.json(result);
     } catch (error) {
       next(error);
@@ -77,11 +77,11 @@ export class ClientController {
 
   async deleteClient(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = Number(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         throw new HttpError(400, 'Invalid client ID');
       }
-      await this.clientService.deleteClient(id);
+      await this.clientService.deleteClient(String(id));
       res.status(204).send();
     } catch (error) {
       next(error);
@@ -90,11 +90,11 @@ export class ClientController {
 
   async getClientSettings(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = Number(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         throw new HttpError(400, 'Invalid client ID');
       }
-      const settings = await this.clientService.getClientSettings(id);
+      const settings = await this.clientService.getClientSettings(String(id));
       res.json(settings);
     } catch (error) {
       next(error);
@@ -103,16 +103,17 @@ export class ClientController {
 
   async updateClientSettings(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = Number(req.params.id);
-      if (isNaN(id)) {
+      const id = req.params.id;
+      if (!id) {
         throw new HttpError(400, 'Invalid client ID');
       }
       const settings = {
-        notifications: req.body.notifications,
-        language: req.body.language,
-        theme: req.body.theme
+        paymentLimits: {
+          daily: req.body.paymentLimits?.daily,
+          transaction: req.body.paymentLimits?.transaction
+        }
       };
-      const result = await this.clientService.updateClientSettings(id, settings);
+      const result = await this.clientService.updateClientSettings(String(id), settings);
       res.json(result);
     } catch (error) {
       next(error);

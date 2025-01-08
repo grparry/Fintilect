@@ -1,7 +1,8 @@
 import * as sql from 'mssql';
-import { Database, db } from '../config/db';
+import { Database } from '../config/db';
 import { HttpError } from '../utils/errors';
 import { logger } from '../config/logger';
+import { PaginatedResponse, SqlResponse } from '../types/common';
 
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'system';
@@ -14,17 +15,32 @@ export interface UserPreferences {
   language: string;
 }
 
+export interface UserRecord {
+  id: string;
+  email: string;
+  roles: string[];
+  firstName?: string;
+  lastName?: string;
+  preferences?: Record<string, any>;
+  createdAt: Date;
+  updatedAt: Date;
+  deactivatedAt?: Date;
+  lastLogin?: Date;
+  status: 'active' | 'inactive';
+}
+
 export interface UserDetails {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   role: string;
-  status: string;
+  status: 'active' | 'inactive';
   lastLogin?: Date;
   createdAt: Date;
   updatedAt: Date;
-  preferences: UserPreferences;
+  deactivatedAt?: Date;
+  preferences?: UserPreferences;
 }
 
 export interface UserListParams {
@@ -32,6 +48,23 @@ export interface UserListParams {
   limit?: number;
   role?: string;
   status?: string;
+}
+
+export interface CreateUserRequest {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  role?: string;
+  preferences?: UserPreferences;
+}
+
+export interface UpdateUserRequest {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  role?: string;
+  status?: 'active' | 'inactive';
+  preferences?: UserPreferences;
 }
 
 export interface PayeeOptions {
@@ -49,10 +82,6 @@ export interface PayeeOptions {
   };
 }
 
-export interface PayeeOptionsResponse extends PayeeOptions {
-  success?: boolean;
-}
-
 export interface HostInfo {
   name: string;
   connectionStatus: string;
@@ -67,9 +96,18 @@ export interface HostInfo {
 export class UserService {
   constructor(private db: Database) {}
 
-  async listUsers(params: UserListParams) {
+  async listUsers(params: UserListParams): Promise<PaginatedResponse<UserDetails>> {
     try {
       const { page = 1, limit = 10, role, status } = params;
+
+      if (page < 1) {
+        throw new HttpError(400, 'Invalid page number');
+      }
+
+      if (limit < 1 || limit > 100) {
+        throw new HttpError(400, 'Invalid page size');
+      }
+
       const offset = (page - 1) * limit;
 
       const result = await this.db.executeProc('ListUsers', {
@@ -86,45 +124,65 @@ export class UserService {
         data: users,
         pagination: {
           page,
-          limit,
-          total,
-          totalPages: Math.ceil(total / limit)
+          pageSize: limit,
+          total
         }
       };
     } catch (error) {
       if (error instanceof HttpError) {
         throw error;
       }
-      logger.error('Error in listUsers:', error);
+      logger.error('Error in listUsers:', { error, stack: (error as Error).stack });
       throw new HttpError(500, 'Error retrieving users');
     }
   }
 
   async getUserById(id: string): Promise<UserDetails> {
     try {
-      const result = await this.db.executeProc('GetUserById', { userId: id });
+      const result = await this.db.executeProc('GetUserById', { id });
+
       if (!result.recordset.length) {
         throw new HttpError(404, 'User not found');
       }
+
       return this.mapUserRecord(result.recordset[0]);
     } catch (error) {
       if (error instanceof HttpError) {
         throw error;
       }
-      logger.error('Error in getUserById:', error);
+      logger.error('Error in getUserById:', { error, stack: (error as Error).stack });
       throw new HttpError(500, 'Error retrieving user');
     }
   }
 
-  async updateUser(id: string, data: Partial<UserDetails>): Promise<UserDetails> {
+  async createUser(data: CreateUserRequest): Promise<UserDetails> {
+    try {
+      this.validateUserData(data);
+
+      const result = await this.db.executeProc('CreateUser', {
+        ...data,
+        role: data.role || 'user'
+      });
+
+      if (!result.recordset.length) {
+        throw new HttpError(500, 'Failed to create user');
+      }
+
+      return this.mapUserRecord(result.recordset[0]);
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw error;
+      }
+      logger.error('Error in createUser:', { error, stack: (error as Error).stack });
+      throw new HttpError(500, 'Error creating user');
+    }
+  }
+
+  async updateUser(id: string, data: UpdateUserRequest): Promise<UserDetails> {
     try {
       const result = await this.db.executeProc('UpdateUser', {
-        userId: id,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        role: data.role,
-        status: data.status
+        id,
+        ...data
       });
 
       if (!result.recordset.length) {
@@ -136,8 +194,24 @@ export class UserService {
       if (error instanceof HttpError) {
         throw error;
       }
-      logger.error('Error in updateUser:', error);
+      logger.error('Error in updateUser:', { error, stack: (error as Error).stack });
       throw new HttpError(500, 'Error updating user');
+    }
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    try {
+      const result = await this.db.executeProc('DeleteUser', { id });
+
+      if (!result.rowsAffected[0]) {
+        throw new HttpError(404, 'User not found');
+      }
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw error;
+      }
+      logger.error('Error in deleteUser:', { error, stack: (error as Error).stack });
+      throw new HttpError(500, 'Error deleting user');
     }
   }
 
@@ -252,6 +326,45 @@ export class UserService {
     }
   }
 
+  private mapUserRecord(record: any): UserDetails {
+    return {
+      id: record.UserId,
+      email: record.Email,
+      firstName: record.FirstName,
+      lastName: record.LastName,
+      role: record.Role,
+      status: record.Status,
+      lastLogin: record.LastLogin,
+      createdAt: record.CreatedAt,
+      updatedAt: record.UpdatedAt,
+      deactivatedAt: record.DeactivatedAt,
+      preferences: record.Preferences
+    };
+  }
+
+  private validateUserData(data: CreateUserRequest) {
+    const errors = [];
+
+    if (!data.email?.trim()) {
+      errors.push({ field: 'email', message: 'Email is required' });
+    } else if (!this.isValidEmail(data.email)) {
+      errors.push({ field: 'email', message: 'Invalid email format' });
+    }
+
+    if (data.role && !['user', 'admin'].includes(data.role)) {
+      errors.push({ field: 'role', message: 'Invalid role' });
+    }
+
+    if (errors.length > 0) {
+      throw new HttpError(400, 'Invalid user data', errors);
+    }
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
   private validatePreferences(preferences: Partial<UserPreferences>) {
     if (preferences.theme && !['light', 'dark', 'system'].includes(preferences.theme)) {
       throw new HttpError(400, 'Invalid theme value');
@@ -284,20 +397,5 @@ export class UserService {
         throw new HttpError(400, 'Invalid language');
       }
     }
-  }
-
-  private mapUserRecord(record: any): UserDetails {
-    return {
-      id: record.UserId,
-      email: record.Email,
-      firstName: record.FirstName,
-      lastName: record.LastName,
-      role: record.Role,
-      status: record.Status,
-      lastLogin: record.LastLogin,
-      createdAt: record.CreatedAt,
-      updatedAt: record.UpdatedAt,
-      preferences: record.Preferences
-    };
   }
 }

@@ -1,6 +1,110 @@
 import { Database } from './db';
 import { HttpError } from '../utils/errors';
 import * as sql from 'mssql';
+import { QueryResult } from 'pg';
+
+interface MockPayment {
+  id: number;
+  amount: number;
+  status: string;
+  description: string;
+  createdDate: Date;
+  modifiedDate: Date;
+  deletedDate?: Date;
+}
+
+// Mock database state
+let mockPayments = [
+  {
+    id: 1,
+    amount: 100,
+    status: 'completed',
+    description: 'Test payment 1',
+    createdDate: new Date(),
+    modifiedDate: new Date()
+  },
+  {
+    id: 2,
+    amount: 200,
+    status: 'pending',
+    description: 'Test payment 2',
+    createdDate: new Date(),
+    modifiedDate: new Date()
+  }
+];
+
+let nextId = 3;
+
+// Mock query handler
+export const mockDBHandlers = {
+  query: async (text: string, values?: any[]): Promise<QueryResult> => {
+    const now = new Date();
+    const baseResult: QueryResult = {
+      command: '',
+      oid: 0,
+      fields: [],
+      rows: [],
+      rowCount: 0
+    };
+
+    // Handle SQL queries
+    if (typeof text === 'string') {
+      if (text.includes('GetPayments()')) {
+        return { ...baseResult, rows: mockPayments, rowCount: mockPayments.length };
+      }
+
+      if (text.includes('GetPaymentDetails')) {
+        const id = Number(values?.[0]);
+        const payment = mockPayments.find(p => p.id === id);
+        return { ...baseResult, rows: payment ? [payment] : [], rowCount: payment ? 1 : 0 };
+      }
+
+      if (text.includes('InsertPayment')) {
+        const [amount, status, description] = values || [];
+        const newPayment = {
+          id: nextId++,
+          amount,
+          status,
+          description,
+          createdDate: now,
+          modifiedDate: now
+        };
+        mockPayments.push(newPayment);
+        return { ...baseResult, rows: [newPayment], rowCount: 1 };
+      }
+
+      if (text.includes('UpdatePayment')) {
+        const [id, amount, status, description] = values || [];
+        const payment = mockPayments.find(p => p.id === Number(id));
+        if (!payment) {
+          return { ...baseResult, rows: [], rowCount: 0 };
+        }
+        const updatedPayment = {
+          ...payment,
+          amount: amount !== undefined ? amount : payment.amount,
+          status: status || payment.status,
+          description: description || payment.description,
+          modifiedDate: now
+        };
+        const index = mockPayments.findIndex(p => p.id === Number(id));
+        mockPayments[index] = updatedPayment;
+        return { ...baseResult, rows: [updatedPayment], rowCount: 1 };
+      }
+
+      if (text.includes('DeletePayment')) {
+        const id = Number(values?.[0]);
+        const index = mockPayments.findIndex(p => p.id === id);
+        if (index === -1) {
+          return { ...baseResult, rows: [{ success: false }], rowCount: 0 };
+        }
+        mockPayments.splice(index, 1);
+        return { ...baseResult, rows: [{ success: true }], rowCount: 1 };
+      }
+    }
+
+    return { ...baseResult, rows: [], rowCount: 0 };
+  }
+};
 
 export class TestRecordSet<T extends Record<string, any>> extends Array<T> implements sql.IRecordSet<T> {
   columns: sql.IColumnMetadata;
@@ -58,11 +162,41 @@ export class TestRecordSet<T extends Record<string, any>> extends Array<T> imple
   }
 }
 
-export class TestDb implements Database {
-  private mockResponses: Map<string, (params: any) => any>;
+// Export mock handlers for use in tests
+export class TestDatabase {
+  private mockResponses: Map<string, (params: any) => Promise<any>>;
+  protected log: (message: string, ...args: any[]) => void;
 
   constructor() {
     this.mockResponses = new Map();
+    this.log = console.log;
+    // Reset mock state
+    mockPayments = [
+      {
+        id: 1,
+        amount: 100,
+        status: 'completed',
+        description: 'Test payment 1',
+        createdDate: new Date(),
+        modifiedDate: new Date()
+      },
+      {
+        id: 2,
+        amount: 200,
+        status: 'pending',
+        description: 'Test payment 2',
+        createdDate: new Date(),
+        modifiedDate: new Date()
+      }
+    ];
+    nextId = 3;
+
+    // Register SQL query handlers
+    this.mockResponses.set('SELECT * FROM GetPayments()', mockDBHandlers.query);
+    this.mockResponses.set('SELECT * FROM GetPaymentDetails($1)', mockDBHandlers.query);
+    this.mockResponses.set('SELECT * FROM InsertPayment($1, $2, $3)', mockDBHandlers.query);
+    this.mockResponses.set('SELECT * FROM UpdatePayment($1, $2, $3, $4)', mockDBHandlers.query);
+    this.mockResponses.set('SELECT * FROM DeletePayment($1)', mockDBHandlers.query);
   }
 
   setMockResponse(procName: string, handler: (params: any) => any) {
@@ -73,83 +207,53 @@ export class TestDb implements Database {
     this.mockResponses.clear();
   }
 
-  async executeProc(procName: string, params: any = {}): Promise<any> {
+  async executeProc(procName: string, params?: any): Promise<any> {
+    return this.executeProcedure(procName, params);
+  }
+
+  async executeProcedure(procName: string, params: any = {}): Promise<any> {
+    this.log('Executing ' + procName + ' with params:', params);
+
     const handler = this.mockResponses.get(procName);
     if (!handler) {
-      return { recordset: new TestRecordSet([]) };
+      return {
+        recordset: [],
+        recordsets: [],
+        output: {},
+        rowsAffected: [0]
+      };
     }
 
-    try {
-      const result = handler(params);
-      if (!result) {
-        return { recordset: new TestRecordSet([]) };
-      }
+    const result = await handler(params);
+    this.log('Result from ' + procName + ':', result);
 
-      // Handle errors
-      if (result instanceof Error) {
-        throw result;
-      }
-
-      // If the result is already in the correct format, return it
-      if (result && typeof result === 'object' && 'recordset' in result) {
-        if (Array.isArray(result.recordset)) {
-          result.recordset = new TestRecordSet(result.recordset);
-          return result;
-        }
-        return { recordset: new TestRecordSet([result.recordset]) };
-      }
-
-      // If the result is an array, wrap it in a recordset
-      if (Array.isArray(result)) {
-        return { recordset: new TestRecordSet(result) };
-      }
-
-      // If it's a single object, wrap it in an array and then in a recordset
-      return { recordset: new TestRecordSet([result]) };
-    } catch (error) {
-      if (error instanceof HttpError) {
-        throw error;
-      }
-      if (error instanceof Error) {
-        // Convert validation errors to 400 Bad Request
-        if (error.message.includes('Invalid') || error.message.includes('Missing')) {
-          throw new HttpError(400, error.message);
-        }
-        // Convert not found errors to 404 Not Found
-        if (error.message.includes('not found')) {
-          throw new HttpError(404, error.message);
-        }
-        // All other errors are internal server errors
-        throw new HttpError(500, error.message);
-      }
-      throw new HttpError(500, 'Database error');
-    }
+    return result;
   }
 
-  async connect(): Promise<void> {
-    // No-op for test db
-  }
-
-  async disconnect(): Promise<void> {
-    // No-op for test db
-  }
-
-  async executeQuery(query: string, params: any = {}): Promise<any> {
-    return this.executeProc(query, params);
-  }
-
-  async executeProcWithTransaction(procName: string, params: any = {}): Promise<any> {
-    return this.executeProc(procName, params);
-  }
-
-  async executeStoredProcedure(procName: string, params: any = {}): Promise<any> {
-    return this.executeProc(procName, params);
-  }
-
-  async beginTransaction(): Promise<void> {}
-  async commitTransaction(): Promise<void> {}
-  async rollbackTransaction(): Promise<void> {}
+  async connect(): Promise<void> {}
+  
+  async disconnect(): Promise<void> {}
+  
   async close(): Promise<void> {}
+  
+  async beginTransaction(): Promise<void> {}
+  
+  async commitTransaction(): Promise<void> {}
+  
+  async rollbackTransaction(): Promise<void> {}
+  
+  async executeQuery(query: string, params?: any): Promise<any> {
+    return this.executeProcedure(query, params);
+  }
+  
+  async executeProcWithTransaction(procName: string, params?: any): Promise<any> {
+    return this.executeProcedure(procName, params);
+  }
+  
+  async executeStoredProcedure(procName: string, params?: any): Promise<any> {
+    return this.executeProcedure(procName, params);
+  }
 }
 
-export const testDb = new TestDb();
+export type TestDb = TestDatabase;
+export const testDb = new TestDatabase();

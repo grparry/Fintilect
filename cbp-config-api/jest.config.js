@@ -18,5 +18,8 @@ module.exports = {
   ],
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
-  verbose: true
+  verbose: true,
+  // New configurations
+  reporters: ['<rootDir>/src/__tests__/customReporter.js'],
+  testResultsProcessor: '<rootDir>/src/__tests__/testResultsProcessor.js'
 };

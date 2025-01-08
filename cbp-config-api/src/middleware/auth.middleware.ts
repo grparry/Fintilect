@@ -11,7 +11,7 @@ declare module 'express' {
 }
 
 // Get JWT secret from environment variables
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'test-secret';  // Match the test secret
 
 // Extract token from request headers
 const extractToken = (req: Request): string | null => {

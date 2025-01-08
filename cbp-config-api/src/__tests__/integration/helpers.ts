@@ -3,10 +3,10 @@ import { Express } from 'express';
 import jwt from 'jsonwebtoken';
 import app from '../../app';
 import { Database } from '../../config/db';
-import { TestDb } from '../../config/test.db';
+import { TestDatabase, testDb } from '../../config/test.db';
 import { HttpError } from '../../utils/errors';
 
-const testDb = new TestDb();
+const testDatabase = testDb;
 
 const JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
 
@@ -47,44 +47,65 @@ export const getAuthHeader = (token: string) => ({
 export const setupTestDb = async () => {
   try {
     // User mocks
-    testDb.setMockResponse('GetUsers', () => [{
+    testDatabase.setMockResponse('GetUsers', () => [{
       id: '1',
       email: 'test@example.com',
       roles: ['user']
     }]);
 
-    testDb.setMockResponse('GetUserById', () => [{
+    testDatabase.setMockResponse('GetUserById', () => [{
       id: '2',
       email: 'admin@example.com',
       roles: ['admin']
     }]);
 
     // Client mocks
-    testDb.setMockResponse('CLIENT', (params: any) => {
+    testDatabase.setMockResponse('CLIENT', (params: any) => {
       const page = Number(params.page) || 1;
       const pageSize = Number(params.pageSize) || 10;
 
-      if (isNaN(page) || page < 1) {
-        throw new HttpError(400, 'Invalid page number');
-      }
-
-      if (isNaN(pageSize) || pageSize < 1 || pageSize > 100) {
-        throw new HttpError(400, 'Invalid page size');
-      }
-
       const clients = [
         {
-          id: 1,
-          name: 'Test Client 1',
-          email: 'client1@example.com',
-          status: 'active',
+          ClientId: '1',
+          Name: 'Test Client 1',
+          Email: 'client1@example.com',
+          Phone: '123-456-7890',
+          Status: 'active',
+          CreatedBy: 'system',
+          CreatedDate: new Date(),
+          Settings: {
+            paymentLimits: {
+              daily: 10000,
+              transaction: 5000
+            },
+            paymentMethods: ['ach', 'wire'],
+            features: {
+              bulkPayments: true,
+              scheduledPayments: true
+            }
+          },
           TotalCount: 2
         },
         {
-          id: 2,
-          name: 'Test Client 2',
-          email: 'client2@example.com',
-          status: 'active',
+          ClientId: '2',
+          Name: 'Test Client 2',
+          Email: 'client2@example.com',
+          Phone: '987-654-3210',
+          Status: 'active',
+          CreatedBy: 'system',
+          CreatedDate: new Date(),
+          Settings: {
+            paymentLimits: {
+              daily: 20000,
+              transaction: 10000
+            },
+            paymentMethods: ['ach', 'wire', 'check'],
+            features: {
+              bulkPayments: true,
+              scheduledPayments: true,
+              priorityProcessing: true
+            }
+          },
           TotalCount: 2
         }
       ];
@@ -94,119 +115,157 @@ export const setupTestDb = async () => {
       const paginatedClients = clients.slice(start, end);
 
       return {
-        recordset: paginatedClients.map(client => ({
-          ...client,
-          TotalCount: clients.length
-        }))
+        recordset: paginatedClients,
+        recordsets: [paginatedClients],
+        output: {},
+        rowsAffected: [paginatedClients.length]
       };
     });
 
-    testDb.setMockResponse('CLIENT_GET', (params: any) => {
-      const id = Number(params.id);
-      if (isNaN(id)) {
-        throw new HttpError(400, 'Invalid client ID');
-      }
-      if (id === 1) {
-        return {
-          recordset: [{
-            id: 1,
-            name: 'Test Client 1',
-            email: 'client1@example.com',
-            status: 'active'
-          }]
-        };
-      }
-      throw new HttpError(404, 'Client not found');
-    });
+    testDatabase.setMockResponse('CLIENT_GET', (params: any) => {
+      const { id } = params;
+      const client = {
+        ClientId: id,
+        Name: 'Test Client',
+        Email: 'client@example.com',
+        Phone: '123-456-7890',
+        Status: 'active',
+        CreatedBy: 'system',
+        CreatedDate: new Date(),
+        Settings: {
+          paymentLimits: {
+            daily: 10000,
+            transaction: 5000
+          },
+          paymentMethods: ['ach', 'wire'],
+          features: {
+            bulkPayments: true,
+            scheduledPayments: true
+          }
+        }
+      };
 
-    testDb.setMockResponse('CLIENT_CREATE', (params: any) => {
-      if (!params.name || !params.email) {
-        throw new HttpError(400, 'Missing required fields');
-      }
       return {
-        recordset: [{
-          id: 3,
-          name: params.name,
-          email: params.email,
-          status: 'active',
-          createdAt: new Date().toISOString()
-        }]
+        recordset: [client],
+        recordsets: [[client]],
+        output: {},
+        rowsAffected: [1]
       };
     });
 
-    testDb.setMockResponse('CLIENT_UPDATE', (params: any) => {
-      const id = Number(params.id);
-      if (isNaN(id)) {
-        throw new HttpError(400, 'Invalid client ID');
-      }
-      if (id === 1) {
-        return {
-          recordset: [{
-            id: params.id,
-            name: params.name,
-            email: params.email,
-            status: 'active',
-            updatedAt: new Date().toISOString()
-          }]
-        };
-      }
-      throw new HttpError(404, 'Client not found');
+    testDatabase.setMockResponse('CLIENT_CREATE', (params: any) => {
+      const newClient = {
+        ClientId: String(Date.now()),
+        Name: params.name,
+        Email: params.email,
+        Phone: params.phone || '123-456-7890',
+        Status: 'active',
+        CreatedBy: 'system',
+        CreatedDate: new Date(),
+        Settings: params.settings || {
+          paymentLimits: {
+            daily: 10000,
+            transaction: 5000
+          },
+          paymentMethods: ['ach'],
+          features: {
+            bulkPayments: true
+          }
+        }
+      };
+
+      return {
+        recordset: [newClient],
+        recordsets: [[newClient]],
+        output: {},
+        rowsAffected: [1]
+      };
     });
 
-    testDb.setMockResponse('CLIENT_DELETE', (params: any) => {
-      const id = Number(params.id);
-      if (isNaN(id)) {
-        throw new HttpError(400, 'Invalid client ID');
-      }
-      if (id === 1) {
-        return {
-          recordset: [{ affected: 1 }]
-        };
-      }
-      throw new HttpError(404, 'Client not found');
+    testDatabase.setMockResponse('CLIENT_UPDATE', (params: any) => {
+      const { id, ...updates } = params;
+      const updatedClient = {
+        ClientId: id,
+        Name: updates.name || 'Test Client',
+        Email: updates.email || 'client@example.com',
+        Phone: updates.phone || '123-456-7890',
+        Status: updates.status || 'active',
+        CreatedBy: 'system',
+        CreatedDate: new Date(),
+        ModifiedBy: 'system',
+        ModifiedDate: new Date(),
+        Settings: updates.settings || {
+          paymentLimits: {
+            daily: 10000,
+            transaction: 5000
+          },
+          paymentMethods: ['ach', 'wire'],
+          features: {
+            bulkPayments: true,
+            scheduledPayments: true
+          }
+        }
+      };
+
+      return {
+        recordset: [updatedClient],
+        recordsets: [[updatedClient]],
+        output: {},
+        rowsAffected: [1]
+      };
     });
 
-    testDb.setMockResponse('CLIENT_SETTINGS_GET', (params: any) => {
-      const id = Number(params.id);
-      if (isNaN(id)) {
-        throw new HttpError(400, 'Invalid client ID');
-      }
-      if (id === 1) {
-        return {
-          recordset: [{
-            clientId: params.id,
-            notifications: true,
-            language: 'en',
-            theme: 'light'
-          }]
-        };
-      }
-      throw new HttpError(404, 'Client settings not found');
+    testDatabase.setMockResponse('CLIENT_DELETE', (params: any) => {
+      return {
+        recordset: [],
+        recordsets: [[]],
+        output: {},
+        rowsAffected: [1]
+      };
     });
 
-    testDb.setMockResponse('CLIENT_SETTINGS_UPDATE', (params: any) => {
-      const id = Number(params.id);
-      if (isNaN(id)) {
-        throw new HttpError(400, 'Invalid client ID');
-      }
-      if (!params.language || !params.theme) {
-        throw new HttpError(400, 'Missing required fields');
-      }
-      if (id === 1) {
-        return {
-          recordset: [{
-            clientId: params.id,
-            notifications: params.notifications,
-            language: params.language,
-            theme: params.theme
-          }]
-        };
-      }
-      throw new HttpError(404, 'Client settings not found');
+    testDatabase.setMockResponse('CLIENT_SETTINGS_GET', (params: any) => {
+      const { id } = params;
+      const settings = {
+        ClientId: id,
+        Settings: {
+          paymentLimits: {
+            daily: 10000,
+            transaction: 5000
+          },
+          paymentMethods: ['ach', 'wire'],
+          features: {
+            bulkPayments: true,
+            scheduledPayments: true
+          }
+        }
+      };
+
+      return {
+        recordset: [settings],
+        recordsets: [[settings]],
+        output: {},
+        rowsAffected: [1]
+      };
+    });
+
+    testDatabase.setMockResponse('CLIENT_SETTINGS_UPDATE', (params: any) => {
+      const { id, settings } = params;
+      const updatedSettings = {
+        ClientId: id,
+        Settings: settings
+      };
+
+      return {
+        recordset: [updatedSettings],
+        recordsets: [[updatedSettings]],
+        output: {},
+        rowsAffected: [1]
+      };
     });
 
     // Payee mocks
-    testDb.setMockResponse('GetPayeeOptions', (params: any) => {
+    testDatabase.setMockResponse('GetPayeeOptions', (params: any) => {
       if (params.payeeId === '999999' || params.payeeId === 999999) {
         return [];
       }
@@ -228,116 +287,106 @@ export const setupTestDb = async () => {
     });
 
     // Payment mocks
-    testDb.setMockResponse('GetPayments', (params: any) => {
-      const offset = parseInt(params.offset) || 0;
-      const pageSize = parseInt(params.pageSize) || 10;
+    testDatabase.setMockResponse('GetPayments', (params: any) => {
+      const page = Number(params.page) || 1;
+      const pageSize = Number(params.pageSize) || 10;
 
-      if (isNaN(pageSize) || pageSize < 1 || pageSize > 100) {
-        throw new Error('Invalid page size');
+      if (isNaN(page) || page < 1) {
+        throw new HttpError(400, 'Invalid page number');
       }
 
-      const payments = [{
-        PaymentId: '1',
-        PayeeId: '1',
-        Amount: 1000,
-        Currency: 'USD',
-        Status: 'pending',
-        EffectiveDate: new Date(),
-        Description: 'Test payment 1',
-        Reference: 'REF001',
-        CreatedBy: 'admin',
-        CreatedDate: new Date(),
-        ModifiedBy: null,
-        ModifiedDate: null,
-        ClearedDate: null
-      },
-      {
-        PaymentId: '2',
-        PayeeId: '2',
-        Amount: 2000,
-        Currency: 'USD',
-        Status: 'cleared',
-        EffectiveDate: new Date(),
-        Description: 'Test payment 2',
-        Reference: 'REF002',
-        CreatedBy: 'admin',
-        CreatedDate: new Date(),
-        ModifiedBy: 'admin',
-        ModifiedDate: new Date(),
-        ClearedDate: new Date()
-      }];
+      const payments = [
+        {
+          id: '1',
+          payeeId: '1',
+          amount: 1000,
+          currency: 'USD',
+          status: 'pending',
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: '2',
+          payeeId: '2',
+          amount: 2000,
+          currency: 'USD',
+          status: 'approved',
+          createdAt: new Date().toISOString()
+        }
+      ];
 
-      return payments.slice(offset, offset + pageSize);
+      return {
+        recordset: payments,
+        recordsets: [],
+        rowsAffected: [payments.length]
+      };
     });
 
-    testDb.setMockResponse('GetPaymentDetails', (params: any) => {
-      if (params.id === '1' || params.id === 1) {
-        return [{
-          PaymentId: '1',
-          PayeeId: '1',
-          Amount: 1000,
-          Currency: 'USD',
-          Status: 'pending',
-          EffectiveDate: new Date(),
-          Description: 'Test payment 1',
-          Reference: 'REF001',
-          CreatedBy: 'admin',
-          CreatedDate: new Date(),
-          ModifiedBy: null,
-          ModifiedDate: null,
-          ClearedDate: null
-        }];
+    testDatabase.setMockResponse('GetPaymentDetails', (params: any) => {
+      const id = params.id;
+      if (id === '1') {
+        return {
+          recordset: [{
+            id: '1',
+            payeeId: '1',
+            amount: 1000,
+            currency: 'USD',
+            status: 'pending',
+            createdAt: new Date().toISOString()
+          }],
+          recordsets: [],
+          rowsAffected: [1]
+        };
       }
-      return [];
+      return { recordset: [], recordsets: [], rowsAffected: [0] };
     });
 
-    testDb.setMockResponse('InsertPayment', (params: any) => {
-      return [{
-        PaymentId: '3',
-        PayeeId: params.payeeId,
-        Amount: params.amount,
-        Currency: params.currency || 'USD',
-        Status: 'pending',
-        EffectiveDate: params.effectiveDate || new Date(),
-        Description: params.description,
-        Reference: params.reference || 'REF003',
-        CreatedBy: 'admin',
-        CreatedDate: new Date(),
-        ModifiedBy: null,
-        ModifiedDate: null,
-        ClearedDate: null
-      }];
-    });
-
-    testDb.setMockResponse('UpdatePaymentDetails', (params: any) => {
-      if (params.id === '1' || params.id === 1) {
-        return [{
-          PaymentId: '1',
-          PayeeId: '1',
-          Amount: params.amount || 1000,
-          Currency: params.currency || 'USD',
-          Status: params.status || 'pending',
-          EffectiveDate: params.effectiveDate || new Date(),
-          Description: params.description || 'Test payment 1',
-          Reference: params.reference || 'REF001',
-          CreatedBy: 'admin',
-          CreatedDate: new Date(),
-          ModifiedBy: 'admin',
-          ModifiedDate: new Date(),
-          ClearedDate: null
-        }];
+    testDatabase.setMockResponse('InsertPayment', (params: any) => {
+      if (!params.payeeId || !params.amount) {
+        throw new HttpError(400, 'Missing required fields');
       }
-      return [];
+      return {
+        recordset: [{
+          id: '3',
+          payeeId: params.payeeId,
+          amount: params.amount,
+          currency: params.currency || 'USD',
+          status: 'pending',
+          createdAt: new Date().toISOString()
+        }],
+        recordsets: [],
+        rowsAffected: [1]
+      };
     });
 
-    testDb.setMockResponse('DeletePayment', (params: any) => {
-      if (params.id === '1' || params.id === 1) {
-        return [{ success: true }];
+    testDatabase.setMockResponse('UpdatePayment', (params: any) => {
+      const id = params.id;
+      if (id === '1') {
+        return {
+          recordset: [{
+            id: '1',
+            payeeId: '1',
+            amount: params.amount || 1000,
+            currency: params.currency || 'USD',
+            status: params.status || 'pending',
+            description: params.description,
+            updatedAt: new Date().toISOString()
+          }],
+          recordsets: [],
+          rowsAffected: [1]
+        };
       }
-      return [];
+      return { recordset: [], recordsets: [], rowsAffected: [0] };
     });
 
-    testDb.setMockResponse('GetPaymentStatus', (params: any) => {
+    testDatabase.setMockResponse('DeletePayment', (params: any) => {
+      const id = params.id;
+      if (id === '1') {
+        return { recordset: [], recordsets: [], rowsAffected: [1] };
+      }
+      return { recordset: [], recordsets: [], rowsAffected: [0] };
+    });
+
+    testDatabase.setMockResponse('GetPaymentStatus', (params: any) => {
       if (params.id === '1' || params.id === 1) {
         return [{
           PaymentId: '1',
@@ -348,7 +397,7 @@ export const setupTestDb = async () => {
       return [];
     });
 
-    testDb.setMockResponse('GetClearedPayments', (params: any) => {
+    testDatabase.setMockResponse('GetClearedPayments', (params: any) => {
       const startDate = new Date(params.startDate);
       const endDate = new Date(params.endDate);
 
@@ -373,7 +422,7 @@ export const setupTestDb = async () => {
       }];
     });
 
-    testDb.setMockResponse('ApprovePayment', (params: any) => {
+    testDatabase.setMockResponse('ApprovePayment', (params: any) => {
       if (params.id === '1' || params.id === 1) {
         return [{
           PaymentId: '1',
@@ -394,7 +443,7 @@ export const setupTestDb = async () => {
       return [];
     });
 
-    testDb.setMockResponse('RejectPayment', (params: any) => {
+    testDatabase.setMockResponse('RejectPayment', (params: any) => {
       if (params.id === '1' || params.id === 1) {
         return [{
           PaymentId: '1',
@@ -417,7 +466,7 @@ export const setupTestDb = async () => {
     });
 
     // Host info mock
-    testDb.setMockResponse('GetHostInfo', () => [{
+    testDatabase.setMockResponse('GetHostInfo', () => [{
       name: 'Test Host',
       connectionStatus: 'connected',
       lastConnectionTime: new Date().toISOString(),
@@ -425,7 +474,7 @@ export const setupTestDb = async () => {
     }]);
 
     // Payee options mock
-    testDb.setMockResponse('GetPayeeOptions', (params: any) => {
+    testDatabase.setMockResponse('GetPayeeOptions', (params: any) => {
       if (params.payeeId === '999999' || params.payeeId === 999999) {
         return [];
       }
@@ -447,7 +496,7 @@ export const setupTestDb = async () => {
     });
 
     // Update payee options mock
-    testDb.setMockResponse('UpdatePayeeOptions', (params: any) => {
+    testDatabase.setMockResponse('UpdatePayeeOptions', (params: any) => {
       return [{
         defaultPaymentMethod: params.defaultPaymentMethod || 'ACH',
         allowedPaymentMethods: params.allowedPaymentMethods || ['ACH', 'CHECK'],
@@ -472,7 +521,7 @@ export const setupTestDb = async () => {
 
 export const cleanupTestDb = async () => {
   try {
-    testDb.clearMockResponses();
+    testDatabase.clearMockResponses();
   } catch (error) {
     console.error('Error cleaning up test database:', error);
     throw error;

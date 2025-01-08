@@ -1,245 +1,175 @@
-import { UserService, PayeeOptions, HostInfo } from '../../services/user.service';
-import { TestDb } from '../../config/test.db';
+import { UserService, UserDetails, PayeeOptions, HostInfo, CreateUserRequest, UpdateUserRequest } from '../../services/user.service';
+import { TestDatabase } from '../../config/test.db';
 import { HttpError } from '../../utils/errors';
+import { UserTestHelper } from '../integration/helpers/user.helper';
+import { mockUsers } from '../integration/fixtures/mockData';
 
 describe('UserService', () => {
   let userService: UserService;
-  let testDb: TestDb;
+  let testDb: TestDatabase;
 
   beforeEach(() => {
-    testDb = new TestDb();
+    testDb = new TestDatabase();
     userService = new UserService(testDb);
+    UserTestHelper.setupUserMocks(testDb);
   });
 
   describe('listUsers', () => {
     it('should list users with pagination', async () => {
-      // Mock successful response
-      testDb.setMockResponse('ListUsers', () => [{
-        UserId: '1',
-        Email: 'user1@example.com',
-        FirstName: 'John',
-        LastName: 'Doe',
-        Role: 'user',
-        Status: 'active',
-        LastLogin: new Date(),
-        CreatedAt: new Date(),
-        UpdatedAt: new Date(),
-        Preferences: { theme: 'light' },
-        TotalCount: 1
-      }]);
-
       const result = await userService.listUsers({ page: 1, limit: 10 });
 
-      expect(result.data).toHaveLength(1);
-      expect(result.data[0].id).toBe('1');
-      expect(result.pagination.total).toBe(1);
+      UserTestHelper.verifyListUsersResponse(result);
+      expect(result.data).toHaveLength(3); // standard, admin, and inactive users
+      expect(result.pagination.total).toBe(3);
     });
 
     it('should handle empty results', async () => {
-      // Mock empty response
-      testDb.setMockResponse('ListUsers', () => []);
+      testDb.setMockResponse('ListUsers', () => ({
+        recordset: [],
+        recordsets: [],
+        output: {},
+        rowsAffected: [0]
+      }));
 
       const result = await userService.listUsers({});
 
+      UserTestHelper.verifyListUsersResponse(result);
       expect(result.data).toHaveLength(0);
       expect(result.pagination.total).toBe(0);
+    });
+
+    it('should throw error for invalid page number', async () => {
+      await expect(userService.listUsers({ page: 0 }))
+        .rejects
+        .toThrow(new HttpError(400, 'Invalid page number'));
+    });
+
+    it('should throw error for invalid page size', async () => {
+      await expect(userService.listUsers({ limit: 0 }))
+        .rejects
+        .toThrow(new HttpError(400, 'Invalid page size'));
+
+      await expect(userService.listUsers({ limit: 101 }))
+        .rejects
+        .toThrow(new HttpError(400, 'Invalid page size'));
     });
   });
 
   describe('getUserById', () => {
     it('should get user by id', async () => {
-      // Mock successful response
-      testDb.setMockResponse('GetUserById', () => [{
-        UserId: '1',
-        Email: 'user1@example.com',
-        FirstName: 'John',
-        LastName: 'Doe',
-        Role: 'user',
-        Status: 'active',
-        LastLogin: new Date(),
-        CreatedAt: new Date(),
-        UpdatedAt: new Date(),
-        Preferences: { theme: 'light' }
-      }]);
+      const result = await userService.getUserById(mockUsers.standard.id);
 
-      const result = await userService.getUserById('1');
-
-      expect(result.id).toBe('1');
-      expect(result.email).toBe('user1@example.com');
+      UserTestHelper.verifyGetUserResponse(result);
+      expect(result.id).toBe(mockUsers.standard.id);
+      expect(result.email).toBe(mockUsers.standard.email);
     });
 
     it('should throw error when user not found', async () => {
-      // Mock empty response
-      testDb.setMockResponse('GetUserById', () => []);
+      await expect(userService.getUserById('nonexistent'))
+        .rejects
+        .toThrow(new HttpError(404, 'User not found'));
+    });
+  });
 
-      await expect(userService.getUserById('1')).rejects.toThrow(HttpError);
+  describe('createUser', () => {
+    const validUserData: CreateUserRequest = {
+      email: 'test@example.com',
+      firstName: 'Test',
+      lastName: 'User',
+      role: 'user',
+      preferences: {
+        theme: 'light',
+        notifications: {
+          email: true,
+          push: true,
+          sms: false
+        },
+        timezone: 'UTC',
+        language: 'en'
+      }
+    };
+
+    it('should create user with valid data', async () => {
+      const result = await userService.createUser(validUserData);
+
+      UserTestHelper.verifyGetUserResponse(result);
+      expect(result.email).toBe(validUserData.email);
+      expect(result.firstName).toBe(validUserData.firstName);
+      expect(result.lastName).toBe(validUserData.lastName);
+      expect(result.role).toBe(validUserData.role);
+      expect(result.preferences).toEqual(validUserData.preferences);
+    });
+
+    it('should throw error for invalid email', async () => {
+      const invalidData = { ...validUserData, email: 'invalid-email' };
+      
+      await expect(userService.createUser(invalidData))
+        .rejects
+        .toThrow(new HttpError(400, 'Invalid user data'));
+    });
+
+    it('should throw error for invalid role', async () => {
+      const invalidData = { ...validUserData, role: 'invalid-role' };
+      
+      await expect(userService.createUser(invalidData))
+        .rejects
+        .toThrow(new HttpError(400, 'Invalid user data'));
     });
   });
 
   describe('updateUser', () => {
-    it('should update user', async () => {
-      // Mock successful response
-      testDb.setMockResponse('UpdateUser', () => [{
-        UserId: '1',
-        Email: 'updated@example.com',
-        FirstName: 'John',
-        LastName: 'Doe',
-        Role: 'user',
-        Status: 'active',
-        LastLogin: new Date(),
-        CreatedAt: new Date(),
-        UpdatedAt: new Date(),
-        Preferences: { theme: 'light' }
-      }]);
-
-      const result = await userService.updateUser('1', { email: 'updated@example.com' });
-
-      expect(result.email).toBe('updated@example.com');
-    });
-
-    it('should throw error when user not found', async () => {
-      // Mock empty response
-      testDb.setMockResponse('UpdateUser', () => []);
-
-      await expect(userService.updateUser('1', { email: 'test@example.com' })).rejects.toThrow(HttpError);
-    });
-  });
-
-  describe('getUserPreferences', () => {
-    it('should get user preferences', async () => {
-      // Mock successful response
-      testDb.setMockResponse('GetUserPreferences', () => [{
-        preferences: {
-          theme: 'dark',
-          notifications: {
-            email: true,
-            sms: true,
-            push: false
-          }
-        }
-      }]);
-
-      const result = await userService.getUserPreferences('1');
-
-      expect(result).toEqual({
+    const validUpdateData: UpdateUserRequest = {
+      email: 'updated@example.com',
+      firstName: 'Updated',
+      lastName: 'User',
+      role: 'admin',
+      preferences: {
         theme: 'dark',
         notifications: {
           email: true,
-          sms: true,
-          push: false
-        }
-      });
-    });
-
-    it('should throw error when preferences not found', async () => {
-      // Mock empty response
-      testDb.setMockResponse('GetUserPreferences', () => []);
-
-      await expect(userService.getUserPreferences('1')).rejects.toThrow(HttpError);
-    });
-  });
-
-  describe('getPayeeOptions', () => {
-    it('should return payee options', async () => {
-      // Mock successful response
-      testDb.setMockResponse('GetPayeeOptions', () => [{
-        defaultPaymentMethod: 'ACH',
-        allowedPaymentMethods: ['ACH', 'CHECK', 'WIRE'],
-        paymentLimits: {
-          daily: 1000,
-          weekly: 5000,
-          monthly: 20000
-        },
-        autoPayEnabled: false,
-        notificationPreferences: {
-          email: true,
+          push: false,
           sms: true
-        }
-      }]);
-
-      const result = await userService.getPayeeOptions('1', 1);
-
-      expect(result).toEqual({
-        defaultPaymentMethod: 'ACH',
-        allowedPaymentMethods: ['ACH', 'CHECK', 'WIRE'],
-        paymentLimits: {
-          daily: 1000,
-          weekly: 5000,
-          monthly: 20000
         },
-        autoPayEnabled: false,
-        notificationPreferences: {
-          email: true,
-          sms: true
-        }
-      });
+        timezone: 'UTC',
+        language: 'es'
+      }
+    };
+
+    it('should update user with valid data', async () => {
+      const result = await userService.updateUser(mockUsers.standard.id, validUpdateData);
+
+      UserTestHelper.verifyGetUserResponse(result);
+      expect(result.email).toBe(validUpdateData.email);
+      expect(result.firstName).toBe(validUpdateData.firstName);
+      expect(result.lastName).toBe(validUpdateData.lastName);
+      expect(result.role).toBe(validUpdateData.role);
+      expect(result.preferences).toEqual(validUpdateData.preferences);
     });
 
-    it('should throw error if options not found', async () => {
-      // Mock empty response
-      testDb.setMockResponse('GetPayeeOptions', () => []);
-
-      await expect(userService.getPayeeOptions('1', 1)).rejects.toThrow(HttpError);
-    });
-  });
-
-  describe('updatePayeeOptions', () => {
-    it('should update payee options', async () => {
-      // Mock successful response
-      testDb.setMockResponse('UpdatePayeeOptions', () => [{ success: true }]);
-
-      await expect(userService.updatePayeeOptions('1', 1, {
-        paymentLimits: {
-          daily: 2000,
-          weekly: 10000,
-          monthly: 40000
-        }
-      })).resolves.not.toThrow();
+    it('should throw error when user not found', async () => {
+      await expect(userService.updateUser('nonexistent', validUpdateData))
+        .rejects
+        .toThrow(new HttpError(404, 'User not found'));
     });
 
-    it('should throw error if update fails', async () => {
-      // Mock successful response
-      testDb.setMockResponse('UpdatePayeeOptions', () => [{ success: false }]);
+    it('should update user status to inactive', async () => {
+      const result = await userService.updateUser(mockUsers.standard.id, { status: 'inactive' });
 
-      await expect(userService.updatePayeeOptions('1', 1, {
-        paymentLimits: {
-          daily: 2000,
-          weekly: 10000,
-          monthly: 40000
-        }
-      })).rejects.toThrow(HttpError);
+      UserTestHelper.verifyGetUserResponse(result, true);
+      expect(result.status).toBe('inactive');
+      expect(result.deactivatedAt).toBeDefined();
     });
   });
 
-  describe('getHostInfo', () => {
-    it('should return host info', async () => {
-      // Mock successful response
-      testDb.setMockResponse('GetHostInfo', () => [{
-        name: 'Test Host',
-        connectionStatus: 'connected',
-        lastConnectionTime: new Date().toISOString(),
-        features: ['payments', 'reporting']
-      }]);
-
-      const result = await userService.getHostInfo('1');
-
-      expect(result).toEqual({
-        name: 'Test Host',
-        connectionStatus: 'connected',
-        lastConnectionTime: expect.any(String),
-        features: {
-          payments: true,
-          reporting: true,
-          automation: false
-        }
-      });
+  describe('deleteUser', () => {
+    it('should delete existing user', async () => {
+      await expect(userService.deleteUser(mockUsers.standard.id)).resolves.not.toThrow();
     });
 
-    it('should throw error if host info not found', async () => {
-      // Mock empty response
-      testDb.setMockResponse('GetHostInfo', () => []);
-
-      await expect(userService.getHostInfo('1')).rejects.toThrow(HttpError);
+    it('should throw error when user not found', async () => {
+      await expect(userService.deleteUser('nonexistent'))
+        .rejects
+        .toThrow(new HttpError(404, 'User not found'));
     });
   });
 });

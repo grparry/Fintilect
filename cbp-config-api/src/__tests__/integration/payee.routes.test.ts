@@ -46,14 +46,14 @@ describe('Payee Routes', () => {
         .set(getAuthHeader(token));
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.objectContaining({
+      expect(response.body).toEqual({
         data: expect.any(Array),
-        pagination: expect.objectContaining({
+        pagination: {
           page: 1,
-          limit: 10,
+          pageSize: 10,
           total: expect.any(Number)
-        })
-      }));
+        }
+      });
     });
 
     it('should mask sensitive data', async () => {
@@ -75,8 +75,13 @@ describe('Payee Routes', () => {
       const { token } = await createTestAdmin();
       const newPayee = {
         name: 'Test Payee',
-        email: 'test@payee.com',
-        status: 'active'
+        email: 'test@example.com',
+        phone: '123-456-7890',
+        bankAccounts: [{
+          accountNumber: '123456789',
+          routingNumber: '987654321',
+          accountType: 'checking'
+        }]
       };
 
       const response = await request(testApp)
@@ -85,16 +90,20 @@ describe('Payee Routes', () => {
         .send(newPayee);
 
       expect(response.status).toBe(201);
-      expect(response.body.data).toHaveProperty('id');
-      expect(response.body.data.name).toBe(newPayee.name);
+      expect(response.body).toMatchObject({
+        name: newPayee.name,
+        email: newPayee.email,
+        phone: newPayee.phone,
+        status: 'ACTIVE'
+      });
     });
 
     it('should return 403 for non-admin user', async () => {
       const { token } = await createTestUser();
       const newPayee = {
         name: 'Test Payee',
-        email: 'test@payee.com',
-        status: 'active'
+        email: 'test@example.com',
+        phone: '123-456-7890'
       };
 
       const response = await request(testApp)
@@ -133,7 +142,13 @@ describe('Payee Routes', () => {
         .set(getAuthHeader(token));
 
       expect(response.status).toBe(200);
-      expect(response.body.data).toHaveProperty('id', payeeId);
+      expect(response.body).toMatchObject({
+        PayeeId: '1',
+        Name: 'Standard Payee',
+        Email: 'standard@example.com',
+        Phone: '123-456-7890',
+        Status: 'ACTIVE'
+      });
     });
 
     it('should return payee details', async () => {
@@ -145,11 +160,13 @@ describe('Payee Routes', () => {
         .set(getAuthHeader(token));
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.objectContaining({
-        id: expect.any(String),
-        name: expect.any(String),
-        status: expect.any(String)
-      }));
+      expect(response.body).toMatchObject({
+        PayeeId: '1',
+        Name: 'Standard Payee',
+        Email: 'standard@example.com',
+        Phone: '123-456-7890',
+        Status: 'ACTIVE'
+      });
     });
 
     it('should return 404 for non-existent payee', async () => {
@@ -169,8 +186,9 @@ describe('Payee Routes', () => {
       const { token } = await createTestAdmin();
       const payeeId = '1'; // Assuming this payee exists in test DB
       const updates = {
-        name: 'Updated Payee Name',
-        status: 'inactive'
+        name: 'Updated Payee',
+        email: 'updated@example.com',
+        phone: '098-765-4321'
       };
 
       const response = await request(testApp)
@@ -179,15 +197,21 @@ describe('Payee Routes', () => {
         .send(updates);
 
       expect(response.status).toBe(200);
-      expect(response.body.data.name).toBe(updates.name);
+      expect(response.body).toMatchObject({
+        PayeeId: '1',
+        Name: updates.name,
+        Email: updates.email,
+        Phone: updates.phone
+      });
     });
 
     it('should update payee', async () => {
       const { token } = await createTestAdmin();
       const payeeId = '1'; // Assuming this payee exists in test DB
       const updates = {
-        name: 'Updated Payee Name',
-        status: 'inactive'
+        name: 'Updated Payee',
+        email: 'updated@example.com',
+        phone: '098-765-4321'
       };
 
       const response = await request(testApp)
@@ -196,11 +220,12 @@ describe('Payee Routes', () => {
         .send(updates);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.objectContaining({
-        id: '1',
-        name: 'Updated Payee Name',
-        status: 'INACTIVE'
-      }));
+      expect(response.body).toMatchObject({
+        PayeeId: '1',
+        Name: updates.name,
+        Email: updates.email,
+        Phone: updates.phone
+      });
     });
 
     it('should prevent status update for payees with active payments', async () => {
@@ -239,7 +264,7 @@ describe('Payee Routes', () => {
         .delete(`/api/payees/${payeeId}`)
         .set(getAuthHeader(token));
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(204);
     });
 
     it('should prevent deletion of payee with active payments', async () => {

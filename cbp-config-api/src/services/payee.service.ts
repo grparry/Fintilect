@@ -1,193 +1,150 @@
-import * as sql from 'mssql';
-import { Database } from '../config/db';
+import { PayeeCreateData, PayeeUpdateData, PayeeRecord } from '../types/payee';
+import { DatabaseService } from '../interfaces/database';
 import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { BaseRepository } from '../repositories/base.repository';
 
-interface PayeeRecord {
+export interface PayeeQueryResult {
   PayeeId: string;
   Name: string;
-  AccountNumber: string;
-  Status: string;
-  CreatedBy?: string;
-  CreatedDate?: Date;
+  Email: string;
+  Phone: string;
+  Status: 'ACTIVE' | 'INACTIVE';
+  BankAccounts: any[];
+  CreatedBy: string;
+  CreatedDate: Date;
   ModifiedBy?: string;
   ModifiedDate?: Date;
   DeletedBy?: string;
   DeletedDate?: Date;
+  TotalCount?: number;
 }
 
-interface PayeeCreateData {
-  name: string;
-  accountNumber: string;
-  status?: string;
-}
+export class PayeeService {
+  constructor(private db: DatabaseService) {}
 
-interface PayeeUpdateData {
-  name?: string;
-  accountNumber?: string;
-  status?: string;
-}
+  async listPayees(page: number, pageSize: number): Promise<{
+    recordset: PayeeQueryResult[];
+    recordsets: PayeeQueryResult[][];
+    rowsAffected: number[];
+    output?: Record<string, any>;
+  }> {
+    if (page < 1) throw new HttpError(400, 'Invalid page number');
+    if (pageSize < 1) throw new HttpError(400, 'Invalid page size');
 
-interface PayeePaymentCheck {
-  hasPayments: boolean;
-}
+    const offset = (page - 1) * pageSize;
+    const query = `
+      SELECT p.*,
+             COUNT(*) OVER() as TotalCount
+      FROM Payees p
+      WHERE p.DeletedDate IS NULL
+      ORDER BY p.CreatedDate DESC
+      OFFSET @offset ROWS
+      FETCH NEXT @pageSize ROWS ONLY;
+    `;
 
-interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    total: number;
-    page: number;
-    pageSize: number;
-    totalPages: number;
-  };
-}
-
-export class PayeeService extends BaseRepository {
-  constructor(db: Database) {
-    super('payees', db);
+    return this.db.query<PayeeQueryResult>(query, { offset, pageSize });
   }
 
-  async listPayees(page = 1, pageSize = 10): Promise<PaginatedResponse<PayeeRecord>> {
-    try {
-      const result = await this.db.executeProc<PayeeRecord & { TotalCount: number }>('PAYEE', {
-        page,
-        pageSize
-      });
-      if (!result.recordset) {
-        throw new HttpError(500, 'Invalid response from database');
-      }
+  async getPayee(id: string): Promise<PayeeQueryResult> {
+    const query = `
+      SELECT *
+      FROM Payees
+      WHERE PayeeId = @id AND DeletedDate IS NULL;
+    `;
 
-      const total = result.recordset[0]?.TotalCount || 0;
-      const totalPages = Math.ceil(total / pageSize);
-
-      return {
-        data: result.recordset,
-        pagination: {
-          total,
-          page,
-          pageSize,
-          totalPages
-        }
-      };
-    } catch (error) {
-      if (error instanceof HttpError) throw error;
-      logger.error('Error listing payees:', error);
-      throw new HttpError(500, 'Failed to list payees');
+    const result = await this.db.query<PayeeQueryResult>(query, { id });
+    if (!result || !result.recordset || result.recordset.length === 0) {
+      return {} as PayeeQueryResult;
     }
+    return result.recordset[0];
   }
 
-  async getPayee(id: string): Promise<PayeeRecord> {
-    try {
-      const result = await this.db.executeProc<PayeeRecord>('PAYEE_GET', { id });
-      if (!result.recordset || !result.recordset.length) {
-        throw new HttpError(404, 'Payee not found');
-      }
-      return result.recordset[0];
-    } catch (error) {
-      if (error instanceof HttpError) throw error;
-      logger.error(`Error getting payee ${id}:`, error);
-      throw new HttpError(500, 'Failed to get payee');
-    }
-  }
+  async createPayee(data: PayeeCreateData): Promise<PayeeQueryResult> {
+    const query = `
+      INSERT INTO Payees (Name, Email, Phone, BankAccounts, CreatedBy, CreatedDate)
+      OUTPUT INSERTED.*
+      VALUES (@name, @email, @phone, @bankAccounts, @createdBy, GETDATE());
+    `;
 
-  async createPayee(data: PayeeCreateData): Promise<PayeeRecord> {
-    try {
-      const result = await this.db.executeProc<PayeeRecord>('PAYEE_CREATE', {
-        Name: data.name,
-        AccountNumber: data.accountNumber,
-        Status: data.status || 'ACTIVE',
-        CreatedBy: 'system',
-        CreatedDate: new Date()
-      });
+    const result = await this.db.query<PayeeQueryResult>(query, {
+      name: data.Name,
+      email: data.Email,
+      phone: data.Phone,
+      bankAccounts: JSON.stringify(data.BankAccounts || []),
+      createdBy: 'system'
+    });
 
-      if (!result.recordset || !result.recordset.length) {
-        throw new HttpError(500, 'Failed to create payee');
-      }
-
-      return result.recordset[0];
-    } catch (error) {
-      logger.error('Error creating payee:', error);
+    if (!result || !result.recordset || result.recordset.length === 0) {
       throw new HttpError(500, 'Failed to create payee');
     }
+    return result.recordset[0];
   }
 
-  async updatePayee(id: string, data: PayeeUpdateData): Promise<PayeeRecord> {
-    try {
-      const result = await this.db.executeProc<PayeeRecord>('PAYEE_UPDATE', {
-        id,
-        Name: data.name,
-        AccountNumber: data.accountNumber,
-        Status: data.status,
-        ModifiedBy: 'system',
-        ModifiedDate: new Date()
-      });
+  async updatePayee(id: string, data: PayeeUpdateData): Promise<PayeeQueryResult> {
+    const updates: string[] = [];
+    const params: Record<string, any> = { id };
 
-      if (!result.recordset || !result.recordset.length) {
-        throw new HttpError(404, 'Payee not found');
-      }
-
-      return result.recordset[0];
-    } catch (error) {
-      if (error instanceof HttpError) throw error;
-      logger.error(`Error updating payee ${id}:`, error);
-      throw new HttpError(500, 'Failed to update payee');
+    if (data.Name !== undefined) {
+      updates.push('Name = @name');
+      params.name = data.Name;
     }
+    if (data.Email !== undefined) {
+      updates.push('Email = @email');
+      params.email = data.Email;
+    }
+    if (data.Phone !== undefined) {
+      updates.push('Phone = @phone');
+      params.phone = data.Phone;
+    }
+    if (data.Status !== undefined) {
+      updates.push('Status = @status');
+      params.status = data.Status;
+    }
+    if (data.BankAccounts !== undefined) {
+      updates.push('BankAccounts = @bankAccounts');
+      params.bankAccounts = JSON.stringify(data.BankAccounts);
+    }
+
+    if (updates.length === 0) {
+      throw new HttpError(400, 'No updates provided');
+    }
+
+    const query = `
+      UPDATE Payees
+      SET ${updates.join(', ')},
+          ModifiedBy = @modifiedBy,
+          ModifiedDate = GETDATE()
+      OUTPUT INSERTED.*
+      WHERE PayeeId = @id AND DeletedDate IS NULL;
+    `;
+
+    params.modifiedBy = 'system';
+
+    const result = await this.db.query<PayeeQueryResult>(query, params);
+    if (!result || !result.recordset || result.recordset.length === 0) {
+      throw new HttpError(404, 'Payee not found');
+    }
+    return result.recordset[0];
   }
 
   async deletePayee(id: string): Promise<void> {
-    try {
-      // First check if payee has any payments
-      const paymentCheck = await this.db.executeProc<PayeePaymentCheck>('PAYEE_CHECK_PAYMENTS', { id });
-      if (paymentCheck.recordset?.[0]?.hasPayments) {
-        throw new HttpError(400, 'Cannot delete payee with existing payments');
-      }
+    // First check if payee has any active payments
+    const activePayments = await this.getActivePayments(id);
+    if (activePayments && activePayments.length > 0) {
+      throw new HttpError(400, 'Cannot delete payee with active payments');
+    }
 
-      // Then delete the payee
-      const result = await this.db.executeProc('PAYEE_DELETE', {
-        id,
-        DeletedBy: 'system',
-        DeletedDate: new Date()
-      });
+    const result = await this.db.executeProc('PAYEE', {
+      id,
+      deletedBy: 'system'
+    });
 
-      if (!result.recordset || !result.recordset.length) {
-        throw new HttpError(404, 'Payee not found');
-      }
-    } catch (error) {
-      if (error instanceof HttpError) throw error;
-      logger.error(`Error deleting payee ${id}:`, error);
-      throw new HttpError(500, 'Failed to delete payee');
+    if (!result || !result.rowsAffected || result.rowsAffected[0] === 0) {
+      throw new HttpError(404, 'Payee not found');
     }
   }
 
-  async listUserPayees(userId: string, page = 1, pageSize = 10): Promise<PaginatedResponse<PayeeRecord>> {
-    try {
-      const result = await this.db.executeProc<PayeeRecord & { TotalCount: number }>('USER_PAYEE', {
-        UserId: userId,
-        page,
-        pageSize
-      });
-
-      if (!result.recordset) {
-        throw new HttpError(500, 'Invalid response from database');
-      }
-
-      const total = result.recordset[0]?.TotalCount || 0;
-      const totalPages = Math.ceil(total / pageSize);
-
-      return {
-        data: result.recordset,
-        pagination: {
-          total,
-          page,
-          pageSize,
-          totalPages
-        }
-      };
-    } catch (error) {
-      logger.error(`Error listing user payees for user ${userId}:`, error);
-      if (error instanceof HttpError) throw error;
-      throw new HttpError(500, 'Failed to list user payees');
-    }
+  async getActivePayments(payeeId: string): Promise<any[]> {
+    const result = await this.db.executeProc('ACTIVE_PAYMENTS', { id: payeeId });
+    return result.recordset || [];
   }
 }

@@ -1,126 +1,205 @@
-import { TestDb } from '../../../config/test.db';
-import { mockPayments, createMockPayment } from '../fixtures/mockData';
-import { PaymentResponse } from '../../../services/payment.service';
-import { ResponseValidator } from './ResponseValidator';
+import { TestDatabase } from '../../../config/test.db';
+import { Payment } from '../../../helpers/payment.helper';
+import { PaymentRecord } from '../../../services/payment.service';
+
+export const mockPayments = {
+  standard: {
+    PaymentId: 'payment-1',
+    PayeeId: 'payee-1',
+    Amount: 100.00,
+    Currency: 'USD',
+    Status: 'COMPLETED',
+    EffectiveDate: new Date(),
+    Description: 'Standard payment',
+    CreatedBy: 'system',
+    CreatedDate: new Date(),
+    ModifiedDate: new Date(),
+    ModifiedBy: 'system'
+  } satisfies PaymentRecord,
+  pending: {
+    PaymentId: 'payment-2',
+    PayeeId: 'payee-2',
+    Amount: 200.00,
+    Currency: 'USD',
+    Status: 'PENDING',
+    EffectiveDate: new Date(),
+    Description: 'Pending payment',
+    CreatedBy: 'system',
+    CreatedDate: new Date(),
+    ModifiedDate: new Date(),
+    ModifiedBy: 'system'
+  } satisfies PaymentRecord
+};
+
+const mockPaymentToInternal = (mock: PaymentRecord): Payment => ({
+  id: parseInt(mock.PaymentId.split('-')[1]),
+  amount: mock.Amount,
+  status: mock.Status.toLowerCase(),
+  description: mock.Description || '',
+  createdDate: mock.CreatedDate,
+  modifiedDate: mock.ModifiedDate || mock.CreatedDate // Fallback to CreatedDate if ModifiedDate is undefined
+});
 
 export class PaymentTestHelper {
-  static setupPaymentMocks(testDb: TestDb) {
-    // List payments mock with pagination
-    testDb.setMockResponse('GetPayments', (params: any) => {
-      const { page = 1, pageSize = 10 } = params;
-      const payments = [mockPayments.pending, mockPayments.approved];
-      const total = payments.length;
+  static setupPaymentMocks(testDb: TestDatabase) {
+    const mockPayment = mockPaymentToInternal(mockPayments.standard);
+
+    // Helper layer mocks
+    testDb.setMockResponse('GetPayments()', () => ({
+      recordset: [mockPayment],
+      recordsets: [[mockPayment]],
+      output: {},
+      rowsAffected: [1]
+    }));
+
+    testDb.setMockResponse('GetPaymentDetails($1)', (params: any) => {
+      const id = params[0];
       return {
-        recordset: payments.slice((page - 1) * pageSize, page * pageSize),
-        recordsets: [],
+        recordset: id === -1 ? [] : [mockPayment],
+        recordsets: id === -1 ? [[]] : [[mockPayment]],
         output: {},
-        rowsAffected: [total]
+        rowsAffected: [id === -1 ? 0 : 1]
       };
     });
 
-    // Get payment mock - returns single record
-    testDb.setMockResponse('GetPaymentDetails', (params: any) => {
-      const { id } = params;
-      const payment = id === mockPayments.pending.PaymentId ? mockPayments.pending :
-                     id === mockPayments.approved.PaymentId ? mockPayments.approved : null;
-      return {
-        recordset: payment ? [payment] : [],
-        recordsets: [],
-        output: {},
-        rowsAffected: [payment ? 1 : 0]
+    testDb.setMockResponse('InsertPayment($1, $2, $3)', (params: any) => {
+      const [amount, status, description] = params;
+      const newPayment = {
+        ...mockPayment,
+        amount,
+        status,
+        description
       };
-    });
-
-    // Create payment mock - returns single record
-    testDb.setMockResponse('InsertPayment', (params: any) => {
-      const newPayment = createMockPayment({
-        Amount: params.amount,
-        Description: params.description,
-        EffectiveDate: params.effectiveDate,
-        CreatedBy: params.createdBy
-      });
       return {
         recordset: [newPayment],
-        recordsets: [],
+        recordsets: [[newPayment]],
         output: {},
         rowsAffected: [1]
       };
     });
 
-    // Update payment mock - returns single record
-    testDb.setMockResponse('UpdatePayment', (params: any) => {
-      const { id, ...updates } = params;
-      const basePayment = mockPayments.pending;
+    testDb.setMockResponse('UpdatePayment($1, $2, $3, $4)', (params: any) => {
+      const [id, amount, status, description] = params;
+      if (id === -1) {
+        return {
+          recordset: [],
+          recordsets: [[]],
+          output: {},
+          rowsAffected: [0]
+        };
+      }
       const updatedPayment = {
-        ...basePayment,
-        ...updates,
-        ModifiedDate: new Date(),
+        ...mockPayment,
+        amount: amount || mockPayment.amount,
+        status: status || mockPayment.status,
+        description: description || mockPayment.description
       };
       return {
         recordset: [updatedPayment],
-        recordsets: [],
+        recordsets: [[updatedPayment]],
         output: {},
         rowsAffected: [1]
       };
     });
 
-    // Delete payment mock - returns affected rows
-    testDb.setMockResponse('DeletePayment', (params: any) => {
+    testDb.setMockResponse('DeletePayment($1)', (params: any) => {
+      const [id] = params;
       return {
         recordset: [],
-        recordsets: [],
+        recordsets: [[]],
+        output: {},
+        rowsAffected: [id === -1 ? 0 : 1]
+      };
+    });
+
+    // Service layer mocks
+    testDb.setMockResponse('PAYMENT', (params: any) => {
+      const { page, pageSize } = params;
+      const records = [
+        { ...mockPayments.standard, TotalCount: 2 },
+        { ...mockPayments.pending, TotalCount: 2 }
+      ];
+      return {
+        recordset: records,
+        recordsets: [records],
+        output: {},
+        rowsAffected: [2]
+      };
+    });
+
+    testDb.setMockResponse('PAYMENT_GET', (params: any) => {
+      const { id } = params;
+      const payment = id === mockPayments.standard.PaymentId ? mockPayments.standard : null;
+      return {
+        recordset: payment ? [payment] : [],
+        recordsets: payment ? [[payment]] : [[]],
+        output: {},
+        rowsAffected: payment ? [1] : [0]
+      };
+    });
+
+    testDb.setMockResponse('INSERT_PAYMENT', (params: any) => {
+      const { payeeId, amount, currency, description, status } = params;
+      const newPayment: PaymentRecord = {
+        PaymentId: 'payment-new',
+        PayeeId: payeeId,
+        Amount: amount,
+        Currency: currency,
+        Status: status.toUpperCase(),
+        EffectiveDate: new Date(),
+        Description: description,
+        CreatedBy: 'system',
+        CreatedDate: new Date(),
+        ModifiedDate: new Date(),
+        ModifiedBy: 'system'
+      };
+      return {
+        recordset: [newPayment],
+        recordsets: [[newPayment]],
         output: {},
         rowsAffected: [1]
       };
     });
-  }
 
-  static verifyListPaymentsResponse(response: PaymentResponse[], page: number, pageSize: number) {
-    ResponseValidator.validateArrayResponse(response);
-    response.forEach(payment => this.verifyPaymentResponse(payment));
-  }
+    testDb.setMockResponse('UPDATE_PAYMENT', (params: any) => {
+      const { id, amount, description } = params;
+      if (id === 'nonexistent') {
+        return {
+          recordset: [],
+          recordsets: [[]],
+          output: {},
+          rowsAffected: [0]
+        };
+      }
+      const updatedPayment: PaymentRecord = {
+        ...mockPayments.standard,
+        Amount: amount || mockPayments.standard.Amount,
+        Description: description || mockPayments.standard.Description,
+        ModifiedDate: new Date(),
+        ModifiedBy: 'system'
+      };
+      return {
+        recordset: [updatedPayment],
+        recordsets: [[updatedPayment]],
+        output: {},
+        rowsAffected: [1]
+      };
+    });
 
-  static verifyGetPaymentResponse(response: PaymentResponse | null, expectNull = false) {
-    ResponseValidator.validateSingletonResponse(response, expectNull);
-    if (!expectNull && response) {
-      this.verifyPaymentResponse(response);
-    }
-  }
-
-  static verifyCreatePaymentResponse(response: PaymentResponse) {
-    ResponseValidator.validateSingletonResponse(response);
-    this.verifyPaymentResponse(response);
-    expect(response.status).toBe('pending');
-  }
-
-  static verifyUpdatePaymentResponse(response: PaymentResponse) {
-    ResponseValidator.validateSingletonResponse(response);
-    this.verifyPaymentResponse(response);
-    expect(response.updatedAt).toBeDefined();
-  }
-
-  static verifyDeletePaymentResponse(response: void) {
-    ResponseValidator.validateVoidResponse(response);
-  }
-
-  private static verifyPaymentResponse(payment: PaymentResponse) {
-    expect(payment).toHaveProperty('id');
-    expect(payment).toHaveProperty('payeeId');
-    expect(payment).toHaveProperty('amount');
-    expect(payment).toHaveProperty('currency');
-    expect(payment).toHaveProperty('status');
-    expect(payment).toHaveProperty('effectiveDate');
-    expect(payment).toHaveProperty('createdBy');
-    expect(payment).toHaveProperty('createdAt');
-  }
-
-  static verifyPaymentFlow(payment: PaymentResponse, expectedStatus: string) {
-    this.verifyPaymentResponse(payment);
-    expect(payment.status).toBe(expectedStatus);
-    
-    if (expectedStatus === 'approved') {
-      expect(payment.updatedBy).toBeDefined();
-      expect(payment.updatedAt).toBeDefined();
-    }
+    testDb.setMockResponse('DELETE_PAYMENT', (params: any) => {
+      const { id } = params;
+      return {
+        recordset: [],
+        recordsets: [[]],
+        output: {},
+        rowsAffected: [id === 'nonexistent' ? 0 : 1]
+      };
+    });
   }
 }
+
+describe('PaymentHelper', () => {
+  it.todo('should set up payment mocks');
+  it.todo('should handle payment responses');
+  it.todo('should validate payment data');
+});

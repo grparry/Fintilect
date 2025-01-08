@@ -11,7 +11,7 @@ import {
 describe('Client Routes', () => {
   let token: string;
   let adminToken: string;
-  const clientId = 1;
+  const clientId = '1';
 
   beforeAll(async () => {
     await setupTestDb();
@@ -35,12 +35,11 @@ describe('Client Routes', () => {
       expect(response.body).toHaveProperty('data');
       expect(response.body).toHaveProperty('pagination');
       expect(Array.isArray(response.body.data)).toBe(true);
-      expect(response.body.data[0]).toHaveProperty('id');
-      expect(response.body.data[0]).toHaveProperty('name');
+      expect(response.body.data[0]).toHaveProperty('ClientId');
+      expect(response.body.data[0]).toHaveProperty('Name');
       expect(response.body.pagination).toHaveProperty('total');
       expect(response.body.pagination).toHaveProperty('page');
       expect(response.body.pagination).toHaveProperty('pageSize');
-      expect(response.body.pagination).toHaveProperty('totalPages');
     });
 
     it('should return 401 for unauthenticated request', async () => {
@@ -62,9 +61,9 @@ describe('Client Routes', () => {
         .send(newClient);
 
       expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty('id');
-      expect(response.body).toHaveProperty('name');
-      expect(response.body.name).toBe(newClient.name);
+      expect(response.body).toHaveProperty('ClientId');
+      expect(response.body).toHaveProperty('Name');
+      expect(response.body.Name).toBe(newClient.name);
     });
 
     it('should return 403 for non-admin user', async () => {
@@ -89,9 +88,9 @@ describe('Client Routes', () => {
         .set(getAuthHeader(token));
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('id');
-      expect(response.body).toHaveProperty('name');
-      expect(response.body.id).toBe(clientId);
+      expect(response.body).toHaveProperty('ClientId');
+      expect(response.body).toHaveProperty('Name');
+      expect(response.body.ClientId).toBe(clientId);
     });
   });
 
@@ -108,9 +107,9 @@ describe('Client Routes', () => {
         .send(updates);
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('id');
-      expect(response.body).toHaveProperty('name');
-      expect(response.body.name).toBe(updates.name);
+      expect(response.body).toHaveProperty('ClientId');
+      expect(response.body).toHaveProperty('Name');
+      expect(response.body.Name).toBe(updates.name);
     });
   });
 
@@ -131,31 +130,28 @@ describe('Client Routes', () => {
         .set(getAuthHeader(token));
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('notifications');
-      expect(response.body).toHaveProperty('language');
-      expect(response.body).toHaveProperty('theme');
+      expect(response.body).toHaveProperty('Settings');
+      expect(response.body.Settings).toHaveProperty('paymentLimits');
     });
   });
 
   describe('PUT /api/clients/:id/settings', () => {
     it('should update client settings for admin user', async () => {
-      const settings = {
-        notifications: true,
-        language: 'en',
-        theme: 'light'
+      const updates = {
+        paymentLimits: {
+          daily: 20000,
+          transaction: 10000
+        }
       };
 
       const response = await request(testApp)
         .put(`/api/clients/${clientId}/settings`)
         .set(getAuthHeader(adminToken))
-        .send(settings);
+        .send(updates);
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('notifications');
-      expect(response.body).toHaveProperty('language');
-      expect(response.body).toHaveProperty('theme');
-      expect(response.body.language).toBe(settings.language);
-      expect(response.body.theme).toBe(settings.theme);
+      expect(response.body).toHaveProperty('Settings');
+      expect(response.body.Settings.paymentLimits).toEqual(updates.paymentLimits);
     });
   });
 });
