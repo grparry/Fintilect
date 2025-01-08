@@ -34,6 +34,10 @@ export interface BillPaySecuritySettings {
   loginPolicy: BillPayLoginPolicy;
   ipWhitelist: BillPayIPWhitelist;
   otpSettings: BillPayOTPSettings;
+  /**
+   * Entity tag for optimistic concurrency control
+   */
+  etag?: string;
 }
 
 export interface BillPaySecurityValidation {

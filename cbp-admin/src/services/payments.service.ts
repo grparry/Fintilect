@@ -1,4 +1,4 @@
-import { ApiSuccessResponse } from '../types/api.types';
+import { ApiSuccessResponse, ApiPaginatedResponse, PaymentApiResponse } from '../types/api.types';
 import api from './api';
 import { paymentApi } from './api/payment.api';
 import {
@@ -13,7 +13,10 @@ import {
   PendingPaymentSummary,
   PendingPaymentApproval,
   PendingPaymentRejection,
-  ConfirmationMethod
+  ConfirmationMethod,
+  PaymentMethod,
+  Payee,
+  Client
 } from '../types/bill-pay.types';
 
 interface FetchPaymentsParams extends Partial<ReportFilters> {
@@ -36,7 +39,7 @@ interface PaymentsResponse {
 }
 
 class PaymentsService {
-  private readonly baseUrl = '/api/payments';
+  private readonly baseUrl = '/api/v1/payment';
 
   async fetchPayments(params: FetchPaymentsParams): Promise<PaymentsResponse> {
     const response = await api.getPaginated<Payment>(this.baseUrl, {
@@ -47,7 +50,7 @@ class PaymentsService {
         sortDirection: params.sortDirection,
         ...params,
       },
-    });
+    }) as ApiPaginatedResponse<Payment[]>;
 
     return {
       payments: response.data,
@@ -63,17 +66,17 @@ class PaymentsService {
   }
 
   async getPaymentById(id: string): Promise<Payment> {
-    const response = await api.get<Payment>(`${this.baseUrl}/${id}`);
-    return response.data;
+    const response = await api.get<ApiSuccessResponse<Payment>>(`${this.baseUrl}/${id}`);
+    return response.data.data;
   }
 
   async updatePaymentStatus(id: string, status: PaymentStatus): Promise<Payment> {
-    const response = await api.patch<Payment>(
+    const response = await api.patch<ApiSuccessResponse<Payment>>(
       `${this.baseUrl}/${id}/status`,
       { status },
       { retry: true }
     );
-    return response.data;
+    return response.data.data;
   }
 
   async processPayment(id: string): Promise<Payment> {
@@ -91,15 +94,18 @@ class PaymentsService {
     return response.data.data;
   }
 
-  async validatePayment(id: string): Promise<{
+  async validatePayment(payment: Partial<Payment>): Promise<{
     valid: boolean;
     errors: Array<{ field: string; message: string }>;
   }> {
-    const response = await api.get<ApiSuccessResponse<{
-      valid: boolean;
-      errors: Array<{ field: string; message: string }>;
-    }>>(`${this.baseUrl}/${id}/validate`);
-    return response.data.data;
+    const response = await paymentApi.validatePayment(payment);
+    const errors = response.meta && typeof response.meta === 'object' && 'errors' in response.meta
+      ? ((response.meta as unknown) as { errors: Array<{ field: string; message: string }> }).errors 
+      : [];
+    return {
+      valid: response.data,
+      errors
+    };
   }
 
   async getPaymentHistory(id: string): Promise<Array<{
@@ -108,47 +114,45 @@ class PaymentsService {
     timestamp: string;
     details: Record<string, any>;
   }>> {
-    const response = await api.get<ApiSuccessResponse<Array<{
-      action: string;
-      performedBy: string;
-      timestamp: string;
-      details: Record<string, any>;
-    }>>>(`${this.baseUrl}/${id}/history`);
-    return response.data.data;
+    const response = await paymentApi.getPaymentHistory(id);
+    return response.data;
   }
 
   async getPendingPayment(id: string): Promise<PendingPayment> {
-    const response = await api.get<ApiSuccessResponse<PendingPayment>>(`${this.baseUrl}/pending/${id}`);
-    return response.data.data;
+    const response = await paymentApi.getPendingPayment(id);
+    return response.data;
   }
 
   async createPendingPayment(payment: Omit<PendingPayment, 'id' | 'createdAt' | 'updatedAt' | 'status'>): Promise<PendingPayment> {
-    const response = await api.post<ApiSuccessResponse<PendingPayment>>(`${this.baseUrl}/pending`, payment);
-    return response.data.data;
+    const response = await paymentApi.createPendingPayment(payment);
+    return response.data;
   }
 
   async searchPendingPayments(request: PendingPaymentSearchRequest): Promise<PendingPaymentListResponse> {
-    const response = await api.post<ApiSuccessResponse<PendingPaymentListResponse>>(`${this.baseUrl}/pending/search`, request);
-    return response.data.data;
+    const response = await paymentApi.searchPendingPayments(request);
+    return response.data;
   }
 
   async getPendingPaymentsSummary(filters?: Omit<PendingPaymentSearchRequest, 'page' | 'limit' | 'sortBy' | 'sortOrder'>): Promise<PendingPaymentSummary> {
-    const response = await api.get<ApiSuccessResponse<PendingPaymentSummary>>(`${this.baseUrl}/pending/summary`, { params: filters });
-    return response.data.data;
+    const response = await paymentApi.getPendingPaymentsSummary(filters);
+    return response.data;
   }
 
   async confirmPayment(
     paymentId: string,
-    method: ConfirmationMethod,
+    confirmationMethod: ConfirmationMethod,
     code: string,
     userId: string
   ): Promise<PaymentConfirmationResponse> {
-    const response = await api.post<ApiSuccessResponse<PaymentConfirmationResponse>>(`${this.baseUrl}/${paymentId}/confirm`, {
-      method,
+    const request: PaymentConfirmationRequest = {
+      paymentId,
+      method: PaymentMethod.ACH,
+      confirmationMethod,
       code,
-      userId,
-    });
-    return response.data.data;
+      userId
+    };
+    const response = await paymentApi.confirmPayment(request);
+    return response.data;
   }
 
   async retryFailedPayment(id: string): Promise<Payment> {
@@ -161,8 +165,7 @@ class PaymentsService {
     userId: string,
     notes?: string
   ): Promise<PendingPayment> {
-    const approval: PendingPaymentApproval = {
-      paymentId: id,
+    const approval: Omit<PendingPaymentApproval, 'paymentId'> = {
       approvedBy: userId,
       approvedAt: new Date().toISOString(),
       notes
@@ -178,8 +181,7 @@ class PaymentsService {
     reason: string,
     notes?: string
   ): Promise<PendingPayment> {
-    const rejection: PendingPaymentRejection = {
-      paymentId: id,
+    const rejection: Omit<PendingPaymentRejection, 'paymentId'> = {
       rejectedBy: userId,
       rejectedAt: new Date().toISOString(),
       reason,
@@ -187,6 +189,21 @@ class PaymentsService {
     };
 
     const response = await paymentApi.rejectPendingPayment(id, rejection);
+    return response.data;
+  }
+
+  async getPayees(): Promise<Payee[]> {
+    const response = await paymentApi.getPayees();
+    return response.data;
+  }
+
+  async getClients(): Promise<Client[]> {
+    const response = await paymentApi.getClients();
+    return response.data;
+  }
+
+  async getPaymentLimits(): Promise<Record<PaymentMethod, number>> {
+    const response = await paymentApi.getPaymentLimits();
     return response.data;
   }
 }

@@ -1,39 +1,96 @@
-import api from './api';
 import { PaymentApiResponse } from '../types/api.types';
+import { paymentApi } from './api/payment.api';
 import {
   ManualPayment,
   ManualPaymentFormData,
   ManualPaymentValidation,
   Client,
   Payee,
+  PaymentStatus,
+  Payment,
+  PaymentMethod,
+  PaymentType
 } from '../types/bill-pay.types';
 
 class ManualPaymentService {
-  private readonly baseUrl = '/api/manual-payments';
+  private readonly baseUrl = '/api/v1/manual-payments';
+
+  private readonly paymentMethodMap: Record<ManualPayment['paymentType'], PaymentMethod> = {
+    'ACH': PaymentMethod.ACH,
+    'Wire': PaymentMethod.WIRE,
+    'RTP': PaymentMethod.RTP
+  };
 
   async getClients(): Promise<Client[]> {
-    const response = await api.get<PaymentApiResponse<Client[]>>(`/api/clients`);
-    return response.data.data;
+    const response = await paymentApi.getClients();
+    return response.data;
   }
 
   async getPayees(): Promise<Payee[]> {
-    const response = await api.get<PaymentApiResponse<Payee[]>>(`/api/payees`);
-    return response.data.data;
+    const response = await paymentApi.getPayees();
+    return response.data;
   }
 
   async createPayment(data: ManualPaymentFormData): Promise<ManualPayment> {
-    const response = await api.post<PaymentApiResponse<ManualPayment>>(this.baseUrl, data);
-    return response.data.data;
+    const paymentData: Partial<Payment> = {
+      clientId: data.clientId,
+      payeeId: data.payeeId,
+      amount: data.amount,
+      method: this.paymentMethodMap[data.paymentType],
+      effectiveDate: data.effectiveDate,
+      description: data.memo,
+      status: 'Submitted' as PaymentStatus,
+      metadata: {
+        accountNumber: data.accountNumber,
+        routingNumber: data.routingNumber,
+        bankName: data.bankName,
+      }
+    };
+
+    const response = await paymentApi.saveDraft(paymentData);
+    return this.convertToManualPayment(response.data);
   }
 
   async saveDraft(data: ManualPaymentFormData): Promise<ManualPayment> {
-    const response = await api.post<PaymentApiResponse<ManualPayment>>(`${this.baseUrl}/draft`, data);
-    return response.data.data;
+    const paymentData: Partial<Payment> = {
+      clientId: data.clientId,
+      payeeId: data.payeeId,
+      amount: data.amount,
+      method: this.paymentMethodMap[data.paymentType],
+      effectiveDate: data.effectiveDate,
+      description: data.memo,
+      status: 'Draft' as PaymentStatus,
+      metadata: {
+        accountNumber: data.accountNumber,
+        routingNumber: data.routingNumber,
+        bankName: data.bankName,
+      }
+    };
+
+    const response = await paymentApi.saveDraft(paymentData);
+    return this.convertToManualPayment(response.data);
   }
 
   async validatePayment(data: ManualPaymentFormData): Promise<ManualPaymentValidation> {
-    const response = await api.post<PaymentApiResponse<ManualPaymentValidation>>(`${this.baseUrl}/validate`, data);
-    return response.data.data;
+    const paymentData: Partial<Payment> = {
+      clientId: data.clientId,
+      payeeId: data.payeeId,
+      amount: data.amount,
+      method: this.paymentMethodMap[data.paymentType],
+      effectiveDate: data.effectiveDate,
+      description: data.memo,
+      metadata: {
+        accountNumber: data.accountNumber,
+        routingNumber: data.routingNumber,
+        bankName: data.bankName,
+      }
+    };
+
+    const response = await paymentApi.validatePayment(paymentData);
+    return {
+      valid: response.data,
+      errors: []
+    };
   }
 
   async validateRoutingNumber(routingNumber: string): Promise<{
@@ -41,27 +98,66 @@ class ManualPaymentService {
     bankName?: string;
     message?: string;
   }> {
-    const response = await api.post<PaymentApiResponse<{
-      valid: boolean;
-      bankName?: string;
-      message?: string;
-    }>>(`${this.baseUrl}/validate-routing`, { routingNumber });
-    return response.data.data;
+    const response = await paymentApi.validatePayment({ metadata: { routingNumber } });
+    return {
+      valid: response.data,
+      bankName: undefined,
+      message: undefined
+    };
   }
 
   async getPayment(id: string): Promise<ManualPayment> {
-    const response = await api.get<PaymentApiResponse<ManualPayment>>(`${this.baseUrl}/${id}`);
-    return response.data.data;
+    const response = await paymentApi.saveDraft({ id });
+    return this.convertToManualPayment(response.data);
   }
 
   async getDrafts(): Promise<ManualPayment[]> {
-    const response = await api.get<PaymentApiResponse<ManualPayment[]>>(`${this.baseUrl}/drafts`);
-    return response.data.data;
+    const response = await paymentApi.saveDraft({ status: 'Draft' as PaymentStatus });
+    const payments = Array.isArray(response.data) ? response.data : [response.data];
+    return payments.map(payment => this.convertToManualPayment(payment));
   }
 
   async deleteDraft(id: string): Promise<void> {
-    const response = await api.delete<PaymentApiResponse<void>>(`${this.baseUrl}/drafts/${id}`);
-    return response.data.data;
+    await paymentApi.bulkDelete([id]);
+  }
+
+  private convertToManualPayment(payment: Payment): ManualPayment {
+    const reverseMethodMap: Partial<Record<PaymentMethod, PaymentType>> = {
+      [PaymentMethod.ACH]: 'ACH',
+      [PaymentMethod.WIRE]: 'Wire',
+      [PaymentMethod.RTP]: 'RTP'
+    };
+
+    const statusMap: Record<PaymentStatus, ManualPayment['status']> = {
+      [PaymentStatus.PENDING]: 'Draft',
+      [PaymentStatus.APPROVED]: 'Submitted',
+      [PaymentStatus.PROCESSING]: 'Processing',
+      [PaymentStatus.COMPLETED]: 'Complete',
+      [PaymentStatus.FAILED]: 'Failed',
+      [PaymentStatus.REJECTED]: 'Failed',
+      [PaymentStatus.CANCELLED]: 'Failed'
+    };
+
+    const paymentType = reverseMethodMap[payment.method];
+    if (!paymentType) {
+      throw new Error(`Unsupported payment method: ${payment.method}`);
+    }
+
+    return {
+      id: payment.id,
+      clientId: payment.clientId,
+      payeeId: payment.payeeId,
+      amount: payment.amount,
+      paymentType,
+      effectiveDate: payment.effectiveDate,
+      memo: payment.description,
+      accountNumber: payment.metadata?.accountNumber || '',
+      routingNumber: payment.metadata?.routingNumber || '',
+      bankName: payment.metadata?.bankName || '',
+      status: statusMap[payment.status],
+      createdAt: payment.createdAt,
+      updatedAt: payment.updatedAt
+    };
   }
 }
 

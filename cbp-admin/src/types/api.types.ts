@@ -76,3 +76,5 @@ export interface RefreshTokenResponse {
   accessToken: string;
   expiresIn: number;
 }
+
+export type PaymentApiResponse<T> = ApiSuccessResponse<T>;

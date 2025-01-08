@@ -1,51 +1,62 @@
 import api from './api';
-import { PaymentApiResponse } from '../types/api.types';
+import { ApiPaginatedResponse, PaymentApiResponse } from '../types/api.types';
 import {
   Client,
   Payee,
   ManualPayment,
   ManualPaymentValidation,
+  PaymentListProps,
+  PaymentStatus,
 } from '../types/bill-pay.types';
 
 interface FetchClientsParams {
   environment?: string;
-  status?: string;
+  status?: 'active' | 'inactive';
   search?: string;
 }
 
 interface FetchPayeesParams {
   clientId?: string;
   accountType?: string;
-  status?: string;
+  status?: 'active' | 'inactive';
   search?: string;
 }
 
+interface ApiError {
+  response?: {
+    data?: {
+      code?: string;
+      message?: string;
+    };
+  };
+}
+
 class ManualPaymentsService {
-  private readonly baseUrl = '/api/manual-payments';
+  private readonly baseUrl = '/api/v2/payments/manual';
 
   // Client operations
-  async fetchClients(params?: FetchClientsParams): Promise<Client[]> {
-    const response = await api.get<PaymentApiResponse<Client[]>>('/api/clients', {
+  async fetchClients(params?: FetchClientsParams): Promise<ApiPaginatedResponse<Client[]>> {
+    const response = await api.get<PaymentApiResponse<ApiPaginatedResponse<Client[]>>>('/api/v2/clients', {
       params,
     });
     return response.data.data;
   }
 
   async getClientById(id: string): Promise<Client> {
-    const response = await api.get<PaymentApiResponse<Client>>(`/api/clients/${id}`);
+    const response = await api.get<PaymentApiResponse<Client>>(`/api/v2/clients/${id}`);
     return response.data.data;
   }
 
   // Payee operations
-  async fetchPayees(params?: FetchPayeesParams): Promise<Payee[]> {
-    const response = await api.get<PaymentApiResponse<Payee[]>>('/api/payees', {
+  async fetchPayees(params?: FetchPayeesParams): Promise<ApiPaginatedResponse<Payee[]>> {
+    const response = await api.get<PaymentApiResponse<ApiPaginatedResponse<Payee[]>>>('/api/v2/payees', {
       params,
     });
     return response.data.data;
   }
 
   async getPayeeById(id: string): Promise<Payee> {
-    const response = await api.get<PaymentApiResponse<Payee>>(`/api/payees/${id}`);
+    const response = await api.get<PaymentApiResponse<Payee>>(`/api/v2/payees/${id}`);
     return response.data.data;
   }
 
@@ -53,11 +64,19 @@ class ManualPaymentsService {
   async validatePayment(
     payment: Omit<ManualPayment, 'id' | 'status' | 'createdAt' | 'processedAt'>
   ): Promise<ManualPaymentValidation> {
-    const response = await api.post<PaymentApiResponse<ManualPaymentValidation>>(
-      `${this.baseUrl}/validate`,
-      payment
-    );
-    return response.data.data;
+    try {
+      const response = await api.post<PaymentApiResponse<ManualPaymentValidation>>(
+        `${this.baseUrl}/validate`,
+        payment
+      );
+      return response.data.data;
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      if (apiError.response?.data?.code === 'VALIDATION_ERROR') {
+        throw new Error(apiError.response.data.message || 'Validation failed');
+      }
+      throw error;
+    }
   }
 
   async validateBankDetails(
@@ -68,35 +87,81 @@ class ManualPaymentsService {
     bankName?: string;
     error?: string;
   }> {
-    const response = await api.post<PaymentApiResponse<{
-      valid: boolean;
-      bankName?: string;
-      error?: string;
-    }>>(`${this.baseUrl}/validate-bank`, {
-      routingNumber,
-      accountNumber,
-    });
-    return response.data.data;
+    try {
+      const response = await api.post<PaymentApiResponse<{
+        valid: boolean;
+        bankName?: string;
+        error?: string;
+      }>>(`${this.baseUrl}/validate-bank`, {
+        routingNumber,
+        accountNumber,
+      });
+      return response.data.data;
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      if (apiError.response?.data?.code === 'INVALID_BANK_DETAILS') {
+        return {
+          valid: false,
+          error: apiError.response.data.message || 'Invalid bank details',
+        };
+      }
+      throw error;
+    }
   }
 
   async submitPayment(
     payment: Omit<ManualPayment, 'id' | 'status' | 'createdAt' | 'processedAt'>
   ): Promise<ManualPayment> {
-    const response = await api.post<PaymentApiResponse<ManualPayment>>(
-      this.baseUrl,
-      payment
-    );
-    return response.data.data;
+    try {
+      const response = await api.post<PaymentApiResponse<ManualPayment>>(
+        this.baseUrl,
+        payment
+      );
+      return response.data.data;
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      if (apiError.response?.data?.code === 'PAYMENT_SUBMISSION_ERROR') {
+        throw new Error(apiError.response.data.message || 'Payment submission failed');
+      }
+      throw error;
+    }
   }
 
   async saveDraft(
     draft: Omit<ManualPayment, 'id' | 'createdAt' | 'updatedAt'>
   ): Promise<ManualPayment> {
-    const response = await api.post<PaymentApiResponse<ManualPayment>>(
+    try {
+      const response = await api.post<PaymentApiResponse<ManualPayment>>(
+        `${this.baseUrl}/drafts`,
+        draft
+      );
+      return response.data.data;
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      if (apiError.response?.data?.code === 'DRAFT_SAVE_ERROR') {
+        throw new Error(apiError.response.data.message || 'Failed to save draft');
+      }
+      throw error;
+    }
+  }
+
+  async fetchDrafts(params?: PaymentListProps): Promise<ApiPaginatedResponse<ManualPayment[]>> {
+    const response = await api.get<PaymentApiResponse<ApiPaginatedResponse<ManualPayment[]>>>(
       `${this.baseUrl}/drafts`,
-      draft
+      { params }
     );
     return response.data.data;
+  }
+
+  async getDraftById(id: string): Promise<ManualPayment> {
+    const response = await api.get<PaymentApiResponse<ManualPayment>>(
+      `${this.baseUrl}/drafts/${id}`
+    );
+    return response.data.data;
+  }
+
+  async deleteDraft(id: string): Promise<void> {
+    await api.delete(`${this.baseUrl}/drafts/${id}`);
   }
 
   async updateDraft(
@@ -107,16 +172,6 @@ class ManualPaymentsService {
       `${this.baseUrl}/drafts/${id}`,
       draft
     );
-    return response.data.data;
-  }
-
-  async getDraft(id: string): Promise<ManualPayment> {
-    const response = await api.get<PaymentApiResponse<ManualPayment>>(`${this.baseUrl}/drafts/${id}`);
-    return response.data.data;
-  }
-
-  async deleteDraft(id: string): Promise<void> {
-    const response = await api.delete<PaymentApiResponse<void>>(`${this.baseUrl}/drafts/${id}`);
     return response.data.data;
   }
 
