@@ -15,6 +15,15 @@ export interface ApiHeaders {
   Accept?: string;
 }
 
+export interface ApiPaginationMeta {
+  currentPage: number;
+  totalPages: number;
+  pageSize: number;
+  totalCount: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
 export interface ApiSuccessResponse<T> {
   success: true;
   data: T;
@@ -36,45 +45,34 @@ export interface ApiErrorResponse {
   };
 }
 
-export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
-
-export interface PaymentApiResponse<T> extends ApiSuccessResponse<T> {
-  success: true;
-  data: T;
-  meta?: {
-    timestamp: string;
-    requestId: string;
-    totalCount?: number;
-    processedCount?: number;
-  };
-}
-
-export interface ApiPaginationMeta {
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
-  itemsPerPage: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
-
-export interface ApiPaginatedResponse<T> extends ApiSuccessResponse<T[]> {
+export interface ApiPaginatedResponse<T> extends ApiSuccessResponse<T> {
   meta: ApiPaginationMeta & {
     timestamp: string;
     requestId: string;
   };
 }
 
+export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
+
 // Authentication related types
-export type LoginRequest = {
+export interface LoginRequest {
   username: string;
   password: string;
   rememberMe?: boolean;
 }
 
-export type LoginResponse = {
+export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
   expiresIn: number;
   tokenType: string;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+  expiresIn: number;
 }

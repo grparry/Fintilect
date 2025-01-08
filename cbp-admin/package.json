@@ -32,7 +32,7 @@
     "yup": "^1.6.1"
   },
   "scripts": {
-    "start": "BROWSER=none react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -85,6 +85,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "msw": "^2.7.0",
     "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },
   "msw": {

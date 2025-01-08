@@ -23,6 +23,13 @@ import { db } from './config/db';
 
 const app = express();
 
+// API documentation - place before other middleware
+app.get('/api-docs.json', (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Basic middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,9 +46,6 @@ app.use(limiter);
 
 // Logging
 app.use(requestLogger);
-
-// API documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {

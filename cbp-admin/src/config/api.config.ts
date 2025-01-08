@@ -4,7 +4,7 @@ export const API_CONFIG = {
   useMockData: process.env.REACT_APP_USE_MOCK_DATA === 'true' || process.env.NODE_ENV === 'development',
   
   // Base URLs for different environments
-  baseUrl: process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000',
+  baseUrl: process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001',
   
   // API Versions
   version: 'v1',

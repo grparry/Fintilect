@@ -120,9 +120,9 @@ const options: swaggerJsdoc.Options = {
     ]
   },
   apis: [
-    './src/routes/*.routes.ts',
-    './src/validators/*.validator.ts',
-    './src/models/*.model.ts'
+    `${__dirname}/../routes/*.routes.ts`,
+    `${__dirname}/../validators/*.validator.ts`,
+    `${__dirname}/../models/*.model.ts`
   ]
 };
 

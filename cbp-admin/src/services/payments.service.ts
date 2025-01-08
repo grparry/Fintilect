@@ -18,34 +18,62 @@ import {
 
 interface FetchPaymentsParams extends Partial<ReportFilters> {
   page?: number;
-  limit?: number;
+  pageSize?: number;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortDirection?: 'asc' | 'desc';
 }
 
 interface PaymentsResponse {
   payments: Payment[];
-  total: number;
-  page: number;
-  totalPages: number;
+  meta: {
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+    pageSize: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
 }
 
 class PaymentsService {
   private readonly baseUrl = '/api/payments';
 
   async fetchPayments(params: FetchPaymentsParams): Promise<PaymentsResponse> {
-    const response = await api.get<ApiSuccessResponse<PaymentsResponse>>(this.baseUrl, { params });
-    return response.data.data;
+    const response = await api.getPaginated<Payment>(this.baseUrl, {
+      params: {
+        page: params.page,
+        pageSize: params.pageSize,
+        sortBy: params.sortBy,
+        sortDirection: params.sortDirection,
+        ...params,
+      },
+    });
+
+    return {
+      payments: response.data,
+      meta: {
+        totalCount: response.meta.totalCount,
+        currentPage: response.meta.currentPage,
+        totalPages: response.meta.totalPages,
+        pageSize: response.meta.pageSize,
+        hasNextPage: response.meta.hasNextPage,
+        hasPreviousPage: response.meta.hasPreviousPage,
+      },
+    };
   }
 
   async getPaymentById(id: string): Promise<Payment> {
-    const response = await api.get<ApiSuccessResponse<Payment>>(`${this.baseUrl}/${id}`);
-    return response.data.data;
+    const response = await api.get<Payment>(`${this.baseUrl}/${id}`);
+    return response.data;
   }
 
   async updatePaymentStatus(id: string, status: PaymentStatus): Promise<Payment> {
-    const response = await api.patch<ApiSuccessResponse<Payment>>(`${this.baseUrl}/${id}/status`, { status });
-    return response.data.data;
+    const response = await api.patch<Payment>(
+      `${this.baseUrl}/${id}/status`,
+      { status },
+      { retry: true }
+    );
+    return response.data;
   }
 
   async processPayment(id: string): Promise<Payment> {

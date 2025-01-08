@@ -74,6 +74,11 @@ const payeeSchemas = {
     body: z.object({
       reason: z.string()
     })
+  }),
+  userId: z.object({
+    params: z.object({
+      userId: z.string()
+    })
   })
 };
 
@@ -164,7 +169,7 @@ router.get(
 router.get(
   '/:id',
   validateRequest(payeeSchemas.payeeId),
-  controller.getPayee.bind(controller)
+  controller.getPayeeById.bind(controller)
 );
 
 /**
@@ -246,7 +251,8 @@ router.delete(
 // List user's payees
 router.get(
   '/user/:userId',
-  controller.listUserPayees.bind(controller)
+  validateRequest(payeeSchemas.userId),
+  controller.listPayees.bind(controller)
 );
 
 export default router;
