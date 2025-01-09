@@ -1,0 +1,229 @@
+openapi: 3.0.0
+info:
+  title: Notification API
+  version: 1.0.0
+  description: API endpoints for managing notifications
+
+paths:
+  /api/notifications/send:
+    post:
+      summary: Send a notification
+      description: Send a notification to one or more recipients
+      tags:
+        - Notifications
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+      responses:
+        '200':
+          description: Notification sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Server error
+
+  /api/notifications/history:
+    get:
+      summary: Search notification history
+      description: Search and retrieve notification history with pagination
+      tags:
+        - Notifications
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date-time
+          description: Start date for filtering notifications
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date-time
+          description: End date for filtering notifications
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [EMAIL, SMS]
+          description: Type of notification
+        - in: query
+          name: template
+          schema:
+            type: string
+            enum: [EXCEPTION_UPDATED, EXCEPTION_REFUNDED, EXCEPTION_CREATED]
+          description: Template used for notification
+        - in: query
+          name: userId
+          schema:
+            type: string
+          description: User who sent the notification
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [SENT, FAILED]
+          description: Status of the notification
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Number of items per page
+      responses:
+        '200':
+          description: Notification history retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationHistoryResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    NotificationRequest:
+      type: object
+      required:
+        - type
+        - template
+        - recipients
+        - data
+      properties:
+        type:
+          type: string
+          enum: [EMAIL, SMS]
+        template:
+          type: string
+          enum: [EXCEPTION_UPDATED, EXCEPTION_REFUNDED, EXCEPTION_CREATED]
+        recipients:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationRecipient'
+          minItems: 1
+        data:
+          $ref: '#/components/schemas/NotificationTemplateData'
+
+    NotificationRecipient:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        name:
+          type: string
+
+    NotificationTemplateData:
+      type: object
+      properties:
+        exceptionId:
+          type: integer
+        correctionType:
+          type: string
+        notes:
+          type: string
+        userId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    NotificationHistoryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationHistory'
+        totalCount:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        error:
+          $ref: '#/components/schemas/ErrorResponse'
+
+    NotificationHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [EMAIL, SMS]
+        template:
+          type: string
+          enum: [EXCEPTION_UPDATED, EXCEPTION_REFUNDED, EXCEPTION_CREATED]
+        recipients:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationRecipient'
+        data:
+          $ref: '#/components/schemas/NotificationTemplateData'
+        userId:
+          type: string
+        status:
+          type: string
+          enum: [SENT, FAILED]
+        error:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    ServiceResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+        error:
+          $ref: '#/components/schemas/ErrorResponse'
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
