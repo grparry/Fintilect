@@ -6,6 +6,172 @@ import { z } from 'zod';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { cacheMiddleware } from '../middleware/cache.middleware';
 
+/**
+ * @swagger
+ * tags:
+ *   name: Utilities
+ *   description: Utility and helper endpoints
+ */
+
+/**
+ * @swagger
+ * /utilities/validate-routing:
+ *   post:
+ *     summary: Validate bank routing number
+ *     tags: [Utilities]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               routingNumber:
+ *                 type: string
+ *             required:
+ *               - routingNumber
+ *     responses:
+ *       200:
+ *         description: Routing number validation result
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 valid:
+ *                   type: boolean
+ *                 bankName:
+ *                   type: string
+ *                 location:
+ *                   type: string
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ */
+
+/**
+ * @swagger
+ * /utilities/validate-tax-id:
+ *   post:
+ *     summary: Validate tax ID (EIN/SSN)
+ *     tags: [Utilities]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               taxId:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *                 enum: [EIN, SSN]
+ *             required:
+ *               - taxId
+ *               - type
+ *     responses:
+ *       200:
+ *         description: Tax ID validation result
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 valid:
+ *                   type: boolean
+ *                 format:
+ *                   type: string
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ */
+
+/**
+ * @swagger
+ * /utilities/currency-rates:
+ *   get:
+ *     summary: Get current currency exchange rates
+ *     tags: [Utilities]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: base
+ *         schema:
+ *           type: string
+ *         description: Base currency code (e.g., USD)
+ *       - in: query
+ *         name: currencies
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *         description: List of currency codes to get rates for
+ *     responses:
+ *       200:
+ *         description: Currency exchange rates
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 base:
+ *                   type: string
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ *                 rates:
+ *                   type: object
+ *                   additionalProperties:
+ *                     type: number
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ */
+
+/**
+ * @swagger
+ * /utilities/holidays:
+ *   get:
+ *     summary: Get bank holidays
+ *     tags: [Utilities]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *         description: Year to get holidays for
+ *       - in: query
+ *         name: country
+ *         schema:
+ *           type: string
+ *         description: Country code (e.g., US, CA)
+ *     responses:
+ *       200:
+ *         description: List of bank holidays
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   date:
+ *                     type: string
+ *                     format: date
+ *                   name:
+ *                     type: string
+ *                   type:
+ *                     type: string
+ *                     enum: [BANK, FEDERAL, STATE]
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ */
+
 const utilityController = new UtilityController(db);
 const router = Router();
 

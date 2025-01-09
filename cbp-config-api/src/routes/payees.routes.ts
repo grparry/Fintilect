@@ -1,3 +1,225 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Payees
+ *   description: Payee management endpoints
+ */
+
+/**
+ * @swagger
+ * /payees:
+ *   get:
+ *     summary: List all payees with pagination
+ *     tags: [Payees]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *         description: Number of items per page
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *           enum: [INDIVIDUAL, BUSINESS]
+ *         description: Filter by payee type
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [ACTIVE, INACTIVE, PENDING]
+ *         description: Filter by payee status
+ *     responses:
+ *       200:
+ *         description: List of payees
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Payee'
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *   post:
+ *     summary: Create a new payee
+ *     tags: [Payees]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *                 enum: [INDIVIDUAL, BUSINESS]
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               phone:
+ *                 type: string
+ *               taxId:
+ *                 type: string
+ *               bankDetails:
+ *                 type: object
+ *                 properties:
+ *                   accountNumber:
+ *                     type: string
+ *                   routingNumber:
+ *                     type: string
+ *                   accountType:
+ *                     type: string
+ *                     enum: [CHECKING, SAVINGS]
+ *             required:
+ *               - name
+ *               - type
+ *               - email
+ *               - bankDetails
+ *     responses:
+ *       201:
+ *         description: Payee created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Payee'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+
+/**
+ * @swagger
+ * /payees/{id}:
+ *   get:
+ *     summary: Get payee by ID
+ *     tags: [Payees]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Payee details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Payee'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *   put:
+ *     summary: Update payee
+ *     tags: [Payees]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               phone:
+ *                 type: string
+ *               taxId:
+ *                 type: string
+ *               bankDetails:
+ *                 type: object
+ *                 properties:
+ *                   accountNumber:
+ *                     type: string
+ *                   routingNumber:
+ *                     type: string
+ *                   accountType:
+ *                     type: string
+ *                     enum: [CHECKING, SAVINGS]
+ *     responses:
+ *       200:
+ *         description: Payee updated successfully
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *   delete:
+ *     summary: Delete payee
+ *     tags: [Payees]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: Payee deleted successfully
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /payees/{id}/verify:
+ *   post:
+ *     summary: Verify payee's bank details
+ *     tags: [Payees]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Bank details verification initiated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 verificationId:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *                   enum: [PENDING, VERIFIED, FAILED]
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ */
+
 import { Router } from 'express';
 import { validateRequest } from '../middleware/validation.middleware';
 import { PayeeController } from '../controllers/payee.controller';
