@@ -1,4 +1,4 @@
-import { TimeRange, ChartData } from './index';
+import { TimeRange } from './index';
 
 export interface ChartDataPoint {
   date: string;
@@ -13,6 +13,19 @@ export interface TimeRangeOption {
 export interface ChartViewOption {
   label: string;
   value: 'line' | 'bar' | 'pie';
+}
+
+export interface ChartDataset {
+  label: string;
+  data: number[];
+  backgroundColor?: string;
+  borderColor?: string;
+  fill?: boolean;
+}
+
+export interface ChartData {
+  labels: string[];
+  datasets: ChartDataset[];
 }
 
 export interface DashboardFilters {

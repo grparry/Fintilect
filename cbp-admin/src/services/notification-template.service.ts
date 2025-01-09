@@ -1,5 +1,4 @@
-import { ApiSuccessResponse } from '../types/api.types';
-import api from './api';
+import { api } from '../utils/api';
 import {
   NotificationTemplate,
   NotificationTemplateInput,
@@ -9,91 +8,159 @@ import {
 } from '../types/bill-pay.types';
 
 class NotificationTemplateService {
-  private readonly baseUrl = '/notification-templates';
+  private readonly baseUrl = '/api/v1/notification-templates';
 
-  async getTemplates(filters: NotificationTemplateFilters): Promise<{
+  async getTemplates(filters?: NotificationTemplateFilters): Promise<{
     templates: NotificationTemplate[];
     total: number;
   }> {
-    const response = await api.get<ApiSuccessResponse<{
+    const queryParams = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined) {
+          queryParams.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await api.get<{
       templates: NotificationTemplate[];
       total: number;
-    }>>(this.baseUrl, { params: filters });
-    return response.data.data;
+    }>(`${this.baseUrl}?${queryParams.toString()}`);
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
-  async getTemplate(id: number): Promise<NotificationTemplate> {
-    const response = await api.get<ApiSuccessResponse<NotificationTemplate>>(
+  async getTemplate(id: string): Promise<NotificationTemplate> {
+    const response = await api.get<NotificationTemplate>(
       `${this.baseUrl}/${id}`
     );
-    return response.data.data;
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async createTemplate(template: NotificationTemplateInput): Promise<NotificationTemplate> {
-    const response = await api.post<ApiSuccessResponse<NotificationTemplate>>(
+    const response = await api.post<NotificationTemplate>(
       this.baseUrl,
       template
     );
-    return response.data.data;
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async updateTemplate(
-    id: number,
-    template: NotificationTemplateInput
+    id: string,
+    template: Partial<NotificationTemplateInput>
   ): Promise<NotificationTemplate> {
-    const response = await api.put<ApiSuccessResponse<NotificationTemplate>>(
+    const response = await api.put<NotificationTemplate>(
       `${this.baseUrl}/${id}`,
       template
     );
-    return response.data.data;
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
-  async deleteTemplate(id: number): Promise<void> {
-    await api.delete(`${this.baseUrl}/${id}`);
+  async deleteTemplate(id: string): Promise<void> {
+    const response = await api.delete<void>(`${this.baseUrl}/${id}`);
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
   }
 
-  async duplicateTemplate(id: number): Promise<NotificationTemplate> {
-    const response = await api.post<ApiSuccessResponse<NotificationTemplate>>(
-      `${this.baseUrl}/${id}/duplicate`
+  async cloneTemplate(id: string, newName: string): Promise<NotificationTemplate> {
+    const response = await api.post<NotificationTemplate>(
+      `${this.baseUrl}/${id}/clone`,
+      { name: newName }
     );
-    return response.data.data;
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async previewTemplate(
-    id: number,
-    sampleData?: Record<string, string>
+    id: string,
+    variables?: Record<string, string>
   ): Promise<NotificationPreview> {
-    const response = await api.post<ApiSuccessResponse<NotificationPreview>>(
+    const response = await api.post<NotificationPreview>(
       `${this.baseUrl}/${id}/preview`,
-      { sampleData }
+      { variables }
     );
-    return response.data.data;
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async getAvailableVariables(): Promise<NotificationVariable[]> {
-    const response = await api.get<ApiSuccessResponse<NotificationVariable[]>>(
+    const response = await api.get<NotificationVariable[]>(
       `${this.baseUrl}/variables`
     );
-    return response.data.data;
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async validateTemplate(template: NotificationTemplateInput): Promise<{
     isValid: boolean;
     errors: Record<string, string>;
   }> {
-    const response = await api.post<ApiSuccessResponse<{
+    const response = await api.post<{
       isValid: boolean;
       errors: Record<string, string>;
-    }>>(`${this.baseUrl}/validate`, template);
-    return response.data.data;
+    }>(`${this.baseUrl}/validate`, template);
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
-  async exportTemplates(filters: NotificationTemplateFilters): Promise<Blob> {
-    const response = await api.get<ApiSuccessResponse<Blob>>(`${this.baseUrl}/export`, {
-      params: filters,
-      responseType: 'blob',
-    });
-    return response.data.data;
+  async exportTemplates(filters?: NotificationTemplateFilters): Promise<Blob> {
+    const queryParams = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined) {
+          queryParams.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await api.get<Blob>(
+      `${this.baseUrl}/export?${queryParams.toString()}`,
+      { isBlob: true }
+    );
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async importTemplates(file: File): Promise<{
@@ -102,15 +169,33 @@ class NotificationTemplateService {
   }> {
     const formData = new FormData();
     formData.append('file', file);
-    const response = await api.post<ApiSuccessResponse<{
+
+    const response = await api.post<{
       imported: NotificationTemplate[];
       errors: Array<{ line: number; error: string }>;
-    }>>(`${this.baseUrl}/import`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data.data;
+    }>(`${this.baseUrl}/import`, formData);
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
+  }
+
+  async sendTestNotification(
+    id: string,
+    recipient: string
+  ): Promise<{ success: boolean; message: string }> {
+    const response = await api.post<{ success: boolean; message: string }>(
+      `${this.baseUrl}/${id}/test`,
+      { recipient }
+    );
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 }
 

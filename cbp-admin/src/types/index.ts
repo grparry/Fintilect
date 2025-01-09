@@ -19,6 +19,33 @@ export type UserRole = 'Admin' | 'User';
 export type CreateUserData = Omit<User, 'id' | 'lastLogin' | 'locked'>;
 export type UpdateUserData = Partial<User> & { id: number };
 
+export interface UserPreferences {
+  theme: 'light' | 'dark';
+  notifications: boolean;
+  language: string;
+}
+
+export interface UserSession {
+  token: string;
+  refreshToken: string;
+  expiresAt: string;
+}
+
+export interface UserFilters extends PaginationParams {
+  status?: string;
+  role?: string;
+  search?: string;
+}
+
+export interface UserStats {
+  totalLogins: number;
+  lastActiveDate: string;
+  failedLoginAttempts: number;
+  accountCreatedAt: string;
+}
+
+export type UsersResponse = PaginatedResponse<User>;
+
 // Dashboard related types
 export type TimeRange = 'day' | 'week' | 'month' | 'year';
 

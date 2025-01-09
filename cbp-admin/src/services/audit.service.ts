@@ -1,4 +1,4 @@
-import { api } from '../utils/api';
+import { api, ApiSuccessResponse } from '../utils/api';
 
 export interface AuditEvent {
   eventType: string;
@@ -13,16 +13,25 @@ class AuditService {
   private readonly baseUrl = '/api/v1/audit';
 
   public async logEvent(event: AuditEvent): Promise<void> {
-    await api.post(`${this.baseUrl}/events`, {
+    const response = await api.post<void>(`${this.baseUrl}/events`, {
       ...event,
       timestamp: event.timestamp || new Date().toISOString(),
     });
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
   }
 
   public async getEvents(resourceId: string): Promise<AuditEvent[]> {
     const response = await api.get<AuditEvent[]>(
       `${this.baseUrl}/events/${resourceId}`
     );
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
     return response.data;
   }
 }

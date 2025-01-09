@@ -1,5 +1,5 @@
-import { ApiSuccessResponse } from '../types/api.types';
-import api from './api';
+import { api } from '../utils/api';
+import type { ApiResponse } from '../utils/api';
 import {
   Member,
   MemberSearchFilters,
@@ -7,156 +7,148 @@ import {
   MemberActivity,
   Alert,
   MemberStatus,
+  SecuritySettings,
+  Device,
 } from '../types/member-center.types';
 
+/**
+ * Service for managing member-related operations
+ */
 class MemberService {
-  private readonly baseUrl = '/members';
+  private static instance: MemberService;
+  private readonly basePath = '/members';
 
-  async searchMembers(filters: MemberSearchFilters): Promise<MemberSearchResult> {
-    try {
-      const response = await api.get<ApiSuccessResponse<MemberSearchResult>>(
-        `${this.baseUrl}/search`,
-        {
-          params: {
-            searchTerm: filters.searchTerm,
-            status: filters.status === 'all' ? undefined : filters.status,
-            startDate: filters.startDate,
-            endDate: filters.endDate,
-            alertType: filters.alertType === 'all' ? undefined : filters.alertType,
-          },
-        }
-      );
-      return response.data.data;
-    } catch (error) {
-      console.error('Error searching members:', error);
-      throw error;
+  private constructor() {}
+
+  public static getInstance(): MemberService {
+    if (!MemberService.instance) {
+      MemberService.instance = new MemberService();
     }
+    return MemberService.instance;
   }
 
-  async getMember(memberId: string): Promise<Member> {
-    try {
-      const response = await api.get<ApiSuccessResponse<Member>>(
-        `${this.baseUrl}/${memberId}`
-      );
-      return response.data.data;
-    } catch (error) {
-      console.error('Error getting member:', error);
-      throw error;
-    }
+  /**
+   * Search for members based on provided filters
+   */
+  async searchMembers(filters: MemberSearchFilters): Promise<ApiResponse<MemberSearchResult>> {
+    return api.get(`${this.basePath}/search`, {
+      params: {
+        searchTerm: filters.searchTerm,
+        searchType: filters.searchType,
+        status: filters.status === 'all' ? undefined : filters.status,
+        startDate: filters.startDate,
+        endDate: filters.endDate,
+        alertType: filters.alertType === 'all' ? undefined : filters.alertType,
+      },
+    });
   }
 
-  async getMemberDetails(memberId: string): Promise<Member> {
-    try {
-      const response = await api.get<ApiSuccessResponse<Member>>(
-        `${this.baseUrl}/${memberId}`
-      );
-      return response.data.data;
-    } catch (error) {
-      console.error('Error getting member details:', error);
-      throw error;
-    }
+  /**
+   * Get a member by ID
+   */
+  async getMember(memberId: string): Promise<ApiResponse<Member>> {
+    return api.get(`${this.basePath}/${memberId}`);
   }
 
-  async getMemberActivity(memberId: string): Promise<MemberActivity[]> {
-    try {
-      const response = await api.get<ApiSuccessResponse<MemberActivity[]>>(
-        `${this.baseUrl}/${memberId}/activity`
-      );
-      return response.data.data;
-    } catch (error) {
-      console.error('Error getting member activity:', error);
-      throw error;
-    }
+  /**
+   * Get detailed member information
+   */
+  async getMemberDetails(memberId: string): Promise<ApiResponse<Member>> {
+    return api.get(`${this.basePath}/${memberId}/details`);
   }
 
-  async getMemberAlerts(memberId: string): Promise<Alert[]> {
-    try {
-      const response = await api.get<ApiSuccessResponse<Alert[]>>(
-        `${this.baseUrl}/${memberId}/alerts`
-      );
-      return response.data.data;
-    } catch (error) {
-      console.error('Error getting member alerts:', error);
-      throw error;
-    }
+  /**
+   * Get member activity history
+   */
+  async getMemberActivity(memberId: string, page = 1, limit = 20): Promise<ApiResponse<{ items: MemberActivity[]; pagination: { total: number; page: number; limit: number; pages: number } }>> {
+    return api.get(`${this.basePath}/${memberId}/activity`, {
+      params: { page, limit },
+    });
   }
 
-  async updateMemberStatus(memberId: string, status: Member['status']): Promise<void> {
-    try {
-      await api.patch<ApiSuccessResponse<void>>(
-        `${this.baseUrl}/${memberId}/status`,
-        { status }
-      );
-    } catch (error) {
-      console.error('Error updating member status:', error);
-      throw error;
-    }
+  /**
+   * Get member alerts
+   */
+  async getMemberAlerts(memberId: string, page = 1, limit = 20): Promise<ApiResponse<{ items: Alert[]; pagination: { total: number; page: number; limit: number; pages: number } }>> {
+    return api.get(`${this.basePath}/${memberId}/alerts`, {
+      params: { page, limit },
+    });
   }
 
-  async updateSecuritySettings(memberId: string, settings: { twoFactorEnabled: boolean; preferredMethod: string }): Promise<Member> {
-    try {
-      const response = await api.patch<ApiSuccessResponse<Member>>(
-        `${this.baseUrl}/${memberId}/security`,
-        settings
-      );
-      return response.data.data;
-    } catch (error) {
-      console.error('Error updating security settings:', error);
-      throw error;
-    }
+  /**
+   * Update member status
+   */
+  async updateMemberStatus(memberId: string, status: MemberStatus): Promise<ApiResponse<void>> {
+    return api.patch(`${this.basePath}/${memberId}/status`, { status });
   }
 
-  async getDevices(memberId: string): Promise<Member['devices']> {
-    try {
-      const response = await api.get<ApiSuccessResponse<Member['devices']>>(
-        `${this.baseUrl}/${memberId}/devices`
-      );
-      return response.data.data;
-    } catch (error) {
-      console.error('Error getting member devices:', error);
-      throw error;
-    }
+  /**
+   * Update member security settings
+   */
+  async updateSecuritySettings(memberId: string, settings: Partial<SecuritySettings>): Promise<ApiResponse<Member>> {
+    return api.patch(`${this.basePath}/${memberId}/security`, settings);
   }
 
-  async removeDevice(memberId: string, deviceId: string): Promise<void> {
-    try {
-      await api.delete(`${this.baseUrl}/${memberId}/devices/${deviceId}`);
-    } catch (error) {
-      console.error('Error removing device:', error);
-      throw error;
-    }
+  /**
+   * Get member devices
+   */
+  async getDevices(memberId: string, page = 1, limit = 20): Promise<ApiResponse<{ items: Device[]; pagination: { total: number; page: number; limit: number; pages: number } }>> {
+    return api.get(`${this.basePath}/${memberId}/devices`, {
+      params: { page, limit },
+    });
   }
 
-  async acknowledgeAlert(memberId: string, alertId: string): Promise<void> {
-    try {
-      await api.post(`${this.baseUrl}/${memberId}/alerts/${alertId}/acknowledge`);
-    } catch (error) {
-      console.error('Error acknowledging alert:', error);
-      throw error;
-    }
+  /**
+   * Remove a device from member's account
+   */
+  async removeDevice(memberId: string, deviceId: string): Promise<ApiResponse<void>> {
+    return api.delete(`${this.basePath}/${memberId}/devices/${deviceId}`);
   }
 
-  async exportMemberData(filters: MemberSearchFilters): Promise<Blob> {
-    try {
-      const response = await api.get<Blob>(
-        `${this.baseUrl}/export`,
-        {
-          params: {
-            searchTerm: filters.searchTerm,
-            status: filters.status === 'all' ? undefined : filters.status,
-            startDate: filters.startDate,
-            endDate: filters.endDate,
-            alertType: filters.alertType === 'all' ? undefined : filters.alertType,
-          },
-          responseType: 'blob',
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error('Error exporting member data:', error);
-      throw error;
-    }
+  /**
+   * Acknowledge an alert
+   */
+  async acknowledgeAlert(memberId: string, alertId: string): Promise<ApiResponse<void>> {
+    return api.post(`${this.basePath}/${memberId}/alerts/${alertId}/acknowledge`, {});
+  }
+
+  /**
+   * Export member data based on filters
+   */
+  async exportMemberData(filters: MemberSearchFilters): Promise<ApiResponse<Blob>> {
+    return api.get(`${this.basePath}/export`, {
+      params: {
+        searchTerm: filters.searchTerm,
+        searchType: filters.searchType,
+        status: filters.status === 'all' ? undefined : filters.status,
+        startDate: filters.startDate,
+        endDate: filters.endDate,
+        alertType: filters.alertType === 'all' ? undefined : filters.alertType,
+      },
+      responseType: 'blob',
+    });
+  }
+
+  /**
+   * Update member profile information
+   */
+  async updateMemberProfile(memberId: string, data: Partial<Omit<Member, 'id' | 'status' | 'joinDate' | 'lastLogin'>>): Promise<ApiResponse<Member>> {
+    return api.patch(`${this.basePath}/${memberId}/profile`, data);
+  }
+
+  /**
+   * Get member dashboard statistics
+   */
+  async getMemberDashboardStats(): Promise<ApiResponse<{
+    totalMembers: number;
+    activeMembers: number;
+    newMembersToday: number;
+    activeAlerts: number;
+    membersByStatus: Record<MemberStatus, number>;
+    alertsByType: Record<Alert['type'], number>;
+  }>> {
+    return api.get(`${this.basePath}/dashboard/stats`);
   }
 }
 
-export const memberService = new MemberService();
+export const memberService = MemberService.getInstance();

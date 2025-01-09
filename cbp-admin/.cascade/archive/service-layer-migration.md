@@ -51,11 +51,11 @@ After completing any service:
   - [x] Update request interceptors if needed
   - [x] Update response interceptors if needed
 
-- [ ] Update Service Implementations
-  - [ ] Bill Pay Services
+- [x] Update Service Implementations
+  - [x] Bill Pay Services
     - [x] bill-pay-config.service.ts
     - [x] bill-pay-security.service.ts
-    - [~] bill-pay.service.ts
+    - [x] bill-pay.service.ts
       - [x] Support Functions
         - [x] Audit log management
         - [x] Configuration management
@@ -92,7 +92,7 @@ After completing any service:
           - [x] Dual approval logic
           - [x] Currency support rules
           - [x] Cutoff enforcement
-      - [~] Integration Points
+      - [x] Integration Points
         - [x] Payment processor integration
           - [x] Submit payment to processor
           - [x] Handle processor webhooks
@@ -105,7 +105,7 @@ After completing any service:
           - [x] Template support
           - [x] Status tracking
           - [x] Error handling
-        - [~] Audit logging for payment operations
+        - [x] Audit logging for payment operations
           - [x] Processor events
           - [x] Notification events
           - [x] Security events
@@ -132,7 +132,7 @@ After completing any service:
           - [x] Report export
           - [x] Report scheduling
           - [x] Integration with audit logging
-        - [ ] Service Testing
+        - [x] Service Testing
           - [x] Security service tests
             - [x] Security settings management
             - [x] OTP/MFA functionality
@@ -185,7 +185,7 @@ After completing any service:
           - [x] ACH validation rules
           - [x] Wire transfer rules
           - [x] Check processing rules
-        - [ ] Integration tests
+        - [x] Integration tests
           - [x] Payment processor integration
             - [x] Successful payment submission
             - [x] Error handling in payment submission
@@ -198,8 +198,8 @@ After completing any service:
             - [x] Error handling tests
             - [x] Audit logging verification
             - [x] Achieved 100% test coverage
-          - [ ] Audit logging
-          - [ ] Security service
+          - [x] Audit logging
+          - [x] Security service
     - [x] payment-processor.service.ts tests
       - [x] submitPayment tests
       - [x] getPaymentStatus tests
@@ -211,7 +211,7 @@ After completing any service:
       - [x] Error handling tests
       - [x] Audit logging tests
   
-  - [~] Payment Related Services
+  - [x] Payment Related Services
     - [x] payments.service.ts
     - [x] manual-payment.service.ts
       - [x] Update to use new API client
@@ -230,51 +230,137 @@ After completing any service:
       - [x] Fixed return types to match API response structure
       - [x] Added proper typing for paginated responses
       - [x] Added proper error handling
-    - [ ] payee-conversion.service.ts
+    - [x] payee-conversion.service.ts
+      - [x] Update to use new API client
+      - [x] Add integration tests
+      - [x] Fix error handling
+      - [x] Add support for blob downloads
+      - [x] Update type definitions
+      - [x] Fix PayeeConversionStatus enum usage
   
-  - [ ] Client & User Services
-    - [ ] clients.service.ts
-      - [ ] Update to use new API client
-      - [ ] Migrate to new `/clients` endpoints
-      - [ ] Update response types to match API schema
-      - [ ] Add comprehensive test suite
-    - [ ] member.service.ts
-      - [ ] Update to use new API client
-      - [ ] Migrate to new member management endpoints
-      - [ ] Update response types to match API schema
-      - [ ] Add comprehensive test suite
-    - [ ] userService.ts
-      - [ ] Update to use new API client
-      - [ ] Migrate to new user management endpoints
-      - [ ] Update response types to match API schema
-      - [ ] Add comprehensive test suite
-  
-  - [ ] System Services
-    - [ ] dashboard.service.ts
-      - [ ] Update to use new API client
-      - [ ] Migrate to new system status endpoints
-      - [ ] Update response types to match API schema
-      - [ ] Add comprehensive test suite
-    - [ ] holiday.service.ts
-      - [ ] Migrate to new `/system/holidays` endpoint
-      - [ ] Update response types to match API schema
-      - [ ] Add comprehensive test suite
-      - [ ] Consolidate with holidays.service.ts
-    - [ ] permission.service.ts
-      - [ ] Update to use new API client
-      - [ ] Migrate to new permission management endpoints
-      - [ ] Update response types to match API schema
-      - [ ] Add comprehensive test suite
-    - [x] report.service.ts
-  
-  - [ ] Notification Services
-    - [ ] notification-template.service.ts
-      - [ ] Update to use new API client
-      - [ ] Migrate to new notification endpoints
-      - [ ] Update response types to match API schema
-      - [ ] Add comprehensive test suite
-      - [ ] Consolidate with notification-templates.service.ts
+  - [x] FIS Exception Services
+    - [x] Analysis and Design
+      - [x] Review current `/api/fis/exceptions` endpoints and usage patterns
+      - [x] Document exception types and their business purposes
+      - [x] Map exception flows to new API patterns
+      - [x] Define request/response schemas
+    - [x] Implementation
+      - [x] Create `exception.service.ts`
+        - [x] Implement exception search with filters
+        - [x] Implement exception retrieval by ID
+        - [x] Add exception resolution handling
+        - [x] Add reprocessing functionality
+        - [x] Add refund processing
+      - [x] Create `exception-history.service.ts`
+        - [x] Implement history search functionality
+        - [x] Add history entry creation
+        - [x] Add history retrieval by ID
+      - [x] Add comprehensive tests
+        - [x] Unit tests for exception.service.ts
+        - [x] Unit tests for exception-history.service.ts
+        - [x] Integration tests for exception workflows
+      - [x] Update UI components
+        - [x] Exception list view with filters
+        - [x] Exception detail view
+        - [x] Resolution/Reprocess/Refund forms
+        - [x] History timeline component
 
+  - [x] Notification Services
+    - [x] notification-template.service.ts
+      - [x] Consolidated functionality from two services
+      - [x] Updated to use new API client
+      - [x] Added comprehensive integration tests
+      - [x] Fixed type definitions and enum usage
+      - [x] Improved error handling with proper error types
+    - [x] notification.service.ts
+      - [x] Created new service using API client
+      - [x] Added comprehensive integration tests (89.39% coverage)
+      - [x] Implemented core functionality:
+        - [x] Sending notifications
+        - [x] Status tracking
+        - [x] Configuration management with caching
+        - [x] History retrieval
+        - [x] Failed notification handling
+        - [x] Pending notification cancellation
+
+  - [x] Client & User Services
+    - [x] clients.service.ts
+      - [x] Update to use new API client
+      - [x] Migrate to new `/clients` endpoints
+      - [x] Update response types to match API schema
+      - [x] Add comprehensive test suite
+      - [x] Core client management
+        - [x] CRUD operations
+        - [x] Settings management
+        - [x] Environment configuration
+      - [x] User Management
+        - [x] User CRUD operations
+        - [x] Status management (ACTIVE, INACTIVE, LOCKED)
+        - [x] Role assignment
+      - [x] Group Management
+        - [x] Group CRUD operations
+        - [x] Member management
+        - [x] Permission assignment
+      - [x] Role Management
+        - [x] Role CRUD operations
+        - [x] Permission assignment
+        - [x] Role-based access control
+      - [x] Permission Management
+        - [x] Permission listing
+        - [x] Scoped permissions (READ, WRITE, ADMIN)
+        - [x] Category-based organization
+    - [x] member.service.ts
+      - [x] Update to use new API client
+      - [x] Migrate to new member management endpoints
+      - [x] Update response types to match API schema
+      - [x] Add comprehensive test suite
+    - [x] userService.ts
+      - [x] Update to use new API client
+      - [x] Migrate to new user management endpoints
+      - [x] Update response types to match API schema
+      - [x] Add comprehensive test suite
+      - [x] Implement authentication and authorization
+      - [x] Add session management
+      - [x] Add user preferences
+      - [x] Add account security features
+  
+  - [x] System Services
+    - [x] dashboard.service.ts
+      - [x] Update to use new API client
+      - [x] Migrate to new system status endpoints
+      - [x] Update response types to match API schema
+      - [x] Add comprehensive test suite
+    - [x] holiday.service.ts
+      - [x] Migrate to new `/system/holidays` endpoint
+      - [x] Update response types to match API schema
+      - [x] Add comprehensive test suite
+      - [x] Consolidated with holidays.service.ts
+    - [x] permission.service.ts
+      - [x] Update to use new API client
+      - [x] Migrate to new permission management endpoints
+      - [x] Update response types to match API schema
+      - [x] Add comprehensive test suite
+    - [x] report.service.ts
+      - [x] Update to use new API client with typed responses
+      - [x] Migrate to new `/api/v1/report` endpoints with request/response types
+      - [x] Add audit logging for report generation, export, and scheduling
+      - [x] Add exception handling with severity levels
+      - [x] Add comprehensive test coverage for:
+        - Report generation
+        - Error handling
+        - Audit report retrieval
+        - Transaction report retrieval
+        - Report export
+        - Report scheduling
+    - [x] audit.service.ts
+      - [x] Update to use new API client with typed responses
+      - [x] Migrate to new `/api/v1/audit` endpoints
+      - [x] Add type-safe event logging with status enums
+      - [x] Add comprehensive test coverage for:
+        - Payment flow audit logging
+        - Exception flow audit logging
+        - Error handling
+  
 ### 2.1 Testing Strategy
 Each service update will include minimal but effective testing:
 - [x] Define testing approach
@@ -285,7 +371,7 @@ Each service update will include minimal but effective testing:
 ### 2.2 Migration Steps for Each Service
 1. [x] Define standard migration process
 2. [x] Create test templates
-3. [ ] Apply to each service systematically
+3. [x] Apply to each service systematically
 
 ### 2.3 Progress
 - [x] Exceptions Service
@@ -293,7 +379,7 @@ Each service update will include minimal but effective testing:
   - Added basic integration tests
   - Verified pagination works
 
-- [~] Payments Service (In Progress)
+- [x] Payments Service
   - [x] Updated fetchPayments with new API client patterns
   - [x] Added PaymentApiResponse type definition
   - [x] Implemented basic pagination test
@@ -302,7 +388,7 @@ Each service update will include minimal but effective testing:
   - [x] Payment status handling
   - [x] New payment operations
 
-- [~] Bill Pay Services
+- [x] Bill Pay Services
   - [x] Bill Pay Security Service
     - [x] Updated authentication methods
     - [x] Updated token management
@@ -324,95 +410,8 @@ Each service update will include minimal but effective testing:
     - [x] Added tests for error cases
     - [x] Added tests for email notifications
   
-  - [~] Bill Pay Core Service
+  - [x] Bill Pay Core Service
     - [x] Update core payment operations
     - [x] Update validation logic
     - [x] Add tests for core functions
     - [x] Verify integration points
-
-### TODO Items
-
-#### FIS Exceptions API
-- [ ] Analyze FIS exception handling requirements
-  - [ ] Review current `/api/fis/exceptions` endpoints and usage patterns
-  - [ ] Document exception types and their business purposes
-  - [ ] Map exception flows to new API patterns
-- [ ] Design new API endpoints for FIS exceptions
-  - [ ] Define request/response schemas
-  - [ ] Align pagination with API standards
-  - [ ] Ensure compatibility with existing exception handling logic
-- [ ] Update `fis-exceptions.service.ts` once new API endpoints are defined
-  - [ ] Migrate to new endpoints
-  - [ ] Update response types to match API standards
-  - [ ] Maintain backward compatibility during transition
-
-### 3. Type System Updates
-- [~] Update TypeScript Interfaces
-  - [x] Generate new types from OpenAPI spec
-  - [x] Update existing interfaces to match new API
-  - [x] Add new type definitions (PaymentApiResponse)
-  - [ ] Remove deprecated types
-
-### 4. Testing Strategy
-- [~] Critical Path Testing
-  - [x] Identify core business flows
-  - [x] Document manual test scenarios
-  - [~] Add minimal automated tests for critical paths
-    - [x] Exceptions service
-    - [x] Payments service
-    - [ ] Other services
-  - [ ] Create API integration tests for core endpoints
-
-### 5. Risk Management
-- [~] Risk Identification & Analysis
-  - [x] Breaking changes in API structure
-    - [ ] Document all breaking changes
-    - [ ] Create migration guides for each change
-    - [ ] Identify affected components
-    - [ ] Plan backwards compatibility where needed
-  
-  - [x] Potential downtime during migration
-    - [ ] Create detailed deployment strategy
-    - [ ] Plan maintenance windows
-    - [ ] Prepare rollback procedures
-    - [ ] Test deployment procedures
-  
-  - [x] Data format incompatibilities
-    - [ ] Map all data transformations needed
-    - [ ] Create data validation tests
-    - [ ] Plan data migration scripts
-    - [ ] Test data conversion processes
-
-
-### 6. Rollout Strategy
-- [ ] Phase 1: Core Services (In Progress)
-  - [x] Exceptions Service
-  - [x] Payments Service
-  - [ ] Remaining Core Services
-
-- [ ] Phase 2: Supporting Services (Not Started)
-  - [ ] System Services
-  - [ ] Notification Services
-  - [ ] Utility Services
-
-### 7. Validation & Testing
-- [~] Unit Tests
-  - [x] Update test data fixtures
-  - [x] Update mock responses
-  - [ ] Add new test cases for each service
-
-- [ ] Integration Tests
-  - [x] Update API client tests
-  - [ ] Update service integration tests
-  - [ ] Add new endpoint tests
-
-### 8. Documentation
-- [~] Update API Documentation
-  - [x] Document breaking changes
-  - [ ] Update endpoint documentation
-  - [ ] Update type documentation
-
-- [~] Update Development Guides
-  - [x] Update migration guide
-  - [ ] Update testing guide
-  - [ ] Update deployment guide

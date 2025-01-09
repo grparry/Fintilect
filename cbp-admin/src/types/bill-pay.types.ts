@@ -24,7 +24,7 @@ export interface AuditLog {
   resourceType: string;
   resourceId: string;
   details: Record<string, any> | string;
-  status: 'Success' | 'Failure';
+  status: AuditEventStatus;
 }
 
 // Payment Types
@@ -72,22 +72,34 @@ export enum ExceptionStatus {
 }
 
 export enum FISExceptionStatus {
-  PENDING = 'pending',
-  RETRYING = 'retrying',
-  RESOLVED = 'resolved',
-  FAILED = 'failed',
-  IGNORED = 'ignored'
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  RESOLVED = 'RESOLVED',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED'
 }
 
 export enum FISErrorCode {
-  INVALID_ACCOUNT = 'invalid_account',
-  INSUFFICIENT_FUNDS = 'insufficient_funds',
-  ACCOUNT_CLOSED = 'account_closed',
-  INVALID_ROUTING = 'invalid_routing',
-  SYSTEM_ERROR = 'system_error',
-  NETWORK_ERROR = 'network_error',
-  TIMEOUT = 'timeout',
-  VALIDATION_ERROR = 'validation_error'
+  INVALID_ACCOUNT = 'INVALID_ACCOUNT',
+  INSUFFICIENT_FUNDS = 'INSUFFICIENT_FUNDS',
+  ACCOUNT_CLOSED = 'ACCOUNT_CLOSED',
+  TECHNICAL_ERROR = 'TECHNICAL_ERROR',
+  VALIDATION_ERROR = 'VALIDATION_ERROR'
+}
+
+export enum AuditEventStatus {
+  INITIATED = 'INITIATED',
+  COMPLETED = 'COMPLETED',
+  ERROR = 'ERROR',
+  RECEIVED = 'RECEIVED',
+  PROCESSED = 'PROCESSED'
+}
+
+export enum PayeeConversionStatus {
+  PENDING = 'PENDING',
+  PROCESSING = 'PROCESSING',
+  PROCESSED = 'PROCESSED',
+  FAILED = 'FAILED'
 }
 
 export interface Payment {
@@ -279,6 +291,27 @@ export interface FISRetryResult {
   lastRetryAt: string;
 }
 
+export interface FISExceptionHistory {
+  id: string;
+  exceptionId: string;
+  type: 'CREATE' | 'UPDATE' | 'RESOLVE' | 'REPROCESS' | 'REFUND';
+  details: {
+    before?: Record<string, unknown>;
+    after?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
+  };
+  userId: string;
+  userName: string;
+  timestamp: string;
+}
+
+export interface FISRefundRequest {
+  amount: number;
+  reason: string;
+  notes?: string;
+  metadata?: Record<string, unknown>;
+}
+
 // Payee Conversion Types
 export type PayeeStatus = 'pending' | 'validating' | 'validated' | 'processing' | 'completed' | 'failed';
 export type PayeeType = 'Personal' | 'Business';
@@ -303,7 +336,7 @@ export interface PayeeConversionSummary {
 
 export interface PayeeConversionFilters {
   clientId?: string;
-  status?: PayeeStatus;
+  status?: PayeeConversionStatus;
   type?: PayeeType;
   searchTerm?: string;
   startDate?: string;
@@ -573,14 +606,19 @@ export interface BillPayConfigValidation {
 }
 
 // Notification Template Types
-export type NotificationType =
-  | 'PAYMENT_COMPLETED'
-  | 'PAYMENT_FAILED'
-  | 'PAYMENT_APPROVAL_REQUIRED'
-  | 'PAYMENT_CANCELLED'
-  | 'PAYMENT_EXPIRED';
+export enum NotificationType {
+  PAYMENT_COMPLETED = 'PAYMENT_COMPLETED',
+  PAYMENT_FAILED = 'PAYMENT_FAILED',
+  PAYMENT_APPROVAL_REQUIRED = 'PAYMENT_APPROVAL_REQUIRED',
+  PAYMENT_CANCELLED = 'PAYMENT_CANCELLED',
+  PAYMENT_EXPIRED = 'PAYMENT_EXPIRED'
+}
 
-export type NotificationCategory = 'Payment' | 'Account' | 'System';
+export enum NotificationCategory {
+  PAYMENT = 'Payment',
+  ACCOUNT = 'Account',
+  SYSTEM = 'System'
+}
 
 export interface NotificationVariable {
   name: string;

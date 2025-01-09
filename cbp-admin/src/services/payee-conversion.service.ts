@@ -1,5 +1,4 @@
-import api from './api';
-import { ApiSuccessResponse } from '../types/api.types';
+import { api, ApiResponse } from '../utils/api';
 import {
   PayeeConversionFile,
   PayeeConversionFilters,
@@ -10,26 +9,43 @@ import {
 } from '../types/bill-pay.types';
 
 class PayeeConversionService {
-  private readonly baseUrl = '/payee-conversion';
+  private readonly baseUrl = '/api/v1/payee-conversion';
 
   async getFiles(filters?: PayeeConversionFilters): Promise<{
     files: PayeeConversionFile[];
     total: number;
   }> {
-    const response = await api.get<
-      ApiSuccessResponse<{
-        files: PayeeConversionFile[];
-        total: number;
-      }>
-    >(this.baseUrl, { params: filters });
-    return response.data.data;
+    const queryParams = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined) {
+          queryParams.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await api.get<{
+      files: PayeeConversionFile[];
+      total: number;
+    }>(`${this.baseUrl}?${queryParams.toString()}`);
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async getFileById(id: string): Promise<PayeeConversionFile> {
-    const response = await api.get<ApiSuccessResponse<PayeeConversionFile>>(
+    const response = await api.get<PayeeConversionFile>(
       `${this.baseUrl}/${id}`
     );
-    return response.data.data;
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async uploadFile(file: File, templateId: string): Promise<PayeeConversionFile> {
@@ -37,34 +53,52 @@ class PayeeConversionService {
     formData.append('file', file);
     formData.append('templateId', templateId);
 
-    const response = await api.post<ApiSuccessResponse<PayeeConversionFile>>(
+    const response = await api.post<PayeeConversionFile>(
       `${this.baseUrl}/upload`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
+      formData
     );
-    return response.data.data;
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async validateFile(id: string): Promise<PayeeConversionValidation> {
-    const response = await api.post<ApiSuccessResponse<PayeeConversionValidation>>(
-      `${this.baseUrl}/${id}/validate`
+    const response = await api.post<PayeeConversionValidation>(
+      `${this.baseUrl}/${id}/validate`,
+      {}
     );
-    return response.data.data;
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async processFile(id: string): Promise<void> {
-    await api.post(`${this.baseUrl}/${id}/process`);
+    const response = await api.post<void>(
+      `${this.baseUrl}/${id}/process`,
+      {}
+    );
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
   }
 
   async getFileProgress(id: string): Promise<PayeeConversionProgress> {
-    const response = await api.get<ApiSuccessResponse<PayeeConversionProgress>>(
+    const response = await api.get<PayeeConversionProgress>(
       `${this.baseUrl}/${id}/progress`
     );
-    return response.data.data;
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async getFileRecords(
@@ -75,42 +109,71 @@ class PayeeConversionService {
     records: PayeeConversionRecord[];
     total: number;
   }> {
-    const response = await api.get<
-      ApiSuccessResponse<{
-        records: PayeeConversionRecord[];
-        total: number;
-      }>
-    >(`${this.baseUrl}/${id}/records`, {
-      params: { page, limit },
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString()
     });
-    return response.data.data;
+
+    const response = await api.get<{
+      records: PayeeConversionRecord[];
+      total: number;
+    }>(`${this.baseUrl}/${id}/records?${queryParams.toString()}`);
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async getTemplates(): Promise<PayeeConversionTemplate[]> {
-    const response = await api.get<ApiSuccessResponse<PayeeConversionTemplate[]>>(
+    const response = await api.get<PayeeConversionTemplate[]>(
       `${this.baseUrl}/templates`
     );
-    return response.data.data;
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
   }
 
   async downloadTemplate(id: string): Promise<Blob> {
-    const response = await api.get<Blob>(`${this.baseUrl}/templates/${id}/download`, {
-      responseType: 'blob',
-    });
+    const response = await api.get<Blob>(
+      `${this.baseUrl}/templates/${id}/download`,
+      { isBlob: true }
+    );
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
     return response.data;
   }
 
   async downloadValidationReport(id: string): Promise<Blob> {
-    const response = await api.get<Blob>(`${this.baseUrl}/${id}/validation/download`, {
-      responseType: 'blob',
-    });
+    const response = await api.get<Blob>(
+      `${this.baseUrl}/${id}/validation/download`,
+      { isBlob: true }
+    );
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
     return response.data;
   }
 
   async downloadProcessingReport(id: string): Promise<Blob> {
-    const response = await api.get<Blob>(`${this.baseUrl}/${id}/processing/download`, {
-      responseType: 'blob',
-    });
+    const response = await api.get<Blob>(
+      `${this.baseUrl}/${id}/processing/download`,
+      { isBlob: true }
+    );
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
     return response.data;
   }
 }

@@ -1,40 +1,86 @@
-import api from './api';
-import { TimeRange } from '../types/index';
-import { 
+import { api, type ApiResponse } from '../utils/api';
+import type { TimeRange } from '../types';
+import type { 
   DashboardFilters, 
   DashboardMetrics, 
   TransactionStats, 
-  UserActivityData 
+  UserActivityData,
+  ChartData
 } from '../types/dashboard.types';
-import { ApiSuccessResponse } from '../types/api.types';
 
-export const DashboardService = {
-  getStats: async (timeRange: TimeRange): Promise<ApiSuccessResponse<DashboardMetrics>> => {
-    try {
-      const response = await api.get<ApiSuccessResponse<DashboardMetrics>>('/dashboard/stats', { params: { timeRange } });
-      return response.data;
-    } catch (error) {
-      throw new Error('Failed to fetch dashboard stats');
-    }
-  },
+/**
+ * Service for managing dashboard functionality
+ */
+class DashboardService {
+  private readonly basePath = '/dashboard';
 
-  getTransactionStats: async (filters: DashboardFilters): Promise<ApiSuccessResponse<TransactionStats>> => {
-    try {
-      const response = await api.get<ApiSuccessResponse<TransactionStats>>('/dashboard/transactions', { params: filters });
-      return response.data;
-    } catch (error) {
-      throw new Error('Failed to fetch transaction stats');
-    }
-  },
-
-  getUserActivity: async (timeRange: TimeRange): Promise<ApiSuccessResponse<UserActivityData>> => {
-    try {
-      const response = await api.get<ApiSuccessResponse<UserActivityData>>('/dashboard/user-activity', { params: { timeRange } });
-      return response.data;
-    } catch (error) {
-      throw new Error('Failed to fetch user activity data');
-    }
+  /**
+   * Get dashboard statistics
+   */
+  async getStats(timeRange: TimeRange): Promise<ApiResponse<DashboardMetrics>> {
+    return api.get(`${this.basePath}/stats`, { params: { timeRange } });
   }
-};
 
-export default DashboardService;
+  /**
+   * Get transaction statistics
+   */
+  async getTransactionStats(filters: DashboardFilters): Promise<ApiResponse<TransactionStats>> {
+    return api.get(`${this.basePath}/transactions`, { params: filters });
+  }
+
+  /**
+   * Get user activity data
+   */
+  async getUserActivity(timeRange: TimeRange): Promise<ApiResponse<UserActivityData>> {
+    return api.get(`${this.basePath}/user-activity`, { params: { timeRange } });
+  }
+
+  /**
+   * Get transaction volume chart data
+   */
+  async getTransactionVolumeChart(timeRange: TimeRange): Promise<ApiResponse<ChartData>> {
+    return api.get(`${this.basePath}/charts/transaction-volume`, { params: { timeRange } });
+  }
+
+  /**
+   * Get user growth chart data
+   */
+  async getUserGrowthChart(timeRange: TimeRange): Promise<ApiResponse<ChartData>> {
+    return api.get(`${this.basePath}/charts/user-growth`, { params: { timeRange } });
+  }
+
+  /**
+   * Get activity breakdown chart data
+   */
+  async getActivityBreakdownChart(timeRange: TimeRange): Promise<ApiResponse<ChartData>> {
+    return api.get(`${this.basePath}/charts/activity-breakdown`, { params: { timeRange } });
+  }
+
+  /**
+   * Export dashboard data
+   */
+  async exportDashboardData(filters: DashboardFilters): Promise<ApiResponse<Blob>> {
+    return api.get(`${this.basePath}/export`, { 
+      params: filters,
+      responseType: 'blob'
+    });
+  }
+
+  /**
+   * Get system status
+   */
+  async getSystemStatus(): Promise<ApiResponse<{
+    status: 'healthy' | 'degraded' | 'down';
+    lastChecked: string;
+    services: {
+      name: string;
+      status: 'up' | 'down';
+      latency: number;
+    }[];
+  }>> {
+    return api.get(`${this.basePath}/system/status`);
+  }
+}
+
+// Export singleton instance
+export const dashboardService = new DashboardService();
