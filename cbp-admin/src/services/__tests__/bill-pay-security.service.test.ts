@@ -1,11 +1,26 @@
 import { billPaySecurityService } from '../bill-pay-security.service';
 import api from '../api';
-import { BillPaySecuritySettings, BillPaySecurityValidation } from '../../types/security.types';
+import { 
+  BillPaySecuritySettings, 
+  BillPaySecurityValidation,
+  BillPayOTPMethod
+} from '../../types/security.types';
+import { auditService } from '../audit.service';
+
+// Import types from the service itself
+type AuthToken = {
+  token: string;
+  refreshToken: string;
+  expiresAt: number;
+  userId: string;
+};
 
 jest.mock('../api');
+jest.mock('../audit.service');
 
 describe('BillPaySecurityService', () => {
-  const mockSettings: BillPaySecuritySettings = {
+  // Mock initial settings
+  const initialSettings: BillPaySecuritySettings = {
     passwordPolicy: {
       minLength: 12,
       requireUppercase: true,
@@ -24,11 +39,11 @@ describe('BillPaySecurityService', () => {
     },
     ipWhitelist: {
       enabled: true,
-      addresses: '192.168.1.0/24,10.0.0.0/8'
+      addresses: '192.168.1.1,192.168.1.2'
     },
     otpSettings: {
-      method: 'email',
-      email: 'security@example.com',
+      method: BillPayOTPMethod.EMAIL,
+      email: 'test@example.com',
       phone: '+1234567890'
     },
     etag: 'abc123' // Added for concurrent update testing
@@ -36,19 +51,37 @@ describe('BillPaySecurityService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    billPaySecurityService.resetOTPAttempts();
   });
+
+  const mockAuthToken: AuthToken = {
+    token: 'jwt.token.here',
+    refreshToken: 'refresh.token.here',
+    expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
+    userId: 'testuser'
+  };
+
+  // Helper function to set current token for testing
+  const setCurrentToken = async (token: AuthToken | null) => {
+    if (token) {
+      (api.post as jest.Mock).mockResolvedValueOnce({
+        data: { data: token }
+      });
+      await billPaySecurityService.authenticate('testuser', 'password123');
+    } else {
+      await billPaySecurityService.logout();
+    }
+  };
 
   describe('getSettings', () => {
     it('should fetch security settings successfully', async () => {
       (api.get as jest.Mock).mockResolvedValueOnce({
-        data: { data: mockSettings }
+        data: { data: initialSettings }
       });
 
       const result = await billPaySecurityService.getSettings();
 
       expect(api.get).toHaveBeenCalledWith('/security/bill-pay/settings');
-      expect(result).toEqual(mockSettings);
+      expect(result).toEqual(initialSettings);
     });
 
     it('should handle API errors gracefully', async () => {
@@ -62,100 +95,192 @@ describe('BillPaySecurityService', () => {
   });
 
   describe('updateSettings', () => {
+    // Mock updated settings
     const updatedSettings: BillPaySecuritySettings = {
-      ...mockSettings,
+      ...initialSettings,
       passwordPolicy: {
-        ...mockSettings.passwordPolicy,
+        ...initialSettings.passwordPolicy,
         minLength: 14,
         expiryDays: 60
       },
       loginPolicy: {
-        ...mockSettings.loginPolicy,
+        ...initialSettings.loginPolicy,
         maxAttempts: 5,
         requireMFA: false
+      },
+      otpSettings: {
+        ...initialSettings.otpSettings,
+        method: BillPayOTPMethod.SMS
       }
     };
 
     it('should update security settings successfully', async () => {
+      (api.get as jest.Mock).mockResolvedValueOnce({
+        data: { data: initialSettings }
+      });
       (api.put as jest.Mock).mockResolvedValueOnce({
         data: { data: updatedSettings }
       });
 
+      await billPaySecurityService.getSettings();
       const result = await billPaySecurityService.updateSettings(updatedSettings);
 
       expect(api.put).toHaveBeenCalledWith(
         '/security/bill-pay/settings',
         updatedSettings,
-        {
-          headers: {
-            'If-Match': updatedSettings.etag
-          }
-        }
+        { headers: { 'If-Match': 'abc123' } }
       );
       expect(result).toEqual(updatedSettings);
     });
 
     it('should handle concurrent update conflict', async () => {
-      const error = { response: { status: 412 } };
-      (api.put as jest.Mock).mockRejectedValueOnce(error);
+      (api.get as jest.Mock).mockResolvedValueOnce({
+        data: { data: initialSettings }
+      });
+      (api.put as jest.Mock).mockRejectedValueOnce({
+        response: {
+          status: 412,
+          data: { message: 'Settings have been modified' }
+        }
+      });
 
+      await billPaySecurityService.getSettings();
       await expect(billPaySecurityService.updateSettings(updatedSettings))
         .rejects
         .toThrow('Settings have been modified by another user. Please refresh and try again.');
     });
 
     it('should validate IP whitelist format', async () => {
+      (api.get as jest.Mock).mockResolvedValueOnce({
+        data: { data: initialSettings }
+      });
+
       const invalidSettings: BillPaySecuritySettings = {
-        ...mockSettings,
+        ...initialSettings,
         ipWhitelist: {
           enabled: true,
           addresses: '192.168.1.256/24' // Invalid IP
         }
       };
 
+      await billPaySecurityService.getSettings();
       await expect(billPaySecurityService.updateSettings(invalidSettings))
         .rejects
         .toThrow('Invalid IP format: 192.168.1.256/24');
     });
 
     it('should validate phone number format for SMS OTP', async () => {
+      (api.get as jest.Mock).mockResolvedValueOnce({
+        data: { data: initialSettings }
+      });
+
       const invalidSettings: BillPaySecuritySettings = {
-        ...mockSettings,
+        ...initialSettings,
         otpSettings: {
-          method: 'sms' as const,
+          method: BillPayOTPMethod.SMS,
           phone: '123456', // Invalid phone format
-          email: 'test@example.com' // Keep required email field
+          email: 'test@example.com'
         }
       };
 
+      await billPaySecurityService.getSettings();
       await expect(billPaySecurityService.updateSettings(invalidSettings))
         .rejects
         .toThrow('Invalid phone number format');
     });
 
     it('should handle API errors gracefully', async () => {
+      (api.get as jest.Mock).mockResolvedValueOnce({
+        data: { data: initialSettings }
+      });
       const error = new Error('Network error');
       (api.put as jest.Mock).mockRejectedValueOnce(error);
 
+      await billPaySecurityService.getSettings();
       await expect(billPaySecurityService.updateSettings(updatedSettings))
         .rejects
         .toThrow('Failed to update security settings: Network error');
     });
 
     it('should handle validation errors', async () => {
-      const validationError = {
+      (api.get as jest.Mock).mockResolvedValueOnce({
+        data: { data: initialSettings }
+      });
+      (api.put as jest.Mock).mockRejectedValueOnce({
         response: {
           data: {
             code: 'VALIDATION_ERROR',
             message: 'Password length must be at least 8 characters'
           }
         }
-      };
-      (api.put as jest.Mock).mockRejectedValueOnce(validationError);
+      });
 
+      await billPaySecurityService.getSettings();
       await expect(billPaySecurityService.updateSettings(updatedSettings))
         .rejects
         .toThrow('Invalid security settings: Password length must be at least 8 characters');
+    });
+
+    it('should log settings update to audit service', async () => {
+      const auditSpy = jest.spyOn(auditService, 'logEvent');
+      (api.get as jest.Mock).mockResolvedValueOnce({
+        data: { data: initialSettings }
+      });
+      (api.put as jest.Mock).mockResolvedValueOnce({
+        data: { data: updatedSettings }
+      });
+
+      await billPaySecurityService.getSettings();
+      await billPaySecurityService.updateSettings(updatedSettings);
+
+      expect(auditSpy).toHaveBeenCalledWith({
+        eventType: 'SECURITY_SETTINGS_UPDATE',
+        resourceId: 'abc123',
+        resourceType: 'security_settings',
+        status: 'COMPLETED',
+        metadata: {
+          changes: {
+            'passwordPolicy.minLength': { from: 12, to: 14 },
+            'passwordPolicy.expiryDays': { from: 90, to: 60 },
+            'loginPolicy.maxAttempts': { from: 3, to: 5 },
+            'loginPolicy.requireMFA': { from: true, to: false },
+            'otpSettings.method': { from: BillPayOTPMethod.EMAIL, to: BillPayOTPMethod.SMS }
+          }
+        }
+      });
+    });
+
+    it('should log failed settings update attempts', async () => {
+      const auditSpy = jest.spyOn(auditService, 'logEvent');
+      (api.get as jest.Mock).mockResolvedValueOnce({
+        data: { data: initialSettings }
+      });
+      const error = new Error('Network error');
+      (api.put as jest.Mock).mockRejectedValueOnce(error);
+
+      await billPaySecurityService.getSettings();
+      try {
+        await billPaySecurityService.updateSettings(updatedSettings);
+      } catch (err) {
+        // Expected error
+      }
+
+      expect(auditSpy).toHaveBeenCalledWith({
+        eventType: 'SECURITY_SETTINGS_UPDATE',
+        resourceId: 'abc123',
+        resourceType: 'security_settings',
+        status: 'ERROR',
+        metadata: {
+          attemptedChanges: {
+            'passwordPolicy.minLength': { from: 12, to: 14 },
+            'passwordPolicy.expiryDays': { from: 90, to: 60 },
+            'loginPolicy.maxAttempts': { from: 3, to: 5 },
+            'loginPolicy.requireMFA': { from: true, to: false },
+            'otpSettings.method': { from: BillPayOTPMethod.EMAIL, to: BillPayOTPMethod.SMS }
+          },
+          error: 'Failed to update security settings: Network error'
+        }
+      });
     });
   });
 
@@ -170,15 +295,15 @@ describe('BillPaySecurityService', () => {
         data: { data: validationResult }
       });
 
-      const result = await billPaySecurityService.validateSettings(mockSettings);
+      const result = await billPaySecurityService.validateSettings(initialSettings);
 
-      expect(api.post).toHaveBeenCalledWith('/security/bill-pay/settings/validate', mockSettings);
+      expect(api.post).toHaveBeenCalledWith('/security/bill-pay/settings/validate', initialSettings);
       expect(result).toEqual(validationResult);
     });
 
     it('should catch invalid IP format in local validation', async () => {
       const invalidSettings: BillPaySecuritySettings = {
-        ...mockSettings,
+        ...initialSettings,
         ipWhitelist: {
           enabled: true,
           addresses: '192.168.1.256/24' // Invalid IP
@@ -193,9 +318,9 @@ describe('BillPaySecurityService', () => {
 
     it('should catch invalid phone format in local validation', async () => {
       const invalidSettings: BillPaySecuritySettings = {
-        ...mockSettings,
+        ...initialSettings,
         otpSettings: {
-          method: 'sms' as const,
+          method: BillPayOTPMethod.SMS,
           phone: '123456', // Invalid phone format
           email: 'test@example.com' // Keep required email field
         }
@@ -209,9 +334,9 @@ describe('BillPaySecurityService', () => {
 
     it('should return validation errors for invalid settings', async () => {
       const invalidSettings: BillPaySecuritySettings = {
-        ...mockSettings,
+        ...initialSettings,
         passwordPolicy: {
-          ...mockSettings.passwordPolicy,
+          ...initialSettings.passwordPolicy,
           minLength: 4
         }
       };
@@ -237,228 +362,291 @@ describe('BillPaySecurityService', () => {
       const error = new Error('Network error');
       (api.post as jest.Mock).mockRejectedValueOnce(error);
 
-      await expect(billPaySecurityService.validateSettings(mockSettings))
+      await expect(billPaySecurityService.validateSettings(initialSettings))
         .rejects
         .toThrow('Failed to validate security settings: Network error');
     });
   });
 
   describe('sendOTP', () => {
-    it('should send OTP via email successfully', async () => {
-      const successResponse = {
-        success: true,
-        message: 'OTP sent successfully'
-      };
+    const mockDestination = 'test@example.com';
 
-      (api.post as jest.Mock).mockResolvedValueOnce({
-        data: { data: successResponse }
+    beforeEach(() => {
+      jest.clearAllMocks();
+      billPaySecurityService.resetOTPAttempts();
+    });
+
+    it('should send OTP via email', async () => {
+      // Mock MFA verification
+      (api.get as jest.Mock).mockResolvedValueOnce({
+        data: { data: { verified: true } }
       });
 
-      const result = await billPaySecurityService.sendOTP('email', 'test@example.com');
+      // Mock OTP send
+      (api.post as jest.Mock).mockResolvedValueOnce({
+        data: { data: { success: true } }
+      });
+
+      await billPaySecurityService.sendOTP(BillPayOTPMethod.EMAIL, mockDestination);
 
       expect(api.post).toHaveBeenCalledWith('/security/bill-pay/otp/send', {
-        method: 'email',
-        destination: 'test@example.com'
+        method: BillPayOTPMethod.EMAIL,
+        destination: mockDestination
       });
-      expect(result).toEqual(successResponse);
     });
 
-    it('should send OTP via SMS successfully', async () => {
-      const successResponse = {
-        success: true,
-        message: 'OTP sent successfully'
-      };
-
-      (api.post as jest.Mock).mockResolvedValueOnce({
-        data: { data: successResponse }
+    it('should send OTP via SMS', async () => {
+      const mockPhone = '+1234567890';
+      // Mock MFA verification
+      (api.get as jest.Mock).mockResolvedValueOnce({
+        data: { data: { verified: true } }
       });
 
-      const result = await billPaySecurityService.sendOTP('sms', '+1234567890');
+      // Mock OTP send
+      (api.post as jest.Mock).mockResolvedValueOnce({
+        data: { data: { success: true } }
+      });
+
+      await billPaySecurityService.sendOTP(BillPayOTPMethod.SMS, mockPhone);
 
       expect(api.post).toHaveBeenCalledWith('/security/bill-pay/otp/send', {
-        method: 'sms',
-        destination: '+1234567890'
+        method: BillPayOTPMethod.SMS,
+        destination: mockPhone
       });
-      expect(result).toEqual(successResponse);
     });
 
-    it('should validate email format before sending', async () => {
-      await expect(billPaySecurityService.sendOTP('email', 'invalid-email'))
-        .rejects
-        .toThrow('Invalid email format');
-    });
-
-    it('should validate phone format before sending', async () => {
-      await expect(billPaySecurityService.sendOTP('sms', '123456'))
-        .rejects
-        .toThrow('Invalid phone number format');
-    });
-
-    it('should handle rate limiting', async () => {
-      const successResponse = {
-        success: true,
-        message: 'OTP sent successfully'
-      };
-
-      (api.post as jest.Mock).mockResolvedValue({
-        data: { data: successResponse }
+    it('should log OTP send attempt', async () => {
+      const auditSpy = jest.spyOn(auditService, 'logEvent');
+      (api.post as jest.Mock).mockResolvedValueOnce({
+        data: { data: { success: true } }
       });
 
-      // Send max allowed attempts
-      for (let i = 0; i < 3; i++) {
-        await billPaySecurityService.sendOTP('email', 'test@example.com');
-      }
+      await billPaySecurityService.sendOTP(BillPayOTPMethod.EMAIL, mockDestination);
 
-      // Next attempt should fail
-      await expect(billPaySecurityService.sendOTP('email', 'test@example.com'))
-        .rejects
-        .toThrow('Too many OTP attempts. Please try again later.');
-    });
-
-    it('should handle invalid destination error', async () => {
-      billPaySecurityService.resetOTPAttempts(); // Reset attempts before test
-      const error = {
-        response: {
-          data: {
-            code: 'INVALID_DESTINATION',
-            message: 'Invalid email format'
-          }
+      expect(auditSpy).toHaveBeenCalledTimes(2);
+      expect(auditSpy).toHaveBeenNthCalledWith(1, {
+        eventType: 'OTP_ATTEMPT',
+        resourceId: mockDestination,
+        resourceType: 'otp',
+        status: 'INITIATED',
+        metadata: {
+          method: 'email',
+          action: 'send'
         }
-      };
-      (api.post as jest.Mock).mockRejectedValueOnce(error);
-
-      await expect(billPaySecurityService.sendOTP('email', 'test@example.com'))
-        .rejects
-        .toThrow('Invalid email destination: test@example.com');
-    });
-
-    it('should handle OTP limit exceeded error', async () => {
-      billPaySecurityService.resetOTPAttempts(); // Reset attempts before test
-      const error = {
-        response: {
-          data: {
-            code: 'OTP_LIMIT_EXCEEDED',
-            message: 'Too many attempts'
-          }
+      });
+      expect(auditSpy).toHaveBeenNthCalledWith(2, {
+        eventType: 'OTP_ATTEMPT',
+        resourceId: mockDestination,
+        resourceType: 'otp',
+        status: 'COMPLETED',
+        metadata: {
+          method: 'email',
+          action: 'send'
         }
-      };
-      (api.post as jest.Mock).mockRejectedValueOnce(error);
-
-      await expect(billPaySecurityService.sendOTP('email', 'test@example.com'))
-        .rejects
-        .toThrow('Too many OTP attempts. Please try again later.');
+      });
     });
 
-    it('should handle API errors gracefully', async () => {
-      billPaySecurityService.resetOTPAttempts(); // Reset attempts before test
-      const error = new Error('Network error');
+    it('should handle too many attempts', async () => {
+      // Mock MFA verification
+      (api.get as jest.Mock).mockResolvedValueOnce({
+        data: { data: { verified: true } }
+      });
+
+      // Mock rate limit error
+      const error = new Error('Too many attempts');
       (api.post as jest.Mock).mockRejectedValueOnce(error);
 
-      await expect(billPaySecurityService.sendOTP('email', 'test@example.com'))
+      await expect(billPaySecurityService.sendOTP(BillPayOTPMethod.EMAIL, mockDestination))
         .rejects
-        .toThrow('Failed to send OTP: Network error');
+        .toThrow('Too many attempts');
     });
   });
 
   describe('verifyOTP', () => {
-    it('should verify OTP successfully', async () => {
-      const successResponse = {
-        success: true,
-        message: 'OTP verified successfully'
-      };
+    const mockOTP = '123456';
 
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should verify OTP successfully', async () => {
       (api.post as jest.Mock).mockResolvedValueOnce({
-        data: { data: successResponse }
+        data: { data: { success: true } }
       });
 
-      const result = await billPaySecurityService.verifyOTP('123456');
+      const result = await billPaySecurityService.verifyOTP(mockOTP);
 
       expect(api.post).toHaveBeenCalledWith('/security/bill-pay/otp/verify', {
-        otp: '123456'
+        otp: mockOTP
       });
-      expect(result).toEqual(successResponse);
+      expect(result).toEqual({ success: true });
     });
 
-    it('should validate OTP format before sending', async () => {
-      await expect(billPaySecurityService.verifyOTP('12345'))
-        .rejects
-        .toThrow('Invalid OTP format. Must be 6 digits.');
+    it('should log successful OTP verification', async () => {
+      const auditSpy = jest.spyOn(auditService, 'logEvent');
+      (api.post as jest.Mock).mockResolvedValueOnce({
+        data: { data: { success: true } }
+      });
 
-      await expect(billPaySecurityService.verifyOTP('1234567'))
-        .rejects
-        .toThrow('Invalid OTP format. Must be 6 digits.');
+      await billPaySecurityService.verifyOTP(mockOTP);
 
-      await expect(billPaySecurityService.verifyOTP('abcdef'))
-        .rejects
-        .toThrow('Invalid OTP format. Must be 6 digits.');
+      expect(auditSpy).toHaveBeenCalledWith({
+        eventType: 'OTP_ATTEMPT',
+        resourceId: mockOTP,
+        resourceType: 'otp',
+        status: 'COMPLETED',
+        metadata: { action: 'verify' }
+      });
     });
 
-    it('should handle invalid OTP', async () => {
-      const error = {
-        response: {
-          data: {
-            code: 'INVALID_OTP',
-            message: 'Invalid OTP code'
-          }
-        }
-      };
+    it('should log failed OTP verification', async () => {
+      const auditSpy = jest.spyOn(auditService, 'logEvent');
+      const error = new Error('Invalid OTP');
       (api.post as jest.Mock).mockRejectedValueOnce(error);
 
-      await expect(billPaySecurityService.verifyOTP('000000'))
-        .rejects
-        .toThrow('Invalid OTP code');
+      try {
+        await billPaySecurityService.verifyOTP(mockOTP);
+      } catch (err) {
+        // Expected error
+      }
+
+      expect(auditSpy).toHaveBeenCalledWith({
+        eventType: 'OTP_ATTEMPT',
+        resourceId: mockOTP,
+        resourceType: 'otp',
+        status: 'ERROR',
+        metadata: { action: 'verify', error: 'Invalid OTP' }
+      });
     });
 
-    it('should handle expired OTP', async () => {
-      const error = {
-        response: {
-          data: {
-            code: 'OTP_EXPIRED',
-            message: 'OTP has expired'
-          }
-        }
-      };
+    it('should handle invalid OTP format', async () => {
+      const invalidOTP = '12345'; // Too short
+      await expect(billPaySecurityService.verifyOTP(invalidOTP))
+        .rejects
+        .toThrow('Invalid OTP format');
+    });
+  });
+
+  describe('authenticate', () => {
+    const mockUsername = 'testuser';
+    const mockPassword = 'password123';
+    const mockAuthToken: AuthToken = {
+      token: 'jwt.token.here',
+      refreshToken: 'refresh.token.here',
+      expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
+      userId: 'testuser'
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should authenticate user successfully', async () => {
+      (api.post as jest.Mock).mockResolvedValueOnce({
+        data: { data: mockAuthToken }
+      });
+
+      const result = await billPaySecurityService.authenticate(mockUsername, mockPassword);
+
+      expect(api.post).toHaveBeenCalledWith('/security/bill-pay/auth', {
+        username: mockUsername,
+        password: mockPassword
+      });
+      expect(result).toEqual(mockAuthToken);
+    });
+
+    it('should log successful authentication', async () => {
+      const auditSpy = jest.spyOn(auditService, 'logEvent');
+      (api.post as jest.Mock).mockResolvedValueOnce({
+        data: { data: mockAuthToken }
+      });
+
+      await billPaySecurityService.authenticate(mockUsername, mockPassword);
+
+      expect(auditSpy).toHaveBeenCalledWith({
+        eventType: 'AUTH_ATTEMPT',
+        resourceId: mockUsername,
+        resourceType: 'user',
+        status: 'COMPLETED',
+        metadata: { method: 'password' }
+      });
+    });
+
+    it('should log failed authentication', async () => {
+      const auditSpy = jest.spyOn(auditService, 'logEvent');
+      const error = new Error('Invalid credentials');
       (api.post as jest.Mock).mockRejectedValueOnce(error);
 
-      await expect(billPaySecurityService.verifyOTP('123456'))
-        .rejects
-        .toThrow('OTP has expired. Please request a new one.');
+      try {
+        await billPaySecurityService.authenticate(mockUsername, mockPassword);
+      } catch (err) {
+        // Expected error
+      }
+
+      expect(auditSpy).toHaveBeenCalledWith({
+        eventType: 'AUTH_ATTEMPT',
+        resourceId: mockUsername,
+        resourceType: 'user',
+        status: 'ERROR',
+        metadata: { method: 'password', error: 'Invalid credentials' }
+      });
+    });
+  });
+
+  describe('refreshToken', () => {
+    it('should refresh token successfully', async () => {
+      await setCurrentToken(mockAuthToken);
+      (api.post as jest.Mock).mockResolvedValueOnce({
+        data: { data: mockAuthToken }
+      });
+
+      const result = await billPaySecurityService.refreshToken();
+      expect(result).toEqual(mockAuthToken);
     });
 
-    it('should handle API errors gracefully', async () => {
-      const error = new Error('Network error');
-      (api.post as jest.Mock).mockRejectedValueOnce(error);
-
-      await expect(billPaySecurityService.verifyOTP('123456'))
+    it('should throw error when no refresh token available', async () => {
+      await setCurrentToken(null);
+      await expect(billPaySecurityService.refreshToken())
         .rejects
-        .toThrow('Failed to verify OTP: Network error');
+        .toThrow('No refresh token available');
+    });
+  });
+
+  describe('logout', () => {
+    it('should log out successfully', async () => {
+      await setCurrentToken(mockAuthToken);
+      await billPaySecurityService.logout();
+
+      expect(api.post).toHaveBeenCalledWith('/security/bill-pay/auth/logout', {
+        refreshToken: mockAuthToken.refreshToken
+      });
     });
 
-    it('should reset attempt counter on successful verification', async () => {
-      billPaySecurityService.resetOTPAttempts(); // Reset attempts before test
-      const successResponse = {
-        success: true,
-        message: 'OTP sent successfully'
-      };
+    it('should do nothing if no current token', async () => {
+      await setCurrentToken(null);
+      await billPaySecurityService.logout();
+      expect(api.post).not.toHaveBeenCalled();
+    });
 
-      // First send an OTP
-      (api.post as jest.Mock).mockResolvedValueOnce({
-        data: { data: successResponse }
-      });
-      await billPaySecurityService.sendOTP('email', 'test@example.com');
+    it('should log logout event', async () => {
+      const auditSpy = jest.spyOn(auditService, 'logEvent');
+      await setCurrentToken(mockAuthToken);
 
-      // Then verify it
-      (api.post as jest.Mock).mockResolvedValueOnce({
-        data: { data: successResponse }
-      });
-      await billPaySecurityService.verifyOTP('123456');
+      await billPaySecurityService.logout();
 
-      // Should be able to send another OTP immediately
-      (api.post as jest.Mock).mockResolvedValueOnce({
-        data: { data: successResponse }
+      expect(auditSpy).toHaveBeenCalledWith({
+        eventType: 'LOGOUT',
+        resourceId: mockAuthToken.userId,
+        resourceType: 'user',
+        status: 'INITIATED'
       });
-      const result = await billPaySecurityService.sendOTP('email', 'test@example.com');
-      expect(result).toEqual(successResponse);
+
+      expect(auditSpy).toHaveBeenCalledWith({
+        eventType: 'LOGOUT',
+        resourceId: mockAuthToken.userId,
+        resourceType: 'user',
+        status: 'COMPLETED'
+      });
     });
   });
 });

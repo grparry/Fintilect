@@ -29,23 +29,15 @@ class PendingPaymentsService {
   private readonly baseUrl = '/api/v2/payments/pending';
 
   async fetchPayments(params: FetchPaymentsParams): Promise<PaymentsResponse> {
-    type PaginatedResponse = {
-      data: PendingPayment[];
-      meta: ApiPaginationMeta & {
-        timestamp: string;
-        requestId: string;
-      };
-    };
-
     const response = await api.get<ApiPaginatedResponse<PendingPayment[]>>(
       this.baseUrl,
       { params }
     );
 
-    const { data: payments, meta } = response;
+    const { data, meta } = response.data;
 
     return {
-      payments,
+      payments: data,
       total: meta.totalCount,
       page: meta.currentPage,
       totalPages: meta.totalPages,
@@ -58,7 +50,7 @@ class PendingPaymentsService {
       const response = await api.get<ApiSuccessResponse<PendingPayment>>(
         `${this.baseUrl}/${id}`
       );
-      return response.data;
+      return response.data.data;
     } catch (error: unknown) {
       if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as { response?: { data?: { message?: string } } };
@@ -113,7 +105,7 @@ class PendingPaymentsService {
       `${this.baseUrl}/summary`,
       { params: filters }
     );
-    return response.data;
+    return response.data.data;
   }
 
   async getPaymentHistory(id: string): Promise<PaymentHistory> {

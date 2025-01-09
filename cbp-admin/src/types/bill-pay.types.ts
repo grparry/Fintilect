@@ -51,13 +51,12 @@ export enum ConfirmationStatus {
 }
 
 export enum PaymentStatus {
-  PENDING = 'pending',
-  APPROVED = 'approved',
-  REJECTED = 'rejected',
-  PROCESSING = 'processing',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-  CANCELLED = 'cancelled'
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+  CANCELLED = 'CANCELLED',
+  EXPIRED = 'EXPIRED',
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
 }
 
 export enum Priority {
@@ -574,7 +573,13 @@ export interface BillPayConfigValidation {
 }
 
 // Notification Template Types
-export type NotificationType = 'Email' | 'SMS';
+export type NotificationType =
+  | 'PAYMENT_COMPLETED'
+  | 'PAYMENT_FAILED'
+  | 'PAYMENT_APPROVAL_REQUIRED'
+  | 'PAYMENT_CANCELLED'
+  | 'PAYMENT_EXPIRED';
+
 export type NotificationCategory = 'Payment' | 'Account' | 'System';
 
 export interface NotificationVariable {
@@ -836,4 +841,116 @@ export interface PayeeConversionService {
   getFileRecords: (fileId: string) => Promise<PayeeConversionRecord[]>;
   validateFile: (fileId: string) => Promise<void>;
   processFile: (fileId: string) => Promise<void>;
+}
+
+// Validation Types
+export interface ValidationError {
+  field: string;
+  message: string;
+  type?: 'error' | 'warning';
+}
+
+export interface PaymentValidationResult {
+  valid: boolean;
+  errors: ValidationError[];
+  warnings?: ValidationError[];
+  requiresApproval?: boolean;
+}
+
+export interface PaymentMethodLimits {
+  maxAmount: number;
+  minAmount: number;
+  allowedCurrencies: string[];
+  requiresApproval: boolean;
+}
+
+export interface DailyLimitCheck {
+  totalAmount: number;
+  remainingLimit: number;
+  reachedLimit: boolean;
+}
+
+// Payment Processor Types
+export interface ProcessorConfig {
+  processorId: string;
+  apiKey: string;
+  apiEndpoint: string;
+  webhookSecret: string;
+  timeout: number;
+  retryAttempts: number;
+  supportedMethods: PaymentMethod[];
+  methodConfigs: Record<PaymentMethod, {
+    enabled: boolean;
+    limits: {
+      min: number;
+      max: number;
+    };
+    currencies: string[];
+    requiresApproval: boolean;
+  }>;
+}
+
+export interface ProcessorResponse {
+  success: boolean;
+  processorId: string;
+  transactionId: string;
+  status: PaymentStatus;
+  timestamp: string;
+  requiresApproval: boolean;
+  metadata?: Record<string, any>;
+}
+
+export interface ProcessorWebhookEvent {
+  eventId: string;
+  paymentId: string;
+  processorId: string;
+  status: string;
+  timestamp: string;
+  metadata: {
+    clientId: string;
+    amount: number;
+    currency: string;
+    completedAt?: string;
+    error?: string;
+  };
+}
+
+// Notification Types
+export interface NotificationConfig {
+  providers: {
+    email: {
+      enabled: boolean;
+      provider: string;
+      apiKey: string;
+      fromEmail: string;
+      templates: Record<NotificationType, string>;
+    };
+    sms: {
+      enabled: boolean;
+      provider: string;
+      apiKey: string;
+      fromNumber: string;
+      templates: Record<NotificationType, string>;
+    };
+  };
+  defaultChannel: 'email' | 'sms';
+}
+
+export interface NotificationRequest {
+  type: NotificationType;
+  recipientId: string;
+  data: Record<string, any>;
+  channel?: 'email' | 'sms';
+  priority?: 'high' | 'normal' | 'low';
+}
+
+export interface NotificationResponse {
+  id: string;
+  recipientId: string;
+  type: NotificationType;
+  status: 'SENT' | 'DELIVERED' | 'FAILED';
+  channel: 'email' | 'sms';
+  sentAt: string;
+  deliveredAt?: string;
+  error?: string;
 }

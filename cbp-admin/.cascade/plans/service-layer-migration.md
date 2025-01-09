@@ -55,44 +55,225 @@ After completing any service:
   - [ ] Bill Pay Services
     - [x] bill-pay-config.service.ts
     - [x] bill-pay-security.service.ts
-    - [ ] bill-pay.service.ts
-  
-  - [ ] Client & User Services
-    - [ ] clients.service.ts
-    - [ ] member.service.ts
-    - [ ] userService.ts
+    - [~] bill-pay.service.ts
+      - [x] Support Functions
+        - [x] Audit log management
+        - [x] Configuration management
+        - [x] Stats tracking
+        - [x] Service control operations
+      - [x] Core Payment Operations
+        - [x] Submit/create payments
+        - [x] Get payment details
+        - [x] Update payment status
+        - [x] Cancel payments
+        - [x] Batch operations
+        - [x] Payment validation
+        - [x] Payment history tracking
+        - [x] Payment search functionality
+      - [x] Payment Confirmation Features
+        - [x] Request confirmation
+        - [x] Verify confirmation
+      - [x] Validation Logic
+        - [x] Payment amount limits
+          - [x] Global transaction limits
+          - [x] Method-specific limits
+          - [x] Currency validation
+        - [x] Daily transaction limits
+          - [x] Per-client tracking
+          - [x] Config-based limits
+          - [x] Cross-method aggregation
+        - [x] Method-specific validations
+          - [x] Wire transfer requirements
+          - [x] ACH effective date rules
+          - [x] Check payee validation
+          - [x] RTP cutoff times
+        - [x] Business rules validation
+          - [x] Weekend processing rules
+          - [x] Dual approval logic
+          - [x] Currency support rules
+          - [x] Cutoff enforcement
+      - [~] Integration Points
+        - [x] Payment processor integration
+          - [x] Submit payment to processor
+          - [x] Handle processor webhooks
+          - [x] Status checking
+          - [x] Error handling
+          - [x] Audit logging
+        - [x] Notification system hooks
+          - [x] Email notifications
+          - [x] SMS notifications
+          - [x] Template support
+          - [x] Status tracking
+          - [x] Error handling
+        - [~] Audit logging for payment operations
+          - [x] Processor events
+          - [x] Notification events
+          - [x] Security events
+            - [x] Authentication attempts
+            - [x] Rate limit violations
+            - [x] OTP/MFA verification
+            - [x] Permission changes
+          - [x] User actions
+            - [x] Payment status updates
+            - [x] Payment cancellations
+            - [x] System state changes
+        - [x] Security service integration
+          - [x] Authentication
+          - [x] Authorization
+          - [x] Rate limiting
+          - [x] API key management
+        - [x] Exception service integration
+          - [x] Exception tracking
+          - [x] Exception management
+          - [x] Exception reporting
+          - [x] Integration with audit logging
+        - [x] Report service integration
+          - [x] Report generation
+          - [x] Report export
+          - [x] Report scheduling
+          - [x] Integration with audit logging
+        - [ ] Service Testing
+          - [x] Security service tests
+            - [x] Security settings management
+            - [x] OTP/MFA functionality
+            - [x] Basic authentication
+            - [x] Security event logging
+            - [x] Fixed test issues:
+              - [x] Added userId to AuthToken mocks
+              - [x] Fixed private property access in tests
+              - [x] Improved audit logging assertions
+              - [x] Added helper functions for token management
+          - [x] Exception service tests
+            - [x] Basic CRUD operations
+              - [x] Fetch exceptions with pagination
+              - [x] Get single exception
+              - [x] Get exception history
+              - [x] Get exception stats
+            - [x] Exception management
+              - [x] Resolve exception
+              - [x] Retry exception
+              - [x] Update status
+              - [x] Assign to user
+            - [x] Notes and exports
+              - [x] Add notes with metadata
+              - [x] Export exceptions
+            - [x] Error handling
+              - [x] API errors
+              - [x] Retry functionality
+          - [x] Report service tests
+            - [x] getReportData tests
+            - [x] getAuditReport tests
+            - [x] getTransactionReport tests
+            - [x] getUserReport tests
+            - [x] exportReport tests
+            - [x] scheduleReport tests
+            - [x] cancelScheduledReport tests
+            - [x] Achieved 85.88% test coverage
+        - [x] Unit tests for payment operations
+          - [x] payment-processor.service.test.ts
+            - [x] submitPayment tests
+            - [x] getPaymentStatus tests
+            - [x] handleWebhook tests
+            - [x] Fixed type issues and enum values
+          - [x] notification.service.test.ts
+            - [x] sendNotification tests with proper types
+            - [x] getNotificationStatus tests
+            - [x] Error handling for API failures
+            - [x] Audit logging verification
+        - [x] Basic validation tests
+        - [x] Method-specific validation tests
+          - [x] ACH validation rules
+          - [x] Wire transfer rules
+          - [x] Check processing rules
+        - [ ] Integration tests
+          - [x] Payment processor integration
+            - [x] Successful payment submission
+            - [x] Error handling in payment submission
+            - [x] Webhook processing
+            - [x] Invalid webhook handling
+            - [x] Achieved 73.33% test coverage
+          - [x] Notification system
+            - [x] Send notification tests
+            - [x] Status check tests
+            - [x] Error handling tests
+            - [x] Audit logging verification
+            - [x] Achieved 100% test coverage
+          - [ ] Audit logging
+          - [ ] Security service
+    - [x] payment-processor.service.ts tests
+      - [x] submitPayment tests
+      - [x] getPaymentStatus tests
+      - [x] handleWebhook tests
+      - [x] Fixed type issues and enum values
+    - [x] notification.service.ts tests
+      - [x] sendNotification tests
+      - [x] getNotificationStatus tests
+      - [x] Error handling tests
+      - [x] Audit logging tests
   
   - [~] Payment Related Services
     - [x] payments.service.ts
-    - [ ] manual-payment.service.ts
-      - [ ] Update to use new API client
-      - [ ] Add comprehensive test suite
-      - [ ] Fix type handling issues
-      - [ ] Add error handling for unsupported methods
-      - [ ] Improve draft management
+    - [x] manual-payment.service.ts
+      - [x] Update to use new API client
+      - [x] Add comprehensive test suite
+      - [x] Fix type handling issues
+      - [x] Add error handling for unsupported methods
+      - [x] Improve draft management
     - [x] manual-payments.service.ts
       - [x] Updated to use new API client
       - [x] Added comprehensive test suite
       - [x] Fixed type handling issues
       - [x] Added error handling
       - [x] Improved pagination handling
-    - [ ] pending-payments.service.ts
+    - [x] pending-payments.service.ts
+      - [x] Fixed type errors in API response handling
+      - [x] Fixed return types to match API response structure
+      - [x] Added proper typing for paginated responses
+      - [x] Added proper error handling
     - [ ] payee-conversion.service.ts
   
-  - [~] Exception Services
-    - [x] exceptions.service.ts
-    - [ ] fis-exceptions.service.ts
+  - [ ] Client & User Services
+    - [ ] clients.service.ts
+      - [ ] Update to use new API client
+      - [ ] Migrate to new `/clients` endpoints
+      - [ ] Update response types to match API schema
+      - [ ] Add comprehensive test suite
+    - [ ] member.service.ts
+      - [ ] Update to use new API client
+      - [ ] Migrate to new member management endpoints
+      - [ ] Update response types to match API schema
+      - [ ] Add comprehensive test suite
+    - [ ] userService.ts
+      - [ ] Update to use new API client
+      - [ ] Migrate to new user management endpoints
+      - [ ] Update response types to match API schema
+      - [ ] Add comprehensive test suite
   
   - [ ] System Services
     - [ ] dashboard.service.ts
+      - [ ] Update to use new API client
+      - [ ] Migrate to new system status endpoints
+      - [ ] Update response types to match API schema
+      - [ ] Add comprehensive test suite
     - [ ] holiday.service.ts
-    - [ ] holidays.service.ts
+      - [ ] Migrate to new `/system/holidays` endpoint
+      - [ ] Update response types to match API schema
+      - [ ] Add comprehensive test suite
+      - [ ] Consolidate with holidays.service.ts
     - [ ] permission.service.ts
-    - [ ] report.service.ts
+      - [ ] Update to use new API client
+      - [ ] Migrate to new permission management endpoints
+      - [ ] Update response types to match API schema
+      - [ ] Add comprehensive test suite
+    - [x] report.service.ts
   
   - [ ] Notification Services
     - [ ] notification-template.service.ts
-    - [ ] notification-templates.service.ts
+      - [ ] Update to use new API client
+      - [ ] Migrate to new notification endpoints
+      - [ ] Update response types to match API schema
+      - [ ] Add comprehensive test suite
+      - [ ] Consolidate with notification-templates.service.ts
 
 ### 2.1 Testing Strategy
 Each service update will include minimal but effective testing:
@@ -143,91 +324,27 @@ Each service update will include minimal but effective testing:
     - [x] Added tests for error cases
     - [x] Added tests for email notifications
   
-  - [ ] Bill Pay Core Service
-    - [ ] Update core payment operations
-    - [ ] Update validation logic
-    - [ ] Add tests for core functions
-    - [ ] Verify integration points
+  - [~] Bill Pay Core Service
+    - [x] Update core payment operations
+    - [x] Update validation logic
+    - [x] Add tests for core functions
+    - [x] Verify integration points
 
-- [ ] Remaining Services
-  - [ ] Clients Service
-    - [ ] Update client management
-    - [ ] Add pagination for client lists
-    - [ ] Update client search
-    - [ ] Add tests for client CRUD
-    - [ ] Add tests for client search
-  
-  - [ ] Member Service
-    - [ ] Update member operations
-    - [ ] Add pagination support
-    - [ ] Update member validation
-    - [ ] Add tests for member CRUD
-    - [ ] Add tests for member search
-  
-  - [ ] User Service
-    - [ ] Update user management
-    - [ ] Update role handling
-    - [ ] Add pagination support
-    - [ ] Add tests for user CRUD
-    - [ ] Add tests for role management
-  
-  - [ ] Manual Payments Service
-    - [ ] Update batch operations
-    - [ ] Add pagination support
-    - [ ] Update error handling
-    - [ ] Add tests for batch operations
-    - [ ] Add tests for validation
-  
-  - [ ] Pending Payments Service
-    - [ ] Update payment queue
-    - [ ] Update status management
-    - [ ] Add pagination support
-    - [ ] Add tests for queue operations
-    - [ ] Add tests for status updates
-  
-  - [ ] Payee Conversion Service
-    - [ ] Update conversion logic
-    - [ ] Update validation rules
-    - [ ] Add tests for conversions
-    - [ ] Add tests for validation
-  
-  - [ ] FIS Exceptions Service
-    - [ ] Update exception handling
-    - [ ] Update status management
-    - [ ] Add pagination support
-    - [ ] Add tests for exception handling
-    - [ ] Add tests for status updates
-  
-  - [ ] Dashboard Service
-    - [ ] Update metrics collection
-    - [ ] Update data aggregation
-    - [ ] Add tests for metrics
-    - [ ] Add tests for aggregation
-  
-  - [ ] Holiday Service
-    - [ ] Update calendar operations
-    - [ ] Update holiday rules
-    - [ ] Add tests for holiday management
-    - [ ] Add tests for date calculations
-  
-  - [ ] Holidays Service
-    - [ ] Update holiday definitions
-    - [ ] Add pagination support
-    - [ ] Add tests for holiday CRUD
-    - [ ] Add tests for holiday rules
-  
-  - [ ] Permission Service
-    - [ ] Update permission checks
-    - [ ] Update role mappings
-    - [ ] Add tests for permissions
-    - [ ] Add tests for role checks
-  
-  - [ ] Report Service
-    - [ ] Update report generation
-    - [ ] Update data filtering
-    - [ ] Add pagination support
-    - [ ] Add tests for report generation
-    - [ ] Add tests for data filtering
+### TODO Items
+
+#### FIS Exceptions API
+- [ ] Analyze FIS exception handling requirements
+  - [ ] Review current `/api/fis/exceptions` endpoints and usage patterns
+  - [ ] Document exception types and their business purposes
+  - [ ] Map exception flows to new API patterns
+- [ ] Design new API endpoints for FIS exceptions
+  - [ ] Define request/response schemas
+  - [ ] Align pagination with API standards
+  - [ ] Ensure compatibility with existing exception handling logic
+- [ ] Update `fis-exceptions.service.ts` once new API endpoints are defined
+  - [ ] Migrate to new endpoints
+  - [ ] Update response types to match API standards
+  - [ ] Maintain backward compatibility during transition
 
 ### 3. Type System Updates
 - [~] Update TypeScript Interfaces

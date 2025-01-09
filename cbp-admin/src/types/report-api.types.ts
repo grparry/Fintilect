@@ -1,4 +1,5 @@
 import { ReportType } from './report.types';
+import { ExportOptions } from './report.types';
 
 /**
  * Common report arguments
@@ -17,6 +18,14 @@ export interface ExportReportArguments extends BaseReportArguments {
   format: 'csv' | 'pdf' | 'excel';
   includeHeaders: boolean;
   dateFormat: string;
+}
+
+/**
+ * Schedule report arguments
+ */
+export interface ScheduleReportArguments extends BaseReportArguments {
+  schedule: string;
+  export?: ExportOptions;
 }
 
 /**

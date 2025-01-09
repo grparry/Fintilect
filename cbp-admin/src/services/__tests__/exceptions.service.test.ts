@@ -168,4 +168,186 @@ describe('ExceptionsService', () => {
       expect(result).toEqual(mockBlob);
     });
   });
+
+  describe('getException', () => {
+    it('should fetch a single exception by id', async () => {
+      const mockResponse: ApiSuccessResponse<any> = {
+        success: true,
+        data: {
+          id: '1',
+          paymentId: 'pay_123',
+          type: 'PAYMENT_FAILED',
+          status: 'OPEN' as ExceptionStatus,
+          message: 'Payment processing failed',
+          details: {},
+          createdAt: '2025-01-07T17:44:51-07:00',
+          updatedAt: '2025-01-07T17:44:51-07:00',
+        },
+      };
+
+      mockedApi.get.mockResolvedValueOnce(mockResponse);
+
+      const result = await exceptionsService.getException('1');
+
+      expect(mockedApi.get).toHaveBeenCalledWith('/system/errors/1');
+      expect(result).toEqual(mockResponse.data);
+    });
+
+    it('should handle API errors gracefully', async () => {
+      const error = new Error('API Error');
+      mockedApi.get.mockRejectedValueOnce(error);
+
+      await expect(exceptionsService.getException('1')).rejects.toThrow('API Error');
+    });
+  });
+
+  describe('getExceptionHistory', () => {
+    it('should fetch exception history', async () => {
+      const mockResponse: ApiSuccessResponse<any> = {
+        success: true,
+        data: [
+          {
+            id: 'hist_1',
+            exceptionId: '1',
+            action: 'STATUS_CHANGE',
+            details: { from: 'OPEN', to: 'IN_PROGRESS' },
+            timestamp: '2025-01-07T17:44:51-07:00',
+            userId: 'user_123',
+          },
+        ],
+      };
+
+      mockedApi.get.mockResolvedValueOnce(mockResponse);
+
+      const result = await exceptionsService.getExceptionHistory('1');
+
+      expect(mockedApi.get).toHaveBeenCalledWith('/system/errors/1/history');
+      expect(result).toEqual(mockResponse.data);
+    });
+  });
+
+  describe('retryException', () => {
+    it('should retry an exception with retry enabled', async () => {
+      const mockResponse: ApiSuccessResponse<any> = {
+        success: true,
+        data: {
+          id: '1',
+          paymentId: 'pay_123',
+          type: 'PAYMENT_FAILED',
+          status: 'IN_PROGRESS' as ExceptionStatus,
+          message: 'Payment processing failed',
+          details: { retryCount: 1 },
+          createdAt: '2025-01-07T17:44:51-07:00',
+          updatedAt: '2025-01-07T17:44:51-07:00',
+        },
+      };
+
+      mockedApi.post.mockResolvedValueOnce(mockResponse);
+
+      const result = await exceptionsService.retryException('1');
+
+      expect(mockedApi.post).toHaveBeenCalledWith(
+        '/system/errors/1/retry',
+        undefined,
+        {
+          retry: true,
+          retryDelay: 1000,
+        }
+      );
+
+      expect(result).toEqual(mockResponse.data);
+    });
+  });
+
+  describe('updateExceptionStatus', () => {
+    it('should update exception status with retry enabled', async () => {
+      const mockResponse: ApiSuccessResponse<any> = {
+        success: true,
+        data: {
+          id: '1',
+          paymentId: 'pay_123',
+          type: 'PAYMENT_FAILED',
+          status: 'IN_PROGRESS' as ExceptionStatus,
+          message: 'Payment processing failed',
+          details: {},
+          createdAt: '2025-01-07T17:44:51-07:00',
+          updatedAt: '2025-01-07T17:44:51-07:00',
+        },
+      };
+
+      mockedApi.patch.mockResolvedValueOnce(mockResponse);
+
+      const result = await exceptionsService.updateExceptionStatus(
+        '1',
+        'IN_PROGRESS' as ExceptionStatus,
+        'Working on it'
+      );
+
+      expect(mockedApi.patch).toHaveBeenCalledWith(
+        '/system/errors/1/status',
+        { status: 'IN_PROGRESS', resolution: 'Working on it' },
+        { retry: true }
+      );
+
+      expect(result).toEqual(mockResponse.data);
+    });
+  });
+
+  describe('assignException', () => {
+    it('should assign an exception to a user with retry enabled', async () => {
+      const mockResponse: ApiSuccessResponse<any> = {
+        success: true,
+        data: {
+          id: '1',
+          paymentId: 'pay_123',
+          type: 'PAYMENT_FAILED',
+          status: 'IN_PROGRESS' as ExceptionStatus,
+          message: 'Payment processing failed',
+          details: { assignedTo: 'user_123' },
+          createdAt: '2025-01-07T17:44:51-07:00',
+          updatedAt: '2025-01-07T17:44:51-07:00',
+        },
+      };
+
+      mockedApi.patch.mockResolvedValueOnce(mockResponse);
+
+      const result = await exceptionsService.assignException('1', 'user_123');
+
+      expect(mockedApi.patch).toHaveBeenCalledWith(
+        '/system/errors/1/assign',
+        { userId: 'user_123' },
+        { retry: true }
+      );
+
+      expect(result).toEqual(mockResponse.data);
+    });
+  });
+
+  describe('addExceptionNote', () => {
+    it('should add a note to an exception with retry enabled', async () => {
+      const mockResponse: ApiSuccessResponse<any> = {
+        success: true,
+        data: {
+          id: 'note_1',
+          exceptionId: '1',
+          action: 'NOTE_ADDED',
+          details: { note: 'Test note', metadata: { key: 'value' } },
+          timestamp: '2025-01-07T17:44:51-07:00',
+          userId: 'user_123',
+        },
+      };
+
+      mockedApi.post.mockResolvedValueOnce(mockResponse);
+
+      const result = await exceptionsService.addExceptionNote('1', 'Test note', { key: 'value' });
+
+      expect(mockedApi.post).toHaveBeenCalledWith(
+        '/system/errors/1/notes',
+        { note: 'Test note', metadata: { key: 'value' } },
+        { retry: true }
+      );
+
+      expect(result).toEqual(mockResponse.data);
+    });
+  });
 });

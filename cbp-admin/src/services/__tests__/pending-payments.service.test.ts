@@ -9,9 +9,8 @@ import {
   PendingPaymentApproval,
   PendingPaymentRejection,
 } from '../../types/bill-pay.types';
-import { ApiPaginatedResponse, ApiSuccessResponse, ApiErrorResponse } from '../../types/api.types';
+import { ApiPaginatedResponse, ApiSuccessResponse, ApiPaginationMeta } from '../../types/api.types';
 
-// Mock the api module
 jest.mock('../api');
 const mockedApi = api as jest.Mocked<typeof api>;
 
@@ -20,7 +19,7 @@ describe('PendingPaymentsService', () => {
     jest.clearAllMocks();
   });
 
-  const mockPayment = {
+  const mockPayment: PendingPayment = {
     id: '123',
     clientId: 'client123',
     clientName: 'Test Client',
@@ -43,31 +42,42 @@ describe('PendingPaymentsService', () => {
   };
 
   describe('fetchPayments', () => {
-    it('should fetch payments with filters', async () => {
+    const mockPaginatedMeta: ApiPaginationMeta & { timestamp: string; requestId: string } = {
+      currentPage: 1,
+      totalPages: 1,
+      pageSize: 10,
+      totalCount: 1,
+      hasNextPage: false,
+      hasPreviousPage: false,
+      timestamp: '2025-01-08T12:00:00Z',
+      requestId: 'test-request-1',
+    };
+
+    const mockPaginatedResponse: ApiPaginatedResponse<PendingPayment[]> = {
+      success: true,
+      data: [mockPayment],
+      meta: mockPaginatedMeta,
+    };
+
+    it('should fetch payments with all filters', async () => {
+      mockedApi.get.mockResolvedValueOnce({
+        success: true,
+        data: mockPaginatedResponse,
+        meta: {
+          timestamp: '2025-01-08T12:00:00Z',
+          requestId: 'test-request-1',
+        },
+      });
+
       const params = {
         page: 1,
         limit: 10,
         status: [PaymentStatus.PENDING],
         method: [PaymentMethod.ACH],
         priority: [Priority.HIGH],
+        sortBy: 'createdAt',
+        sortOrder: 'desc' as const,
       };
-
-      const mockResponse: ApiPaginatedResponse<PendingPayment[]> = {
-        success: true,
-        data: [mockPayment],
-        meta: {
-          currentPage: 1,
-          totalPages: 1,
-          pageSize: 10,
-          totalCount: 1,
-          hasNextPage: false,
-          hasPreviousPage: false,
-          timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-1',
-        },
-      };
-
-      mockedApi.get.mockResolvedValueOnce(mockResponse);
 
       const result = await pendingPaymentsService.fetchPayments(params);
 
@@ -80,33 +90,29 @@ describe('PendingPaymentsService', () => {
       });
 
       expect(mockedApi.get).toHaveBeenCalledWith('/api/v2/payments/pending', {
-        params: {
-          page: params.page,
-          limit: params.limit,
-          status: params.status,
-          method: params.method,
-          priority: params.priority,
-        },
+        params,
       });
     });
 
-    it('should handle empty response', async () => {
-      const mockResponse: ApiPaginatedResponse<PendingPayment[]> = {
+    it('should fetch payments without filters', async () => {
+      const emptyResponse: ApiPaginatedResponse<PendingPayment[]> = {
         success: true,
         data: [],
         meta: {
-          currentPage: 1,
-          totalPages: 0,
-          pageSize: 10,
+          ...mockPaginatedMeta,
           totalCount: 0,
-          hasNextPage: false,
-          hasPreviousPage: false,
-          timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-2',
+          totalPages: 0,
         },
       };
 
-      mockedApi.get.mockResolvedValueOnce(mockResponse);
+      mockedApi.get.mockResolvedValueOnce({
+        success: true,
+        data: emptyResponse,
+        meta: {
+          timestamp: '2025-01-08T12:00:00Z',
+          requestId: 'test-request-1',
+        },
+      });
 
       const result = await pendingPaymentsService.fetchPayments({});
 
@@ -125,17 +131,24 @@ describe('PendingPaymentsService', () => {
   });
 
   describe('getPaymentById', () => {
-    it('should get payment by id', async () => {
-      const mockResponse: ApiSuccessResponse<PendingPayment> = {
+    const mockSuccessResponse: ApiSuccessResponse<PendingPayment> = {
+      success: true,
+      data: mockPayment,
+      meta: {
+        timestamp: '2025-01-08T12:00:00Z',
+        requestId: 'test-request-2',
+      },
+    };
+
+    it('should fetch single payment successfully', async () => {
+      mockedApi.get.mockResolvedValueOnce({
         success: true,
-        data: mockPayment,
+        data: mockSuccessResponse,
         meta: {
           timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-3',
+          requestId: 'test-request-2',
         },
-      };
-
-      mockedApi.get.mockResolvedValueOnce(mockResponse);
+      });
 
       const result = await pendingPaymentsService.getPaymentById('123');
 
@@ -143,7 +156,7 @@ describe('PendingPaymentsService', () => {
       expect(mockedApi.get).toHaveBeenCalledWith('/api/v2/payments/pending/123');
     });
 
-    it('should handle error when getting payment', async () => {
+    it('should handle payment not found error', async () => {
       const errorMessage = 'Payment not found';
       mockedApi.get.mockRejectedValueOnce({
         response: {
@@ -153,104 +166,223 @@ describe('PendingPaymentsService', () => {
         },
       });
 
-      await expect(pendingPaymentsService.getPaymentById('123')).rejects.toThrow(
-        errorMessage
-      );
+      await expect(pendingPaymentsService.getPaymentById('invalid-id'))
+        .rejects.toThrow(errorMessage);
+    });
+
+    it('should handle unexpected error format', async () => {
+      mockedApi.get.mockRejectedValueOnce(new Error('Network error'));
+
+      await expect(pendingPaymentsService.getPaymentById('123'))
+        .rejects.toThrow('Network error');
     });
   });
 
   describe('approvePayment', () => {
-    it('should approve payment', async () => {
-      const approval: PendingPaymentApproval = {
-        paymentId: '123',
-        approvedBy: 'user123',
-        approvedAt: '2025-01-08T12:00:00Z',
-        notes: 'Approved payment',
-      };
+    const mockApproval: Omit<PendingPaymentApproval, 'paymentId'> = {
+      approvedBy: 'user123',
+      approvedAt: '2025-01-08T12:00:00Z',
+      notes: 'Test approval',
+    };
 
-      const mockResponse: ApiSuccessResponse<void> = {
+    it('should approve payment successfully', async () => {
+      mockedApi.post.mockResolvedValueOnce({
         success: true,
-        data: undefined,
+        data: {
+          success: true,
+          data: null,
+          meta: {
+            timestamp: '2025-01-08T12:00:00Z',
+            requestId: 'test-request-3',
+          },
+        },
         meta: {
           timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-4',
+          requestId: 'test-request-3',
         },
-      };
+      });
 
-      mockedApi.post.mockResolvedValueOnce(mockResponse);
+      await pendingPaymentsService.approvePayment('123', { paymentId: '123', ...mockApproval });
 
-      await pendingPaymentsService.approvePayment('123', approval);
-
-      expect(mockedApi.post).toHaveBeenCalledWith('/api/v2/payments/pending/123/approve', approval);
+      expect(mockedApi.post).toHaveBeenCalledWith(
+        '/api/v2/payments/pending/123/approve',
+        { paymentId: '123', ...mockApproval }
+      );
     });
   });
 
   describe('rejectPayment', () => {
-    it('should reject payment', async () => {
-      const rejection: PendingPaymentRejection = {
-        paymentId: '123',
-        rejectedBy: 'user123',
-        rejectedAt: '2025-01-08T12:00:00Z',
-        reason: 'Invalid payment',
-        notes: 'Payment rejected',
-      };
+    const mockRejection: Omit<PendingPaymentRejection, 'paymentId'> = {
+      rejectedBy: 'user123',
+      rejectedAt: '2025-01-08T12:00:00Z',
+      reason: 'Invalid payment',
+      notes: 'Test rejection',
+    };
 
-      const mockResponse: ApiSuccessResponse<void> = {
+    it('should reject payment successfully', async () => {
+      mockedApi.post.mockResolvedValueOnce({
         success: true,
-        data: undefined,
+        data: {
+          success: true,
+          data: null,
+          meta: {
+            timestamp: '2025-01-08T12:00:00Z',
+            requestId: 'test-request-4',
+          },
+        },
+        meta: {
+          timestamp: '2025-01-08T12:00:00Z',
+          requestId: 'test-request-4',
+        },
+      });
+
+      await pendingPaymentsService.rejectPayment('123', { paymentId: '123', ...mockRejection });
+
+      expect(mockedApi.post).toHaveBeenCalledWith(
+        '/api/v2/payments/pending/123/reject',
+        { paymentId: '123', ...mockRejection }
+      );
+    });
+  });
+
+  describe('bulkApprovePayments', () => {
+    const mockBulkResponse: ApiSuccessResponse<Array<{ id: string; success: boolean; error?: string }>> = {
+      success: true,
+      data: [
+        { id: '123', success: true },
+        { id: '456', success: true },
+      ],
+      meta: {
+        timestamp: '2025-01-08T12:00:00Z',
+        requestId: 'test-request-5',
+      },
+    };
+
+    it('should approve multiple payments', async () => {
+      mockedApi.post.mockResolvedValueOnce({
+        success: true,
+        data: mockBulkResponse,
         meta: {
           timestamp: '2025-01-08T12:00:00Z',
           requestId: 'test-request-5',
         },
+      });
+
+      const ids = ['123', '456'];
+      const approval = {
+        approvedBy: 'user123',
+        approvedAt: '2025-01-08T12:00:00Z',
+        notes: 'Bulk approval test',
       };
 
-      mockedApi.post.mockResolvedValueOnce(mockResponse);
+      const result = await pendingPaymentsService.bulkApprovePayments(ids, approval);
 
-      await pendingPaymentsService.rejectPayment('123', rejection);
+      expect(result).toEqual([
+        { id: '123', success: true },
+        { id: '456', success: true },
+      ]);
 
-      expect(mockedApi.post).toHaveBeenCalledWith('/api/v2/payments/pending/123/reject', rejection);
+      expect(mockedApi.post).toHaveBeenCalledWith(
+        '/api/v2/payments/pending/bulk/approve',
+        {
+          ids,
+          ...approval,
+        }
+      );
+    });
+  });
+
+  describe('bulkRejectPayments', () => {
+    const mockBulkResponse: ApiSuccessResponse<Array<{ id: string; success: boolean; error?: string }>> = {
+      success: true,
+      data: [
+        { id: '123', success: true },
+        { id: '456', success: true },
+      ],
+      meta: {
+        timestamp: '2025-01-08T12:00:00Z',
+        requestId: 'test-request-6',
+      },
+    };
+
+    it('should reject multiple payments', async () => {
+      mockedApi.post.mockResolvedValueOnce({
+        success: true,
+        data: mockBulkResponse,
+        meta: {
+          timestamp: '2025-01-08T12:00:00Z',
+          requestId: 'test-request-6',
+        },
+      });
+
+      const ids = ['123', '456'];
+      const rejection = {
+        rejectedBy: 'user123',
+        rejectedAt: '2025-01-08T12:00:00Z',
+        reason: 'Bulk rejection test',
+      };
+
+      const result = await pendingPaymentsService.bulkRejectPayments(ids, rejection);
+
+      expect(result).toEqual([
+        { id: '123', success: true },
+        { id: '456', success: true },
+      ]);
+
+      expect(mockedApi.post).toHaveBeenCalledWith(
+        '/api/v2/payments/pending/bulk/reject',
+        {
+          ids,
+          ...rejection,
+        }
+      );
     });
   });
 
   describe('getSummary', () => {
-    it('should get payment summary', async () => {
-      const mockSummary = {
-        totalAmount: 5000,
-        count: 5,
-        amount: 5000,
-        byMethod: {
-          [PaymentMethod.ACH]: { count: 3, amount: 3000 },
-          [PaymentMethod.WIRE]: { count: 2, amount: 2000 },
-          [PaymentMethod.CHECK]: { count: 0, amount: 0 },
-          [PaymentMethod.CARD]: { count: 0, amount: 0 },
-          [PaymentMethod.RTP]: { count: 0, amount: 0 },
-        },
-        byStatus: {
-          [PaymentStatus.PENDING]: 3,
-          [PaymentStatus.APPROVED]: 2,
-          [PaymentStatus.REJECTED]: 0,
-          [PaymentStatus.PROCESSING]: 0,
-          [PaymentStatus.COMPLETED]: 0,
-          [PaymentStatus.FAILED]: 0,
-          [PaymentStatus.CANCELLED]: 0,
-        },
-        byPriority: {
-          [Priority.HIGH]: 2,
-          [Priority.MEDIUM]: 2,
-          [Priority.LOW]: 1,
-        },
-      };
+    const mockSummary: PendingPaymentSummary = {
+      totalAmount: 5000,
+      byMethod: {
+        [PaymentMethod.ACH]: { count: 3, amount: 3000 },
+        [PaymentMethod.WIRE]: { count: 2, amount: 2000 },
+        [PaymentMethod.CHECK]: { count: 0, amount: 0 },
+        [PaymentMethod.CARD]: { count: 0, amount: 0 },
+        [PaymentMethod.RTP]: { count: 0, amount: 0 },
+      },
+      byStatus: {
+        [PaymentStatus.PENDING]: 3,
+        [PaymentStatus.APPROVED]: 2,
+        [PaymentStatus.REJECTED]: 0,
+        [PaymentStatus.PROCESSING]: 0,
+        [PaymentStatus.COMPLETED]: 0,
+        [PaymentStatus.FAILED]: 0,
+        [PaymentStatus.CANCELLED]: 0,
+      },
+      byPriority: {
+        [Priority.HIGH]: 2,
+        [Priority.MEDIUM]: 2,
+        [Priority.LOW]: 1,
+      },
+    };
 
+    it('should fetch payment summary with filters', async () => {
       const mockResponse: ApiSuccessResponse<PendingPaymentSummary> = {
         success: true,
         data: mockSummary,
         meta: {
           timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-6',
+          requestId: 'test-request-7',
         },
       };
 
-      mockedApi.get.mockResolvedValueOnce(mockResponse);
+      mockedApi.get.mockResolvedValueOnce({
+        success: true,
+        data: mockResponse,
+        meta: {
+          timestamp: '2025-01-08T12:00:00Z',
+          requestId: 'test-request-7',
+        },
+      });
 
       const filters = {
         startDate: '2025-01-01',

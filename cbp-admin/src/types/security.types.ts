@@ -21,7 +21,10 @@ export interface BillPayIPWhitelist {
   addresses: string;
 }
 
-export type BillPayOTPMethod = 'email' | 'sms';
+export enum BillPayOTPMethod {
+  EMAIL = 'email',
+  SMS = 'sms'
+}
 
 export interface BillPayOTPSettings {
   method: BillPayOTPMethod;
