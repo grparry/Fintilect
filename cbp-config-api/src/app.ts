@@ -19,6 +19,8 @@ import paymentRoutes from './routes/payments.routes';
 import systemRoutes from './routes/system.routes';
 import utilityRoutes from './routes/utility.routes';
 import trackingRoutes from './routes/tracking.routes';
+import exceptionRoutes from './routes/exception.routes';
+import exceptionHistoryRoutes from './routes/exception-history.routes';
 import { db } from './config/db';
 
 const app = express();
@@ -53,14 +55,18 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 // API routes
-app.use('/api/clients', authMiddleware, clientRoutes);
-app.use('/api/hosts', authMiddleware, hostRoutes);
-app.use('/api/users', createUserRouter(db)); // Some routes don't require auth (login/register)
-app.use('/api/payees', authMiddleware, payeeRoutes);
-app.use('/api/payments', authMiddleware, paymentRoutes);
-app.use('/api/system', authMiddleware, systemRoutes);
-app.use('/api/utility', authMiddleware, utilityRoutes);
-app.use('/api/tracking', authMiddleware, trackingRoutes);
+const apiRouter = express.Router();
+apiRouter.use('/clients', authMiddleware, clientRoutes);
+apiRouter.use('/hosts', authMiddleware, hostRoutes);
+apiRouter.use('/users', createUserRouter(db)); // Some routes don't require auth (login/register)
+apiRouter.use('/payees', authMiddleware, payeeRoutes);
+apiRouter.use('/payments', authMiddleware, paymentRoutes);
+apiRouter.use('/system', authMiddleware, systemRoutes);
+apiRouter.use('/utility', authMiddleware, utilityRoutes);
+apiRouter.use('/tracking', authMiddleware, trackingRoutes);
+apiRouter.use('/exceptions', authMiddleware, exceptionRoutes);
+apiRouter.use('/exception-history', authMiddleware, exceptionHistoryRoutes);
+app.use('/api', apiRouter);
 
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

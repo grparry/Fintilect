@@ -78,12 +78,55 @@ export class ExceptionService implements IExceptionService {
     }
   }
 
+  async resolveException(id: number, resolution: string, notes?: string): Promise<ServiceResponse<void>> {
+    try {
+      await this.db.executeProc('sp_ResolveException', [id, resolution, notes]);
+      return { success: true };
+    } catch (error) {
+      logger.error(`Failed to resolve exception ${id}:`, error);
+      throw new ExceptionError(
+        ExceptionErrorCodes.RESOLVE_FAILED,
+        500,
+        'Failed to resolve exception'
+      );
+    }
+  }
+
+  async reprocessException(id: number, notes?: string): Promise<ServiceResponse<void>> {
+    try {
+      await this.db.executeProc('sp_ReprocessException', [id, notes]);
+      return { success: true };
+    } catch (error) {
+      logger.error(`Failed to reprocess exception ${id}:`, error);
+      throw new ExceptionError(
+        ExceptionErrorCodes.REPROCESS_FAILED,
+        500,
+        'Failed to reprocess exception'
+      );
+    }
+  }
+
+  async refundException(id: number, amount: number, reason: string, notes?: string): Promise<ServiceResponse<void>> {
+    try {
+      await this.db.executeProc('sp_RefundException', [id, amount, reason, notes]);
+      return { success: true };
+    } catch (error) {
+      logger.error(`Failed to process refund for exception ${id}:`, error);
+      throw new ExceptionError(
+        ExceptionErrorCodes.REFUND_FAILED,
+        500,
+        'Failed to process refund'
+      );
+    }
+  }
+
   async checkRefundAdjustment(request: ExceptionRefundRequest): Promise<ServiceResponse<ExceptionRefundResponse>> {
     try {
       const result = await this.db.executeProc('sp_CheckRefundAdjustment', [
         request.exceptionId,
         request.amount
       ]);
+
       return {
         success: true,
         data: result.recordset[0]

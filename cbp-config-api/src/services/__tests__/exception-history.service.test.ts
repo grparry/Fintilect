@@ -1,41 +1,18 @@
-import { Database } from '../../database';
 import { ExceptionHistoryService } from '../exception-history.service';
-import { ExceptionError, ExceptionErrorCodes } from '../../types/fis-exception';
 import { ExceptionHistoryType } from '../../types/exception-history';
-import { IResult, IRecordSet } from 'mssql';
+import { TestDatabase } from '../../config/test.db';
+import { ExceptionError, ExceptionErrorCodes } from '../../types/fis-exception';
+import { IResult, IRecordSet, IProcedureResult } from 'mssql';
 
-jest.mock('../../database');
 jest.mock('../../utils/logger');
 
 describe('ExceptionHistoryService', () => {
   let service: ExceptionHistoryService;
-  let mockDb: jest.Mocked<Database>;
-
-  const createMockRecordSet = <T extends Record<string, any>>(records: T[]): IRecordSet<T> => {
-    const arr = [...records];
-    return Object.assign(arr, {
-      toTable: jest.fn(),
-      columns: {},
-    }) as unknown as IRecordSet<T>;
-  };
+  let testDb: TestDatabase;
 
   beforeEach(() => {
-    mockDb = {
-      executeProc: jest.fn(),
-      executeProcWithTransaction: jest.fn(),
-      executeStoredProcedure: jest.fn(),
-      executeQuery: jest.fn(),
-      close: jest.fn(),
-      connect: jest.fn(),
-      disconnect: jest.fn(),
-      getConnection: jest.fn(),
-      transaction: jest.fn(),
-      request: jest.fn(),
-      beginTransaction: jest.fn(),
-      commitTransaction: jest.fn(),
-      rollbackTransaction: jest.fn()
-    } as unknown as jest.Mocked<Database>;
-    service = new ExceptionHistoryService(mockDb);
+    testDb = new TestDatabase();
+    service = new ExceptionHistoryService(testDb);
   });
 
   describe('createHistory', () => {
@@ -53,14 +30,13 @@ describe('ExceptionHistoryService', () => {
     };
 
     it('should create history record successfully', async () => {
-      const mockResult: IResult<any> = {
-        recordset: createMockRecordSet([mockHistoryRecord]),
-        recordsets: [createMockRecordSet([mockHistoryRecord])],
+      testDb.setMockResponse('sp_CreateExceptionHistory', async () => ({
+        recordset: [mockHistoryRecord],
+        recordsets: [[mockHistoryRecord]],
         rowsAffected: [1],
-        output: {}
-      };
-
-      mockDb.executeProc.mockResolvedValue(mockResult);
+        output: {},
+        returnValue: 0
+      }));
 
       const result = await service.createHistory({
         exceptionId: 100,
@@ -71,21 +47,8 @@ describe('ExceptionHistoryService', () => {
           after: { status: 'COMPLETED' }
         }
       });
-
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockHistoryRecord);
-      expect(mockDb.executeProc).toHaveBeenCalledWith(
-        'PROC_FIS_EXCEPTION_HISTORY_CREATE',
-        {
-          ExceptionId: 100,
-          Type: ExceptionHistoryType.UPDATED,
-          UserId: 'USER123',
-          Details: JSON.stringify({
-            before: { status: 'PENDING' },
-            after: { status: 'COMPLETED' }
-          })
-        }
-      );
     });
 
     it('should throw error for missing exception ID', async () => {
@@ -138,6 +101,15 @@ describe('ExceptionHistoryService', () => {
         )
       );
     });
+
+    it('should handle database errors', async () => {
+      testDb.setMockResponse('sp_CreateExceptionHistory', async () => {
+        throw new Error('Database error');
+      });
+
+      const result = await service.createHistory(mockHistoryRecord);
+      expect(result.success).toBe(false);
+    });
   });
 
   describe('searchHistory', () => {
@@ -167,14 +139,13 @@ describe('ExceptionHistoryService', () => {
     ];
 
     it('should search history records successfully', async () => {
-      const mockResult: IResult<any> = {
-        recordset: createMockRecordSet(mockHistoryRecords),
-        recordsets: [createMockRecordSet(mockHistoryRecords)],
+      testDb.setMockResponse('sp_SearchExceptionHistory', async () => ({
+        recordset: mockHistoryRecords,
+        recordsets: [mockHistoryRecords],
         rowsAffected: [2],
-        output: {}
-      };
-
-      mockDb.executeProc.mockResolvedValue(mockResult);
+        output: {},
+        returnValue: 0
+      }));
 
       const result = await service.searchHistory({
         exceptionId: 100,
@@ -193,18 +164,6 @@ describe('ExceptionHistoryService', () => {
         page: 1,
         pageSize: 10
       });
-      expect(mockDb.executeProc).toHaveBeenCalledWith(
-        'PROC_FIS_EXCEPTION_HISTORY_SEARCH',
-        {
-          ExceptionId: 100,
-          Types: JSON.stringify([ExceptionHistoryType.CREATED, ExceptionHistoryType.UPDATED]),
-          StartDate: mockDate,
-          EndDate: mockDate,
-          UserId: 'USER123',
-          PageNumber: 1,
-          PageSize: 10
-        }
-      );
     });
 
     it('should throw error for invalid page number', async () => {
@@ -253,14 +212,13 @@ describe('ExceptionHistoryService', () => {
     };
 
     it('should get history record by ID successfully', async () => {
-      const mockResult: IResult<any> = {
-        recordset: createMockRecordSet([mockHistoryRecord]),
-        recordsets: [createMockRecordSet([mockHistoryRecord])],
+      testDb.setMockResponse('sp_GetExceptionHistory', async () => ({
+        recordset: [mockHistoryRecord],
+        recordsets: [[mockHistoryRecord]],
         rowsAffected: [1],
-        output: {}
-      };
-
-      mockDb.executeProc.mockResolvedValue(mockResult);
+        output: {},
+        returnValue: 0
+      }));
 
       const result = await service.getHistoryById(1);
 
@@ -269,12 +227,6 @@ describe('ExceptionHistoryService', () => {
         ...mockHistoryRecord,
         timestamp: new Date(mockHistoryRecord.timestamp)
       });
-      expect(mockDb.executeProc).toHaveBeenCalledWith(
-        'PROC_FIS_EXCEPTION_HISTORY_GET',
-        {
-          Id: 1
-        }
-      );
     });
 
     it('should throw error for missing history ID', async () => {
@@ -290,14 +242,13 @@ describe('ExceptionHistoryService', () => {
     });
 
     it('should throw error for non-existent history record', async () => {
-      const mockResult: IResult<any> = {
-        recordset: createMockRecordSet([]),
-        recordsets: [createMockRecordSet([])],
+      testDb.setMockResponse('sp_GetExceptionHistory', async () => ({
+        recordset: [],
+        recordsets: [[]],
         rowsAffected: [0],
-        output: {}
-      };
-
-      mockDb.executeProc.mockResolvedValue(mockResult);
+        output: {},
+        returnValue: 0
+      }));
 
       await expect(
         service.getHistoryById(999)

@@ -38,6 +38,37 @@ security_exception: |
   of responsible disclosure.
 ```
 
+## Task Execution Context
+```yaml
+plan_execution:
+  maintain_focus:
+    - "Always refer back to the original plan"
+    - "Do not let summaries redirect focus"
+    - "Keep plan as source of truth"
+    - "Treat summaries as documentation only"
+
+  summary_guidelines:
+    purpose: "Document completed work only"
+    constraints:
+      - "Do not use summaries to guide next steps unless explicitly instructed by USER"
+      - "Do not expand scope based on summaries"
+      - "Do not treat summaries as new requirements"
+    format:
+      - "Keep summaries factual and brief"
+      - "Focus on what was done, not what could be done"
+      - "Avoid suggesting future enhancements in summaries"
+
+  context_hierarchy:
+    primary:
+      - "Original plan or task"
+      - "User's explicit requests"
+      - "Core rules and patterns"
+    secondary:
+      - "Implementation details"
+      - "Task summaries"
+      - "Status updates"
+```
+
 ## Meta Layer Usage
 ```yaml
 file_purposes:

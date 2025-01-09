@@ -35,6 +35,40 @@ This file defines the fundamental rules that govern the workspace structure and 
 - Explicit type exports
 - Minimal type duplication
 
+## Error Handling
+### Error Patterns
+- Use consistent error types across projects
+- Maintain clear error hierarchies
+- Include contextual information
+- Follow established error formats
+
+### Error Documentation
+- Document error conditions
+- Include recovery strategies
+- Maintain error catalogs
+- Version error definitions
+
+### Error Boundaries
+- Clear error isolation
+- Consistent error propagation
+- Proper error translation
+- Context preservation
+
+## Error Resolution
+### Core Principles
+- Assume errors originate in new code first
+- Avoid modifying existing, stable code
+- Use adaptation layers when needed
+- Document any changes to existing code
+
+### Resolution Process
+- Check new code and recent changes first
+- Verify against existing interfaces
+- Consider adaptation strategies
+- Get approval for existing code changes
+
+See ERROR_RESOLUTION.md for detailed error resolution rules and patterns.
+
 ## Meta Layer Structure
 ### Configuration
 - Follow meta layer configuration defined in `.cascade/META_CONFIG.md`
@@ -87,22 +121,3 @@ validation:
     - "work units"
     - "effort points"
 ```
-
-## Error Handling
-### Error Patterns
-- Use consistent error types across projects
-- Maintain clear error hierarchies
-- Include contextual information
-- Follow established error formats
-
-### Error Documentation
-- Document error conditions
-- Include recovery strategies
-- Maintain error catalogs
-- Version error definitions
-
-### Error Boundaries
-- Clear error isolation
-- Consistent error propagation
-- Proper error translation
-- Context preservation

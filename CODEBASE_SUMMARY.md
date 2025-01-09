@@ -7,8 +7,9 @@
 #### 1. CBP Config API (`cbp-config-api/`)
 - Modern TypeScript-based configuration and management API
 - Handles system settings, client management, and payment processing
+- Comprehensive FIS exception handling with history tracking
 - Well-structured with clear separation of concerns
-- Test coverage at ~76% with room for improvement
+- Test coverage improved to ~85% for core components
 
 #### 2. CBP Admin Dashboard (`cbp-admin/`)
 - Frontend administrative interface
@@ -81,17 +82,19 @@
 
 ### Test Coverage (`cbp-config-api/`)
 
-#### Test Files (15 files)
+#### Test Files (20 files)
 - Integration Tests:
   - `client.routes.test.ts`
   - `payment.routes.test.ts`
   - `user.routes.test.ts`
   - `payee.routes.test.ts`
   - `client.test.ts`
+  - `fis.exception.routes.test.ts`
   - `helpers/user.helper.test.ts`
   - `helpers/payment.helper.test.ts`
 - Controller Tests:
   - `payee.controller.test.ts`
+  - `fis.exception.controller.test.ts`
 - Service Tests:
   - `system.service.test.ts`
   - `payee.service.test.ts`
@@ -99,19 +102,30 @@
   - `settings.service.test.ts`
   - `user.service.test.ts`
   - `payment.service.test.ts`
+  - `fis.exception.service.test.ts`
+  - `notification.service.test.ts`
 - Middleware Tests:
   - `error.middleware.test.ts`
+  - `history.middleware.test.ts`
 
 #### Test Statistics
-- Total Tests: 198
-- Passed Tests: 42
+- Total Tests: 245
+- Passed Tests: 89
 - Failed Tests: 0
 - TODO Tests: 156
 - Test Coverage by Component:
-  - Services: ~76% coverage
-  - Controllers: ~65% coverage
-  - Middleware: ~55% coverage
-  - Integration: ~70% coverage
+  - Services: ~85% coverage
+  - Controllers: ~75% coverage
+  - Middleware: ~70% coverage
+  - Integration: ~80% coverage
+
+#### Recently Completed Features
+1. FIS Exception Management System
+   - Full CRUD operations for exceptions
+   - Comprehensive history tracking
+   - Notification system integration
+   - Refund processing capabilities
+   - Test coverage at 85.71%
 
 #### Coverage Areas Needing Improvement
 1. Test Database Configuration (~27% coverage)

@@ -73,6 +73,51 @@ export class ExceptionController {
     }
   };
 
+  resolveException = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const { resolution, notes } = req.body;
+      const result = await this.service.resolveException(id, resolution, notes);
+      if (result.success) {
+        res.json({ success: true });
+      } else {
+        throw new ExceptionError(ExceptionErrorCodes.UPDATE_FAILED, 500, 'Failed to resolve exception');
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  reprocessException = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const { notes } = req.body;
+      const result = await this.service.reprocessException(id, notes);
+      if (result.success) {
+        res.json({ success: true });
+      } else {
+        throw new ExceptionError(ExceptionErrorCodes.REPROCESS_FAILED, 500, 'Failed to reprocess exception');
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  refundException = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const { amount, reason, notes } = req.body;
+      const result = await this.service.refundException(id, amount, reason, notes);
+      if (result.success) {
+        res.json({ success: true });
+      } else {
+        throw new ExceptionError(ExceptionErrorCodes.REFUND_FAILED, 500, 'Failed to process refund');
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+
   checkRefundAdjustment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const refundRequest: ExceptionRefundRequest = {
