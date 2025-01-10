@@ -44,10 +44,26 @@ interface RolesListState {
   error: string | null;
   deleteDialogOpen: boolean;
   roleToDelete: SecurityRole | null;
-  sortBy: keyof SecurityRole;
+  sortBy: 'name' | 'description' | 'permissions';
   sortDirection: 'asc' | 'desc';
   filterText: string;
 }
+
+const serviceRoleToUIRole = (role: any): SecurityRole => ({
+  id: role.id,
+  name: role.name,
+  description: role.description || '',
+  permissions: role.permissions.map((id: string) => ({
+    id,
+    name: '',
+    description: '',
+    category: 'user',
+    actions: []
+  })),
+  isSystem: role.isSystem || false,
+  createdAt: role.createdAt,
+  updatedAt: role.updatedAt
+});
 
 const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
   const navigate = useNavigate();
@@ -69,8 +85,7 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
   const loadRoles = async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
-      const decodedClientId = decodeId(clientId);
-      const response = await clientService.getRoles(decodedClientId);
+      const response = await clientService.getRoles();
 
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to load roles');
@@ -78,7 +93,7 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
 
       setState(prev => ({
         ...prev,
-        roles: response.data,
+        roles: response.data.items.map(serviceRoleToUIRole),
         loading: false
       }));
     } catch (error) {
@@ -104,10 +119,9 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
 
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
-      const decodedClientId = decodeId(clientId);
       const decodedRoleId = decodeId(state.roleToDelete.id);
       
-      const response = await clientService.deleteRole(decodedClientId, decodedRoleId);
+      const response = await clientService.deleteRole(decodedRoleId);
       
       if (!response.success) {
         throw new Error(response.error?.message || 'Failed to delete role');
@@ -130,19 +144,19 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
     }
   };
 
+  const handleSort = (field: 'name' | 'description' | 'permissions') => {
+    setState(prev => ({
+      ...prev,
+      sortBy: field,
+      sortDirection: prev.sortBy === field && prev.sortDirection === 'asc' ? 'desc' : 'asc'
+    }));
+  };
+
   const handleDeleteCancel = () => {
     setState(prev => ({
       ...prev,
       deleteDialogOpen: false,
       roleToDelete: null
-    }));
-  };
-
-  const handleSort = (field: keyof SecurityRole) => {
-    setState(prev => ({
-      ...prev,
-      sortBy: field,
-      sortDirection: prev.sortBy === field && prev.sortDirection === 'asc' ? 'desc' : 'asc'
     }));
   };
 
@@ -156,17 +170,18 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
   const filteredAndSortedRoles = state.roles
     .filter(role => 
       role.name.toLowerCase().includes(state.filterText.toLowerCase()) ||
-      role.description.toLowerCase().includes(state.filterText.toLowerCase())
+      (role.description || '').toLowerCase().includes(state.filterText.toLowerCase())
     )
     .sort((a, b) => {
-      const aValue = a[state.sortBy];
-      const bValue = b[state.sortBy];
       const direction = state.sortDirection === 'asc' ? 1 : -1;
       
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return direction * aValue.localeCompare(bValue);
+      if (state.sortBy === 'permissions') {
+        return direction * (a.permissions.length - b.permissions.length);
       }
-      return 0;
+      
+      const aValue = a[state.sortBy] || '';
+      const bValue = b[state.sortBy] || '';
+      return direction * aValue.localeCompare(bValue);
     });
 
   if (state.loading) {

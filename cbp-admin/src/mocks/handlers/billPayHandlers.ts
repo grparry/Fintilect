@@ -13,7 +13,8 @@ import {
   PendingPaymentSummary,
   PendingPaymentApproval,
   PendingPaymentRejection,
-  PaymentHistory
+  PaymentHistory,
+  AuditEventStatus
 } from '../../types/bill-pay.types';
 import { mockDashboardStats, generateMockTrends } from '../bill-pay/dashboard';
 import { mockPayments, mockPendingPayments, mockPaymentHistory } from '../bill-pay/payments';
@@ -40,7 +41,7 @@ const mockAuditLogs: AuditLog[] = [
     resourceType: 'payment',
     resourceId: 'pmt_123',
     details: { amount: 1000, payee: 'Acme Corp' },
-    status: 'Success'
+    status: AuditEventStatus.COMPLETED
   },
   {
     id: 'audit_2',
@@ -51,7 +52,7 @@ const mockAuditLogs: AuditLog[] = [
     resourceType: 'payment',
     resourceId: 'pmt_123',
     details: { notes: 'Approved for processing' },
-    status: 'Success'
+    status: AuditEventStatus.COMPLETED
   }
 ];
 
@@ -79,7 +80,8 @@ export const billPayHandlers = [
     const url = new URL(request.url)
     const page = parseInt(url.searchParams.get('page') || '0')
     const limit = parseInt(url.searchParams.get('limit') || '10')
-    const status = url.searchParams.get('status')?.split(',') || []
+    const statusParam = url.searchParams.get('status');
+    const status = statusParam ? statusParam.split(',').filter(Boolean) : [];
     const startDate = url.searchParams.get('startDate')
     const endDate = url.searchParams.get('endDate')
     const priority = url.searchParams.get('priority')?.split(',') || []
@@ -93,19 +95,19 @@ export const billPayHandlers = [
     // Apply filters
     if (status.length > 0) {
       filteredPayments = filteredPayments.filter(payment => 
-        status.includes(payment.status)
+        status.some(s => s === payment.status)
       )
     }
 
     if (startDate) {
       filteredPayments = filteredPayments.filter(payment =>
-        dayjs(payment.effectiveDate).isAfter(startDate)
+        payment.effectiveDate >= startDate
       )
     }
 
     if (endDate) {
       filteredPayments = filteredPayments.filter(payment =>
-        dayjs(payment.effectiveDate).isBefore(endDate)
+        payment.effectiveDate <= endDate
       )
     }
 
@@ -122,27 +124,32 @@ export const billPayHandlers = [
     }
 
     if (searchTerm) {
-      const term = searchTerm.toLowerCase();
+      const term = searchTerm.toLowerCase()
       filteredPayments = filteredPayments.filter(payment =>
         payment.payeeName.toLowerCase().includes(term) ||
-        payment.clientName.toLowerCase().includes(term) ||
-        payment.id.toLowerCase().includes(term)
+        payment.description?.toLowerCase().includes(term)
       )
     }
 
-    // Apply sorting
+    // Sort payments
     if (sortBy) {
-      filteredPayments.sort((a: any, b: any) => {
-        const aVal = a[sortBy];
-        const bVal = b[sortBy];
-        const order = sortOrder === 'desc' ? -1 : 1;
-        if (aVal < bVal) return -1 * order;
-        if (aVal > bVal) return 1 * order;
-        return 0;
-      });
+      filteredPayments.sort((a, b) => {
+        const aValue = a[sortBy as keyof Payment]
+        const bValue = b[sortBy as keyof Payment]
+        
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+          return sortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue)
+        }
+        
+        if (typeof aValue === 'number' && typeof bValue === 'number') {
+          return sortOrder === 'asc' ? aValue - bValue : bValue - aValue
+        }
+        
+        return 0
+      })
     }
 
-    // Apply pagination
+    // Paginate
     const start = page * limit
     const end = start + limit
     const paginatedPayments = filteredPayments.slice(start, end)
@@ -150,367 +157,276 @@ export const billPayHandlers = [
     return HttpResponse.json({
       success: true,
       data: {
-        items: paginatedPayments,
+        payments: paginatedPayments,
         total: filteredPayments.length,
         page,
-        limit,
-        hasMore: end < filteredPayments.length
+        limit
       }
     });
   }),
 
-  // Payment confirmation endpoint
-  http.post('*/bill-pay/payments/:id/confirm', async ({ request, params }) => {
+  // Get payment by ID
+  http.get<{ id: string }>('*/bill-pay/payments/:id', ({ params }) => {
     const { id } = params;
-    const confirmationRequest = await request.json() as PaymentConfirmationRequest;
-    
-    // Validate request
-    if (!confirmationRequest.confirmationMethod || !confirmationRequest.code) {
-      return new HttpResponse(null, {
-        status: 400,
-        statusText: 'Bad Request',
-      });
-    }
-
-    // Get or initialize confirmation attempts
-    let confirmation = confirmationAttempts.get(id as string);
-    if (!confirmation) {
-      confirmation = {
-        attempts: 0,
-        expiresAt: new Date(Date.now() + CONFIRMATION_EXPIRY_MINUTES * 60000).toISOString(),
-        method: confirmationRequest.confirmationMethod,
-        status: ConfirmationStatus.PENDING
-      };
-      confirmationAttempts.set(id as string, confirmation);
-    }
-
-    // Check expiration
-    if (new Date(confirmation.expiresAt) < new Date()) {
-      confirmation.status = ConfirmationStatus.EXPIRED;
-      return HttpResponse.json({
-        success: false,
-        confirmationStatus: ConfirmationStatus.EXPIRED,
-        message: 'Confirmation code has expired',
-        attempts: confirmation.attempts,
-        maxAttempts: MAX_CONFIRMATION_ATTEMPTS,
-        expiresAt: confirmation.expiresAt
-      } as PaymentConfirmationResponse, { status: 400 });
-    }
-
-    // Check max attempts
-    if (confirmation.attempts >= MAX_CONFIRMATION_ATTEMPTS) {
-      confirmation.status = ConfirmationStatus.FAILED;
-      return HttpResponse.json({
-        success: false,
-        confirmationStatus: ConfirmationStatus.FAILED,
-        message: 'Maximum confirmation attempts exceeded',
-        attempts: confirmation.attempts,
-        maxAttempts: MAX_CONFIRMATION_ATTEMPTS,
-        expiresAt: confirmation.expiresAt
-      } as PaymentConfirmationResponse, { status: 400 });
-    }
-
-    // Validate confirmation code (mock validation)
-    const isValidCode = confirmationRequest.code === '123456' || confirmationRequest.code === 'valid_test_code';
-    confirmation.attempts++;
-
-    if (!isValidCode) {
-      return HttpResponse.json({
-        success: false,
-        confirmationStatus: ConfirmationStatus.PENDING,
-        message: 'Invalid confirmation code',
-        attempts: confirmation.attempts,
-        maxAttempts: MAX_CONFIRMATION_ATTEMPTS,
-        expiresAt: confirmation.expiresAt
-      } as PaymentConfirmationResponse, { status: 400 });
-    }
-
-    // Update payment status and add to history
     const payment = mockPayments.find(p => p.id === id);
-    if (payment) {
-      payment.status = PaymentStatus.APPROVED;
-      
-      const historyEntry: PaymentHistory = {
-        paymentId: id as string,
-        action: 'payment_confirmed',
-        performedBy: confirmationRequest.userId || 'system',
-        timestamp: new Date().toISOString(),
-        details: {
-          amount: payment.amount,
-          currency: payment.currency,
-          method: payment.method,
-          notes: `Payment confirmed via ${confirmationRequest.confirmationMethod}`
-        }
-      };
 
-      mockPaymentHistory.push(historyEntry);
+    if (!payment) {
+      return new HttpResponse(null, { status: 404 });
     }
 
-    // Return success response
     return HttpResponse.json({
       success: true,
-      confirmationStatus: ConfirmationStatus.VERIFIED,
-      message: 'Payment confirmed successfully',
-      attempts: confirmation.attempts,
-      maxAttempts: MAX_CONFIRMATION_ATTEMPTS,
-      expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString() // 30 minutes from now
-    } as PaymentConfirmationResponse);
-  }),
-
-  // Get payment history
-  http.get('*/bill-pay/payments/:id/history', ({ params }) => {
-    const { id } = params;
-    const history = mockPaymentHistory.filter(h => h.paymentId === id);
-    
-    return HttpResponse.json({
-      success: true,
-      data: history
+      data: payment
     });
   }),
 
-  // Get pending payments with filtering and pagination
+  // Payment confirmation endpoint
+  http.post<{ id: string }>('*/bill-pay/payments/:id/confirm', async ({ request, params }) => {
+    const id = params.id;
+    
+    // Validate ID parameter
+    if (!id) {
+      return new HttpResponse(null, { 
+        status: 400,
+        statusText: 'Missing payment ID'
+      });
+    }
+
+    const confirmationRequest = await request.json() as PaymentConfirmationRequest;
+    
+    // Validate request
+    if (!confirmationRequest.method || !confirmationRequest.confirmationMethod) {
+      return new HttpResponse(null, { 
+        status: 400,
+        statusText: 'Missing required fields'
+      });
+    }
+
+    const existingAttempt = confirmationAttempts.get(id);
+    const now = dayjs();
+
+    if (existingAttempt) {
+      // Check if expired
+      if (now.isAfter(existingAttempt.expiresAt)) {
+        const response: PaymentConfirmationResponse = {
+          success: false,
+          confirmationStatus: ConfirmationStatus.EXPIRED,
+          message: 'Confirmation code has expired',
+          attempts: existingAttempt.attempts,
+          maxAttempts: MAX_CONFIRMATION_ATTEMPTS,
+          expiresAt: existingAttempt.expiresAt
+        };
+        return HttpResponse.json(response);
+      }
+
+      // Check attempts
+      if (existingAttempt.attempts >= MAX_CONFIRMATION_ATTEMPTS) {
+        const response: PaymentConfirmationResponse = {
+          success: false,
+          confirmationStatus: ConfirmationStatus.FAILED,
+          message: 'Maximum confirmation attempts exceeded',
+          attempts: existingAttempt.attempts,
+          maxAttempts: MAX_CONFIRMATION_ATTEMPTS,
+          expiresAt: existingAttempt.expiresAt
+        };
+        return HttpResponse.json(response);
+      }
+
+      // Validate code if provided
+      if (confirmationRequest.code) {
+        existingAttempt.attempts += 1;
+        
+        if (confirmationRequest.code === '123456') { // Mock valid code
+          const response: PaymentConfirmationResponse = {
+            success: true,
+            confirmationStatus: ConfirmationStatus.VERIFIED,
+            message: 'Payment confirmed successfully',
+            attempts: existingAttempt.attempts,
+            maxAttempts: MAX_CONFIRMATION_ATTEMPTS,
+            expiresAt: existingAttempt.expiresAt
+          };
+          return HttpResponse.json(response);
+        } else {
+          const response: PaymentConfirmationResponse = {
+            success: false,
+            confirmationStatus: ConfirmationStatus.FAILED,
+            message: 'Invalid confirmation code',
+            attempts: existingAttempt.attempts,
+            maxAttempts: MAX_CONFIRMATION_ATTEMPTS,
+            expiresAt: existingAttempt.expiresAt
+          };
+          return HttpResponse.json(response);
+        }
+      }
+    }
+
+    // Create new confirmation attempt
+    const expiresAt = now.add(CONFIRMATION_EXPIRY_MINUTES, 'minute').toISOString();
+    confirmationAttempts.set(id, {
+      attempts: 0,
+      expiresAt,
+      method: confirmationRequest.confirmationMethod,
+      status: ConfirmationStatus.PENDING
+    });
+
+    const response: PaymentConfirmationResponse = {
+      success: true,
+      confirmationStatus: ConfirmationStatus.PENDING,
+      message: 'Confirmation code sent',
+      attempts: 0,
+      maxAttempts: MAX_CONFIRMATION_ATTEMPTS,
+      expiresAt
+    };
+
+    return HttpResponse.json(response);
+  }),
+
+  // Get pending payments
   http.get('*/api/pending-payments', ({ request }) => {
     const url = new URL(request.url)
     const page = parseInt(url.searchParams.get('page') || '1')
     const limit = parseInt(url.searchParams.get('limit') || '10')
-    const status = url.searchParams.get('status')?.split(',') || []
-    const startDate = url.searchParams.get('startDate')
-    const endDate = url.searchParams.get('endDate')
-    const priority = url.searchParams.get('priority')?.split(',') || []
-    const paymentType = url.searchParams.get('paymentType')?.split(',') || []
-    const searchTerm = url.searchParams.get('searchTerm') || ''
-    const sortBy = url.searchParams.get('sortBy')
-    const sortOrder = url.searchParams.get('sortOrder') as 'asc' | 'desc'
+    const statusParam = url.searchParams.get('status');
+    const status = statusParam ? statusParam.split(',').filter(Boolean) : [];
 
     let filteredPayments = [...mockPendingPayments]
 
     // Apply filters
     if (status.length > 0) {
       filteredPayments = filteredPayments.filter(payment => 
-        status.includes(payment.status)
+        status.some(s => s === payment.status)
       )
     }
 
-    if (priority.length > 0) {
-      filteredPayments = filteredPayments.filter(payment =>
-        priority.includes(payment.priority)
-      )
-    }
-
-    if (paymentType.length > 0) {
-      filteredPayments = filteredPayments.filter(payment =>
-        paymentType.includes(payment.method)
-      )
-    }
-
-    if (startDate) {
-      filteredPayments = filteredPayments.filter(payment =>
-        dayjs(payment.effectiveDate).isAfter(startDate)
-      )
-    }
-
-    if (endDate) {
-      filteredPayments = filteredPayments.filter(payment =>
-        dayjs(payment.effectiveDate).isBefore(endDate)
-      )
-    }
-
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      filteredPayments = filteredPayments.filter(payment =>
-        payment.payeeName.toLowerCase().includes(term) ||
-        payment.clientName.toLowerCase().includes(term) ||
-        payment.id.toLowerCase().includes(term)
-      )
-    }
-
-    // Apply sorting
-    if (sortBy) {
-      filteredPayments.sort((a: any, b: any) => {
-        const aVal = a[sortBy];
-        const bVal = b[sortBy];
-        const order = sortOrder === 'desc' ? -1 : 1;
-        if (aVal < bVal) return -1 * order;
-        if (aVal > bVal) return 1 * order;
-        return 0;
-      });
-    }
-
-    // Apply pagination
+    // Calculate pagination
     const start = (page - 1) * limit
     const end = start + limit
     const paginatedPayments = filteredPayments.slice(start, end)
-    const currentPage = page
-    const pageSize = limit
 
-    return HttpResponse.json({
-      success: true,
+    const response: PendingPaymentListResponse = {
       data: paginatedPayments,
       total: filteredPayments.length,
-      page: currentPage,
-      limit: pageSize
-    } as PendingPaymentListResponse);
+      page,
+      limit
+    }
+
+    return HttpResponse.json(response)
+  }),
+
+  // Get pending payment by ID
+  http.get<{ id: string }>('*/api/pending-payments/:id', ({ params }) => {
+    const { id } = params;
+    const payment = mockPendingPayments.find(p => p.id === id);
+
+    if (!payment) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(payment)
   }),
 
   // Approve pending payment
-  http.post('*/api/pending-payments/:id/approve', async ({ params, request }) => {
-    const { id } = params;
+  http.post<{ id: string }>('*/api/pending-payments/:id/approve', async ({ params, request }) => {
+    const id = params.id;
+    
+    // Validate ID parameter
+    if (!id) {
+      return new HttpResponse(null, { 
+        status: 400,
+        statusText: 'Missing payment ID'
+      });
+    }
+
     const approval = await request.json() as PendingPaymentApproval;
     const payment = mockPendingPayments.find(p => p.id === id);
 
     if (!payment) {
-      return new HttpResponse(null, {
-        status: 404,
-        statusText: 'Payment not found',
-      });
+      return new HttpResponse(null, { status: 404 });
     }
 
+    // Update payment status
     payment.status = PaymentStatus.APPROVED;
-    const historyEntry: PaymentHistory = {
-      paymentId: id as string,
-      action: 'payment_approved',
-      performedBy: approval.approvedBy,
-      timestamp: approval.approvedAt,
-      details: {
-        amount: payment.amount,
-        currency: payment.currency,
-        method: payment.method,
-        notes: 'Payment approved'
-      }
-    };
+    payment.updatedAt = new Date().toISOString();
 
-    mockPaymentHistory.push(historyEntry);
-
-    return HttpResponse.json({ success: true });
+    return HttpResponse.json({
+      success: true,
+      message: 'Payment approved successfully'
+    });
   }),
 
   // Reject pending payment
-  http.post('*/api/pending-payments/:id/reject', async ({ params, request }) => {
-    const { id } = params;
+  http.post<{ id: string }>('*/api/pending-payments/:id/reject', async ({ params, request }) => {
+    const id = params.id;
+    
+    // Validate ID parameter
+    if (!id) {
+      return new HttpResponse(null, { 
+        status: 400,
+        statusText: 'Missing payment ID'
+      });
+    }
+
     const rejection = await request.json() as PendingPaymentRejection;
     const payment = mockPendingPayments.find(p => p.id === id);
 
     if (!payment) {
-      return new HttpResponse(null, {
-        status: 404,
-        statusText: 'Payment not found',
-      });
+      return new HttpResponse(null, { status: 404 });
     }
 
-    payment.status = PaymentStatus.CANCELLED;
-    const historyEntry: PaymentHistory = {
-      paymentId: id as string,
-      action: 'payment_rejected',
-      performedBy: rejection.rejectedBy,
-      timestamp: rejection.rejectedAt,
-      details: {
-        amount: payment.amount,
-        currency: payment.currency,
-        method: payment.method,
-        notes: rejection.reason
-      }
-    };
+    // Update payment status
+    payment.status = PaymentStatus.REJECTED;
+    payment.updatedAt = new Date().toISOString();
 
-    mockPaymentHistory.push(historyEntry);
-
-    return HttpResponse.json({ success: true });
+    return HttpResponse.json({
+      success: true,
+      message: 'Payment rejected successfully'
+    });
   }),
 
   // Bulk approve pending payments
-  http.post('*/api/pending-payments/bulk-approve', async ({ request }) => {
+  http.post<{ ids: string[] }>('*/api/pending-payments/bulk-approve', async ({ request }) => {
     const { ids, ...approval } = await request.json() as { ids: string[] } & PendingPaymentApproval;
 
     ids.forEach(id => {
       const payment = mockPendingPayments.find(p => p.id === id);
       if (payment) {
         payment.status = PaymentStatus.APPROVED;
-        const historyEntry: PaymentHistory = {
-          paymentId: id as string,
-          action: 'payment_approved',
-          performedBy: approval.approvedBy,
-          timestamp: approval.approvedAt,
-          details: {
-            amount: payment.amount,
-            currency: payment.currency,
-            method: payment.method,
-            notes: 'Payment approved in batch'
-          }
-        };
-
-        mockPaymentHistory.push(historyEntry);
+        payment.updatedAt = new Date().toISOString();
       }
     });
 
-    return HttpResponse.json({ success: true });
+    return HttpResponse.json({
+      success: true,
+      message: `${ids.length} payments approved successfully`
+    });
   }),
 
   // Bulk reject pending payments
-  http.post('*/api/pending-payments/bulk-reject', async ({ request }) => {
+  http.post<{ ids: string[] }>('*/api/pending-payments/bulk-reject', async ({ request }) => {
     const { ids, ...rejection } = await request.json() as { ids: string[] } & PendingPaymentRejection;
 
     ids.forEach(id => {
       const payment = mockPendingPayments.find(p => p.id === id);
       if (payment) {
-        payment.status = PaymentStatus.CANCELLED;
-        const historyEntry: PaymentHistory = {
-          paymentId: id as string,
-          action: 'payment_rejected',
-          performedBy: rejection.rejectedBy,
-          timestamp: rejection.rejectedAt,
-          details: {
-            amount: payment.amount,
-            currency: payment.currency,
-            method: payment.method,
-            notes: `Batch rejection: ${rejection.reason}`
-          }
-        };
-
-        mockPaymentHistory.push(historyEntry);
+        payment.status = PaymentStatus.REJECTED;
+        payment.updatedAt = new Date().toISOString();
       }
     });
-
-    return HttpResponse.json({ success: true });
-  }),
-
-  // Get audit logs with filtering and pagination
-  http.get('*/api/bill-pay/audit-log', ({ request }) => {
-    const url = new URL(request.url);
-    const searchTerm = url.searchParams.get('searchTerm') || '';
-    const page = parseInt(url.searchParams.get('page') || '1');
-    const pageSize = parseInt(url.searchParams.get('pageSize') || '10');
-    const startDate = url.searchParams.get('startDate');
-    const endDate = url.searchParams.get('endDate');
-
-    let filteredLogs = [...mockAuditLogs];
-
-    // Apply search filter
-    if (searchTerm) {
-      filteredLogs = filteredLogs.filter(log => 
-        log.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        log.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        log.resourceId.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Apply date filters
-    if (startDate) {
-      filteredLogs = filteredLogs.filter(log => 
-        new Date(log.timestamp) >= new Date(startDate)
-      );
-    }
-    if (endDate) {
-      filteredLogs = filteredLogs.filter(log => 
-        new Date(log.timestamp) <= new Date(endDate)
-      );
-    }
 
     return HttpResponse.json({
       success: true,
-      data: filteredLogs,
-      meta: {
-        timestamp: new Date().toISOString(),
-        requestId: crypto.randomUUID()
-      }
+      message: `${ids.length} payments rejected successfully`
     });
   }),
+
+  // Get payment history
+  http.get<{ id: string }>('*/api/payments/:id/history', ({ params }) => {
+    const { id } = params;
+    const history = mockPaymentHistory.filter(h => h.paymentId === id);
+
+    return HttpResponse.json({
+      success: true,
+      data: history
+    });
+  })
 ];

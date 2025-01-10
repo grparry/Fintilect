@@ -3,7 +3,9 @@ import { exceptionService } from '../../exception.service';
 import { auditService } from '../../audit.service';
 import api from '../../api';
 import dayjs from 'dayjs';
-import { ReportFilters } from '../../../types/report.types';
+import type { ReportFilters, ReportData } from '../../../types/report.types';
+import type { ReportResponse } from '../../../types/report-api.types';
+import type { ApiSuccessResponse } from '../../../types/api.types';
 
 // Mock the API and audit service
 jest.mock('../../api');
@@ -42,10 +44,9 @@ describe('Report and Exception Service Integration', () => {
         .mockRejectedValueOnce(error)
         .mockResolvedValueOnce({
           success: true,
-          data: {
-            data: mockException,
-          },
-        });
+          data: mockException,
+          message: 'Exception created successfully'
+        } as ApiSuccessResponse<typeof mockException>);
 
       // Mock audit logging
       mockedAuditService.logEvent.mockResolvedValue();
@@ -92,10 +93,9 @@ describe('Report and Exception Service Integration', () => {
         }
         return Promise.resolve({
           success: true,
-          data: {
-            data: mockException,
-          },
-        });
+          data: mockException,
+          message: 'Exception created successfully'
+        } as ApiSuccessResponse<typeof mockException>);
       });
 
       // Mock audit logging
@@ -128,20 +128,21 @@ describe('Report and Exception Service Integration', () => {
   describe('Audit Trail', () => {
     it('should maintain a complete audit trail across services', async () => {
       // Mock successful report generation
-      const mockData = {
-        audit: [{ id: 1, event: 'TEST' }],
+      const mockData: ReportData = {
+        audit: [{ id: 1, timestamp: '2025-01-01', user: 'test', action: 'TEST', details: 'test' }],
         transactions: [],
         users: [],
       };
 
-      mockedApi.post.mockResolvedValueOnce({
+      const mockResponse: ApiSuccessResponse<ReportResponse<ReportData>> = {
         success: true,
         data: {
-          data: {
-            data: mockData,
-          },
+          data: mockData
         },
-      });
+        message: 'Report data retrieved successfully'
+      };
+
+      mockedApi.post.mockResolvedValueOnce(mockResponse);
 
       // Get report data
       await reportService.getReportData(defaultFilters);
@@ -153,13 +154,20 @@ describe('Report and Exception Service Integration', () => {
       expect(auditCalls[0][0]).toMatchObject({
         eventType: 'REPORT_RUN',
         status: 'INITIATED',
+        metadata: expect.objectContaining({
+          filters: defaultFilters
+        })
       });
 
       expect(auditCalls[1][0]).toMatchObject({
         eventType: 'REPORT_RUN',
         status: 'COMPLETED',
         metadata: expect.objectContaining({
-          recordCount: expect.any(Object),
+          recordCount: {
+            audit: 1,
+            transactions: 0,
+            users: 0,
+          }
         }),
       });
 
@@ -167,7 +175,7 @@ describe('Report and Exception Service Integration', () => {
       auditCalls.forEach(call => {
         expect(call[0]).toMatchObject({
           resourceId: expect.any(String),
-          resourceType: expect.any(String),
+          resourceType: 'report',
           metadata: expect.any(Object),
         });
       });

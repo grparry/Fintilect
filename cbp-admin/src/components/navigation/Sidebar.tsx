@@ -35,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state, toggleSection } = useNavigation();
-  const navigationConfig = useMemo(() => getNavigationConfig(), []);
+  const navigationConfig = useMemo<NavigationSection[]>(() => getNavigationConfig(), []);
 
   const handleNavigate = (path: string) => {
     navigate(path);
@@ -179,7 +179,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
         </IconButton>
       </Box>
       <List sx={{ pt: 0 }}>
-        {navigationConfig.sections.map((section) => renderNavigationSection(section))}
+        {navigationConfig.map((section) => renderNavigationSection(section))}
       </List>
     </Drawer>
   );

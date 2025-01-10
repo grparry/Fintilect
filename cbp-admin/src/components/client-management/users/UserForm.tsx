@@ -10,6 +10,7 @@ import {
   Alert,
   Button,
   CircularProgress,
+  SelectChangeEvent,
 } from '@mui/material';
 import { User, UserRole, UserStatus, UserGroup } from '../../../types/client.types';
 
@@ -45,7 +46,7 @@ const UserForm: React.FC<UserFormProps> = ({
     email: '',
     username: '',
     role: UserRole.ReadOnly,
-    status: UserStatus.Pending,
+    status: UserStatus.PENDING,
     department: '',
     password: '',
   });
@@ -53,7 +54,13 @@ const UserForm: React.FC<UserFormProps> = ({
   useEffect(() => {
     if (user) {
       setFormData({
-        ...user,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        status: user.status,
+        department: user.department,
         password: '', // Clear password when editing
       });
     } else {
@@ -64,14 +71,16 @@ const UserForm: React.FC<UserFormProps> = ({
         email: '',
         username: '',
         role: UserRole.ReadOnly,
-        status: UserStatus.Pending,
+        status: UserStatus.PENDING,
         department: '',
         password: '',
       });
     }
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | any) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
+  ) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -84,10 +93,16 @@ const UserForm: React.FC<UserFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Convert form data to user data
       const userData: Partial<User> = {
-        ...formData,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        username: formData.username,
         role: formData.role,
         status: formData.status,
+        department: formData.department,
+        password: formData.password,
       };
       await onSubmit(userData);
     } catch (error) {
@@ -148,13 +163,11 @@ const UserForm: React.FC<UserFormProps> = ({
               label="Role"
               onChange={handleChange}
             >
-              {(Object.keys(UserRole) as Array<keyof typeof UserRole>)
-                .filter(key => isNaN(Number(key)))
-                .map(role => (
-                  <MenuItem key={role} value={UserRole[role]}>
-                    {role}
-                  </MenuItem>
-                ))}
+              {Object.values(UserRole).map(role => (
+                <MenuItem key={role} value={role}>
+                  {role}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
@@ -167,13 +180,11 @@ const UserForm: React.FC<UserFormProps> = ({
               label="Status"
               onChange={handleChange}
             >
-              {(Object.keys(UserStatus) as Array<keyof typeof UserStatus>)
-                .filter(key => isNaN(Number(key)))
-                .map(status => (
-                  <MenuItem key={status} value={UserStatus[status]}>
-                    {status}
-                  </MenuItem>
-                ))}
+              {Object.values(UserStatus).map(status => (
+                <MenuItem key={status} value={status}>
+                  {status}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
@@ -199,20 +210,20 @@ const UserForm: React.FC<UserFormProps> = ({
             />
           </Grid>
         )}
+        <Grid item xs={12} sx={{ mt: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Button onClick={onCancel}>Cancel</Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={saving}
+            >
+              {saving ? 'Saving...' : user ? 'Update' : 'Create'}
+            </Button>
+          </Box>
+        </Grid>
       </Grid>
-
-      <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-        <Button onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          type="submit"
-          disabled={saving}
-        >
-          {saving ? <CircularProgress size={24} /> : (user ? 'Save' : 'Create')}
-        </Button>
-      </Box>
     </Box>
   );
 };

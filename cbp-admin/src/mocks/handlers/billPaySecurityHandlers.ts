@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { BillPaySecuritySettings } from '../../types/security.types';
+import { BillPaySecuritySettings, BillPayOTPMethod } from '../../types/security.types';
 
 const mockSecuritySettings: BillPaySecuritySettings = {
   passwordPolicy: {
@@ -23,7 +23,7 @@ const mockSecuritySettings: BillPaySecuritySettings = {
     addresses: '192.168.1.0/24, 10.0.0.0/8'
   },
   otpSettings: {
-    method: 'email',
+    method: BillPayOTPMethod.EMAIL,
     email: 'admin@example.com',
     phone: '+1234567890'
   }

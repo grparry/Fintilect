@@ -27,6 +27,24 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean | null>(null);
 
+  const defaultSettings: SecuritySettings = {
+    passwordPolicy: {
+      minLength: 8,
+      requireUppercase: true,
+      requireLowercase: true,
+      requireNumbers: true,
+      requireSpecialChars: true,
+      expirationDays: 90
+    },
+    loginPolicy: {
+      maxAttempts: 3,
+      lockoutDuration: 30
+    },
+    sessionTimeout: 30,
+    mfaEnabled: false,
+    ipWhitelist: []
+  };
+
   // Load initial data
   useEffect(() => {
     loadSettings();
@@ -36,8 +54,31 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
     try {
       setLoading(true);
       setError(null);
-      const data = await clientService.getClientSecuritySettings(clientId);
-      setSettings(data);
+      const response = await clientService.getClientSettings(clientId);
+      if (response.success) {
+        const securitySettings = response.data.security;
+        // Ensure all required fields are present by merging with defaults
+        const mergedSettings: SecuritySettings = {
+          passwordPolicy: {
+            minLength: securitySettings?.passwordPolicy?.minLength ?? defaultSettings.passwordPolicy.minLength,
+            requireUppercase: securitySettings?.passwordPolicy?.requireUppercase ?? defaultSettings.passwordPolicy.requireUppercase,
+            requireLowercase: securitySettings?.passwordPolicy?.requireLowercase ?? defaultSettings.passwordPolicy.requireLowercase,
+            requireNumbers: securitySettings?.passwordPolicy?.requireNumbers ?? defaultSettings.passwordPolicy.requireNumbers,
+            requireSpecialChars: securitySettings?.passwordPolicy?.requireSpecialChars ?? defaultSettings.passwordPolicy.requireSpecialChars,
+            expirationDays: securitySettings?.passwordPolicy?.expirationDays ?? defaultSettings.passwordPolicy.expirationDays
+          },
+          loginPolicy: {
+            maxAttempts: securitySettings?.loginPolicy?.maxAttempts ?? defaultSettings.loginPolicy.maxAttempts,
+            lockoutDuration: securitySettings?.loginPolicy?.lockoutDuration ?? defaultSettings.loginPolicy.lockoutDuration
+          },
+          sessionTimeout: securitySettings?.sessionTimeout ?? defaultSettings.sessionTimeout,
+          mfaEnabled: securitySettings?.mfaEnabled ?? defaultSettings.mfaEnabled,
+          ipWhitelist: securitySettings?.ipWhitelist ?? defaultSettings.ipWhitelist
+        };
+        setSettings(mergedSettings);
+      } else {
+        throw new Error(response.error?.message || 'Failed to load settings');
+      }
     } catch (err) {
       setError('Failed to load security settings');
       console.error('Error loading security settings:', err);
@@ -46,12 +87,40 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
     }
   };
 
-  const handleSubmit = async (values: SecuritySettings) => {
+  const handleSubmit = async (values: Partial<SecuritySettings>) => {
     try {
       setSubmitting(true);
       setError(null);
-      await clientService.updateClientSecuritySettings(clientId, values);
-      setSuccess(true);
+      
+      // Merge partial values with current settings to ensure all required fields are present
+      const currentSettings = settings || defaultSettings;
+      const mergedSettings: SecuritySettings = {
+        passwordPolicy: {
+          minLength: values.passwordPolicy?.minLength ?? currentSettings.passwordPolicy.minLength,
+          requireUppercase: values.passwordPolicy?.requireUppercase ?? currentSettings.passwordPolicy.requireUppercase,
+          requireLowercase: values.passwordPolicy?.requireLowercase ?? currentSettings.passwordPolicy.requireLowercase,
+          requireNumbers: values.passwordPolicy?.requireNumbers ?? currentSettings.passwordPolicy.requireNumbers,
+          requireSpecialChars: values.passwordPolicy?.requireSpecialChars ?? currentSettings.passwordPolicy.requireSpecialChars,
+          expirationDays: values.passwordPolicy?.expirationDays ?? currentSettings.passwordPolicy.expirationDays
+        },
+        loginPolicy: {
+          maxAttempts: values.loginPolicy?.maxAttempts ?? currentSettings.loginPolicy.maxAttempts,
+          lockoutDuration: values.loginPolicy?.lockoutDuration ?? currentSettings.loginPolicy.lockoutDuration
+        },
+        sessionTimeout: values.sessionTimeout ?? currentSettings.sessionTimeout,
+        mfaEnabled: values.mfaEnabled ?? currentSettings.mfaEnabled,
+        ipWhitelist: values.ipWhitelist ?? currentSettings.ipWhitelist
+      };
+
+      const response = await clientService.updateClientSettings(clientId, {
+        security: mergedSettings
+      });
+      
+      if (response.success) {
+        setSuccess(true);
+      } else {
+        throw new Error(response.error?.message || 'Failed to update settings');
+      }
     } catch (err) {
       setError('Failed to update security settings');
       console.error('Error updating security settings:', err);

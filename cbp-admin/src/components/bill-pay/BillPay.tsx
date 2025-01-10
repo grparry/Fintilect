@@ -15,24 +15,23 @@ import BillPaySecuritySettings from './settings/security/BillPaySecuritySettings
 import Settings from './settings/Settings';
 import { paymentApi } from '../../services/api/payment.api';
 import { PaymentException, ExceptionResolution, FISException, FISExceptionFilters, FISResponseHistory, FISRetryResult, ExceptionStats } from '../../types/bill-pay.types';
-import { PaymentApiResponse } from '../../types/api.types';
+import { PaymentApiResponse, ApiResponse } from '../../types/api.types';
 
 // Define interfaces for the API wrappers
 interface ExceptionToolApi {
-  getPaymentExceptions(): Promise<PaymentApiResponse<PaymentException[]>>;
-  resolvePaymentException(id: string, resolution: ExceptionResolution): Promise<PaymentApiResponse<void>>;
-  retryPaymentException(id: string): Promise<PaymentApiResponse<void>>;
+  getExceptions(): Promise<PaymentApiResponse<PaymentException[]>>;
+  resolveException(id: string, resolution: ExceptionResolution): Promise<PaymentApiResponse<void>>;
 }
 
 interface FISExceptionApi {
-  getExceptions(filters: FISExceptionFilters): Promise<PaymentApiResponse<FISException[]>>;
-  getResponseHistory(requestId: string): Promise<PaymentApiResponse<FISResponseHistory[]>>;
-  retryException(id: string): Promise<PaymentApiResponse<FISRetryResult>>;
-  ignoreException(id: string, notes: string): Promise<PaymentApiResponse<void>>;
-  bulkRetry(ids: string[]): Promise<PaymentApiResponse<FISRetryResult[]>>;
-  bulkDelete(ids: string[]): Promise<PaymentApiResponse<void>>;
+  getExceptions(filters: FISExceptionFilters): Promise<ApiResponse<FISException[]>>;
+  getResponseHistory(requestId: string): Promise<ApiResponse<FISResponseHistory[]>>;
+  retryException(id: string): Promise<ApiResponse<FISRetryResult>>;
+  ignoreException(id: string, notes: string): Promise<ApiResponse<void>>;
+  bulkRetry(ids: string[]): Promise<ApiResponse<FISRetryResult[]>>;
+  bulkDelete(ids: string[]): Promise<ApiResponse<void>>;
   exportExceptions(filters: FISExceptionFilters): Promise<Blob>;
-  getExceptionStats(): Promise<PaymentApiResponse<ExceptionStats>>;
+  getExceptionStats(): Promise<ApiResponse<ExceptionStats>>;
 }
 
 const BillPay: React.FC = () => {
@@ -44,14 +43,11 @@ const BillPay: React.FC = () => {
 
   // Create API wrappers that implement the exact interfaces
   const exceptionToolApi: ExceptionToolApi = {
-    getPaymentExceptions() {
+    getExceptions() {
       return paymentApi.getPaymentExceptions();
     },
-    resolvePaymentException(id: string, resolution: ExceptionResolution) {
+    resolveException(id: string, resolution: ExceptionResolution) {
       return paymentApi.resolvePaymentException(id, resolution);
-    },
-    retryPaymentException(id: string) {
-      return paymentApi.retryPaymentException(id);
     }
   };
 

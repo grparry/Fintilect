@@ -1,7 +1,7 @@
 import { api } from '../../../utils/api';
-import { auditService } from '../../audit.service';
-import { AuditEvent } from '../../audit.service';
+import { auditService, AuditEvent } from '../../audit.service';
 import { FISExceptionStatus } from '../../../types/bill-pay.types';
+import type { ApiResponse } from '../../../utils/api';
 
 jest.mock('../../../utils/api');
 
@@ -17,30 +17,34 @@ describe('Audit Service Integration', () => {
       // Mock API responses
       mockApi.post.mockResolvedValue({
         success: true,
-        data: undefined
-      });
+        data: undefined,
+        message: 'Event logged successfully'
+      } as ApiResponse<void>);
+
+      const mockEvents: AuditEvent[] = [
+        {
+          eventType: 'PAYMENT_SUBMIT',
+          resourceId: 'payment-1',
+          resourceType: 'payment',
+          status: 'INITIATED',
+          metadata: { amount: 100 },
+          timestamp: '2025-01-09T12:00:00Z'
+        },
+        {
+          eventType: 'PAYMENT_SUBMIT',
+          resourceId: 'payment-1',
+          resourceType: 'payment',
+          status: 'COMPLETED',
+          metadata: { amount: 100 },
+          timestamp: '2025-01-09T12:00:01Z'
+        }
+      ];
 
       mockApi.get.mockResolvedValue({
         success: true,
-        data: [
-          {
-            eventType: 'PAYMENT_SUBMIT',
-            resourceId: 'payment-1',
-            resourceType: 'payment',
-            status: 'INITIATED',
-            metadata: { amount: 100 },
-            timestamp: '2025-01-09T12:00:00Z'
-          },
-          {
-            eventType: 'PAYMENT_SUBMIT',
-            resourceId: 'payment-1',
-            resourceType: 'payment',
-            status: 'COMPLETED',
-            metadata: { amount: 100 },
-            timestamp: '2025-01-09T12:00:01Z'
-          }
-        ]
-      });
+        data: mockEvents,
+        message: 'Events retrieved successfully'
+      } as ApiResponse<AuditEvent[]>);
 
       // Log payment events
       await auditService.logEvent({
@@ -73,34 +77,38 @@ describe('Audit Service Integration', () => {
       // Mock API responses
       mockApi.post.mockResolvedValue({
         success: true,
-        data: undefined
-      });
+        data: undefined,
+        message: 'Event logged successfully'
+      } as ApiResponse<void>);
+
+      const mockEvents: AuditEvent[] = [
+        {
+          eventType: 'EXCEPTION_RESOLVE',
+          resourceId: 'exc-1',
+          resourceType: 'fis_exception',
+          status: 'INITIATED',
+          metadata: { resolution: 'Account updated' },
+          timestamp: '2025-01-09T12:00:00Z'
+        },
+        {
+          eventType: 'EXCEPTION_RESOLVE',
+          resourceId: 'exc-1',
+          resourceType: 'fis_exception',
+          status: 'COMPLETED',
+          metadata: { 
+            resolution: 'Account updated',
+            before: { status: FISExceptionStatus.PENDING },
+            after: { status: FISExceptionStatus.RESOLVED }
+          },
+          timestamp: '2025-01-09T12:00:01Z'
+        }
+      ];
 
       mockApi.get.mockResolvedValue({
         success: true,
-        data: [
-          {
-            eventType: 'EXCEPTION_RESOLVE',
-            resourceId: 'exc-1',
-            resourceType: 'fis_exception',
-            status: 'INITIATED',
-            metadata: { resolution: 'Account updated' },
-            timestamp: '2025-01-09T12:00:00Z'
-          },
-          {
-            eventType: 'EXCEPTION_RESOLVE',
-            resourceId: 'exc-1',
-            resourceType: 'fis_exception',
-            status: 'COMPLETED',
-            metadata: { 
-              resolution: 'Account updated',
-              before: { status: FISExceptionStatus.PENDING },
-              after: { status: FISExceptionStatus.RESOLVED }
-            },
-            timestamp: '2025-01-09T12:00:01Z'
-          }
-        ]
-      });
+        data: mockEvents,
+        message: 'Events retrieved successfully'
+      } as ApiResponse<AuditEvent[]>);
 
       // Log exception events
       await auditService.logEvent({
@@ -143,7 +151,7 @@ describe('Audit Service Integration', () => {
           code: '500',
           message: 'API Error'
         }
-      });
+      } as ApiResponse<void>);
 
       // Attempt to log event
       await expect(auditService.logEvent({
@@ -164,7 +172,7 @@ describe('Audit Service Integration', () => {
           code: '500',
           message: 'API Error'
         }
-      });
+      } as ApiResponse<AuditEvent[]>);
 
       // Attempt to get events
       await expect(auditService.getEvents('test-1')).rejects.toThrow('API Error');

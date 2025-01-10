@@ -135,7 +135,24 @@ class ManualPaymentService {
       [PaymentStatus.COMPLETED]: 'Complete',
       [PaymentStatus.FAILED]: 'Failed',
       [PaymentStatus.REJECTED]: 'Failed',
-      [PaymentStatus.CANCELLED]: 'Failed'
+      [PaymentStatus.CANCELLED]: 'Failed',
+      [PaymentStatus.EXPIRED]: 'Failed',
+      [PaymentStatus.PENDING_APPROVAL]: 'Draft',
+      [PaymentStatus.DRAFT]: 'Draft',
+      [PaymentStatus.SUBMITTED]: 'Submitted',
+      [PaymentStatus.SCHEDULED]: 'Processing',
+      [PaymentStatus.RETURNED]: 'Failed',
+      [PaymentStatus.STOP_PAYMENT]: 'Failed',
+      [PaymentStatus.REVERSED]: 'Failed',
+      [PaymentStatus.REFUNDED]: 'Failed',
+      [PaymentStatus.RESENT]: 'Processing',
+      [PaymentStatus.REINITIATED]: 'Processing',
+      [PaymentStatus.PENDING_REVERSAL]: 'Processing',
+      [PaymentStatus.PENDING_REFUND]: 'Processing',
+      [PaymentStatus.PENDING_RETURN]: 'Processing',
+      [PaymentStatus.PENDING_STOP_PAYMENT]: 'Processing',
+      [PaymentStatus.PENDING_RESEND]: 'Processing',
+      [PaymentStatus.PENDING_REINITIATE]: 'Processing'
     };
 
     const paymentType = reverseMethodMap[payment.method];

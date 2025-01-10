@@ -9,9 +9,9 @@ import {
   Alert,
   Chip,
 } from '@mui/material';
-import type { Client } from '../../types/client.types';
-import type { ApiResponse } from '../../types/api.types';
-import { clientService } from '../../services/clients.service';
+import { Client as ClientType, Environment, ClientStatus, ClientType as ClientTypeEnum } from '../../types/client.types';
+import { ApiResponse } from '../../utils/api';
+import { clientService, Client as ServiceClient } from '../../services/clients.service';
 import ContactInformation from './ContactInformation';
 import Groups from './Groups';
 import UsersWrapper from './wrappers/UsersWrapper';
@@ -48,9 +48,76 @@ interface ClientManagementProps {
 const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [client, setClient] = useState<Client | null>(null);
+  const [client, setClient] = useState<ClientType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Convert service client to client type
+  const mapServiceClientToClient = (serviceClient: ServiceClient): ClientType => ({
+    ...serviceClient,
+    type: serviceClient.type === 'ENTERPRISE' ? ClientTypeEnum.Enterprise :
+          serviceClient.type === 'SMB' ? ClientTypeEnum.Small :
+          serviceClient.type === 'STARTUP' ? ClientTypeEnum.Medium :
+          ClientTypeEnum.Other,
+    status: serviceClient.status === 'ACTIVE' ? ClientStatus.Active :
+            serviceClient.status === 'INACTIVE' ? ClientStatus.Inactive :
+            ClientStatus.Pending,
+    environment: serviceClient.environment === 'PRODUCTION' ? Environment.Production :
+                serviceClient.environment === 'STAGING' ? Environment.Staging :
+                Environment.Development,
+    domain: '',
+    contactName: '',
+    contactEmail: '',
+    contactPhone: '',
+    settings: {
+      general: {
+        timezone: '',
+        dateFormat: '',
+        timeFormat: '',
+        currency: '',
+        language: ''
+      },
+      security: {
+        passwordPolicy: {
+          minLength: 8,
+          requireUppercase: true,
+          requireLowercase: true,
+          requireNumbers: true,
+          requireSpecialChars: true,
+          expirationDays: 90
+        },
+        loginPolicy: {
+          maxAttempts: 3,
+          lockoutDuration: 30
+        },
+        sessionTimeout: 30,
+        mfaEnabled: false,
+        ipWhitelist: []
+      },
+      notifications: {
+        emailEnabled: true,
+        smsEnabled: false,
+        pushEnabled: false,
+        frequency: 'realtime',
+        alertTypes: []
+      },
+      branding: {
+        logo: '',
+        primaryColor: '',
+        secondaryColor: '',
+        favicon: ''
+      },
+      features: {
+        billPay: false,
+        moneyDesktop: false,
+        mobileDeposit: false,
+        p2p: false,
+        cardControls: false
+      }
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  });
 
   // Load client data
   const loadClientData = useCallback(async () => {
@@ -59,7 +126,7 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
       setError(null);
       const response = await clientService.getClient(clientId);
       if (response.success) {
-        setClient(response.data);
+        setClient(mapServiceClientToClient(response.data));
       } else {
         setError(response.error?.message || 'Failed to load client details');
       }
@@ -105,26 +172,26 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
     }
   };
 
-  const getStatusColor = (status: Client['status']) => {
+  const getStatusColor = (status: ClientStatus) => {
     switch (status) {
-      case 'Active':
+      case ClientStatus.Active:
         return 'success';
-      case 'Inactive':
+      case ClientStatus.Inactive:
         return 'error';
-      case 'Pending':
+      case ClientStatus.Pending:
         return 'warning';
       default:
         return 'default';
     }
   };
 
-  const getEnvironmentColor = (env: Client['environment']) => {
+  const getEnvironmentColor = (env: Environment) => {
     switch (env) {
-      case 'Production':
+      case Environment.Production:
         return 'error';
-      case 'Staging':
+      case Environment.Staging:
         return 'warning';
-      case 'Development':
+      case Environment.Development:
         return 'info';
       default:
         return 'default';
@@ -155,7 +222,7 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
           <Chip
-            label={`Environment: ${client.environment}`}
+            label={`Environment: ${client.environment.charAt(0).toUpperCase() + client.environment.slice(1)}`}
             color={getEnvironmentColor(client.environment)}
             variant="outlined"
           />

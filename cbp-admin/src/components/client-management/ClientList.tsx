@@ -17,10 +17,43 @@ import {
 } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Client } from '../../types/client.types';
+import { Client, ClientStatus, ClientType, Environment } from '../../types/client.types';
 import { clientService } from '../../services/clients.service';
 import { encodeId } from '../../utils/idEncoder';
 import { shouldUseMockData } from '../../config/api.config';
+import { ApiResponse } from '../../utils/api';
+
+interface ClientListResponse {
+  items: Client[];
+}
+
+const serviceClientToUIClient = (serviceClient: any): Client => ({
+  id: serviceClient.id,
+  name: serviceClient.name,
+  type: serviceClient.type === 'ENTERPRISE' ? ClientType.Enterprise :
+        serviceClient.type === 'SMB' ? ClientType.Small :
+        serviceClient.type === 'STARTUP' ? ClientType.Medium :
+        ClientType.Other,
+  status: serviceClient.status === 'ACTIVE' ? ClientStatus.Active :
+          serviceClient.status === 'INACTIVE' ? ClientStatus.Inactive :
+          ClientStatus.Pending,
+  environment: serviceClient.environment === 'PRODUCTION' ? Environment.Production :
+              serviceClient.environment === 'STAGING' ? Environment.Staging :
+              Environment.Development,
+  domain: serviceClient.domain || '',
+  contactName: serviceClient.contactName || '',
+  contactEmail: serviceClient.contactEmail || '',
+  contactPhone: serviceClient.contactPhone || '',
+  settings: serviceClient.settings || {
+    general: {},
+    security: {},
+    notifications: {},
+    branding: {},
+    features: {},
+  },
+  createdAt: serviceClient.createdAt,
+  updatedAt: serviceClient.updatedAt,
+});
 
 const ClientList: React.FC = () => {
   const navigate = useNavigate();
@@ -40,9 +73,14 @@ const ClientList: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await clientService.getClients();
-      console.log('ClientList - Loaded clients:', data);
-      setClients(data);
+      const response = await clientService.getClients();
+      console.log('ClientList - Loaded clients:', response);
+      
+      if (response.success) {
+        setClients(response.data.items.map(serviceClientToUIClient));
+      } else {
+        setError(response.error?.message || 'Failed to load clients');
+      }
     } catch (err) {
       setError('Failed to load clients');
       console.error('Error loading clients:', err);
@@ -59,14 +97,27 @@ const ClientList: React.FC = () => {
     navigate(targetPath);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'active':
+  const getStatusColor = (status: ClientStatus) => {
+    switch (status) {
+      case ClientStatus.Active:
         return 'success';
-      case 'inactive':
+      case ClientStatus.Inactive:
         return 'error';
-      case 'pending':
+      case ClientStatus.Pending:
         return 'warning';
+      default:
+        return 'default';
+    }
+  };
+
+  const getEnvironmentColor = (env: Environment) => {
+    switch (env) {
+      case Environment.Production:
+        return 'error';
+      case Environment.Staging:
+        return 'warning';
+      case Environment.Development:
+        return 'info';
       default:
         return 'default';
     }
@@ -117,11 +168,17 @@ const ClientList: React.FC = () => {
             {clients.map((client) => (
               <TableRow key={client.id}>
                 <TableCell>{client.name}</TableCell>
-                <TableCell>{client.environment}</TableCell>
+                <TableCell>
+                  <Chip
+                    label={client.environment}
+                    color={getEnvironmentColor(client.environment)}
+                    size="small"
+                  />
+                </TableCell>
                 <TableCell>
                   <Chip
                     label={client.status}
-                    color={getStatusColor(client.status) as any}
+                    color={getStatusColor(client.status)}
                     size="small"
                   />
                 </TableCell>

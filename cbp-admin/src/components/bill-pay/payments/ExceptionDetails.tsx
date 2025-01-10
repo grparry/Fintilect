@@ -29,10 +29,11 @@ import { useAuth } from '../../../hooks/useAuth';
 import {
   PaymentException,
   ExceptionResolution,
-  PaymentApiResponse,
+  ExceptionStatus,
   ResolutionHistory,
   FISRetryResult,
 } from '../../../types/bill-pay.types';
+import { ApiResponse } from '../../../types/api.types';
 import dayjs from 'dayjs';
 
 interface ExceptionDetailsProps {
@@ -40,9 +41,9 @@ interface ExceptionDetailsProps {
   onClose: () => void;
   onResolutionComplete: () => void;
   api: {
-    resolveException: (id: string, resolution: ExceptionResolution) => Promise<PaymentApiResponse<void>>;
-    retryException: (id: string) => Promise<PaymentApiResponse<FISRetryResult>>;
-    getResolutionHistory: (id: string) => Promise<PaymentApiResponse<ResolutionHistory[]>>;
+    resolveException: (id: string, resolution: ExceptionResolution) => Promise<ApiResponse<void>>;
+    retryException: (id: string) => Promise<ApiResponse<FISRetryResult>>;
+    getResolutionHistory: (id: string) => Promise<ApiResponse<ResolutionHistory[]>>;
   };
 }
 
@@ -92,12 +93,16 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
 
     try {
       setLoading(true);
-      await api.resolveException(exception.id, {
+      const response = await api.resolveException(exception.id, {
         ...resolution,
         userId: user?.id?.toString(),
         timestamp: new Date().toISOString(),
       });
-      onResolutionComplete();
+      if (response.success) {
+        onResolutionComplete();
+      } else {
+        setError(response.error?.message || 'Failed to resolve exception');
+      }
     } catch (err) {
       setError('Failed to resolve exception');
       console.error(err);
@@ -187,7 +192,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
                   <HistoryIcon />
                 </IconButton>
               </Tooltip>
-              {exception.status === 'PENDING' && (
+              {exception.status === ExceptionStatus.PENDING && (
                 <Tooltip title="Retry">
                   <IconButton size="small" onClick={handleRetry} disabled={loading}>
                     <RefreshIcon />
@@ -204,9 +209,9 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
                 label={exception.status}
                 size="small"
                 color={
-                  exception.status === 'RESOLVED'
+                  exception.status === ExceptionStatus.RESOLVED
                     ? 'success'
-                    : exception.status === 'PENDING'
+                    : exception.status === ExceptionStatus.PENDING
                     ? 'warning'
                     : 'error'
                 }
@@ -230,7 +235,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
             )}
           </Grid>
 
-          {exception.status === 'PENDING' && (
+          {exception.status === ExceptionStatus.PENDING && (
             <>
               <Divider sx={{ my: 2 }} />
               <Typography variant="h6">Resolution</Typography>

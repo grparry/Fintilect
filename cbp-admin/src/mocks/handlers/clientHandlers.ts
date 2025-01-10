@@ -134,7 +134,7 @@ const mockUsers: User[] = [
     lastName: 'Doe',
     email: 'john@example.com',
     role: UserRole.Admin,
-    status: UserStatus.Active,
+    status: UserStatus.ACTIVE,
     department: 'IT',
     lastLogin: new Date().toISOString(),
     locked: false
@@ -146,7 +146,7 @@ const mockUsers: User[] = [
     lastName: 'Smith',
     email: 'jane@example.com',
     role: UserRole.User,
-    status: UserStatus.Active,
+    status: UserStatus.ACTIVE,
     department: 'Operations',
     lastLogin: new Date().toISOString(),
     locked: false

@@ -12,27 +12,30 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { 
-  User, 
-  UserGroup, 
+  User as UIUser,
+  UserGroup as UIUserGroup,
   SecurityRole,
   Permission,
+  UserStatus,
+  UserRole
 } from '../../types/client.types';
+import { UserGroup as ServiceUserGroup } from '../../services/clients.service';
 import { clientService } from '../../services/clients.service';
 import UserSearch from './users/UserSearch';
 import UserTable from './users/UserTable';
 import UserForm from './users/UserForm';
 import { shouldUseMockData } from '../../config/api.config';
 import { useNavigate } from 'react-router-dom';
-import { encodeId } from '../../utils/idEncoder';
+import { encodeId, decodeId } from '../../utils/idEncoder';
 
 interface UsersState {
-  users: User[];
-  groups: UserGroup[];
+  users: UIUser[];
+  groups: UIUserGroup[];
   loading: boolean;
   error: string | null;
   success: string | null;
   saving: boolean;
-  selectedUser: User | null;
+  selectedUser: UIUser | null;
   isFormOpen: boolean;
 }
 
@@ -41,8 +44,87 @@ interface UsersProps {
   loading?: boolean;
 }
 
+interface ServiceUser {
+  id: string;
+  clientId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'LOCKED';
+  role: string;
+  department?: string;
+  lastLogin?: string | null;
+}
+
+interface ServiceUserCreate {
+  firstName: string;
+  lastName: string;
+  email: string;
+  department?: string;
+  role: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'LOCKED';
+}
+
+const serviceUserToUIUser = (serviceUser: ServiceUser): UIUser => ({
+  id: parseInt(serviceUser.id, 10),
+  firstName: serviceUser.firstName,
+  lastName: serviceUser.lastName,
+  email: serviceUser.email,
+  department: serviceUser.department || '',
+  role: serviceUser.role === 'ADMIN' ? UserRole.Admin :
+        serviceUser.role === 'MANAGER' ? UserRole.Manager :
+        serviceUser.role === 'SUPPORT' ? UserRole.Support :
+        serviceUser.role === 'USER' ? UserRole.User :
+        UserRole.ReadOnly,
+  status: serviceUser.status === 'ACTIVE' ? UserStatus.ACTIVE :
+          serviceUser.status === 'INACTIVE' ? UserStatus.INACTIVE :
+          UserStatus.LOCKED,
+  username: serviceUser.email,
+  lastLogin: serviceUser.lastLogin || null,
+  locked: serviceUser.status === 'LOCKED'
+});
+
+const serviceGroupToUIGroup = (group: ServiceUserGroup): UIUserGroup => ({
+  id: group.id,
+  name: group.name,
+  description: group.description || '',
+  clientId: group.clientId,
+  roles: [],
+  permissions: group.permissions.map(id => ({ 
+    id,
+    name: '',
+    description: '',
+    category: 'user',
+    actions: []
+  })),
+  members: group.members,
+  createdAt: group.createdAt,
+  updatedAt: group.updatedAt
+});
+
+const uiUserToServiceUser = (uiUser: Partial<UIUser>): Partial<ServiceUserCreate> => ({
+  ...(uiUser.firstName && { firstName: uiUser.firstName }),
+  ...(uiUser.lastName && { lastName: uiUser.lastName }),
+  ...(uiUser.email && { email: uiUser.email }),
+  ...(uiUser.department && { department: uiUser.department }),
+  ...(uiUser.role && {
+    role: uiUser.role === UserRole.Admin ? 'ADMIN' :
+          uiUser.role === UserRole.Manager ? 'MANAGER' :
+          uiUser.role === UserRole.Support ? 'SUPPORT' :
+          uiUser.role === UserRole.User ? 'USER' :
+          'READONLY'
+  }),
+  ...(uiUser.status && {
+    status: uiUser.status === UserStatus.ACTIVE ? 'ACTIVE' :
+            uiUser.status === UserStatus.INACTIVE ? 'INACTIVE' :
+            'LOCKED'
+  })
+});
+
 const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
   const navigate = useNavigate();
+  const decodedClientId = clientId ? decodeId(clientId) : '';
+
   const [state, setState] = useState<UsersState>({
     users: [],
     groups: [],
@@ -61,11 +143,11 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       setState(prev => ({ ...prev, loading: true, error: null }));
 
       const [usersResponse, groupsResponse] = await Promise.all([
-        clientService.getUsers(clientId),
-        clientService.getGroups(clientId)
+        clientService.getUsers(decodedClientId),
+        clientService.getGroups(decodedClientId)
       ]);
 
-      if ('error' in usersResponse || 'error' in groupsResponse) {
+      if (!usersResponse.success || !groupsResponse.success) {
         setState(prev => ({ 
           ...prev, 
           error: 'Failed to load user data',
@@ -76,8 +158,8 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
 
       setState(prev => ({ 
         ...prev,
-        users: usersResponse.data.items,
-        groups: groupsResponse.data.items,
+        users: usersResponse.data.items.map(serviceUserToUIUser),
+        groups: groupsResponse.data.items.map(serviceGroupToUIGroup),
         loading: false 
       }));
     } catch (error) {
@@ -93,16 +175,31 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     loadData();
   }, [loadData]);
 
-  const handleCreateUser = async (userData: Omit<User, 'id' | 'clientId' | 'createdAt' | 'updatedAt'>) => {
+  const handleCreateUser = async (userData: Omit<UIUser, 'id'>) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
       
-      const response = await clientService.createUser(clientId, userData);
+      const serviceUserData: ServiceUserCreate = {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        department: userData.department,
+        role: userData.role === UserRole.Admin ? 'ADMIN' :
+              userData.role === UserRole.Manager ? 'MANAGER' :
+              userData.role === UserRole.Support ? 'SUPPORT' :
+              userData.role === UserRole.User ? 'USER' :
+              'READONLY',
+        status: userData.status === UserStatus.ACTIVE ? 'ACTIVE' :
+                userData.status === UserStatus.INACTIVE ? 'INACTIVE' :
+                'LOCKED'
+      };
+
+      const response = await clientService.createUser(decodedClientId, serviceUserData);
       
-      if ('error' in response) {
+      if (!response.success) {
         setState(prev => ({ 
           ...prev,
-          error: response.error.message,
+          error: response.error?.message || 'Failed to create user',
           saving: false 
         }));
         return;
@@ -110,7 +207,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
 
       setState(prev => ({
         ...prev,
-        users: [...prev.users, response.data],
+        users: [...prev.users, serviceUserToUIUser(response.data)],
         success: 'User created successfully',
         saving: false,
         isFormOpen: false
@@ -124,16 +221,18 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     }
   };
 
-  const handleUpdateUser = async (userId: string, userData: Partial<Omit<User, 'id' | 'clientId' | 'createdAt' | 'updatedAt'>>) => {
+  const handleUpdateUser = async (userId: string, userData: Partial<UIUser>) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
       
-      const response = await clientService.updateUser(clientId, userId, userData);
+      const serviceUserData = uiUserToServiceUser(userData);
+
+      const response = await clientService.updateUser(decodedClientId, userId, serviceUserData);
       
-      if ('error' in response) {
+      if (!response.success) {
         setState(prev => ({ 
           ...prev,
-          error: response.error.message,
+          error: response.error?.message || 'Failed to update user',
           saving: false 
         }));
         return;
@@ -142,7 +241,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       setState(prev => ({
         ...prev,
         users: prev.users.map(user => 
-          user.id === Number(userId) ? response.data : user
+          user.id === parseInt(userId, 10) ? serviceUserToUIUser(response.data) : user
         ),
         success: 'User updated successfully',
         saving: false,
@@ -157,16 +256,16 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     }
   };
 
-  const handleDeleteUser = async (userId: string) => {
+  const handleDeleteUser = async (user: UIUser) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
       
-      const response = await clientService.deleteUser(clientId, userId);
+      const response = await clientService.deleteUser(decodedClientId, String(user.id));
       
-      if ('error' in response) {
+      if (!response.success) {
         setState(prev => ({ 
           ...prev,
-          error: response.error.message,
+          error: response.error?.message || 'Failed to delete user',
           saving: false 
         }));
         return;
@@ -174,7 +273,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
 
       setState(prev => ({
         ...prev,
-        users: prev.users.filter(user => user.id !== Number(userId)),
+        users: prev.users.filter(u => u.id !== user.id),
         success: 'User deleted successfully',
         saving: false
       }));
@@ -211,26 +310,26 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     }
   };
 
-  const handleEditUser = (user: User) => {
-    navigate(`/admin/client-management/${encodeId(clientId)}/users/${encodeId(String(user.id))}`);
+  const handleEditUser = (user: UIUser) => {
+    navigate(`/admin/client-management/${encodeId(decodedClientId)}/users/${encodeId(String(user.id))}`);
   };
 
   const handleCreateClick = () => {
-    navigate(`/admin/client-management/${encodeId(clientId)}/users/new`);
+    navigate(`/admin/client-management/${encodeId(decodedClientId)}/users/new`);
   };
 
-  const handleToggleLock = async (user: User) => {
+  const handleToggleLock = async (user: UIUser) => {
     try {
-      const newStatus = user.status === 'ACTIVE' ? 'LOCKED' : 'ACTIVE';
+      const newStatus = user.status === UserStatus.LOCKED ? 'ACTIVE' : 'LOCKED';
       
-      const response = await clientService.updateUser(clientId, String(user.id), {
+      const response = await clientService.updateUser(decodedClientId, String(user.id), {
         status: newStatus,
       });
       
-      if ('error' in response) {
+      if (!response.success) {
         setState(prev => ({ 
           ...prev,
-          error: response.error.message,
+          error: response.error?.message || 'Failed to update user status',
           saving: false 
         }));
         return;
@@ -239,7 +338,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       setState(prev => ({
         ...prev,
         users: prev.users.map(u =>
-          u.id === user.id ? { ...u, status: newStatus } : u
+          u.id === user.id ? serviceUserToUIUser(response.data) : u
         ),
         success: 'User status updated successfully',
         saving: false
@@ -293,6 +392,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
         onEdit={handleEditUser}
         onDelete={handleDeleteUser}
         onToggleLock={handleToggleLock}
+        clientId={decodedClientId}
       />
     </Box>
   );

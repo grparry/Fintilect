@@ -32,6 +32,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserGroup } from '../../../types/client.types';
 import { clientService } from '../../../services/clients.service';
 import { shouldUseMockData } from '../../../config/api.config';
+import { decodeId } from '../../../utils/idEncoder';
 
 interface GroupsListProps {
   clientId: string;
@@ -43,10 +44,28 @@ interface GroupsListState {
   error: string | null;
   deleteDialogOpen: boolean;
   groupToDelete: UserGroup | null;
-  sortBy: keyof UserGroup;
+  sortBy: 'name' | 'description' | 'members';
   sortDirection: 'asc' | 'desc';
   filterText: string;
 }
+
+const serviceGroupToUIGroup = (group: any, clientId: string): UserGroup => ({
+  id: group.id,
+  name: group.name,
+  description: group.description || '',
+  clientId,
+  roles: [],
+  permissions: group.permissions.map((id: string) => ({
+    id,
+    name: '',
+    description: '',
+    category: 'user',
+    actions: []
+  })),
+  members: group.members || [],
+  createdAt: group.createdAt,
+  updatedAt: group.updatedAt
+});
 
 const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
   const navigate = useNavigate();
@@ -77,7 +96,7 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
 
       setState(prev => ({
         ...prev,
-        groups: response.data,
+        groups: response.data.items.map(group => serviceGroupToUIGroup(group, clientId)),
         loading: false
       }));
     } catch (error) {
@@ -137,7 +156,7 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
     }));
   };
 
-  const handleSort = (field: keyof UserGroup) => {
+  const handleSort = (field: 'name' | 'description' | 'members') => {
     setState(prev => ({
       ...prev,
       sortBy: field,
@@ -155,17 +174,18 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
   const filteredAndSortedGroups = state.groups
     .filter(group => 
       group.name.toLowerCase().includes(state.filterText.toLowerCase()) ||
-      group.description.toLowerCase().includes(state.filterText.toLowerCase())
+      (group.description || '').toLowerCase().includes(state.filterText.toLowerCase())
     )
     .sort((a, b) => {
-      const aValue = a[state.sortBy];
-      const bValue = b[state.sortBy];
       const direction = state.sortDirection === 'asc' ? 1 : -1;
       
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return direction * aValue.localeCompare(bValue);
+      if (state.sortBy === 'members') {
+        return direction * ((a.members?.length || 0) - (b.members?.length || 0));
       }
-      return 0;
+      
+      const aValue = a[state.sortBy] || '';
+      const bValue = b[state.sortBy] || '';
+      return direction * aValue.localeCompare(bValue);
     });
 
   if (state.loading) {
@@ -206,7 +226,7 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
             <TableRow>
               <TableCell onClick={() => handleSort('name')}>Name</TableCell>
               <TableCell onClick={() => handleSort('description')}>Description</TableCell>
-              <TableCell>Members</TableCell>
+              <TableCell onClick={() => handleSort('members')}>Members</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>

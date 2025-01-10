@@ -10,7 +10,9 @@ import {
   Paper,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { Client } from '../../types/client.types';
+import { Client as UIClient } from '../../types/client.types';
+import { Client as ServiceClient } from '../../services/clients.service';
+import { ApiResponse } from '../../utils/api';
 import { clientService } from '../../services/clients.service';
 
 interface ContactInformationProps {
@@ -40,13 +42,17 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
     try {
       setLoading(true);
       setError(null);
-      const client = await clientService.getClient(clientId);
-      // Initialize contact info with default values if not present
-      setContactInfo({
-        name: client.contactName || '',
-        email: client.contactEmail || '',
-        phone: client.contactPhone || '',
-      });
+      const response: ApiResponse<ServiceClient> = await clientService.getClient(clientId);
+      
+      if (response.success) {
+        setContactInfo({
+          name: response.data.name || '',
+          email: '', // Contact email is not part of the service client
+          phone: '', // Contact phone is not part of the service client
+        });
+      } else {
+        setError(response.error?.message || 'Failed to load contact information');
+      }
     } catch (err) {
       setError('Failed to load contact information');
       console.error('Error loading contact info:', err);
@@ -75,12 +81,19 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
     try {
       setSaving(true);
       setError(null);
-      await clientService.updateClient(clientId, {
-        contactName: contactInfo.name,
-        contactEmail: contactInfo.email,
-        contactPhone: contactInfo.phone,
-      });
-      setSuccess('Contact information updated successfully');
+      const updateData = {
+        name: contactInfo.name,
+        type: 'ENTERPRISE' as const,
+        status: 'ACTIVE' as const,
+        environment: 'PRODUCTION' as const,
+      };
+      const response: ApiResponse<ServiceClient> = await clientService.updateClient(clientId, updateData);
+
+      if (response.success) {
+        setSuccess('Contact information updated successfully');
+      } else {
+        setError(response.error?.message || 'Failed to update contact information');
+      }
     } catch (err) {
       setError('Failed to update contact information');
       console.error('Error updating contact info:', err);

@@ -5,21 +5,23 @@ import {
   GridRowSelectionModel,
   GridSortModel,
   GridPaginationModel,
+  GridRowParams,
+  GridRenderCellParams,
+  GridValidRowModel,
 } from '@mui/x-data-grid';
 import { Box, Alert } from '@mui/material';
-import { PaginationParams } from '../../types/index';
 
-export interface Column<T> {
+export interface Column<T extends GridValidRowModel> {
   field: keyof T;
   headerName: string;
   width?: number;
   flex?: number;
   sortable?: boolean;
-  renderCell?: (params: any) => React.ReactElement;
+  renderCell?: (params: GridRenderCellParams<T>) => React.ReactElement;
   align?: 'left' | 'center' | 'right';
 }
 
-export interface DataTableProps<T> {
+export interface DataTableProps<T extends GridValidRowModel> {
   rows: T[];
   columns: Column<T>[];
   loading?: boolean;
@@ -39,7 +41,7 @@ export interface DataTableProps<T> {
   error?: string;
 }
 
-const DataTable = <T extends object>({
+const DataTable = <T extends GridValidRowModel>({
   rows,
   columns,
   loading = false,
@@ -64,7 +66,7 @@ const DataTable = <T extends object>({
   });
 
   // Convert our Column type to GridColDef
-  const gridColumns: GridColDef[] = columns.map((col) => ({
+  const gridColumns: GridColDef<T>[] = columns.map((col) => ({
     field: col.field as string,
     headerName: col.headerName,
     width: col.width,
@@ -72,6 +74,7 @@ const DataTable = <T extends object>({
     sortable: col.sortable ?? true,
     renderCell: col.renderCell,
     align: col.align,
+    type: 'string', // Add default type
   }));
 
   const handlePaginationModelChange = (newModel: GridPaginationModel) => {
@@ -87,7 +90,13 @@ const DataTable = <T extends object>({
   const handleSortModelChange = (model: GridSortModel) => {
     if (onSortChange && model.length > 0) {
       const { field, sort } = model[0];
-      onSortChange(field as keyof T, sort as 'asc' | 'desc');
+      onSortChange(field, sort as 'asc' | 'desc');
+    }
+  };
+
+  const handleRowClick = (params: GridRowParams<T>) => {
+    if (onRowClick) {
+      onRowClick(params.row);
     }
   };
 
@@ -101,7 +110,7 @@ const DataTable = <T extends object>({
 
   return (
     <Box sx={{ width: '100%', height: 400, ...style }} className={className}>
-      <DataGrid
+      <DataGrid<T>
         rows={rows}
         columns={gridColumns}
         loading={loading}
@@ -109,7 +118,7 @@ const DataTable = <T extends object>({
         onPaginationModelChange={handlePaginationModelChange}
         pageSizeOptions={rowsPerPageOptions}
         rowCount={rows.length}
-        onRowClick={onRowClick ? (params) => onRowClick(params.row as T) : undefined}
+        onRowClick={onRowClick ? handleRowClick : undefined}
         checkboxSelection={checkboxSelection}
         disableRowSelectionOnClick={disableSelectionOnClick}
         rowSelectionModel={selectionModel}

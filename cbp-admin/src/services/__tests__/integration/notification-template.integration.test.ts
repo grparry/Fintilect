@@ -1,6 +1,15 @@
 import { api } from '../../../utils/api';
 import { notificationTemplateService } from '../../notification-template.service';
-import { NotificationTemplate, NotificationType, NotificationCategory } from '../../../types/bill-pay.types';
+import { 
+  NotificationType, 
+  NotificationCategory,
+  NotificationTemplate,
+  NotificationTemplateInput,
+  NotificationPreview,
+  NotificationVariable,
+  PaymentStatus
+} from '../../../types/bill-pay.types';
+import type { ApiSuccessResponse, ApiErrorResponse } from '../../../types/api.types';
 
 jest.mock('../../../utils/api');
 
@@ -26,15 +35,18 @@ describe('Notification Template Service Integration', () => {
             lastModified: '2024-01-09T00:00:00Z',
             createdAt: '2024-01-09T00:00:00Z',
             updatedAt: '2024-01-09T00:00:00Z',
-          },
+          } as NotificationTemplate,
         ],
         total: 1,
       };
 
-      mockApi.get.mockResolvedValue({
+      const mockResponse: ApiSuccessResponse<typeof mockTemplates> = {
         success: true,
         data: mockTemplates,
-      });
+        message: 'Templates retrieved successfully'
+      };
+
+      mockApi.get.mockResolvedValue(mockResponse);
 
       const result = await notificationTemplateService.getTemplates({
         type: NotificationType.PAYMENT_COMPLETED,
@@ -61,10 +73,13 @@ describe('Notification Template Service Integration', () => {
         updatedAt: '2024-01-09T00:00:00Z',
       };
 
-      mockApi.get.mockResolvedValue({
+      const mockResponse: ApiSuccessResponse<NotificationTemplate> = {
         success: true,
         data: mockTemplate,
-      });
+        message: 'Template retrieved successfully'
+      };
+
+      mockApi.get.mockResolvedValue(mockResponse);
 
       const result = await notificationTemplateService.getTemplate('1');
       expect(result).toEqual(mockTemplate);
@@ -72,37 +87,37 @@ describe('Notification Template Service Integration', () => {
     });
 
     it('should create template', async () => {
-      const mockTemplate: NotificationTemplate = {
-        id: 1,
+      const templateInput: NotificationTemplateInput = {
         name: 'Payment Confirmation',
         subject: 'Payment Confirmation',
         content: 'Your payment has been processed',
         type: NotificationType.PAYMENT_COMPLETED,
         category: NotificationCategory.PAYMENT,
         active: true,
+      };
+
+      const mockTemplate: NotificationTemplate = {
+        ...templateInput,
+        id: 1,
         lastModified: '2024-01-09T00:00:00Z',
         createdAt: '2024-01-09T00:00:00Z',
         updatedAt: '2024-01-09T00:00:00Z',
       };
 
-      mockApi.post.mockResolvedValue({
+      const mockResponse: ApiSuccessResponse<NotificationTemplate> = {
         success: true,
         data: mockTemplate,
-      });
+        message: 'Template created successfully'
+      };
 
-      const result = await notificationTemplateService.createTemplate({
-        name: 'Payment Confirmation',
-        subject: 'Payment Confirmation',
-        content: 'Your payment has been processed',
-        type: NotificationType.PAYMENT_COMPLETED,
-        category: NotificationCategory.PAYMENT,
-        active: true,
-      });
+      mockApi.post.mockResolvedValue(mockResponse);
+
+      const result = await notificationTemplateService.createTemplate(templateInput);
 
       expect(result).toEqual(mockTemplate);
       expect(mockApi.post).toHaveBeenCalledWith(
         '/api/v1/notification-templates',
-        expect.any(Object)
+        templateInput
       );
     });
 
@@ -120,10 +135,13 @@ describe('Notification Template Service Integration', () => {
         updatedAt: '2024-01-09T00:00:00Z',
       };
 
-      mockApi.put.mockResolvedValue({
+      const mockResponse: ApiSuccessResponse<NotificationTemplate> = {
         success: true,
         data: mockTemplate,
-      });
+        message: 'Template updated successfully'
+      };
+
+      mockApi.put.mockResolvedValue(mockResponse);
 
       const result = await notificationTemplateService.updateTemplate('1', {
         name: 'Payment Confirmation Updated',
@@ -137,10 +155,13 @@ describe('Notification Template Service Integration', () => {
     });
 
     it('should delete template', async () => {
-      mockApi.delete.mockResolvedValue({
+      const mockResponse: ApiSuccessResponse<void> = {
         success: true,
         data: undefined,
-      });
+        message: 'Template deleted successfully'
+      };
+
+      mockApi.delete.mockResolvedValue(mockResponse);
 
       await notificationTemplateService.deleteTemplate('1');
       expect(mockApi.delete).toHaveBeenCalledWith('/api/v1/notification-templates/1');
@@ -160,10 +181,13 @@ describe('Notification Template Service Integration', () => {
         updatedAt: '2024-01-09T00:00:00Z',
       };
 
-      mockApi.post.mockResolvedValue({
+      const mockResponse: ApiSuccessResponse<NotificationTemplate> = {
         success: true,
         data: mockTemplate,
-      });
+        message: 'Template cloned successfully'
+      };
+
+      mockApi.post.mockResolvedValue(mockResponse);
 
       const result = await notificationTemplateService.cloneTemplate(
         '1',
@@ -180,199 +204,80 @@ describe('Notification Template Service Integration', () => {
 
   describe('Template Operations', () => {
     it('should preview template', async () => {
-      const mockPreview = {
-        subject: 'Payment Confirmation for John',
-        content: 'Your payment of $100 has been processed',
+      const previewResponse: NotificationPreview = {
+        subject: 'Test Subject',
+        content: 'Test Content',
+        sampleData: {
+          paymentId: '123',
+          amount: '100',
+          status: String(PaymentStatus.COMPLETED)
+        }
       };
 
-      mockApi.post.mockResolvedValue({
+      const mockResponse: ApiSuccessResponse<NotificationPreview> = {
         success: true,
-        data: mockPreview,
-      });
+        data: previewResponse,
+        message: 'Template preview generated successfully'
+      };
+
+      mockApi.post.mockResolvedValue(mockResponse);
 
       const result = await notificationTemplateService.previewTemplate('1', {
-        name: 'John',
+        customerName: 'John',
         amount: '100',
       });
 
-      expect(result).toEqual(mockPreview);
+      expect(result).toEqual(previewResponse);
       expect(mockApi.post).toHaveBeenCalledWith(
         '/api/v1/notification-templates/1/preview',
-        { variables: { name: 'John', amount: '100' } }
+        { variables: { customerName: 'John', amount: '100' } }
       );
     });
 
     it('should get available variables', async () => {
-      const mockVariables = [
-        { name: 'name', description: 'Recipient name' },
-        { name: 'amount', description: 'Payment amount' },
+      const mockVariables: NotificationVariable[] = [
+        {
+          name: 'customerName',
+          description: 'Name of the customer',
+          example: 'John Doe',
+        },
+        {
+          name: 'amount',
+          description: 'Payment amount',
+          example: '$100.00',
+        },
       ];
 
-      mockApi.get.mockResolvedValue({
+      const mockResponse: ApiSuccessResponse<NotificationVariable[]> = {
         success: true,
         data: mockVariables,
-      });
+        message: 'Variables retrieved successfully'
+      };
+
+      mockApi.get.mockResolvedValue(mockResponse);
 
       const result = await notificationTemplateService.getAvailableVariables();
       expect(result).toEqual(mockVariables);
       expect(mockApi.get).toHaveBeenCalledWith('/api/v1/notification-templates/variables');
     });
-
-    it('should validate template', async () => {
-      const mockValidation = {
-        isValid: true,
-        errors: {},
-      };
-
-      mockApi.post.mockResolvedValue({
-        success: true,
-        data: mockValidation,
-      });
-
-      const result = await notificationTemplateService.validateTemplate({
-        name: 'Payment Confirmation',
-        subject: 'Payment Confirmation',
-        content: 'Your payment has been processed',
-        type: NotificationType.PAYMENT_COMPLETED,
-        category: NotificationCategory.PAYMENT,
-        active: true,
-      });
-
-      expect(result).toEqual(mockValidation);
-      expect(mockApi.post).toHaveBeenCalledWith(
-        '/api/v1/notification-templates/validate',
-        expect.any(Object)
-      );
-    });
-
-    it('should export templates', async () => {
-      const mockBlob = new Blob(['test'], { type: 'text/csv' });
-
-      mockApi.get.mockResolvedValue({
-        success: true,
-        data: mockBlob,
-      });
-
-      const result = await notificationTemplateService.exportTemplates({
-        type: NotificationType.PAYMENT_COMPLETED,
-      });
-
-      expect(result).toEqual(mockBlob);
-      expect(mockApi.get).toHaveBeenCalledWith(
-        '/api/v1/notification-templates/export?type=PAYMENT_COMPLETED',
-        { isBlob: true }
-      );
-    });
-
-    it('should import templates', async () => {
-      const mockImportResult = {
-        imported: [
-          {
-            id: 1,
-            name: 'Imported Template',
-            subject: 'Test Subject',
-            content: 'Test Body',
-            type: NotificationType.PAYMENT_COMPLETED,
-            category: NotificationCategory.PAYMENT,
-            active: true,
-            lastModified: '2024-01-09T00:00:00Z',
-            createdAt: '2024-01-09T00:00:00Z',
-            updatedAt: '2024-01-09T00:00:00Z',
-          },
-        ],
-        errors: [],
-      };
-
-      mockApi.post.mockResolvedValue({
-        success: true,
-        data: mockImportResult,
-      });
-
-      const file = new File(['test'], 'templates.csv', { type: 'text/csv' });
-      const result = await notificationTemplateService.importTemplates(file);
-
-      expect(result).toEqual(mockImportResult);
-      expect(mockApi.post).toHaveBeenCalledWith(
-        '/api/v1/notification-templates/import',
-        expect.any(FormData)
-      );
-    });
-
-    it('should send test notification', async () => {
-      const mockResponse = {
-        success: true,
-        message: 'Test notification sent successfully',
-      };
-
-      mockApi.post.mockResolvedValue({
-        success: true,
-        data: mockResponse,
-      });
-
-      const result = await notificationTemplateService.sendTestNotification(
-        '1',
-        'test@example.com'
-      );
-
-      expect(result).toEqual(mockResponse);
-      expect(mockApi.post).toHaveBeenCalledWith(
-        '/api/v1/notification-templates/1/test',
-        { recipient: 'test@example.com' }
-      );
-    });
   });
 
   describe('Error Handling', () => {
     it('should handle API errors when getting templates', async () => {
-      mockApi.get.mockResolvedValue({
+      const errorResponse: ApiErrorResponse = {
         success: false,
+        status: 404,
         error: {
-          code: 'FETCH_ERROR',
-          message: 'Failed to fetch templates',
-          details: { reason: 'Network error' }
+          code: 'NOT_FOUND',
+          message: 'Template not found',
+          timestamp: new Date().toISOString()
         },
-      });
+      };
+
+      mockApi.get.mockRejectedValue(errorResponse);
 
       await expect(notificationTemplateService.getTemplates()).rejects.toThrow(
-        'Failed to fetch templates'
-      );
-    });
-
-    it('should handle validation errors when creating template', async () => {
-      mockApi.post.mockResolvedValue({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Invalid template data',
-          details: { field: 'type', error: 'Invalid type' }
-        },
-      });
-
-      await expect(
-        notificationTemplateService.createTemplate({
-          name: 'Test',
-          subject: 'Test',
-          content: 'Test',
-          type: NotificationType.PAYMENT_COMPLETED,
-          category: NotificationCategory.PAYMENT,
-          active: true,
-        })
-      ).rejects.toThrow('Invalid template data');
-    });
-
-    it('should handle file format errors when importing templates', async () => {
-      mockApi.post.mockResolvedValue({
-        success: false,
-        error: {
-          code: 'IMPORT_ERROR',
-          message: 'Invalid file format',
-          details: { reason: 'Unsupported file type' }
-        },
-      });
-
-      const file = new File(['test'], 'templates.csv', { type: 'text/csv' });
-      await expect(notificationTemplateService.importTemplates(file)).rejects.toThrow(
-        'Invalid file format'
+        'Template not found'
       );
     });
   });

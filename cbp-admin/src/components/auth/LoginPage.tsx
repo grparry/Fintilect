@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
 
-  const formFields: FormField[] = [
+  const formFields: FormField<LoginFormData>[] = [
     {
       name: 'username',
       label: 'Username',
@@ -101,10 +101,10 @@ const LoginPage: React.FC = () => {
               {error.message}
             </Alert>
           )}
-          <Form
+          <Form<LoginFormData>
             fields={formFields}
             onSubmit={handleSubmit}
-            submitLabel="Login"
+            submitText="Login"
             loading={loading}
           />
         </Paper>

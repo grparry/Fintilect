@@ -20,7 +20,14 @@ const urlSegmentTitles: Record<string, string> = {
   'audit': 'Audit',
   'bill-pay': 'Bill Pay',
   'emerge': 'Emerge Admin',
-  'dev': 'Development'
+  'dev': 'Development',
+  [Symbol.iterator]: function* () {
+    for (const key in this) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
+        yield [key, this[key]];
+      }
+    }
+  }
 };
 
 interface CachedNames {
@@ -76,7 +83,7 @@ export default function Breadcrumbs() {
   // Function to get display name for a segment
   const getDisplayName = (segment: string, isUser: boolean = false): string => {
     if (!shouldBeEncodedId(segment)) {
-      return segment;
+      return urlSegmentTitles[segment] || segment;
     }
 
     const cache = isUser ? cachedNames.users : cachedNames.clients;
@@ -99,14 +106,18 @@ export default function Breadcrumbs() {
 
     try {
       const decodedId = decodeId(encodedId);
-      const client = await clientService.getClient(decodedId);
-      setCachedNames(prev => ({
-        ...prev,
-        clients: {
-          ...prev.clients,
-          [encodedId]: client.name
-        }
-      }));
+      const response = await clientService.getClient(decodedId);
+      if (response.success) {
+        setCachedNames(prev => ({
+          ...prev,
+          clients: {
+            ...prev.clients,
+            [encodedId]: response.data.name
+          }
+        }));
+      } else {
+        throw new Error(response.error?.message || 'Failed to fetch client');
+      }
     } catch (err) {
       console.error('Error fetching client name:', err);
       setCachedNames(prev => ({
@@ -134,14 +145,18 @@ export default function Breadcrumbs() {
     try {
       const decodedClientId = decodeId(clientId);
       const decodedUserId = decodeId(userId);
-      const user = await clientService.getUser(decodedClientId, decodedUserId);
-      setCachedNames(prev => ({
-        ...prev,
-        users: {
-          ...prev.users,
-          [userId]: `${user.firstName} ${user.lastName}`
-        }
-      }));
+      const response = await clientService.getUser(decodedClientId, decodedUserId);
+      if (response.success) {
+        setCachedNames(prev => ({
+          ...prev,
+          users: {
+            ...prev.users,
+            [userId]: `${response.data.firstName} ${response.data.lastName}`
+          }
+        }));
+      } else {
+        throw new Error(response.error?.message || 'Failed to fetch user');
+      }
     } catch (err) {
       console.error('Error fetching user name:', err);
       setCachedNames(prev => ({
@@ -194,29 +209,27 @@ export default function Breadcrumbs() {
   const breadcrumbItems = filteredSegments.map((segment, index) => {
     const pathSegments = ['admin', ...filteredSegments.slice(0, index + 1)];
     const fullPath = '/' + pathSegments.join('/');
-    const route = getAllRoutes().find(r => r.path === fullPath);
+    const routes = getAllRoutes();
+    const route = routes.find(r => r.path === fullPath);
     
     let title;
     if (index === 0 && segment === 'admin') {
       title = 'Home';
-    } else if (shouldBeEncodedId(segment)) {
-      const isUserSection = filteredSegments.includes('users');
-      const isSecondEncodedId = filteredSegments.findIndex(s => shouldBeEncodedId(s)) !== index;
-      title = getDisplayName(segment, isUserSection && isSecondEncodedId);
+    } else if (isEncodedId(segment)) {
+      title = getDisplayName(segment, fullPath.includes('/users/'));
     } else {
-      title = route?.title || urlSegmentTitles[segment] || 
-              segment.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+      title = urlSegmentTitles[segment] || segment;
     }
 
     const isLast = index === filteredSegments.length - 1;
 
     return isLast ? (
-      <Typography key={fullPath} color="text.primary">
+      <Typography key={segment} color="text.primary">
         {title}
       </Typography>
     ) : (
       <Link
-        key={fullPath}
+        key={segment}
         component={RouterLink}
         to={fullPath}
         color="inherit"
@@ -228,8 +241,10 @@ export default function Breadcrumbs() {
   });
 
   return (
-    <MUIBreadcrumbs aria-label="breadcrumb">
-      {breadcrumbItems}
-    </MUIBreadcrumbs>
+    <Box sx={{ p: 2 }}>
+      <MUIBreadcrumbs separator="›">
+        {breadcrumbItems}
+      </MUIBreadcrumbs>
+    </Box>
   );
 }

@@ -2,13 +2,36 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { renderWithRouter } from '../../../../test-utils/navigation';
 import ClientManagementWrapper from '../ClientManagementWrapper';
 import { act } from 'react-dom/test-utils';
+import type { Client, ClientType, ClientStatus, ClientEnvironment } from '../../../../services/clients.service';
+import type { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '../../../../utils/api';
 
 // Mock the idEncoder utility
 jest.mock('../../../../utils/idEncoder', () => ({
-  decodeId: jest.fn((id) => id === 'encoded123' ? 'decoded123' : null)
+  decodeId: jest.fn((id) => id === 'encoded123' ? '1' : null)
 }));
 
 describe('ClientManagementWrapper', () => {
+  const mockClient: Client = {
+    id: '1',
+    name: 'Test Client',
+    status: 'ACTIVE',
+    type: 'ENTERPRISE',
+    environment: 'DEVELOPMENT'
+  };
+
+  const mockSuccessResponse: ApiSuccessResponse<Client> = {
+    success: true,
+    data: mockClient
+  };
+
+  const mockErrorResponse: ApiErrorResponse = {
+    success: false,
+    error: {
+      code: 'NOT_FOUND',
+      message: 'Client not found'
+    }
+  };
+
   beforeEach(() => {
     (global.fetch as jest.Mock).mockClear();
   });
@@ -29,7 +52,7 @@ describe('ClientManagementWrapper', () => {
     (global.fetch as jest.Mock).mockImplementationOnce(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({ id: 'decoded123', name: 'Test Client' }),
+        json: () => Promise.resolve(mockSuccessResponse),
       })
     );
 
@@ -51,6 +74,7 @@ describe('ClientManagementWrapper', () => {
       Promise.resolve({
         ok: false,
         status: 404,
+        json: () => Promise.resolve(mockErrorResponse)
       })
     );
 

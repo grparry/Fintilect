@@ -17,26 +17,26 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { User, UserGroup } from '../../../types/client.types';
+import { User as UIUser, UserGroup as UIUserGroup, UserStatus } from '../../../types/client.types';
 import dayjs from 'dayjs';
 import { encodeId } from '../../../utils/idEncoder';
 import { useNavigate } from 'react-router-dom';
 
 interface UserTableProps {
-  users: User[];
-  groups: UserGroup[];
-  onEdit: (user: User) => void;
-  onDelete: (user: User) => void;
-  onToggleLock: (user: User) => void;
+  users: UIUser[];
+  groups: UIUserGroup[];
+  onEdit: (user: UIUser) => void;
+  onDelete: (user: UIUser) => void;
+  onToggleLock: (user: UIUser) => void;
   clientId: string;
 }
 
-const statusColors = {
-  Active: 'success',
-  Inactive: 'error',
-  Pending: 'warning',
-  Locked: 'error',
-} as const;
+const statusColors: Record<string, "success" | "error" | "warning"> = {
+  ACTIVE: 'success',
+  INACTIVE: 'error',
+  PENDING: 'warning',
+  LOCKED: 'error',
+};
 
 const roleColors: Record<string, "error" | "default" | "warning" | "info"> = {
   Admin: 'error',
@@ -44,7 +44,7 @@ const roleColors: Record<string, "error" | "default" | "warning" | "info"> = {
   Manager: 'warning',
   Support: 'info',
   ReadOnly: 'default',
-} as const;
+};
 
 const UserTable: React.FC<UserTableProps> = ({
   users,
@@ -56,23 +56,12 @@ const UserTable: React.FC<UserTableProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleEdit = (user: User) => {
-    console.log('=== Navigation Debug Start ===');
-    console.log('1. Current clientId:', clientId);
-    
+  const handleEdit = (user: UIUser) => {
     const encodedClientId = encodeId(clientId);
-    console.log('2. Encoded clientId:', encodedClientId);
-    
     const encodedUserId = encodeId(user.id);
-    console.log('3. Encoded userId:', encodedUserId);
-    
     const targetPath = `/admin/client-management/${encodedClientId}/users/${encodedUserId}`;
-    console.log('4. Target navigation path:', targetPath);
-    
-    console.log('5. About to navigate...');
     navigate(targetPath);
-    onEdit(user); // Call the onEdit callback as well
-    console.log('=== Navigation Debug End ===');
+    onEdit(user);
   };
 
   if (users.length === 0) {
@@ -112,7 +101,7 @@ const UserTable: React.FC<UserTableProps> = ({
                 <Chip
                   label={user.role}
                   size="small"
-                  color={roleColors[user.role] as any}
+                  color={roleColors[user.role] || 'default'}
                   variant="outlined"
                 />
               </TableCell>
@@ -120,7 +109,7 @@ const UserTable: React.FC<UserTableProps> = ({
                 <Chip
                   label={user.status}
                   size="small"
-                  color={statusColors[user.status] as any}
+                  color={statusColors[user.status] || 'default'}
                 />
               </TableCell>
               <TableCell>{user.department || '-'}</TableCell>
@@ -142,10 +131,10 @@ const UserTable: React.FC<UserTableProps> = ({
                     </IconButton>
                   </Tooltip>
                   <Tooltip
-                    title={user.status === 'Locked' ? 'Unlock user' : 'Lock user'}
+                    title={user.status === UserStatus.LOCKED ? 'Unlock user' : 'Lock user'}
                   >
                     <IconButton size="small" onClick={() => onToggleLock(user)}>
-                      {user.status === 'Locked' ? (
+                      {user.status === UserStatus.LOCKED ? (
                         <LockOpenIcon fontSize="small" />
                       ) : (
                         <LockIcon fontSize="small" />

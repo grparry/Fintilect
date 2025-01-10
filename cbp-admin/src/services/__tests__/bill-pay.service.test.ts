@@ -12,8 +12,9 @@ import {
   PaymentConfirmationRequest,
   PaymentConfirmationResponse,
   Priority,
+  AuditEventStatus,
 } from '../../types/bill-pay.types';
-import { ApiPaginatedResponse, ApiSuccessResponse } from '../../types/api.types';
+import { ApiSuccessResponse, ApiPaginationMeta } from '../../types/api.types';
 
 jest.mock('../api');
 const mockedApi = api as jest.Mocked<typeof api>;
@@ -36,7 +37,7 @@ describe('BillPayService', () => {
       amount: 1000,
       status: PaymentStatus.PENDING,
     },
-    status: 'Success',
+    status: AuditEventStatus.COMPLETED,
   };
 
   const mockConfig: BillPayConfig = {
@@ -81,6 +82,23 @@ describe('BillPayService', () => {
       [PaymentStatus.COMPLETED]: 5,
       [PaymentStatus.FAILED]: 0,
       [PaymentStatus.CANCELLED]: 0,
+      [PaymentStatus.EXPIRED]: 0,
+      [PaymentStatus.PENDING_APPROVAL]: 0,
+      [PaymentStatus.DRAFT]: 0,
+      [PaymentStatus.SUBMITTED]: 0,
+      [PaymentStatus.SCHEDULED]: 0,
+      [PaymentStatus.RETURNED]: 0,
+      [PaymentStatus.STOP_PAYMENT]: 0,
+      [PaymentStatus.REVERSED]: 0,
+      [PaymentStatus.REFUNDED]: 0,
+      [PaymentStatus.RESENT]: 0,
+      [PaymentStatus.REINITIATED]: 0,
+      [PaymentStatus.PENDING_REVERSAL]: 0,
+      [PaymentStatus.PENDING_REFUND]: 0,
+      [PaymentStatus.PENDING_RETURN]: 0,
+      [PaymentStatus.PENDING_STOP_PAYMENT]: 0,
+      [PaymentStatus.PENDING_RESEND]: 0,
+      [PaymentStatus.PENDING_REINITIATE]: 0,
     },
     recentActivity: [
       {
@@ -94,31 +112,34 @@ describe('BillPayService', () => {
   };
 
   describe('getAuditLogs', () => {
-    const mockPaginatedMeta = {
+    const mockMeta: ApiPaginationMeta = {
       currentPage: 1,
       totalPages: 2,
       pageSize: 10,
       totalCount: 15,
       hasNextPage: true,
       hasPreviousPage: false,
-      timestamp: '2025-01-08T12:00:00Z',
-      requestId: 'test-request-1',
     };
 
-    const mockPaginatedResponse: ApiPaginatedResponse<AuditLog[]> = {
+    const mockResponse: ApiSuccessResponse<{
+      data: AuditLog[];
+      meta: ApiPaginationMeta;
+    }> = {
       success: true,
-      data: [mockAuditLog],
-      meta: mockPaginatedMeta,
+      data: {
+        data: [mockAuditLog],
+        meta: mockMeta,
+      },
+      meta: {
+        timestamp: '2025-01-08T12:00:00Z',
+        requestId: 'test-request-1',
+      },
     };
 
     it('should fetch audit logs with pagination', async () => {
       mockedApi.get.mockResolvedValueOnce({
         success: true,
-        data: mockPaginatedResponse,
-        meta: {
-          timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-1',
-        },
+        data: mockResponse,
       });
 
       const params = {
@@ -156,10 +177,6 @@ describe('BillPayService', () => {
             requestId: 'test-request-2',
           },
         },
-        meta: {
-          timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-2',
-        },
       });
 
       const result = await billPayService.getConfig();
@@ -183,10 +200,6 @@ describe('BillPayService', () => {
             requestId: 'test-request-3',
           },
         },
-        meta: {
-          timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-3',
-        },
       });
 
       const result = await billPayService.updateConfig({ maxTransactionLimit: 75000 });
@@ -209,10 +222,6 @@ describe('BillPayService', () => {
             timestamp: '2025-01-08T12:00:00Z',
             requestId: 'test-request-4',
           },
-        },
-        meta: {
-          timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-4',
         },
       });
 
@@ -243,10 +252,6 @@ describe('BillPayService', () => {
             requestId: 'test-request-5',
           },
         },
-        meta: {
-          timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-5',
-        },
       });
 
       await billPayService.enableBillPay();
@@ -267,10 +272,6 @@ describe('BillPayService', () => {
             requestId: 'test-request-6',
           },
         },
-        meta: {
-          timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-6',
-        },
       });
 
       await billPayService.disableBillPay();
@@ -290,10 +291,6 @@ describe('BillPayService', () => {
             timestamp: '2025-01-08T12:00:00Z',
             requestId: 'test-request-7',
           },
-        },
-        meta: {
-          timestamp: '2025-01-08T12:00:00Z',
-          requestId: 'test-request-7',
         },
       });
 
@@ -610,16 +607,19 @@ describe('BillPayService', () => {
 
       mockedApi.get.mockResolvedValueOnce({
         success: true,
-        data: mockSearchResponse,
+        data: {
+          success: true,
+          data: mockSearchResponse,
+          meta: { timestamp: '2025-01-08T12:00:00Z' },
+        },
       });
 
       const result = await billPayService.searchPayments(mockFilters);
       
       expect(result).toEqual(mockSearchResponse);
-      expect(mockedApi.get).toHaveBeenCalledWith(
-        '/api/v2/bill-pay/payments/search',
-        { params: mockFilters }
-      );
+      expect(mockedApi.get).toHaveBeenCalledWith('/api/v2/bill-pay/payments/search', {
+        params: mockFilters,
+      });
     });
   });
 });

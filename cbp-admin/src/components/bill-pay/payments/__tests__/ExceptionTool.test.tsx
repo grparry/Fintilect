@@ -1,10 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ExceptionTool from '../ExceptionTool';
-import { paymentApi } from '../../../../services/api/payment.api';
-import { PaymentException, ExceptionStatus, Priority } from '../../../../types/bill-pay.types';
+import { PaymentException, ExceptionStatus, ExceptionResolution } from '../../../../types/bill-pay.types';
+import { ApiSuccessResponse } from '../../../../types/api.types';
 
-jest.mock('../../../../services/api/payment.api');
 jest.mock('../../../../hooks/useAuth', () => ({
   useAuth: () => ({
     user: { id: 'test-user', name: 'Test User' }
@@ -12,21 +11,35 @@ jest.mock('../../../../hooks/useAuth', () => ({
 }));
 
 describe('ExceptionTool Component', () => {
-  const mockExceptions = [
+  const mockExceptions: PaymentException[] = [
     {
       id: '1',
       paymentId: 'payment-1',
       type: 'VALIDATION',
-      status: 'PENDING',
-      description: 'Invalid account number',
-      createdAt: '2024-01-01T00:00:00Z'
+      status: ExceptionStatus.PENDING,
+      message: 'Invalid account number',
+      details: { accountNumber: '123456789' },
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z'
     }
   ];
 
   const mockApi = {
-    getPaymentExceptions: jest.fn().mockResolvedValue(mockExceptions),
-    resolvePaymentException: jest.fn().mockResolvedValue({ success: true, message: 'Exception resolved' }),
-    retryPaymentException: jest.fn().mockResolvedValue({ success: true, message: 'Exception retried' })
+    getExceptions: jest.fn().mockResolvedValue({
+      success: true,
+      data: mockExceptions,
+      message: 'Exceptions retrieved successfully'
+    } as ApiSuccessResponse<PaymentException[]>),
+    resolveException: jest.fn().mockResolvedValue({
+      success: true,
+      data: undefined,
+      message: 'Exception resolved'
+    } as ApiSuccessResponse<void>),
+    retryException: jest.fn().mockResolvedValue({
+      success: true,
+      data: undefined,
+      message: 'Exception retried'
+    } as ApiSuccessResponse<void>)
   };
 
   const mockOnClose = jest.fn();
@@ -38,9 +51,9 @@ describe('ExceptionTool Component', () => {
   it('renders the component and fetches exceptions', async () => {
     render(<ExceptionTool api={mockApi} onClose={mockOnClose} />);
 
-    expect(screen.getByText('Payment Exceptions')).toBeInTheDocument();
+    expect(screen.getByText('Exception Tool')).toBeInTheDocument();
     await waitFor(() => {
-      expect(mockApi.getPaymentExceptions).toHaveBeenCalled();
+      expect(mockApi.getExceptions).toHaveBeenCalled();
       expect(screen.getByText('Invalid account number')).toBeInTheDocument();
     });
   });
@@ -59,11 +72,16 @@ describe('ExceptionTool Component', () => {
     const submitButton = screen.getByText(/submit/i);
     fireEvent.click(submitButton);
 
+    const expectedResolution: ExceptionResolution = {
+      type: 'manual',
+      action: 'retry',
+      notes: 'Fixed account number',
+      userId: 'test-user',
+      timestamp: expect.any(String)
+    };
+
     await waitFor(() => {
-      expect(mockApi.resolvePaymentException).toHaveBeenCalledWith('1', {
-        type: 'manual',
-        notes: 'Fixed account number'
-      });
+      expect(mockApi.resolveException).toHaveBeenCalledWith('1', expectedResolution);
     });
   });
 
@@ -76,7 +94,7 @@ describe('ExceptionTool Component', () => {
     });
 
     await waitFor(() => {
-      expect(mockApi.retryPaymentException).toHaveBeenCalledWith('1');
+      expect(mockApi.retryException).toHaveBeenCalledWith('1');
       expect(screen.getByText('Exception retried')).toBeInTheDocument();
     });
   });

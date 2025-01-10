@@ -5,6 +5,7 @@ export const mockGroups: UserGroup[] = [
     id: '1',
     name: 'System Administrators',
     description: 'Full system access',
+    clientId: '1',
     members: ['1', '2'],
     roles: [],  // Will be populated from client service
     permissions: [
@@ -30,6 +31,7 @@ export const mockGroups: UserGroup[] = [
     id: '2',
     name: 'User Managers',
     description: 'Can manage users and permissions',
+    clientId: '1',
     members: ['3', '4'],
     roles: [],  // Will be populated from client service
     permissions: [

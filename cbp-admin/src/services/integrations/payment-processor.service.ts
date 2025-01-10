@@ -6,6 +6,7 @@ import {
   ProcessorResponse,
   ProcessorWebhookEvent,
   ProcessorConfig,
+  NotificationType,
 } from '../../types/bill-pay.types';
 import { ApiSuccessResponse } from '../../types/api.types';
 import { billPayService } from '../bill-pay.service';
@@ -76,7 +77,7 @@ class PaymentProcessorService {
       // Send notification if needed
       if (response.data.requiresApproval) {
         await notificationService.sendNotification({
-          type: 'PAYMENT_APPROVAL_REQUIRED',
+          type: NotificationType.PAYMENT_APPROVAL_REQUIRED,
           recipientId: payment.clientId,
           data: {
             paymentId: payment.id,
@@ -109,7 +110,7 @@ class PaymentProcessorService {
 
       // Send error notification
       await notificationService.sendNotification({
-        type: 'PAYMENT_FAILED',
+        type: NotificationType.PAYMENT_FAILED,
         recipientId: payment.clientId,
         data: {
           paymentId: payment.id,
@@ -144,7 +145,7 @@ class PaymentProcessorService {
       switch (paymentStatus) {
         case PaymentStatus.COMPLETED:
           await notificationService.sendNotification({
-            type: 'PAYMENT_COMPLETED',
+            type: NotificationType.PAYMENT_COMPLETED,
             recipientId: metadata.clientId,
             data: {
               paymentId,
@@ -157,7 +158,7 @@ class PaymentProcessorService {
 
         case PaymentStatus.FAILED:
           await notificationService.sendNotification({
-            type: 'PAYMENT_FAILED',
+            type: NotificationType.PAYMENT_FAILED,
             recipientId: metadata.clientId,
             data: {
               paymentId,
@@ -170,7 +171,7 @@ class PaymentProcessorService {
 
         case PaymentStatus.PENDING_APPROVAL:
           await notificationService.sendNotification({
-            type: 'PAYMENT_APPROVAL_REQUIRED',
+            type: NotificationType.PAYMENT_APPROVAL_REQUIRED,
             recipientId: metadata.clientId,
             data: {
               paymentId,

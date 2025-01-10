@@ -69,7 +69,7 @@ export const mockUsers: User[] = [
     lastName: 'User',
     email: 'admin@example.com',
     role: UserRole.Admin,
-    status: UserStatus.Active,
+    status: UserStatus.ACTIVE,
     department: 'IT Administration',
     lastLogin: new Date().toISOString(),
     locked: false
@@ -81,7 +81,7 @@ export const mockUsers: User[] = [
     lastName: 'Smith',
     email: 'john.smith@example.com',
     role: UserRole.User,
-    status: UserStatus.Active,
+    status: UserStatus.ACTIVE,
     department: 'Operations',
     lastLogin: new Date().toISOString(),
     locked: false
@@ -93,7 +93,7 @@ export const mockUsers: User[] = [
     lastName: 'Team',
     email: 'support@example.com',
     role: UserRole.Support,
-    status: UserStatus.Active,
+    status: UserStatus.ACTIVE,
     department: 'Customer Service',
     lastLogin: new Date().toISOString(),
     locked: false
@@ -105,7 +105,7 @@ export const mockUsers: User[] = [
     lastName: 'Doe',
     email: 'jane.doe@example.com',
     role: UserRole.Manager,
-    status: UserStatus.Active,
+    status: UserStatus.ACTIVE,
     department: 'Management',
     lastLogin: new Date().toISOString(),
     locked: false
@@ -181,6 +181,7 @@ export const mockGroups: UserGroup[] = [
     id: '1',
     name: 'Administrators',
     description: 'System administrators group',
+    clientId: '1',
     roles: [],
     permissions: [],
     members: [],

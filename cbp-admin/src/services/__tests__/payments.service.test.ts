@@ -221,7 +221,24 @@ describe('PaymentsService', () => {
           [PaymentStatus.PROCESSING]: 0,
           [PaymentStatus.COMPLETED]: 0,
           [PaymentStatus.FAILED]: 0,
-          [PaymentStatus.CANCELLED]: 0
+          [PaymentStatus.CANCELLED]: 0,
+          [PaymentStatus.EXPIRED]: 0,
+          [PaymentStatus.PENDING_APPROVAL]: 0,
+          [PaymentStatus.DRAFT]: 0,
+          [PaymentStatus.SUBMITTED]: 0,
+          [PaymentStatus.SCHEDULED]: 0,
+          [PaymentStatus.RETURNED]: 0,
+          [PaymentStatus.STOP_PAYMENT]: 0,
+          [PaymentStatus.REVERSED]: 0,
+          [PaymentStatus.REFUNDED]: 0,
+          [PaymentStatus.RESENT]: 0,
+          [PaymentStatus.REINITIATED]: 0,
+          [PaymentStatus.PENDING_REVERSAL]: 0,
+          [PaymentStatus.PENDING_REFUND]: 0,
+          [PaymentStatus.PENDING_RETURN]: 0,
+          [PaymentStatus.PENDING_STOP_PAYMENT]: 0,
+          [PaymentStatus.PENDING_RESEND]: 0,
+          [PaymentStatus.PENDING_REINITIATE]: 0
         },
         byPriority: {
           [Priority.HIGH]: 0,
@@ -281,7 +298,6 @@ describe('PaymentsService', () => {
 
       expect(paymentApi.confirmPayment).toHaveBeenCalledWith({
         paymentId: '123',
-        method: PaymentMethod.ACH,
         confirmationMethod: ConfirmationMethod.OTP,
         code: '123456',
         userId: 'user-123'

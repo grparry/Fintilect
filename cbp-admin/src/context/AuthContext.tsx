@@ -1,19 +1,21 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { LoginFormData } from '../types/auth.types';
+import { LoginCredentials } from '../types/auth.types';
 import GlobalProfiler from '../components/common/GlobalProfiler';
 import { mockUsers } from '../mocks/client-management/mockClientData';
 import { User } from '../types/client.types';
 
-interface AuthContextType {
+interface AuthContextProps {
   isAuthenticated: boolean;
   user: User | null;
   loading: boolean;
   error: string | null;
-  login: (username: string, password: string, rememberMe?: boolean) => Promise<void>;
+  login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
+  refreshToken: () => Promise<void>;
+  clearError: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export { AuthContext };
 
@@ -33,19 +35,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // TODO: You could send this data to your monitoring service
   }, []);
 
-  const login = useCallback(async (username: string, password: string, rememberMe = false) => {
+  const login = useCallback(async (credentials: LoginCredentials) => {
     setLoading(true);
     setError(null);
     try {
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const foundUser = mockUsers.find(u => u.username === username && u.password === password);
+      const foundUser = mockUsers.find(u => 
+        u.username === credentials.username && 
+        u.password === credentials.password
+      );
       
       if (foundUser) {
         setIsAuthenticated(true);
         setUser(foundUser);
-        if (rememberMe) {
+        if (credentials.rememberMe) {
           localStorage.setItem('auth', JSON.stringify({
             id: foundUser.id,
             username: foundUser.username,
@@ -80,6 +85,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+  const refreshToken = useCallback(async () => {
+    // TODO: Implement token refresh logic
+    throw new Error('Not implemented');
+  }, []);
+
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
   return (
     <GlobalProfiler id="auth-context" onMeasurement={handlePerformanceMeasurement}>
       <AuthContext.Provider
@@ -90,6 +104,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           error,
           login,
           logout,
+          refreshToken,
+          clearError
         }}
       >
         {children}

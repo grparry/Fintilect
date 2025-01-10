@@ -9,8 +9,8 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { SecurityRole, Permission, ApiResponse } from '../../../types/client.types';
-import { clientService } from '../../../services/clients.service';
+import { SecurityRole, Permission } from '../../../types/client.types';
+import { clientService, Permission as ServicePermission } from '../../../services/clients.service';
 import { encodeId, decodeId } from '../../../utils/idEncoder';
 import PermissionTreeView from '../groups/PermissionTreeView';
 
@@ -18,6 +18,15 @@ interface RoleEditProps {
   clientId: string;
   roleId?: string;
 }
+
+// Convert service permission to client permission type
+const mapServicePermissionToClientPermission = (p: ServicePermission): Permission => ({
+  id: p.id,
+  name: p.name,
+  description: p.description,
+  category: p.category as Permission['category'],
+  actions: [p.scope]
+});
 
 export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
   const navigate = useNavigate();
@@ -35,23 +44,35 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
         setLoading(true);
         setError(null);
 
-        const permissionsResponse: ApiResponse<Permission[]> = await clientService.getPermissions();
+        const permissionsResponse = await clientService.getPermissions();
         
         if (!permissionsResponse.success) {
           throw new Error(permissionsResponse.error?.message || 'Failed to load permissions');
         }
-        setPermissions(permissionsResponse.data);
+        
+        // Convert service permissions to client permissions
+        const clientPermissions = permissionsResponse.data.map(mapServicePermissionToClientPermission);
+        setPermissions(clientPermissions);
 
         if (roleId) {
           const decodedRoleId = decodeId(roleId);
-          const roleResponse: ApiResponse<SecurityRole> = await clientService.getRole(decodedRoleId);
+          const roleResponse = await clientService.getRole(decodedRoleId);
           
           if (!roleResponse.success) {
             throw new Error(roleResponse.error?.message || 'Failed to load role');
           }
           
-          setRole(roleResponse.data);
-          setSelectedPermissions(roleResponse.data.permissions || []);
+          // Convert service role to client role type
+          const clientRole: SecurityRole = {
+            ...roleResponse.data,
+            description: roleResponse.data.description || '', // Ensure description is not undefined
+            permissions: roleResponse.data.permissions
+              .map(permId => clientPermissions.find(p => p.id === permId))
+              .filter((p): p is Permission => p !== undefined)
+          };
+          
+          setRole(clientRole);
+          setSelectedPermissions(clientRole.permissions);
         } else {
           setRole({
             id: '',
@@ -93,14 +114,15 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
       setSaving(true);
       setError(null);
 
-      const roleData: Partial<SecurityRole> = {
+      // Convert client role type to service role type
+      const roleData = {
         name: role.name,
-        description: role.description,
-        permissions: selectedPermissions,
+        description: role.description || '',
+        permissions: selectedPermissions.map(p => p.id),
         isSystem: role.isSystem
       };
 
-      let response: ApiResponse<SecurityRole>;
+      let response;
       if (roleId) {
         const decodedRoleId = decodeId(roleId);
         response = await clientService.updateRole(decodedRoleId, roleData);
@@ -169,14 +191,16 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
           rows={2}
           sx={{ mb: 2 }}
         />
-        <TextField
-          fullWidth
-          label="Is System"
-          value={role.isSystem}
-          onChange={(e) => setRole({ ...role, isSystem: e.target.value === 'true' })}
-          type="checkbox"
-          sx={{ mb: 2 }}
-        />
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="subtitle1" gutterBottom>
+            System Role
+          </Typography>
+          <input
+            type="checkbox"
+            checked={role.isSystem || false}
+            onChange={(e) => setRole({ ...role, isSystem: e.target.checked })}
+          />
+        </Box>
       </Paper>
 
       <Paper sx={{ p: 2 }}>

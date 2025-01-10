@@ -114,7 +114,7 @@ const Navbar: React.FC<NavbarProps> = ({
             color="inherit"
           >
             <Avatar sx={{ bgcolor: 'secondary.main' }}>
-              {user?.firstName?.[0] || 'A'}
+              {user ? user.firstName[0] : 'A'}
             </Avatar>
           </IconButton>
         </Box>

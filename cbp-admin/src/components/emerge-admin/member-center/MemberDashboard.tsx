@@ -67,7 +67,9 @@ import {
   DeviceStatus,
   Account,
   MemberActivity,
+  MemberStatus,
 } from '../../../types/member-center.types';
+import type { ApiResponse } from '../../../utils/api';
 import { memberService } from '../../../services/member.service';
 import MemberSearch from './components/search/MemberSearch';
 import SearchResults from './components/search/SearchResults';
@@ -104,11 +106,17 @@ const MemberDashboard: React.FC = () => {
     try {
       setSearching(true);
       setError(null);
-      const results = await memberService.searchMembers(filters);
-      setSearchResults(results);
+      const response = await memberService.searchMembers(filters);
+      if (response.success) {
+        setSearchResults(response.data);
+      } else {
+        setError(response.error.message);
+        setSearchResults(null);
+      }
     } catch (err) {
       setError('Failed to search members');
       console.error('Error searching members:', err);
+      setSearchResults(null);
     } finally {
       setSearching(false);
     }
@@ -118,32 +126,42 @@ const MemberDashboard: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const memberDetails = await memberService.getMemberDetails(member.id);
-      setSelectedMember(memberDetails);
-      setActiveTab(0); // Reset to overview tab
+      const response = await memberService.getMemberDetails(member.id);
+      if (response.success) {
+        setSelectedMember(response.data);
+        setActiveTab(0); // Reset to overview tab
+      } else {
+        setError(response.error.message);
+        setSelectedMember(null);
+      }
     } catch (err) {
       setError('Failed to load member details');
       console.error('Error loading member details:', err);
+      setSelectedMember(null);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpdateStatus = async (member: Member, newStatus: Member['status']) => {
+  const handleUpdateStatus = async (member: Member, newStatus: MemberStatus) => {
     try {
       setError(null);
-      await memberService.updateMemberStatus(member.id, newStatus);
-      if (searchResults) {
-        const updatedMembers = searchResults.members.map(m =>
-          m.id === member.id ? { ...m, status: newStatus } : m
-        );
-        setSearchResults({
-          ...searchResults,
-          members: updatedMembers,
-        });
-      }
-      if (selectedMember?.id === member.id) {
-        setSelectedMember({ ...selectedMember, status: newStatus });
+      const response = await memberService.updateMemberStatus(member.id, newStatus);
+      if (response.success) {
+        if (searchResults) {
+          const updatedMembers = searchResults.members.map(m =>
+            m.id === member.id ? { ...m, status: newStatus } : m
+          );
+          setSearchResults({
+            ...searchResults,
+            members: updatedMembers,
+          });
+        }
+        if (selectedMember?.id === member.id) {
+          setSelectedMember(selectedMember ? { ...selectedMember, status: newStatus } : null);
+        }
+      } else {
+        setError(response.error.message);
       }
     } catch (err) {
       setError('Failed to update member status');
@@ -156,14 +174,14 @@ const MemberDashboard: React.FC = () => {
     
     try {
       setError(null);
-      await memberService.removeDevice(selectedMember.id, deviceId);
-      
-      if (selectedMember.devices) {
-        const updatedDevices = selectedMember.devices.filter(device => device.id !== deviceId);
+      const response = await memberService.removeDevice(selectedMember.id, deviceId);
+      if (response.success) {
         setSelectedMember({
           ...selectedMember,
-          devices: updatedDevices
-        } as Member); // Type assertion to Member
+          devices: selectedMember.devices?.filter(device => device.id !== deviceId) || []
+        });
+      } else {
+        setError(response.error.message);
       }
     } catch (err) {
       setError('Failed to remove device');
@@ -181,11 +199,17 @@ const MemberDashboard: React.FC = () => {
   const loadMemberActivities = async (memberId: string) => {
     try {
       setLoadingActivities(true);
-      const memberActivities = await memberService.getMemberActivity(memberId);
-      setActivities(memberActivities);
+      const response = await memberService.getMemberActivity(memberId);
+      if (response.success) {
+        setActivities(response.data.items);
+      } else {
+        setError(response.error.message);
+        setActivities([]);
+      }
     } catch (err) {
       console.error('Error loading member activities:', err);
       setError('Failed to load member activities');
+      setActivities([]);
     } finally {
       setLoadingActivities(false);
     }
@@ -536,6 +560,33 @@ const MemberDashboard: React.FC = () => {
     );
   };
 
+  const renderDevices = () => {
+    if (!selectedMember?.devices) return null;
+
+    return (
+      <List>
+        {selectedMember.devices.map((device) => (
+          <ListItem key={device.id}>
+            <ListItemIcon>
+              {device.type === 'mobile' ? <PhoneAndroidIcon /> : <ComputerIcon />}
+            </ListItemIcon>
+            <ListItemText
+              primary={device.name}
+              secondary={`Last used: ${new Date(device.lastUsed).toLocaleDateString()}`}
+            />
+            <IconButton
+              onClick={() => handleRemoveDevice(device.id)}
+              size="small"
+              color="error"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </ListItem>
+        ))}
+      </List>
+    );
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
@@ -600,77 +651,7 @@ const MemberDashboard: React.FC = () => {
           </Box>
         </DialogTitle>
         <DialogContent>
-          <List>
-            {selectedMember?.devices?.map((device) => (
-              <ListItem
-                key={device.id}
-                secondaryAction={
-                  <IconButton edge="end" onClick={() => handleRemoveDevice(device.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                }
-              >
-                <ListItemIcon>
-                  {device.type === 'Mobile' ? (
-                    <PhoneAndroidIcon />
-                  ) : device.type === 'Tablet' ? (
-                    <TabletIcon />
-                  ) : (
-                    <ComputerIcon />
-                  )}
-                </ListItemIcon>
-                <ListItemText
-                  primary={device.name}
-                  secondary={
-                    <Box component="span">
-                      <Typography variant="body2" component="span">
-                        {`${device.type}${device.browser ? ` • ${device.browser}` : ''}${
-                          device.operatingSystem ? ` • ${device.operatingSystem}` : ''
-                        }`}
-                      </Typography>
-                      <br />
-                      <Typography variant="body2" color="textSecondary" component="span">
-                        {`Last access: ${new Date(device.lastAccess).toLocaleString()}${
-                          device.location ? ` • ${device.location}` : ''
-                        }`}
-                      </Typography>
-                    </Box>
-                  }
-                />
-                <Box sx={{ mx: 2 }}>
-                  <Chip
-                    label={device.status}
-                    color={
-                      device.status === 'Active'
-                        ? 'success'
-                        : device.status === 'Blocked'
-                        ? 'error'
-                        : device.status === 'Unverified'
-                        ? 'warning'
-                        : 'default'
-                    }
-                    size="small"
-                  />
-                  {device.trusted && (
-                    <Chip
-                      label="Trusted"
-                      color="primary"
-                      size="small"
-                      sx={{ ml: 1 }}
-                      variant="outlined"
-                    />
-                  )}
-                </Box>
-              </ListItem>
-            ))}
-          </List>
-          {(!selectedMember?.devices || selectedMember.devices.length === 0) && (
-            <Box sx={{ textAlign: 'center', py: 3 }}>
-              <Typography variant="body1" color="textSecondary">
-                No devices registered.
-              </Typography>
-            </Box>
-          )}
+          {renderDevices()}
         </DialogContent>
       </Dialog>
 

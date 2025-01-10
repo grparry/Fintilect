@@ -29,7 +29,7 @@ const mockUsers: User[] = [
   },
 ];
 
-export const fetchUsers = async (filters?: UserFilters): Promise<ApiPaginatedResponse<User>> => {
+export const fetchUsers = async (filters?: UserFilters): Promise<ApiPaginatedResponse<User[]>> => {
   // Simulate API call
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -39,8 +39,8 @@ export const fetchUsers = async (filters?: UserFilters): Promise<ApiPaginatedRes
         meta: {
           currentPage: 1,
           totalPages: 1,
-          totalItems: mockUsers.length,
-          itemsPerPage: 10,
+          pageSize: 10,
+          totalCount: mockUsers.length,
           hasNextPage: false,
           hasPreviousPage: false,
           timestamp: new Date().toISOString(),

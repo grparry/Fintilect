@@ -62,7 +62,26 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
       setError(null);
       const response = await clientService.getClientSettings(clientId);
       if (response.success) {
-        setSettings(response.data.security || defaultSecuritySettings);
+        const securitySettings = response.data.security;
+        // Ensure all required fields are present by merging with defaults
+        const mergedSettings: SecuritySettingsType = {
+          passwordPolicy: {
+            minLength: securitySettings?.passwordPolicy?.minLength ?? defaultSecuritySettings.passwordPolicy.minLength,
+            requireUppercase: securitySettings?.passwordPolicy?.requireUppercase ?? defaultSecuritySettings.passwordPolicy.requireUppercase,
+            requireLowercase: securitySettings?.passwordPolicy?.requireLowercase ?? defaultSecuritySettings.passwordPolicy.requireLowercase,
+            requireNumbers: securitySettings?.passwordPolicy?.requireNumbers ?? defaultSecuritySettings.passwordPolicy.requireNumbers,
+            requireSpecialChars: securitySettings?.passwordPolicy?.requireSpecialChars ?? defaultSecuritySettings.passwordPolicy.requireSpecialChars,
+            expirationDays: securitySettings?.passwordPolicy?.expirationDays ?? defaultSecuritySettings.passwordPolicy.expirationDays
+          },
+          loginPolicy: {
+            maxAttempts: securitySettings?.loginPolicy?.maxAttempts ?? defaultSecuritySettings.loginPolicy.maxAttempts,
+            lockoutDuration: securitySettings?.loginPolicy?.lockoutDuration ?? defaultSecuritySettings.loginPolicy.lockoutDuration
+          },
+          sessionTimeout: securitySettings?.sessionTimeout ?? defaultSecuritySettings.sessionTimeout,
+          mfaEnabled: securitySettings?.mfaEnabled ?? defaultSecuritySettings.mfaEnabled,
+          ipWhitelist: securitySettings?.ipWhitelist ?? defaultSecuritySettings.ipWhitelist
+        };
+        setSettings(mergedSettings);
         setIsDirty(false);
       } else {
         setError(response.error.message);

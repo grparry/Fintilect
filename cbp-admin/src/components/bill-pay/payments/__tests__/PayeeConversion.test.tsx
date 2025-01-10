@@ -2,6 +2,13 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import PayeeConversion from '../PayeeConversion';
 import { paymentApi } from '../../../../services/api/payment.api';
+import {
+  PayeeConversionFile,
+  PayeeConversionValidation,
+  PayeeConversionFileUploadResponse,
+  PayeeConversionRecord
+} from '../../../../types/bill-pay.types';
+import { ApiSuccessResponse } from '../../../../types/api.types';
 
 // Mock the API
 jest.mock('../../../../services/api/payment.api');
@@ -12,6 +19,41 @@ jest.mock('../../../../hooks/useAuth', () => ({
 }));
 
 describe('PayeeConversion Component', () => {
+  const mockMeta = {
+    timestamp: '2024-01-01T00:00:00Z',
+    requestId: 'test-request-id'
+  };
+
+  const mockValidation: PayeeConversionValidation = {
+    valid: true,
+    errors: [],
+    warnings: [],
+    totalRecords: 100,
+    validRecords: 98,
+    invalidRecords: 2
+  };
+
+  const mockFile: PayeeConversionFile = {
+    id: 'file_001',
+    name: 'payees_batch1.csv',
+    status: 'PENDING',
+    createdAt: '2024-12-28T17:02:57-07:00'
+  };
+
+  const mockUploadResponse: PayeeConversionFileUploadResponse = {
+    id: 'file_001',
+    name: 'test.csv',
+    status: 'PENDING',
+    validation: {
+      totalRecords: 10,
+      validRecords: 8,
+      invalidRecords: 2,
+      errors: [{ field: 'accountNumber', message: 'Invalid format' }],
+      warnings: []
+    },
+    createdAt: '2024-01-01T00:00:00Z'
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -19,22 +61,9 @@ describe('PayeeConversion Component', () => {
   it('renders the component and fetches files', async () => {
     (paymentApi.getPayeeConversionFiles as jest.Mock).mockResolvedValue({
       success: true,
-      data: [
-        {
-          id: 'file_001',
-          name: 'payees_batch1.csv',
-          status: 'PENDING',
-          createdAt: '2024-12-28T17:02:57-07:00',
-          validation: {
-            totalRecords: 100,
-            validRecords: 0,
-            invalidRecords: 0,
-            errors: [],
-            warnings: []
-          }
-        }
-      ]
-    });
+      data: [mockFile],
+      meta: mockMeta
+    } as ApiSuccessResponse<PayeeConversionFile[]>);
 
     await act(async () => {
       render(<PayeeConversion />);
@@ -51,25 +80,15 @@ describe('PayeeConversion Component', () => {
     const mockFile = new File(['test'], 'test.csv', { type: 'text/csv' });
     (paymentApi.uploadPayeeConversionFile as jest.Mock).mockResolvedValue({
       success: true,
-      data: {
-        id: 'test-file',
-        name: 'test.csv',
-        status: 'PENDING',
-        createdAt: new Date().toISOString(),
-        validation: {
-          totalRecords: 10,
-          validRecords: 0,
-          invalidRecords: 0,
-          errors: [],
-          warnings: []
-        }
-      }
-    });
+      data: mockUploadResponse,
+      meta: mockMeta
+    } as ApiSuccessResponse<PayeeConversionFileUploadResponse>);
 
     (paymentApi.getPayeeConversionFiles as jest.Mock).mockResolvedValue({
       success: true,
-      data: []
-    });
+      data: [],
+      meta: mockMeta
+    } as ApiSuccessResponse<PayeeConversionFile[]>);
 
     await act(async () => {
       render(<PayeeConversion />);
@@ -88,26 +107,30 @@ describe('PayeeConversion Component', () => {
   });
 
   it('displays validation results', async () => {
-    const mockValidation = {
-      totalRecords: 10,
-      validRecords: 8,
-      invalidRecords: 2,
-      errors: [{ field: 'accountNumber', message: 'Invalid format' }],
-      warnings: []
+    const mockFileWithValidation: PayeeConversionFile = {
+      ...mockFile,
+      processedAt: '2024-12-28T17:03:57-07:00',
+      status: 'PROCESSED'
     };
 
     (paymentApi.getPayeeConversionFiles as jest.Mock).mockResolvedValue({
       success: true,
-      data: [
-        {
-          id: 'file_001',
-          name: 'payees_batch1.csv',
-          status: 'PENDING',
-          createdAt: '2024-12-28T17:02:57-07:00',
-          validation: mockValidation
-        }
-      ]
-    });
+      data: [mockFileWithValidation],
+      meta: mockMeta
+    } as ApiSuccessResponse<PayeeConversionFile[]>);
+
+    (paymentApi.getPayeeConversionRecords as jest.Mock).mockResolvedValue({
+      success: true,
+      data: [{
+        id: 'record_001',
+        fileId: 'file_001',
+        payeeName: 'Test Payee',
+        status: 'PROCESSED',
+        createdAt: '2024-12-28T17:02:57-07:00',
+        processedAt: '2024-12-28T17:03:57-07:00'
+      }],
+      meta: mockMeta
+    } as ApiSuccessResponse<PayeeConversionRecord[]>);
 
     await act(async () => {
       render(<PayeeConversion />);
@@ -115,7 +138,7 @@ describe('PayeeConversion Component', () => {
 
     await waitFor(() => {
       expect(screen.getByText('payees_batch1.csv')).toBeInTheDocument();
-      expect(screen.getByText('PENDING')).toBeInTheDocument();
+      expect(screen.getByText('PROCESSED')).toBeInTheDocument();
     });
   });
 

@@ -50,7 +50,7 @@ const BillPaySecuritySettings: React.FC = () => {
       addresses: '',
     },
     otpSettings: {
-      method: 'email',
+      method: BillPayOTPMethod.EMAIL,
       email: '',
       phone: '',
     },
@@ -109,7 +109,7 @@ const BillPaySecuritySettings: React.FC = () => {
     }));
   };
 
-  const handleOTPSettingsChange = (field: keyof BillPaySecuritySettingsType['otpSettings'], value: string) => {
+  const handleOTPSettingsChange = (field: keyof BillPaySecuritySettingsType['otpSettings'], value: BillPayOTPMethod | string) => {
     setSettings(prev => ({
       ...prev,
       otpSettings: {
@@ -121,21 +121,17 @@ const BillPaySecuritySettings: React.FC = () => {
 
   const handleSendOTP = async () => {
     try {
-      const destination = settings.otpSettings.method === 'email' 
+      const destination = settings.otpSettings.method === BillPayOTPMethod.EMAIL 
         ? settings.otpSettings.email 
         : settings.otpSettings.phone;
       
-      const result = await billPaySecurityService.sendOTP(settings.otpSettings.method, destination);
-      if (result.success) {
-        setSuccess('OTP sent successfully');
-        setOtpSent(true);
-        setTimeout(() => {
-          setOtpSent(false);
-          setSuccess(null);
-        }, 3000);
-      } else {
-        setError(result.message);
-      }
+      await billPaySecurityService.sendOTP(settings.otpSettings.method, destination);
+      setSuccess('OTP sent successfully');
+      setOtpSent(true);
+      setTimeout(() => {
+        setOtpSent(false);
+        setSuccess(null);
+      }, 3000);
     } catch (err) {
       setError('Failed to send OTP');
       console.error('Error sending OTP:', err);
@@ -313,7 +309,7 @@ const BillPaySecuritySettings: React.FC = () => {
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>Session Timeout</InputLabel>
-                  <Select
+                  <Select<number>
                     value={settings.loginPolicy.sessionTimeout}
                     label="Session Timeout"
                     onChange={(e: SelectChangeEvent<number>) => 
@@ -372,19 +368,19 @@ const BillPaySecuritySettings: React.FC = () => {
                   onChange={(e) => handleOTPSettingsChange('method', e.target.value as BillPayOTPMethod)}
                 >
                   <FormControlLabel 
-                    value="email" 
+                    value={BillPayOTPMethod.EMAIL}
                     control={<Radio />} 
                     label="Email"
                   />
                   <FormControlLabel 
-                    value="sms" 
+                    value={BillPayOTPMethod.SMS}
                     control={<Radio />} 
                     label="Text Message (SMS)"
                   />
                 </RadioGroup>
               </FormControl>
 
-              {settings.otpSettings.method === 'email' && (
+              {settings.otpSettings.method === BillPayOTPMethod.EMAIL && (
                 <TextField
                   fullWidth
                   label="Email Address"
@@ -394,7 +390,7 @@ const BillPaySecuritySettings: React.FC = () => {
                 />
               )}
 
-              {settings.otpSettings.method === 'sms' && (
+              {settings.otpSettings.method === BillPayOTPMethod.SMS && (
                 <TextField
                   fullWidth
                   label="Phone Number"

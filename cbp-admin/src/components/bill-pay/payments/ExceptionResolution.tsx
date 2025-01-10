@@ -15,23 +15,24 @@ import {
   Alert,
   CircularProgress,
   Divider,
+  SelectChangeEvent,
 } from '@mui/material';
 import { useAuth } from '../../../hooks/useAuth';
-import type {
+import {
   PaymentException,
   ExceptionResolution as ExceptionResolutionType,
   FISRetryResult,
   ExceptionStatus,
-  ApiResponse
 } from '../../../types/bill-pay.types';
+import { ApiSuccessResponse } from '../../../types/api.types';
 
 interface ExceptionResolutionProps {
   exception: PaymentException;
   onClose: () => void;
   onResolutionComplete: () => void;
   api: {
-    resolveException: (id: string, resolution: ExceptionResolutionType) => Promise<ApiResponse<void>>;
-    retryException: (id: string) => Promise<ApiResponse<FISRetryResult>>;
+    resolveException: (id: string, resolution: ExceptionResolutionType) => Promise<ApiSuccessResponse<void>>;
+    retryException: (id: string) => Promise<ApiSuccessResponse<FISRetryResult>>;
   };
 }
 
@@ -48,7 +49,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
     type: 'manual',
     action: '',
     notes: '',
-    userId: user?.id?.toString(),
+    userId: user?.id?.toString() || '',
     timestamp: new Date().toISOString(),
   });
   const [retryResult, setRetryResult] = useState<FISRetryResult | null>(null);
@@ -63,7 +64,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
       setLoading(true);
       await api.resolveException(exception.id, {
         ...resolution,
-        userId: user?.id?.toString(),
+        userId: user?.id?.toString() || '',
         timestamp: new Date().toISOString(),
       });
       onResolutionComplete();
@@ -148,14 +149,15 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>Resolution Type</InputLabel>
-                  <Select
+                  <Select<'manual' | 'automated' | 'ignore'>
                     value={resolution.type}
-                    onChange={(e) =>
+                    onChange={(e: SelectChangeEvent<'manual' | 'automated' | 'ignore'>) => {
+                      const value = e.target.value as ExceptionResolutionType['type'];
                       setResolution((prev) => ({
                         ...prev,
-                        type: e.target.value as 'manual' | 'automated' | 'ignore',
-                      }))
-                    }
+                        type: value,
+                      }));
+                    }}
                     label="Resolution Type"
                   >
                     <MenuItem value="manual">Manual Resolution</MenuItem>
@@ -167,9 +169,9 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>Action</InputLabel>
-                  <Select
+                  <Select<string>
                     value={resolution.action}
-                    onChange={(e) =>
+                    onChange={(e: SelectChangeEvent<string>) =>
                       setResolution((prev) => ({
                         ...prev,
                         action: e.target.value,

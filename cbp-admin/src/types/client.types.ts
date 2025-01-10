@@ -1,4 +1,5 @@
 import { Dayjs } from 'dayjs';
+import { ApiResponse } from '../utils/api';
 
 // Payment Types
 export type PaymentMethod = 'ACH' | 'Wire' | 'RTP' | 'Check';
@@ -152,10 +153,10 @@ export enum UserRole {
 }
 
 export enum UserStatus {
-  Active = 'Active',
-  Inactive = 'Inactive',
-  Pending = 'Pending',
-  Locked = 'Locked'
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  LOCKED = 'LOCKED',
+  PENDING = 'PENDING'
 }
 
 export interface User {
@@ -237,6 +238,7 @@ export interface UserGroup {
   id: string;
   name: string;
   description: string;
+  clientId: string;
   roles: SecurityRole[];
   permissions: Permission[];
   members: string[];
@@ -295,8 +297,5 @@ export interface Contact {
   isEmergencyContact?: boolean;
 }
 
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message?: string;
-}
+// Re-export ApiResponse type for backwards compatibility
+export type { ApiResponse } from '../utils/api';

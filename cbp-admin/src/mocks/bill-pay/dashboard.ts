@@ -35,13 +35,30 @@ export const mockDashboardStats = (): BillPayStats => ({
     [PaymentMethod.CARD]: 50
   },
   transactionsByStatus: {
-    [PaymentStatus.PENDING]: 150,
-    [PaymentStatus.APPROVED]: 200,
-    [PaymentStatus.REJECTED]: 100,
-    [PaymentStatus.PROCESSING]: 50,
-    [PaymentStatus.COMPLETED]: 300,
-    [PaymentStatus.FAILED]: 50,
-    [PaymentStatus.CANCELLED]: 50
+    [PaymentStatus.PENDING]: 10,
+    [PaymentStatus.APPROVED]: 5,
+    [PaymentStatus.REJECTED]: 2,
+    [PaymentStatus.PROCESSING]: 8,
+    [PaymentStatus.COMPLETED]: 15,
+    [PaymentStatus.FAILED]: 3,
+    [PaymentStatus.CANCELLED]: 1,
+    [PaymentStatus.EXPIRED]: 0,
+    [PaymentStatus.PENDING_APPROVAL]: 0,
+    [PaymentStatus.DRAFT]: 0,
+    [PaymentStatus.SUBMITTED]: 0,
+    [PaymentStatus.SCHEDULED]: 0,
+    [PaymentStatus.RETURNED]: 0,
+    [PaymentStatus.STOP_PAYMENT]: 0,
+    [PaymentStatus.REVERSED]: 0,
+    [PaymentStatus.REFUNDED]: 0,
+    [PaymentStatus.RESENT]: 0,
+    [PaymentStatus.REINITIATED]: 0,
+    [PaymentStatus.PENDING_REVERSAL]: 0,
+    [PaymentStatus.PENDING_REFUND]: 0,
+    [PaymentStatus.PENDING_RETURN]: 0,
+    [PaymentStatus.PENDING_STOP_PAYMENT]: 0,
+    [PaymentStatus.PENDING_RESEND]: 0,
+    [PaymentStatus.PENDING_REINITIATE]: 0
   },
   recentActivity: [
     {
