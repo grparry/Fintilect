@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { BaseModal } from '../BaseModal';
+import BaseModal from '../BaseModal';
 
-describe('BaseModal Navigation Flow', () => {
+describe('BaseModal', () => {
   const mockOnClose = jest.fn();
   const defaultProps = {
     open: true,
@@ -15,29 +15,29 @@ describe('BaseModal Navigation Flow', () => {
 
   it('should render when open', () => {
     render(<BaseModal {...defaultProps} />);
-    expect(screen.getByTestId('base-modal')).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
   it('should not render when closed', () => {
     render(<BaseModal {...defaultProps} open={false} />);
-    expect(screen.queryByTestId('base-modal')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('should call onClose when close button clicked', () => {
     render(<BaseModal {...defaultProps} />);
-    fireEvent.click(screen.getByTestId('base-modal-close'));
+    fireEvent.click(screen.getByRole('button', { name: /close/i }));
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 
   it('should render title when provided', () => {
     const title = 'Test Modal';
     render(<BaseModal {...defaultProps} title={title} />);
-    expect(screen.getByTestId('base-modal-title')).toHaveTextContent(title);
+    expect(screen.getByRole('heading')).toHaveTextContent(title);
   });
 
   it('should not render title when not provided', () => {
     render(<BaseModal {...defaultProps} />);
-    expect(screen.queryByTestId('base-modal-title')).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
   });
 
   it('should render children content', () => {
@@ -46,18 +46,9 @@ describe('BaseModal Navigation Flow', () => {
   });
 
   it('should use custom testId when provided', () => {
-    render(<BaseModal {...defaultProps} data-testid="custom-modal" />);
-    expect(screen.getByTestId('custom-modal')).toBeInTheDocument();
-    expect(screen.getByTestId('custom-modal-close')).toBeInTheDocument();
-  });
-
-  it('should call onClose when backdrop is clicked', () => {
-    render(<BaseModal {...defaultProps} />);
-    const backdrop = document.querySelector('[class*="MuiBackdrop-root"]');
-    if (backdrop) {
-      fireEvent.click(backdrop);
-      expect(mockOnClose).toHaveBeenCalledTimes(1);
-    }
+    const testId = 'custom-modal';
+    render(<BaseModal {...defaultProps} data-testid={testId} />);
+    expect(screen.getByTestId(testId)).toBeInTheDocument();
   });
 
   it('should not close when clicking modal content', () => {
@@ -68,7 +59,16 @@ describe('BaseModal Navigation Flow', () => {
 
   it('should call onClose when Escape key is pressed', () => {
     render(<BaseModal {...defaultProps} />);
-    fireEvent.keyDown(screen.getByTestId('base-modal'), { key: 'Escape' });
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
     expect(mockOnClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not call onClose when clicking backdrop', () => {
+    render(<BaseModal {...defaultProps} />);
+    const backdrop = document.querySelector('[class*="MuiBackdrop-root"]');
+    if (backdrop) {
+      fireEvent.click(backdrop);
+      expect(mockOnClose).not.toHaveBeenCalled();
+    }
   });
 });

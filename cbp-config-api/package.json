@@ -1,6 +1,6 @@
 {
   "name": "cbp-config-api",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "CBP Configuration API for payment processing and system management",
   "main": "dist/server.js",
   "scripts": {
@@ -12,6 +12,8 @@
     "test:coverage": "jest --coverage",
     "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit",
     "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "typecheck": "tsc --noEmit",
     "typeorm": "typeorm-ts-node-commonjs"
   },
   "keywords": [],

@@ -50,6 +50,15 @@ This file defines the essential patterns that must be shared and maintained acro
 - Context preservation
 - Error translation
 
+### Component Libraries
+See COMPONENT_LIBRARIES.md for detailed patterns regarding:
+- Testing frameworks (Jest ecosystem)
+- UI component libraries (Material UI)
+- Backend components (Express, TypeORM)
+- Data visualization (@nivo)
+- Form handling (react-hook-form)
+- Date handling (date-fns)
+
 #### Error Flow
 - Error propagation
 - Boundary handling

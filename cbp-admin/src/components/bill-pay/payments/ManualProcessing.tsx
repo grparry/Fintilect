@@ -35,11 +35,12 @@ import {
   Client,
   Payee,
   ManualPayment,
+  ManualPaymentFormData,
   ManualPaymentValidation,
-  PaymentType,
   PaymentMethod,
-  Priority,
-  PaymentStatus,
+  PendingPayment,
+  Payment,
+  Priority
 } from '../../../types/bill-pay.types';
 import { paymentApi } from '../../../services/api/payment.api';
 import { useAuth } from '../../../hooks/useAuth';
@@ -48,11 +49,9 @@ interface PaymentForm {
   clientId: string;
   payeeId: string;
   amount: string;
-  currency: string;
   paymentType: PaymentMethod;
   effectiveDate: Dayjs;
-  description?: string;
-  reference?: string;
+  memo?: string;
   accountNumber: string;
   routingNumber: string;
   bankName: string;
@@ -71,6 +70,25 @@ interface ValidationState {
   warnings: Record<string, string>;
 }
 
+const initialPaymentForm: PaymentForm = {
+  clientId: '',
+  payeeId: '',
+  amount: '',
+  paymentType: PaymentMethod.ACH,
+  effectiveDate: dayjs(),
+  memo: '',
+  accountNumber: '',
+  routingNumber: '',
+  bankName: ''
+};
+
+const paymentTypes = [
+  { value: PaymentMethod.ACH, label: 'ACH' },
+  { value: PaymentMethod.WIRE, label: 'Wire' },
+  { value: PaymentMethod.CHECK, label: 'Check' },
+  { value: PaymentMethod.RTP, label: 'RTP' }
+];
+
 const ManualProcessing: React.FC = () => {
   const { user } = useAuth();
 
@@ -79,27 +97,20 @@ const ManualProcessing: React.FC = () => {
   const [payees, setPayees] = useState<Payee[]>([]);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [selectedPayee, setSelectedPayee] = useState<Payee | null>(null);
-  const paymentMethods = [PaymentMethod.ACH, PaymentMethod.WIRE, PaymentMethod.RTP];
-  const [form, setForm] = useState<PaymentForm>({
-    clientId: '',
-    payeeId: '',
-    amount: '',
-    currency: 'USD',
-    paymentType: PaymentMethod.ACH,
-    effectiveDate: dayjs(),
-    description: '',
-    reference: '',
-    accountNumber: '',
-    routingNumber: '',
-    bankName: '',
-  });
+  const [form, setForm] = useState<PaymentForm>(initialPaymentForm);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [validation, setValidation] = useState<ValidationState>({
     errors: {},
     warnings: {},
   });
-  const [paymentLimits, setPaymentLimits] = useState<PaymentLimits | null>(null);
+  const [paymentLimits, setPaymentLimits] = useState<Record<PaymentMethod, number>>({
+    [PaymentMethod.ACH]: 0,
+    [PaymentMethod.WIRE]: 0,
+    [PaymentMethod.CHECK]: 0,
+    [PaymentMethod.RTP]: 0,
+    [PaymentMethod.CARD]: 0
+  });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
   // Fetch initial data
@@ -138,11 +149,11 @@ const ManualProcessing: React.FC = () => {
       setError(null);
       const limits = await paymentApi.getPaymentLimits();
       setPaymentLimits({
-        min: 0, // Default min value
-        max: limits.data[form.paymentType] || 0,
-        currency: 'USD', // Default currency
-        dailyLimit: 0, // Default daily limit
-        monthlyLimit: 0 // Default monthly limit
+        [PaymentMethod.ACH]: limits.data[PaymentMethod.ACH] || 0,
+        [PaymentMethod.WIRE]: limits.data[PaymentMethod.WIRE] || 0,
+        [PaymentMethod.CHECK]: limits.data[PaymentMethod.CHECK] || 0,
+        [PaymentMethod.RTP]: limits.data[PaymentMethod.RTP] || 0,
+        [PaymentMethod.CARD]: limits.data[PaymentMethod.CARD] || 0
       });
     } catch (err) {
       setError('Failed to load payment limits');
@@ -230,11 +241,11 @@ const ManualProcessing: React.FC = () => {
       if (isNaN(numAmount)) {
         errors.amount = 'Invalid amount';
       } else if (paymentLimits) {
-        if (numAmount < paymentLimits.min) {
-          errors.amount = `Amount must be at least ${paymentLimits.min}`;
-        } else if (numAmount > paymentLimits.max) {
-          errors.amount = `Amount cannot exceed ${paymentLimits.max}`;
-        } else if (numAmount > paymentLimits.dailyLimit * 0.8) {
+        if (numAmount < paymentLimits[form.paymentType]) {
+          errors.amount = `Amount must be at least ${paymentLimits[form.paymentType]}`;
+        } else if (numAmount > paymentLimits[form.paymentType]) {
+          errors.amount = `Amount cannot exceed ${paymentLimits[form.paymentType]}`;
+        } else if (numAmount > paymentLimits[form.paymentType] * 0.8) {
           warnings.amount = 'Amount is close to daily limit';
         }
       }
@@ -247,125 +258,133 @@ const ManualProcessing: React.FC = () => {
     }));
   };
 
-  const validateForm = async (formData: PaymentForm): Promise<boolean> => {
-    try {
-      const validation = await paymentApi.validatePayment({
-        clientId: formData.clientId,
-        payeeId: formData.payeeId,
-        amount: parseFloat(formData.amount),
-        method: formData.paymentType,
-        effectiveDate: formData.effectiveDate.toISOString(),
-      });
+  const validateForm = async (): Promise<ManualPaymentValidation> => {
+    const errors: Array<{ field: keyof ManualPaymentFormData; message: string }> = [];
 
-      if (!validation.data) {
-        setValidation({ errors: { general: 'Validation failed' }, warnings: {} });
-        return false;
-      }
-
-      if (!validation.data) {
-        setValidation({ errors: {}, warnings: {} });
-        return true;
-      }
-
-      return false;
-    } catch (error) {
-      console.error('Validation error:', error);
-      setValidation({ errors: { general: 'Failed to validate payment' }, warnings: {} });
-      return false;
+    // Required field validation
+    if (!form.clientId) {
+      errors.push({ field: 'clientId', message: 'Client is required' });
     }
+    if (!form.payeeId) {
+      errors.push({ field: 'payeeId', message: 'Payee is required' });
+    }
+    if (!form.amount || parseFloat(form.amount) <= 0) {
+      errors.push({ field: 'amount', message: 'Valid amount is required' });
+    }
+    if (!form.paymentType) {
+      errors.push({ field: 'paymentType', message: 'Payment type is required' });
+    }
+    if (!form.effectiveDate) {
+      errors.push({ field: 'effectiveDate', message: 'Effective date is required' });
+    }
+    if (!form.accountNumber) {
+      errors.push({ field: 'accountNumber', message: 'Account number is required' });
+    }
+    if (!form.routingNumber) {
+      errors.push({ field: 'routingNumber', message: 'Routing number is required' });
+    }
+    if (!form.bankName) {
+      errors.push({ field: 'bankName', message: 'Bank name is required' });
+    }
+
+    // Convert validation errors to state format
+    const validationState: ValidationState = {
+      errors: {},
+      warnings: {}
+    };
+
+    errors.forEach(({ field, message }) => {
+      validationState.errors[field] = message;
+    });
+
+    setValidation(validationState);
+
+    return {
+      valid: errors.length === 0,
+      errors
+    };
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!selectedClient || !selectedPayee) {
-      setValidation({ errors: { general: 'Please select client and payee' }, warnings: {} });
+
+    const validation = await validateForm();
+    if (!validation.valid) {
       return;
     }
 
-    const isValid = await validateForm(form);
-    if (!isValid) return;
-
     try {
       setLoading(true);
-      const payment = {
-        clientId: selectedClient.id,
-        clientName: selectedClient.name,
-        payeeId: selectedPayee.id,
-        payeeName: selectedPayee.name,
+      setError(null);
+
+      const payment: Omit<PendingPayment, 'id' | 'createdAt' | 'updatedAt' | 'status'> = {
+        clientId: selectedClient?.id || '',
+        clientName: selectedClient?.name || '',
+        payeeId: selectedPayee?.id || '',
+        payeeName: selectedPayee?.name || '',
         amount: parseFloat(form.amount),
-        currency: form.currency,
+        currency: 'USD',
         method: form.paymentType,
-        date: form.effectiveDate.toISOString(),
-        effectiveDate: form.effectiveDate.toISOString(),
-        description: form.description,
-        reference: form.reference,
-        metadata: {
-          submittedBy: user?.id,
-          submittedAt: new Date().toISOString(),
-        },
+        effectiveDate: form.effectiveDate.format('YYYY-MM-DD'),
+        description: form.memo,
         recipient: {
-          name: selectedPayee.name,
-          accountNumber: selectedPayee.accountNumber,
-          routingNumber: selectedPayee.routingNumber,
-          bankName: selectedPayee.bankName
+          name: selectedPayee?.name || '',
+          accountNumber: form.accountNumber,
+          routingNumber: form.routingNumber,
+          bankName: form.bankName
         },
-        userId: user?.id || '',
-        priority: Priority.MEDIUM,
+        priority: Priority.MEDIUM
       };
 
       const response = await paymentApi.createPendingPayment(payment);
+
       if (response.success) {
-        setForm({
-          clientId: '',
-          payeeId: '',
-          amount: '',
-          currency: 'USD',
-          paymentType: PaymentMethod.ACH,
-          effectiveDate: dayjs(),
-          description: '',
-          reference: '',
-          accountNumber: '',
-          routingNumber: '',
-          bankName: '',
-        });
+        setForm(initialPaymentForm);
         setSelectedClient(null);
         setSelectedPayee(null);
         setValidation({ errors: {}, warnings: {} });
+        // Show success message
       }
-    } catch (error) {
-      console.error('Submit error:', error);
-      setValidation({ errors: { general: 'Failed to submit payment' }, warnings: {} });
+    } catch (err) {
+      console.error('Submit error:', err);
+      setError('Failed to submit payment. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleSaveDraft = async () => {
+    if (!form.clientId) {
+      setValidation({ errors: { clientId: 'Client is required' }, warnings: {} });
+      return;
+    }
+
     setLoading(true);
-    setError('');
+    setError(null);
 
     try {
-      const draft = await paymentApi.saveDraft({
+      const draft: Partial<Payment> = {
         clientId: form.clientId,
         payeeId: form.payeeId,
         amount: parseFloat(form.amount || '0'),
         method: form.paymentType,
         effectiveDate: form.effectiveDate.format('YYYY-MM-DD'),
-        description: form.description,
-        status: PaymentStatus.PENDING,
+        description: form.memo,
         metadata: {
           accountNumber: form.accountNumber,
           routingNumber: form.routingNumber,
           bankName: form.bankName
         }
-      });
+      };
 
-      // TODO: Show success message and/or redirect to drafts
-      console.log('Draft saved:', draft);
+      const response = await paymentApi.saveDraft(draft);
+      if (response.success) {
+        // Show success message
+        console.log('Draft saved:', response.data);
+      }
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to save draft'
-      );
+      console.error('Error saving draft:', err);
+      setError('Failed to save draft. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -423,7 +442,7 @@ const ManualProcessing: React.FC = () => {
         validation.errors.amount ||
         validation.warnings.amount ||
         (paymentLimits &&
-          `Limit: ${paymentLimits.min} - ${paymentLimits.max} ${paymentLimits.currency}`)
+          `Limit: ${paymentLimits[form.paymentType]}`)
       }
       InputProps={{
         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -445,9 +464,9 @@ const ManualProcessing: React.FC = () => {
         label="Payment Type"
         required
       >
-        {paymentMethods.map((type) => (
-          <MenuItem key={type} value={type}>
-            {type}
+        {paymentTypes.map((type) => (
+          <MenuItem key={type.value} value={type.value}>
+            {type.label}
           </MenuItem>
         ))}
       </Select>
@@ -473,7 +492,7 @@ const ManualProcessing: React.FC = () => {
           <Grid item xs={6}>
             <Typography variant="subtitle2">Amount</Typography>
             <Typography>
-              ${parseFloat(form.amount).toFixed(2)} {form.currency}
+              ${parseFloat(form.amount).toFixed(2)}
             </Typography>
           </Grid>
           <Grid item xs={6}>
@@ -484,16 +503,10 @@ const ManualProcessing: React.FC = () => {
             <Typography variant="subtitle2">Effective Date</Typography>
             <Typography>{form.effectiveDate.format('YYYY-MM-DD')}</Typography>
           </Grid>
-          {form.description && (
+          {form.memo && (
             <Grid item xs={12}>
-              <Typography variant="subtitle2">Description</Typography>
-              <Typography>{form.description}</Typography>
-            </Grid>
-          )}
-          {form.reference && (
-            <Grid item xs={12}>
-              <Typography variant="subtitle2">Reference</Typography>
-              <Typography>{form.reference}</Typography>
+              <Typography variant="subtitle2">Memo</Typography>
+              <Typography>{form.memo}</Typography>
             </Grid>
           )}
         </Grid>
@@ -560,22 +573,12 @@ const ManualProcessing: React.FC = () => {
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Description"
-              name="description"
-              value={form.description}
+              label="Memo"
+              name="memo"
+              value={form.memo}
               onChange={handleInputChange}
               multiline
               rows={2}
-              disabled={loading}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Reference"
-              name="reference"
-              value={form.reference}
-              onChange={handleInputChange}
               disabled={loading}
             />
           </Grid>
@@ -615,7 +618,7 @@ const ManualProcessing: React.FC = () => {
               <Button
                 variant="outlined"
                 startIcon={<SaveIcon />}
-                onClick={handleSaveDraft}
+                onClick={() => handleSaveDraft()}
                 disabled={loading || !form.clientId}
               >
                 Save Draft

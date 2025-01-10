@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Box, CircularProgress } from '@mui/material';
 import { ProtectedRouteProps } from '../../types/auth.types';
+import { UserRole } from '../../types/index';
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
@@ -27,17 +28,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
     // Save the attempted URL for redirecting after login
     return <Navigate to={redirectPath} state={{ from: location }} replace />;
   }
 
   // Check if user has required roles
-  if (
-    requiredRoles.length > 0 &&
-    user &&
-    !requiredRoles.includes(user.role)
-  ) {
+  if (requiredRoles.length > 0 && !requiredRoles.includes(user.permissionGroup)) {
     return <Navigate to="/unauthorized" replace />;
   }
 

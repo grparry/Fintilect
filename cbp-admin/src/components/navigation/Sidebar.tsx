@@ -21,7 +21,7 @@ import {
 } from '@mui/icons-material';
 import * as Icons from '@mui/icons-material';
 import { getNavigationConfig } from '../../routes';
-import { NavigationSection } from '../../types/route.types';
+import { NavigationItem, NavigationSection } from '../../types/navigation.types';
 import { useNavigation } from '../../context/NavigationContext';
 
 interface SidebarProps {
@@ -54,32 +54,30 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
 
   const menuItemStyles = {
     button: {
-      paddingLeft: '0px',  
-    },
-    subMenuContent: {
-      '& .MuiListItemButton-root': {
-        paddingLeft: '16px',  
+      pl: 2,
+      py: 1.5,
+      '&:hover': {
+        backgroundColor: theme.palette.action.hover,
       },
     },
-    label: {
-      fontSize: '0.875rem',
-    },
     icon: {
-      marginRight: '0px',  
+      color: theme.palette.text.secondary,
+      minWidth: 36,
+    },
+    text: {
+      color: theme.palette.text.primary,
     },
   };
 
-  const renderNavigationItem = (item: any) => {
+  const renderNavigationItem = (item: NavigationItem) => {
+    if (item.hideFromSidebar) return null;
+    
     const Icon = item.icon ? Icons[item.icon as keyof typeof Icons] : null;
-    console.log(`Rendering nav item: ${item.title}, path: ${item.path}`);
 
     return (
-      <ListItem key={item.path} disablePadding>
+      <ListItem key={item.id} disablePadding>
         <ListItemButton
-          onClick={() => {
-            console.log(`Navigating to: ${item.path}`);
-            handleNavigate(item.path);
-          }}
+          onClick={() => handleNavigate(item.path)}
           selected={isCurrentPath(item.path)}
           sx={{
             ...menuItemStyles.button,
@@ -90,21 +88,24 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
                 backgroundColor: theme.palette.action.hover,
               },
             },
-            '&:hover': {
-              backgroundColor: theme.palette.action.hover,
-            },
           }}
         >
           {Icon && (
-            <ListItemIcon sx={{ 
-              color: 'inherit',
-              minWidth: '32px',  
-              marginRight: '6px'  
-            }}>
+            <ListItemIcon sx={menuItemStyles.icon}>
               <Icon />
             </ListItemIcon>
           )}
-          <ListItemText primary={item.title} sx={menuItemStyles.label} />
+          <ListItemText
+            primary={item.title}
+            sx={menuItemStyles.text}
+          />
+          {item.children && (
+            state.expandedSections.includes(item.id) ? (
+              <ExpandLessIcon />
+            ) : (
+              <ExpandMoreIcon />
+            )
+          )}
         </ListItemButton>
       </ListItem>
     );
@@ -139,57 +140,47 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
             <ExpandMoreIcon sx={{ color: theme.palette.primary.contrastText }} />
           )}
         </ListItem>
-        <Collapse in={state.expandedSections.includes(section.id)} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding sx={menuItemStyles.subMenuContent}>
-            {section.items.map(renderNavigationItem)}
+        <Collapse in={state.expandedSections.includes(section.id)}>
+          <List component="div" disablePadding>
+            {section.items.map((item) => renderNavigationItem(item))}
           </List>
         </Collapse>
       </React.Fragment>
     );
   };
 
-  const drawerWidth = 240;
-  const closedWidth = '0px';
-
   return (
     <Drawer
-      variant="permanent"
+      variant={isMobile ? 'temporary' : 'persistent'}
+      anchor="left"
+      open={open}
+      onClose={onClose}
       sx={{
-        width: open ? drawerWidth : closedWidth,
+        width: open ? 240 : 0,
         flexShrink: 0,
-        whiteSpace: 'nowrap',
         '& .MuiDrawer-paper': {
-          width: open ? drawerWidth : closedWidth,
-          transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-          }),
-          overflowX: 'hidden',
-          backgroundColor: theme.palette.background.default,
-          borderRight: `1px solid ${theme.palette.divider}`,
+          width: 240,
+          boxSizing: 'border-box',
+          backgroundColor: theme.palette.background.paper,
         },
       }}
-      open={open}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
-        <IconButton onClick={onClose}>
-          {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-        </IconButton>
-      </Box>
       <Box
         sx={{
-          opacity: open ? 1 : 0,
-          visibility: open ? 'visible' : 'hidden',
-          transition: theme.transitions.create(['opacity', 'visibility'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-          }),
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          p: 1,
+          borderBottom: `1px solid ${theme.palette.divider}`,
         }}
       >
-        <List>
-          {navigationConfig.map(renderNavigationSection)}
-        </List>
+        <IconButton onClick={onClose}>
+          {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+        </IconButton>
       </Box>
+      <List sx={{ pt: 0 }}>
+        {navigationConfig.sections.map((section) => renderNavigationSection(section))}
+      </List>
     </Drawer>
   );
 };

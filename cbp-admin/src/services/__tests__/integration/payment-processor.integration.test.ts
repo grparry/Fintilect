@@ -231,7 +231,7 @@ describe('Payment Processor Integration', () => {
         eventId: 'test_event_1',
         paymentId: mockPayment.id,
         processorId: mockProcessorConfig.processorId,
-        status: PaymentStatus.COMPLETED,
+        status: 'COMPLETED',
         timestamp: new Date().toISOString(),
         metadata: {
           clientId: mockPayment.clientId,
@@ -265,7 +265,7 @@ describe('Payment Processor Integration', () => {
       // Verify Bill Pay Service was updated
       expect(mockedBillPayService.updatePaymentStatus).toHaveBeenCalledWith(
         mockPayment.id,
-        PaymentStatus.COMPLETED,
+        'COMPLETED',
         JSON.stringify({ processorMetadata: webhookEvent.metadata })
       );
 
@@ -277,7 +277,7 @@ describe('Payment Processor Integration', () => {
           resourceType: 'payment',
           status: 'PROCESSED',
           metadata: expect.objectContaining({
-            processorStatus: PaymentStatus.COMPLETED,
+            processorStatus: 'COMPLETED',
             updatedAt: expect.any(String),
           }),
         })
@@ -301,7 +301,7 @@ describe('Payment Processor Integration', () => {
         eventId: 'invalid_event',
         paymentId: 'invalid_payment',
         processorId: '', // Invalid processor ID
-        status: PaymentStatus.COMPLETED,
+        status: 'COMPLETED',
         timestamp: new Date().toISOString(),
         metadata: {
           clientId: 'invalid_client',

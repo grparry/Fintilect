@@ -5,10 +5,13 @@ import {
   Toolbar,
   Typography,
   useTheme,
+  Box,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { useAuth } from '../../context/AuthContext';
+import { User } from '../../types/index';
 
 interface HeaderProps {
   drawerWidth: number;
@@ -26,86 +29,50 @@ const Header: React.FC<HeaderProps> = ({
   open,
 }) => {
   const theme = useTheme();
-
-  const iconColor = isDarkMode ? '#ffffff' : '#000000';
+  const { user } = useAuth();
 
   return (
     <AppBar
       position="fixed"
       sx={{
         width: '100%',
-        bgcolor: isDarkMode ? '#000000 !important' : '#ffffff !important',
-        backgroundImage: 'none !important',
-        transition: theme.transitions.create(['margin', 'width', 'background-color'], {
+        bgcolor: theme.palette.background.paper,
+        backgroundImage: 'none',
+        transition: theme.transitions.create(['margin', 'width'], {
           easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.standard,
+          duration: theme.transitions.duration.leavingScreen,
+        }),
+        ...(open && {
+          width: `calc(100% - ${drawerWidth}px)`,
+          marginLeft: `${drawerWidth}px`,
+          transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
         }),
       }}
+      elevation={1}
     >
-      <Toolbar
-        sx={{
-          ml: open ? `${drawerWidth}px` : 0,
-          transition: theme.transitions.create(['margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.standard,
-          }),
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          bgcolor: 'inherit',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={onMenuClick}
-            edge="start"
-            sx={{ 
-              mr: 2,
-              transition: theme.transitions.create('transform', {
-                duration: theme.transitions.duration.shorter,
-              }),
-              transform: open ? 'rotate(180deg)' : 'none',
-              color: iconColor,
-              '& .MuiSvgIcon-root': {
-                color: iconColor,
-              },
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography 
-            variant="h6" 
-            noWrap 
-            component="div" 
-            sx={{ 
-              color: `${iconColor} !important`,
-              '&&': {
-                color: iconColor,
-              }
-            }}
-          >
-            CBP Admin
-          </Typography>
-        </div>
+      <Toolbar>
         <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={onMenuClick}
+          edge="start"
+          sx={{ mr: 2, ...(open && { display: 'none' }) }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" noWrap component="div" color="textPrimary">
+            {user?.firstName ? `Welcome, ${user.firstName}` : 'Welcome'}
+          </Typography>
+        </Box>
+        <IconButton
+          sx={{ ml: 1 }}
           onClick={toggleTheme}
           color="inherit"
           aria-label="toggle theme"
-          sx={{
-            transition: theme.transitions.create(['transform', 'color'], {
-              duration: theme.transitions.duration.shortest,
-            }),
-            '&:hover': {
-              transform: 'rotate(30deg)',
-              backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
-            },
-            color: iconColor,
-            '& .MuiSvgIcon-root': {
-              color: iconColor,
-            },
-          }}
         >
           {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
         </IconButton>

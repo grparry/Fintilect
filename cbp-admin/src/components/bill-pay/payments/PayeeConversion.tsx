@@ -41,8 +41,6 @@ import {
   PayeeConversionRecord,
   PayeeConversionValidation,
   PayeeConversionProgress,
-  PayeeStatus,
-  PayeeType,
   PayeeConversionFileUploadResponse,
   PayeeConversionProgressResponse,
 } from '../../../types/bill-pay.types';
@@ -176,8 +174,14 @@ const PayeeConversion: React.FC = () => {
         // Create validation object from response data
         const validation: PayeeConversionValidation = {
           valid: uploadResponse.validation.invalidRecords === 0,
-          errors: uploadResponse.validation.errors,
-          warnings: uploadResponse.validation.warnings,
+          errors: uploadResponse.validation.errors.map(error => ({
+            field: error.field,
+            message: error.message
+          })),
+          warnings: uploadResponse.validation.warnings.map(warning => ({
+            field: warning.field,
+            message: warning.message
+          })),
           totalRecords: uploadResponse.validation.totalRecords,
           validRecords: uploadResponse.validation.validRecords,
           invalidRecords: uploadResponse.validation.invalidRecords
@@ -321,6 +325,7 @@ const PayeeConversion: React.FC = () => {
                     <Chip
                       label={file.status}
                       color={file.status === 'PROCESSED' ? 'success' : 'warning'}
+                      size="small"
                     />
                   </TableCell>
                   <TableCell>
@@ -496,14 +501,28 @@ const PayeeConversion: React.FC = () => {
                 Invalid Records: {validation.invalidRecords}
               </Typography>
               {validation.errors.length > 0 && (
-                <Alert severity="error">
-                  {validation.errors.length} errors found
-                </Alert>
+                <Box>
+                  <Typography color="error" gutterBottom>
+                    Errors:
+                  </Typography>
+                  {validation.errors.map((error, index) => (
+                    <Alert severity="error" key={index} sx={{ mb: 1 }}>
+                      {error.field}: {error.message}
+                    </Alert>
+                  ))}
+                </Box>
               )}
               {validation.warnings.length > 0 && (
-                <Alert severity="warning">
-                  {validation.warnings.length} warnings found
-                </Alert>
+                <Box>
+                  <Typography color="warning.main" gutterBottom>
+                    Warnings:
+                  </Typography>
+                  {validation.warnings.map((warning, index) => (
+                    <Alert severity="warning" key={index} sx={{ mb: 1 }}>
+                      {warning.field}: {warning.message}
+                    </Alert>
+                  ))}
+                </Box>
               )}
             </Stack>
           )}

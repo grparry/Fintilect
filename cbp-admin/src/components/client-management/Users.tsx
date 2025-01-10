@@ -11,7 +11,12 @@ import {
   DialogActions,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { User, UserGroup, UserStatus } from '../../types/client.types';
+import { 
+  User, 
+  UserGroup, 
+  SecurityRole,
+  Permission,
+} from '../../types/client.types';
 import { clientService } from '../../services/clients.service';
 import UserSearch from './users/UserSearch';
 import UserTable from './users/UserTable';
@@ -20,6 +25,17 @@ import { shouldUseMockData } from '../../config/api.config';
 import { useNavigate } from 'react-router-dom';
 import { encodeId } from '../../utils/idEncoder';
 
+interface UsersState {
+  users: User[];
+  groups: UserGroup[];
+  loading: boolean;
+  error: string | null;
+  success: string | null;
+  saving: boolean;
+  selectedUser: User | null;
+  isFormOpen: boolean;
+}
+
 interface UsersProps {
   clientId: string;
   loading?: boolean;
@@ -27,134 +43,217 @@ interface UsersProps {
 
 const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
   const navigate = useNavigate();
-  const [users, setUsers] = useState<User[]>([]);
-  const [groups, setGroups] = useState<UserGroup[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
-
-  console.log('=== Users Component Debug Start ===');
-  console.log('Props received:', {
-    clientId,
-    loading: parentLoading,
+  const [state, setState] = useState<UsersState>({
+    users: [],
+    groups: [],
+    loading: true,
+    error: null,
+    success: null,
+    saving: false,
+    selectedUser: null,
+    isFormOpen: false
   });
 
   const isMockMode = shouldUseMockData();
 
   const loadData = useCallback(async () => {
-    console.log('Loading users for client:', clientId);
     try {
-      setLoading(true);
-      setError(null);
+      setState(prev => ({ ...prev, loading: true, error: null }));
 
-      const [usersData, groupsData] = await Promise.all([
+      const [usersResponse, groupsResponse] = await Promise.all([
         clientService.getUsers(clientId),
         clientService.getGroups(clientId)
       ]);
 
-      console.log('Data loaded:', { 
-        userCount: usersData.length,
-        groupCount: groupsData.length
-      });
-      setUsers(usersData);
-      setGroups(groupsData);
-    } catch (err) {
-      console.error('Error loading data:', err);
-      setError('Failed to load users and groups');
-    } finally {
-      setLoading(false);
+      if ('error' in usersResponse || 'error' in groupsResponse) {
+        setState(prev => ({ 
+          ...prev, 
+          error: 'Failed to load user data',
+          loading: false 
+        }));
+        return;
+      }
+
+      setState(prev => ({ 
+        ...prev,
+        users: usersResponse.data.items,
+        groups: groupsResponse.data.items,
+        loading: false 
+      }));
+    } catch (error) {
+      setState(prev => ({ 
+        ...prev,
+        error: 'An unexpected error occurred',
+        loading: false 
+      }));
     }
   }, [clientId]);
 
   useEffect(() => {
-    console.log('Users component useEffect triggered', { clientId });
-    console.log('Users - Using mock data:', isMockMode);
     loadData();
-  }, [clientId, isMockMode, loadData]);
+  }, [loadData]);
+
+  const handleCreateUser = async (userData: Omit<User, 'id' | 'clientId' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      setState(prev => ({ ...prev, saving: true, error: null }));
+      
+      const response = await clientService.createUser(clientId, userData);
+      
+      if ('error' in response) {
+        setState(prev => ({ 
+          ...prev,
+          error: response.error.message,
+          saving: false 
+        }));
+        return;
+      }
+
+      setState(prev => ({
+        ...prev,
+        users: [...prev.users, response.data],
+        success: 'User created successfully',
+        saving: false,
+        isFormOpen: false
+      }));
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        error: 'Failed to create user',
+        saving: false
+      }));
+    }
+  };
+
+  const handleUpdateUser = async (userId: string, userData: Partial<Omit<User, 'id' | 'clientId' | 'createdAt' | 'updatedAt'>>) => {
+    try {
+      setState(prev => ({ ...prev, saving: true, error: null }));
+      
+      const response = await clientService.updateUser(clientId, userId, userData);
+      
+      if ('error' in response) {
+        setState(prev => ({ 
+          ...prev,
+          error: response.error.message,
+          saving: false 
+        }));
+        return;
+      }
+
+      setState(prev => ({
+        ...prev,
+        users: prev.users.map(user => 
+          user.id === Number(userId) ? response.data : user
+        ),
+        success: 'User updated successfully',
+        saving: false,
+        selectedUser: null
+      }));
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        error: 'Failed to update user',
+        saving: false
+      }));
+    }
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      setState(prev => ({ ...prev, saving: true, error: null }));
+      
+      const response = await clientService.deleteUser(clientId, userId);
+      
+      if ('error' in response) {
+        setState(prev => ({ 
+          ...prev,
+          error: response.error.message,
+          saving: false 
+        }));
+        return;
+      }
+
+      setState(prev => ({
+        ...prev,
+        users: prev.users.filter(user => user.id !== Number(userId)),
+        success: 'User deleted successfully',
+        saving: false
+      }));
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        error: 'Failed to delete user',
+        saving: false
+      }));
+    }
+  };
 
   const handleSearch = async (searchTerm: string) => {
     try {
-      setLoading(true);
-      setError(null);
-      // TODO: Implement proper search endpoint
-      const filteredUsers = users.filter(user =>
+      setState(prev => ({ ...prev, loading: true, error: null }));
+      
+      const filteredUsers = state.users.filter(user =>
         `${user.firstName} ${user.lastName} ${user.email} ${user.role}`
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
       );
-      console.log('Search results:', { 
-        searchTerm,
-        userCount: filteredUsers.length
-      });
-      setUsers(filteredUsers);
-    } catch (err) {
-      console.error('Error searching users:', err);
-      setError('Failed to search users');
-    } finally {
-      setLoading(false);
+      
+      setState(prev => ({ 
+        ...prev,
+        users: filteredUsers,
+        loading: false 
+      }));
+    } catch (error) {
+      setState(prev => ({ 
+        ...prev,
+        error: 'Failed to search users',
+        loading: false 
+      }));
     }
   };
 
   const handleEditUser = (user: User) => {
-    console.log('✏️ Users.handleEditUser - Navigating to edit user:', { 
-      userId: user.id,
-      userName: `${user.firstName} ${user.lastName}`
-    });
-    navigate(`/admin/client-management/${encodeId(clientId)}/users/${encodeId(user.id)}`);
+    navigate(`/admin/client-management/${encodeId(clientId)}/users/${encodeId(String(user.id))}`);
   };
 
-  const handleAddUser = () => {
-    console.log('➕ Creating new user');
+  const handleCreateClick = () => {
     navigate(`/admin/client-management/${encodeId(clientId)}/users/new`);
-  };
-
-  const handleDeleteUser = (user: User) => {
-    console.log('Deleting user:', { 
-      userId: user.id,
-      userName: `${user.firstName} ${user.lastName}`
-    });
-    navigate(`/admin/client-management/${encodeId(clientId)}/users/${encodeId(user.id)}/delete`);
   };
 
   const handleToggleLock = async (user: User) => {
     try {
-      console.log('Toggling user lock:', { 
-        userId: user.id,
-        userName: `${user.firstName} ${user.lastName}`,
-        currentStatus: user.status
-      });
-
-      const newStatus = user.status === UserStatus.Active ? UserStatus.Locked : UserStatus.Active;
+      const newStatus = user.status === 'ACTIVE' ? 'LOCKED' : 'ACTIVE';
       
-      await clientService.updateUser(clientId, String(user.id), {
-        ...user,
+      const response = await clientService.updateUser(clientId, String(user.id), {
         status: newStatus,
       });
-      console.log('User status updated:', { 
-        userId: user.id,
-        newStatus
-      });
       
-      setUsers(users.map(u =>
-        u.id === user.id ? { ...u, status: newStatus } : u
-      ));
-      setSuccess('User status updated successfully');
-    } catch (err) {
-      console.error('Error updating user status:', err);
-      setError('Failed to update user status');
+      if ('error' in response) {
+        setState(prev => ({ 
+          ...prev,
+          error: response.error.message,
+          saving: false 
+        }));
+        return;
+      }
+
+      setState(prev => ({
+        ...prev,
+        users: prev.users.map(u =>
+          u.id === user.id ? { ...u, status: newStatus } : u
+        ),
+        success: 'User status updated successfully',
+        saving: false
+      }));
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        error: 'Failed to update user status',
+        saving: false
+      }));
     }
   };
 
-  console.log('🔄 Users Render', {
-    hasSelectedUser: false,
-    userCount: users.length,
-    groupCount: groups.length,
-    isLoading: loading,
-    isSaving: saving
-  });
-
-  if (loading || parentLoading) {
+  if (state.loading || parentLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
         <CircularProgress />
@@ -164,23 +263,23 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
 
   return (
     <Box>
-      {error && <Alert severity="error">{error}</Alert>}
-      {success && <Alert severity="success">{success}</Alert>}
+      {state.error && <Alert severity="error">{state.error}</Alert>}
+      {state.success && <Alert severity="success">{state.success}</Alert>}
       {isMockMode && (
         <Alert severity="info" sx={{ mb: 2 }}>
           Mock mode is enabled
         </Alert>
       )}
 
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="h6" component="div">
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+        <Typography variant="h5" component="h1">
           Users
         </Typography>
         <Button
           variant="contained"
+          color="primary"
           startIcon={<AddIcon />}
-          onClick={handleAddUser}
-          sx={{ mt: 1 }}
+          onClick={handleCreateClick}
         >
           Add User
         </Button>
@@ -189,12 +288,11 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       <UserSearch onSearch={handleSearch} />
 
       <UserTable
-        users={users}
-        groups={groups}
+        users={state.users}
+        groups={state.groups}
         onEdit={handleEditUser}
         onDelete={handleDeleteUser}
         onToggleLock={handleToggleLock}
-        clientId={clientId}
       />
     </Box>
   );

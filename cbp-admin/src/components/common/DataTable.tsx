@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import {
   DataGrid,
-  GridToolbar,
-  useGridApiContext,
-  gridPageSelector,
-  gridPageCountSelector,
-  GridRowId,
-  GridRowParams,
+  GridColDef,
   GridRowSelectionModel,
+  GridSortModel,
+  GridPaginationModel,
 } from '@mui/x-data-grid';
 import { Box, Alert } from '@mui/material';
+import { PaginationParams } from '../../types/index';
 
-interface Column<T> {
+export interface Column<T> {
   field: keyof T;
   headerName: string;
   width?: number;
@@ -21,7 +19,7 @@ interface Column<T> {
   align?: 'left' | 'center' | 'right';
 }
 
-interface DataTableProps<T> {
+export interface DataTableProps<T> {
   rows: T[];
   columns: Column<T>[];
   loading?: boolean;
@@ -60,23 +58,23 @@ const DataTable = <T extends object>({
   style,
   error,
 }: DataTableProps<T>): React.ReactElement => {
-  const [paginationModel, setPaginationModel] = useState({
-    pageSize: pageSize,
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
+    pageSize,
   });
 
   // Convert our Column type to GridColDef
-  const gridColumns = columns.map((col) => ({
+  const gridColumns: GridColDef[] = columns.map((col) => ({
     field: col.field as string,
     headerName: col.headerName,
     width: col.width,
     flex: col.flex,
-    sortable: col.sortable,
+    sortable: col.sortable ?? true,
     renderCell: col.renderCell,
     align: col.align,
   }));
 
-  const handlePaginationModelChange = (newModel: any) => {
+  const handlePaginationModelChange = (newModel: GridPaginationModel) => {
     setPaginationModel(newModel);
     if (onPageChange) {
       onPageChange(newModel.page);
@@ -86,16 +84,23 @@ const DataTable = <T extends object>({
     }
   };
 
+  const handleSortModelChange = (model: GridSortModel) => {
+    if (onSortChange && model.length > 0) {
+      const { field, sort } = model[0];
+      onSortChange(field as keyof T, sort as 'asc' | 'desc');
+    }
+  };
+
   if (error) {
     return (
-      <Box sx={{ width: '100%' }}>
-        <Alert severity="error">{error}</Alert>
-      </Box>
+      <Alert severity="error" sx={{ mb: 2 }}>
+        {error}
+      </Alert>
     );
   }
 
   return (
-    <Box sx={{ height: 400, width: '100%' }} className={className} style={style}>
+    <Box sx={{ width: '100%', height: 400, ...style }} className={className}>
       <DataGrid
         rows={rows}
         columns={gridColumns}
@@ -103,27 +108,24 @@ const DataTable = <T extends object>({
         paginationModel={paginationModel}
         onPaginationModelChange={handlePaginationModelChange}
         pageSizeOptions={rowsPerPageOptions}
-        onRowClick={
-          onRowClick
-            ? (params: GridRowParams) => onRowClick(params.row as T)
-            : undefined
-        }
-        getRowId={getRowId}
+        rowCount={rows.length}
+        onRowClick={onRowClick ? (params) => onRowClick(params.row as T) : undefined}
         checkboxSelection={checkboxSelection}
         disableRowSelectionOnClick={disableSelectionOnClick}
         rowSelectionModel={selectionModel}
         onRowSelectionModelChange={onSelectionModelChange}
-        sortingMode="server"
-        onSortModelChange={(model) => {
-          if (onSortChange && model.length > 0) {
-            onSortChange(
-              model[0].field as keyof T,
-              model[0].sort as 'asc' | 'desc'
-            );
-          }
-        }}
-        slots={{
-          toolbar: GridToolbar
+        onSortModelChange={handleSortModelChange}
+        getRowId={getRowId}
+        sx={{
+          '& .MuiDataGrid-columnHeader': {
+            backgroundColor: 'background.default',
+            color: 'text.primary',
+            fontWeight: 'bold',
+          },
+          '& .MuiDataGrid-cell': {
+            borderBottom: 1,
+            borderColor: 'divider',
+          },
         }}
       />
     </Box>

@@ -12,9 +12,9 @@ import {
 
 export const mockMemberDetails: MemberDashboard = {
   recentPayments: [
-    { date: '2024-01-15', amount: 150.00, status: 'Completed' as PaymentStatus, description: 'Monthly Bill Payment' },
-    { date: '2024-01-01', amount: 75.50, status: 'Completed' as PaymentStatus, description: 'Utility Payment' },
-    { date: '2023-12-15', amount: 200.00, status: 'Completed' as PaymentStatus, description: 'Credit Card Payment' },
+    { date: '2024-01-15', amount: 150.00, status: PaymentStatus.COMPLETED, description: 'Monthly Bill Payment' },
+    { date: '2024-01-01', amount: 75.50, status: PaymentStatus.COMPLETED, description: 'Utility Payment' },
+    { date: '2023-12-15', amount: 200.00, status: PaymentStatus.COMPLETED, description: 'Credit Card Payment' },
   ],
   accountSummary: {
     totalPayments: 25,
@@ -31,8 +31,8 @@ export const mockMemberDetails: MemberDashboard = {
     { id: 3, name: 'Credit Card Co', accountNumber: '11111', lastPayment: '2023-12-15', status: 'Inactive' as PayeeStatus },
   ],
   scheduledPayments: [
-    { id: 1, payee: 'Electric Company', amount: 150.00, date: '2024-02-15', status: 'Scheduled' as PaymentStatus },
-    { id: 2, payee: 'Water Utility', amount: 75.50, date: '2024-02-01', status: 'Scheduled' as PaymentStatus },
+    { id: 1, payee: 'Electric Company', amount: 150.00, date: '2024-02-15', status: PaymentStatus.SCHEDULED },
+    { id: 2, payee: 'Water Utility', amount: 75.50, date: '2024-02-01', status: PaymentStatus.SCHEDULED },
   ],
   alerts: [
     { id: 1, type: 'warning' as AlertType, message: 'Payment account ending in 1234 expires next month' },

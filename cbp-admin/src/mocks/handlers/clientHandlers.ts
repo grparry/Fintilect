@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { Client, Environment, ClientStatus, ClientType, AuditLog, ApiResponse } from '../../types/client.types';
+import { Client, Environment, ClientStatus, ClientType, AuditLog, ApiResponse, User, UserRole, UserStatus } from '../../types/client.types';
 import dayjs from 'dayjs';
 import { decodeId } from '../../utils/idEncoder';
 
@@ -122,6 +122,34 @@ const mockClients: Client[] = [
     },
     createdAt: '2024-12-26T10:00:00Z',
     updatedAt: '2024-12-26T10:00:00Z'
+  }
+];
+
+// Mock user data
+const mockUsers: User[] = [
+  {
+    id: 1,
+    username: 'john',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john@example.com',
+    role: UserRole.Admin,
+    status: UserStatus.Active,
+    department: 'IT',
+    lastLogin: new Date().toISOString(),
+    locked: false
+  },
+  {
+    id: 2,
+    username: 'jane',
+    firstName: 'Jane',
+    lastName: 'Smith',
+    email: 'jane@example.com',
+    role: UserRole.User,
+    status: UserStatus.Active,
+    department: 'Operations',
+    lastLogin: new Date().toISOString(),
+    locked: false
   }
 ];
 
@@ -293,5 +321,110 @@ export const clientHandlers = [
       success: true,
       data: updatedClient
     } as ApiResponse<Client>);
-  })
+  }),
+
+  // Get users for client
+  http.get('*/admin/clients/:clientId/users', ({ params, request }) => {
+    console.log('MSW: Handling get users request', params);
+    const url = new URL(request.url);
+    const page = parseInt(url.searchParams.get('page') || '1');
+    const limit = parseInt(url.searchParams.get('limit') || '20');
+    const searchTerm = url.searchParams.get('searchTerm')?.toLowerCase();
+
+    let filteredUsers = [...mockUsers];
+
+    if (searchTerm) {
+      filteredUsers = filteredUsers.filter(user =>
+        `${user.firstName} ${user.lastName} ${user.email} ${user.role}`
+          .toLowerCase()
+          .includes(searchTerm)
+      );
+    }
+
+    const total = filteredUsers.length;
+    const pages = Math.ceil(total / limit);
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    const items = filteredUsers.slice(start, end);
+
+    console.log('MSW: Returning filtered users', items);
+
+    return HttpResponse.json({
+      success: true,
+      data: {
+        items,
+        pagination: {
+          total,
+          page,
+          limit,
+          pages
+        }
+      }
+    });
+  }),
+
+  // Create user
+  http.post('*/admin/clients/:clientId/users', async ({ params, request }) => {
+    console.log('MSW: Handling create user request', params);
+    const userData = await request.json() as Omit<User, 'id'>;
+
+    const newUser: User = {
+      id: mockUsers.length + 1,
+      ...userData,
+      lastLogin: null,
+      locked: false
+    };
+
+    mockUsers.push(newUser);
+    console.log('MSW: Created new user', newUser);
+
+    return HttpResponse.json({
+      success: true,
+      data: newUser
+    });
+  }),
+
+  // Update user
+  http.put('*/admin/clients/:clientId/users/:userId', async ({ params, request }) => {
+    console.log('MSW: Handling update user request', params);
+    const decodedUserId = parseInt(decodeId(params.userId as string));
+    const updates = await request.json() as Partial<Omit<User, 'id'>>;
+
+    const userIndex = mockUsers.findIndex(u => u.id === decodedUserId);
+    if (userIndex === -1) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    const updatedUser = {
+      ...mockUsers[userIndex],
+      ...updates
+    };
+
+    mockUsers[userIndex] = updatedUser;
+    console.log('MSW: Updated user', updatedUser);
+
+    return HttpResponse.json({
+      success: true,
+      data: updatedUser
+    });
+  }),
+
+  // Delete user
+  http.delete('*/admin/clients/:clientId/users/:userId', ({ params }) => {
+    console.log('MSW: Handling delete user request', params);
+    const decodedUserId = parseInt(decodeId(params.userId as string));
+
+    const userIndex = mockUsers.findIndex(u => u.id === decodedUserId);
+    if (userIndex === -1) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    mockUsers.splice(userIndex, 1);
+    console.log('MSW: Deleted user', decodedUserId);
+
+    return HttpResponse.json({
+      success: true,
+      data: null
+    });
+  }),
 ];

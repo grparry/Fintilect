@@ -1,23 +1,27 @@
 import React from 'react';
-import type { UseFormReturn, FieldValues, DefaultValues, Path } from 'react-hook-form';
-import { useForm, Controller } from 'react-hook-form';
 import {
   TextField,
   Button,
+  FormControl,
+  FormControlLabel,
+  Checkbox,
+  Select,
+  MenuItem,
+  InputLabel,
   Box,
-  Grid,
   Typography,
   CircularProgress,
-  Checkbox,
-  FormControlLabel,
 } from '@mui/material';
+import { Controller, useForm, Path, FieldValues, DefaultValues } from 'react-hook-form';
+import { SelectOption } from '../../types/index';
 
-export interface FormField {
-  name: string;
+export interface FormField<T> {
+  name: Path<T>;
   label: string;
-  type?: string;
+  type?: 'text' | 'password' | 'email' | 'number' | 'select' | 'checkbox';
   required?: boolean;
   defaultValue?: any;
+  options?: SelectOption[];
   validation?: {
     required?: string;
     minLength?: { value: number; message: string };
@@ -28,15 +32,15 @@ export interface FormField {
   };
 }
 
-interface FormProps<T extends Record<string, any>> {
-  fields: FormField[];
+export interface FormProps<T extends FieldValues> {
+  fields: FormField<T>[];
   onSubmit: (data: T) => Promise<void>;
   title?: string;
   submitText?: string;
   loading?: boolean;
 }
 
-const Form = <T extends Record<string, any>>({
+const Form = <T extends FieldValues>({
   fields,
   onSubmit,
   title,
@@ -57,7 +61,7 @@ const Form = <T extends Record<string, any>>({
         acc[field.name] = field.defaultValue ?? '';
     }
     return acc;
-  }, {} as Record<string, any>) as DefaultValues<T>;
+  }, {} as DefaultValues<T>);
 
   const {
     control,
@@ -65,7 +69,6 @@ const Form = <T extends Record<string, any>>({
     formState: { errors },
   } = useForm<T>({
     defaultValues,
-    mode: 'onBlur',
   });
 
   const onSubmitHandler = async (data: T) => {
@@ -76,78 +79,78 @@ const Form = <T extends Record<string, any>>({
     }
   };
 
-  const renderField = (field: FormField) => {
-    switch (field.type) {
+  const renderField = (field: FormField<T>) => {
+    const { name, label, type = 'text', required, options, validation = {} } = field;
+
+    const rules = {
+      required: required ? validation.required || `${label} is required` : false,
+      ...validation,
+    };
+
+    switch (type) {
+      case 'select':
+        return (
+          <Controller
+            key={name}
+            name={name}
+            control={control}
+            rules={rules}
+            render={({ field: { onChange, value } }) => (
+              <FormControl fullWidth error={!!errors[name]}>
+                <InputLabel>{label}</InputLabel>
+                <Select
+                  value={value ?? ''}
+                  onChange={onChange}
+                  label={label}
+                >
+                  {options?.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          />
+        );
+
       case 'checkbox':
         return (
           <Controller
-            key={field.name}
-            name={field.name as Path<T>}
+            key={name}
+            name={name}
             control={control}
-            rules={{
-              required: field.required ? `${field.label} is required` : false,
-              ...field.validation,
-            }}
-            render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
+            rules={rules}
+            render={({ field: { onChange, value } }) => (
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={!!value}
+                    checked={value}
                     onChange={(e) => onChange(e.target.checked)}
-                    inputRef={ref}
                   />
                 }
-                label={field.label}
+                label={label}
               />
             )}
           />
         );
-      case 'number':
-        return (
-          <Controller
-            key={field.name}
-            name={field.name as Path<T>}
-            control={control}
-            rules={{
-              required: field.required ? `${field.label} is required` : false,
-              ...field.validation,
-            }}
-            render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
-              <TextField
-                fullWidth
-                label={field.label}
-                type="number"
-                value={value ?? ''}
-                onChange={(e) => onChange(e.target.value ? Number(e.target.value) : '')}
-                error={!!error}
-                helperText={error?.message}
-                required={field.required}
-                inputRef={ref}
-              />
-            )}
-          />
-        );
+
       default:
         return (
           <Controller
-            key={field.name}
-            name={field.name as Path<T>}
+            key={name}
+            name={name}
             control={control}
-            rules={{
-              required: field.required ? `${field.label} is required` : false,
-              ...field.validation,
-            }}
-            render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
+            rules={rules}
+            render={({ field: { onChange, value } }) => (
               <TextField
                 fullWidth
-                label={field.label}
-                type={field.type || 'text'}
-                value={value ?? ''}
+                label={label}
+                type={type}
+                value={value}
                 onChange={onChange}
-                error={!!error}
-                helperText={error?.message}
-                required={field.required}
-                inputRef={ref}
+                error={!!errors[name]}
+                helperText={errors[name]?.message as string}
               />
             )}
           />
@@ -156,32 +159,27 @@ const Form = <T extends Record<string, any>>({
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmitHandler)} noValidate>
+    <form onSubmit={handleSubmit(onSubmitHandler)}>
       {title && (
         <Typography variant="h6" gutterBottom>
           {title}
         </Typography>
       )}
-      <Grid container spacing={2}>
-        {fields.map((field) => (
-          <Grid item xs={12} key={field.name}>
-            {renderField(field)}
-          </Grid>
-        ))}
-        <Grid item xs={12}>
-          <Box sx={{ mt: 2 }}>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={loading}
-              startIcon={loading && <CircularProgress size={20} />}
-            >
-              {submitText}
-            </Button>
-          </Box>
-        </Grid>
-      </Grid>
-    </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 2 }}>
+        {fields.map(renderField)}
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={loading}
+          startIcon={loading && <CircularProgress size={20} />}
+        >
+          {submitText}
+        </Button>
+      </Box>
+    </form>
   );
 };
 

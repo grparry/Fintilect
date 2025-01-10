@@ -31,6 +31,7 @@ import {
   TablePagination,
   Divider,
   SelectChangeEvent,
+  Checkbox,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -39,6 +40,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import SearchIcon from '@mui/icons-material/Search';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import dayjs from 'dayjs';
+import { ApiResponse } from '../../../types/api.types';
 import {
   FISException,
   FISExceptionFilters,
@@ -48,7 +50,6 @@ import {
   FISExceptionStatus,
   FISErrorCode,
 } from '../../../types/bill-pay.types';
-import { PaymentApiResponse } from '../../../types/api.types';
 import { useAuth } from '../../../hooks/useAuth';
 
 interface FISDialogState {
@@ -58,8 +59,8 @@ interface FISDialogState {
 }
 
 interface FilterState {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: string | null;
+  endDate: string | null;
   status: FISExceptionStatus[];
   errorCodes: FISErrorCode[];
   searchTerm: string;
@@ -67,58 +68,134 @@ interface FilterState {
 
 interface FISExceptionHandlingProps {
   api: {
-    getExceptions: (filters: FISExceptionFilters) => Promise<PaymentApiResponse<FISException[]>>;
-    getResponseHistory: (requestId: string) => Promise<PaymentApiResponse<FISResponseHistory[]>>;
-    retryException: (id: string) => Promise<PaymentApiResponse<FISRetryResult>>;
-    ignoreException: (id: string, notes: string) => Promise<PaymentApiResponse<void>>;
-    bulkRetry: (ids: string[]) => Promise<PaymentApiResponse<FISRetryResult[]>>;
-    bulkDelete: (ids: string[]) => Promise<PaymentApiResponse<void>>;
+    getExceptions: (filters: FISExceptionFilters) => Promise<ApiResponse<FISException[]>>;
+    getResponseHistory: (requestId: string) => Promise<ApiResponse<FISResponseHistory[]>>;
+    retryException: (id: string) => Promise<ApiResponse<FISRetryResult>>;
+    ignoreException: (id: string, notes: string) => Promise<ApiResponse<void>>;
+    bulkRetry: (ids: string[]) => Promise<ApiResponse<FISRetryResult[]>>;
+    bulkDelete: (ids: string[]) => Promise<ApiResponse<void>>;
     exportExceptions: (filters: FISExceptionFilters) => Promise<Blob>;
-    getExceptionStats: () => Promise<PaymentApiResponse<ExceptionStats>>;
+    getExceptionStats: () => Promise<ApiResponse<ExceptionStats>>;
   };
   onClose: () => void;
 }
+
+interface ExceptionSummary {
+  total: number;
+  byStatus: Record<FISExceptionStatus, number>;
+}
+
+const getExceptionSummary = (exceptions: FISException[]): ExceptionSummary => {
+  const summary: ExceptionSummary = {
+    total: exceptions.length,
+    byStatus: {
+      [FISExceptionStatus.PENDING]: 0,
+      [FISExceptionStatus.IN_PROGRESS]: 0,
+      [FISExceptionStatus.RESOLVED]: 0,
+      [FISExceptionStatus.FAILED]: 0,
+      [FISExceptionStatus.REFUNDED]: 0,
+      [FISExceptionStatus.RETRYING]: 0,
+      [FISExceptionStatus.REVERSED]: 0,
+      [FISExceptionStatus.STOPPED]: 0,
+      [FISExceptionStatus.RETURNED]: 0,
+      [FISExceptionStatus.RESENT]: 0,
+      [FISExceptionStatus.REINITIATED]: 0,
+      [FISExceptionStatus.PENDING_REVERSAL]: 0,
+      [FISExceptionStatus.PENDING_REFUND]: 0,
+      [FISExceptionStatus.PENDING_RETURN]: 0,
+      [FISExceptionStatus.PENDING_STOP_PAYMENT]: 0,
+      [FISExceptionStatus.PENDING_RESEND]: 0,
+      [FISExceptionStatus.PENDING_REINITIATE]: 0,
+    },
+  };
+
+  exceptions.forEach((exception) => {
+    summary.byStatus[exception.status]++;
+  });
+
+  return summary;
+};
+
+const ExceptionStatusChip: React.FC<{ status: FISExceptionStatus }> = ({ status }) => {
+  const getColor = () => {
+    switch (status) {
+      case FISExceptionStatus.PENDING:
+      case FISExceptionStatus.IN_PROGRESS:
+      case FISExceptionStatus.RETRYING:
+        return 'warning';
+      case FISExceptionStatus.RESOLVED:
+        return 'success';
+      case FISExceptionStatus.FAILED:
+        return 'error';
+      default:
+        return 'default';
+    }
+  };
+
+  return (
+    <Chip
+      label={status}
+      color={getColor()}
+      size="small"
+    />
+  );
+};
+
+const ExceptionSummaryDisplay: React.FC<{ summary: ExceptionSummary }> = ({ summary }) => {
+  return (
+    <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+      <Typography variant="body2">
+        Total: {summary.total}
+      </Typography>
+      <Typography variant="body2">
+        Pending: {summary.byStatus[FISExceptionStatus.PENDING]}
+      </Typography>
+      <Typography variant="body2">
+        In Progress: {summary.byStatus[FISExceptionStatus.IN_PROGRESS]}
+      </Typography>
+      <Typography variant="body2">
+        Resolved: {summary.byStatus[FISExceptionStatus.RESOLVED]}
+      </Typography>
+      <Typography variant="body2">
+        Failed: {summary.byStatus[FISExceptionStatus.FAILED]}
+      </Typography>
+    </Box>
+  );
+};
 
 const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClose }) => {
   const { user } = useAuth();
 
   // State
   const [exceptions, setExceptions] = useState<FISException[]>([]);
-  const [selectedExceptions, setSelectedExceptions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [totalExceptions, setTotalExceptions] = useState(0);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [dialogState, setDialogState] = useState<FISDialogState>({
     open: false,
     exception: null,
     action: null,
   });
   const [filters, setFilters] = useState<FilterState>({
-    startDate: dayjs().subtract(30, 'days').toDate(),
-    endDate: dayjs().toDate(),
-    status: [FISExceptionStatus.PENDING],
+    startDate: null,
+    endDate: null,
+    status: [],
     errorCodes: [],
     searchTerm: '',
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<ExceptionStats | null>(null);
-  const [retrying, setRetrying] = useState<Record<string, boolean>>({});
-  const [processing, setProcessing] = useState<Record<string, boolean>>({});
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [responseHistory, setResponseHistory] = useState<FISResponseHistory[]>([]);
-  const [historyDialogOpen, setHistoryDialogOpen] = useState(false);
+  const [retryResult, setRetryResult] = useState<FISRetryResult | null>(null);
 
-  const convertFiltersToApiFormat = (filters: FilterState): FISExceptionFilters => ({
-    ...filters,
-    startDate: filters.startDate?.toISOString(),
-    endDate: filters.endDate?.toISOString()
-  });
-
-  const fetchExceptions = useCallback(async () => {
+  const loadExceptions = useCallback(async () => {
     try {
       setLoading(true);
-      const apiFilters = convertFiltersToApiFormat(filters);
-      const response = await api.getExceptions(apiFilters);
+      const response = await api.getExceptions({
+        requestId: filters.searchTerm,
+        status: filters.status,
+      });
       if (response.success) {
         setExceptions(response.data);
         setError(null);
@@ -133,64 +210,72 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
     }
   }, [api, filters]);
 
-  const handleRetryException = async (id: string) => {
+  const handleRetry = async (exception: FISException | null) => {
+    if (!exception) return;
+
     try {
       setLoading(true);
-      const response = await api.retryException(id);
+      const response = await api.retryException(exception.id);
       if (response.success) {
-        await fetchExceptions();
+        setRetryResult(response.data);
+        if (response.data.success) {
+          await loadExceptions();
+          setDialogState({ open: false, exception: null, action: null });
+        }
       } else {
-        setError('Failed to retry exception');
+        setError(response.error?.message || 'Failed to retry exception');
       }
     } catch (err) {
-      setError('An error occurred while retrying exception');
-      console.error('Error retrying exception:', err);
+      setError('Failed to retry exception');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
   const handleBulkRetry = async () => {
+    if (!selectedIds.length) return;
+
     try {
       setLoading(true);
-      const response = await api.bulkRetry(selectedExceptions);
+      const response = await api.bulkRetry(selectedIds);
       if (response.success) {
-        await fetchExceptions();
-        setSelectedExceptions([]);
+        await loadExceptions();
+        setSelectedIds([]);
       } else {
-        setError('Failed to retry selected exceptions');
+        setError(response.error?.message || 'Failed to retry selected exceptions');
       }
     } catch (err) {
-      setError('An error occurred while retrying exceptions');
-      console.error('Error bulk retrying exceptions:', err);
+      setError('Failed to retry selected exceptions');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
   const handleBulkDelete = async () => {
+    if (!selectedIds.length) return;
+
     try {
       setLoading(true);
-      const response = await api.bulkDelete(selectedExceptions);
-      if (response.success) {
-        await fetchExceptions();
-        setSelectedExceptions([]);
-      } else {
-        setError('Failed to delete selected exceptions');
-      }
+      await api.bulkDelete(selectedIds);
+      await loadExceptions();
+      setSelectedIds([]);
     } catch (err) {
-      setError('An error occurred while deleting exceptions');
-      console.error('Error bulk deleting exceptions:', err);
+      setError('Failed to delete selected exceptions');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleExportExceptions = async () => {
+  const handleExport = async () => {
     try {
       setLoading(true);
-      const apiFilters = convertFiltersToApiFormat(filters);
-      const blob = await api.exportExceptions(apiFilters);
+      const blob = await api.exportExceptions({
+        requestId: filters.searchTerm,
+        status: filters.status,
+      });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -200,58 +285,11 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (err) {
-      setError('An error occurred while exporting exceptions');
-      console.error('Error exporting exceptions:', err);
+      setError('Failed to export exceptions');
+      console.error(err);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleViewHistory = async (exception: FISException) => {
-    try {
-      setLoading(true);
-      const response = await api.getResponseHistory(exception.id);
-      if (response.success) {
-        setDialogState({
-          open: true,
-          exception,
-          action: 'view',
-        });
-      } else {
-        setError('Failed to fetch exception history');
-      }
-    } catch (err) {
-      setError('An error occurred while fetching exception history');
-      console.error('Error fetching exception history:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchStats = useCallback(async () => {
-    try {
-      const response = await api.getExceptionStats();
-      if (response.success) {
-        setStats(response.data);
-      }
-    } catch (err) {
-      console.error('Failed to fetch stats:', err);
-    }
-  }, [api]);
-
-  useEffect(() => {
-    fetchExceptions();
-    fetchStats();
-  }, [fetchExceptions, fetchStats]);
-
-  // Handlers
-  const handlePageChange = (_: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
   };
 
   const handleFilterChange = <K extends keyof FilterState>(
@@ -261,7 +299,7 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
     setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleDateChange = (field: 'startDate' | 'endDate') => (date: Date | null) => {
+  const handleDateChange = (field: 'startDate' | 'endDate') => (date: string | null) => {
     handleFilterChange(field, date);
   };
 
@@ -287,21 +325,6 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleFilterChange('searchTerm', event.target.value);
-  };
-
-  const getStatusColor = (status: FISExceptionStatus) => {
-    switch (status) {
-      case FISExceptionStatus.PENDING:
-        return 'warning';
-      case FISExceptionStatus.RETRYING:
-        return 'info';
-      case FISExceptionStatus.RESOLVED:
-        return 'success';
-      case FISExceptionStatus.FAILED:
-        return 'error';
-      default:
-        return 'default';
-    }
   };
 
   const renderStats = () => (
@@ -338,7 +361,7 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
         <Card>
           <CardContent>
             <Typography variant="h6">Pending Exceptions</Typography>
-            <Typography>{stats?.byStatus.pending || 0}</Typography>
+            <Typography>{stats?.byStatus[FISExceptionStatus.PENDING] || 0}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -353,8 +376,8 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
             <TextField
               label="Start Date"
               type="date"
-              value={filters.startDate?.toISOString().split('T')[0] || ''}
-              onChange={(e) => handleDateChange('startDate')(new Date(e.target.value))}
+              value={filters.startDate || ''}
+              onChange={(e) => handleDateChange('startDate')(e.target.value)}
               InputLabelProps={{ shrink: true }}
               fullWidth
               size="small"
@@ -364,8 +387,8 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
             <TextField
               label="End Date"
               type="date"
-              value={filters.endDate?.toISOString().split('T')[0] || ''}
-              onChange={(e) => handleDateChange('endDate')(new Date(e.target.value))}
+              value={filters.endDate || ''}
+              onChange={(e) => handleDateChange('endDate')(e.target.value)}
               InputLabelProps={{ shrink: true }}
               fullWidth
               size="small"
@@ -422,123 +445,102 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
     </Card>
   );
 
-  const renderTable = () => (
-    <TableContainer component={Paper} sx={{ mt: 3 }}>
+  const renderExceptionList = () => (
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell padding="checkbox">
+              <Checkbox
+                checked={selectedIds.length === exceptions.length}
+                indeterminate={selectedIds.length > 0 && selectedIds.length < exceptions.length}
+                onChange={(e) =>
+                  setSelectedIds(
+                    e.target.checked ? exceptions.map((ex) => ex.id) : []
+                  )
+                }
+              />
+            </TableCell>
             <TableCell>Request ID</TableCell>
-            <TableCell>Error Code</TableCell>
-            <TableCell>Error Message</TableCell>
             <TableCell>Status</TableCell>
+            <TableCell>Error Code</TableCell>
+            <TableCell>Message</TableCell>
             <TableCell>Retry Count</TableCell>
-            <TableCell>Last Updated</TableCell>
+            <TableCell>Created At</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {loading ? (
-            <TableRow>
-              <TableCell colSpan={7} align="center">
-                <CircularProgress />
+          {exceptions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((exception) => (
+            <TableRow key={exception.id}>
+              <TableCell padding="checkbox">
+                <Checkbox
+                  checked={selectedIds.includes(exception.id)}
+                  onChange={(e) =>
+                    setSelectedIds(
+                      e.target.checked
+                        ? [...selectedIds, exception.id]
+                        : selectedIds.filter((id) => id !== exception.id)
+                    )
+                  }
+                />
               </TableCell>
-            </TableRow>
-          ) : exceptions.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={7} align="center">
-                No exceptions found
+              <TableCell>{exception.requestId}</TableCell>
+              <TableCell>
+                <ExceptionStatusChip status={exception.status} />
               </TableCell>
-            </TableRow>
-          ) : (
-            exceptions
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((exception) => (
-                <TableRow key={exception.id}>
-                  <TableCell>{exception.requestId}</TableCell>
-                  <TableCell>{exception.errorCode}</TableCell>
-                  <TableCell>{exception.errorMessage}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={exception.status}
+              <TableCell>{exception.errorCode}</TableCell>
+              <TableCell>{exception.errorMessage}</TableCell>
+              <TableCell>{exception.retryCount}</TableCell>
+              <TableCell>{dayjs(exception.createdAt).format('MM/DD/YYYY HH:mm')}</TableCell>
+              <TableCell>
+                <Stack direction="row" spacing={1}>
+                  <Tooltip title="View Details">
+                    <IconButton
                       size="small"
-                      color={getStatusColor(exception.status)}
-                    />
-                  </TableCell>
-                  <TableCell>{exception.retryCount}</TableCell>
-                  <TableCell>
-                    {dayjs(exception.updatedAt).format('YYYY-MM-DD HH:mm')}
-                  </TableCell>
-                  <TableCell>
-                    <Stack direction="row" spacing={1}>
-                      <Tooltip title="View Details">
-                        <IconButton
-                          size="small"
-                          onClick={() =>
-                            setDialogState({
-                              open: true,
-                              exception,
-                              action: 'view',
-                            })
-                          }
-                        >
-                          <VisibilityIcon />
-                        </IconButton>
-                      </Tooltip>
-                      {exception.status !== FISExceptionStatus.RESOLVED && (
-                        <>
-                          <Tooltip title="Retry">
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              onClick={() => handleRetryException(exception.id)}
-                              disabled={processing[exception.id]}
-                            >
-                              {processing[exception.id] ? (
-                                <CircularProgress size={24} />
-                              ) : (
-                                <ReplayIcon />
-                              )}
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Delete">
-                            <IconButton
-                              size="small"
-                              color="error"
-                              onClick={() =>
-                                setDialogState({
-                                  open: true,
-                                  exception,
-                                  action: 'delete',
-                                })
-                              }
-                            >
-                              <ErrorOutlineIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </>
-                      )}
-                      <Tooltip title="View History">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleViewHistory(exception)}
-                        >
-                          <VisibilityIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              ))
-          )}
+                      onClick={() =>
+                        setDialogState({
+                          open: true,
+                          exception,
+                          action: 'view',
+                        })
+                      }
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+                  </Tooltip>
+                  {exception.status === FISExceptionStatus.PENDING && (
+                    <Tooltip title="Retry">
+                      <IconButton
+                        size="small"
+                        onClick={() =>
+                          setDialogState({
+                            open: true,
+                            exception,
+                            action: 'retry',
+                          })
+                        }
+                      >
+                        <ReplayIcon />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </Stack>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
       <TablePagination
         component="div"
-        count={totalExceptions}
+        count={exceptions.length}
         page={page}
-        onPageChange={handlePageChange}
+        onPageChange={(_, newPage) => setPage(newPage)}
         rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={handleRowsPerPageChange}
+        onRowsPerPageChange={(e) => {
+          setRowsPerPage(parseInt(e.target.value, 10));
+          setPage(0);
+        }}
       />
     </TableContainer>
   );
@@ -574,36 +576,12 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
             </Grid>
             <Grid item xs={6}>
               <Typography variant="subtitle2">Status</Typography>
-              <Chip
-                label={dialogState.exception.status}
-                size="small"
-                color={getStatusColor(dialogState.exception.status)}
-              />
+              <ExceptionStatusChip status={dialogState.exception.status} />
             </Grid>
             <Grid item xs={6}>
               <Typography variant="subtitle2">Retry Count</Typography>
               <Typography>{dialogState.exception.retryCount}</Typography>
             </Grid>
-            {dialogState.exception.metadata && (
-              <>
-                <Grid item xs={12}>
-                  <Divider sx={{ my: 1 }} />
-                  <Typography variant="subtitle2">Additional Details</Typography>
-                </Grid>
-                {Object.entries(dialogState.exception.metadata).map(([key, value]) => (
-                  <Grid item xs={6} key={key}>
-                    <Typography variant="subtitle2">
-                      {key.replace(/([A-Z])/g, ' $1').trim()}
-                    </Typography>
-                    <Typography>
-                      {typeof value === 'object'
-                        ? JSON.stringify(value, null, 2)
-                        : value}
-                    </Typography>
-                  </Grid>
-                ))}
-              </>
-            )}
           </Grid>
         )}
       </DialogContent>
@@ -619,85 +597,18 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
           <Button
             variant="contained"
             color="primary"
-            onClick={() => {
-              if (dialogState.exception) {
-                handleRetryException(dialogState.exception.id);
-              }
-            }}
-            disabled={dialogState.exception ? processing[dialogState.exception.id] : false}
-            startIcon={
-              dialogState.exception && processing[dialogState.exception.id] ? (
-                <CircularProgress size={20} />
-              ) : (
-                <ReplayIcon />
-              )
-            }
+            onClick={() => handleRetry(dialogState.exception)}
           >
             Retry Exception
-          </Button>
-        )}
-        {dialogState.action === 'delete' && dialogState.exception && (
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              if (dialogState.exception) {
-                setSelectedExceptions([dialogState.exception.id]);
-                handleBulkDelete();
-              }
-            }}
-            startIcon={<ErrorOutlineIcon />}
-          >
-            Delete Exception
           </Button>
         )}
       </DialogActions>
     </Dialog>
   );
 
-  const renderHistoryDialog = () => (
-    <Dialog
-      open={historyDialogOpen}
-      onClose={() => setHistoryDialogOpen(false)}
-      maxWidth="md"
-      fullWidth
-    >
-      <DialogTitle>Response History</DialogTitle>
-      <DialogContent>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Timestamp</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Response</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {responseHistory.map((entry) => (
-              <TableRow key={entry.timestamp}>
-                <TableCell>
-                  {dayjs(entry.timestamp).format('YYYY-MM-DD HH:mm')}
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    label={entry.status}
-                    size="small"
-                    color={getStatusColor(entry.status)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <pre>{JSON.stringify(entry.response, null, 2)}</pre>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setHistoryDialogOpen(false)}>Close</Button>
-      </DialogActions>
-    </Dialog>
-  );
+  useEffect(() => {
+    loadExceptions();
+  }, [loadExceptions]);
 
   return (
     <Box>
@@ -717,7 +628,7 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       >
         <Typography variant="h5">FIS Exception Handling</Typography>
         <Stack direction="row" spacing={2}>
-          {selectedExceptions.length > 0 && (
+          {selectedIds.length > 0 && (
             <>
               <Button
                 variant="contained"
@@ -726,7 +637,7 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
                 onClick={handleBulkRetry}
                 disabled={loading}
               >
-                Retry Selected ({selectedExceptions.length})
+                Retry Selected ({selectedIds.length})
               </Button>
               <Button
                 variant="contained"
@@ -742,7 +653,7 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
           <Button
             variant="outlined"
             startIcon={<RefreshIcon />}
-            onClick={fetchExceptions}
+            onClick={loadExceptions}
             disabled={loading}
           >
             Refresh
@@ -750,7 +661,7 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
           <Button
             variant="outlined"
             startIcon={<FileDownloadIcon />}
-            onClick={handleExportExceptions}
+            onClick={handleExport}
             disabled={loading}
           >
             Export
@@ -758,86 +669,35 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
         </Stack>
       </Box>
 
-      {stats && renderStats()}
+      {stats && (
+        <ExceptionSummaryDisplay summary={{
+          total: stats.total,
+          byStatus: {
+            [FISExceptionStatus.PENDING]: stats.byStatus[FISExceptionStatus.PENDING],
+            [FISExceptionStatus.IN_PROGRESS]: stats.byStatus[FISExceptionStatus.IN_PROGRESS],
+            [FISExceptionStatus.RESOLVED]: stats.byStatus[FISExceptionStatus.RESOLVED],
+            [FISExceptionStatus.FAILED]: stats.byStatus[FISExceptionStatus.FAILED],
+            [FISExceptionStatus.REFUNDED]: stats.byStatus[FISExceptionStatus.REFUNDED],
+            [FISExceptionStatus.RETRYING]: stats.byStatus[FISExceptionStatus.RETRYING],
+            [FISExceptionStatus.REVERSED]: stats.byStatus[FISExceptionStatus.REVERSED],
+            [FISExceptionStatus.STOPPED]: stats.byStatus[FISExceptionStatus.STOPPED],
+            [FISExceptionStatus.RETURNED]: stats.byStatus[FISExceptionStatus.RETURNED],
+            [FISExceptionStatus.RESENT]: stats.byStatus[FISExceptionStatus.RESENT],
+            [FISExceptionStatus.REINITIATED]: stats.byStatus[FISExceptionStatus.REINITIATED],
+            [FISExceptionStatus.PENDING_REVERSAL]: stats.byStatus[FISExceptionStatus.PENDING_REVERSAL],
+            [FISExceptionStatus.PENDING_REFUND]: stats.byStatus[FISExceptionStatus.PENDING_REFUND],
+            [FISExceptionStatus.PENDING_RETURN]: stats.byStatus[FISExceptionStatus.PENDING_RETURN],
+            [FISExceptionStatus.PENDING_STOP_PAYMENT]: stats.byStatus[FISExceptionStatus.PENDING_STOP_PAYMENT],
+            [FISExceptionStatus.PENDING_RESEND]: stats.byStatus[FISExceptionStatus.PENDING_RESEND],
+            [FISExceptionStatus.PENDING_REINITIATE]: stats.byStatus[FISExceptionStatus.PENDING_REINITIATE]
+          }
+        }} />
+      )}
 
-      <Card>
-        <CardContent>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={6} md={3}>
-              <TextField
-                label="Start Date"
-                type="date"
-                value={filters.startDate?.toISOString().split('T')[0] || ''}
-                onChange={(e) => handleDateChange('startDate')(new Date(e.target.value))}
-                InputLabelProps={{ shrink: true }}
-                fullWidth
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <TextField
-                label="End Date"
-                type="date"
-                value={filters.endDate?.toISOString().split('T')[0] || ''}
-                onChange={(e) => handleDateChange('endDate')(new Date(e.target.value))}
-                InputLabelProps={{ shrink: true }}
-                fullWidth
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={2}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Status</InputLabel>
-                <Select
-                  multiple
-                  value={filters.status}
-                  onChange={handleStatusChange}
-                  label="Status"
-                >
-                  {Object.values(FISExceptionStatus).map((status) => (
-                    <MenuItem key={status} value={status}>
-                      {status}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6} md={2}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Error Code</InputLabel>
-                <Select
-                  multiple
-                  value={filters.errorCodes}
-                  onChange={handleErrorCodeChange}
-                  label="Error Code"
-                >
-                  {Object.values(FISErrorCode).map((code) => (
-                    <MenuItem key={code} value={code}>
-                      {code}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6} md={2}>
-              <TextField
-                fullWidth
-                size="small"
-                label="Search"
-                value={filters.searchTerm}
-                onChange={handleSearchChange}
-                InputProps={{
-                  endAdornment: <SearchIcon />,
-                }}
-              />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
+      {renderFilters()}
 
-      {renderTable()}
+      {renderExceptionList()}
       {renderDialog()}
-      {renderHistoryDialog()}
     </Box>
   );
 };

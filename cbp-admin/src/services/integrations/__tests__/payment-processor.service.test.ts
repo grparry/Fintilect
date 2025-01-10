@@ -117,7 +117,7 @@ describe('PaymentProcessorService', () => {
       eventId: 'evt123',
       paymentId: mockPayment.id,
       processorId: 'proc123',
-      status: PaymentStatus.COMPLETED,
+      status: 'COMPLETED',
       timestamp: '2025-01-08T14:21:58-07:00',
       metadata: {
         clientId: mockPayment.clientId,

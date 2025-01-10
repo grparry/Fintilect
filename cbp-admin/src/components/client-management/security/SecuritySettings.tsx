@@ -24,6 +24,24 @@ interface SecuritySettingsProps {
   clientId: string;
 }
 
+const defaultSecuritySettings: SecuritySettingsType = {
+  passwordPolicy: {
+    minLength: 8,
+    requireUppercase: true,
+    requireLowercase: true,
+    requireNumbers: true,
+    requireSpecialChars: true,
+    expirationDays: 90
+  },
+  loginPolicy: {
+    maxAttempts: 3,
+    lockoutDuration: 30
+  },
+  sessionTimeout: 30,
+  mfaEnabled: false,
+  ipWhitelist: []
+};
+
 const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
   const [settings, setSettings] = useState<SecuritySettingsType | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,9 +60,13 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await clientService.getClientSecuritySettings(clientId);
-      setSettings(data);
-      setIsDirty(false);
+      const response = await clientService.getClientSettings(clientId);
+      if (response.success) {
+        setSettings(response.data.security || defaultSecuritySettings);
+        setIsDirty(false);
+      } else {
+        setError(response.error.message);
+      }
     } catch (err) {
       setError('Failed to load security settings');
       console.error('Error loading security settings:', err);
@@ -103,6 +125,12 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     if (settings.loginPolicy.maxAttempts < 1) {
       return 'Maximum login attempts must be at least 1';
     }
+    if (settings.loginPolicy.lockoutDuration < 1) {
+      return 'Lockout duration must be at least 1 minute';
+    }
+    if (settings.sessionTimeout < 1) {
+      return 'Session timeout must be at least 1 minute';
+    }
     return null;
   };
 
@@ -117,9 +145,13 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
 
     try {
       setSaving(true);
-      await clientService.updateClientSecuritySettings(clientId, settings);
-      setIsDirty(false);
-      setError(null);
+      const response = await clientService.updateClientSettings(clientId, { security: settings });
+      if (response.success) {
+        setIsDirty(false);
+        setError(null);
+      } else {
+        setError(response.error.message);
+      }
     } catch (err) {
       setError('Failed to update security settings');
       console.error('Error updating security settings:', err);
@@ -187,6 +219,15 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Expiration Days"
+                    value={settings.passwordPolicy.expirationDays}
+                    onChange={(e) => handlePasswordPolicyChange('expirationDays', parseInt(e.target.value))}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -195,6 +236,39 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
                       />
                     }
                     label="Require Uppercase"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={settings.passwordPolicy.requireLowercase}
+                        onChange={(e) => handlePasswordPolicyChange('requireLowercase', e.target.checked)}
+                      />
+                    }
+                    label="Require Lowercase"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={settings.passwordPolicy.requireNumbers}
+                        onChange={(e) => handlePasswordPolicyChange('requireNumbers', e.target.checked)}
+                      />
+                    }
+                    label="Require Numbers"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={settings.passwordPolicy.requireSpecialChars}
+                        onChange={(e) => handlePasswordPolicyChange('requireSpecialChars', e.target.checked)}
+                      />
+                    }
+                    label="Require Special Characters"
                   />
                 </Grid>
               </Grid>
@@ -214,6 +288,36 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
                     onChange={(e) => handleLoginPolicyChange('maxAttempts', parseInt(e.target.value))}
                     error={settings.loginPolicy.maxAttempts < 1}
                     helperText={settings.loginPolicy.maxAttempts < 1 ? 'Must be at least 1' : ''}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Lockout Duration (minutes)"
+                    value={settings.loginPolicy.lockoutDuration}
+                    onChange={(e) => handleLoginPolicyChange('lockoutDuration', parseInt(e.target.value))}
+                    error={settings.loginPolicy.lockoutDuration < 1}
+                    helperText={settings.loginPolicy.lockoutDuration < 1 ? 'Must be at least 1 minute' : ''}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                General Security
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Session Timeout (minutes)"
+                    value={settings.sessionTimeout}
+                    onChange={(e) => handleSettingChange('sessionTimeout', parseInt(e.target.value))}
+                    error={settings.sessionTimeout < 1}
+                    helperText={settings.sessionTimeout < 1 ? 'Must be at least 1 minute' : ''}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>

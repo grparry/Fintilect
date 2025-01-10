@@ -3,15 +3,17 @@ import {
   NotificationTemplate,
   NotificationTemplateInput,
   NotificationVariable,
-  NotificationPreview
+  NotificationPreview,
+  NotificationType,
+  NotificationCategory
 } from '../../types/bill-pay.types';
 
 const mockTemplates: NotificationTemplate[] = [
   {
     id: 1,
-    name: 'Payment Success',
-    type: 'Email',
-    category: 'Payment',
+    name: 'Payment Success Template',
+    type: NotificationType.PAYMENT_COMPLETED,
+    category: NotificationCategory.PAYMENT,
     subject: 'Payment Successfully Processed',
     content: 'Dear {{customerName}}, your payment of {{amount}} has been processed successfully.',
     active: true,
@@ -33,9 +35,9 @@ const mockTemplates: NotificationTemplate[] = [
   },
   {
     id: 2,
-    name: 'Payment Failed',
-    type: 'Email',
-    category: 'Payment',
+    name: 'Payment Failed Template',
+    type: NotificationType.PAYMENT_FAILED,
+    category: NotificationCategory.PAYMENT,
     subject: 'Payment Failed',
     content: 'Dear {{customerName}}, your payment of {{amount}} has failed. Error: {{errorMessage}}',
     active: true,

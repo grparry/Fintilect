@@ -25,11 +25,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import SearchIcon from '@mui/icons-material/Search';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import {
   ReportData,
   ReportType,
   ReportFilters,
+  ExportOptions,
   AuditRecord,
   TransactionRecord,
   UserRecord,
@@ -37,7 +38,6 @@ import {
 import { reportService } from '../../../services/report.service';
 
 const Reports: React.FC = () => {
-  // State
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [filters, setFilters] = useState<ReportFilters>({
     startDate: dayjs().subtract(7, 'day'),
@@ -50,24 +50,20 @@ const Reports: React.FC = () => {
     transactions: [],
     users: [],
   });
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [exporting, setExporting] = useState<boolean>(false);
+  const [exporting, setExporting] = useState(false);
 
-  // Load initial data
   const loadReportData = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('Fetching report data with filters:', filters);
-      const data = await reportService.getReportData(filters);
-      console.log('Received report data:', data);
-      setReportData(data);
       setError(null);
+      const data = await reportService.getReportData(filters);
+      setReportData(data);
+      setLoading(false);
     } catch (err) {
       setError('Failed to load report data');
-      console.error('Error loading report data:', err);
-    } finally {
       setLoading(false);
     }
   }, [filters]);
@@ -76,67 +72,48 @@ const Reports: React.FC = () => {
     loadReportData();
   }, [loadReportData]);
 
-  // Event handlers
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
 
-  const handleDateChange = (field: 'startDate' | 'endDate') => (newValue: Dayjs | null) => {
-    if (newValue) {
-      setFilters(prev => ({
-        ...prev,
-        [field]: newValue,
-      }));
+  const handleDateChange = (field: 'startDate' | 'endDate') => (date: dayjs.Dayjs | null) => {
+    if (date) {
+      setFilters(prev => ({ ...prev, [field]: date }));
     }
   };
 
   const handleReportTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters(prev => ({
-      ...prev,
-      reportType: event.target.value as ReportType,
-    }));
+    setFilters(prev => ({ ...prev, reportType: event.target.value as ReportType }));
   };
 
   const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters(prev => ({
-      ...prev,
-      searchTerm: event.target.value,
-    }));
+    setFilters(prev => ({ ...prev, searchTerm: event.target.value }));
   };
 
-  const handleSearch = async () => {
-    await loadReportData();
+  const handleSearch = () => {
+    loadReportData();
   };
 
   const handleExport = async () => {
     try {
       setExporting(true);
-      const blob = await reportService.exportReport(filters, {
-        format: 'excel',
+      setError(null);
+      
+      const exportOptions: ExportOptions = {
+        format: 'csv',
         includeHeaders: true,
-        dateFormat: 'YYYY-MM-DD',
-      });
-
-      // Create download link
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `report-${dayjs().format('YYYY-MM-DD')}.xlsx`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-
+        dateFormat: 'YYYY-MM-DD'
+      };
+      
+      await reportService.exportReport(filters, exportOptions);
       setSuccess('Report exported successfully');
     } catch (err) {
       setError('Failed to export report');
-      console.error('Error exporting report:', err);
     } finally {
       setExporting(false);
     }
   };
 
-  // Render functions
   const renderAuditTable = () => (
     <TableContainer component={Paper}>
       <Table>

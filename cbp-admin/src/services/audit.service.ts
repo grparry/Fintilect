@@ -1,4 +1,4 @@
-import { api, ApiSuccessResponse } from '../utils/api';
+import { api } from '../utils/api';
 
 export interface AuditEvent {
   eventType: string;
@@ -7,6 +7,21 @@ export interface AuditEvent {
   status: 'INITIATED' | 'COMPLETED' | 'ERROR' | 'RECEIVED' | 'PROCESSED';
   metadata?: Record<string, any>;
   timestamp?: string;
+}
+
+export interface AuditLogFilters {
+  startDate?: string;
+  endDate?: string;
+  searchTerm?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface AuditLogResponse {
+  events: AuditEvent[];
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
 class AuditService {
@@ -26,6 +41,27 @@ class AuditService {
   public async getEvents(resourceId: string): Promise<AuditEvent[]> {
     const response = await api.get<AuditEvent[]>(
       `${this.baseUrl}/events/${resourceId}`
+    );
+
+    if (!response.success) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
+  }
+
+  public async getAuditLogs(filters?: AuditLogFilters): Promise<AuditLogResponse> {
+    const queryParams = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined) {
+          queryParams.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await api.get<AuditLogResponse>(
+      `${this.baseUrl}/logs?${queryParams.toString()}`
     );
 
     if (!response.success) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -32,333 +32,313 @@ import {
   PermissionGroup, 
   PermissionGroupInput,
   PermissionCategoryDefinition,
-  PermissionAction 
+  PermissionAction,
+  PermissionGroupFilters,
+  PermissionCategory
 } from '../../../types/permission.types';
 import { permissionService } from '../../../services/permission.service';
 
 const PermissionGroups: React.FC = () => {
+  // State
   const [groups, setGroups] = useState<PermissionGroup[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<PermissionGroup | null>(null);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [permissionCategories, setPermissionCategories] = useState<PermissionCategoryDefinition>({});
-  const [editForm, setEditForm] = useState<PermissionGroupInput>({
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState<PermissionGroupInput>({
     name: '',
     description: '',
     permissions: {},
   });
 
-  const loadGroups = useCallback(async () => {
-    try {
-      setLoading(true);
-      const { groups: loadedGroups } = await permissionService.getGroups({ searchTerm });
-      setGroups(loadedGroups);
-      setError(null);
-    } catch (err) {
-      setError('Failed to load permission groups');
-      console.error('Error loading groups:', err);
-    } finally {
-      setLoading(false);
-    }
+  // Load permission groups and categories
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const filters: PermissionGroupFilters = {
+          searchTerm: searchTerm || undefined,
+        };
+        
+        const [groupsResponse, categoriesResponse] = await Promise.all([
+          permissionService.getGroups(filters),
+          permissionService.getPermissionCategories(),
+        ]);
+
+        setGroups(groupsResponse.groups);
+        setPermissionCategories(categoriesResponse);
+        setError(null);
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to load permission groups');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
   }, [searchTerm]);
 
-  const loadPermissionCategories = useCallback(async () => {
+  // Handle form submission
+  const handleSubmit = async () => {
     try {
-      const categories = await permissionService.getPermissionCategories();
-      setPermissionCategories(categories);
-    } catch (err) {
-      setError('Failed to load permission categories');
-      console.error('Error loading categories:', err);
-    }
-  }, []);
+      setValidationErrors({});
 
-  useEffect(() => {
-    loadGroups();
-    loadPermissionCategories();
-  }, [loadGroups, loadPermissionCategories]);
-
-  const handleSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  }, []); // No dependencies needed as it only uses setState
-
-  const handleOpenDialog = useCallback((group: PermissionGroup | null) => {
-    if (group) {
-      setEditForm({
-        name: group.name,
-        description: group.description,
-        permissions: { ...group.permissions },
-      });
-    } else {
-      setEditForm({
-        name: '',
-        description: '',
-        permissions: {},
-      });
-    }
-    setSelectedGroup(group);
-    setOpenDialog(true);
-    setError(null); // Clear any previous errors
-  }, []); // No dependencies needed
-
-  const handleCloseDialog = useCallback(() => {
-    setSelectedGroup(null);
-    setEditForm({
-      name: '',
-      description: '',
-      permissions: {},
-    });
-    setOpenDialog(false);
-    setError(null);
-  }, []); // No dependencies needed
-
-  const handleOpenDeleteDialog = useCallback((group: PermissionGroup) => {
-    setSelectedGroup(group);
-    setOpenDeleteDialog(true);
-  }, []); // No dependencies needed
-
-  const handleCloseDeleteDialog = useCallback(() => {
-    setSelectedGroup(null);
-    setOpenDeleteDialog(false);
-  }, []); // No dependencies needed
-
-  const handleDeleteGroup = useCallback(async () => {
-    if (!selectedGroup) return;
-
-    try {
-      await permissionService.deleteGroup(selectedGroup.id);
-      setSuccess('Permission group deleted successfully');
-      loadGroups();
-      handleCloseDeleteDialog();
-    } catch (err) {
-      setError('Failed to delete permission group');
-      console.error('Error deleting group:', err);
-    }
-  }, [selectedGroup, loadGroups, handleCloseDeleteDialog]);
-
-  const handleInputChange = useCallback((field: keyof PermissionGroupInput, value: string) => {
-    setEditForm(prev => ({
-      ...prev,
-      [field]: value,
-    }));
-  }, []); // No dependencies needed
-
-  const handlePermissionChange = useCallback((category: string, action: PermissionAction, checked: boolean) => {
-    setEditForm(prev => {
-      const updatedPermissions = { ...prev.permissions };
-      
-      if (!updatedPermissions[category]) {
-        updatedPermissions[category] = [];
+      if (selectedGroup) {
+        await permissionService.updateGroup(selectedGroup.id, formData);
+      } else {
+        await permissionService.createGroup(formData);
       }
 
-      if (checked) {
-        updatedPermissions[category] = [...updatedPermissions[category], action];
+      // Refresh groups list
+      const response = await permissionService.getGroups({ searchTerm: searchTerm || undefined });
+      setGroups(response.groups);
+      
+      handleCloseDialog();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        if (err.message.includes('validation failed')) {
+          // Handle validation errors
+          const validationMessage = err.message.replace('validation failed: ', '');
+          const errors: Record<string, string> = {};
+          validationMessage.split(', ').forEach(errorStr => {
+            const [field, message] = errorStr.split(': ');
+            if (field && message) {
+              errors[field] = message;
+            }
+          });
+          setValidationErrors(errors);
+        } else {
+          setError(err.message);
+        }
       } else {
-        updatedPermissions[category] = updatedPermissions[category].filter(p => p !== action);
+        setError('Failed to save permission group');
+      }
+    }
+  };
+
+  // Handle permission changes
+  const handlePermissionChange = (category: string, action: PermissionAction) => {
+    setFormData(prev => {
+      const newPermissions: PermissionCategory = { ...prev.permissions };
+      
+      if (!newPermissions[category]) {
+        newPermissions[category] = [];
+      }
+
+      const actionIndex = newPermissions[category].indexOf(action);
+      if (actionIndex === -1) {
+        newPermissions[category] = [...newPermissions[category], action];
+      } else {
+        newPermissions[category] = newPermissions[category].filter(a => a !== action);
+        if (newPermissions[category].length === 0) {
+          delete newPermissions[category];
+        }
       }
 
       return {
         ...prev,
-        permissions: updatedPermissions,
+        permissions: newPermissions,
       };
     });
-  }, []); // No dependencies needed
+  };
 
-  const handleSave = useCallback(async () => {
+  // Handle group deletion
+  const handleDelete = async () => {
+    if (!selectedGroup) return;
+
     try {
-      const validation = await permissionService.validateGroup(editForm);
-      if (!validation.isValid) {
-        setError('Invalid form: ' + Object.values(validation.errors).join(', '));
-        return;
-      }
-
-      if (selectedGroup) {
-        await permissionService.updateGroup(selectedGroup.id, editForm);
-        setSuccess('Permission group updated successfully');
-      } else {
-        await permissionService.createGroup(editForm);
-        setSuccess('Permission group created successfully');
-      }
-
-      loadGroups();
-      handleCloseDialog();
-    } catch (err) {
-      setError('Failed to save permission group');
-      console.error('Error saving group:', err);
+      await permissionService.deleteGroup(selectedGroup.id);
+      
+      // Refresh groups list
+      const response = await permissionService.getGroups({ searchTerm: searchTerm || undefined });
+      setGroups(response.groups);
+      
+      setDeleteDialogOpen(false);
+      setSelectedGroup(null);
+      setError(null);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to delete permission group');
     }
-  }, [selectedGroup, editForm, loadGroups, handleCloseDialog]);
+  };
 
-  if (loading) {
-    return (
-      <Box sx={{ p: 3, textAlign: 'center' }}>
-        Loading permission groups...
-      </Box>
-    );
-  }
+  // Dialog handlers
+  const handleOpenDialog = (group?: PermissionGroup) => {
+    if (group) {
+      setFormData({
+        name: group.name,
+        description: group.description,
+        permissions: group.permissions,
+      });
+      setSelectedGroup(group);
+    } else {
+      setFormData({
+        name: '',
+        description: '',
+        permissions: {},
+      });
+      setSelectedGroup(null);
+    }
+    setValidationErrors({});
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setFormData({
+      name: '',
+      description: '',
+      permissions: {},
+    });
+    setValidationErrors({});
+    setSelectedGroup(null);
+  };
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
-      {success && (
-        <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess(null)}>
-          {success}
-        </Alert>
-      )}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <Typography variant="h5">Permission Groups</Typography>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <TextField
+            size="small"
+            placeholder="Search groups..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />,
+            }}
+          />
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => handleOpenDialog()}
+          >
+            Add Group
+          </Button>
+        </Box>
+      </Box>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-            <Typography variant="h5" component="h1">
-              Permission Groups
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={() => handleOpenDialog(null)}
-              type="button"
-            >
-              Add Group
-            </Button>
-          </Box>
-        </Grid>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Permissions</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {groups.map((group) => (
+              <TableRow key={group.id}>
+                <TableCell>{group.name}</TableCell>
+                <TableCell>{group.description}</TableCell>
+                <TableCell>
+                  {Object.keys(group.permissions).length} categories
+                </TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => handleOpenDialog(group)}
+                    size="small"
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      setSelectedGroup(group);
+                      setDeleteDialogOpen(true);
+                    }}
+                    size="small"
+                    color="error"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-        <Grid item xs={12}>
-          <Paper sx={{ p: 2, mb: 3 }}>
-            <Box display="flex" alignItems="center">
-              <SearchIcon sx={{ mr: 1 }} />
-              <TextField
-                fullWidth
-                variant="outlined"
-                placeholder="Search permission groups..."
-                value={searchTerm}
-                onChange={handleSearch}
-                size="small"
-              />
-            </Box>
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12}>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Group Name</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell align="right">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {groups.map((group) => (
-                  <TableRow key={group.id}>
-                    <TableCell>{group.name}</TableCell>
-                    <TableCell>{group.description}</TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleOpenDialog(group)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        color="error"
-                        onClick={() => handleOpenDeleteDialog(group)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
-      </Grid>
-
-      {/* Add/Edit Group Dialog */}
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        maxWidth="md"
-        fullWidth
-      >
+      {/* Add/Edit Dialog */}
+      <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth>
         <DialogTitle>
           {selectedGroup ? 'Edit Permission Group' : 'Add Permission Group'}
         </DialogTitle>
         <DialogContent>
-          <Grid container spacing={3} sx={{ mt: 1 }}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Group Name"
-                value={editForm.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Description"
-                multiline
-                rows={2}
-                value={editForm.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Permissions
-              </Typography>
+          <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField
+              label="Name"
+              value={formData.name}
+              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              error={!!validationErrors.name}
+              helperText={validationErrors.name}
+              fullWidth
+            />
+
+            <TextField
+              label="Description"
+              value={formData.description}
+              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              error={!!validationErrors.description}
+              helperText={validationErrors.description}
+              fullWidth
+              multiline
+              rows={2}
+            />
+
+            <Typography variant="subtitle1" sx={{ mt: 2 }}>
+              Permissions
+            </Typography>
+
+            <Grid container spacing={2}>
               {Object.entries(permissionCategories).map(([category, actions]) => (
-                <Card key={category} sx={{ mb: 2 }}>
-                  <CardContent>
-                    <Typography variant="subtitle1" gutterBottom sx={{ textTransform: 'capitalize' }}>
-                      {category}
-                    </Typography>
-                    <Divider sx={{ my: 1 }} />
-                    <Grid container spacing={2}>
-                      {actions.map((action) => (
-                        <Grid item xs={12} sm={6} md={4} key={action}>
+                <Grid item xs={12} key={category}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="subtitle2" gutterBottom>
+                        {category}
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                        {actions.map((action) => (
                           <FormControlLabel
+                            key={`${category}-${action}`}
                             control={
                               <Checkbox
-                                checked={editForm.permissions[category]?.includes(action as PermissionAction) || false}
-                                onChange={(e) => handlePermissionChange(category, action as PermissionAction, e.target.checked)}
+                                checked={formData.permissions[category]?.includes(action as PermissionAction) || false}
+                                onChange={() => handlePermissionChange(category, action as PermissionAction)}
                               />
                             }
                             label={action}
                           />
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </CardContent>
-                </Card>
+                        ))}
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
               ))}
             </Grid>
-          </Grid>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            {selectedGroup ? 'Save Changes' : 'Create Group'}
+          <Button onClick={handleSubmit} variant="contained">
+            {selectedGroup ? 'Update' : 'Add'}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DialogTitle>Delete Permission Group</DialogTitle>
         <DialogContent>
           <Typography>
@@ -367,12 +347,8 @@ const PermissionGroups: React.FC = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={handleDeleteGroup}
-          >
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleDelete} color="error" variant="contained">
             Delete
           </Button>
         </DialogActions>

@@ -18,65 +18,80 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
-import { AuditLog, AuditSearchRequest } from '../../../types/client.types';
 import { clientService } from '../../../services/clients.service';
 import { shouldUseMockData } from '../../../config/api.config';
+import { ApiResponse } from '../../../utils/api';
+import type { AuditLog, AuditSearchRequest } from '../../../services/clients.service';
 
 interface AuditSearchProps {
   clientId: string;
 }
 
+interface AuditSearchState {
+  loading: boolean;
+  error: string | null;
+  auditLogs: AuditLog[];
+  startDate: Dayjs | null;
+  endDate: Dayjs | null;
+  username: string;
+}
+
 const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
-  console.log('AuditSearch mounted with clientId:', clientId);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<Dayjs | null>(dayjs().subtract(7, 'days'));
-  const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());
-  const [username, setUsername] = useState<string>('');
-  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [state, setState] = useState<AuditSearchState>({
+    loading: false,
+    error: null,
+    auditLogs: [],
+    startDate: dayjs().subtract(7, 'days'),
+    endDate: dayjs(),
+    username: ''
+  });
+
   const isMockMode = shouldUseMockData();
 
   const formatDateForAPI = (date: Dayjs): string => {
-    return date.format('YYYY-MM-DD');
+    return date.format('YYYY-MM-DD[T]HH:mm:ss[Z]');
   };
 
   const searchAuditLogs = useCallback(async () => {
-    if (!startDate || !endDate) {
-      setError('Please select both start and end dates');
+    if (!state.startDate || !state.endDate) {
+      setState(prev => ({ ...prev, error: 'Please select both start and end dates' }));
       return;
     }
 
-    setLoading(true);
-    setError(null);
-    console.log('Searching audit logs with request:', {
-      clientId,
-      startDate: formatDateForAPI(startDate),
-      endDate: formatDateForAPI(endDate),
-      username: username.trim()
-    });
+    setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
       const searchRequest: AuditSearchRequest = {
-        startDate: formatDateForAPI(startDate),
-        endDate: formatDateForAPI(endDate),
-        username: username.trim(),
+        timestampFrom: formatDateForAPI(state.startDate),
+        timestampTo: formatDateForAPI(state.endDate),
+        userId: state.username.trim() || undefined,
       };
 
-      console.log('Searching audit logs with request:', {
-        clientId,
-        ...searchRequest
-      });
-
-      const logs = await clientService.searchAuditLogs(clientId, searchRequest);
-      console.log('Received audit logs:', logs);
-      setAuditLogs(logs);
+      const response = await clientService.searchAuditLogs(clientId, searchRequest);
+      
+      if (response.success) {
+        setState(prev => ({ 
+          ...prev, 
+          auditLogs: response.data,
+          loading: false,
+          error: null
+        }));
+      } else {
+        setState(prev => ({ 
+          ...prev, 
+          error: response.error?.message || 'Failed to fetch audit logs',
+          loading: false
+        }));
+      }
     } catch (err) {
-      setError('Failed to fetch audit logs. Please try again.');
+      setState(prev => ({ 
+        ...prev,
+        error: 'An unexpected error occurred while fetching audit logs',
+        loading: false
+      }));
       console.error('Error fetching audit logs:', err);
-    } finally {
-      setLoading(false);
     }
-  }, [startDate, endDate, username, clientId]);
+  }, [clientId, state.startDate, state.endDate, state.username]);
 
   const formatDateTime = (dateString: string): string => {
     try {
@@ -88,69 +103,32 @@ const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
     }
   };
 
-  const formatDetails = (details: string, action: string): React.ReactNode => {
+  const formatDescription = (description: string): React.ReactNode => {
     try {
-      const parsedDetails = JSON.parse(details);
+      const parsedDescription = JSON.parse(description);
       
-      switch (action) {
-        case 'UPDATE_SETTINGS':
-          return (
-            <Box>
-              <Typography variant="body2" color="textSecondary">Changed daily limit from</Typography>
-              <Typography component="span" sx={{ mx: 1 }}>
-                {parsedDetails.before.maxDailyLimit.toLocaleString()}
+      return (
+        <Box>
+          {typeof parsedDescription === 'object' ? (
+            Object.entries(parsedDescription).map(([key, value]) => (
+              <Typography key={key} variant="body2">
+                {key}: {JSON.stringify(value)}
               </Typography>
-              <Typography variant="body2" color="textSecondary" component="span">to</Typography>
-              <Typography component="span" sx={{ mx: 1 }}>
-                {parsedDetails.after.maxDailyLimit.toLocaleString()}
-              </Typography>
-            </Box>
-          );
-        
-        case 'ADD_USER':
-          return (
-            <Box>
-              <Typography variant="body2">
-                Added new user: <strong>{parsedDetails.email}</strong>
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Role: {parsedDetails.role}
-              </Typography>
-            </Box>
-          );
-        
-        case 'UPDATE_SECURITY_SETTINGS':
-          return (
-            <Box>
-              <Typography variant="body2">
-                {parsedDetails.after.mfaEnabled ? 'Enabled' : 'Disabled'} Multi-Factor Authentication
-              </Typography>
-            </Box>
-          );
-        
-        default:
-          return (
-            <Box>
-              {parsedDetails.before && (
-                <Typography variant="body2" color="textSecondary">
-                  Before: {JSON.stringify(parsedDetails.before, null, 2)}
-                </Typography>
-              )}
-              {parsedDetails.after && (
-                <Typography variant="body2" color="textSecondary">
-                  After: {JSON.stringify(parsedDetails.after, null, 2)}
-                </Typography>
-              )}
-            </Box>
-          );
-      }
+            ))
+          ) : (
+            <Typography variant="body2">{description}</Typography>
+          )}
+        </Box>
+      );
     } catch (err) {
-      console.error('Error formatting details:', err);
-      return details;
+      return (
+        <Typography variant="body2">
+          {description}
+        </Typography>
+      );
     }
   };
 
-  // Load audit logs on mount
   useEffect(() => {
     searchAuditLogs();
   }, [searchAuditLogs]);
@@ -175,34 +153,34 @@ const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Start Date"
-              value={startDate}
-              onChange={(newValue) => setStartDate(newValue)}
+              value={state.startDate}
+              onChange={(newValue) => setState(prev => ({ ...prev, startDate: newValue }))}
               sx={{ width: 200 }}
             />
             <DatePicker
               label="End Date"
-              value={endDate}
-              onChange={(newValue) => setEndDate(newValue)}
+              value={state.endDate}
+              onChange={(newValue) => setState(prev => ({ ...prev, endDate: newValue }))}
               sx={{ width: 200 }}
             />
           </LocalizationProvider>
           <TextField
             label="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={state.username}
+            onChange={(e) => setState(prev => ({ ...prev, username: e.target.value }))}
             sx={{ width: 200 }}
           />
           <Button
             variant="contained"
             onClick={searchAuditLogs}
-            disabled={loading}
+            disabled={state.loading}
           >
-            {loading ? <CircularProgress size={24} /> : 'Search'}
+            {state.loading ? <CircularProgress size={24} /> : 'Search'}
           </Button>
         </Box>
-        {error && (
+        {state.error && (
           <Typography color="error" sx={{ mb: 2 }}>
-            {error}
+            {state.error}
           </Typography>
         )}
         <TableContainer>
@@ -210,18 +188,26 @@ const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
             <TableHead>
               <TableRow>
                 <TableCell>Timestamp</TableCell>
-                <TableCell>Username</TableCell>
-                <TableCell>Action</TableCell>
-                <TableCell>Details</TableCell>
+                <TableCell>User ID</TableCell>
+                <TableCell>Event Type</TableCell>
+                <TableCell>IP Address</TableCell>
+                <TableCell>Description</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {auditLogs.map((log) => (
+              {state.auditLogs.map((log) => (
                 <TableRow key={log.id}>
                   <TableCell>{formatDateTime(log.timestamp)}</TableCell>
-                  <TableCell>{log.userName}</TableCell>
-                  <TableCell>{log.action}</TableCell>
-                  <TableCell>{formatDetails(log.details, log.action)}</TableCell>
+                  <TableCell>{log.userId}</TableCell>
+                  <TableCell>
+                    <Chip 
+                      label={log.eventType}
+                      color="default"
+                      size="small"
+                    />
+                  </TableCell>
+                  <TableCell>{log.ipAddress}</TableCell>
+                  <TableCell>{formatDescription(log.description)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -42,6 +42,7 @@ export const GroupEdit: React.FC<GroupEditProps> = ({ clientId, groupId, onSave,
   const [selectedPermissions, setSelectedPermissions] = useState<Permission[]>([]);
   const [roles, setRoles] = useState<SecurityRole[]>([]);
   const [selectedRoles, setSelectedRoles] = useState<SecurityRole[]>([]);
+  const [members, setMembers] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,19 +57,30 @@ export const GroupEdit: React.FC<GroupEditProps> = ({ clientId, groupId, onSave,
         const decodedClientId = decodeId(clientId);
         const decodedGroupId = decodeId(groupId);
 
-        const [groupData, permissionsData, rolesData] = await Promise.all([
+        const [groupResponse, permissionsResponse, rolesResponse] = await Promise.all([
           clientService.getGroup(decodedClientId, decodedGroupId),
           clientService.getPermissions(),
           clientService.getRoles()
         ]);
 
-        setGroup(groupData);
-        setPermissions(permissionsData);
-        setRoles(rolesData);
-        setSelectedRoles(groupData.roles || []);
-        setSelectedPermissions(groupData.permissions || []);
+        if (!groupResponse.success) {
+          throw new Error(groupResponse.error?.message || 'Failed to load group');
+        }
+        if (!permissionsResponse.success) {
+          throw new Error(permissionsResponse.error?.message || 'Failed to load permissions');
+        }
+        if (!rolesResponse.success) {
+          throw new Error(rolesResponse.error?.message || 'Failed to load roles');
+        }
+
+        setGroup(groupResponse.data);
+        setPermissions(permissionsResponse.data);
+        setRoles(rolesResponse.data);
+        setSelectedRoles(groupResponse.data.roles || []);
+        setSelectedPermissions(groupResponse.data.permissions || []);
+        setMembers(groupResponse.data.members || []);
       } catch (error) {
-        setError('Failed to load group data');
+        setError(error instanceof Error ? error.message : 'Failed to load group data');
         console.error('Error loading group data:', error);
       } finally {
         setLoading(false);
@@ -114,21 +126,26 @@ export const GroupEdit: React.FC<GroupEditProps> = ({ clientId, groupId, onSave,
       setError(null);
 
       const decodedClientId = decodeId(clientId);
+      const decodedGroupId = decodeId(groupId);
 
-      const updatedGroup: UserGroup = {
-        ...group,
+      const updatedGroup: Partial<UserGroup> = {
+        name: group.name,
+        description: group.description,
         roles: selectedRoles,
-        permissions: selectedPermissions
+        permissions: selectedPermissions,
+        members
       };
 
-      await clientService.updateGroup(decodedClientId, {
-        ...group,
-        ...updatedGroup
-      });
-      setSuccess('Group updated successfully');
-      onSave?.();
+      const response = await clientService.updateGroup(decodedClientId, decodedGroupId, updatedGroup);
+      
+      if (response.success) {
+        setSuccess('Group updated successfully');
+        onSave?.();
+      } else {
+        setError(response.error?.message || 'Failed to update group');
+      }
     } catch (error) {
-      setError('Failed to update group');
+      setError(error instanceof Error ? error.message : 'Failed to update group');
       console.error('Error updating group:', error);
     } finally {
       setSaving(false);

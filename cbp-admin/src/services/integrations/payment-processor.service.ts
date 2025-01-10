@@ -56,7 +56,8 @@ class PaymentProcessorService {
       );
 
       // Update payment status
-      await billPayService.updatePaymentStatus(payment.id, response.data.status, 
+      const paymentStatus = response.data.status.toUpperCase() as PaymentStatus;
+      await billPayService.updatePaymentStatus(payment.id, paymentStatus, 
         JSON.stringify({ processorResponse: response.data })
       );
 
@@ -134,12 +135,13 @@ class PaymentProcessorService {
       });
 
       // Update payment status
-      await billPayService.updatePaymentStatus(paymentId, status as PaymentStatus, 
+      const paymentStatus = status.toUpperCase() as PaymentStatus;
+      await billPayService.updatePaymentStatus(paymentId, paymentStatus, 
         JSON.stringify({ processorMetadata: metadata })
       );
 
       // Send notifications based on status
-      switch (status) {
+      switch (paymentStatus) {
         case PaymentStatus.COMPLETED:
           await notificationService.sendNotification({
             type: 'PAYMENT_COMPLETED',
@@ -186,7 +188,7 @@ class PaymentProcessorService {
         resourceType: 'payment',
         status: 'PROCESSED',
         metadata: {
-          processorStatus: status,
+          processorStatus: paymentStatus,
           updatedAt: new Date().toISOString(),
         },
       });

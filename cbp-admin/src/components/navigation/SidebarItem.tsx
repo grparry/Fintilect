@@ -1,147 +1,100 @@
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Collapse,
-  styled,
-  IconButton,
   List,
+  useTheme,
 } from '@mui/material';
-import {
-  Circle,
-  ExpandLess,
-  ExpandMore,
-  Payment,
-  Settings,
-  People,
-  Security,
-  Assessment,
-  AccountBalance,
-  Dashboard,
-} from '@mui/icons-material';
-import { useNavigation } from '../../context/NavigationContext';
+import * as Icons from '@mui/icons-material';
 import { NavigationItem } from '../../types/navigation.types';
-
-// Create an icons map
-const IconMap: Record<string, typeof Circle> = {
-  Circle,
-  Payment,
-  Settings,
-  People,
-  Security,
-  Assessment,
-  AccountBalance,
-  Dashboard,
-};
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { useNavigation } from '../../context/NavigationContext';
 
 interface SidebarItemProps {
   item: NavigationItem;
   depth?: number;
 }
 
-interface StyledListItemProps {
-  component?: typeof Link | 'div';
-  isSection?: boolean;
-}
-
-const StyledListItem = styled(ListItem)<StyledListItemProps>(({ theme }) => ({
-  padding: theme.spacing(1.5, 2),
-  paddingLeft: theme.spacing(4),
-  color: theme.palette.text.secondary,
-  cursor: 'pointer',
-  '&:hover': {
-    backgroundColor: theme.palette.mode === 'dark' 
-      ? theme.palette.grey[800] 
-      : theme.palette.grey[100],
-    '& .MuiListItemIcon-root': {
-      color: theme.palette.text.primary,
-    }
-  },
-  '&.active': {
-    backgroundColor: theme.palette.mode === 'dark' 
-      ? theme.palette.grey[800] 
-      : theme.palette.grey[100],
-    color: theme.palette.text.primary,
-    borderRight: `3px solid ${theme.palette.primary.main}`,
-    '& .MuiListItemIcon-root': {
-      color: theme.palette.primary.main,
-    },
-  },
-  '& .MuiListItemIcon-root': {
-    minWidth: 40,
-    color: theme.palette.text.secondary,
-    '& svg': {
-      fontSize: '1.25rem', // 20px to complement the 18px text
-    }
-  },
-  '& .MuiListItemText-root': {
-    margin: 0,
-    '& .MuiTypography-root': {
-      fontSize: '1.125rem', // 18px
-      fontWeight: 500,
-      lineHeight: 1.3,
-    }
-  }
-}));
-
 const SidebarItem: React.FC<SidebarItemProps> = ({ item, depth = 0 }) => {
+  const theme = useTheme();
   const navigate = useNavigate();
-  const location = useLocation();
-  const { toggleSection } = useNavigation();
-  const [isExpanded, setIsExpanded] = useState(false);
-  const isActive = location.pathname === item.path;
-  const isSection = Boolean(!item.path && item.children && item.children.length > 0);
+  const { state, toggleSection } = useNavigation();
+  const Icon = item.icon ? Icons[item.icon as keyof typeof Icons] : null;
 
   const handleClick = (e: React.MouseEvent) => {
-    if (!item.path) {
-      e.preventDefault();
+    e.preventDefault();
+    if (item.children) {
       toggleSection(item.id);
-      setIsExpanded(!isExpanded);
+    } else {
+      navigate(item.path);
     }
   };
 
-  const IconComponent = item.icon ? IconMap[item.icon] || Circle : Circle;
+  const menuItemStyles = {
+    button: {
+      pl: 2 + depth * 2,
+      py: 1.5,
+      '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+      },
+      '&.Mui-selected': {
+        backgroundColor: theme.palette.action.selected,
+        '&:hover': {
+          backgroundColor: theme.palette.action.hover,
+        },
+      },
+    },
+    icon: {
+      color: theme.palette.text.secondary,
+      minWidth: 36,
+    },
+    text: {
+      color: theme.palette.text.primary,
+    },
+  };
+
+  if (item.hideFromSidebar) {
+    return null;
+  }
 
   return (
     <>
-      <StyledListItem
-        {...(item.path ? { component: Link, to: item.path } : { component: 'div' })}
-        className={isActive ? 'active' : ''}
-        sx={{ pl: depth * 2 + 2 }}
-        onClick={handleClick}
-        isSection={isSection}
-      >
-        <ListItemIcon>
-          <IconComponent />
-        </ListItemIcon>
-        <ListItemText primary={item.title} />
-        {item.children && (
-          <IconButton
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsExpanded(!isExpanded);
-            }}
-            size="small"
-            sx={{ 
-              color: isSection ? 'common.white' : 'inherit',
-              '&:hover': {
-                backgroundColor: isSection 
-                  ? 'rgba(255, 255, 255, 0.1)'
-                  : 'rgba(0, 0, 0, 0.04)',
-              }
-            }}
-          >
-            {isExpanded ? <ExpandLess /> : <ExpandMore />}
-          </IconButton>
-        )}
-      </StyledListItem>
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={handleClick}
+          sx={menuItemStyles.button}
+        >
+          {Icon && (
+            <ListItemIcon sx={menuItemStyles.icon}>
+              <Icon />
+            </ListItemIcon>
+          )}
+          <ListItemText
+            primary={item.title}
+            sx={menuItemStyles.text}
+          />
+          {item.children && (
+            state.expandedSections.includes(item.id) ? (
+              <ExpandLess />
+            ) : (
+              <ExpandMore />
+            )
+          )}
+        </ListItemButton>
+      </ListItem>
       {item.children && (
-        <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+        <Collapse in={state.expandedSections.includes(item.id)}>
           <List component="div" disablePadding>
             {item.children.map((child) => (
-              <SidebarItem key={child.id} item={child} depth={depth + 1} />
+              <SidebarItem
+                key={child.id}
+                item={child}
+                depth={depth + 1}
+              />
             ))}
           </List>
         </Collapse>

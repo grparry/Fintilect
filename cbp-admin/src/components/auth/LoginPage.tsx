@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Container,
   Paper,
@@ -9,13 +9,15 @@ import {
 } from '@mui/material';
 import Form, { FormField } from '../common/Form';
 import { useAuth } from '../../context/AuthContext';
-import { LoginFormData } from '../../types/auth.types';
+import { LoginFormData, LoginCredentials } from '../../types/auth.types';
+import { ApiError } from '../../types/index';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<ApiError | null>(null);
 
   const formFields: FormField[] = [
     {
@@ -29,10 +31,6 @@ const LoginPage: React.FC = () => {
         minLength: {
           value: 3,
           message: 'Username must be at least 3 characters'
-        },
-        maxLength: {
-          value: 50,
-          message: 'Username must be at most 50 characters'
         }
       }
     },
@@ -47,29 +45,45 @@ const LoginPage: React.FC = () => {
         minLength: {
           value: 8,
           message: 'Password must be at least 8 characters'
-        },
-        pattern: {
-          value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/,
-          message: 'Password must contain at least one letter and one number'
         }
       }
     },
     {
       name: 'rememberMe',
-      label: 'Remember me',
+      label: 'Remember Me',
       type: 'checkbox',
-      defaultValue: false,
-    },
+      defaultValue: false
+    }
   ];
 
   const handleSubmit = async (data: LoginFormData) => {
-    setError(null);
     setLoading(true);
+    setError(null);
+
     try {
-      await login(data.username, data.password, data.rememberMe);
-      navigate('/dashboard');
+      const credentials: LoginCredentials = {
+        username: data.username,
+        password: data.password,
+        rememberMe: data.rememberMe
+      };
+
+      await login(credentials);
+      const from = (location.state as any)?.from?.pathname || '/';
+      navigate(from);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to login');
+      if (err instanceof Error) {
+        setError({
+          message: err.message,
+          code: 'AUTH_ERROR',
+          status: 401
+        });
+      } else {
+        setError({
+          message: 'An unexpected error occurred',
+          code: 'UNKNOWN_ERROR',
+          status: 500
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -77,39 +91,21 @@ const LoginPage: React.FC = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Paper
-          elevation={3}
-          sx={{
-            padding: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
-          }}
-        >
-          <Typography component="h1" variant="h5" gutterBottom>
-            Sign In
+      <Box sx={{ mt: 8 }}>
+        <Paper sx={{ p: 4 }}>
+          <Typography variant="h4" align="center" gutterBottom>
+            Login
           </Typography>
-          
           {error && (
-            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
-              {error}
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error.message}
             </Alert>
           )}
-
           <Form
             fields={formFields}
             onSubmit={handleSubmit}
+            submitLabel="Login"
             loading={loading}
-            submitText="Sign In"
           />
         </Paper>
       </Box>

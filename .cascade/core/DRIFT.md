@@ -66,6 +66,7 @@ This file defines specific rules and triggers to prevent architectural and imple
 - Structure validation
 - Type consistency
 - Contract verification
+- Testing framework compliance (see DRIFT_TESTING.md)
 
 ### Monitoring
 - Pattern adherence

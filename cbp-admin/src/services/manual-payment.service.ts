@@ -39,7 +39,7 @@ class ManualPaymentService {
       method: this.paymentMethodMap[data.paymentType],
       effectiveDate: data.effectiveDate,
       description: data.memo,
-      status: 'Submitted' as PaymentStatus,
+      status: PaymentStatus.SUBMITTED,
       metadata: {
         accountNumber: data.accountNumber,
         routingNumber: data.routingNumber,
@@ -59,7 +59,7 @@ class ManualPaymentService {
       method: this.paymentMethodMap[data.paymentType],
       effectiveDate: data.effectiveDate,
       description: data.memo,
-      status: 'Draft' as PaymentStatus,
+      status: PaymentStatus.DRAFT,
       metadata: {
         accountNumber: data.accountNumber,
         routingNumber: data.routingNumber,
@@ -112,7 +112,7 @@ class ManualPaymentService {
   }
 
   async getDrafts(): Promise<ManualPayment[]> {
-    const response = await paymentApi.saveDraft({ status: 'Draft' as PaymentStatus });
+    const response = await paymentApi.saveDraft({ status: PaymentStatus.DRAFT });
     const payments = Array.isArray(response.data) ? response.data : [response.data];
     return payments.map(payment => this.convertToManualPayment(payment));
   }

@@ -49,18 +49,29 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HistoryIcon from '@mui/icons-material/History';
 import LockIcon from '@mui/icons-material/Lock';
 import dayjs, { Dayjs } from 'dayjs';
+
 import {
-  PaymentStatus,
-  PaymentMethod,
+  Payment,
   PendingPayment,
-  PendingPaymentApproval,
-  PendingPaymentRejection,
-  ConfirmationMethod,
-  PaymentConfirmationResponse,
-  PendingPaymentFilters,
+  PaymentMethod,
+  PaymentStatus,
   Priority,
+  PaymentFilters,
+  PendingPaymentFilters,
+  PendingPaymentSearchRequest,
+  PendingPaymentListResponse,
   PendingPaymentSummary,
+  PaymentHistory,
+  PaymentAction,
+  PaymentConfirmationRequest,
+  PaymentConfirmationResponse,
+  ConfirmationMethod,
+  ConfirmationStatus,
+  PendingPaymentApproval,
+  PendingPaymentRejection
 } from '../../../types/bill-pay.types';
+
+import { ApiResponse, ApiSuccessResponse, PaymentApiResponse } from '../../../types/api.types';
 import { pendingPaymentsApi } from '../../../services/api/pending-payments.api';
 import { useAuth } from '../../../hooks/useAuth';
 
@@ -70,15 +81,17 @@ interface PaymentDialogState {
   action: 'view' | 'approve' | 'reject' | 'history' | 'confirm' | null;
 }
 
-interface FilterState extends Omit<PendingPaymentFilters, 'startDate' | 'endDate'> {
+interface FilterState {
   startDate: Dayjs | null;
   endDate: Dayjs | null;
   priority: Priority[];
-  searchTerm: string;  // Additional field for local filtering
+  searchTerm: string;
+  method?: PaymentMethod[];
+  status?: PaymentStatus[];
 }
 
 interface ConfirmationState {
-  method: string;
+  method: ConfirmationMethod;
   code: string;
   attempts: number;
   maxAttempts: number;
@@ -87,30 +100,15 @@ interface ConfirmationState {
   processing: boolean;
 }
 
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  meta?: {
-    timestamp: string;
-    requestId: string;
-  };
-}
-
-interface PaymentsResponse {
-  data: PendingPayment[];
-  total: number;
-  page: number;
-  limit: number;
-}
-
-interface MswResponse {
-  success: boolean;
-  data: ApiResponse<PaymentsResponse>;
-  meta?: {
-    timestamp: string;
-    requestId: string;
-  };
-}
+const initialConfirmationState: ConfirmationState = {
+  method: ConfirmationMethod.OTP,
+  code: '',
+  attempts: 0,
+  maxAttempts: 3,
+  expiresAt: null,
+  error: null,
+  processing: false,
+};
 
 const PendingPayments: React.FC = () => {
   const { user } = useAuth();
@@ -119,7 +117,7 @@ const PendingPayments: React.FC = () => {
   const [payments, setPayments] = useState<PendingPayment[]>([]);
   const [filteredPayments, setFilteredPayments] = useState<PendingPayment[] | null>(null);
   const [selectedPayments, setSelectedPayments] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -132,10 +130,10 @@ const PendingPayments: React.FC = () => {
   const [filters, setFilters] = useState<FilterState>({
     startDate: null,
     endDate: null,
-    status: [PaymentStatus.PENDING],  // Initialize with PENDING status
     priority: [],
+    searchTerm: '',
     method: [],
-    searchTerm: '',  // Local search term
+    status: [PaymentStatus.PENDING],
   });
   const [summary, setSummary] = useState<PendingPaymentSummary | null>(null);
   const [history, setHistory] = useState<Array<{
@@ -145,15 +143,7 @@ const PendingPayments: React.FC = () => {
     details: Record<string, any>;
   }> | null>(null);
   const [processing, setProcessing] = useState<Record<string, boolean>>({});
-  const [confirmation, setConfirmation] = useState<ConfirmationState>({
-    method: 'otp',
-    code: '',
-    attempts: 0,
-    maxAttempts: 3,
-    expiresAt: null,
-    error: null,
-    processing: false,
-  });
+  const [confirmation, setConfirmation] = useState<ConfirmationState>(initialConfirmationState);
 
   // Helper function to get priority color
   const getPriorityColor = (priority: Priority): 'error' | 'warning' | 'info' | 'default' => {
@@ -225,19 +215,19 @@ const PendingPayments: React.FC = () => {
 
   const fetchSummary = useCallback(async () => {
     try {
-      setLoading(true);
-      const response = await pendingPaymentsApi.getSummary({
+      const searchRequest: PendingPaymentSearchRequest = {
         startDate: filters.startDate?.format('YYYY-MM-DD'),
         endDate: filters.endDate?.format('YYYY-MM-DD'),
         status: filters.status?.[0],
         priority: filters.priority?.[0],
         method: filters.method?.[0],
-      }) as ApiResponse<PendingPaymentSummary>;
-      setSummary(response.data);
-    } catch (err) {
-      console.error('Error fetching summary:', err);
-    } finally {
-      setLoading(false);
+      };
+      const response = await pendingPaymentsApi.getSummary(searchRequest);
+      if (response.success) {
+        setSummary(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching summary:', error);
     }
   }, [filters]);
 
@@ -295,19 +285,37 @@ const PendingPayments: React.FC = () => {
     handleFilterChange(field, date);
   };
 
-  const handleStatusChange = (event: SelectChangeEvent<string[]>) => {
-    const values = Array.isArray(event.target.value) ? event.target.value : [event.target.value];
-    handleFilterChange('status', values.map(value => value as PaymentStatus));
+  const handleStatusChange = (event: SelectChangeEvent<PaymentStatus[]>) => {
+    const {
+      target: { value },
+    } = event;
+    setFilters(prev => ({
+      ...prev,
+      status: typeof value === 'string' ? [value as PaymentStatus] : value as PaymentStatus[],
+    }));
+    setPage(0);
   };
 
-  const handlePriorityChange = (event: SelectChangeEvent<string[]>) => {
-    const values = Array.isArray(event.target.value) ? event.target.value : [event.target.value];
-    handleFilterChange('priority', values.map(value => value as Priority));
+  const handlePriorityChange = (event: SelectChangeEvent<Priority[]>) => {
+    const {
+      target: { value },
+    } = event;
+    setFilters(prev => ({
+      ...prev,
+      priority: typeof value === 'string' ? [value as Priority] : value as Priority[],
+    }));
+    setPage(0);
   };
 
-  const handleMethodChange = (event: SelectChangeEvent<string[]>) => {
-    const values = Array.isArray(event.target.value) ? event.target.value : [event.target.value];
-    handleFilterChange('method', values.map(value => value as PaymentMethod));
+  const handleMethodChange = (event: SelectChangeEvent<PaymentMethod[]>) => {
+    const {
+      target: { value },
+    } = event;
+    setFilters(prev => ({
+      ...prev,
+      method: typeof value === 'string' ? [value as PaymentMethod] : value as PaymentMethod[],
+    }));
+    setPage(0);
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -450,10 +458,10 @@ const PendingPayments: React.FC = () => {
   };
 
   // Confirmation handlers
-  const handleConfirmationMethodChange = (event: SelectChangeEvent<string>) => {
+  const handleConfirmationMethodChange = (event: SelectChangeEvent<ConfirmationMethod>) => {
     setConfirmation(prev => ({
       ...prev,
-      method: event.target.value,
+      method: event.target.value as ConfirmationMethod,
       code: '',
       error: null
     }));
@@ -480,14 +488,14 @@ const PendingPayments: React.FC = () => {
         userId: user?.id?.toString(),
       });
 
-      if (response.data) {
+      if (response.success) {
         setConfirmation(prev => ({
           ...prev,
           attempts: response.data.attempts,
           maxAttempts: response.data.maxAttempts,
           expiresAt: response.data.expiresAt,
           error: null,
-          method: 'otp',
+          method: ConfirmationMethod.OTP,
           code: '',
           processing: false,
         }));
@@ -496,6 +504,66 @@ const PendingPayments: React.FC = () => {
       handleConfirmationError(err instanceof Error ? err.message : 'Failed to confirm payment');
     } finally {
       setConfirmation(prev => ({ ...prev, processing: false }));
+    }
+  };
+
+  const handlePaymentAction = async (paymentId: string, action: 'approve' | 'reject', data: PendingPaymentApproval | PendingPaymentRejection) => {
+    try {
+      setProcessing(prev => ({ ...prev, [paymentId]: true }));
+      const response = action === 'approve'
+        ? await pendingPaymentsApi.approvePayment(paymentId, data as PendingPaymentApproval)
+        : await pendingPaymentsApi.rejectPayment(paymentId, data as PendingPaymentRejection);
+      
+      if (response.success) {
+        fetchPayments();
+        setDialogState({ open: false, payment: null, action: null });
+      }
+    } catch (error) {
+      console.error(`Error ${action}ing payment:`, error);
+    } finally {
+      setProcessing(prev => ({ ...prev, [paymentId]: false }));
+    }
+  };
+
+  const handleConfirmationRequest = async (paymentId: string) => {
+    try {
+      setConfirmation(prev => ({
+        ...prev,
+        processing: true,
+        error: null,
+        method: ConfirmationMethod.OTP // Ensure method is set with enum
+      }));
+
+      const request: PaymentConfirmationRequest = {
+        paymentId,
+        method: PaymentMethod.ACH,
+        confirmationMethod: ConfirmationMethod.OTP,
+        code: confirmation.code,
+        userId: user?.id?.toString() // Convert number to string
+      };
+
+      const response = await pendingPaymentsApi.confirmPayment(paymentId, request);
+      if (response.success) {
+        setConfirmation(prev => ({
+          ...prev,
+          attempts: response.data.attempts,
+          maxAttempts: response.data.maxAttempts,
+          expiresAt: response.data.expiresAt,
+          error: null,
+          method: ConfirmationMethod.OTP,
+          code: '',
+          processing: false
+        }));
+        fetchPayments();
+      }
+    } catch (error) {
+      console.error('Error confirming payment:', error);
+      setConfirmation(prev => ({
+        ...prev,
+        error: 'Failed to confirm payment',
+        processing: false,
+        method: ConfirmationMethod.OTP // Maintain enum value in error state
+      }));
     }
   };
 
@@ -726,7 +794,7 @@ const PendingPayments: React.FC = () => {
                           <VisibilityIcon />
                         </IconButton>
                       </Tooltip>
-                      {payment.status === 'pending' && (
+                      {payment.status === PaymentStatus.PENDING && (
                         <>
                           <Tooltip title="Approve">
                             <IconButton

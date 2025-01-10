@@ -1,8 +1,16 @@
 import React from 'react';
-import { Modal, Box, Typography, IconButton } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Typography,
+  Box,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-interface BaseModalProps {
+export interface BaseModalProps {
   open: boolean;
   onClose: () => void;
   title?: string;
@@ -10,7 +18,7 @@ interface BaseModalProps {
   'data-testid'?: string;
 }
 
-export const BaseModal: React.FC<BaseModalProps> = ({
+const BaseModal: React.FC<BaseModalProps> = ({
   open,
   onClose,
   title,
@@ -18,63 +26,57 @@ export const BaseModal: React.FC<BaseModalProps> = ({
   'data-testid': testId = 'base-modal'
 }) => {
   const handleClose = (_: React.MouseEvent | {}, reason: string) => {
-    if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+    if (reason !== 'backdropClick') {
       onClose();
     }
   };
 
   return (
-    <Modal
+    <Dialog
       open={open}
       onClose={handleClose}
+      maxWidth="sm"
+      fullWidth
       data-testid={testId}
-      aria-labelledby={title ? 'modal-title' : undefined}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+      PaperProps={{
+        sx: {
+          borderRadius: 2,
+          boxShadow: 5,
+        },
       }}
     >
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          bgcolor: 'background.paper',
-          boxShadow: 24,
-          p: 4,
-          minWidth: 400,
-          maxWidth: '90vw',
-          maxHeight: '90vh',
-          overflow: 'auto',
-          borderRadius: 1,
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <IconButton
-          onClick={onClose}
-          sx={{ position: 'absolute', right: 8, top: 8 }}
-          aria-label="Close modal"
-          data-testid={`${testId}-close`}
+      {title && (
+        <DialogTitle
+          sx={{
+            m: 0,
+            p: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
         >
-          <CloseIcon />
-        </IconButton>
-
-        {title && (
-          <Typography
-            id="modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, pr: 4 }}
-            data-testid={`${testId}-title`}
-          >
+          <Typography variant="h6" component="div">
             {title}
           </Typography>
-        )}
-
-        {children}
-      </Box>
-    </Modal>
+          <IconButton
+            aria-label="close"
+            onClick={() => onClose()}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+      )}
+      <DialogContent dividers>
+        <Box sx={{ mt: 1 }}>{children}</Box>
+      </DialogContent>
+    </Dialog>
   );
 };
+
+export default BaseModal;

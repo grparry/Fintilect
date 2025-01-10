@@ -13,8 +13,8 @@ export const mockTemplates: NotificationTemplate[] = [
   {
     id: 1,
     name: 'Payment Confirmation',
-    type: 'Email' as NotificationType,
-    category: 'Payment' as NotificationCategory,
+    type: NotificationType.PAYMENT_COMPLETED,
+    category: NotificationCategory.PAYMENT,
     subject: 'Payment Confirmation',
     content: 'Your payment of {{amount}} has been processed',
     active: true,
@@ -23,8 +23,8 @@ export const mockTemplates: NotificationTemplate[] = [
   {
     id: 2,
     name: 'Payment Failed',
-    type: 'Email' as NotificationType,
-    category: 'Payment' as NotificationCategory,
+    type: NotificationType.PAYMENT_FAILED,
+    category: NotificationCategory.PAYMENT,
     subject: 'Payment Failed',
     content: 'Your payment of {{amount}} has failed',
     active: true,

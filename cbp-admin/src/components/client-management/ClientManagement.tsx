@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation, Outlet, Routes, Route } from 'react-router-dom';
+import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -7,9 +7,10 @@ import {
   Tabs,
   CircularProgress,
   Alert,
-  Paper,
+  Chip,
 } from '@mui/material';
-import { Client } from '../../types/client.types';
+import type { Client } from '../../types/client.types';
+import type { ApiResponse } from '../../types/api.types';
 import { clientService } from '../../services/clients.service';
 import ContactInformation from './ContactInformation';
 import Groups from './Groups';
@@ -56,8 +57,12 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await clientService.getClient(clientId);
-      setClient(data);
+      const response = await clientService.getClient(clientId);
+      if (response.success) {
+        setClient(response.data);
+      } else {
+        setError(response.error?.message || 'Failed to load client details');
+      }
     } catch (err) {
       setError('Failed to load client details');
       console.error('Error loading client:', err);
@@ -100,6 +105,32 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
     }
   };
 
+  const getStatusColor = (status: Client['status']) => {
+    switch (status) {
+      case 'Active':
+        return 'success';
+      case 'Inactive':
+        return 'error';
+      case 'Pending':
+        return 'warning';
+      default:
+        return 'default';
+    }
+  };
+
+  const getEnvironmentColor = (env: Client['environment']) => {
+    switch (env) {
+      case 'Production':
+        return 'error';
+      case 'Staging':
+        return 'warning';
+      case 'Development':
+        return 'info';
+      default:
+        return 'default';
+    }
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
@@ -122,14 +153,26 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
         <Typography variant="h6" gutterBottom>
           {client.name}
         </Typography>
-        <Typography variant="subtitle1" color="textSecondary">
-          Environment: {client.environment}
-        </Typography>
-        <Typography variant="subtitle1" color="textSecondary">
-          Status: {client.status}
-        </Typography>
-        <Typography variant="subtitle1" color="textSecondary">
-          Type: {client.type}
+        <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+          <Chip
+            label={`Environment: ${client.environment}`}
+            color={getEnvironmentColor(client.environment)}
+            variant="outlined"
+          />
+          <Chip
+            label={`Status: ${client.status}`}
+            color={getStatusColor(client.status)}
+            variant="outlined"
+          />
+          <Chip
+            label={`Type: ${client.type}`}
+            variant="outlined"
+          />
+        </Box>
+        <Typography variant="body2" color="textSecondary">
+          Created: {new Date(client.createdAt).toLocaleDateString()}
+          {' | '}
+          Last Updated: {new Date(client.updatedAt).toLocaleDateString()}
         </Typography>
       </Box>
 

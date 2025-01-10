@@ -9,7 +9,7 @@ import {
   Typography,
   Stack,
 } from '@mui/material';
-import { SyncDialogProps } from '../../../types/money-desktop.types';
+import { Connection, SyncDialogProps } from '../../../types/money-desktop.types';
 
 const SyncDialog: React.FC<SyncDialogProps> = ({
   open,
@@ -17,6 +17,10 @@ const SyncDialog: React.FC<SyncDialogProps> = ({
   connection,
   onSync,
 }) => {
+  if (!connection) {
+    return null;
+  }
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Sync Connection</DialogTitle>
@@ -25,16 +29,19 @@ const SyncDialog: React.FC<SyncDialogProps> = ({
           <Typography gutterBottom>
             Are you sure you want to sync this connection?
           </Typography>
-          {connection && (
-            <Stack spacing={2} sx={{ mt: 2 }}>
-              <Typography variant="subtitle2">Client</Typography>
-              <Typography>{connection.clientName}</Typography>
-              <Typography variant="subtitle2">Institution</Typography>
-              <Typography>{connection.institutionName}</Typography>
-              <Typography variant="subtitle2">Last Sync</Typography>
-              <Typography>{connection.lastSync}</Typography>
-            </Stack>
-          )}
+          <Stack spacing={2} sx={{ mt: 2 }}>
+            <Typography variant="subtitle2">Client</Typography>
+            <Typography>{connection.clientName}</Typography>
+            <Typography variant="subtitle2">Institution</Typography>
+            <Typography>{connection.institutionName}</Typography>
+            <Typography variant="subtitle2">Last Sync</Typography>
+            <Typography>{connection.lastSync || 'Never'}</Typography>
+            {connection.error && (
+              <Typography color="error">
+                Last Error: {connection.error}
+              </Typography>
+            )}
+          </Stack>
         </Box>
       </DialogContent>
       <DialogActions>
@@ -43,13 +50,11 @@ const SyncDialog: React.FC<SyncDialogProps> = ({
           variant="contained"
           color="primary"
           onClick={() => {
-            if (connection) {
-              onSync(connection);
-            }
+            onSync(connection);
             onClose();
           }}
         >
-          Start Sync
+          Sync Now
         </Button>
       </DialogActions>
     </Dialog>

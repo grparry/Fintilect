@@ -12,6 +12,7 @@ import {
   Typography,
   Alert,
   Skeleton,
+  SelectChangeEvent,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
@@ -30,13 +31,19 @@ import {
   TIME_RANGES,
   CHART_VIEWS,
 } from './constants';
-import { BillPayStats, TransactionTrend } from '../../../types/bill-pay.types';
-import { ApiSuccessResponse } from '../../../types/api.types';
-import api from '../../../services/api';
+import { 
+  DashboardMetrics,
+  TransactionStats,
+  UserActivityData,
+  ChartData,
+  TimeRangeOption,
+  ChartViewOption
+} from '../../../types/dashboard.types';
+import { dashboardService } from '../../../services/dashboard.service';
+import { TimeRange } from '../../../types';
 
 interface DashboardState {
-  stats: BillPayStats | null;
-  trends: TransactionTrend[];
+  metrics: DashboardMetrics | null;
   loading: boolean;
   error: string | null;
 }
@@ -56,17 +63,12 @@ interface CustomTooltipProps {
 
 const formatValue = (value: number, isAmount: boolean): string => {
   if (isAmount) {
-    return value.toLocaleString('en-US', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+    }).format(value);
   }
-  return value.toLocaleString('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
+  return new Intl.NumberFormat('en-US').format(value);
 };
 
 const CustomTooltip = ({ active, payload, label, isAmount }: CustomTooltipProps) => {
@@ -74,16 +76,12 @@ const CustomTooltip = ({ active, payload, label, isAmount }: CustomTooltipProps)
     return null;
   }
 
-  const data = payload[0];
-
   return (
     <Card>
       <CardContent>
+        <Typography variant="body2">{label}</Typography>
         <Typography variant="body2" color="textSecondary">
-          {label}
-        </Typography>
-        <Typography variant="body1">
-          {formatValue(data.value, isAmount)}
+          {formatValue(payload[0].value, isAmount)}
         </Typography>
       </CardContent>
     </Card>
@@ -91,126 +89,107 @@ const CustomTooltip = ({ active, payload, label, isAmount }: CustomTooltipProps)
 };
 
 const Dashboard: React.FC = () => {
-  const [timeRange, setTimeRange] = useState(TIME_RANGES[0].value);
-  const [chartView, setChartView] = useState(CHART_VIEWS[0].value);
   const [state, setState] = useState<DashboardState>({
-    stats: null,
-    trends: [],
+    metrics: null,
     loading: true,
-    error: null,
+    error: null
   });
+  const [timeRange, setTimeRange] = useState<TimeRange>('week');
+  const [chartView, setChartView] = useState<ChartViewOption['value']>('line');
 
-  const fetchDashboardData = useCallback(async () => {
-    setState((prev) => ({ ...prev, loading: true, error: null }));
+  const loadDashboardData = useCallback(async () => {
     try {
-      const selectedRange = TIME_RANGES.find((r) => r.value === timeRange);
-      const days = selectedRange?.days || 7;
-
-      const [statsResponse, trendsResponse] = await Promise.all([
-        api.get<ApiSuccessResponse<BillPayStats>>('/bill-pay/dashboard/stats'),
-        api.get<ApiSuccessResponse<TransactionTrend[]>>('/bill-pay/dashboard/trends', {
-          params: { days }
-        })
-      ]);
-
-      setState({
-        stats: statsResponse.data.data,
-        trends: trendsResponse.data.data,
-        loading: false,
-        error: null
-      });
+      setState(prev => ({ ...prev, loading: true, error: null }));
+      const response = await dashboardService.getStats(timeRange);
+      if ('error' in response) {
+        setState(prev => ({ 
+          ...prev, 
+          error: response.error.message,
+          loading: false 
+        }));
+        return;
+      }
+      setState(prev => ({ 
+        ...prev, 
+        metrics: response.data,
+        loading: false 
+      }));
     } catch (error) {
-      setState((prev) => ({
-        ...prev,
-        loading: false,
-        error: 'Failed to load dashboard data'
+      setState(prev => ({ 
+        ...prev, 
+        error: 'Failed to load dashboard data', 
+        loading: false 
       }));
     }
   }, [timeRange]);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, [fetchDashboardData]);
+    loadDashboardData();
+  }, [loadDashboardData]);
 
   const handleRefresh = () => {
-    fetchDashboardData();
+    loadDashboardData();
   };
 
-  const handleTimeRangeChange = (event: any) => {
-    setTimeRange(event.target.value);
+  const handleTimeRangeChange = (event: SelectChangeEvent<TimeRange>) => {
+    setTimeRange(event.target.value as TimeRange);
   };
 
-  const handleChartViewChange = (event: any) => {
-    setChartView(event.target.value);
+  const handleChartViewChange = (event: SelectChangeEvent<ChartViewOption['value']>) => {
+    setChartView(event.target.value as ChartViewOption['value']);
   };
 
-  const getCardValue = (card: typeof DASHBOARD_CARDS[0], stats: BillPayStats): string | number | undefined => {
-    const value = stats[card.dataKey];
-    
-    if (value === undefined || value === null) {
-      return undefined;
+  const getMetricValue = (metrics: DashboardMetrics, type: 'transactions' | 'userActivity', key: string): number => {
+    const data = metrics[type];
+    if (type === 'transactions') {
+      const transactionData = data as TransactionStats;
+      // Special handling for volume since it's an object with daily/weekly/monthly
+      if (key === 'volume') {
+        // Return the daily volume as that's the most granular metric
+        return transactionData.volume.daily;
+      }
+      // For other transaction stats, they're direct number values
+      return transactionData[key as keyof Omit<TransactionStats, 'volume'>] || 0;
     }
-
-    if (typeof value === 'object') {
-      const total = Object.values(value).reduce((sum, curr) => sum + curr, 0);
-      return card.formatter ? card.formatter(total) : total;
-    }
-
-    return card.formatter ? card.formatter(value as number) : value as number;
+    // User activity metrics are all direct number values
+    const userData = data as UserActivityData;
+    return userData[key as keyof UserActivityData] || 0;
   };
 
-  const renderStatCards = () => {
-    return (
-      <Grid container spacing={3}>
-        {DASHBOARD_CARDS.map((card) => (
-          <Grid item xs={12} sm={6} md={3} key={card.id}>
-            <DashboardCard
-              title={card.title}
-              value={state.loading || !state.stats ? undefined : getCardValue(card, state.stats)}
-              icon={card.icon}
-              loading={state.loading}
-            />
-          </Grid>
-        ))}
-      </Grid>
-    );
-  };
+  const renderStatCards = () => (
+    <Grid container spacing={3}>
+      {DASHBOARD_CARDS.map((card) => (
+        <Grid item xs={12} sm={6} md={3} key={card.id}>
+          <DashboardCard
+            title={card.title}
+            value={state.metrics ? getMetricValue(state.metrics, 'transactions', card.dataKey) : undefined}
+            icon={card.icon}
+            loading={state.loading}
+          />
+        </Grid>
+      ))}
+    </Grid>
+  );
 
   const renderChart = () => {
-    if (state.loading) {
+    if (state.loading || !state.metrics) {
       return <Skeleton variant="rectangular" height={400} />;
     }
 
-    const data = state.trends.map(trend => ({
-      date: trend.date,
-      value: chartView === 'payments' ? trend.count : trend.amount
-    }));
-
-    const isAmount = chartView === 'amount';
-    const valueFormatter = (value: number) => formatValue(value, isAmount);
+    const chartData = state.metrics.charts.transactionVolume;
 
     return (
       <ResponsiveContainer width="100%" height={400}>
-        <BarChart
-          data={data}
-          margin={{ top: 20, right: 30, left: isAmount ? 60 : 30, bottom: 20 }}
-        >
+        <BarChart data={chartData.datasets[0].data}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis tickFormatter={valueFormatter} width={isAmount ? 60 : 30} />
-          <Tooltip content={({ active, payload, label }) => (
-            <CustomTooltip
-              active={active}
-              payload={payload as CustomTooltipProps['payload']}
-              label={label}
-              isAmount={isAmount}
-            />
-          )} />
+          <XAxis dataKey="label" />
+          <YAxis />
+          <Tooltip content={<CustomTooltip isAmount={true} />} />
           <Legend />
           <Bar
             dataKey="value"
-            fill="#2196f3"
-            name={CHART_VIEWS.find(v => v.value === chartView)?.label || ''}
+            fill="#8884d8"
+            name={chartData.datasets[0].label}
           />
         </BarChart>
       </ResponsiveContainer>

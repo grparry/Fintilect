@@ -27,8 +27,11 @@ import InfoIcon from '@mui/icons-material/Info';
 import {
   BillPayConfig as IBillPayConfig,
   BillPayConfigUpdate,
+  BillPayConfigValidation
 } from '../../../types/bill-pay.types';
 import { billPayConfigService } from '../../../services/bill-pay-config.service';
+
+type ValidationErrors = Partial<Record<keyof BillPayConfigUpdate, string>>;
 
 const BillPayConfig: React.FC = () => {
   // State
@@ -42,154 +45,124 @@ const BillPayConfig: React.FC = () => {
     notificationEmail: '',
     enableEmailNotifications: true,
   });
-  const [originalConfig, setOriginalConfig] = useState<IBillPayConfig | null>(
-    null
-  );
+  const [originalConfig, setOriginalConfig] = useState<IBillPayConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [testingEmail, setTestingEmail] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [validationErrors, setValidationErrors] = useState<
-    Array<{ field: keyof BillPayConfigUpdate; message: string }>
-  >([]);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
 
-  const fetchConfig = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await billPayConfigService.getConfig();
-      setOriginalConfig(data);
-      setConfig({
-        cutoffTime: data.cutoffTime,
-        maxDailyLimit: data.maxDailyLimit,
-        maxTransactionLimit: data.maxTransactionLimit,
-        allowWeekendProcessing: data.allowWeekendProcessing,
-        requireDualApproval: data.requireDualApproval,
-        retryAttempts: data.retryAttempts,
-        notificationEmail: data.notificationEmail,
-        enableEmailNotifications: data.enableEmailNotifications,
-      });
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to load configuration'
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, []); // No dependencies needed as it only uses service methods and setState
-
-  // Load config
+  // Load initial config
   useEffect(() => {
-    fetchConfig();
-  }, [fetchConfig]);
-
-  // Handlers
-  const handleChange = (field: keyof BillPayConfigUpdate) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value =
-      event.target.type === 'number'
-        ? Number(event.target.value)
-        : event.target.value;
-    setConfig((prev) => ({ ...prev, [field]: value }));
-    setValidationErrors((prev) =>
-      prev.filter((error) => error.field !== field)
-    );
-    setSuccess(null);
-  };
-
-  const handleSwitchChange = (field: keyof BillPayConfigUpdate) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setConfig((prev) => ({ ...prev, [field]: event.target.checked }));
-    setValidationErrors((prev) =>
-      prev.filter((error) => error.field !== field)
-    );
-    setSuccess(null);
-  };
-
-  const handleTimeChange = (value: Dayjs | null) => {
-    if (value) {
-      setConfig((prev) => ({
-        ...prev,
-        cutoffTime: value.format('HH:mm'),
-      }));
-      setValidationErrors((prev) =>
-        prev.filter((error) => error.field !== 'cutoffTime')
-      );
-      setSuccess(null);
-    }
-  };
-
-  const handleSave = async () => {
-    setError(null);
-    setSuccess(null);
-    setSaving(true);
-    try {
-      const validation = await billPayConfigService.validateConfig(config);
-      if (!validation.valid) {
-        setValidationErrors(validation.errors);
-        return;
+    const loadConfig = async () => {
+      try {
+        setLoading(true);
+        const data = await billPayConfigService.getConfig();
+        setOriginalConfig(data);
+        setConfig({
+          cutoffTime: data.cutoffTime,
+          maxDailyLimit: data.maxDailyLimit,
+          maxTransactionLimit: data.maxTransactionLimit,
+          allowWeekendProcessing: data.allowWeekendProcessing,
+          requireDualApproval: data.requireDualApproval,
+          retryAttempts: data.retryAttempts,
+          notificationEmail: data.notificationEmail,
+          enableEmailNotifications: data.enableEmailNotifications,
+        });
+        setError(null);
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to load configuration');
+      } finally {
+        setLoading(false);
       }
+    };
 
+    loadConfig();
+  }, []);
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    try {
+      setSaving(true);
+      setError(null);
+      setValidationErrors({});
+      
       await billPayConfigService.updateConfig(config);
-      setSuccess('Configuration saved successfully');
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to save configuration'
-      );
+      const updatedConfig = await billPayConfigService.getConfig();
+      setOriginalConfig(updatedConfig);
+      setConfig({
+        cutoffTime: updatedConfig.cutoffTime,
+        maxDailyLimit: updatedConfig.maxDailyLimit,
+        maxTransactionLimit: updatedConfig.maxTransactionLimit,
+        allowWeekendProcessing: updatedConfig.allowWeekendProcessing,
+        requireDualApproval: updatedConfig.requireDualApproval,
+        retryAttempts: updatedConfig.retryAttempts,
+        notificationEmail: updatedConfig.notificationEmail,
+        enableEmailNotifications: updatedConfig.enableEmailNotifications,
+      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        // Check if it's a validation error
+        if (err.message.startsWith('Invalid configuration:')) {
+          const validationMessage = err.message.replace('Invalid configuration: ', '');
+          const errors: ValidationErrors = {};
+          validationMessage.split(', ').forEach(errorStr => {
+            const [field, message] = errorStr.split(': ');
+            if (field && message && field in config) {
+              errors[field as keyof BillPayConfigUpdate] = message;
+            }
+          });
+          setValidationErrors(errors);
+        } else {
+          setError(err.message);
+        }
+      } else {
+        setError('Failed to update configuration');
+      }
     } finally {
       setSaving(false);
     }
   };
 
-  const handleReset = async () => {
-    setError(null);
-    setSuccess(null);
-    setLoading(true);
-    try {
-      const data = await billPayConfigService.resetConfig();
-      setOriginalConfig(data);
-      setConfig({
-        cutoffTime: data.cutoffTime,
-        maxDailyLimit: data.maxDailyLimit,
-        maxTransactionLimit: data.maxTransactionLimit,
-        allowWeekendProcessing: data.allowWeekendProcessing,
-        requireDualApproval: data.requireDualApproval,
-        retryAttempts: data.retryAttempts,
-        notificationEmail: data.notificationEmail,
-        enableEmailNotifications: data.enableEmailNotifications,
-      });
-      setSuccess('Configuration reset to defaults');
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to reset configuration'
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Test email notification
   const handleTestEmail = async () => {
-    setError(null);
-    setSuccess(null);
-    setTestingEmail(true);
     try {
-      const result = await billPayConfigService.testEmailNotification(
-        config.notificationEmail
-      );
-      if (result.success) {
-        setSuccess('Test email sent successfully');
-      } else {
-        setError(result.message);
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to send test email'
-      );
+      setTestingEmail(true);
+      setError(null);
+      await billPayConfigService.testEmailNotification(config.notificationEmail);
+      // Show success message
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to send test email');
     } finally {
       setTestingEmail(false);
     }
+  };
+
+  // Reset form to original values
+  const handleReset = () => {
+    if (originalConfig) {
+      setConfig({
+        cutoffTime: originalConfig.cutoffTime,
+        maxDailyLimit: originalConfig.maxDailyLimit,
+        maxTransactionLimit: originalConfig.maxTransactionLimit,
+        allowWeekendProcessing: originalConfig.allowWeekendProcessing,
+        requireDualApproval: originalConfig.requireDualApproval,
+        retryAttempts: originalConfig.retryAttempts,
+        notificationEmail: originalConfig.notificationEmail,
+        enableEmailNotifications: originalConfig.enableEmailNotifications,
+      });
+      setValidationErrors({});
+      setError(null);
+    }
+  };
+
+  // Handle field changes
+  const handleFieldChange = (field: keyof BillPayConfigUpdate, value: string | number | boolean) => {
+    setConfig(prev => ({ ...prev, [field]: value }));
+    setValidationErrors(prev => {
+      const { [field]: _, ...rest } = prev;
+      return rest;
+    });
   };
 
   if (loading) {
@@ -219,16 +192,6 @@ const BillPayConfig: React.FC = () => {
         </Alert>
       )}
 
-      {success && (
-        <Alert
-          severity="success"
-          sx={{ mb: 3 }}
-          onClose={() => setSuccess(null)}
-        >
-          {success}
-        </Alert>
-      )}
-
       <Card>
         <CardContent>
           <Grid container spacing={3}>
@@ -237,16 +200,16 @@ const BillPayConfig: React.FC = () => {
                 <TimePicker
                   label="Daily Cutoff Time"
                   value={dayjs(config.cutoffTime, 'HH:mm')}
-                  onChange={handleTimeChange}
+                  onChange={(value) => {
+                    if (value) {
+                      handleFieldChange('cutoffTime', value.format('HH:mm'));
+                    }
+                  }}
                   slotProps={{
                     textField: {
                       fullWidth: true,
-                      error: validationErrors.some(
-                        (e) => e.field === 'cutoffTime'
-                      ),
-                      helperText: validationErrors.find(
-                        (e) => e.field === 'cutoffTime'
-                      )?.message,
+                      error: validationErrors.cutoffTime !== undefined,
+                      helperText: validationErrors.cutoffTime,
                     },
                   }}
                 />
@@ -259,13 +222,13 @@ const BillPayConfig: React.FC = () => {
                 type="number"
                 label="Maximum Daily Limit"
                 value={config.maxDailyLimit}
-                onChange={handleChange('maxDailyLimit')}
-                error={validationErrors.some(
-                  (e) => e.field === 'maxDailyLimit'
-                )}
+                onChange={(event) => {
+                  const value = Number(event.target.value);
+                  handleFieldChange('maxDailyLimit', value);
+                }}
+                error={validationErrors.maxDailyLimit !== undefined}
                 helperText={
-                  validationErrors.find((e) => e.field === 'maxDailyLimit')
-                    ?.message ||
+                  validationErrors.maxDailyLimit ||
                   `Min: $${originalConfig?.validationRules.minDailyLimit.toLocaleString()}, Max: $${originalConfig?.validationRules.maxDailyLimit.toLocaleString()}`
                 }
                 InputProps={{
@@ -282,14 +245,13 @@ const BillPayConfig: React.FC = () => {
                 type="number"
                 label="Maximum Transaction Limit"
                 value={config.maxTransactionLimit}
-                onChange={handleChange('maxTransactionLimit')}
-                error={validationErrors.some(
-                  (e) => e.field === 'maxTransactionLimit'
-                )}
+                onChange={(event) => {
+                  const value = Number(event.target.value);
+                  handleFieldChange('maxTransactionLimit', value);
+                }}
+                error={validationErrors.maxTransactionLimit !== undefined}
                 helperText={
-                  validationErrors.find(
-                    (e) => e.field === 'maxTransactionLimit'
-                  )?.message ||
+                  validationErrors.maxTransactionLimit ||
                   `Min: $${originalConfig?.validationRules.minTransactionAmount.toLocaleString()}, Max: $${originalConfig?.validationRules.maxTransactionAmount.toLocaleString()}`
                 }
                 InputProps={{
@@ -306,13 +268,13 @@ const BillPayConfig: React.FC = () => {
                 type="number"
                 label="Retry Attempts"
                 value={config.retryAttempts}
-                onChange={handleChange('retryAttempts')}
-                error={validationErrors.some(
-                  (e) => e.field === 'retryAttempts'
-                )}
+                onChange={(event) => {
+                  const value = Number(event.target.value);
+                  handleFieldChange('retryAttempts', value);
+                }}
+                error={validationErrors.retryAttempts !== undefined}
                 helperText={
-                  validationErrors.find((e) => e.field === 'retryAttempts')
-                    ?.message ||
+                  validationErrors.retryAttempts ||
                   `Min: ${originalConfig?.validationRules.minRetryAttempts}, Max: ${originalConfig?.validationRules.maxRetryAttempts}`
                 }
               />
@@ -327,7 +289,9 @@ const BillPayConfig: React.FC = () => {
                 control={
                   <Switch
                     checked={config.allowWeekendProcessing}
-                    onChange={handleSwitchChange('allowWeekendProcessing')}
+                    onChange={(event) => {
+                      handleFieldChange('allowWeekendProcessing', event.target.checked);
+                    }}
                   />
                 }
                 label={
@@ -346,7 +310,9 @@ const BillPayConfig: React.FC = () => {
                 control={
                   <Switch
                     checked={config.requireDualApproval}
-                    onChange={handleSwitchChange('requireDualApproval')}
+                    onChange={(event) => {
+                      handleFieldChange('requireDualApproval', event.target.checked);
+                    }}
                   />
                 }
                 label={
@@ -369,7 +335,9 @@ const BillPayConfig: React.FC = () => {
                 control={
                   <Switch
                     checked={config.enableEmailNotifications}
-                    onChange={handleSwitchChange('enableEmailNotifications')}
+                    onChange={(event) => {
+                      handleFieldChange('enableEmailNotifications', event.target.checked);
+                    }}
                   />
                 }
                 label="Enable Email Notifications"
@@ -381,15 +349,12 @@ const BillPayConfig: React.FC = () => {
                 fullWidth
                 label="Notification Email"
                 value={config.notificationEmail}
-                onChange={handleChange('notificationEmail')}
+                onChange={(event) => {
+                  handleFieldChange('notificationEmail', event.target.value);
+                }}
                 disabled={!config.enableEmailNotifications}
-                error={validationErrors.some(
-                  (e) => e.field === 'notificationEmail'
-                )}
-                helperText={
-                  validationErrors.find((e) => e.field === 'notificationEmail')
-                    ?.message
-                }
+                error={validationErrors.notificationEmail !== undefined}
+                helperText={validationErrors.notificationEmail}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -426,7 +391,7 @@ const BillPayConfig: React.FC = () => {
               </Button>
               <Button
                 variant="contained"
-                onClick={handleSave}
+                onClick={handleSubmit}
                 disabled={saving}
                 startIcon={
                   saving ? <CircularProgress size={20} /> : undefined

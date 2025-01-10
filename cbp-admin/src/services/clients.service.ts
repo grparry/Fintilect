@@ -102,6 +102,25 @@ export interface ClientListResponse {
 export interface ClientCreateRequest extends Omit<Client, 'id'> {}
 export interface ClientUpdateRequest extends Partial<Omit<Client, 'id'>> {}
 
+export interface AuditLog {
+  id: string;
+  clientId: string;
+  timestamp: string;
+  eventType: string;
+  userId: string;
+  ipAddress: string;
+  description: string;
+}
+
+export interface AuditSearchRequest {
+  timestampFrom?: string;
+  timestampTo?: string;
+  eventType?: string;
+  userId?: string;
+  ipAddress?: string;
+  description?: string;
+}
+
 /**
  * Service for managing clients and their settings
  */
@@ -281,6 +300,13 @@ export class ClientService {
    */
   async getPermissions(): Promise<ApiResponse<Permission[]>> {
     return api.get(`${this.basePath}/permissions`);
+  }
+
+  /**
+   * Search audit logs for a client
+   */
+  async searchAuditLogs(clientId: string, request: AuditSearchRequest): Promise<ApiResponse<AuditLog[]>> {
+    return api.post(`${this.basePath}/${clientId}/audit/search`, request);
   }
 }
 

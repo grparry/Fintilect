@@ -6,9 +6,10 @@ import {
   Paper,
   Typography,
   Alert,
+  CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { SecurityRole, Permission } from '../../../types/client.types';
+import { SecurityRole, Permission, ApiResponse } from '../../../types/client.types';
 import { clientService } from '../../../services/clients.service';
 import { encodeId, decodeId } from '../../../utils/idEncoder';
 import PermissionTreeView from '../groups/PermissionTreeView';
@@ -26,6 +27,7 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,22 +35,30 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
         setLoading(true);
         setError(null);
 
-        const [permissionsData] = await Promise.all([
-          clientService.getPermissions(),
-        ]);
-        setPermissions(permissionsData);
+        const permissionsResponse: ApiResponse<Permission[]> = await clientService.getPermissions();
+        
+        if (!permissionsResponse.success) {
+          throw new Error(permissionsResponse.error?.message || 'Failed to load permissions');
+        }
+        setPermissions(permissionsResponse.data);
 
         if (roleId) {
           const decodedRoleId = decodeId(roleId);
-          const roleData = await clientService.getRole(decodedRoleId);
-          setRole(roleData);
-          setSelectedPermissions(roleData.permissions || []);
+          const roleResponse: ApiResponse<SecurityRole> = await clientService.getRole(decodedRoleId);
+          
+          if (!roleResponse.success) {
+            throw new Error(roleResponse.error?.message || 'Failed to load role');
+          }
+          
+          setRole(roleResponse.data);
+          setSelectedPermissions(roleResponse.data.permissions || []);
         } else {
           setRole({
             id: '',
             name: '',
             description: '',
             permissions: [],
+            isSystem: false,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           });
@@ -56,7 +66,7 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
 
         setLoading(false);
       } catch (error) {
-        setError('Failed to load role data');
+        setError(error instanceof Error ? error.message : 'Failed to load role data');
         console.error('Error loading role data:', error);
         setLoading(false);
       }
@@ -87,19 +97,26 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
         name: role.name,
         description: role.description,
         permissions: selectedPermissions,
+        isSystem: role.isSystem
       };
 
+      let response: ApiResponse<SecurityRole>;
       if (roleId) {
         const decodedRoleId = decodeId(roleId);
-        await clientService.updateRole(decodedRoleId, roleData);
+        response = await clientService.updateRole(decodedRoleId, roleData);
       } else {
-        await clientService.createRole(roleData);
+        response = await clientService.createRole(roleData);
       }
 
-      const encodedClientId = encodeId(clientId);
-      navigate(`/clients/${encodedClientId}/roles`);
+      if (response.success) {
+        setSuccess('Role saved successfully');
+        const encodedClientId = encodeId(clientId);
+        navigate(`/clients/${encodedClientId}/roles`);
+      } else {
+        setError(response.error?.message || 'Failed to save role');
+      }
     } catch (error) {
-      setError('Failed to save role');
+      setError(error instanceof Error ? error.message : 'Failed to save role');
       console.error('Error saving role:', error);
     } finally {
       setSaving(false);
@@ -107,7 +124,11 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (!role) {
@@ -123,6 +144,11 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {success}
         </Alert>
       )}
 
@@ -141,6 +167,14 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
           onChange={(e) => setRole({ ...role, description: e.target.value })}
           multiline
           rows={2}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="Is System"
+          value={role.isSystem}
+          onChange={(e) => setRole({ ...role, isSystem: e.target.value === 'true' })}
+          type="checkbox"
           sx={{ mb: 2 }}
         />
       </Paper>
