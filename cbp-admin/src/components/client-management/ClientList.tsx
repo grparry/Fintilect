@@ -177,18 +177,7 @@ const ClientList: React.FC = () => {
         return;
       }
 
-      // Handle both mock and real data formats
-      let clientsData: ServiceClient[] = [];
-      const responseData = response.data as ServiceClientListResponse | MockServiceClientResponse;
-      
-      if ('success' in responseData && responseData.success) {
-        // Mock data format (nested)
-        clientsData = responseData.data.items;
-      } else {
-        // Real data format (flat)
-        clientsData = (responseData as ServiceClientListResponse).items;
-      }
-
+      const clientsData = response.data.items;
       logger.log('Processing ' + clientsData.length + ' clients');
       const clients = clientsData.map(transformServiceClient);
       logger.log('Successfully loaded ' + clients.length + ' clients');

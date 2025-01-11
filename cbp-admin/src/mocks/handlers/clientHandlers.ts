@@ -199,48 +199,22 @@ export const clientHandlers = [
   http.get('*/admin/client-management/list', ({ request }) => {
     console.log('MSW: Handling get clients request');
     const url = new URL(request.url);
-    const searchTerm = url.searchParams.get('searchTerm')?.toLowerCase() || '';
-    const environment = url.searchParams.get('environment');
-    const page = parseInt(url.searchParams.get('page') || '1');
-    const limit = parseInt(url.searchParams.get('limit') || '20');
-
-    let filteredClients = [...mockClients];
-
-    if (searchTerm) {
-      filteredClients = filteredClients.filter(client =>
-        client.name.toLowerCase().includes(searchTerm) ||
-        client.domain.toLowerCase().includes(searchTerm) ||
-        client.contactName.toLowerCase().includes(searchTerm)
-      );
-    }
-
-    if (environment) {
-      filteredClients = filteredClients.filter(client => 
-        client.environment.toLowerCase() === environment.toLowerCase()
-      );
-    }
-
-    // Calculate pagination
-    const total = filteredClients.length;
-    const totalPages = Math.ceil(total / limit);
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedClients = filteredClients.slice(startIndex, endIndex);
+    const page = Number(url.searchParams.get('page')) || 1;
+    const limit = Number(url.searchParams.get('limit')) || 20;
 
     const response: ApiSuccessResponse<ClientListResponse> = {
       success: true,
       data: {
-        items: paginatedClients,
+        items: mockClients,
         pagination: {
-          total,
+          total: mockClients.length,
           page,
           limit,
-          pages: totalPages
+          pages: Math.ceil(mockClients.length / limit)
         }
       }
     };
 
-    console.log('MSW: Returning clients response:', response);
     return HttpResponse.json(response);
   }),
 
