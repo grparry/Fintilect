@@ -1,4 +1,4 @@
-import { User } from './index';
+import { User } from './client.types';
 
 export interface LoginFormData {
   username: string;

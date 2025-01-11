@@ -145,7 +145,7 @@ export default function Breadcrumbs() {
     try {
       const decodedClientId = decodeId(clientId);
       const decodedUserId = decodeId(userId);
-      const response = await clientService.getUser(decodedClientId, decodedUserId);
+      const response = await clientService.getClientUser(decodedClientId, decodedUserId);
       if (response.success) {
         setCachedNames(prev => ({
           ...prev,
@@ -155,7 +155,7 @@ export default function Breadcrumbs() {
           }
         }));
       } else {
-        throw new Error(response.error?.message || 'Failed to fetch user');
+        throw new Error(response.error.message || 'Failed to fetch user');
       }
     } catch (err) {
       console.error('Error fetching user name:', err);

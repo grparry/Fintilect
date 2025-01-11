@@ -14,12 +14,19 @@ code {
 }
 
 .MuiDrawer-paper {
-  border-right: none !important;
+  border-right: none;
   box-shadow: rgb(113 122 131 / 11%) 0px 7px 30px 0px;
 }
 
+/* Light mode styles */
 .MuiAppBar-root {
-  background-color: #fff !important;
-  color: #2f3542 !important;
-  box-shadow: rgb(113 122 131 / 11%) 0px 7px 30px 0px !important;
+  background-color: #fff;
+  color: #2f3542;
+  box-shadow: rgb(113 122 131 / 11%) 0px 7px 30px 0px;
+}
+
+/* Dark mode styles */
+[data-mui-color-scheme="dark"] .MuiAppBar-root {
+  background-color: #1e1e1e;
+  color: #fff;
 }

@@ -63,7 +63,8 @@ export const defaultSettings: ClientSettings = {
 // Mock Users
 export const mockUsers: User[] = [
   {
-    id: 1,
+    id: '1',
+    clientId: '1',
     username: 'admin',
     firstName: 'Admin',
     lastName: 'User',
@@ -72,10 +73,13 @@ export const mockUsers: User[] = [
     status: UserStatus.ACTIVE,
     department: 'IT Administration',
     lastLogin: new Date().toISOString(),
-    locked: false
+    locked: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   },
   {
-    id: 2,
+    id: '2',
+    clientId: '1',
     username: 'user1',
     firstName: 'John',
     lastName: 'Smith',
@@ -84,10 +88,13 @@ export const mockUsers: User[] = [
     status: UserStatus.ACTIVE,
     department: 'Operations',
     lastLogin: new Date().toISOString(),
-    locked: false
+    locked: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   },
   {
-    id: 3,
+    id: '3',
+    clientId: '1',
     username: 'support',
     firstName: 'Support',
     lastName: 'Team',
@@ -96,10 +103,13 @@ export const mockUsers: User[] = [
     status: UserStatus.ACTIVE,
     department: 'Customer Service',
     lastLogin: new Date().toISOString(),
-    locked: false
+    locked: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   },
   {
-    id: 4,
+    id: '4',
+    clientId: '1',
     username: 'manager',
     firstName: 'Jane',
     lastName: 'Doe',
@@ -108,7 +118,9 @@ export const mockUsers: User[] = [
     status: UserStatus.ACTIVE,
     department: 'Management',
     lastLogin: new Date().toISOString(),
-    locked: false
+    locked: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   }
 ];
 
@@ -170,8 +182,8 @@ export const mockClients: Client[] = [
         cardControls: true,
       },
     },
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }
 ];
 

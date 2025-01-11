@@ -26,11 +26,21 @@ class ApiClient {
   private readonly baseUrl: string;
 
   constructor() {
-    this.baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000';
+    // Use API URL from environment variables
+    const apiUrl = process.env.REACT_APP_API_URL;
+    if (!apiUrl) {
+      console.warn('REACT_APP_API_URL is not set in environment variables');
+      this.baseUrl = 'http://localhost:3000'; // Fallback to default API URL
+    } else {
+      this.baseUrl = apiUrl;
+    }
   }
 
   private buildUrl(path: string, params?: Record<string, any>): string {
-    const url = new URL(`${this.baseUrl}${path}`);
+    // Ensure path starts with a forward slash
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    const url = new URL(normalizedPath, this.baseUrl);
+    
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined) {

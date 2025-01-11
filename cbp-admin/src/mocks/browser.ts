@@ -11,9 +11,13 @@ import { billPaySecurityHandlers } from './handlers/billPaySecurityHandlers';
 import { holidayHandlers } from './handlers/holidayHandlers';
 import { clientHandlers } from './handlers/clientHandlers';
 import { paymentHandlers } from './handlers/paymentHandlers';
+import { authHandlers } from './handlers/authHandlers';
+import { wsHandlers } from './handlers/wsHandlers';
 
 // Log all registered handlers for debugging
 console.log('MSW: Registering handlers', {
+  auth: authHandlers.map(h => h.info.path),
+  ws: wsHandlers.map(h => h.info.path),
   payeeConversion: payeeConversionHandlers.map(h => h.info.path),
   reports: reportHandlers.map(h => h.info.path),
   billPay: billPayHandlers.map(h => h.info.path),
@@ -30,6 +34,8 @@ console.log('MSW: Registering handlers', {
 
 // Create the worker instance
 export const worker = setupWorker(
+  ...wsHandlers,
+  ...authHandlers,
   ...memberHandlers,
   ...billPayHandlers,
   ...moneyDesktopHandlers,

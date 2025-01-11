@@ -1,5 +1,6 @@
 export async function initMocks() {
   if (process.env.NODE_ENV === 'development') {
+    console.log('MSW: Starting initialization');
     const { worker } = await import('./browser');
     try {
       await worker.start({
@@ -33,7 +34,9 @@ export async function initMocks() {
       });
       console.log('MSW: Started successfully');
     } catch (error) {
-      console.error('MSW: Failed to start:', error);
+      console.error('MSW: Failed to start', error);
     }
+  } else {
+    console.log('MSW: Not starting in non-development environment');
   }
 }

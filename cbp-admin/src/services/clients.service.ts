@@ -126,7 +126,7 @@ export interface AuditSearchRequest {
  */
 export class ClientService {
   private static instance: ClientService;
-  private readonly basePath = '/clients';
+  private readonly basePath = '/admin/client-management';
 
   private constructor() {}
 
@@ -140,8 +140,10 @@ export class ClientService {
   /**
    * Get a list of all clients with pagination
    */
-  async getClients(page = 1, limit = 20): Promise<ApiResponse<ClientListResponse>> {
-    return api.get(`${this.basePath}?page=${page}&limit=${limit}`);
+  async getClients(page: number = 1, limit: number = 20): Promise<ApiResponse<ClientListResponse>> {
+    return api.get(`${this.basePath}/list`, {
+      params: { page, limit }
+    });
   }
 
   /**
@@ -154,14 +156,14 @@ export class ClientService {
   /**
    * Create a new client
    */
-  async createClient(data: ClientCreateRequest): Promise<ApiResponse<Client>> {
+  async createClient(data: Partial<Client>): Promise<ApiResponse<Client>> {
     return api.post(this.basePath, data);
   }
 
   /**
    * Update an existing client
    */
-  async updateClient(id: string, data: ClientUpdateRequest): Promise<ApiResponse<Client>> {
+  async updateClient(id: string, data: Partial<Client>): Promise<ApiResponse<Client>> {
     return api.put(`${this.basePath}/${id}`, data);
   }
 
@@ -190,35 +192,37 @@ export class ClientService {
   /**
    * Get all users for a client
    */
-  async getUsers(clientId: string, page = 1, limit = 20): Promise<ApiResponse<{ items: User[]; pagination: { total: number; page: number; limit: number; pages: number } }>> {
-    return api.get(`${this.basePath}/${clientId}/users?page=${page}&limit=${limit}`);
+  async getClientUsers(clientId: string, page: number = 1, limit: number = 20): Promise<ApiResponse<{ items: User[]; pagination: { total: number; page: number; limit: number; pages: number } }>> {
+    return api.get(`${this.basePath}/${clientId}/users`, {
+      params: { page, limit }
+    });
   }
 
   /**
    * Get a specific user
    */
-  async getUser(clientId: string, userId: string): Promise<ApiResponse<User>> {
+  async getClientUser(clientId: string, userId: string): Promise<ApiResponse<User>> {
     return api.get(`${this.basePath}/${clientId}/users/${userId}`);
   }
 
   /**
    * Create a new user
    */
-  async createUser(clientId: string, userData: Omit<User, 'id' | 'clientId' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<User>> {
+  async createClientUser(clientId: string, userData: Partial<User>): Promise<ApiResponse<User>> {
     return api.post(`${this.basePath}/${clientId}/users`, userData);
   }
 
   /**
    * Update a user
    */
-  async updateUser(clientId: string, userId: string, userData: Partial<Omit<User, 'id' | 'clientId' | 'createdAt' | 'updatedAt'>>): Promise<ApiResponse<User>> {
+  async updateClientUser(clientId: string, userId: string, userData: Partial<User>): Promise<ApiResponse<User>> {
     return api.put(`${this.basePath}/${clientId}/users/${userId}`, userData);
   }
 
   /**
    * Delete a user
    */
-  async deleteUser(clientId: string, userId: string): Promise<ApiResponse<void>> {
+  async deleteClientUser(clientId: string, userId: string): Promise<ApiResponse<void>> {
     return api.delete(`${this.basePath}/${clientId}/users/${userId}`);
   }
 
@@ -226,8 +230,10 @@ export class ClientService {
   /**
    * Get all groups for a client
    */
-  async getGroups(clientId: string, page = 1, limit = 20): Promise<ApiResponse<{ items: UserGroup[]; pagination: { total: number; page: number; limit: number; pages: number } }>> {
-    return api.get(`${this.basePath}/${clientId}/groups?page=${page}&limit=${limit}`);
+  async getGroups(clientId: string, page: number = 1, limit: number = 20): Promise<ApiResponse<{ items: UserGroup[]; pagination: { total: number; page: number; limit: number; pages: number } }>> {
+    return api.get(`${this.basePath}/${clientId}/groups`, {
+      params: { page, limit }
+    });
   }
 
   /**
@@ -240,14 +246,14 @@ export class ClientService {
   /**
    * Create a new group
    */
-  async createGroup(clientId: string, groupData: Omit<UserGroup, 'id' | 'clientId' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<UserGroup>> {
+  async createGroup(clientId: string, groupData: Partial<UserGroup>): Promise<ApiResponse<UserGroup>> {
     return api.post(`${this.basePath}/${clientId}/groups`, groupData);
   }
 
   /**
    * Update a group
    */
-  async updateGroup(clientId: string, groupId: string, groupData: Partial<Omit<UserGroup, 'id' | 'clientId' | 'createdAt' | 'updatedAt'>>): Promise<ApiResponse<UserGroup>> {
+  async updateGroup(clientId: string, groupId: string, groupData: Partial<UserGroup>): Promise<ApiResponse<UserGroup>> {
     return api.put(`${this.basePath}/${clientId}/groups/${groupId}`, groupData);
   }
 
@@ -262,8 +268,10 @@ export class ClientService {
   /**
    * Get all roles
    */
-  async getRoles(page = 1, limit = 20): Promise<ApiResponse<{ items: SecurityRole[]; pagination: { total: number; page: number; limit: number; pages: number } }>> {
-    return api.get(`${this.basePath}/roles?page=${page}&limit=${limit}`);
+  async getRoles(page: number = 1, limit: number = 20): Promise<ApiResponse<{ items: SecurityRole[]; pagination: { total: number; page: number; limit: number; pages: number } }>> {
+    return api.get(`${this.basePath}/roles`, {
+      params: { page, limit }
+    });
   }
 
   /**
@@ -276,14 +284,14 @@ export class ClientService {
   /**
    * Create a new role
    */
-  async createRole(roleData: Omit<SecurityRole, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<SecurityRole>> {
+  async createRole(roleData: Partial<SecurityRole>): Promise<ApiResponse<SecurityRole>> {
     return api.post(`${this.basePath}/roles`, roleData);
   }
 
   /**
    * Update a role
    */
-  async updateRole(roleId: string, roleData: Partial<Omit<SecurityRole, 'id' | 'createdAt' | 'updatedAt'>>): Promise<ApiResponse<SecurityRole>> {
+  async updateRole(roleId: string, roleData: Partial<SecurityRole>): Promise<ApiResponse<SecurityRole>> {
     return api.put(`${this.basePath}/roles/${roleId}`, roleData);
   }
 
@@ -307,6 +315,15 @@ export class ClientService {
    */
   async searchAuditLogs(clientId: string, request: AuditSearchRequest): Promise<ApiResponse<AuditLog[]>> {
     return api.post(`${this.basePath}/${clientId}/audit/search`, request);
+  }
+
+  /**
+   * Get client audit log
+   */
+  async getClientAuditLog(clientId: string, from?: string, to?: string): Promise<ApiResponse<AuditLog[]>> {
+    return api.get(`${this.basePath}/${clientId}/audit-log`, {
+      params: { from, to }
+    });
   }
 }
 

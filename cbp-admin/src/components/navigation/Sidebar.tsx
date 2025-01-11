@@ -12,6 +12,7 @@ import {
   IconButton,
   useTheme,
   useMediaQuery,
+  Toolbar,
 } from '@mui/material';
 import {
   ExpandLess as ExpandLessIcon,
@@ -39,9 +40,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
 
   const handleNavigate = (path: string) => {
     navigate(path);
-    if (isMobile) {
-      onClose();
-    }
   };
 
   const isCurrentPath = (path: string) => {
@@ -165,19 +163,22 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
         },
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          p: 1,
-          borderBottom: `1px solid ${theme.palette.divider}`,
-        }}
-      >
-        <IconButton onClick={onClose}>
-          {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-        </IconButton>
-      </Box>
+      <Toolbar /> {/* Add spacing for header */}
+      {isMobile && (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            p: 1,
+            borderBottom: `1px solid ${theme.palette.divider}`,
+          }}
+        >
+          <IconButton onClick={onClose}>
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </Box>
+      )}
       <List sx={{ pt: 0 }}>
         {navigationConfig.map((section) => renderNavigationSection(section))}
       </List>

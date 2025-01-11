@@ -54,6 +54,8 @@ interface ServiceUser {
   role: string;
   department?: string;
   lastLogin?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface ServiceUserCreate {
@@ -66,7 +68,9 @@ interface ServiceUserCreate {
 }
 
 const serviceUserToUIUser = (serviceUser: ServiceUser): UIUser => ({
-  id: parseInt(serviceUser.id, 10),
+  id: serviceUser.id,
+  clientId: serviceUser.clientId,
+  username: serviceUser.email,
   firstName: serviceUser.firstName,
   lastName: serviceUser.lastName,
   email: serviceUser.email,
@@ -79,9 +83,10 @@ const serviceUserToUIUser = (serviceUser: ServiceUser): UIUser => ({
   status: serviceUser.status === 'ACTIVE' ? UserStatus.ACTIVE :
           serviceUser.status === 'INACTIVE' ? UserStatus.INACTIVE :
           UserStatus.LOCKED,
-  username: serviceUser.email,
   lastLogin: serviceUser.lastLogin || null,
-  locked: serviceUser.status === 'LOCKED'
+  locked: serviceUser.status === 'LOCKED',
+  createdAt: serviceUser.createdAt || new Date().toISOString(),
+  updatedAt: serviceUser.updatedAt || new Date().toISOString()
 });
 
 const serviceGroupToUIGroup = (group: ServiceUserGroup): UIUserGroup => ({
@@ -143,80 +148,68 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       setState(prev => ({ ...prev, loading: true, error: null }));
 
       const [usersResponse, groupsResponse] = await Promise.all([
-        clientService.getUsers(decodedClientId),
+        clientService.getClientUsers(decodedClientId),
         clientService.getGroups(decodedClientId)
       ]);
 
       if (!usersResponse.success || !groupsResponse.success) {
         setState(prev => ({ 
           ...prev, 
-          error: 'Failed to load user data',
-          loading: false 
+          loading: false, 
+          error: (!usersResponse.success ? usersResponse.error.message : undefined) || 
+                (!groupsResponse.success ? groupsResponse.error.message : undefined) || 
+                'Failed to load data'
         }));
         return;
       }
 
-      setState(prev => ({ 
+      setState(prev => ({
         ...prev,
+        loading: false,
         users: usersResponse.data.items.map(serviceUserToUIUser),
-        groups: groupsResponse.data.items.map(serviceGroupToUIGroup),
-        loading: false 
+        groups: groupsResponse.data.items.map(serviceGroupToUIGroup)
       }));
     } catch (error) {
       setState(prev => ({ 
-        ...prev,
-        error: 'An unexpected error occurred',
-        loading: false 
+        ...prev, 
+        loading: false, 
+        error: error instanceof Error ? error.message : 'An unexpected error occurred' 
       }));
     }
-  }, [clientId]);
+  }, [decodedClientId]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  const handleCreateUser = async (userData: Omit<UIUser, 'id'>) => {
+  const handleCreateUser = async (userData: Partial<UIUser>) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
-      
-      const serviceUserData: ServiceUserCreate = {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        email: userData.email,
-        department: userData.department,
-        role: userData.role === UserRole.Admin ? 'ADMIN' :
-              userData.role === UserRole.Manager ? 'MANAGER' :
-              userData.role === UserRole.Support ? 'SUPPORT' :
-              userData.role === UserRole.User ? 'USER' :
-              'READONLY',
-        status: userData.status === UserStatus.ACTIVE ? 'ACTIVE' :
-                userData.status === UserStatus.INACTIVE ? 'INACTIVE' :
-                'LOCKED'
-      };
 
-      const response = await clientService.createUser(decodedClientId, serviceUserData);
-      
+      const serviceUserData = uiUserToServiceUser(userData);
+      const response = await clientService.createClientUser(decodedClientId, serviceUserData);
+
       if (!response.success) {
         setState(prev => ({ 
-          ...prev,
-          error: response.error?.message || 'Failed to create user',
-          saving: false 
+          ...prev, 
+          saving: false, 
+          error: response.error.message || 'Failed to create user'
         }));
         return;
       }
 
       setState(prev => ({
         ...prev,
+        saving: false,
         users: [...prev.users, serviceUserToUIUser(response.data)],
         success: 'User created successfully',
-        saving: false,
         isFormOpen: false
       }));
     } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: 'Failed to create user',
-        saving: false
+      setState(prev => ({ 
+        ...prev, 
+        saving: false, 
+        error: error instanceof Error ? error.message : 'An unexpected error occurred' 
       }));
     }
   };
@@ -224,64 +217,60 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
   const handleUpdateUser = async (userId: string, userData: Partial<UIUser>) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
-      
-      const serviceUserData = uiUserToServiceUser(userData);
 
-      const response = await clientService.updateUser(decodedClientId, userId, serviceUserData);
-      
+      const serviceUserData = uiUserToServiceUser(userData);
+      const response = await clientService.updateClientUser(decodedClientId, userId, serviceUserData);
+
       if (!response.success) {
         setState(prev => ({ 
-          ...prev,
-          error: response.error?.message || 'Failed to update user',
-          saving: false 
+          ...prev, 
+          saving: false, 
+          error: response.error.message || 'Failed to update user'
         }));
         return;
       }
 
       setState(prev => ({
         ...prev,
-        users: prev.users.map(user => 
-          user.id === parseInt(userId, 10) ? serviceUserToUIUser(response.data) : user
-        ),
-        success: 'User updated successfully',
         saving: false,
-        selectedUser: null
+        users: prev.users.map(user => user.id === userId ? serviceUserToUIUser(response.data) : user),
+        success: 'User updated successfully'
       }));
     } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: 'Failed to update user',
-        saving: false
+      setState(prev => ({ 
+        ...prev, 
+        saving: false, 
+        error: error instanceof Error ? error.message : 'An unexpected error occurred' 
       }));
     }
   };
 
-  const handleDeleteUser = async (user: UIUser) => {
+  const handleDeleteUser = async (userId: string) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
-      
-      const response = await clientService.deleteUser(decodedClientId, String(user.id));
-      
+
+      const response = await clientService.deleteClientUser(decodedClientId, userId);
+
       if (!response.success) {
         setState(prev => ({ 
-          ...prev,
-          error: response.error?.message || 'Failed to delete user',
-          saving: false 
+          ...prev, 
+          saving: false, 
+          error: response.error.message || 'Failed to delete user'
         }));
         return;
       }
 
       setState(prev => ({
         ...prev,
-        users: prev.users.filter(u => u.id !== user.id),
-        success: 'User deleted successfully',
-        saving: false
+        saving: false,
+        users: prev.users.filter(user => user.id !== userId),
+        success: 'User deleted successfully'
       }));
     } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: 'Failed to delete user',
-        saving: false
+      setState(prev => ({ 
+        ...prev, 
+        saving: false, 
+        error: error instanceof Error ? error.message : 'An unexpected error occurred' 
       }));
     }
   };
@@ -311,7 +300,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
   };
 
   const handleEditUser = (user: UIUser) => {
-    navigate(`/admin/client-management/${encodeId(decodedClientId)}/users/${encodeId(String(user.id))}`);
+    navigate(`/admin/client-management/${encodeId(decodedClientId)}/users/${encodeId(user.id)}`);
   };
 
   const handleCreateClick = () => {
@@ -322,14 +311,14 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     try {
       const newStatus = user.status === UserStatus.LOCKED ? 'ACTIVE' : 'LOCKED';
       
-      const response = await clientService.updateUser(decodedClientId, String(user.id), {
+      const response = await clientService.updateClientUser(decodedClientId, user.id, {
         status: newStatus,
       });
       
       if (!response.success) {
         setState(prev => ({ 
           ...prev,
-          error: response.error?.message || 'Failed to update user status',
+          error: response.error.message || 'Failed to update user status',
           saving: false 
         }));
         return;
@@ -346,7 +335,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     } catch (error) {
       setState(prev => ({
         ...prev,
-        error: 'Failed to update user status',
+        error: error instanceof Error ? error.message : 'An unexpected error occurred',
         saving: false
       }));
     }
@@ -390,7 +379,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
         users={state.users}
         groups={state.groups}
         onEdit={handleEditUser}
-        onDelete={handleDeleteUser}
+        onDelete={(user: UIUser) => handleDeleteUser(user.id)}
         onToggleLock={handleToggleLock}
         clientId={decodedClientId}
       />

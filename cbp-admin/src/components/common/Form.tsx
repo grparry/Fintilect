@@ -47,6 +47,8 @@ const Form = <T extends FieldValues>({
   submitText = 'Submit',
   loading = false,
 }: FormProps<T>): React.ReactElement => {
+  console.log('Form: Initializing with fields:', fields);
+  
   // Create default values with proper typing
   const defaultValues = fields.reduce((acc, field) => {
     // Ensure we have a defined initial value for each field type
@@ -63,6 +65,8 @@ const Form = <T extends FieldValues>({
     return acc;
   }, {} as DefaultValues<T>);
 
+  console.log('Form: Using default values:', defaultValues);
+
   const {
     control,
     handleSubmit,
@@ -72,10 +76,12 @@ const Form = <T extends FieldValues>({
   });
 
   const onSubmitHandler = async (data: T) => {
+    console.log('Form: Submitting form with data:', data);
     try {
       await onSubmit(data);
+      console.log('Form: Submit successful');
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error('Form: Submit error:', error);
     }
   };
 
@@ -86,6 +92,8 @@ const Form = <T extends FieldValues>({
       required: required ? validation.required || `${label} is required` : false,
       ...validation,
     };
+
+    console.log(`Form: Rendering field "${name}" with rules:`, rules);
 
     switch (type) {
       case 'select':
@@ -99,7 +107,7 @@ const Form = <T extends FieldValues>({
               <FormControl fullWidth error={!!errors[name]}>
                 <InputLabel>{label}</InputLabel>
                 <Select
-                  value={value ?? ''}
+                  value={value || ''}
                   onChange={onChange}
                   label={label}
                 >
@@ -109,6 +117,11 @@ const Form = <T extends FieldValues>({
                     </MenuItem>
                   ))}
                 </Select>
+                {errors[name] && (
+                  <Typography color="error" variant="caption">
+                    {errors[name]?.message as string}
+                  </Typography>
+                )}
               </FormControl>
             )}
           />
@@ -151,6 +164,8 @@ const Form = <T extends FieldValues>({
                 onChange={onChange}
                 error={!!errors[name]}
                 helperText={errors[name]?.message as string}
+                required={required}
+                margin="normal"
               />
             )}
           />
@@ -159,27 +174,25 @@ const Form = <T extends FieldValues>({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmitHandler)}>
+    <Box component="form" onSubmit={handleSubmit(onSubmitHandler)} noValidate>
       {title && (
         <Typography variant="h6" gutterBottom>
           {title}
         </Typography>
       )}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 2 }}>
-        {fields.map(renderField)}
-      </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+      {fields.map(renderField)}
+      <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
         <Button
           type="submit"
           variant="contained"
           color="primary"
           disabled={loading}
-          startIcon={loading && <CircularProgress size={20} />}
+          startIcon={loading && <CircularProgress size={20} color="inherit" />}
         >
           {submitText}
         </Button>
       </Box>
-    </form>
+    </Box>
   );
 };
 

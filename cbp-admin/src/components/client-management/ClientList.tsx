@@ -17,83 +17,195 @@ import {
 } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Client, ClientStatus, ClientType, Environment } from '../../types/client.types';
+import { useSnackbar } from 'notistack';
+import { Client, ClientStatus, ClientType, Environment, ClientSettings } from '../../types/client.types';
 import { clientService } from '../../services/clients.service';
 import { encodeId } from '../../utils/idEncoder';
 import { shouldUseMockData } from '../../config/api.config';
-import { ApiResponse } from '../../utils/api';
+import { ApiResponse, ApiErrorResponse, ApiSuccessResponse } from '../../utils/api';
+import logger from '../../utils/logger';
 
-interface ClientListResponse {
-  items: Client[];
+// API types
+interface ServiceClient {
+  id: string;
+  name: string;
+  type: string;
+  environment: string;
+  status: string;
+  domain?: string;
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  settings?: ClientSettings;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-const serviceClientToUIClient = (serviceClient: any): Client => ({
+interface ServiceClientListResponse {
+  items: ServiceClient[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  };
+}
+
+// Mock data response format
+interface MockServiceClientResponse {
+  success: boolean;
+  data: {
+    items: ServiceClient[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      pages: number;
+    };
+  };
+}
+
+interface MockApiResponse {
+  success: boolean;
+  data: MockServiceClientResponse;
+}
+
+interface NestedApiResponse {
+  success: boolean;
+  error?: {
+    message: string;
+    code: string;
+  };
+  data: ServiceClientListResponse;
+}
+
+const DEFAULT_SETTINGS: Client['settings'] = {
+  general: {
+    timezone: 'UTC',
+    dateFormat: 'MM/DD/YYYY',
+    timeFormat: '12h',
+    currency: 'USD',
+    language: 'en-US',
+  },
+  security: {
+    passwordPolicy: {
+      minLength: 8,
+      requireUppercase: true,
+      requireLowercase: true,
+      requireNumbers: true,
+      requireSpecialChars: true,
+      expirationDays: 90,
+    },
+    loginPolicy: {
+      maxAttempts: 5,
+      lockoutDuration: 30,
+    },
+    sessionTimeout: 30,
+    mfaEnabled: false,
+    ipWhitelist: [],
+  },
+  notifications: {
+    emailEnabled: true,
+    smsEnabled: false,
+    pushEnabled: false,
+    frequency: 'realtime',
+    alertTypes: ['security', 'system'],
+  },
+  branding: {
+    logo: '',
+    primaryColor: '#007bff',
+    secondaryColor: '#6c757d',
+    favicon: '',
+  },
+  features: {
+    billPay: false,
+    moneyDesktop: false,
+    mobileDeposit: false,
+    p2p: false,
+    cardControls: false,
+  },
+};
+
+const transformServiceClient = (serviceClient: ServiceClient): Client => ({
   id: serviceClient.id,
   name: serviceClient.name,
-  type: serviceClient.type === 'ENTERPRISE' ? ClientType.Enterprise :
-        serviceClient.type === 'SMB' ? ClientType.Small :
-        serviceClient.type === 'STARTUP' ? ClientType.Medium :
+  type: serviceClient.type.toUpperCase() === 'ENTERPRISE' ? ClientType.Enterprise :
+        serviceClient.type.toUpperCase() === 'SMALL' ? ClientType.Small :
+        serviceClient.type.toUpperCase() === 'MEDIUM' ? ClientType.Medium :
         ClientType.Other,
-  status: serviceClient.status === 'ACTIVE' ? ClientStatus.Active :
-          serviceClient.status === 'INACTIVE' ? ClientStatus.Inactive :
+  status: serviceClient.status.toUpperCase() === 'ACTIVE' ? ClientStatus.Active :
+          serviceClient.status.toUpperCase() === 'INACTIVE' ? ClientStatus.Inactive :
           ClientStatus.Pending,
-  environment: serviceClient.environment === 'PRODUCTION' ? Environment.Production :
-              serviceClient.environment === 'STAGING' ? Environment.Staging :
-              Environment.Development,
+  environment: serviceClient.environment.toLowerCase() === 'production' ? Environment.Production :
+               serviceClient.environment.toLowerCase() === 'staging' ? Environment.Staging :
+               Environment.Development,
   domain: serviceClient.domain || '',
   contactName: serviceClient.contactName || '',
   contactEmail: serviceClient.contactEmail || '',
   contactPhone: serviceClient.contactPhone || '',
-  settings: serviceClient.settings || {
-    general: {},
-    security: {},
-    notifications: {},
-    branding: {},
-    features: {},
-  },
-  createdAt: serviceClient.createdAt,
-  updatedAt: serviceClient.updatedAt,
+  settings: serviceClient.settings || DEFAULT_SETTINGS,
+  createdAt: serviceClient.createdAt || new Date().toISOString(),  
+  updatedAt: serviceClient.updatedAt || new Date().toISOString(),  
 });
 
 const ClientList: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [clients, setClients] = useState<Client[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
   const isMockMode = shouldUseMockData();
 
   useEffect(() => {
-    console.log('ClientList - Current location:', location.pathname);
-    console.log('ClientList - Using mock data:', isMockMode);
+    logger.log('ClientList - Current location: ' + location.pathname);
+    logger.log('ClientList - Using mock data: ' + isMockMode);
     loadClients();
   }, [location, isMockMode]);
 
   const loadClients = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      setError(null);
-      const response = await clientService.getClients();
-      console.log('ClientList - Loaded clients:', response);
+      logger.log('Loading clients...');
       
-      if (response.success) {
-        setClients(response.data.items.map(serviceClientToUIClient));
-      } else {
-        setError(response.error?.message || 'Failed to load clients');
+      const response = await clientService.getClients();
+      logger.log('Raw response: ' + JSON.stringify(response));
+
+      if (!response.success) {
+        const errorMsg = (response as ApiErrorResponse).error?.message || 'Failed to load clients';
+        logger.error('Failed to load clients: ' + errorMsg);
+        enqueueSnackbar('Failed to load clients', { variant: 'error' });
+        return;
       }
-    } catch (err) {
-      setError('Failed to load clients');
-      console.error('Error loading clients:', err);
+
+      // Handle both mock and real data formats
+      let clientsData: ServiceClient[] = [];
+      const responseData = response.data as ServiceClientListResponse | MockServiceClientResponse;
+      
+      if ('success' in responseData && responseData.success) {
+        // Mock data format (nested)
+        clientsData = responseData.data.items;
+      } else {
+        // Real data format (flat)
+        clientsData = (responseData as ServiceClientListResponse).items;
+      }
+
+      logger.log('Processing ' + clientsData.length + ' clients');
+      const clients = clientsData.map(transformServiceClient);
+      logger.log('Successfully loaded ' + clients.length + ' clients');
+      setClients(clients);
+    } catch (error) {
+      logger.error('Error loading clients: ' + error);
+      enqueueSnackbar('Error loading clients', { variant: 'error' });
     } finally {
       setLoading(false);
     }
   };
 
   const handleEditClient = (clientId: string) => {
-    console.log('ClientList - Navigating to client:', clientId);
+    logger.log('ClientList - Navigating to client: ' + clientId);
     const encodedId = encodeId(clientId);
     const targetPath = `/admin/client-management/${encodedId}`;
-    console.log('ClientList - Target path:', targetPath);
+    logger.log('ClientList - Target path: ' + targetPath);
     navigate(targetPath);
   };
 
@@ -131,10 +243,10 @@ const ClientList: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (isMockMode) {
     return (
-      <Alert severity="error" onClose={() => setError(null)}>
-        {error}
+      <Alert severity="info" onClose={() => {}}>
+        Mock mode is enabled
       </Alert>
     );
   }

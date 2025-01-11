@@ -202,7 +202,8 @@ export class CreditUnionApi {
     if (this.useMockData) {
       await new Promise(resolve => setTimeout(resolve, 500));
       const newUser: User = {
-        id: Date.now(),
+        id: Date.now().toString(),
+        clientId,
         username: userData.username || '',
         firstName: userData.firstName || '',
         lastName: userData.lastName || '',
@@ -212,6 +213,8 @@ export class CreditUnionApi {
         department: userData.department || '',
         lastLogin: null,
         locked: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
       return newUser;
     }

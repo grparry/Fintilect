@@ -160,7 +160,8 @@ export enum UserStatus {
 }
 
 export interface User {
-  id: number;
+  id: string;
+  clientId: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -171,6 +172,8 @@ export interface User {
   lastLogin: string | null;
   locked: boolean;
   password?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface UserFormData {
@@ -296,6 +299,22 @@ export interface Contact {
   notifications: NotificationType[];
   isEmergencyContact?: boolean;
 }
+
+// List Response Types
+export interface PaginatedResponse<T> {
+  items: T[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  };
+}
+
+export type ClientListResponse = PaginatedResponse<Client>;
+export type UserListResponse = PaginatedResponse<User>;
+export type GroupListResponse = PaginatedResponse<UserGroup>;
+export type RoleListResponse = PaginatedResponse<SecurityRole>;
 
 // Re-export ApiResponse type for backwards compatibility
 export type { ApiResponse } from '../utils/api';

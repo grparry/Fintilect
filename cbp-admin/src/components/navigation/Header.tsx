@@ -10,7 +10,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { User } from '../../types/index';
 
 interface HeaderProps {
@@ -35,23 +35,15 @@ const Header: React.FC<HeaderProps> = ({
     <AppBar
       position="fixed"
       sx={{
-        width: '100%',
-        bgcolor: theme.palette.background.paper,
-        backgroundImage: 'none',
+        width: { sm: open ? `calc(100% - ${drawerWidth}px)` : '100%' },
+        ml: { sm: open ? `${drawerWidth}px` : 0 },
+        zIndex: theme.zIndex.drawer + 1,
+        backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[900] : theme.palette.primary.main,
         transition: theme.transitions.create(['margin', 'width'], {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.leavingScreen,
         }),
-        ...(open && {
-          width: `calc(100% - ${drawerWidth}px)`,
-          marginLeft: `${drawerWidth}px`,
-          transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-          }),
-        }),
       }}
-      elevation={1}
     >
       <Toolbar>
         <IconButton
@@ -59,23 +51,25 @@ const Header: React.FC<HeaderProps> = ({
           aria-label="open drawer"
           onClick={onMenuClick}
           edge="start"
-          sx={{ mr: 2, ...(open && { display: 'none' }) }}
+          sx={{
+            marginRight: 2,
+            ...(open && { display: { sm: 'none' } }),
+          }}
         >
           <MenuIcon />
         </IconButton>
-        <Box sx={{ flexGrow: 1 }}>
-          <Typography variant="h6" noWrap component="div" color="textPrimary">
-            {user?.firstName ? `Welcome, ${user.firstName}` : 'Welcome'}
-          </Typography>
+        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          {user ? `Welcome, ${user.firstName}` : 'Welcome'}
+        </Typography>
+        <Box>
+          <IconButton 
+            onClick={toggleTheme} 
+            color="inherit"
+            aria-label="toggle theme"
+          >
+            {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
         </Box>
-        <IconButton
-          sx={{ ml: 1 }}
-          onClick={toggleTheme}
-          color="inherit"
-          aria-label="toggle theme"
-        >
-          {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-        </IconButton>
       </Toolbar>
     </AppBar>
   );

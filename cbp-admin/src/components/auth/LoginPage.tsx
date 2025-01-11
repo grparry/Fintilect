@@ -8,7 +8,7 @@ import {
   Alert,
 } from '@mui/material';
 import Form, { FormField } from '../common/Form';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { LoginFormData, LoginCredentials } from '../../types/auth.types';
 import { ApiError } from '../../types/index';
 
@@ -57,6 +57,7 @@ const LoginPage: React.FC = () => {
   ];
 
   const handleSubmit = async (data: LoginFormData) => {
+    console.log('LoginPage: Submitting form with data:', { ...data, password: '[REDACTED]' });
     setLoading(true);
     setError(null);
 
@@ -67,10 +68,15 @@ const LoginPage: React.FC = () => {
         rememberMe: data.rememberMe
       };
 
+      console.log('LoginPage: Calling login with credentials:', { ...credentials, password: '[REDACTED]' });
       await login(credentials);
+      console.log('LoginPage: Login successful');
+      
       const from = (location.state as any)?.from?.pathname || '/';
+      console.log('LoginPage: Navigating to:', from);
       navigate(from);
     } catch (err) {
+      console.error('LoginPage: Login failed:', err);
       if (err instanceof Error) {
         setError({
           message: err.message,
@@ -101,7 +107,7 @@ const LoginPage: React.FC = () => {
               {error.message}
             </Alert>
           )}
-          <Form<LoginFormData>
+          <Form
             fields={formFields}
             onSubmit={handleSubmit}
             submitText="Login"

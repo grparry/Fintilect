@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation }
 import { CircularProgress } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { NavigationProvider } from './context/NavigationContext';
 import MainLayout from './components/layout/MainLayout';

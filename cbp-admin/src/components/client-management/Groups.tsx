@@ -97,7 +97,7 @@ const Groups: React.FC<GroupsProps> = ({ clientId }) => {
       setError(null);
       const [groupsResponse, usersResponse, permissionsResponse, rolesResponse] = await Promise.all([
         clientService.getGroups(clientId) as Promise<ApiResponse<{ items: ServiceGroup[] }>>,
-        clientService.getUsers(clientId) as Promise<ApiResponse<{ items: UIUser[] }>>,
+        clientService.getClientUsers(clientId) as Promise<ApiResponse<{ items: UIUser[] }>>,
         clientService.getPermissions() as Promise<ApiResponse<UIPermission[]>>,
         clientService.getRoles() as Promise<ApiResponse<{ items: UISecurityRole[] }>>,
       ]);

@@ -39,30 +39,6 @@ const lightTheme = createTheme({
         },
       },
     },
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: '#1976d2',
-          backgroundImage: 'none',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
-        },
-      },
-    },
-    MuiToolbar: {
-      styleOverrides: {
-        root: {
-          '& .MuiIconButton-root': {
-            color: '#ffffff',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            },
-          },
-          '& .MuiTypography-root': {
-            color: '#ffffff',
-          },
-        },
-      },
-    },
   },
 });
 
@@ -70,9 +46,9 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#90caf9',
-      light: '#e3f2fd',
-      dark: '#42a5f5',
+      main: '#1976d2',
+      light: '#42a5f5',
+      dark: '#1565c0',
     },
     secondary: {
       main: '#ce93d8',
@@ -93,26 +69,12 @@ const darkTheme = createTheme({
       },
     },
     MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: '#000000',
-          backgroundImage: 'none',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
-        },
+      defaultProps: {
+        color: 'primary',
       },
-    },
-    MuiToolbar: {
       styleOverrides: {
         root: {
-          '& .MuiIconButton-root': {
-            color: '#000000',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            },
-          },
-          '& .MuiTypography-root': {
-            color: '#ffffff',
-          },
+          backgroundImage: 'none',
         },
       },
     },
@@ -120,32 +82,24 @@ const darkTheme = createTheme({
 });
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    const savedMode = localStorage.getItem('theme-mode');
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem('theme');
     return savedMode === 'dark';
   });
 
-  const toggleTheme = useCallback((): void => {
+  const toggleTheme = useCallback(() => {
     setIsDarkMode((prev) => {
       const newMode = !prev;
-      localStorage.setItem('theme-mode', newMode ? 'dark' : 'light');
+      localStorage.setItem('theme', newMode ? 'dark' : 'light');
       return newMode;
     });
   }, []);
 
-  const theme: Theme = isDarkMode ? darkTheme : lightTheme;
-
-  const value = {
-    isDarkMode,
-    toggleTheme,
-    theme,
-  };
+  const theme = isDarkMode ? darkTheme : lightTheme;
 
   return (
-    <ThemeContext.Provider value={value}>
-      <MuiThemeProvider theme={theme}>
-        {children}
-      </MuiThemeProvider>
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, theme }}>
+      <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
     </ThemeContext.Provider>
   );
 };

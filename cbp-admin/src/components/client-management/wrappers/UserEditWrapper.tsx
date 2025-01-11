@@ -7,7 +7,8 @@ import { User, UserGroup, UserStatus, UserRole } from '../../../types/client.typ
 import UserForm from '../users/UserForm';
 
 const serviceUserToUIUser = (user: any): User => ({
-  id: parseInt(user.id, 10),
+  id: user.id.toString(),
+  clientId: user.clientId.toString(),
   username: user.username,
   firstName: user.firstName,
   lastName: user.lastName,
@@ -19,18 +20,31 @@ const serviceUserToUIUser = (user: any): User => ({
          UserStatus.PENDING,
   department: user.department || '',
   lastLogin: user.lastLogin || null,
-  locked: user.locked || false
+  locked: user.locked || false,
+  createdAt: user.createdAt || new Date().toISOString(),
+  updatedAt: user.updatedAt || new Date().toISOString()
 });
 
-const uiUserToServiceUser = (user: Partial<User>) => ({
-  firstName: user.firstName,
-  lastName: user.lastName,
-  email: user.email,
-  department: user.department,
-  role: user.role,
-  status: user.status ? user.status.toString() as "ACTIVE" | "INACTIVE" | "LOCKED" : undefined,
-  locked: user.locked
-});
+const uiUserToServiceUser = (user: Partial<User>) => {
+  const { id, clientId, status, lastLogin, ...rest } = user;
+  
+  // Convert status, excluding PENDING which is not supported by the service
+  let serviceStatus: 'ACTIVE' | 'INACTIVE' | 'LOCKED' | undefined;
+  if (status && status !== UserStatus.PENDING) {
+    serviceStatus = status as 'ACTIVE' | 'INACTIVE' | 'LOCKED';
+  }
+
+  // Convert lastLogin from string | null to string | undefined
+  const serviceLastLogin = lastLogin === null ? undefined : lastLogin;
+
+  return {
+    ...rest,
+    id: id?.toString(),
+    clientId: clientId?.toString(),
+    status: serviceStatus,
+    lastLogin: serviceLastLogin
+  };
+};
 
 const serviceGroupToUIGroup = (group: any): UserGroup => ({
   id: group.id,
@@ -82,7 +96,7 @@ const UserEditWrapper: React.FC = () => {
 
         // Load user and groups in parallel
         const [userResponse, groupsResponse] = await Promise.all([
-          clientService.getUser(decodedClientId, decodedUserId),
+          clientService.getClientUser(decodedClientId, decodedUserId),
           clientService.getGroups(decodedClientId)
         ]);
 
@@ -121,7 +135,7 @@ const UserEditWrapper: React.FC = () => {
       const decodedClientId = decodeId(clientId);
       const decodedUserId = decodeId(userId);
 
-      const response = await clientService.updateUser(
+      const response = await clientService.updateClientUser(
         decodedClientId, 
         decodedUserId, 
         uiUserToServiceUser(updatedUser)

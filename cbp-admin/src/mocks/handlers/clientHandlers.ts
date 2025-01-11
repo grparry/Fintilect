@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
-import { Client, Environment, ClientStatus, ClientType, AuditLog, ApiResponse, User, UserRole, UserStatus } from '../../types/client.types';
+import { Client, Environment, ClientStatus, ClientType, AuditLog, ClientListResponse, User, UserListResponse, UserRole, UserStatus } from '../../types/client.types';
+import { ApiSuccessResponse } from '../../types/api.types';
 import dayjs from 'dayjs';
 import { decodeId } from '../../utils/idEncoder';
 
@@ -128,7 +129,8 @@ const mockClients: Client[] = [
 // Mock user data
 const mockUsers: User[] = [
   {
-    id: 1,
+    id: '1',
+    clientId: '1',
     username: 'john',
     firstName: 'John',
     lastName: 'Doe',
@@ -137,10 +139,13 @@ const mockUsers: User[] = [
     status: UserStatus.ACTIVE,
     department: 'IT',
     lastLogin: new Date().toISOString(),
-    locked: false
+    locked: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   },
   {
-    id: 2,
+    id: '2',
+    clientId: '2',
     username: 'jane',
     firstName: 'Jane',
     lastName: 'Smith',
@@ -149,7 +154,9 @@ const mockUsers: User[] = [
     status: UserStatus.ACTIVE,
     department: 'Operations',
     lastLogin: new Date().toISOString(),
-    locked: false
+    locked: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   }
 ];
 
@@ -189,170 +196,175 @@ const generateAuditLogs = (clientId: string): AuditLog[] => {
 
 export const clientHandlers = [
   // Get all clients
-  http.get('*/admin/clients', ({ request }) => {
+  http.get('*/admin/client-management/list', ({ request }) => {
     console.log('MSW: Handling get clients request');
     const url = new URL(request.url);
     const searchTerm = url.searchParams.get('searchTerm')?.toLowerCase() || '';
     const environment = url.searchParams.get('environment');
+    const page = parseInt(url.searchParams.get('page') || '1');
+    const limit = parseInt(url.searchParams.get('limit') || '20');
 
     let filteredClients = [...mockClients];
 
     if (searchTerm) {
       filteredClients = filteredClients.filter(client =>
-        client.name.toLowerCase().includes(searchTerm)
+        client.name.toLowerCase().includes(searchTerm) ||
+        client.domain.toLowerCase().includes(searchTerm) ||
+        client.contactName.toLowerCase().includes(searchTerm)
       );
     }
 
     if (environment) {
-      filteredClients = filteredClients.filter(client =>
-        client.environment === environment
+      filteredClients = filteredClients.filter(client => 
+        client.environment.toLowerCase() === environment.toLowerCase()
       );
     }
 
-    console.log('MSW: Returning filtered clients', filteredClients);
+    // Calculate pagination
+    const total = filteredClients.length;
+    const totalPages = Math.ceil(total / limit);
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedClients = filteredClients.slice(startIndex, endIndex);
 
-    return HttpResponse.json({
+    const response: ApiSuccessResponse<ClientListResponse> = {
       success: true,
-      data: filteredClients
-    } as ApiResponse<Client[]>);
+      data: {
+        items: paginatedClients,
+        pagination: {
+          total,
+          page,
+          limit,
+          pages: totalPages
+        }
+      }
+    };
+
+    console.log('MSW: Returning clients response:', response);
+    return HttpResponse.json(response);
   }),
 
   // Get client by ID
-  http.get('*/admin/clients/:id', ({ params }) => {
-    console.log('MSW: Handling get client request', params);
-    const decodedId = decodeId(params.id as string);
-    const client = mockClients.find(c => c.id === decodedId);
-
+  http.get('*/admin/client-management/:id', ({ params }) => {
+    const client = mockClients.find(c => c.id === params.id);
     if (!client) {
       return new HttpResponse(null, { status: 404 });
     }
 
-    console.log('MSW: Returning client', client);
-
-    return HttpResponse.json({
+    const response: ApiSuccessResponse<Client> = {
       success: true,
       data: client
-    } as ApiResponse<Client>);
+    };
+
+    return HttpResponse.json(response);
   }),
 
-  // Get client audit log
-  http.get('*/admin/clients/:id/audit-log', ({ params, request }) => {
-    console.log('MSW: Handling get client audit log request', params);
-    const decodedId = decodeId(params.id as string);
-    const url = new URL(request.url);
-    const startDate = url.searchParams.get('startDate');
-    const endDate = url.searchParams.get('endDate');
-
-    const auditLogs = generateAuditLogs(decodedId);
-    let filteredLogs = [...auditLogs];
-
-    if (startDate) {
-      filteredLogs = filteredLogs.filter(log =>
-        dayjs(log.timestamp).isAfter(startDate)
-      );
-    }
-
-    if (endDate) {
-      filteredLogs = filteredLogs.filter(log =>
-        dayjs(log.timestamp).isBefore(endDate)
-      );
-    }
-
-    console.log('MSW: Returning filtered audit logs', filteredLogs);
-
-    return HttpResponse.json({
-      success: true,
-      data: filteredLogs
-    } as ApiResponse<AuditLog[]>);
-  }),
-
-  // Get client management audit log
-  http.get('*/admin/client-management/:id/audit-log', ({ params, request }) => {
-    console.log('MSW: Handling get client management audit log request', params);
-    const decodedId = decodeId(params.id as string);
-    const url = new URL(request.url);
-    const startDate = url.searchParams.get('startDate');
-    const endDate = url.searchParams.get('endDate');
-
-    const auditLogs = generateAuditLogs(decodedId);
-    let filteredLogs = [...auditLogs];
-
-    if (startDate) {
-      filteredLogs = filteredLogs.filter(log =>
-        dayjs(log.timestamp).isAfter(startDate)
-      );
-    }
-
-    if (endDate) {
-      filteredLogs = filteredLogs.filter(log =>
-        dayjs(log.timestamp).isBefore(endDate)
-      );
-    }
-
-    console.log('MSW: Returning filtered audit logs', filteredLogs);
-
-    return HttpResponse.json({
-      success: true,
-      data: filteredLogs
-    } as ApiResponse<AuditLog[]>);
-  }),
-
-  // Update client
-  http.put('*/admin/clients/:id', async ({ params, request }) => {
-    console.log('MSW: Handling update client request', params);
-    const decodedId = decodeId(params.id as string);
-    const index = mockClients.findIndex(c => c.id === decodedId);
-
-    if (index === -1) {
+  // Get client settings
+  http.get('*/admin/client-management/:id/settings', ({ params }) => {
+    const client = mockClients.find(c => c.id === params.id);
+    if (!client) {
       return new HttpResponse(null, { status: 404 });
     }
 
+    const response: ApiSuccessResponse<any> = {
+      success: true,
+      data: client.settings
+    };
+
+    return HttpResponse.json(response);
+  }),
+
+  // Update client settings
+  http.put('*/admin/client-management/:id/settings', async ({ params, request }) => {
+    const settings = await request.json() as any;
+    const clientIndex = mockClients.findIndex(c => c.id === params.id);
+    
+    if (clientIndex === -1) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    mockClients[clientIndex] = {
+      ...mockClients[clientIndex],
+      settings: {
+        ...mockClients[clientIndex].settings,
+        ...settings
+      }
+    };
+
+    const response: ApiSuccessResponse<any> = {
+      success: true,
+      data: mockClients[clientIndex].settings
+    };
+
+    return HttpResponse.json(response);
+  }),
+
+  // Update client
+  http.put('*/admin/client-management/:id', async ({ params, request }) => {
     const updates = await request.json() as Partial<Client>;
+    const clientIndex = mockClients.findIndex(c => c.id === params.id);
+    
+    if (clientIndex === -1) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
     const updatedClient = {
-      ...mockClients[index],
+      ...mockClients[clientIndex],
       ...updates,
       updatedAt: new Date().toISOString()
     };
 
-    mockClients[index] = updatedClient;
-    console.log('MSW: Updated client', updatedClient);
+    mockClients[clientIndex] = updatedClient;
 
-    return HttpResponse.json({
+    const response: ApiSuccessResponse<Client> = {
       success: true,
       data: updatedClient
-    } as ApiResponse<Client>);
+    };
+
+    return HttpResponse.json(response);
+  }),
+
+  // Get client audit log
+  http.get('*/admin/client-management/:id/audit-log', ({ params, request }) => {
+    const url = new URL(request.url);
+    const from = url.searchParams.get('from');
+    const to = url.searchParams.get('to');
+
+    let logs = generateAuditLogs(params.id as string);
+
+    if (from) {
+      logs = logs.filter(log => log.timestamp >= from);
+    }
+
+    if (to) {
+      logs = logs.filter(log => log.timestamp <= to);
+    }
+
+    const response: ApiSuccessResponse<AuditLog[]> = {
+      success: true,
+      data: logs
+    };
+
+    return HttpResponse.json(response);
   }),
 
   // Get users for client
-  http.get('*/admin/clients/:clientId/users', ({ params, request }) => {
-    console.log('MSW: Handling get users request', params);
+  http.get('*/admin/client-management/:clientId/users', ({ params, request }) => {
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get('page') || '1');
     const limit = parseInt(url.searchParams.get('limit') || '20');
-    const searchTerm = url.searchParams.get('searchTerm')?.toLowerCase();
 
-    let filteredUsers = [...mockUsers];
-
-    if (searchTerm) {
-      filteredUsers = filteredUsers.filter(user =>
-        `${user.firstName} ${user.lastName} ${user.email} ${user.role}`
-          .toLowerCase()
-          .includes(searchTerm)
-      );
-    }
-
-    const total = filteredUsers.length;
+    const clientUsers = mockUsers.filter(u => u.clientId === params.clientId as string);
+    const total = clientUsers.length;
     const pages = Math.ceil(total / limit);
-    const start = (page - 1) * limit;
-    const end = start + limit;
-    const items = filteredUsers.slice(start, end);
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedUsers = clientUsers.slice(startIndex, endIndex);
 
-    console.log('MSW: Returning filtered users', items);
-
-    return HttpResponse.json({
+    const response: ApiSuccessResponse<UserListResponse> = {
       success: true,
       data: {
-        items,
+        items: paginatedUsers,
         pagination: {
           total,
           page,
@@ -360,71 +372,73 @@ export const clientHandlers = [
           pages
         }
       }
-    });
+    };
+
+    return HttpResponse.json(response);
   }),
 
   // Create user
-  http.post('*/admin/clients/:clientId/users', async ({ params, request }) => {
-    console.log('MSW: Handling create user request', params);
-    const userData = await request.json() as Omit<User, 'id'>;
+  http.post('*/admin/client-management/:clientId/users', async ({ params, request }) => {
+    const userData = await request.json() as Partial<User>;
 
     const newUser: User = {
-      id: mockUsers.length + 1,
+      id: (mockUsers.length + 1).toString(),
+      clientId: params.clientId as string,
       ...userData,
-      lastLogin: null,
-      locked: false
-    };
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    } as User;
 
     mockUsers.push(newUser);
-    console.log('MSW: Created new user', newUser);
 
-    return HttpResponse.json({
+    const response: ApiSuccessResponse<User> = {
       success: true,
       data: newUser
-    });
+    };
+
+    return HttpResponse.json(response);
   }),
 
   // Update user
-  http.put('*/admin/clients/:clientId/users/:userId', async ({ params, request }) => {
-    console.log('MSW: Handling update user request', params);
-    const decodedUserId = parseInt(decodeId(params.userId as string));
-    const updates = await request.json() as Partial<Omit<User, 'id'>>;
+  http.put('*/admin/client-management/:clientId/users/:userId', async ({ params, request }) => {
+    const updates = await request.json() as Partial<User>;
+    const userIndex = mockUsers.findIndex(u => u.id === params.userId && u.clientId === params.clientId);
 
-    const userIndex = mockUsers.findIndex(u => u.id === decodedUserId);
     if (userIndex === -1) {
       return new HttpResponse(null, { status: 404 });
     }
 
     const updatedUser = {
       ...mockUsers[userIndex],
-      ...updates
-    };
+      ...updates,
+      updatedAt: new Date().toISOString()
+    } as User;
 
     mockUsers[userIndex] = updatedUser;
-    console.log('MSW: Updated user', updatedUser);
 
-    return HttpResponse.json({
+    const response: ApiSuccessResponse<User> = {
       success: true,
       data: updatedUser
-    });
+    };
+
+    return HttpResponse.json(response);
   }),
 
   // Delete user
-  http.delete('*/admin/clients/:clientId/users/:userId', ({ params }) => {
-    console.log('MSW: Handling delete user request', params);
-    const decodedUserId = parseInt(decodeId(params.userId as string));
+  http.delete('*/admin/client-management/:clientId/users/:userId', ({ params }) => {
+    const userIndex = mockUsers.findIndex(u => u.id === params.userId && u.clientId === params.clientId);
 
-    const userIndex = mockUsers.findIndex(u => u.id === decodedUserId);
     if (userIndex === -1) {
       return new HttpResponse(null, { status: 404 });
     }
 
     mockUsers.splice(userIndex, 1);
-    console.log('MSW: Deleted user', decodedUserId);
 
-    return HttpResponse.json({
+    const response: ApiSuccessResponse<void> = {
       success: true,
-      data: null
-    });
-  }),
+      data: undefined
+    };
+
+    return HttpResponse.json(response);
+  })
 ];
