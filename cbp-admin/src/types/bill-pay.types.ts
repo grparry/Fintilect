@@ -36,20 +36,6 @@ export enum PaymentMethod {
   RTP = 'rtp'
 }
 
-export enum ConfirmationMethod {
-  MANUAL = 'manual',
-  OTP = 'otp',
-  EMAIL = 'email',
-  SMS = 'sms'
-}
-
-export enum ConfirmationStatus {
-  PENDING = 'pending',
-  VERIFIED = 'verified',
-  FAILED = 'failed',
-  EXPIRED = 'expired'
-}
-
 export enum PaymentStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
@@ -65,16 +51,26 @@ export enum PaymentStatus {
   SCHEDULED = 'SCHEDULED',
   RETURNED = 'RETURNED',
   STOP_PAYMENT = 'STOP_PAYMENT',
-  REVERSED = 'REVERSED',
+  VOID = 'VOID',
+  HOLD = 'HOLD',
+  SUSPENDED = 'SUSPENDED',
   REFUNDED = 'REFUNDED',
-  RESENT = 'RESENT',
-  REINITIATED = 'REINITIATED',
-  PENDING_REVERSAL = 'PENDING_REVERSAL',
-  PENDING_REFUND = 'PENDING_REFUND',
-  PENDING_RETURN = 'PENDING_RETURN',
-  PENDING_STOP_PAYMENT = 'PENDING_STOP_PAYMENT',
-  PENDING_RESEND = 'PENDING_RESEND',
-  PENDING_REINITIATE = 'PENDING_REINITIATE'
+  PARTIALLY_REFUNDED = 'PARTIALLY_REFUNDED',
+  CHARGEBACK = 'CHARGEBACK'
+}
+
+export enum ConfirmationMethod {
+  MANUAL = 'manual',
+  OTP = 'otp',
+  EMAIL = 'email',
+  SMS = 'sms'
+}
+
+export enum ConfirmationStatus {
+  PENDING = 'pending',
+  VERIFIED = 'verified',
+  FAILED = 'failed',
+  EXPIRED = 'expired'
 }
 
 export enum Priority {
@@ -580,7 +576,7 @@ export interface ManualPaymentValidation {
 }
 
 // Holiday Types
-export type HolidayType = 'Federal' | 'State' | 'Custom';
+export type HolidayType = 'BANK' | 'FEDERAL';
 export type HolidayStatus = 'Active' | 'Inactive';
 
 export interface Holiday {
@@ -588,17 +584,19 @@ export interface Holiday {
   name: string;
   date: string;
   type: HolidayType;
+  description?: string;
   status: HolidayStatus;
   createdAt?: string;
   updatedAt?: string;
 }
 
-export type HolidayInput = {
+export interface HolidayInput {
   name: string;
   date: string;
   type: HolidayType;
+  description?: string;
   status: HolidayStatus;
-};
+}
 
 export interface HolidayValidation {
   isValid: boolean;
@@ -606,6 +604,7 @@ export interface HolidayValidation {
     name?: string;
     date?: string;
     type?: string;
+    description?: string;
     status?: string;
   };
 }

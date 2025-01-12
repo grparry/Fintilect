@@ -6,24 +6,29 @@ export type PaymentMethod = 'ACH' | 'Wire' | 'RTP' | 'Check';
 
 // Environment Types
 export enum Environment {
-  Production = 'production',
-  Staging = 'staging',
-  Development = 'development'
+  Production = 'PRODUCTION',
+  Staging = 'STAGING',
+  Development = 'DEVELOPMENT'
 }
 
 // Client Types
 export enum ClientType {
-  Enterprise = 'Enterprise',
-  Small = 'Small',
-  Medium = 'Medium',
-  Other = 'Other'
+  Enterprise = 'ENTERPRISE',
+  SMB = 'SMB',
+  Startup = 'STARTUP'
 }
 
 export enum ClientStatus {
-  Active = 'Active',
-  Inactive = 'Inactive',
-  Pending = 'Pending'
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE',
+  Suspended = 'SUSPENDED'
 }
+
+// Date and Time Format Types
+export type DateFormat = 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD';
+export type TimeFormat = '12h' | '24h';
+export type NotificationFrequency = 'realtime' | 'daily' | 'weekly' | 'monthly';
+export type AlertType = 'payment' | 'security' | 'system';
 
 export interface Client {
   id: string;
@@ -31,36 +36,40 @@ export interface Client {
   type: ClientType;
   status: ClientStatus;
   environment: Environment;
-  domain: string;
-  contactName: string;
-  contactEmail: string;
-  contactPhone: string;
+  domain?: string;
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
   settings: ClientSettings;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface GeneralSettings {
   timezone: string;
-  dateFormat: string;
-  timeFormat: string;
+  dateFormat: DateFormat;
+  timeFormat: TimeFormat;
   currency: string;
   language: string;
 }
 
+export interface PasswordPolicy {
+  minLength: number;
+  requireUppercase: boolean;
+  requireLowercase: boolean;
+  requireNumbers: boolean;
+  requireSpecialChars: boolean;
+  expirationDays: number;
+}
+
+export interface LoginPolicy {
+  maxAttempts: number;
+  lockoutDuration: number;
+}
+
 export interface SecuritySettings {
-  passwordPolicy: {
-    minLength: number;
-    requireUppercase: boolean;
-    requireLowercase: boolean;
-    requireNumbers: boolean;
-    requireSpecialChars: boolean;
-    expirationDays: number;
-  };
-  loginPolicy: {
-    maxAttempts: number;
-    lockoutDuration: number;
-  };
+  passwordPolicy: PasswordPolicy;
+  loginPolicy: LoginPolicy;
   sessionTimeout: number;
   mfaEnabled: boolean;
   ipWhitelist: string[];
@@ -70,31 +79,14 @@ export interface NotificationSettings {
   emailEnabled: boolean;
   smsEnabled: boolean;
   pushEnabled: boolean;
-  frequency: 'realtime' | 'daily' | 'weekly';
-  alertTypes: string[];
-}
-
-export interface BrandingSettings {
-  logo: string;
-  primaryColor: string;
-  secondaryColor: string;
-  favicon: string;
-}
-
-export interface FeatureSettings {
-  billPay: boolean;
-  moneyDesktop: boolean;
-  mobileDeposit: boolean;
-  p2p: boolean;
-  cardControls: boolean;
+  frequency: NotificationFrequency;
+  alertTypes: AlertType[];
 }
 
 export interface ClientSettings {
   general: GeneralSettings;
   security: SecuritySettings;
   notifications: NotificationSettings;
-  branding: BrandingSettings;
-  features: FeatureSettings;
 }
 
 // Client Configuration Types

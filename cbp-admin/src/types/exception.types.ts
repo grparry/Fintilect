@@ -64,3 +64,15 @@ export interface ExceptionStats {
   byStatus: Record<ExceptionStatus, number>;
   mttr: number; // Mean Time To Resolution (in minutes)
 }
+
+export interface Error {
+  message: string;
+  code: string;
+}
+
+export interface ApiError extends Error {
+  status: number;
+  timestamp: string;
+  path: string;
+  details?: Record<string, any>;
+}

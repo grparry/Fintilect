@@ -35,65 +35,65 @@ export const mockDashboardStats = (): BillPayStats => ({
     [PaymentMethod.CARD]: 50
   },
   transactionsByStatus: {
-    [PaymentStatus.PENDING]: 10,
-    [PaymentStatus.APPROVED]: 5,
-    [PaymentStatus.REJECTED]: 2,
-    [PaymentStatus.PROCESSING]: 8,
-    [PaymentStatus.COMPLETED]: 15,
-    [PaymentStatus.FAILED]: 3,
-    [PaymentStatus.CANCELLED]: 1,
-    [PaymentStatus.EXPIRED]: 0,
-    [PaymentStatus.PENDING_APPROVAL]: 0,
-    [PaymentStatus.DRAFT]: 0,
-    [PaymentStatus.SUBMITTED]: 0,
-    [PaymentStatus.SCHEDULED]: 0,
-    [PaymentStatus.RETURNED]: 0,
-    [PaymentStatus.STOP_PAYMENT]: 0,
-    [PaymentStatus.REVERSED]: 0,
-    [PaymentStatus.REFUNDED]: 0,
-    [PaymentStatus.RESENT]: 0,
-    [PaymentStatus.REINITIATED]: 0,
-    [PaymentStatus.PENDING_REVERSAL]: 0,
-    [PaymentStatus.PENDING_REFUND]: 0,
-    [PaymentStatus.PENDING_RETURN]: 0,
-    [PaymentStatus.PENDING_STOP_PAYMENT]: 0,
-    [PaymentStatus.PENDING_RESEND]: 0,
-    [PaymentStatus.PENDING_REINITIATE]: 0
+    [PaymentStatus.PENDING]: 50,
+    [PaymentStatus.APPROVED]: 25,
+    [PaymentStatus.REJECTED]: 10,
+    [PaymentStatus.PROCESSING]: 40,
+    [PaymentStatus.COMPLETED]: 200,
+    [PaymentStatus.FAILED]: 15,
+    [PaymentStatus.CANCELLED]: 5,
+    [PaymentStatus.EXPIRED]: 2,
+    [PaymentStatus.PENDING_APPROVAL]: 20,
+    [PaymentStatus.DRAFT]: 30,
+    [PaymentStatus.SUBMITTED]: 15,
+    [PaymentStatus.SCHEDULED]: 10,
+    [PaymentStatus.RETURNED]: 8,
+    [PaymentStatus.STOP_PAYMENT]: 3,
+    [PaymentStatus.VOID]: 5,
+    [PaymentStatus.HOLD]: 4,
+    [PaymentStatus.SUSPENDED]: 3,
+    [PaymentStatus.REFUNDED]: 3,
+    [PaymentStatus.PARTIALLY_REFUNDED]: 1,
+    [PaymentStatus.CHARGEBACK]: 1
   },
   recentActivity: [
     {
-      id: 'txn_001',
-      amount: 50000.00,
+      id: 'pmt_1',
+      amount: 1000.00,
       method: PaymentMethod.ACH,
-      status: PaymentStatus.PENDING,
-      timestamp: '2024-12-30T08:00:00Z'
+      status: PaymentStatus.COMPLETED,
+      timestamp: '2024-12-28T21:43:09-07:00'
     },
     {
-      id: 'txn_002',
-      amount: 75000.00,
+      id: 'pmt_2',
+      amount: 500.00,
       method: PaymentMethod.WIRE,
-      status: PaymentStatus.APPROVED,
-      timestamp: '2024-12-30T07:45:00Z'
+      status: PaymentStatus.PENDING,
+      timestamp: '2024-12-28T21:42:13-07:00'
     },
     {
-      id: 'txn_003',
-      amount: 25000.00,
+      id: 'pmt_3',
+      amount: 750.00,
       method: PaymentMethod.RTP,
-      status: PaymentStatus.REJECTED,
-      timestamp: '2024-12-30T07:30:00Z'
+      status: PaymentStatus.PROCESSING,
+      timestamp: '2024-12-28T21:41:00-07:00'
     }
   ]
 });
 
 export const generateMockTrends = (days: number): TransactionTrend[] => {
-  return Array.from({ length: days }).map((_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (days - i - 1));
-    return {
-      date: date.toISOString().split('T')[0],
-      count: Math.floor(Math.random() * 100) + 50,
-      amount: Math.round((Math.random() * 10000 + 5000) * 100) / 100,
-      successRate: Math.round((Math.random() * 0.1 + 0.9) * 1000) / 1000,
-    };
-  });
+  const trends: TransactionTrend[] = [];
+  const baseDate = new Date('2024-12-28T21:43:09-07:00');
+
+  for (let i = 0; i < days; i++) {
+    const date = new Date(baseDate);
+    date.setDate(date.getDate() - i);
+    trends.push({
+      date: date.toISOString(),
+      amount: Math.floor(Math.random() * 10000) + 1000,
+      count: Math.floor(Math.random() * 50) + 10
+    });
+  }
+
+  return trends;
 };

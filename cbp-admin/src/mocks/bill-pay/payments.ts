@@ -3,7 +3,8 @@ import {
   PaymentStatus,
   PaymentMethod,
   Priority,
-  PaymentHistory
+  PaymentHistory,
+  PaymentAction
 } from '../../types/bill-pay.types';
 
 export const mockPayments: Payment[] = [
@@ -119,6 +120,28 @@ export const mockPaymentHistory: PaymentHistory[] = [
     timestamp: '2024-12-27T12:00:00-07:00',
     details: {
       transactionId: 'tx_123456'
+    }
+  }
+];
+
+export const mockPaymentActions: PaymentAction[] = [
+  {
+    action: 'create',
+    performedBy: 'user-1',
+    timestamp: new Date().toISOString(),
+    details: {
+      amount: 1000.00,
+      payee: 'John Doe',
+      paymentId: 'pmt_1'
+    }
+  },
+  {
+    action: 'approve',
+    performedBy: 'user-2',
+    timestamp: new Date().toISOString(),
+    details: {
+      paymentId: 'pmt_1',
+      notes: 'Payment approved'
     }
   }
 ];

@@ -41,3 +41,31 @@ export interface LoginCredentials {
   password: string;
   rememberMe?: boolean;
 }
+
+export interface AuthenticationResponse extends LoginResponse {
+  expiresAt: number;
+  sessionId: string;
+}
+
+export interface TokenResponse {
+  accessToken: string;
+  refreshToken?: string;
+  expiresAt: number;
+}
+
+export interface SessionInfo {
+  id: string;
+  user: User;
+  startedAt: number;
+  expiresAt: number;
+  lastActivity: number;
+  deviceInfo?: {
+    browser: string;
+    os: string;
+    ip: string;
+  };
+}
+
+export interface UserSession extends SessionInfo {
+  isCurrent: boolean;
+}

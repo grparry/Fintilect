@@ -93,20 +93,44 @@ export interface ApiError {
 }
 
 // Common utility types
-export interface PaginationParams {
+export type SortDirection = 'asc' | 'desc';
+
+export interface SortOptions {
+  field: string;
+  direction: SortDirection;
+}
+
+export interface FilterOptions {
+  [key: string]: any;
+}
+
+export interface PaginationOptions {
   page: number;
   limit: number;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: SortDirection;
+}
+
+export interface QueryOptions {
+  pagination?: PaginationOptions;
+  sort?: SortOptions;
+  filter?: FilterOptions;
+}
+
+export interface Pagination {
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
 }
 
 export interface PaginatedResponse<T> {
   items: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+  pagination: Pagination;
 }
+
+// For backward compatibility
+export type PaginationParams = PaginationOptions;
 
 // Form related types
 export interface SelectOption {

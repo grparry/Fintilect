@@ -41,4 +41,7 @@ export interface ReportRunRequest<T = BaseReportArguments> {
  */
 export interface ReportResponse<T = unknown> {
   data: T;
+  status: 'pending' | 'running' | 'completed' | 'failed';
+  createdAt: string;
+  completedAt?: string;
 }

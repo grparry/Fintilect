@@ -15,13 +15,16 @@ export interface ApiHeaders {
   Accept?: string;
 }
 
-export interface ApiPaginationMeta {
-  currentPage: number;
-  totalPages: number;
-  pageSize: number;
-  totalCount: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
+export interface Pagination {
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+}
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  pagination: Pagination;
 }
 
 export interface ApiSuccessResponse<T> {
@@ -45,8 +48,8 @@ export interface ApiErrorResponse {
   };
 }
 
-export interface ApiPaginatedResponse<T> extends ApiSuccessResponse<T> {
-  meta: ApiPaginationMeta & {
+export interface ApiPaginatedResponse<T> extends ApiSuccessResponse<PaginatedResponse<T>> {
+  meta: {
     timestamp: string;
     requestId: string;
   };
