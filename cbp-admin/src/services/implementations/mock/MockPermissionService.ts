@@ -13,10 +13,11 @@ import { PaginatedResponse } from '../../../types/common.types';
 import { BaseMockService } from './BaseMockService';
 import {
   mockPermissions,
-  mockPermissionGroups,
-  mockUserPermissionGroups
-} from '../../../mocks/permissions';
-import { mockPermissionAuditLog } from '../../../mocks/permission-audit';
+  mockRoles,
+  mockUserPermissions,
+  mockGroupPermissions
+} from './data/permission/permissions';
+import { mockPermissionAuditLog } from './data/permission/permission-audit';
 
 @injectable()
 export class MockPermissionService extends BaseMockService implements IPermissionService {
@@ -40,11 +41,11 @@ export class MockPermissionService extends BaseMockService implements IPermissio
       this.permissions.set(permission.id, permission);
     });
 
-    mockPermissionGroups.forEach(group => {
+    mockGroupPermissions.forEach(group => {
       this.permissionGroups.set(group.id, group);
     });
 
-    Object.entries(mockUserPermissionGroups).forEach(([userId, groupIds]) => {
+    Object.entries(mockUserPermissions).forEach(([userId, groupIds]) => {
       this.userPermissionGroups.set(userId, groupIds);
     });
 
@@ -288,5 +289,16 @@ export class MockPermissionService extends BaseMockService implements IPermissio
       throw this.createError(`Permission group not found: ${groupId}`);
     }
     return this.auditLog.get(groupId) || [];
+  }
+
+  async getGroupPermissions(group: { id: number }): Promise<Permission[]> {
+    await this.delay();
+    const groupPermissions = mockGroupPermissions.find(g => g.id === group.id);
+    if (!groupPermissions) return [];
+
+    return mockPermissions.filter(p => {
+      const categoryActions = groupPermissions.permissions[p.category];
+      return categoryActions && categoryActions.some(action => p.actions.includes(action));
+    });
   }
 }

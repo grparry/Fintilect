@@ -11,14 +11,12 @@ import {
 import { TimeRange } from '../../../types';
 import { BaseMockService } from './BaseMockService';
 import {
-  mockDashboardMetrics,
-  mockTransactionStats,
-  mockUserActivityData,
-  mockChartData,
-  mockSystemHealth,
-  mockRealTimeMetrics,
-  mockPerformanceInsights
-} from '../../../mocks/dashboard';
+  mockDashboardStats,
+  mockDashboardCharts,
+  mockDashboardAlerts,
+  mockDashboardTasks,
+  mockDashboardNews
+} from './data/dashboard/dashboard';
 
 @injectable()
 export class MockDashboardService extends BaseMockService implements IDashboardService {
@@ -34,7 +32,7 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
     this.updateInterval = setInterval(() => {
       const updates: Partial<DashboardMetrics> = {
         transactions: {
-          ...mockTransactionStats,
+          ...mockDashboardStats.transactions,
           volume: {
             daily: Math.floor(Math.random() * 500) + 400,
             weekly: Math.floor(Math.random() * 1000) + 2500,
@@ -61,10 +59,9 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
   async getDashboardMetrics(filters: DashboardFilters): Promise<DashboardMetrics> {
     await this.delay();
     return {
-      ...mockDashboardMetrics,
+      ...mockDashboardStats,
       charts: {
-        ...mockDashboardMetrics.charts,
-        transactionVolume: mockChartData(filters.timeRange, 'day')
+        ...mockDashboardCharts
       }
     };
   }
@@ -72,7 +69,7 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
   async getTransactionStats(timeRange: TimeRange): Promise<TransactionStats> {
     await this.delay();
     return {
-      ...mockTransactionStats,
+      ...mockDashboardStats.transactions,
       volume: {
         daily: Math.floor(Math.random() * 500) + 400,
         weekly: Math.floor(Math.random() * 1000) + 2500,
@@ -84,7 +81,7 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
   async getUserActivityData(timeRange: TimeRange): Promise<UserActivityData> {
     await this.delay();
     return {
-      ...mockUserActivityData,
+      ...mockDashboardStats.userActivity,
       activeUsers: Math.floor(Math.random() * 200) + 750
     };
   }
@@ -94,17 +91,17 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
     interval: 'hour' | 'day' | 'week' | 'month'
   ): Promise<ChartData> {
     await this.delay();
-    return mockChartData(timeRange, interval);
+    return mockDashboardCharts.transactionVolume;
   }
 
   async getUserGrowthChart(timeRange: TimeRange): Promise<ChartData> {
     await this.delay();
-    return mockDashboardMetrics.charts.userGrowth;
+    return mockDashboardCharts.userGrowth;
   }
 
   async getActivityBreakdownChart(timeRange: TimeRange): Promise<ChartData> {
     await this.delay();
-    return mockDashboardMetrics.charts.activityBreakdown;
+    return mockDashboardCharts.activityBreakdown;
   }
 
   async getRealTimeMetrics(): Promise<{
@@ -115,7 +112,7 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
   }> {
     await this.delay();
     return {
-      ...mockRealTimeMetrics,
+      ...mockDashboardStats.realTimeMetrics,
       activeTransactions: Math.floor(Math.random() * 20) + 30,
       transactionsPerMinute: Math.random() * 5 + 5
     };
@@ -133,7 +130,7 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
   }> {
     await this.delay();
     return {
-      ...mockSystemHealth,
+      ...mockDashboardStats.systemHealth,
       lastChecked: new Date().toISOString()
     };
   }
@@ -185,7 +182,7 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
     timestamp: string;
   }>> {
     await this.delay();
-    return mockPerformanceInsights.map(insight => ({
+    return mockDashboardAlerts.map(insight => ({
       ...insight,
       timestamp: new Date().toISOString()
     }));

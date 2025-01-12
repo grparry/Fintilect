@@ -11,7 +11,7 @@ import {
   UserStats
 } from '../../../types/user.types';
 import { PaginatedResponse, QueryOptions } from '../../../types/api.types';
-import { mockUsers } from '../../../mocks/client-management/mockClientData';
+import { mockUsers } from './data/client/mockClientData';
 
 /**
  * Mock implementation of UserService

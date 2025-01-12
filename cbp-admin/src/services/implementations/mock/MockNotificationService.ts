@@ -10,22 +10,23 @@ import {
 } from '../../../types/bill-pay.types';
 import { PaginatedResponse } from '../../../types/common.types';
 import { 
-    mockNotificationTemplates, 
-    mockNotificationTypes,
-    mockNotificationCategories,
-    mockTemplateVariables
-} from '../../../mocks/notifications/templates';
+    mockTemplates,
+    mockTemplateCategories,
+    mockTemplateVariables,
+    mockTemplateVersions
+} from './data/notification/templates';
 import { 
-    mockDeliverySettings,
-    mockDeliveryStatuses
-} from '../../../mocks/notifications/delivery';
+    mockDeliveryMethods,
+    mockDeliveryPreferences,
+    mockDeliveryStats
+} from './data/notification/delivery';
 import { v4 as uuidv4 } from 'uuid';
 
 export class MockNotificationService implements INotificationService {
     basePath = '/api/notifications';
-    private templates: NotificationTemplate[] = [...mockNotificationTemplates];
-    private deliverySettings = { ...mockDeliverySettings };
-    private deliveryStatuses = { ...mockDeliveryStatuses };
+    private templates: NotificationTemplate[] = [...mockTemplates];
+    private deliverySettings = { ...mockDeliveryPreferences };
+    private deliveryStatuses = { ...mockDeliveryStats };
 
     async getTemplates(filters: NotificationTemplateFilters): Promise<PaginatedResponse<NotificationTemplate>> {
         let filteredTemplates = [...this.templates];
@@ -129,11 +130,11 @@ export class MockNotificationService implements INotificationService {
     }
 
     async getNotificationTypes(): Promise<NotificationType[]> {
-        return mockNotificationTypes;
+        return mockTemplateCategories;
     }
 
     async getNotificationCategories(): Promise<NotificationCategory[]> {
-        return mockNotificationCategories;
+        return mockTemplateCategories;
     }
 
     async getTemplateVariables(type: NotificationType): Promise<NotificationVariable[]> {

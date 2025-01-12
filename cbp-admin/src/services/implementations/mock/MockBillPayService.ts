@@ -22,14 +22,15 @@ import {
 } from '../../../types/bill-pay.types';
 import { PaginatedResponse, Pagination, PaginationOptions } from '../../../types/index';
 import { 
-    mockPayments, 
-    mockPaymentHistory,
-    mockPaymentActions
-} from '../../../mocks/bill-pay/payments';
-import { mockExceptions } from '../../../mocks/bill-pay/exceptions';
-import { mockDashboardStats, generateMockTrends } from '../../../mocks/bill-pay/dashboard';
-import { mockTemplates, initialHolidays } from '../../../mocks/bill-pay/settings';
-import { mockClients, mockPayees } from '../../../mocks/bill-pay/clients';
+    mockPayments,
+    mockPendingPayments,
+    mockPaymentHistory
+} from './data/billpay/payments';
+import { mockExceptions } from './data/billpay/exceptions';
+import { mockDashboardStats, generateMockTrends } from './data/billpay/dashboard';
+import { mockTemplates, initialHolidays } from './data/billpay/settings';
+import { mockClients, mockPayees } from './data/billpay/clients';
+import { mockPaymentActions } from './data/billpay/payments';
 import { v4 as uuidv4 } from 'uuid';
 
 export class MockBillPayService implements IBillPayService {

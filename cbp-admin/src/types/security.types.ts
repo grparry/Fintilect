@@ -165,6 +165,25 @@ export interface SecurityAlert {
     }>;
 }
 
+export interface SecurityMetrics {
+    loginAttempts: {
+        successful: number;
+        failed: number;
+        locked: number;
+    };
+    mfaUsage: {
+        enabled: number;
+        disabled: number;
+        byMethod: Record<MFAMethod, number>;
+    };
+    passwordResets: {
+        selfService: number;
+        adminInitiated: number;
+        forgotten: number;
+    };
+    riskLevels: Record<RiskLevel, number>;
+}
+
 // Bill Pay Specific Security Types
 export interface BillPayPasswordPolicy {
     minLength: number;

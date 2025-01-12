@@ -3,21 +3,19 @@ import { IPaymentProcessorService } from '../../interfaces/IPaymentProcessorServ
 import { ApiClient } from '../../../api/ApiClient';
 import { TYPES } from '../../../types/dependency.types';
 import {
-    Payment,
-    PaymentMethod,
+    PaymentTransaction,
     PaymentStatus,
+    PaymentMethod,
     PaymentType,
-    PaymentPriority,
-    PaymentHistory,
-    PaymentException,
-    ExceptionResolution,
-    PaymentAction,
-    PaymentFilters,
-    PendingPayment,
-    BillPayStats,
-    TransactionTrend
-} from '../../../types/bill-pay.types';
-import { PaginatedResponse } from '../../../types/common.types';
+    TransactionBatch,
+    ProcessorConfig,
+    ProcessingError,
+    PaymentValidation,
+    PaymentReceipt,
+    TransactionSummary,
+    ProcessorMetrics,
+    DateRange
+} from '../../../types/payment.types';
 
 @injectable()
 export class PaymentProcessorService implements IPaymentProcessorService {
@@ -26,142 +24,97 @@ export class PaymentProcessorService implements IPaymentProcessorService {
         @inject(TYPES.BasePath) private readonly basePath: string = '/api/v1/payment-processor'
     ) {}
 
-    async processPayment(payment: Payment): Promise<Payment> {
-        const response = await this.apiClient.post<Payment>(`${this.basePath}/payments`, payment);
-        return response.data;
+    async processPayment(transaction: PaymentTransaction): Promise<PaymentTransaction> {
+        try {
+            const response = await this.apiClient.post<PaymentTransaction>(`${this.basePath}/payments`, transaction);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
     }
 
-    async processBatch(payments: Payment[]): Promise<PaginatedResponse<Payment>> {
-        const response = await this.apiClient.post<PaginatedResponse<Payment>>(`${this.basePath}/batches`, { payments });
-        return response.data;
+    async processBatch(transactions: PaymentTransaction[]): Promise<TransactionBatch> {
+        try {
+            const response = await this.apiClient.post<TransactionBatch>(`${this.basePath}/batches`, { transactions });
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
     }
 
-    async getTransaction(transactionId: string): Promise<Payment> {
-        const response = await this.apiClient.get<Payment>(`${this.basePath}/payments/${transactionId}`);
-        return response.data;
+    async getTransaction(transactionId: string): Promise<PaymentTransaction> {
+        try {
+            const response = await this.apiClient.get<PaymentTransaction>(`${this.basePath}/payments/${transactionId}`);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
     }
 
-    async searchTransactions(filters: PaymentFilters & { page?: number; limit?: number }): Promise<PaginatedResponse<Payment>> {
-        const response = await this.apiClient.get<PaginatedResponse<Payment>>(`${this.basePath}/payments`, { params: filters });
-        return response.data;
+    async validatePayment(transaction: PaymentTransaction): Promise<PaymentValidation> {
+        try {
+            const response = await this.apiClient.post<PaymentValidation>(`${this.basePath}/payments/validate`, transaction);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
     }
 
-    async getBatch(batchId: string): Promise<PaginatedResponse<Payment>> {
-        const response = await this.apiClient.get<PaginatedResponse<Payment>>(`${this.basePath}/batches/${batchId}`);
-        return response.data;
+    async getPaymentReceipt(transactionId: string): Promise<PaymentReceipt> {
+        try {
+            const response = await this.apiClient.get<PaymentReceipt>(`${this.basePath}/payments/${transactionId}/receipt`);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
     }
 
-    async getBatches(params: {
-        status?: PaymentStatus[];
-        dateRange?: { startDate: string; endDate: string };
-        clientId?: string;
-        page?: number;
-        limit?: number;
-    }): Promise<PaginatedResponse<Payment>> {
-        const response = await this.apiClient.get<PaginatedResponse<Payment>>(`${this.basePath}/batches`, { params });
-        return response.data;
+    async getProcessorConfig(): Promise<ProcessorConfig> {
+        try {
+            const response = await this.apiClient.get<ProcessorConfig>(`${this.basePath}/config`);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
     }
 
-    async cancelTransaction(transactionId: string): Promise<Payment> {
-        const response = await this.apiClient.post<Payment>(
-            `${this.basePath}/payments/${transactionId}/cancel`,
-            {}
-        );
-        return response.data;
+    async updateProcessorConfig(config: Partial<ProcessorConfig>): Promise<ProcessorConfig> {
+        try {
+            const response = await this.apiClient.patch<ProcessorConfig>(`${this.basePath}/config`, config);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
     }
 
-    async retryTransaction(transactionId: string): Promise<Payment> {
-        const response = await this.apiClient.post<Payment>(
-            `${this.basePath}/payments/${transactionId}/retry`,
-            {}
-        );
-        return response.data;
+    async getProcessingErrors(transactionId: string): Promise<ProcessingError[]> {
+        try {
+            const response = await this.apiClient.get<ProcessingError[]>(`${this.basePath}/payments/${transactionId}/errors`);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
     }
 
-    async schedulePayment(payment: Payment, schedule: { effectiveDate: string }): Promise<Payment> {
-        const response = await this.apiClient.post<Payment>(`${this.basePath}/payments/schedule`, {
-            payment,
-            schedule
-        });
-        return response.data;
+    async getTransactionSummary(params: { dateRange: DateRange; clientId?: string; type?: PaymentType }): Promise<TransactionSummary> {
+        try {
+            const response = await this.apiClient.get<TransactionSummary>(`${this.basePath}/summary`, { params });
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
     }
 
-    async validatePayment(payment: Payment): Promise<{ isValid: boolean; errors: string[] }> {
-        const response = await this.apiClient.post<{ isValid: boolean; errors: string[] }>(
-            `${this.basePath}/payments/validate`,
-            payment
-        );
-        return response.data;
+    async getProcessorMetrics(params: { dateRange: DateRange; clientId?: string }): Promise<ProcessorMetrics> {
+        try {
+            const response = await this.apiClient.get<ProcessorMetrics>(`${this.basePath}/metrics`, { params });
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
     }
 
-    async getPaymentReceipt(transactionId: string): Promise<{ receiptId: string; content: string }> {
-        const response = await this.apiClient.get<{ receiptId: string; content: string }>(
-            `${this.basePath}/payments/${transactionId}/receipt`
-        );
-        return response.data;
-    }
-
-    async getProcessorConfig(): Promise<{
-        maxBatchSize: number;
-        retryAttempts: number;
-        processingDelay: number;
-        supportedMethods: PaymentMethod[];
-        supportedTypes: string[];
-    }> {
-        const response = await this.apiClient.get<{
-            maxBatchSize: number;
-            retryAttempts: number;
-            processingDelay: number;
-            supportedMethods: PaymentMethod[];
-            supportedTypes: string[];
-        }>(`${this.basePath}/config`);
-        return response.data;
-    }
-
-    async updateProcessorConfig(config: {
-        maxBatchSize?: number;
-        retryAttempts?: number;
-        processingDelay?: number;
-        supportedMethods?: PaymentMethod[];
-        supportedTypes?: string[];
-    }): Promise<{
-        maxBatchSize: number;
-        retryAttempts: number;
-        processingDelay: number;
-        supportedMethods: PaymentMethod[];
-        supportedTypes: string[];
-    }> {
-        const response = await this.apiClient.patch<{
-            maxBatchSize: number;
-            retryAttempts: number;
-            processingDelay: number;
-            supportedMethods: PaymentMethod[];
-            supportedTypes: string[];
-        }>(`${this.basePath}/config`, config);
-        return response.data;
-    }
-
-    async getProcessingErrors(transactionId: string): Promise<PaymentException[]> {
-        const response = await this.apiClient.get<PaymentException[]>(
-            `${this.basePath}/payments/${transactionId}/errors`
-        );
-        return response.data;
-    }
-
-    async getTransactionSummary(params: {
-        dateRange: { startDate: string; endDate: string };
-        clientId?: string;
-        type?: PaymentType;
-    }): Promise<BillPayStats> {
-        const response = await this.apiClient.get<BillPayStats>(`${this.basePath}/summary`, { params });
-        return response.data;
-    }
-
-    async getProcessorMetrics(params: {
-        dateRange: { startDate: string; endDate: string };
-        clientId?: string;
-    }): Promise<TransactionTrend[]> {
-        const response = await this.apiClient.get<TransactionTrend[]>(`${this.basePath}/metrics`, { params });
-        return response.data;
+    private handleError(error: any): any {
+        // Handle error
     }
 }

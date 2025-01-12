@@ -22,7 +22,7 @@ import {
     PaginatedResponse,
     Contact
 } from '../../../types/client.types';
-import { mockClients, mockUsers, defaultSettings, mockPermissions } from '../../../mocks/client-management/mockClientData';
+import { mockClients, mockUsers, defaultSettings, mockPermissions } from './data/client/mockClientData';
 
 /**
  * Mock implementation of ClientService

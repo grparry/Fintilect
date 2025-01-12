@@ -12,19 +12,18 @@ import {
 import { PaginatedResponse } from '../../../types/common.types';
 import { 
     mockSecuritySettings,
-    mockSecurityPolicies,
-    mockAuditLogs,
-    mockAccessAttempts,
-    mockSecurityAlerts
-} from '../../../mocks/security-management/mockSecurityData';
+    mockSecurityAuditLog,
+    mockSecurityAlerts,
+    mockSecurityMetrics
+} from './data/security/mockSecurityData';
 import { v4 as uuidv4 } from 'uuid';
 
 export class MockSecurityService implements ISecurityService {
     basePath = '/api/security';
     private settings: SecuritySettings = { ...mockSecuritySettings };
-    private policies: SecurityPolicy[] = [...mockSecurityPolicies];
-    private auditLogs: AuditLog[] = [...mockAuditLogs];
-    private accessAttempts: AccessAttempt[] = [...mockAccessAttempts];
+    private policies: SecurityPolicy[] = [];
+    private auditLogs: AuditLog[] = [];
+    private accessAttempts: AccessAttempt[] = [];
     private alerts: SecurityAlert[] = [...mockSecurityAlerts];
 
     async getSecuritySettings(): Promise<SecuritySettings> {

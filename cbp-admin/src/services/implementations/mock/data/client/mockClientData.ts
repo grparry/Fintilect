@@ -60,30 +60,6 @@ export const defaultSettings: ClientSettings = {
   },
 };
 
-// Mock Client Settings
-export const mockClientSettings: ClientSettings = {
-  dateFormat: 'MM/DD/YYYY',
-  timeFormat: '12h',
-  timezone: 'America/New_York',
-  language: 'en-US',
-  currency: 'USD',
-  notifications: {
-    email: true,
-    sms: false,
-    push: true
-  },
-  security: {
-    mfaEnabled: true,
-    passwordExpiry: 90,
-    sessionTimeout: 30
-  },
-  preferences: {
-    theme: 'light',
-    compactView: false,
-    autoRefresh: true
-  }
-};
-
 // Mock Users
 export const mockUsers: User[] = [
   {
@@ -152,57 +128,62 @@ export const mockUsers: User[] = [
 export const mockClients: Client[] = [
   {
     id: '1',
-    name: 'Acme Corporation',
-    type: ClientType.ENTERPRISE,
-    status: ClientStatus.ACTIVE,
-    contactEmail: 'contact@acme.com',
-    contactPhone: '555-0100',
-    address: {
-      street: '123 Main St',
-      city: 'San Francisco',
-      state: 'CA',
-      zip: '94105',
-      country: 'USA'
+    name: 'Example Credit Union',
+    type: ClientType.Enterprise,
+    status: ClientStatus.Active,
+    environment: Environment.Production,
+    domain: 'example.com',
+    contactName: 'John Doe',
+    contactEmail: 'john@example.com',
+    contactPhone: '555-0123',
+    settings: {
+      general: {
+        timezone: 'America/Denver',
+        dateFormat: 'MM/DD/YYYY',
+        timeFormat: '12h',
+        currency: 'USD',
+        language: 'en',
+      },
+      security: {
+        passwordPolicy: {
+          minLength: 8,
+          requireUppercase: true,
+          requireLowercase: true,
+          requireNumbers: true,
+          requireSpecialChars: true,
+          expirationDays: 90,
+        },
+        loginPolicy: {
+          maxAttempts: 3,
+          lockoutDuration: 15,
+        },
+        sessionTimeout: 30,
+        mfaEnabled: true,
+        ipWhitelist: ['192.168.1.0/24'],
+      },
+      notifications: {
+        emailEnabled: true,
+        smsEnabled: true,
+        pushEnabled: true,
+        frequency: 'daily',
+        alertTypes: ['payment', 'security', 'system'],
+      },
+      branding: {
+        logo: '',
+        primaryColor: '#1976d2',
+        secondaryColor: '#dc004e',
+        favicon: '',
+      },
+      features: {
+        billPay: true,
+        moneyDesktop: true,
+        mobileDeposit: true,
+        p2p: true,
+        cardControls: true,
+      },
     },
-    settings: mockClientSettings,
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: '2',
-    name: 'TechStart Inc',
-    type: ClientType.STARTUP,
-    status: ClientStatus.ACTIVE,
-    contactEmail: 'contact@techstart.com',
-    contactPhone: '555-0101',
-    address: {
-      street: '456 Innovation Way',
-      city: 'Austin',
-      state: 'TX',
-      zip: '78701',
-      country: 'USA'
-    },
-    settings: mockClientSettings,
-    createdAt: '2024-01-02T00:00:00Z',
-    updatedAt: '2024-01-02T00:00:00Z'
-  },
-  {
-    id: '3',
-    name: 'Global Services LLC',
-    type: ClientType.ENTERPRISE,
-    status: ClientStatus.ACTIVE,
-    contactEmail: 'contact@globalservices.com',
-    contactPhone: '555-0102',
-    address: {
-      street: '789 Corporate Blvd',
-      city: 'Chicago',
-      state: 'IL',
-      zip: '60601',
-      country: 'USA'
-    },
-    settings: mockClientSettings,
-    createdAt: '2024-01-03T00:00:00Z',
-    updatedAt: '2024-01-03T00:00:00Z'
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }
 ];
 

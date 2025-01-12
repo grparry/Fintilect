@@ -18,7 +18,7 @@ import {
 } from '../../../types/report-api.types';
 import { PaginatedResponse } from '../../../types/common.types';
 import { BaseMockService } from './BaseMockService';
-import { mockReportData } from '../../../mocks/reports';
+import { mockReportData } from './data/report/reports';
 
 @injectable()
 export class MockReportService extends BaseMockService implements IReportService {

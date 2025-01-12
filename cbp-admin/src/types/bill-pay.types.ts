@@ -576,8 +576,18 @@ export interface ManualPaymentValidation {
 }
 
 // Holiday Types
-export type HolidayType = 'BANK' | 'FEDERAL';
-export type HolidayStatus = 'Active' | 'Inactive';
+export enum HolidayType {
+  FEDERAL = 'FEDERAL',
+  STATE = 'STATE',
+  BANK = 'BANK',
+  CUSTOM = 'CUSTOM'
+}
+
+export enum HolidayStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  PENDING = 'PENDING'
+}
 
 export interface Holiday {
   id: number;

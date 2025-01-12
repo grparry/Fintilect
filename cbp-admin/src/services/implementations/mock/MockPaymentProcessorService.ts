@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { IPaymentProcessorService } from '../../interfaces/IPaymentProcessorService';
 import { BaseMockService } from './BaseMockService';
-import { mockPayments, mockPendingPayments } from '../../../mocks/payment-processing/mockPaymentData';
+import { mockPayments, mockPendingPayments } from './data/processor/mockPaymentData';
 import {
     Payment,
     PaymentMethod,

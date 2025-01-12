@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
-import { Holiday, HolidayInput, HolidayValidation } from '../../../types/bill-pay.types';
+import { Holiday, HolidayInput, HolidayValidation, HolidayStatus } from '../../../types/bill-pay.types';
 import { IHolidayService } from '../../interfaces/IHolidayService';
 import { BaseMockService } from './BaseMockService';
-import { mockHolidays } from '../../../mocks/holidays';
+import { mockHolidays } from './data/holiday/holidays';
 import { addDays, isWeekend, parseISO } from 'date-fns';
 
 @injectable()
@@ -15,7 +15,10 @@ export class MockHolidayService extends BaseMockService implements IHolidayServi
     }
 
     private initializeData(): void {
-        mockHolidays.forEach(holiday => {
+        const activeHolidays = mockHolidays.filter(
+            (holiday) => holiday.status === HolidayStatus.ACTIVE
+        );
+        activeHolidays.forEach(holiday => {
             this.holidays.set(holiday.id, holiday);
         });
     }
@@ -92,7 +95,7 @@ export class MockHolidayService extends BaseMockService implements IHolidayServi
     async isHoliday(date: string): Promise<boolean> {
         await this.delay();
         return Array.from(this.holidays.values()).some(
-            holiday => holiday.date === date && holiday.status === 'Active'
+            holiday => holiday.date === date && holiday.status === HolidayStatus.ACTIVE
         );
     }
 
