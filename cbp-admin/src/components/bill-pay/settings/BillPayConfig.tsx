@@ -29,7 +29,7 @@ import {
   BillPayConfigUpdate,
   BillPayConfigValidation
 } from '../../../types/bill-pay.types';
-import { billPayConfigService } from '../../../services/bill-pay-config.service';
+import { billPayService } from '../../../services/factory/ServiceFactory';
 
 type ValidationErrors = Partial<Record<keyof BillPayConfigUpdate, string>>;
 
@@ -57,7 +57,7 @@ const BillPayConfig: React.FC = () => {
     const loadConfig = async () => {
       try {
         setLoading(true);
-        const data = await billPayConfigService.getConfig();
+        const data = await billPayService.getConfig();
         setOriginalConfig(data);
         setConfig({
           cutoffTime: data.cutoffTime,
@@ -87,8 +87,8 @@ const BillPayConfig: React.FC = () => {
       setError(null);
       setValidationErrors({});
       
-      await billPayConfigService.updateConfig(config);
-      const updatedConfig = await billPayConfigService.getConfig();
+      await billPayService.updateConfig(config);
+      const updatedConfig = await billPayService.getConfig();
       setOriginalConfig(updatedConfig);
       setConfig({
         cutoffTime: updatedConfig.cutoffTime,
@@ -129,7 +129,7 @@ const BillPayConfig: React.FC = () => {
     try {
       setTestingEmail(true);
       setError(null);
-      await billPayConfigService.testEmailNotification(config.notificationEmail);
+      await billPayService.testEmailNotification(config.notificationEmail);
       // Show success message
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to send test email');

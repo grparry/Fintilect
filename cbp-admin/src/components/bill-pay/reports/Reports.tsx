@@ -35,7 +35,7 @@ import {
   TransactionRecord,
   UserRecord,
 } from '../../../types/report.types';
-import { reportService } from '../../../services/report.service';
+import { reportService } from '../../../services/factory/ServiceFactory';
 
 const Reports: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<number>(0);

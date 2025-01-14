@@ -1,5 +1,7 @@
 import { Dayjs } from 'dayjs';
 import { ApiResponse } from '../utils/api';
+import { PaginationOptions } from './common.types';
+import { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';
 
 // Payment Types
 export type PaymentMethod = 'ACH' | 'Wire' | 'RTP' | 'Check';
@@ -53,26 +55,10 @@ export interface GeneralSettings {
   language: string;
 }
 
-export interface PasswordPolicy {
-  minLength: number;
-  requireUppercase: boolean;
-  requireLowercase: boolean;
-  requireNumbers: boolean;
-  requireSpecialChars: boolean;
-  expirationDays: number;
-}
-
-export interface LoginPolicy {
-  maxAttempts: number;
-  lockoutDuration: number;
-}
-
-export interface SecuritySettings {
-  passwordPolicy: PasswordPolicy;
-  loginPolicy: LoginPolicy;
-  sessionTimeout: number;
-  mfaEnabled: boolean;
-  ipWhitelist: string[];
+export interface ClientSettings {
+  general: GeneralSettings;
+  security: SecuritySettings;
+  notifications: NotificationSettings;
 }
 
 export interface NotificationSettings {
@@ -81,12 +67,6 @@ export interface NotificationSettings {
   pushEnabled: boolean;
   frequency: NotificationFrequency;
   alertTypes: AlertType[];
-}
-
-export interface ClientSettings {
-  general: GeneralSettings;
-  security: SecuritySettings;
-  notifications: NotificationSettings;
 }
 
 // Client Configuration Types
@@ -241,24 +221,6 @@ export interface UserGroup {
   updatedAt: string;
 }
 
-export interface AuditSearchRequest {
-  startDate: string;
-  endDate: string;
-  username: string;
-}
-
-export interface AuditLog {
-  id: string;
-  timestamp: string;
-  action: string;
-  userId: string;
-  userName: string;
-  resourceType: string;
-  resourceId: string;
-  details: string;
-  status: string;
-}
-
 export interface Address {
   street1: string;
   street2?: string;
@@ -290,6 +252,7 @@ export interface Contact {
   role: ContactRole;
   notifications: NotificationType[];
   isEmergencyContact?: boolean;
+  address?: Address;
 }
 
 // List Response Types
@@ -308,5 +271,54 @@ export type UserListResponse = PaginatedResponse<User>;
 export type GroupListResponse = PaginatedResponse<UserGroup>;
 export type RoleListResponse = PaginatedResponse<SecurityRole>;
 
+export interface UserPreferences {
+  theme: 'light' | 'dark' | 'system';
+  notifications: {
+    email: boolean;
+    push: boolean;
+    sms: boolean;
+  };
+  language: string;
+  timezone: string;
+  dateFormat: string;
+  displayDensity: 'comfortable' | 'compact';
+}
+
+export interface UserFilters extends PaginationOptions {
+  status?: UserStatus;
+  role?: UserRole;
+  groupId?: string;
+  search?: string;
+  lastLoginAfter?: string;
+  lastLoginBefore?: string;
+}
+
+export interface UserStats {
+  totalLogins: number;
+  lastActiveDate: string;
+  failedLoginAttempts: number;
+  accountCreatedAt: string;
+  lastPasswordChange: string;
+  groupCount: number;
+  activeSessionCount: number;
+}
+
+export type UsersResponse = PaginatedResponse<User>;
+
+// Audit Log Types
+export interface AuditSearchRequest {
+  startDate?: string;
+  endDate?: string;
+  userId?: string;
+  action?: string;
+  resourceType?: string;
+  resourceId?: string;
+  page?: number;
+  limit?: number;
+}
+
 // Re-export ApiResponse type for backwards compatibility
 export type { ApiResponse } from '../utils/api';
+
+// Re-export security types
+export type { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';

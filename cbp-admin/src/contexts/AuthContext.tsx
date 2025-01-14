@@ -1,16 +1,12 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { authService } from '../services/auth.service';
+import { authService } from '../services/factory/ServiceFactory';
 import { LoginCredentials, AuthState } from '../types/auth.types';
 import { User } from '../types/client.types';
 
 interface AuthContextType {
-  isAuthenticated: boolean;
-  user: User | null;
-  loading: boolean;
-  error: string | null;
+  state: AuthState;
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
-  clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -28,7 +24,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isAuthenticated: false,
     user: null,
     loading: false,
-    error: null,
+    error: null
   });
 
   const login = useCallback(async (credentials: LoginCredentials) => {
@@ -38,16 +34,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setState(prev => ({
         ...prev,
         isAuthenticated: true,
-        user: response.data,
-        loading: false,
+        user: response.user,
+        loading: false
       }));
     } catch (error) {
       setState(prev => ({
         ...prev,
-        isAuthenticated: false,
-        user: null,
-        loading: false,
-        error: error instanceof Error ? error.message : 'An error occurred during login',
+        error: error instanceof Error ? error.message : 'An error occurred',
+        loading: false
       }));
     }
   }, []);
@@ -60,27 +54,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: false,
         user: null,
         loading: false,
-        error: null,
+        error: null
       });
     } catch (error) {
       setState(prev => ({
         ...prev,
-        loading: false,
-        error: error instanceof Error ? error.message : 'An error occurred during logout',
+        error: error instanceof Error ? error.message : 'An error occurred',
+        loading: false
       }));
     }
   }, []);
 
-  const clearError = useCallback(() => {
-    setState(prev => ({ ...prev, error: null }));
-  }, []);
-
-  const value = {
-    ...state,
-    login,
-    logout,
-    clearError,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ state, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

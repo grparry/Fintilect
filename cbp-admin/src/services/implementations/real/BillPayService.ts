@@ -18,137 +18,207 @@ import {
     NotificationTemplate,
     NotificationTemplateInput
 } from '../../../types/bill-pay.types';
-import { PaginatedResponse } from '../../../types/common.types';
-import { api } from '../../../utils/api';
+import { PaginatedResponse, QueryOptions } from '../../../types/index';
+import { ApiResponse } from '../../../utils/api';
+import { ApiClient } from '../../../utils/api';
+import { BaseService } from './BaseService';
+import logger from '../../../utils/logger';
 
-export class BillPayService implements IBillPayService {
-    basePath = '/api/bill-pay';
+export class BillPayService extends BaseService implements IBillPayService {
+    constructor(basePath: string = '/api/v1/bill-pay') {
+        super(basePath);
+    }
 
     async getConfiguration(): Promise<BillPayConfig> {
-        const response = await api.get<BillPayConfig>(`${this.basePath}/config`);
-        return response.data;
+        try {
+            return await this.get<BillPayConfig>('/config');
+        } catch (error) {
+            logger.error(`Error getting bill pay configuration: ${error}`);
+            throw error;
+        }
     }
 
     async updateConfiguration(config: BillPayConfigUpdate): Promise<BillPayConfigValidation> {
-        const response = await api.put<BillPayConfigValidation>(
-            `${this.basePath}/config`,
-            config
-        );
-        return response.data;
+        try {
+            return await this.put<BillPayConfigValidation>('/config', config);
+        } catch (error) {
+            logger.error(`Error updating bill pay configuration: ${error}`);
+            throw error;
+        }
+    }
+
+    async validateConfiguration(config: BillPayConfigUpdate): Promise<BillPayConfigValidation> {
+        try {
+            return await this.post<BillPayConfigValidation>('/config/validate', config);
+        } catch (error) {
+            logger.error(`Error validating bill pay configuration: ${error}`);
+            throw error;
+        }
     }
 
     async getPayments(filters: PaymentFilters): Promise<PaginatedResponse<Payment>> {
-        const response = await api.get<PaginatedResponse<Payment>>(
-            `${this.basePath}/payments`,
-            { params: filters }
-        );
-        return response.data;
+        try {
+            return await this.get<PaginatedResponse<Payment>>('/payments', filters);
+        } catch (error) {
+            logger.error(`Error getting payments: ${error}`);
+            throw error;
+        }
     }
 
     async getPayment(paymentId: string): Promise<Payment> {
-        const response = await api.get<Payment>(`${this.basePath}/payments/${paymentId}`);
-        return response.data;
+        try {
+            return await this.get<Payment>(`/payments/${paymentId}`);
+        } catch (error) {
+            logger.error(`Error getting payment: ${error}`);
+            throw error;
+        }
     }
 
     async createPayment(payment: Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>): Promise<Payment> {
-        const response = await api.post<Payment>(`${this.basePath}/payments`, payment);
-        return response.data;
+        try {
+            return await this.post<Payment>('/payments', payment);
+        } catch (error) {
+            logger.error(`Error creating payment: ${error}`);
+            throw error;
+        }
     }
 
     async updatePayment(paymentId: string, payment: Partial<Payment>): Promise<Payment> {
-        const response = await api.put<Payment>(
-            `${this.basePath}/payments/${paymentId}`,
-            payment
-        );
-        return response.data;
+        try {
+            return await this.put<Payment>(`/payments/${paymentId}`, payment);
+        } catch (error) {
+            logger.error(`Error updating payment: ${error}`);
+            throw error;
+        }
     }
 
     async cancelPayment(paymentId: string, reason: string): Promise<void> {
-        await api.post(`${this.basePath}/payments/${paymentId}/cancel`, { reason });
+        try {
+            await this.put<void>(`/payments/${paymentId}/cancel`, { reason });
+        } catch (error) {
+            logger.error(`Error canceling payment: ${error}`);
+            throw error;
+        }
     }
 
     async getPaymentHistory(paymentId: string): Promise<PaymentHistory[]> {
-        const response = await api.get<PaymentHistory[]>(
-            `${this.basePath}/payments/${paymentId}/history`
-        );
-        return response.data;
+        try {
+            return await this.get<PaymentHistory[]>(`/payments/${paymentId}/history`);
+        } catch (error) {
+            logger.error(`Error getting payment history: ${error}`);
+            throw error;
+        }
     }
 
     async getExceptions(filters: PaymentFilters): Promise<PaginatedResponse<PaymentException>> {
-        const response = await api.get<PaginatedResponse<PaymentException>>(
-            `${this.basePath}/exceptions`,
-            { params: filters }
-        );
-        return response.data;
+        try {
+            return await this.get<PaginatedResponse<PaymentException>>('/exceptions', filters);
+        } catch (error) {
+            logger.error(`Error getting exceptions: ${error}`);
+            throw error;
+        }
     }
 
     async resolveException(exceptionId: string, resolution: ExceptionResolution): Promise<void> {
-        await api.post(
-            `${this.basePath}/exceptions/${exceptionId}/resolve`,
-            resolution
-        );
+        try {
+            await this.put<void>(`/exceptions/${exceptionId}/resolve`, resolution);
+        } catch (error) {
+            logger.error(`Error resolving exception: ${error}`);
+            throw error;
+        }
     }
 
     async getClients(): Promise<Client[]> {
-        const response = await api.get<Client[]>(`${this.basePath}/clients`);
-        return response.data;
+        try {
+            return await this.get<Client[]>('/clients');
+        } catch (error) {
+            logger.error(`Error getting clients: ${error}`);
+            throw error;
+        }
     }
 
     async getPayees(clientId: string): Promise<Payee[]> {
-        const response = await api.get<Payee[]>(
-            `${this.basePath}/clients/${clientId}/payees`
-        );
-        return response.data;
+        try {
+            return await this.get<Payee[]>(`/clients/${clientId}/payees`);
+        } catch (error) {
+            logger.error(`Error getting payees: ${error}`);
+            throw error;
+        }
     }
 
     async getStats(timeframe: 'day' | 'week' | 'month'): Promise<BillPayStats> {
-        const response = await api.get<BillPayStats>(
-            `${this.basePath}/stats`,
-            { params: { timeframe } }
-        );
-        return response.data;
+        try {
+            return await this.get<BillPayStats>('/stats', { timeframe });
+        } catch (error) {
+            logger.error(`Error getting bill pay stats: ${error}`);
+            throw error;
+        }
     }
 
     async getTransactionTrends(timeframe: 'day' | 'week' | 'month'): Promise<TransactionTrend[]> {
-        const response = await api.get<TransactionTrend[]>(
-            `${this.basePath}/trends`,
-            { params: { timeframe } }
-        );
-        return response.data;
+        try {
+            return await this.get<TransactionTrend[]>('/trends', { timeframe });
+        } catch (error) {
+            logger.error(`Error getting transaction trends: ${error}`);
+            throw error;
+        }
     }
 
     async getHolidays(): Promise<Holiday[]> {
-        const response = await api.get<Holiday[]>(`${this.basePath}/holidays`);
-        return response.data;
+        try {
+            return await this.get<Holiday[]>('/holidays');
+        } catch (error) {
+            logger.error(`Error getting holidays: ${error}`);
+            throw error;
+        }
     }
 
     async addHoliday(holiday: HolidayInput): Promise<Holiday> {
-        const response = await api.post<Holiday>(`${this.basePath}/holidays`, holiday);
-        return response.data;
+        try {
+            return await this.post<Holiday>('/holidays', holiday);
+        } catch (error) {
+            logger.error(`Error adding holiday: ${error}`);
+            throw error;
+        }
     }
 
     async getNotificationTemplates(): Promise<NotificationTemplate[]> {
-        const response = await api.get<NotificationTemplate[]>(
-            `${this.basePath}/notification-templates`
-        );
-        return response.data;
+        try {
+            return await this.get<NotificationTemplate[]>('/notifications/templates');
+        } catch (error) {
+            logger.error(`Error getting notification templates: ${error}`);
+            throw error;
+        }
     }
 
     async updateNotificationTemplate(
         templateId: number,
         template: NotificationTemplateInput
     ): Promise<NotificationTemplate> {
-        const response = await api.put<NotificationTemplate>(
-            `${this.basePath}/notification-templates/${templateId}`,
-            template
-        );
-        return response.data;
+        try {
+            return await this.put<NotificationTemplate>(`/notifications/templates/${templateId}`, template);
+        } catch (error) {
+            logger.error(`Error updating notification template: ${error}`);
+            throw error;
+        }
     }
 
     async getPaymentActions(paymentId: string): Promise<PaymentAction[]> {
-        const response = await api.get<PaymentAction[]>(
-            `${this.basePath}/payments/${paymentId}/actions`
-        );
-        return response.data;
+        try {
+            return await this.get<PaymentAction[]>(`/payments/${paymentId}/actions`);
+        } catch (error) {
+            logger.error(`Error getting payment actions: ${error}`);
+            throw error;
+        }
+    }
+
+    private handleError(error: unknown, defaultMessage: string): Error {
+        if (error instanceof Error) {
+            return error;
+        }
+        if (typeof error === 'string') {
+            return new Error(error);
+        }
+        return new Error(defaultMessage);
     }
 }

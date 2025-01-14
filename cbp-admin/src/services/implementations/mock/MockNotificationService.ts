@@ -1,4 +1,5 @@
 import { INotificationService } from '../../interfaces/INotificationService';
+import { BaseMockService } from './BaseMockService';
 import {
     NotificationTemplate,
     NotificationTemplateInput,
@@ -21,12 +22,21 @@ import {
     mockDeliveryStats
 } from './data/notification/delivery';
 import { v4 as uuidv4 } from 'uuid';
+import { mockDeliverySettings } from './data/notifications/mockNotificationData';
 
-export class MockNotificationService implements INotificationService {
-    basePath = '/api/notifications';
+export class MockNotificationService extends BaseMockService implements INotificationService {
+    constructor(basePath: string = '/api/v1/notifications') {
+        super(basePath);
+    }
+
     private templates: NotificationTemplate[] = [...mockTemplates];
-    private deliverySettings = { ...mockDeliveryPreferences };
-    private deliveryStatuses = { ...mockDeliveryStats };
+    private deliverySettings = { ...mockDeliverySettings };
+
+    private deliveryStatuses: Record<string, {
+        status: 'sent' | 'failed';
+        attempts: number;
+        lastAttempt: string;
+    }> = {};
 
     async getTemplates(filters: NotificationTemplateFilters): Promise<PaginatedResponse<NotificationTemplate>> {
         let filteredTemplates = [...this.templates];
@@ -130,7 +140,7 @@ export class MockNotificationService implements INotificationService {
     }
 
     async getNotificationTypes(): Promise<NotificationType[]> {
-        return mockTemplateCategories;
+        return Object.values(NotificationType);
     }
 
     async getNotificationCategories(): Promise<NotificationCategory[]> {
@@ -229,7 +239,11 @@ export class MockNotificationService implements INotificationService {
         if (!status) {
             throw new Error('Notification not found');
         }
-        return status;
+        return {
+            status: status.status,
+            attempts: status.attempts,
+            lastAttempt: status.lastAttempt
+        };
     }
 
     async retryNotification(notificationId: string): Promise<boolean> {
@@ -251,10 +265,41 @@ export class MockNotificationService implements INotificationService {
             ...status,
             status: 'sent',
             attempts: status.attempts + 1,
-            lastAttempt: new Date().toISOString(),
-            error: undefined
+            lastAttempt: new Date().toISOString()
         };
 
         return true;
+    }
+
+    async getDeliveryStats(method?: string): Promise<{
+        totalSent: number;
+        totalFailed: number;
+        byMethod: {
+            email: { sent: number; failed: number };
+            sms: { sent: number; failed: number };
+        };
+    }> {
+        const stats = {
+            totalSent: 0,
+            totalFailed: 0,
+            byMethod: {
+                email: { sent: 0, failed: 0 },
+                sms: { sent: 0, failed: 0 }
+            }
+        };
+
+        Object.values(this.deliveryStatuses).forEach(status => {
+            if (status.status === 'sent') {
+                stats.totalSent++;
+                if (method === 'email') stats.byMethod.email.sent++;
+                if (method === 'sms') stats.byMethod.sms.sent++;
+            } else {
+                stats.totalFailed++;
+                if (method === 'email') stats.byMethod.email.failed++;
+                if (method === 'sms') stats.byMethod.sms.failed++;
+            }
+        });
+
+        return stats;
     }
 }

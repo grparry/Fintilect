@@ -1,39 +1,36 @@
-import { useState, useEffect } from 'react';
-import { dashboardService } from '../services/dashboard.service';
+import { useEffect, useState } from 'react';
+import { dashboardService } from '../services/factory/ServiceFactory';
 import { TimeRange } from '../types';
 import { DashboardMetrics } from '../types/dashboard.types';
 
 interface UseStatsResult {
   stats: DashboardMetrics | null;
-  isLoading: boolean;
+  loading: boolean;
   error: string | null;
 }
 
 export const useStats = (timeRange: TimeRange): UseStatsResult => {
   const [stats, setStats] = useState<DashboardMetrics | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStats = async (): Promise<void> => {
+      setLoading(true);
       try {
-        setIsLoading(true);
-        const response = await dashboardService.getStats(timeRange);
-        if (response.success) {
-          setStats(response.data);
-          setError(null);
-        } else {
-          setError(response.error?.message || 'Failed to load stats');
-        }
+        const data = await dashboardService.getDashboardMetrics({ timeRange });
+        setStats(data);
+        setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setError(err instanceof Error ? err.message : 'Failed to fetch stats');
+        setStats(null);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     fetchStats();
   }, [timeRange]);
 
-  return { stats, isLoading, error };
+  return { stats, loading, error };
 };

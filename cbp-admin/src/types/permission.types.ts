@@ -8,6 +8,8 @@ export interface Permission {
   description: string;
   category: PermissionCategoryType;
   actions: PermissionAction[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface PermissionCategory {

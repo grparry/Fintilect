@@ -1,13 +1,14 @@
 import {
-  NotificationTemplate,
-  NotificationType,
-  NotificationCategory,
+  BillPayConfig,
   Holiday,
   HolidayType,
   HolidayStatus,
+  NotificationTemplate,
+  NotificationType,
+  NotificationCategory,
   PermissionGroup,
   Permission
-} from '../../types/bill-pay.types';
+} from '../../../../../types/bill-pay.types';
 
 export const mockTemplates: NotificationTemplate[] = [
   {

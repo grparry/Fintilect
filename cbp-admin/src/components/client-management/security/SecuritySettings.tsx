@@ -14,7 +14,7 @@ import {
   FormControlLabel,
   Switch,
 } from '@mui/material';
-import { SecuritySettings as SecuritySettingsType } from '../../../types/client.types';
+import { SecuritySettings as SecuritySettingsType } from '../../../types/security.types';
 import { clientService } from '../../../services/clients.service';
 import MemberSecuritySettings from './MemberSecuritySettings';
 import AuditSearch from './AuditSearch';
@@ -60,35 +60,17 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await clientService.getClientSettings(clientId);
-      if (response.success) {
-        const securitySettings = response.data.security;
-        // Ensure all required fields are present by merging with defaults
-        const mergedSettings: SecuritySettingsType = {
-          passwordPolicy: {
-            minLength: securitySettings?.passwordPolicy?.minLength ?? defaultSecuritySettings.passwordPolicy.minLength,
-            requireUppercase: securitySettings?.passwordPolicy?.requireUppercase ?? defaultSecuritySettings.passwordPolicy.requireUppercase,
-            requireLowercase: securitySettings?.passwordPolicy?.requireLowercase ?? defaultSecuritySettings.passwordPolicy.requireLowercase,
-            requireNumbers: securitySettings?.passwordPolicy?.requireNumbers ?? defaultSecuritySettings.passwordPolicy.requireNumbers,
-            requireSpecialChars: securitySettings?.passwordPolicy?.requireSpecialChars ?? defaultSecuritySettings.passwordPolicy.requireSpecialChars,
-            expirationDays: securitySettings?.passwordPolicy?.expirationDays ?? defaultSecuritySettings.passwordPolicy.expirationDays
-          },
-          loginPolicy: {
-            maxAttempts: securitySettings?.loginPolicy?.maxAttempts ?? defaultSecuritySettings.loginPolicy.maxAttempts,
-            lockoutDuration: securitySettings?.loginPolicy?.lockoutDuration ?? defaultSecuritySettings.loginPolicy.lockoutDuration
-          },
-          sessionTimeout: securitySettings?.sessionTimeout ?? defaultSecuritySettings.sessionTimeout,
-          mfaEnabled: securitySettings?.mfaEnabled ?? defaultSecuritySettings.mfaEnabled,
-          ipWhitelist: securitySettings?.ipWhitelist ?? defaultSecuritySettings.ipWhitelist
-        };
-        setSettings(mergedSettings);
-        setIsDirty(false);
-      } else {
-        setError(response.error.message);
-      }
+      const response = await clientService.getSecuritySettings(clientId);
+      // Ensure all required fields are present by merging with defaults
+      const mergedSettings: SecuritySettingsType = {
+        ...defaultSecuritySettings,
+        ...response
+      };
+      setSettings(mergedSettings);
+      setIsDirty(false);
     } catch (err) {
-      setError('Failed to load security settings');
-      console.error('Error loading security settings:', err);
+      const message = err instanceof Error ? err.message : 'Failed to load security settings';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -153,27 +135,18 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     return null;
   };
 
-  const handleSubmit = async () => {
+  const handleSave = async () => {
     if (!settings) return;
-
-    const validationError = validateSettings(settings);
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
+    
     try {
       setSaving(true);
-      const response = await clientService.updateClientSettings(clientId, { security: settings });
-      if (response.success) {
-        setIsDirty(false);
-        setError(null);
-      } else {
-        setError(response.error.message);
-      }
+      setError(null);
+      const updatedSettings = await clientService.updateSecuritySettings(clientId, settings as SecuritySettingsType);
+      setSettings(updatedSettings as SecuritySettingsType);
+      setIsDirty(false);
     } catch (err) {
-      setError('Failed to update security settings');
-      console.error('Error updating security settings:', err);
+      const message = err instanceof Error ? err.message : 'Failed to update security settings';
+      setError(message);
     } finally {
       setSaving(false);
     }
@@ -370,7 +343,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={handleSubmit}
+                  onClick={handleSave}
                   disabled={saving || !isDirty}
                 >
                   {saving ? 'Saving...' : 'Save Changes'}

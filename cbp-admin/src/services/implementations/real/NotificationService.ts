@@ -1,4 +1,5 @@
 import { INotificationService } from '../../interfaces/INotificationService';
+import { BaseService } from './BaseService';
 import {
     NotificationTemplate,
     NotificationTemplateInput,
@@ -9,96 +10,46 @@ import {
     NotificationCategory
 } from '../../../types/bill-pay.types';
 import { PaginatedResponse } from '../../../types/common.types';
-import { api } from '../../../utils/api';
 
-export class NotificationService implements INotificationService {
-    basePath = '/api/notifications';
-
-    async getTemplates(filters: NotificationTemplateFilters): Promise<PaginatedResponse<NotificationTemplate>> {
-        const response = await api.get<PaginatedResponse<NotificationTemplate>>(
-            `${this.basePath}/templates`,
-            { params: filters }
-        );
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
+export class NotificationService extends BaseService implements INotificationService {
+    constructor(basePath: string = '/api/notifications') {
+        super(basePath);
     }
 
-    async getTemplate(templateId: number): Promise<NotificationTemplate> {
-        const response = await api.get<NotificationTemplate>(
-            `${this.basePath}/templates/${templateId}`
-        );
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
+    async getTemplates(filters?: NotificationTemplateFilters): Promise<PaginatedResponse<NotificationTemplate>> {
+        return this.get('/templates', { params: filters });
     }
 
-    async createTemplate(template: NotificationTemplateInput): Promise<NotificationTemplate> {
-        const response = await api.post<NotificationTemplate>(
-            `${this.basePath}/templates`,
-            template
-        );
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
+    async getTemplate(id: number): Promise<NotificationTemplate> {
+        return this.get(`/templates/${id}`);
+    }
+
+    async createTemplate(input: NotificationTemplateInput): Promise<NotificationTemplate> {
+        return this.post('/templates', input);
     }
 
     async updateTemplate(templateId: number, template: Partial<NotificationTemplateInput>): Promise<NotificationTemplate> {
-        const response = await api.patch<NotificationTemplate>(
-            `${this.basePath}/templates/${templateId}`,
-            template
-        );
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
+        return this.put(`/templates/${templateId}`, template);
     }
 
     async deleteTemplate(templateId: number): Promise<void> {
-        const response = await api.delete<void>(`${this.basePath}/templates/${templateId}`);
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
+        return this.delete(`/templates/${templateId}`);
     }
 
     async previewTemplate(templateId: number, sampleData: Record<string, string>): Promise<NotificationPreview> {
-        const response = await api.post<NotificationPreview>(
-            `${this.basePath}/templates/${templateId}/preview`,
-            { sampleData }
-        );
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
+        return this.post(`/templates/${templateId}/preview`, { variables: sampleData });
     }
 
     async getNotificationTypes(): Promise<NotificationType[]> {
-        const response = await api.get<NotificationType[]>(`${this.basePath}/types`);
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
+        return this.get('/types');
+    }
+
+    async getNotificationVariables(): Promise<NotificationVariable[]> {
+        return this.get('/variables');
     }
 
     async getNotificationCategories(): Promise<NotificationCategory[]> {
-        const response = await api.get<NotificationCategory[]>(`${this.basePath}/categories`);
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
-    }
-
-    async getTemplateVariables(type: NotificationType): Promise<NotificationVariable[]> {
-        const response = await api.get<NotificationVariable[]>(
-            `${this.basePath}/variables/${type}`
-        );
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
+        return this.get('/categories');
     }
 
     async sendTestNotification(
@@ -106,28 +57,14 @@ export class NotificationService implements INotificationService {
         testData: Record<string, string>,
         recipients: string[]
     ): Promise<boolean> {
-        const response = await api.post<{ success: boolean }>(
-            `${this.basePath}/templates/${templateId}/test`,
-            { testData, recipients }
-        );
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data.success;
+        return this.post(`/templates/${templateId}/test`, { testData, recipients });
     }
 
     async validateTemplateContent(
         content: string,
         type: NotificationType
     ): Promise<{ valid: boolean; errors: string[] }> {
-        const response = await api.post<{ valid: boolean; errors: string[] }>(
-            `${this.basePath}/templates/validate`,
-            { content, type }
-        );
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
+        return this.post<{ valid: boolean; errors: string[] }>('/templates/validate', { content, type });
     }
 
     async getDeliverySettings(): Promise<{
@@ -137,17 +74,13 @@ export class NotificationService implements INotificationService {
         retryAttempts: number;
         retryInterval: number;
     }> {
-        const response = await api.get<{
+        return this.get<{
             emailEnabled: boolean;
             smsEnabled: boolean;
             defaultRecipients: string[];
             retryAttempts: number;
             retryInterval: number;
-        }>(`${this.basePath}/delivery/settings`);
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
+        }>('/delivery/settings');
     }
 
     async updateDeliverySettings(settings: {
@@ -163,20 +96,13 @@ export class NotificationService implements INotificationService {
         retryAttempts: number;
         retryInterval: number;
     }> {
-        const response = await api.patch<{
+        return this.put<{
             emailEnabled: boolean;
             smsEnabled: boolean;
             defaultRecipients: string[];
             retryAttempts: number;
             retryInterval: number;
-        }>(
-            `${this.basePath}/delivery/settings`,
-            settings
-        );
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
+        }>('/delivery/settings', settings);
     }
 
     async getDeliveryStatus(notificationId: string): Promise<{
@@ -185,26 +111,19 @@ export class NotificationService implements INotificationService {
         lastAttempt?: string;
         error?: string;
     }> {
-        const response = await api.get<{
+        return this.get<{
             status: 'pending' | 'sent' | 'failed';
             attempts: number;
             lastAttempt?: string;
             error?: string;
-        }>(`${this.basePath}/delivery/status/${notificationId}`);
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data;
+        }>(`/delivery/status/${notificationId}`);
     }
 
     async retryNotification(notificationId: string): Promise<boolean> {
-        const response = await api.post<{ success: boolean }>(
-            `${this.basePath}/delivery/retry/${notificationId}`,
-            {}
-        );
-        if (!response.success) {
-            throw new Error(response.error.message);
-        }
-        return response.data.success;
+        return this.post<boolean>(`/delivery/retry/${notificationId}`, {});
+    }
+
+    async getTemplateVariables(type: NotificationType): Promise<NotificationVariable[]> {
+        return this.get<NotificationVariable[]>(`/variables/${type}`);
     }
 }

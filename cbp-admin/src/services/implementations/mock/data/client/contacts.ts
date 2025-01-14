@@ -1,51 +1,51 @@
-import { 
-  ContactType, 
-  ContactRole, 
-  NotificationType, 
-  Contact 
-} from '../../types/client.types';
+import {
+  Contact,
+  ContactType,
+  Address,
+  NotificationType
+} from '../../../../../types/client.types';
 
 export const contactTypes: ContactType[] = [
   'Primary',
   'Technical',
-  'Billing',
-  'Emergency'
-] as const;
-
-export const roleOptions: ContactRole[] = [
-  'Admin',
-  'Technical',
-  'Business',
   'Billing'
-] as const;
-
-export const notificationOptions: NotificationType[] = [
-  'Email',
-  'SMS',
-  'Push'
-] as const;
+];
 
 export const mockContacts: Contact[] = [
   {
-    id: '1',
-    name: 'John Doe',
-    title: 'System Administrator',
-    email: 'john.doe@example.com',
-    phone: '555-0123',
-    type: 'Primary' as ContactType,
-    role: 'Admin' as ContactRole,
-    notifications: ['Email', 'SMS'] as NotificationType[],
-    isEmergencyContact: true
+    id: "contact-1",
+    type: "Primary",
+    role: "Admin",
+    name: "John Smith",
+    title: "CEO",
+    email: "john.smith@example.com",
+    phone: "555-0123",
+    address: {
+      street1: "123 Main St",
+      street2: "Suite 100",
+      city: "San Francisco",
+      state: "CA",
+      zipCode: "94105",
+      country: "USA"
+    },
+    notifications: ["Email", "SMS"]
   },
   {
-    id: '2',
-    name: 'Jane Smith',
-    title: 'Technical Lead',
-    email: 'jane.smith@example.com',
-    phone: '555-0124',
-    type: 'Technical' as ContactType,
-    role: 'Technical' as ContactRole,
-    notifications: ['Email', 'Push'] as NotificationType[],
-    isEmergencyContact: false
+    id: "contact-2",
+    type: "Technical",
+    role: "Technical",
+    name: "Jane Doe",
+    title: "CTO",
+    email: "jane.doe@example.com",
+    phone: "555-0124",
+    address: {
+      street1: "456 Market St",
+      street2: "Floor 4",
+      city: "San Francisco",
+      state: "CA",
+      zipCode: "94105",
+      country: "USA"
+    },
+    notifications: ["Email"]
   }
 ];

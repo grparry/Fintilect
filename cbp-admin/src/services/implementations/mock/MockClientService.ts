@@ -15,13 +15,12 @@ import {
     UserGroup,
     SecurityRole,
     Permission,
-    AuditLog,
-    AuditSearchRequest,
     ContactInformation,
     Address,
     PaginatedResponse,
     Contact
 } from '../../../types/client.types';
+import { AuditLog, AuditSearchRequest, SecuritySettings, LoginPolicy } from '../../../types/security.types';
 import { mockClients, mockUsers, defaultSettings, mockPermissions } from './data/client/mockClientData';
 
 /**
@@ -38,8 +37,8 @@ export class MockClientService extends BaseMockService implements IClientService
     private auditLogs: Map<string, AuditLog[]> = new Map();
     private addresses: Map<string, Address> = new Map();
 
-    constructor() {
-        super('/api/v1/clients');
+    constructor(basePath: string = '/api/v1/clients') {
+        super(basePath);
         this.initializeData();
     }
 
@@ -70,8 +69,6 @@ export class MockClientService extends BaseMockService implements IClientService
         page?: number;
         limit?: number;
     }): Promise<PaginatedResponse<Client>> {
-        await this.delay();
-
         let filteredClients = [...this.clients];
 
         if (params) {
@@ -113,7 +110,6 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async getClient(clientId: string): Promise<Client> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         const client = this.clients.find(c => c.id === clientId);
@@ -125,8 +121,6 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async createClient(client: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>): Promise<Client> {
-        await this.delay();
-
         const newClient: Client = {
             ...client,
             id: Math.random().toString(36).substr(2, 9),
@@ -141,7 +135,6 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async updateClient(clientId: string, client: Partial<Client>): Promise<Client> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         const index = this.clients.findIndex(c => c.id === clientId);
@@ -160,7 +153,6 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async deleteClient(clientId: string): Promise<void> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         const index = this.clients.findIndex(c => c.id === clientId);
@@ -178,7 +170,6 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async getClientSettings(clientId: string): Promise<ClientSettings> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         const client = await this.getClient(clientId);
@@ -190,7 +181,6 @@ export class MockClientService extends BaseMockService implements IClientService
         security?: Partial<ClientSettings['security']>;
         notifications?: Partial<ClientSettings['notifications']>;
     }): Promise<ClientSettings> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         const client = await this.getClient(clientId);
@@ -206,7 +196,6 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async getClientConfiguration(clientId: string): Promise<ClientConfiguration> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         return {
@@ -222,7 +211,6 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async updateClientConfiguration(clientId: string, config: Partial<ClientConfiguration>): Promise<ClientConfiguration> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         const currentConfig = await this.getClientConfiguration(clientId);
@@ -230,7 +218,6 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async getClientApiKeys(clientId: string): Promise<ClientApiKey[]> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         return this.apiKeys.get(clientId) || [];
@@ -241,7 +228,6 @@ export class MockClientService extends BaseMockService implements IClientService
         environment: Environment;
         expiresAt?: string;
     }): Promise<ClientApiKey> {
-        await this.delay();
         this.validateRequired({ clientId, keyData }, ['clientId', 'keyData']);
 
         const newKey: ClientApiKey = {
@@ -263,7 +249,6 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async revokeClientApiKey(clientId: string, keyId: number): Promise<void> {
-        await this.delay();
         this.validateRequired({ clientId, keyId }, ['clientId', 'keyId']);
 
         const keys = this.apiKeys.get(clientId);
@@ -280,14 +265,12 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async getClientContacts(clientId: string): Promise<ClientContact[]> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         return this.contacts.get(clientId) || [];
     }
 
     async updateClientContacts(clientId: string, contacts: ContactInformation): Promise<ContactInformation> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         const clientContacts: ClientContact[] = [
@@ -315,7 +298,6 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async getClientServices(clientId: string): Promise<ClientService[]> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         return this.services.get(clientId) || [];
@@ -326,7 +308,6 @@ export class MockClientService extends BaseMockService implements IClientService
         serviceId: number,
         service: Partial<ClientService>
     ): Promise<ClientService> {
-        await this.delay();
         this.validateRequired({ clientId, serviceId }, ['clientId', 'serviceId']);
 
         const services = this.services.get(clientId);
@@ -355,7 +336,6 @@ export class MockClientService extends BaseMockService implements IClientService
         page?: number;
         limit?: number;
     }): Promise<PaginatedResponse<User>> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         let filteredUsers = this.users.filter(u => u.clientId === clientId);
@@ -394,14 +374,12 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async getClientUserGroups(clientId: string): Promise<UserGroup[]> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         return this.userGroups.get(clientId) || [];
     }
 
     async getClientRoles(clientId: string): Promise<SecurityRole[]> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         return [
@@ -436,21 +414,27 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async getClientPermissions(clientId: string): Promise<Permission[]> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         return mockPermissions;
     }
 
-    async getClientAuditLogs(clientId: string, request: AuditSearchRequest): Promise<AuditLog[]> {
-        await this.delay();
-        this.validateRequired({ clientId }, ['clientId']);
+    async getPermissions(): Promise<Permission[]> {
+        return mockPermissions;
+    }
 
-        return this.auditLogs.get(clientId) || [];
+    async getClientAuditLogs(clientId: string, request: AuditSearchRequest): Promise<AuditLog[]> {
+        this.validateRequired({ clientId }, ['clientId']);
+        
+        const logs = this.auditLogs.get(clientId) || [];
+        // Convert security audit logs to client audit logs by adding userEmail
+        return logs.map(log => ({
+            ...log,
+            userEmail: `user-${log.userId}@example.com` // Add required userEmail field
+        }));
     }
 
     async getClientAddress(clientId: string): Promise<Address> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         const address = this.addresses.get(clientId);
@@ -462,7 +446,6 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     async updateClientAddress(clientId: string, address: Address): Promise<Address> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         this.addresses.set(clientId, address);
@@ -476,7 +459,6 @@ export class MockClientService extends BaseMockService implements IClientService
         activeServices: number;
         lastActivityDate: string;
     }> {
-        await this.delay();
         this.validateRequired({ clientId }, ['clientId']);
 
         const clientUsers = this.users.filter(u => u.clientId === clientId);
@@ -489,5 +471,62 @@ export class MockClientService extends BaseMockService implements IClientService
             activeServices: (this.services.get(clientId) || []).length,
             lastActivityDate: new Date().toISOString()
         };
+    }
+
+    async getSecuritySettings(clientId: string): Promise<SecuritySettings> {
+        this.validateRequired({ clientId }, ['clientId']);
+        return {
+            passwordPolicy: {
+                minLength: 8,
+                requireUppercase: true,
+                requireLowercase: true,
+                requireNumbers: true,
+                requireSpecialChars: true,
+                expirationDays: 90,
+                preventReuse: 5,
+                complexityScore: 3
+            },
+            loginPolicy: {
+                maxAttempts: 5,
+                lockoutDuration: 30,
+                sessionTimeout: 30,
+                requireMFA: true,
+                allowRememberMe: false,
+                allowMultipleSessions: false,
+                requirePasswordChange: false
+            },
+            ipWhitelist: {
+                enabled: false,
+                addresses: [],
+                allowedRanges: []
+            },
+            mfaSettings: {
+                methods: ['email', 'authenticator'],
+                defaultMethod: 'email',
+                gracePeriod: 7,
+                trustDuration: 30
+            },
+            auditSettings: {
+                retentionDays: 90,
+                highRiskEvents: ['login', 'password_change', 'mfa_update'],
+                alertThresholds: {
+                    login_attempts: 5,
+                    password_changes: 3,
+                    mfa_updates: 2
+                }
+            },
+            alertSettings: {
+                enableEmailAlerts: true,
+                enableSMSAlerts: false,
+                recipients: [],
+                severityLevels: ['high', 'critical']
+            }
+        };
+    }
+
+    async updateSecuritySettings(clientId: string, settings: Partial<SecuritySettings>): Promise<SecuritySettings> {
+        this.validateRequired({ clientId }, ['clientId']);
+        const currentSettings = await this.getSecuritySettings(clientId);
+        return { ...currentSettings, ...settings };
     }
 }

@@ -17,12 +17,16 @@ import {
     mockSecurityMetrics
 } from './data/security/mockSecurityData';
 import { v4 as uuidv4 } from 'uuid';
+import { BaseMockService } from './BaseMockService';
 
-export class MockSecurityService implements ISecurityService {
-    basePath = '/api/security';
+export class MockSecurityService extends BaseMockService implements ISecurityService {
+    constructor(basePath: string = '/api/v1/security') {
+        super(basePath);
+    }
+
     private settings: SecuritySettings = { ...mockSecuritySettings };
     private policies: SecurityPolicy[] = [];
-    private auditLogs: AuditLog[] = [];
+    private auditLogs: AuditLog[] = [...mockSecurityAuditLog];
     private accessAttempts: AccessAttempt[] = [];
     private alerts: SecurityAlert[] = [...mockSecurityAlerts];
 
@@ -52,9 +56,9 @@ export class MockSecurityService implements ISecurityService {
                 new Date(log.timestamp) <= new Date(filters.endDate!)
             );
         }
-        if (filters.eventTypes?.length) {
+        if (filters.actions?.length) {
             filteredLogs = filteredLogs.filter(log => 
-                filters.eventTypes!.includes(log.eventType)
+                filters.actions!.includes(log.eventType)
             );
         }
         if (filters.userIds?.length) {
@@ -62,9 +66,14 @@ export class MockSecurityService implements ISecurityService {
                 filters.userIds!.includes(log.userId)
             );
         }
-        if (filters.riskLevels?.length) {
+        if (filters.resourceTypes?.length) {
             filteredLogs = filteredLogs.filter(log => 
-                filters.riskLevels!.includes(log.riskLevel)
+                filters.resourceTypes!.includes(log.resourceType)
+            );
+        }
+        if (filters.status) {
+            filteredLogs = filteredLogs.filter(log => 
+                log.status === filters.status
             );
         }
 
@@ -93,23 +102,23 @@ export class MockSecurityService implements ISecurityService {
     }
 
     async createAuditLog(event: SecurityEvent): Promise<AuditLog> {
-        const newLog: AuditLog = {
-            id: uuidv4(),
+        const log: AuditLog = {
+            id: `log-${Date.now()}`,
             timestamp: new Date().toISOString(),
             eventType: event.type,
-            userId: event.user?.id || 'unknown',
+            action: event.type,
+            userId: '',
+            userEmail: '',  
             userAgent: 'Mock User Agent',
             ipAddress: '127.0.0.1',
-            resourceType: event.resource?.type || 'unknown',
-            resourceId: event.resource?.id || 'unknown',
-            action: event.type,
+            resourceType: event.resource?.type || '',
+            resourceId: event.resource?.id || '',
+            details: event.context || {},
             status: 'success',
-            details: event.context,
-            riskLevel: event.severity
+            riskLevel: 'low'
         };
-
-        this.auditLogs.unshift(newLog);
-        return newLog;
+        this.auditLogs.push(log);
+        return log;
     }
 
     async getSecurityPolicies(): Promise<SecurityPolicy[]> {
@@ -172,7 +181,7 @@ export class MockSecurityService implements ISecurityService {
         if (userId) {
             attempts = attempts.filter(a => a.userId === userId);
         }
-        return attempts.slice(0, 10); // Return last 10 attempts
+        return attempts.filter(a => a.status === 'success' || a.status === 'failure').slice(0, 10);
     }
 
     async createSecurityAlert(alert: Omit<SecurityAlert, 'id' | 'timestamp'>): Promise<SecurityAlert> {
@@ -204,12 +213,35 @@ export class MockSecurityService implements ISecurityService {
     }
 
     async getSecurityMetrics(timeframe: 'day' | 'week' | 'month'): Promise<Record<string, number>> {
-        // Mock metrics based on timeframe
+        const now = new Date();
+        let startDate = new Date();
+        
+        switch (timeframe) {
+            case 'day':
+                startDate.setDate(now.getDate() - 1);
+                break;
+            case 'week':
+                startDate.setDate(now.getDate() - 7);
+                break;
+            case 'month':
+                startDate.setMonth(now.getMonth() - 1);
+                break;
+        }
+
+        const filteredLogs = this.auditLogs.filter(log => 
+            new Date(log.timestamp) >= startDate
+        );
+
+        const filteredAttempts = this.accessAttempts.filter(attempt => 
+            new Date(attempt.timestamp) >= startDate
+        );
+
         return {
-            totalAlerts: this.alerts.length,
-            activeAlerts: this.alerts.filter(a => a.status === 'active').length,
-            failedLogins: this.accessAttempts.filter(a => a.status === 'failure').length,
-            highRiskEvents: this.auditLogs.filter(l => l.riskLevel === 'high').length
+            totalEvents: filteredLogs.length,
+            totalAlerts: this.alerts.filter(a => new Date(a.timestamp) >= startDate).length,
+            activeAlerts: this.alerts.filter(a => a.status === 'active' && new Date(a.timestamp) >= startDate).length,
+            failedLogins: filteredAttempts.filter(a => a.status === 'failure').length,
+            successfulLogins: filteredAttempts.filter(a => a.status === 'success').length
         };
     }
 }

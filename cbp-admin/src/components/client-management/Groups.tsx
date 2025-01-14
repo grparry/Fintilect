@@ -36,7 +36,7 @@ import {
   ApiResponse,
   UserStatus,
 } from '../../types/client.types';
-import { clientService } from '../../services/clients.service';
+import { clientService } from '../../services/factory/ServiceFactory';
 import { useNavigate } from 'react-router-dom';
 import { encodeId } from '../../utils/idEncoder';
 

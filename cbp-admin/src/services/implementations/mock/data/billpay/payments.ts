@@ -1,11 +1,21 @@
 import {
   Payment,
-  PaymentStatus,
   PaymentMethod,
+  PaymentStatus,
   Priority,
-  PaymentHistory,
+  ConfirmationMethod,
+  ConfirmationStatus,
+  PaymentHistory as IPaymentHistory,
   PaymentAction
-} from '../../types/bill-pay.types';
+} from '../../../../../types/bill-pay.types';
+
+export interface PaymentHistory {
+  paymentId: string;
+  action: string;
+  performedBy: string;
+  timestamp: string;
+  details: Record<string, any>;
+}
 
 export const mockPayments: Payment[] = [
   {
@@ -92,56 +102,34 @@ export const mockPendingPayments = [
   }
 ];
 
-export const mockPaymentHistory: PaymentHistory[] = [
+export const mockPaymentHistory: IPaymentHistory[] = [
   {
     paymentId: 'pmt_1',
     action: 'CREATED',
-    performedBy: 'John Doe',
-    timestamp: '2024-12-28T21:42:13-07:00',
-    details: {
-      amount: 500.00,
-      currency: 'USD',
-      method: PaymentMethod.ACH
-    }
-  },
-  {
-    paymentId: 'pmt_1',
-    action: 'APPROVED',
-    performedBy: 'Jane Smith',
-    timestamp: '2024-12-28T21:42:13-07:00',
-    details: {
-      notes: 'Payment approved after verification'
-    }
+    performedBy: 'user_1',
+    timestamp: '2024-12-28T21:43:09-07:00',
+    details: { status: 'PENDING' }
   },
   {
     paymentId: 'pmt_2',
     action: 'COMPLETED',
-    performedBy: 'System',
+    performedBy: 'user_1',
     timestamp: '2024-12-27T12:00:00-07:00',
-    details: {
-      transactionId: 'tx_123456'
-    }
+    details: { status: 'COMPLETED' }
   }
 ];
 
 export const mockPaymentActions: PaymentAction[] = [
   {
-    action: 'create',
-    performedBy: 'user-1',
-    timestamp: new Date().toISOString(),
-    details: {
-      amount: 1000.00,
-      payee: 'John Doe',
-      paymentId: 'pmt_1'
-    }
+    action: 'CREATED',
+    performedBy: 'user_1',
+    timestamp: '2024-12-28T21:43:09-07:00',
+    details: { status: 'PENDING' }
   },
   {
-    action: 'approve',
-    performedBy: 'user-2',
-    timestamp: new Date().toISOString(),
-    details: {
-      paymentId: 'pmt_1',
-      notes: 'Payment approved'
-    }
+    action: 'COMPLETED',
+    performedBy: 'user_1',
+    timestamp: '2024-12-27T12:00:00-07:00',
+    details: { status: 'COMPLETED' }
   }
 ];

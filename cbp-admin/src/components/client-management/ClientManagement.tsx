@@ -9,15 +9,15 @@ import {
   Alert,
   Chip,
 } from '@mui/material';
-import { Client as ClientType, Environment, ClientStatus, ClientType as ClientTypeEnum } from '../../types/client.types';
-import { ApiResponse } from '../../utils/api';
-import { clientService, Client as ServiceClient } from '../../services/clients.service';
+import { Client, Environment, ClientStatus, ClientType } from '../../types/client.types';
+import { clientService } from '../../services/clients.service';
 import ContactInformation from './ContactInformation';
 import Groups from './Groups';
 import UsersWrapper from './wrappers/UsersWrapper';
 import MemberSecuritySettings from './security/MemberSecuritySettings';
 import AuditSearch from './security/AuditSearch';
 import { encodeId } from '../../utils/idEncoder';
+import logger from '../../utils/logger';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -45,94 +45,58 @@ interface ClientManagementProps {
   clientId: string;
 }
 
+const DEFAULT_SETTINGS = {
+  general: {
+    timezone: 'UTC',
+    dateFormat: 'MM/DD/YYYY',
+    timeFormat: '12h',
+    language: 'en',
+  },
+  security: {
+    passwordPolicy: {
+      minLength: 8,
+      requireUppercase: true,
+      requireLowercase: true,
+      requireNumbers: true,
+      requireSpecialChars: true,
+      expirationDays: 90,
+    },
+    loginPolicy: {
+      maxAttempts: 5,
+      lockoutDuration: 30,
+    },
+    sessionTimeout: 30,
+    mfaEnabled: false,
+    ipWhitelist: [],
+  },
+  notifications: {
+    emailEnabled: true,
+    smsEnabled: false,
+    pushEnabled: false,
+    frequency: 'realtime',
+    alertTypes: ['payment', 'security', 'system'],
+  },
+};
+
 const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [client, setClient] = useState<ClientType | null>(null);
+  const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Convert service client to client type
-  const mapServiceClientToClient = (serviceClient: ServiceClient): ClientType => ({
-    ...serviceClient,
-    type: serviceClient.type === 'ENTERPRISE' ? ClientTypeEnum.Enterprise :
-          serviceClient.type === 'SMB' ? ClientTypeEnum.Small :
-          serviceClient.type === 'STARTUP' ? ClientTypeEnum.Medium :
-          ClientTypeEnum.Other,
-    status: serviceClient.status === 'ACTIVE' ? ClientStatus.Active :
-            serviceClient.status === 'INACTIVE' ? ClientStatus.Inactive :
-            ClientStatus.Pending,
-    environment: serviceClient.environment === 'PRODUCTION' ? Environment.Production :
-                serviceClient.environment === 'STAGING' ? Environment.Staging :
-                Environment.Development,
-    domain: '',
-    contactName: '',
-    contactEmail: '',
-    contactPhone: '',
-    settings: {
-      general: {
-        timezone: '',
-        dateFormat: '',
-        timeFormat: '',
-        currency: '',
-        language: ''
-      },
-      security: {
-        passwordPolicy: {
-          minLength: 8,
-          requireUppercase: true,
-          requireLowercase: true,
-          requireNumbers: true,
-          requireSpecialChars: true,
-          expirationDays: 90
-        },
-        loginPolicy: {
-          maxAttempts: 3,
-          lockoutDuration: 30
-        },
-        sessionTimeout: 30,
-        mfaEnabled: false,
-        ipWhitelist: []
-      },
-      notifications: {
-        emailEnabled: true,
-        smsEnabled: false,
-        pushEnabled: false,
-        frequency: 'realtime',
-        alertTypes: []
-      },
-      branding: {
-        logo: '',
-        primaryColor: '',
-        secondaryColor: '',
-        favicon: ''
-      },
-      features: {
-        billPay: false,
-        moneyDesktop: false,
-        mobileDeposit: false,
-        p2p: false,
-        cardControls: false
-      }
-    },
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  });
+  const [activeTab, setActiveTab] = useState(0);
 
   // Load client data
   const loadClientData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await clientService.getClient(clientId);
-      if (response.success) {
-        setClient(mapServiceClientToClient(response.data));
-      } else {
-        setError(response.error?.message || 'Failed to load client details');
-      }
+      const clientData = await clientService.getClient(clientId);
+      setClient(clientData);
+      logger.info('Client data loaded successfully', { clientId });
     } catch (err) {
-      setError('Failed to load client details');
-      console.error('Error loading client:', err);
+      logger.error(`Failed to load client data for client ${clientId}: ${err instanceof Error ? err.message : String(err)}`);
+      setError('Failed to load client data. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -151,23 +115,23 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
     return 0;
   };
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    const basePath = `/admin/client-management/${encodeId(clientId)}`;
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    const basePath = `/clients/${encodeId(clientId)}`;
     switch (newValue) {
       case 0:
-        navigate(basePath, { replace: true });
+        navigate(basePath);
         break;
       case 1:
-        navigate(`${basePath}/users`, { replace: true });
+        navigate(`${basePath}/users`);
         break;
       case 2:
-        navigate(`${basePath}/groups`, { replace: true });
+        navigate(`${basePath}/groups`);
         break;
       case 3:
-        navigate(`${basePath}/security`, { replace: true });
+        navigate(`${basePath}/security`);
         break;
       case 4:
-        navigate(`${basePath}/audit-log`, { replace: true });
+        navigate(`${basePath}/audit-log`);
         break;
     }
   };
@@ -178,21 +142,8 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
         return 'success';
       case ClientStatus.Inactive:
         return 'error';
-      case ClientStatus.Pending:
+      case ClientStatus.Suspended:
         return 'warning';
-      default:
-        return 'default';
-    }
-  };
-
-  const getEnvironmentColor = (env: Environment) => {
-    switch (env) {
-      case Environment.Production:
-        return 'error';
-      case Environment.Staging:
-        return 'warning';
-      case Environment.Development:
-        return 'info';
       default:
         return 'default';
     }
@@ -200,74 +151,63 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
         <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box mb={2}>
+        <Alert severity="error">{error}</Alert>
       </Box>
     );
   }
 
   if (!client) {
     return (
-      <Alert severity="error">
-        Client not found or you don't have permission to view it.
-      </Alert>
+      <Box mb={2}>
+        <Alert severity="error">Client not found</Alert>
+      </Box>
     );
   }
 
   return (
     <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h6" gutterBottom>
+      <Box display="flex" alignItems="center" mb={3}>
+        <Typography variant="h5" component="h1">
           {client.name}
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-          <Chip
-            label={`Environment: ${client.environment.charAt(0).toUpperCase() + client.environment.slice(1)}`}
-            color={getEnvironmentColor(client.environment)}
-            variant="outlined"
-          />
-          <Chip
-            label={`Status: ${client.status}`}
-            color={getStatusColor(client.status)}
-            variant="outlined"
-          />
-          <Chip
-            label={`Type: ${client.type}`}
-            variant="outlined"
-          />
-        </Box>
-        <Typography variant="body2" color="textSecondary">
-          Created: {new Date(client.createdAt).toLocaleDateString()}
-          {' | '}
-          Last Updated: {new Date(client.updatedAt).toLocaleDateString()}
-        </Typography>
+        <Chip
+          label={client.status}
+          color={getStatusColor(client.status)}
+          size="small"
+          sx={{ ml: 2 }}
+        />
+        <Chip
+          label={client.environment}
+          variant="outlined"
+          size="small"
+          sx={{ ml: 1 }}
+        />
       </Box>
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
+      <Tabs value={getCurrentTab()} onChange={handleTabChange} aria-label="client management tabs">
+        <Tab label="Contact Information" id="client-tab-0" />
+        <Tab label="Users" id="client-tab-1" />
+        <Tab label="Groups" id="client-tab-2" />
+        <Tab label="Security Settings" id="client-tab-3" />
+        <Tab label="Audit Log" id="client-tab-4" />
+      </Tabs>
 
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={getCurrentTab()} onChange={handleTabChange}>
-          <Tab label="Contact Information" />
-          <Tab label="Users" />
-          <Tab label="Groups" />
-          <Tab label="Security Settings" />
-          <Tab label="Audit Log" />
-        </Tabs>
-      </Box>
-
-      <Box>
-        <Routes>
-          <Route path="" element={<ContactInformation clientId={clientId} />} />
-          <Route path="users/*" element={<UsersWrapper />} />
-          <Route path="groups/*" element={<Groups clientId={clientId} />} />
-          <Route path="security" element={<MemberSecuritySettings clientId={clientId} />} />
-          <Route path="audit-log" element={<AuditSearch clientId={clientId} />} />
-        </Routes>
-      </Box>
+      <Routes>
+        <Route path="/" element={<ContactInformation client={client} onUpdate={loadClientData} />} />
+        <Route path="/users/*" element={<UsersWrapper client={client} />} />
+        <Route path="/groups/*" element={<Groups client={client} />} />
+        <Route path="/security" element={<MemberSecuritySettings client={client} onUpdate={loadClientData} />} />
+        <Route path="/audit-log" element={<AuditSearch clientId={client.id} />} />
+      </Routes>
     </Box>
   );
 };

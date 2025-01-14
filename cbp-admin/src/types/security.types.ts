@@ -1,5 +1,5 @@
-import { PaginationOptions } from './common.types';
-import { User } from './user.types';
+import { PaginationOptions, BaseEntity } from './common.types';
+import { User } from './client.types';
 
 // General Security Types
 export interface SecuritySettings {
@@ -17,7 +17,7 @@ export interface PasswordPolicy {
     requireLowercase: boolean;
     requireNumbers: boolean;
     requireSpecialChars: boolean;
-    expiryDays: number;
+    expirationDays: number;
     preventReuse: number;
     complexityScore: number;
 }
@@ -65,6 +65,7 @@ export interface AuditLog {
     timestamp: string;
     eventType: string;
     userId: string;
+    userEmail: string;
     userAgent: string;
     ipAddress: string;
     resourceType: string;
@@ -86,6 +87,13 @@ export interface AuditLogFilters extends PaginationOptions {
     actions?: string[];
     riskLevels?: RiskLevel[];
     status?: 'success' | 'failure';
+}
+
+export interface AuditSearchRequest extends AuditLogFilters {
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
 }
 
 export interface SecurityPolicy {
@@ -185,14 +193,8 @@ export interface SecurityMetrics {
 }
 
 // Bill Pay Specific Security Types
-export interface BillPayPasswordPolicy {
-    minLength: number;
-    requireUppercase: boolean;
-    requireLowercase: boolean;
-    requireNumbers: boolean;
-    requireSpecialChars: boolean;
-    expiryDays: number;
-    preventReuse: number;
+export interface BillPayPasswordPolicy extends PasswordPolicy {
+    // Add any additional bill-pay specific fields here if needed
 }
 
 export interface BillPayLoginPolicy {

@@ -1,4 +1,4 @@
-import { Role } from '../../types/client.types';
+import { Role } from '../../../../../types/client.types';
 
 export const mockRoles: Role[] = [
   {

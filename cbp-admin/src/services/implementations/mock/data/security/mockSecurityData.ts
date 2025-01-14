@@ -22,7 +22,7 @@ export const mockSecuritySettings: SecuritySettings = {
         requireLowercase: true,
         requireNumbers: true,
         requireSpecialChars: true,
-        expiryDays: 90,
+        expirationDays: 90,
         preventReuse: 5,
         complexityScore: 3
     },
@@ -92,6 +92,7 @@ export const mockAuditLogs: AuditLog[] = [
         timestamp: new Date().toISOString(),
         eventType: 'login',
         userId: 'user-1',
+        userEmail: 'user1@example.com',
         userAgent: 'Mozilla/5.0',
         ipAddress: '192.168.1.1',
         resourceType: 'session',
@@ -109,6 +110,7 @@ export const mockAuditLogs: AuditLog[] = [
         timestamp: new Date().toISOString(),
         eventType: 'password_reset',
         userId: 'user-2',
+        userEmail: 'user2@example.com',
         userAgent: 'Mozilla/5.0',
         ipAddress: '192.168.1.2',
         resourceType: 'user',
@@ -120,6 +122,39 @@ export const mockAuditLogs: AuditLog[] = [
             method: 'self-service'
         },
         riskLevel: 'medium' as RiskLevel
+    }
+];
+
+export const mockSecurityAuditLog: AuditLog[] = [
+    {
+        id: '1',
+        timestamp: '2025-01-13T13:00:00Z',
+        eventType: 'LOGIN_ATTEMPT',
+        userId: 'user1',
+        userEmail: 'user1@example.com',
+        userAgent: 'Chrome/120.0.0.0',
+        ipAddress: '192.168.1.1',
+        resourceType: 'AUTH',
+        resourceId: 'session1',
+        action: 'LOGIN',
+        status: 'success',
+        details: { browser: 'Chrome', success: true },
+        riskLevel: 'low' as RiskLevel
+    },
+    {
+        id: '2',
+        timestamp: '2025-01-13T13:05:00Z',
+        eventType: 'PASSWORD_CHANGE',
+        userId: 'user2',
+        userEmail: 'user2@example.com',
+        userAgent: 'Mozilla/5.0',
+        ipAddress: '192.168.1.2',
+        resourceType: 'USER',
+        resourceId: 'user2',
+        action: 'PASSWORD_CHANGE',
+        status: 'success',
+        details: { reason: 'expired' },
+        riskLevel: 'low' as RiskLevel
     }
 ];
 

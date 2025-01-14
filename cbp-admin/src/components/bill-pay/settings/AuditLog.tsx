@@ -20,7 +20,8 @@ import {
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { auditService, type AuditEvent } from '../../../services/audit.service';
+import { auditService } from '../../../services/factory/ServiceFactory';
+import { AuditEvent, AuditLogFilters } from '../../../services/interfaces/IAuditService';
 
 interface AuditLogFilters {
   startDate?: string;
@@ -56,8 +57,8 @@ const AuditLog: React.FC = () => {
         pageSize: rowsPerPage,
       };
 
-      const response = await auditService.getAuditLogs(filters);
-      setAuditLogs(response.events);
+      const response = await auditService.searchLogs(filters);
+      setAuditLogs(response.items);
       setTotal(response.total);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to load audit logs');

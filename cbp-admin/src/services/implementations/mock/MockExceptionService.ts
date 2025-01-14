@@ -35,8 +35,8 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     createdAt: string;
   }>> = new Map();
 
-  constructor() {
-    super('/api/exceptions');
+  constructor(basePath: string = '/api/v1/exceptions') {
+    super(basePath);
     this.initializeMockData();
   }
 

@@ -39,7 +39,7 @@ import AddIcon from '@mui/icons-material/Add';
 import PreviewIcon from '@mui/icons-material/Preview';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { notificationTemplateService } from '../../../services/notification-template.service';
+import { notificationService } from '../../../services/factory/ServiceFactory';
 import {
   NotificationTemplate,
   NotificationTemplateInput,
@@ -98,7 +98,7 @@ const NotificationTemplates: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const result = await notificationTemplateService.getTemplates(filters);
+      const result = await notificationService.getTemplates(filters);
       setTemplates(result.templates);
       setTotal(result.total);
     } catch (err: unknown) {
@@ -170,9 +170,9 @@ const NotificationTemplates: React.FC = () => {
       setError(null);
 
       if (templateDialog.mode === 'create') {
-        await notificationTemplateService.createTemplate(formData);
+        await notificationService.createTemplate(formData);
       } else if (templateDialog.template) {
-        await notificationTemplateService.updateTemplate(templateDialog.template.id.toString(), formData);
+        await notificationService.updateTemplate(templateDialog.template.id.toString(), formData);
       }
 
       handleCloseTemplateDialog();
@@ -189,7 +189,7 @@ const NotificationTemplates: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      await notificationTemplateService.deleteTemplate(template.id.toString());
+      await notificationService.deleteTemplate(template.id.toString());
       loadTemplates();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to delete template');
@@ -203,7 +203,7 @@ const NotificationTemplates: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const preview = await notificationTemplateService.previewTemplate(template.id.toString());
+      const preview = await notificationService.previewTemplate(template.id.toString());
       setPreviewDialog({
         open: true,
         subject: preview.subject,
@@ -220,7 +220,7 @@ const NotificationTemplates: React.FC = () => {
   const handleDuplicate = async (templateId: number) => {
     try {
       if (!selectedTemplate) return;
-      const template = await notificationTemplateService.cloneTemplate(
+      const template = await notificationService.cloneTemplate(
         templateId.toString(),
         `${selectedTemplate.name} (Copy)`
       );
@@ -242,7 +242,7 @@ const NotificationTemplates: React.FC = () => {
 
   const handleGetTemplate = async (id: number) => {
     try {
-      const template = await notificationTemplateService.getTemplate(id.toString());
+      const template = await notificationService.getTemplate(id.toString());
       setSelectedTemplate(template);
       setFormData({
         name: template.name,
@@ -260,7 +260,7 @@ const NotificationTemplates: React.FC = () => {
 
   const handleUpdateTemplate = async (id: number, template: Partial<NotificationTemplateInput>) => {
     try {
-      const updatedTemplate = await notificationTemplateService.updateTemplate(id.toString(), template);
+      const updatedTemplate = await notificationService.updateTemplate(id.toString(), template);
       setTemplates(prev => prev.map(t => t.id === id ? updatedTemplate : t));
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to update template');
@@ -269,7 +269,7 @@ const NotificationTemplates: React.FC = () => {
 
   const handleDeleteTemplate = async (id: number) => {
     try {
-      await notificationTemplateService.deleteTemplate(id.toString());
+      await notificationService.deleteTemplate(id.toString());
       setTemplates(prev => prev.filter(t => t.id !== id));
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to delete template');
@@ -278,7 +278,7 @@ const NotificationTemplates: React.FC = () => {
 
   const handlePreviewTemplate = async (id: number) => {
     try {
-      const preview = await notificationTemplateService.previewTemplate(id.toString());
+      const preview = await notificationService.previewTemplate(id.toString());
       setPreviewDialog({
         open: true,
         subject: preview.subject,

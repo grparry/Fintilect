@@ -27,7 +27,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import dayjs, { Dayjs } from 'dayjs';
-import { holidayService } from '../../../services/holiday.service';
+import { holidayService } from '../../../services/factory/ServiceFactory';
 import {
   Holiday,
   HolidayInput,

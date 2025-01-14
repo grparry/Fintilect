@@ -5,9 +5,9 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-import { Member, MemberSearchFilters, MemberStatus, MemberSearchResult } from '../../../types/member-center.types';
+import { Member, MemberSearchFilters, MemberStatus, IMemberService } from '../../../types/member-center.types';
 import type { ApiResponse } from '../../../utils/api';
-import { memberService } from '../../../services/member.service';
+import { memberService } from '../../../services/factory/ServiceFactory';
 import MemberSearchForm from './components/search/MemberSearch';
 import SearchResults from './components/search/SearchResults';
 
@@ -16,10 +16,11 @@ interface MemberSearchProps {
 }
 
 interface MemberSearchState {
-  searchResults: MemberSearchResult | null;
+  searchResults: { items: Member[], total: number } | null;
   loading: boolean;
   error: string | null;
   success: string | null;
+  currentFilters: MemberSearchFilters | null;
 }
 
 const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
@@ -27,30 +28,40 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
     searchResults: null,
     loading: false,
     error: null,
-    success: null
+    success: null,
+    currentFilters: null
   });
+
+  const setLoading = (loading: boolean) => {
+    setState(prev => ({ ...prev, loading }));
+  };
+
+  const setSearchResults = (searchResults: { items: Member[], total: number }) => {
+    setState(prev => ({ ...prev, searchResults }));
+  };
+
+  const setError = (error: string) => {
+    setState(prev => ({ ...prev, error }));
+  };
+
+  const setSuccess = (success: string) => {
+    setState(prev => ({ ...prev, success }));
+  };
+
+  const setCurrentFilters = (filters: MemberSearchFilters) => {
+    setState(prev => ({ ...prev, currentFilters: filters }));
+  };
 
   const handleSearch = async (filters: MemberSearchFilters) => {
     try {
-      setState(prev => ({ ...prev, loading: true, error: null }));
+      setLoading(true);
       const response = await memberService.searchMembers(filters);
-      
-      if (!response.success) {
-        throw new Error(response.error.message);
-      }
-
-      setState(prev => ({
-        ...prev,
-        searchResults: response.data,
-        loading: false
-      }));
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error.message : 'Failed to search members',
-        loading: false
-      }));
-      console.error('Error searching members:', error);
+      setSearchResults(response);
+      setCurrentFilters(filters);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to search members');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,48 +71,33 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
     }
   };
 
-  const handleUpdateStatus = async (member: Member, newStatus: MemberStatus) => {
+  const handleUpdateStatus = async (memberId: string, status: MemberStatus) => {
     try {
-      setState(prev => ({ ...prev, loading: true, error: null }));
-      const response = await memberService.updateMemberStatus(member.id, newStatus);
-      
-      if (!response.success) {
-        throw new Error(response.error.message);
+      setLoading(true);
+      await memberService.updateMemberStatus(memberId, status);
+      // Refresh search results
+      const filters = state.currentFilters;
+      if (filters) {
+        const response = await memberService.searchMembers(filters);
+        setSearchResults(response);
+        setSuccess('Member status updated successfully');
       }
-
-      if (state.searchResults) {
-        const updatedMembers = state.searchResults.members.map((m) =>
-          m.id === member.id ? { ...m, status: newStatus } : m
-        );
-        setState(prev => ({
-          ...prev,
-          searchResults: {
-            ...prev.searchResults!,
-            members: updatedMembers
-          },
-          success: 'Member status updated successfully',
-          loading: false
-        }));
-      }
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error.message : 'Failed to update member status',
-        loading: false
-      }));
-      console.error('Error updating member status:', error);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to update member status');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Box>
       {state.error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setState(prev => ({ ...prev, error: null }))}>
+        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
           {state.error}
         </Alert>
       )}
       {state.success && (
-        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setState(prev => ({ ...prev, success: null }))}>
+        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess(null)}>
           {state.success}
         </Alert>
       )}

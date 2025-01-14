@@ -95,7 +95,11 @@ class Api {
     endpoint: string,
     config: Omit<ApiRequestOptions, 'method'> = {}
   ): Promise<ApiPaginatedResponse<T[]>> {
-    return this.get<T[]>(endpoint, config) as Promise<ApiPaginatedResponse<T[]>>;
+    const response = await this.request<ApiPaginatedResponse<T[]>>(endpoint, {
+      method: 'GET',
+      ...config,
+    });
+    return response;
   }
 
   async post<T>(

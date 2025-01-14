@@ -145,3 +145,5 @@ export interface ProcessorMetrics {
         network: number;
     };
 }
+
+export type { PaginatedResponse } from './common.types';

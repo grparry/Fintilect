@@ -1,16 +1,14 @@
-import { injectable } from 'inversify';
 import { Holiday, HolidayInput, HolidayValidation, HolidayStatus } from '../../../types/bill-pay.types';
 import { IHolidayService } from '../../interfaces/IHolidayService';
 import { BaseMockService } from './BaseMockService';
 import { mockHolidays } from './data/holiday/holidays';
 import { addDays, isWeekend, parseISO } from 'date-fns';
 
-@injectable()
 export class MockHolidayService extends BaseMockService implements IHolidayService {
     private holidays: Map<number, Holiday> = new Map();
 
-    constructor() {
-        super('/api/v1/holidays');
+    constructor(basePath: string = '/api/v1/holidays') {
+        super(basePath);
         this.initializeData();
     }
 
@@ -24,12 +22,10 @@ export class MockHolidayService extends BaseMockService implements IHolidayServi
     }
 
     async getHolidays(): Promise<Holiday[]> {
-        await this.delay();
         return Array.from(this.holidays.values());
     }
 
     async getHolidayById(id: number): Promise<Holiday> {
-        await this.delay();
         const holiday = this.holidays.get(id);
         if (!holiday) {
             throw this.createError(`Holiday not found: ${id}`);
@@ -38,7 +34,6 @@ export class MockHolidayService extends BaseMockService implements IHolidayServi
     }
 
     async createHoliday(holiday: HolidayInput): Promise<Holiday> {
-        await this.delay();
         const newHoliday: Holiday = {
             ...holiday,
             id: Math.max(...Array.from(this.holidays.keys())) + 1,
@@ -50,7 +45,6 @@ export class MockHolidayService extends BaseMockService implements IHolidayServi
     }
 
     async updateHoliday(id: number, holiday: Partial<HolidayInput>): Promise<Holiday> {
-        await this.delay();
         const existingHoliday = await this.getHolidayById(id);
         const updatedHoliday: Holiday = {
             ...existingHoliday,
@@ -62,7 +56,6 @@ export class MockHolidayService extends BaseMockService implements IHolidayServi
     }
 
     async deleteHoliday(id: number): Promise<void> {
-        await this.delay();
         if (!this.holidays.has(id)) {
             throw this.createError(`Holiday not found: ${id}`);
         }
@@ -70,7 +63,6 @@ export class MockHolidayService extends BaseMockService implements IHolidayServi
     }
 
     async validateHoliday(holiday: HolidayInput): Promise<HolidayValidation> {
-        await this.delay();
         const errors: Record<string, string> = {};
         
         if (!holiday.name) {
@@ -93,14 +85,12 @@ export class MockHolidayService extends BaseMockService implements IHolidayServi
     }
 
     async isHoliday(date: string): Promise<boolean> {
-        await this.delay();
         return Array.from(this.holidays.values()).some(
             holiday => holiday.date === date && holiday.status === HolidayStatus.ACTIVE
         );
     }
 
     async getNextBusinessDay(date: string): Promise<string> {
-        await this.delay();
         let nextDate = addDays(parseISO(date), 1);
         
         while (
@@ -114,14 +104,12 @@ export class MockHolidayService extends BaseMockService implements IHolidayServi
     }
 
     async getHolidaysBetweenDates(startDate: string, endDate: string): Promise<Holiday[]> {
-        await this.delay();
         return Array.from(this.holidays.values()).filter(
             holiday => holiday.date >= startDate && holiday.date <= endDate
         );
     }
 
     async getBusinessDayCount(startDate: string, endDate: string): Promise<number> {
-        await this.delay();
         let count = 0;
         let currentDate = parseISO(startDate);
         const end = parseISO(endDate);

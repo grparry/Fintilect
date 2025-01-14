@@ -3,8 +3,11 @@ import {
     User,
     UserGroup,
     UserPreferences,
+    UserFilters,
+    UserStats,
+    UsersResponse,
     UserStatus
-} from '../../types/user.types';
+} from '../../types/client.types';
 import { PaginatedResponse, QueryOptions } from '../../types/index';
 
 /**

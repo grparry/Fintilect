@@ -1,73 +1,148 @@
-import { inject, injectable } from 'inversify';
 import { 
-  Exception, 
-  ExceptionFilter, 
-  ExceptionStats, 
-  CreateExceptionRequest, 
-  UpdateExceptionRequest 
-} from '../../../types/exception.types';
-import { api } from '../../../utils/api';
+    ExceptionTool,
+    ExceptionToolStatus,
+    ExceptionToolPriority,
+    FISException,
+    FISExceptionStatus,
+    FISExceptionHistory,
+    FISResponseHistory,
+    FISRetryResult,
+    FISRefundRequest,
+    ExceptionFilters,
+    FISExceptionFilters
+} from '../../../types/bill-pay.types';
 import { PaginatedResponse } from '../../../types/common.types';
 import { IExceptionService } from '../../interfaces/IExceptionService';
-import { IBaseService } from '../../interfaces/IBaseService';
+import { BaseService } from './BaseService';
 
-@injectable()
-export class ExceptionService implements IExceptionService, IBaseService {
-  private readonly baseUrl = '/api/v1/exceptions';
+export class ExceptionService extends BaseService implements IExceptionService {
+    constructor(basePath: string = '/api/v1/exceptions') {
+        super(basePath);
+    }
 
-  constructor(@inject('ApiClient') private apiClient: typeof api) {}
+    async getExceptions(filters?: ExceptionFilters): Promise<PaginatedResponse<ExceptionTool>> {
+        return this.get<PaginatedResponse<ExceptionTool>>('/exceptions', { params: filters });
+    }
 
-  async createException(request: CreateExceptionRequest): Promise<Exception> {
-    const response = await this.apiClient.post<Exception>(this.baseUrl, request);
-    return response.data;
-  }
+    async getException(exceptionId: string): Promise<ExceptionTool> {
+        return this.get<ExceptionTool>(`/exceptions/${exceptionId}`);
+    }
 
-  async getException(id: string): Promise<Exception> {
-    const response = await this.apiClient.get<Exception>(`${this.baseUrl}/${id}`);
-    return response.data;
-  }
+    async updateExceptionStatus(
+        exceptionId: string,
+        status: ExceptionToolStatus,
+        notes?: string
+    ): Promise<void> {
+        await this.patch<void>(`/exceptions/${exceptionId}/status`, { status, notes });
+    }
 
-  async updateException(id: string, request: UpdateExceptionRequest): Promise<Exception> {
-    const response = await this.apiClient.patch<Exception>(`${this.baseUrl}/${id}`, request);
-    return response.data;
-  }
+    async updateExceptionPriority(
+        exceptionId: string,
+        priority: ExceptionToolPriority
+    ): Promise<void> {
+        await this.patch<void>(`/exceptions/${exceptionId}/priority`, { priority });
+    }
 
-  async listExceptions(filter?: ExceptionFilter, page: number = 1, size: number = 20): Promise<PaginatedResponse<Exception>> {
-    const params = {
-      page,
-      size,
-      ...filter
-    };
-    const response = await this.apiClient.get<PaginatedResponse<Exception>>(this.baseUrl, { params });
-    return response.data;
-  }
+    async getFISExceptions(filters?: FISExceptionFilters): Promise<PaginatedResponse<FISException>> {
+        return this.get<PaginatedResponse<FISException>>('/fis', { params: filters });
+    }
 
-  async getExceptionStats(): Promise<ExceptionStats> {
-    const response = await this.apiClient.get<ExceptionStats>(`${this.baseUrl}/stats`);
-    return response.data;
-  }
+    async getFISException(exceptionId: string): Promise<FISException> {
+        return this.get<FISException>(`/fis/${exceptionId}`);
+    }
 
-  async acknowledgeException(id: string): Promise<Exception> {
-    const response = await this.apiClient.post<Exception>(`${this.baseUrl}/${id}/acknowledge`);
-    return response.data;
-  }
+    async getFISExceptionHistory(exceptionId: string): Promise<FISExceptionHistory[]> {
+        return this.get<FISExceptionHistory[]>(`/fis/${exceptionId}/history`);
+    }
 
-  async resolveException(id: string, resolution: string): Promise<Exception> {
-    const response = await this.apiClient.post<Exception>(`${this.baseUrl}/${id}/resolve`, { resolution });
-    return response.data;
-  }
+    async getFISResponseHistory(requestId: string): Promise<FISResponseHistory[]> {
+        return this.get<FISResponseHistory[]>(`/fis/responses/${requestId}`);
+    }
 
-  async closeException(id: string): Promise<Exception> {
-    const response = await this.apiClient.post<Exception>(`${this.baseUrl}/${id}/close`);
-    return response.data;
-  }
+    async retryFISException(exceptionId: string): Promise<FISRetryResult> {
+        return this.post<FISRetryResult>(`/fis/${exceptionId}/retry`, {});
+    }
 
-  async assignException(id: string, userId: string): Promise<Exception> {
-    const response = await this.apiClient.post<Exception>(`${this.baseUrl}/${id}/assign`, { userId });
-    return response.data;
-  }
+    async requestFISRefund(exceptionId: string, request: FISRefundRequest): Promise<void> {
+        await this.post<void>(`/fis/${exceptionId}/refund`, request);
+    }
 
-  async bulkUpdateExceptions(ids: string[], request: UpdateExceptionRequest): Promise<void> {
-    await this.apiClient.patch(`${this.baseUrl}/bulk`, { ids, ...request });
-  }
+    async getExceptionSummary(): Promise<{
+        total: number;
+        byStatus: Record<ExceptionToolStatus, number>;
+        byPriority: Record<ExceptionToolPriority, number>;
+        avgResolutionTime: number;
+    }> {
+        return this.get<{
+            total: number;
+            byStatus: Record<ExceptionToolStatus, number>;
+            byPriority: Record<ExceptionToolPriority, number>;
+            avgResolutionTime: number;
+        }>(`/exceptions/summary`);
+    }
+
+    async getFISExceptionSummary(): Promise<{
+        total: number;
+        byStatus: Record<FISExceptionStatus, number>;
+        avgRetryCount: number;
+        successRate: number;
+    }> {
+        return this.get<{
+            total: number;
+            byStatus: Record<FISExceptionStatus, number>;
+            avgRetryCount: number;
+            successRate: number;
+        }>(`/fis/summary`);
+    }
+
+    async assignException(exceptionId: string, userId: string): Promise<void> {
+        await this.post<void>(`/exceptions/${exceptionId}/assign`, { userId });
+    }
+
+    async bulkUpdateExceptions(
+        exceptionIds: string[],
+        updates: {
+            status?: ExceptionToolStatus;
+            priority?: ExceptionToolPriority;
+            assignedTo?: string;
+        }
+    ): Promise<void> {
+        await this.patch<void>(`/exceptions/bulk`, { ids: exceptionIds, ...updates });
+    }
+
+    async getExceptionAuditTrail(exceptionId: string): Promise<Array<{
+        action: string;
+        performedBy: string;
+        timestamp: string;
+        details: Record<string, unknown>;
+    }>> {
+        return this.get<Array<{
+            action: string;
+            performedBy: string;
+            timestamp: string;
+            details: Record<string, unknown>;
+        }>>(`/exceptions/${exceptionId}/audit`);
+    }
+
+    async addExceptionNote(
+        exceptionId: string,
+        note: string,
+        userId: string
+    ): Promise<void> {
+        await this.post<void>(`/exceptions/${exceptionId}/notes`, { note, userId });
+    }
+
+    async getExceptionNotes(exceptionId: string): Promise<Array<{
+        id: string;
+        content: string;
+        createdBy: string;
+        createdAt: string;
+    }>> {
+        return this.get<Array<{
+            id: string;
+            content: string;
+            createdBy: string;
+            createdAt: string;
+        }>>(`/exceptions/${exceptionId}/notes`);
+    }
 }

@@ -32,9 +32,13 @@ import { mockTemplates, initialHolidays } from './data/billpay/settings';
 import { mockClients, mockPayees } from './data/billpay/clients';
 import { mockPaymentActions } from './data/billpay/payments';
 import { v4 as uuidv4 } from 'uuid';
+import { BaseMockService } from './BaseMockService';
 
-export class MockBillPayService implements IBillPayService {
-    basePath = '/api/bill-pay';
+export class MockBillPayService extends BaseMockService implements IBillPayService {
+    constructor(basePath: string = '/api/v1/bill-pay') {
+        super(basePath);
+    }
+
     private config: BillPayConfig = {
         id: 'config-1',
         cutoffTime: '16:00',

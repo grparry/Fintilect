@@ -22,7 +22,7 @@ interface ApiClientOptions extends RequestInit {
   responseType?: 'json' | 'blob';
 }
 
-class ApiClient {
+export class ApiClient {
   private readonly baseUrl: string;
 
   constructor() {

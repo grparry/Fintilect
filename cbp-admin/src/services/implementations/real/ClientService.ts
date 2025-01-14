@@ -19,16 +19,21 @@ import {
     AuditSearchRequest,
     ContactInformation,
     Address,
-    PaginatedResponse
+    PaginatedResponse,
+    SecuritySettings,
+    ApiResponse
 } from '../../../types/client.types';
+import logger from '../../../utils/logger';
 
 /**
  * Real implementation of ClientService
  * Communicates with the backend API
  */
 export class ClientService extends BaseService implements IClientService {
-    constructor() {
-        super('/api/v1/clients');
+    constructor(
+        basePath: string = '/api/v1/clients'
+    ) {
+        super(basePath);
     }
 
     async getClients(params?: {
@@ -183,5 +188,39 @@ export class ClientService extends BaseService implements IClientService {
             activeServices: number;
             lastActivityDate: string;
         }>(`/${clientId}/stats`);
+    }
+
+    async getPermissions(): Promise<Permission[]> {
+        try {
+            return await this.get<Permission[]>('/permissions');
+        } catch (error) {
+            throw this.handleError(error, 'Failed to get permissions');
+        }
+    }
+
+    async getSecuritySettings(clientId: string): Promise<SecuritySettings> {
+        try {
+            this.validateRequired({ clientId }, ['clientId']);
+            return await this.get<SecuritySettings>(`/${clientId}/security-settings`);
+        } catch (error) {
+            throw this.handleError(error, 'Failed to get security settings');
+        }
+    }
+
+    async updateSecuritySettings(clientId: string, settings: Partial<SecuritySettings>): Promise<SecuritySettings> {
+        try {
+            this.validateRequired({ clientId }, ['clientId']);
+            return await this.put<SecuritySettings>(`/${clientId}/security-settings`, settings);
+        } catch (error) {
+            throw this.handleError(error, 'Failed to update security settings');
+        }
+    }
+
+    protected handleError(error: unknown, defaultMessage: string): Error {
+        logger.error(`${defaultMessage}: ${error instanceof Error ? error.message : String(error)}`);
+        if (error instanceof Error) {
+            return error;
+        }
+        return new Error(defaultMessage);
     }
 }

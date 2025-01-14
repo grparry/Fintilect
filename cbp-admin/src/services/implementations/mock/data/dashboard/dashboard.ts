@@ -4,7 +4,6 @@ import {
   UserActivityData,
   ChartData,
   ChartDataPoint,
-  DashboardAlert,
   DashboardTask,
   DashboardNews
 } from '../../../../../types/dashboard.types';
@@ -84,8 +83,8 @@ export const mockDashboardMetrics: DashboardMetrics = {
   transactions: mockTransactionStats,
   userActivity: mockUserActivityData,
   charts: {
-    transactionVolume: mockChartData('day', 'hour'),
-    userGrowth: mockChartData('month', 'month'),
+    transactionVolume: mockChartData(TimeRange.DAY, 'hour'),
+    userGrowth: mockChartData(TimeRange.MONTH, 'month'),
     activityBreakdown: {
       labels: ['Active', 'Inactive', 'New'] as const,
       datasets: [{
@@ -100,23 +99,6 @@ export const mockDashboardMetrics: DashboardMetrics = {
 
 export const mockDashboardStats = mockTransactionStats;
 export const mockDashboardCharts = mockChartData;
-
-export const mockDashboardAlerts: DashboardAlert[] = [
-  {
-    id: '1',
-    type: 'warning',
-    message: 'High transaction volume detected',
-    timestamp: new Date().toISOString(),
-    read: false
-  },
-  {
-    id: '2',
-    type: 'error',
-    message: 'Failed payment batch detected',
-    timestamp: new Date().toISOString(),
-    read: true
-  }
-];
 
 export const mockDashboardTasks: DashboardTask[] = [
   {
@@ -194,5 +176,29 @@ export const mockPerformanceInsights = [
     metric: 850,
     trend: 'stable' as const,
     timestamp: new Date('2025-01-11T17:33:16-07:00').toISOString()
+  }
+];
+
+export const mockDashboardAlerts = [
+  {
+    id: '1',
+    type: 'warning',
+    message: 'High transaction volume detected',
+    timestamp: new Date('2025-01-13T09:32:04-07:00').toISOString(),
+    read: false
+  },
+  {
+    id: '2',
+    type: 'info',
+    message: 'System maintenance scheduled for tonight',
+    timestamp: new Date('2025-01-13T09:32:04-07:00').toISOString(),
+    read: true
+  },
+  {
+    id: '3',
+    type: 'error',
+    message: 'Failed transactions above threshold',
+    timestamp: new Date('2025-01-13T09:32:04-07:00').toISOString(),
+    read: false
   }
 ];

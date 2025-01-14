@@ -1,123 +1,73 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { LoginCredentials } from '../types/auth.types';
-import GlobalProfiler from '../components/common/GlobalProfiler';
-import { mockUsers } from '../mocks/client-management/mockClientData';
+import { authService } from '../services/factory/ServiceFactory';
+import { LoginCredentials, AuthState } from '../types/auth.types';
 import { User } from '../types/client.types';
 
-interface AuthContextProps {
-  isAuthenticated: boolean;
-  user: User | null;
-  loading: boolean;
-  error: string | null;
+interface AuthContextType {
+  state: AuthState;
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
-  refreshToken: () => Promise<void>;
-  clearError: () => void;
 }
 
-const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
-export { AuthContext };
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handlePerformanceMeasurement = useCallback((measurement: {
-    componentName: string;
-    phase: 'mount' | 'update';
-    duration: number;
-    timestamp: number;
-  }) => {
-    console.log(`Auth Performance Measurement:`, measurement);
-    // TODO: You could send this data to your monitoring service
-  }, []);
+  const [state, setState] = useState<AuthState>({
+    isAuthenticated: false,
+    user: null,
+    loading: false,
+    error: null
+  });
 
   const login = useCallback(async (credentials: LoginCredentials) => {
-    setLoading(true);
-    setError(null);
+    setState(prev => ({ ...prev, loading: true, error: null }));
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const foundUser = mockUsers.find(u => 
-        u.username === credentials.username && 
-        u.password === credentials.password
-      );
-      
-      if (foundUser) {
-        setIsAuthenticated(true);
-        setUser(foundUser);
-        if (credentials.rememberMe) {
-          localStorage.setItem('auth', JSON.stringify({
-            id: foundUser.id,
-            username: foundUser.username,
-            role: foundUser.role
-          }));
-        }
-      } else {
-        throw new Error('Invalid credentials');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
-      throw err;
-    } finally {
-      setLoading(false);
+      const response = await authService.login(credentials);
+      setState(prev => ({
+        ...prev,
+        isAuthenticated: true,
+        user: response.user,
+        loading: false
+      }));
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : 'An error occurred',
+        loading: false
+      }));
     }
   }, []);
 
   const logout = useCallback(async () => {
-    setLoading(true);
+    setState(prev => ({ ...prev, loading: true }));
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setIsAuthenticated(false);
-      setUser(null);
-      localStorage.removeItem('auth');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Logout failed');
-      throw err;
-    } finally {
-      setLoading(false);
+      await authService.logout();
+      setState({
+        isAuthenticated: false,
+        user: null,
+        loading: false,
+        error: null
+      });
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : 'An error occurred',
+        loading: false
+      }));
     }
   }, []);
 
-  const refreshToken = useCallback(async () => {
-    // TODO: Implement token refresh logic
-    throw new Error('Not implemented');
-  }, []);
-
-  const clearError = useCallback(() => {
-    setError(null);
-  }, []);
-
   return (
-    <GlobalProfiler id="auth-context" onMeasurement={handlePerformanceMeasurement}>
-      <AuthContext.Provider
-        value={{
-          isAuthenticated,
-          user,
-          loading,
-          error,
-          login,
-          logout,
-          refreshToken,
-          clearError
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    </GlobalProfiler>
+    <AuthContext.Provider value={{ state, login, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };

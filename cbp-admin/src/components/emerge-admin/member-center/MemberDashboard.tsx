@@ -70,7 +70,7 @@ import {
   MemberStatus,
 } from '../../../types/member-center.types';
 import type { ApiResponse } from '../../../utils/api';
-import { memberService } from '../../../services/member.service';
+import { memberService } from '../../../services/factory/ServiceFactory';
 import MemberSearch from './components/search/MemberSearch';
 import SearchResults from './components/search/SearchResults';
 import MemberSecuritySettings from '../security/MemberSecuritySettings';
@@ -104,68 +104,41 @@ const MemberDashboard: React.FC = () => {
 
   const handleSearch = useCallback(async (filters: MemberSearchFilters) => {
     try {
-      setSearching(true);
-      setError(null);
+      setLoading(true);
       const response = await memberService.searchMembers(filters);
-      if (response.success) {
-        setSearchResults(response.data);
-      } else {
-        setError(response.error.message);
-        setSearchResults(null);
-      }
-    } catch (err) {
-      setError('Failed to search members');
-      console.error('Error searching members:', err);
-      setSearchResults(null);
-    } finally {
+      setSearchResults(response.items);
       setSearching(false);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to search members');
+    } finally {
+      setLoading(false);
     }
   }, []);
 
-  const handleMemberSelect = async (member: Member) => {
+  const handleMemberSelect = async (memberId: string) => {
     try {
       setLoading(true);
-      setError(null);
-      const response = await memberService.getMemberDetails(member.id);
-      if (response.success) {
-        setSelectedMember(response.data);
-        setActiveTab(0); // Reset to overview tab
-      } else {
-        setError(response.error.message);
-        setSelectedMember(null);
-      }
-    } catch (err) {
-      setError('Failed to load member details');
-      console.error('Error loading member details:', err);
-      setSelectedMember(null);
+      const member = await memberService.getMember(memberId);
+      setSelectedMember(member);
+      setActiveTab(0); // Reset to overview tab
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to load member details');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpdateStatus = async (member: Member, newStatus: MemberStatus) => {
+  const handleUpdateStatus = async (memberId: string, status: MemberStatus) => {
     try {
-      setError(null);
-      const response = await memberService.updateMemberStatus(member.id, newStatus);
-      if (response.success) {
-        if (searchResults) {
-          const updatedMembers = searchResults.members.map(m =>
-            m.id === member.id ? { ...m, status: newStatus } : m
-          );
-          setSearchResults({
-            ...searchResults,
-            members: updatedMembers,
-          });
-        }
-        if (selectedMember?.id === member.id) {
-          setSelectedMember(selectedMember ? { ...selectedMember, status: newStatus } : null);
-        }
-      } else {
-        setError(response.error.message);
-      }
-    } catch (err) {
-      setError('Failed to update member status');
-      console.error('Error updating member status:', err);
+      setLoading(true);
+      await memberService.updateMemberStatus(memberId, status);
+      // Refresh member details
+      const member = await memberService.getMember(memberId);
+      setSelectedMember(member);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to update member status');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -173,19 +146,16 @@ const MemberDashboard: React.FC = () => {
     if (!selectedMember) return;
     
     try {
-      setError(null);
-      const response = await memberService.removeDevice(selectedMember.id, deviceId);
-      if (response.success) {
-        setSelectedMember({
-          ...selectedMember,
-          devices: selectedMember.devices?.filter(device => device.id !== deviceId) || []
-        });
-      } else {
-        setError(response.error.message);
-      }
-    } catch (err) {
-      setError('Failed to remove device');
-      console.error('Error removing device:', err);
+      setLoading(true);
+      await memberService.removeDevice(selectedMember.id, deviceId);
+      setSelectedMember({
+        ...selectedMember,
+        devices: selectedMember.devices?.filter(device => device.id !== deviceId) || []
+      });
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to remove device');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -199,17 +169,10 @@ const MemberDashboard: React.FC = () => {
   const loadMemberActivities = async (memberId: string) => {
     try {
       setLoadingActivities(true);
-      const response = await memberService.getMemberActivity(memberId);
-      if (response.success) {
-        setActivities(response.data.items);
-      } else {
-        setError(response.error.message);
-        setActivities([]);
-      }
-    } catch (err) {
-      console.error('Error loading member activities:', err);
-      setError('Failed to load member activities');
-      setActivities([]);
+      const activities = await memberService.getMemberActivity(memberId);
+      setActivities(activities);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to load member activities');
     } finally {
       setLoadingActivities(false);
     }

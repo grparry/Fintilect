@@ -12,6 +12,8 @@ import { IReportService } from '../interfaces/IReportService';
 import { IHolidayService } from '../interfaces/IHolidayService';
 import { IPermissionService } from '../interfaces/IPermissionService';
 import { IDashboardService } from '../interfaces/IDashboardService';
+import { IAuditService } from '../interfaces/IAuditService';
+import { IMemberService } from '../interfaces/IMemberService';
 
 // Import real service implementations
 import { UserService } from '../implementations/real/UserService';
@@ -27,6 +29,8 @@ import { ReportService } from '../implementations/real/ReportService';
 import { HolidayService } from '../implementations/real/HolidayService';
 import { PermissionService } from '../implementations/real/PermissionService';
 import { DashboardService } from '../implementations/real/DashboardService';
+import { AuditService } from '../implementations/real/AuditService';
+import { MemberService } from '../implementations/real/MemberService';
 
 // Import mock service implementations
 import { MockUserService } from '../implementations/mock/MockUserService';
@@ -42,6 +46,8 @@ import { MockReportService } from '../implementations/mock/MockReportService';
 import { MockHolidayService } from '../implementations/mock/MockHolidayService';
 import { MockPermissionService } from '../implementations/mock/MockPermissionService';
 import { MockDashboardService } from '../implementations/mock/MockDashboardService';
+import { MockAuditService } from '../implementations/mock/MockAuditService';
+import { MockMemberService } from '../implementations/mock/MockMemberService';
 
 import { getConfig } from '../../config/api.config';
 
@@ -49,181 +55,195 @@ import { getConfig } from '../../config/api.config';
  * Service factory for managing service instantiation
  */
 export class ServiceFactory {
-  private static instances: Map<string, IBaseService> = new Map();
-  private static useMock: boolean = getConfig().useMockServices;
+  private static instance: ServiceFactory;
+  private services: Map<string, IUserService | IClientService | IBillPayService | IAuthService | ISecurityService | 
+    INotificationService | IExceptionService | IPayeeService | IPaymentProcessorService | IReportService | 
+    IHolidayService | IPermissionService | IDashboardService | IAuditService | IMemberService> = new Map();
 
-  /**
-   * Get service instance with caching
-   */
-  private static getInstance<T extends IBaseService>(
-    key: string,
-    createReal: () => T,
-    createMock: () => T
-  ): T {
-    if (!ServiceFactory.instances.has(key)) {
-      const instance = ServiceFactory.useMock ? createMock() : createReal();
-      ServiceFactory.instances.set(key, instance);
+  private constructor() {
+    // Initialize services
+    this.initializeServices();
+  }
+
+  static getInstance(): ServiceFactory {
+    if (!ServiceFactory.instance) {
+      ServiceFactory.instance = new ServiceFactory();
     }
-    return ServiceFactory.instances.get(key) as T;
+    return ServiceFactory.instance;
   }
 
-  /**
-   * Get UserService instance
-   */
-  static getUserService(): IUserService {
-    return ServiceFactory.getInstance<IUserService>(
-      'user',
-      () => new UserService(),
-      () => new MockUserService()
-    );
-  }
-
-  /**
-   * Get ClientService instance
-   */
-  static getClientService(): IClientService {
-    return ServiceFactory.getInstance<IClientService>(
-      'client',
-      () => new ClientService(),
-      () => new MockClientService()
-    );
-  }
-
-  /**
-   * Get BillPayService instance
-   */
-  static getBillPayService(): IBillPayService {
-    return ServiceFactory.getInstance<IBillPayService>(
-      'billPay',
-      () => new BillPayService(),
-      () => new MockBillPayService()
-    );
-  }
-
-  /**
-   * Get AuthService instance
-   */
-  static getAuthService(): IAuthService {
-    return ServiceFactory.getInstance<IAuthService>(
-      'auth',
-      () => new AuthService(),
-      () => new MockAuthService()
-    );
-  }
-
-  /**
-   * Get SecurityService instance
-   */
-  static getSecurityService(): ISecurityService {
-    return ServiceFactory.getInstance<ISecurityService>(
-      'security',
-      () => new SecurityService(),
-      () => new MockSecurityService()
-    );
-  }
-
-  /**
-   * Get NotificationService instance
-   */
-  static getNotificationService(): INotificationService {
-    return ServiceFactory.getInstance<INotificationService>(
-      'notification',
-      () => new NotificationService(),
-      () => new MockNotificationService()
-    );
-  }
-
-  /**
-   * Get ExceptionService instance
-   */
-  static getExceptionService(): IExceptionService {
-    return ServiceFactory.getInstance<IExceptionService>(
-      'exception',
-      () => new ExceptionService(),
-      () => new MockExceptionService()
-    );
-  }
-
-  /**
-   * Get PayeeService instance
-   */
-  static getPayeeService(): IPayeeService {
-    return ServiceFactory.getInstance<IPayeeService>(
-      'payee',
-      () => new PayeeService(),
-      () => new MockPayeeService()
-    );
-  }
-
-  /**
-   * Get PaymentProcessorService instance
-   */
-  static getPaymentProcessorService(): IPaymentProcessorService {
-    return ServiceFactory.getInstance<IPaymentProcessorService>(
-      'paymentProcessor',
-      () => new PaymentProcessorService(),
-      () => new MockPaymentProcessorService()
-    );
-  }
-
-  /**
-   * Get ReportService instance
-   */
-  static getReportService(): IReportService {
-    return ServiceFactory.getInstance<IReportService>(
-      'report',
-      () => new ReportService(),
-      () => new MockReportService()
-    );
-  }
-
-  /**
-   * Get HolidayService instance
-   */
-  static getHolidayService(): IHolidayService {
-    return ServiceFactory.getInstance<IHolidayService>(
-      'holiday',
-      () => new HolidayService(),
-      () => new MockHolidayService()
-    );
-  }
-
-  /**
-   * Get PermissionService instance
-   */
-  static getPermissionService(): IPermissionService {
-    return ServiceFactory.getInstance<IPermissionService>(
-      'permission',
-      () => new PermissionService(),
-      () => new MockPermissionService()
-    );
-  }
-
-  /**
-   * Get DashboardService instance
-   */
-  static getDashboardService(): IDashboardService {
-    return ServiceFactory.getInstance<IDashboardService>(
-      'dashboard',
-      () => new DashboardService(),
-      () => new MockDashboardService()
-    );
-  }
-
-  /**
-   * Clear all cached instances
-   */
-  static clearInstances(): void {
-    ServiceFactory.instances.clear();
-  }
-
-  /**
-   * Set whether to use mock services
-   */
-  static setUseMock(useMock: boolean): void {
-    if (ServiceFactory.useMock !== useMock) {
-      ServiceFactory.useMock = useMock;
-      ServiceFactory.clearInstances();
+  private initializeServices(): void {
+    if (process.env.USE_MOCK_SERVICES === 'true') {
+      // Initialize mock services
+      this.services.set('user', new MockUserService('/api/v1/users'));
+      this.services.set('client', new MockClientService('/api/v1/clients'));
+      this.services.set('billPay', new MockBillPayService('/api/v1/bill-pay'));
+      this.services.set('auth', new MockAuthService('/api/v1/auth'));
+      this.services.set('security', new MockSecurityService('/api/v1/security'));
+      this.services.set('notification', new MockNotificationService('/api/v1/notifications'));
+      this.services.set('exception', new MockExceptionService('/api/v1/exceptions'));
+      this.services.set('payee', new MockPayeeService('/api/v1/payees'));
+      this.services.set('paymentProcessor', new MockPaymentProcessorService('/api/v1/payment-processor'));
+      this.services.set('report', new MockReportService('/api/v1/reports'));
+      this.services.set('holiday', new MockHolidayService('/api/v1/holidays'));
+      this.services.set('permission', new MockPermissionService('/api/v1/permissions'));
+      this.services.set('dashboard', new MockDashboardService('/api/v1/dashboard'));
+      this.services.set('audit', new MockAuditService('/api/v1/audit'));
+      this.services.set('member', new MockMemberService('/api/v1/members'));
+    } else {
+      // Initialize real services with ApiClient
+      this.services.set('user', new UserService('/api/v1/users'));
+      this.services.set('client', new ClientService('/api/v1/clients'));
+      this.services.set('billPay', new BillPayService('/api/v1/bill-pay'));
+      this.services.set('auth', new AuthService('/api/v1/auth'));
+      this.services.set('security', new SecurityService('/api/v1/security'));
+      this.services.set('notification', new NotificationService('/api/v1/notifications'));
+      this.services.set('exception', new ExceptionService('/api/v1/exceptions'));
+      this.services.set('payee', new PayeeService('/api/v1/payees'));
+      this.services.set('paymentProcessor', new PaymentProcessorService('/api/v1/payment-processor'));
+      this.services.set('report', new ReportService('/api/v1/reports'));
+      this.services.set('holiday', new HolidayService('/api/v1/holidays'));
+      this.services.set('permission', new PermissionService('/api/v1/permissions'));
+      this.services.set('dashboard', new DashboardService('/api/v1/dashboard'));
+      this.services.set('audit', new AuditService('/api/v1/audit'));
+      this.services.set('member', new MemberService('/api/v1/members'));
     }
+  }
+
+  getUserService(): IUserService {
+    const service = this.services.get('user');
+    if (!service) {
+      throw new Error('UserService not initialized');
+    }
+    return service as IUserService;
+  }
+
+  getClientService(): IClientService {
+    const service = this.services.get('client');
+    if (!service) {
+      throw new Error('ClientService not initialized');
+    }
+    return service as IClientService;
+  }
+
+  getBillPayService(): IBillPayService {
+    const service = this.services.get('billPay');
+    if (!service) {
+      throw new Error('BillPayService not initialized');
+    }
+    return service as IBillPayService;
+  }
+
+  getAuthService(): IAuthService {
+    const service = this.services.get('auth');
+    if (!service) {
+      throw new Error('AuthService not initialized');
+    }
+    return service as IAuthService;
+  }
+
+  getSecurityService(): ISecurityService {
+    const service = this.services.get('security');
+    if (!service) {
+      throw new Error('SecurityService not initialized');
+    }
+    return service as ISecurityService;
+  }
+
+  getNotificationService(): INotificationService {
+    const service = this.services.get('notification');
+    if (!service) {
+      throw new Error('NotificationService not initialized');
+    }
+    return service as INotificationService;
+  }
+
+  getExceptionService(): IExceptionService {
+    const service = this.services.get('exception');
+    if (!service) {
+      throw new Error('ExceptionService not initialized');
+    }
+    return service as IExceptionService;
+  }
+
+  getPayeeService(): IPayeeService {
+    const service = this.services.get('payee');
+    if (!service) {
+      throw new Error('PayeeService not initialized');
+    }
+    return service as IPayeeService;
+  }
+
+  getPaymentProcessorService(): IPaymentProcessorService {
+    const service = this.services.get('paymentProcessor');
+    if (!service) {
+      throw new Error('PaymentProcessorService not initialized');
+    }
+    return service as IPaymentProcessorService;
+  }
+
+  getReportService(): IReportService {
+    const service = this.services.get('report');
+    if (!service) {
+      throw new Error('ReportService not initialized');
+    }
+    return service as IReportService;
+  }
+
+  getHolidayService(): IHolidayService {
+    const service = this.services.get('holiday');
+    if (!service) {
+      throw new Error('HolidayService not initialized');
+    }
+    return service as IHolidayService;
+  }
+
+  getPermissionService(): IPermissionService {
+    const service = this.services.get('permission');
+    if (!service) {
+      throw new Error('PermissionService not initialized');
+    }
+    return service as IPermissionService;
+  }
+
+  getDashboardService(): IDashboardService {
+    const service = this.services.get('dashboard');
+    if (!service) {
+      throw new Error('DashboardService not initialized');
+    }
+    return service as IDashboardService;
+  }
+
+  getAuditService(): IAuditService {
+    const service = this.services.get('audit');
+    if (!service) {
+      throw new Error('AuditService not initialized');
+    }
+    return service as IAuditService;
+  }
+
+  getMemberService(): IMemberService {
+    const service = this.services.get('member');
+    if (!service) {
+      throw new Error('MemberService not initialized');
+    }
+    return service as IMemberService;
   }
 }
+
+// Export service instances
+export const userService = ServiceFactory.getInstance().getUserService();
+export const clientService = ServiceFactory.getInstance().getClientService();
+export const billPayService = ServiceFactory.getInstance().getBillPayService();
+export const authService = ServiceFactory.getInstance().getAuthService();
+export const securityService = ServiceFactory.getInstance().getSecurityService();
+export const notificationService = ServiceFactory.getInstance().getNotificationService();
+export const exceptionService = ServiceFactory.getInstance().getExceptionService();
+export const payeeService = ServiceFactory.getInstance().getPayeeService();
+export const paymentProcessorService = ServiceFactory.getInstance().getPaymentProcessorService();
+export const reportService = ServiceFactory.getInstance().getReportService();
+export const holidayService = ServiceFactory.getInstance().getHolidayService();
+export const permissionService = ServiceFactory.getInstance().getPermissionService();
+export const dashboardService = ServiceFactory.getInstance().getDashboardService();
+export const auditService = ServiceFactory.getInstance().getAuditService();
+export const memberService = ServiceFactory.getInstance().getMemberService();

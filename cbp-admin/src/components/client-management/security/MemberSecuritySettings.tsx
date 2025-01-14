@@ -12,7 +12,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { SecuritySettings } from '../../../types/client.types';
+import { SecuritySettings } from '../../../types/security.types';
 import { clientService } from '../../../services/clients.service';
 
 interface MemberSecuritySettingsProps {

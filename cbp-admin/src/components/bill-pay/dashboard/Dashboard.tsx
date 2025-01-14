@@ -39,7 +39,7 @@ import {
   TimeRangeOption,
   ChartViewOption
 } from '../../../types/dashboard.types';
-import { dashboardService } from '../../../services/dashboard.service';
+import { dashboardService } from '../../../services/factory/ServiceFactory';
 import { TimeRange } from '../../../types';
 
 interface DashboardState {

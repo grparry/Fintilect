@@ -36,7 +36,7 @@ import {
   PermissionGroupFilters,
   PermissionCategory
 } from '../../../types/permission.types';
-import { permissionService } from '../../../services/permission.service';
+import { permissionService } from '../../../services/factory/ServiceFactory';
 
 const PermissionGroups: React.FC = () => {
   // State

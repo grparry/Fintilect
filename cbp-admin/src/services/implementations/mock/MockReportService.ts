@@ -1,5 +1,3 @@
-import { injectable } from 'inversify';
-import { IReportService } from '../../interfaces/IReportService';
 import {
     ReportType,
     ReportData,
@@ -20,8 +18,7 @@ import { PaginatedResponse } from '../../../types/common.types';
 import { BaseMockService } from './BaseMockService';
 import { mockReportData } from './data/report/reports';
 
-@injectable()
-export class MockReportService extends BaseMockService implements IReportService {
+export class MockReportService extends BaseMockService {
     private reports: Map<string, ReportData> = new Map();
     private reportTypes: ReportType[] = ['all', 'login', 'payments', 'system'];
     private exportOptions: ExportOptions = {
@@ -30,8 +27,8 @@ export class MockReportService extends BaseMockService implements IReportService
         dateFormat: 'YYYY-MM-DD'
     };
 
-    constructor() {
-        super('/api/v1/reports');
+    constructor(basePath: string = '/api/v1/reports') {
+        super(basePath);
         this.initializeData();
     }
 

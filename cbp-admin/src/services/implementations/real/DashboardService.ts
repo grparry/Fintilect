@@ -1,4 +1,3 @@
-import { injectable } from 'inversify';
 import { IDashboardService } from '../../interfaces/IDashboardService';
 import {
   DashboardMetrics,
@@ -11,12 +10,13 @@ import {
 import { TimeRange } from '../../../types';
 import { BaseService } from './BaseService';
 
-@injectable()
 export class DashboardService extends BaseService implements IDashboardService {
   private subscriptions: Map<string, (updates: Partial<DashboardMetrics>) => void> = new Map();
 
-  constructor() {
-    super('/api/v1/dashboard');
+  constructor(
+    basePath: string = '/api/v1/dashboard'
+  ) {
+    super(basePath);
   }
 
   async getDashboardMetrics(filters: DashboardFilters): Promise<DashboardMetrics> {

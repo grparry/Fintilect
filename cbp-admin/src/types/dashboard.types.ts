@@ -1,5 +1,7 @@
 import { TimeRange } from './index';
 
+// Dashboard related types
+
 export interface ChartDataPoint {
   date: string;
   value: number;
@@ -32,6 +34,10 @@ export interface DashboardFilters {
   timeRange: TimeRange;
   category?: string;
   status?: string;
+  dateRange?: {
+    startDate: string;
+    endDate: string;
+  };
 }
 
 export interface TransactionStats {
@@ -69,4 +75,28 @@ export interface DashboardWidgetProps {
   change?: number;
   changeType?: 'increase' | 'decrease';
   loading?: boolean;
+}
+
+export interface DashboardTask {
+  id: string;
+  title: string;
+  priority: 'high' | 'medium' | 'low';
+  dueDate: string;
+  completed: boolean;
+}
+
+export interface DashboardNews {
+  id: string;
+  title: string;
+  content: string;
+  date: string;
+  category: 'maintenance' | 'feature' | 'update' | 'alert';
+}
+
+export interface DashboardAlert {
+  id: string;
+  type: 'warning' | 'info' | 'error';
+  message: string;
+  timestamp: string;
+  read: boolean;
 }

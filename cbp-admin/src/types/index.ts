@@ -1,5 +1,7 @@
 // Common type definitions used across the application
 
+import { PaginationOptions } from './common.types';
+
 // User related types
 export interface User {
   id: number;
@@ -47,7 +49,12 @@ export interface UserStats {
 export type UsersResponse = PaginatedResponse<User>;
 
 // Dashboard related types
-export type TimeRange = 'day' | 'week' | 'month' | 'year';
+export enum TimeRange {
+  DAY = 'day',
+  WEEK = 'week',
+  MONTH = 'month',
+  YEAR = 'year'
+}
 
 export interface DashboardStats {
   totalUsers: number;
@@ -104,12 +111,7 @@ export interface FilterOptions {
   [key: string]: any;
 }
 
-export interface PaginationOptions {
-  page: number;
-  limit: number;
-  sortBy?: string;
-  sortOrder?: SortDirection;
-}
+export type PaginationParams = PaginationOptions;
 
 export interface QueryOptions {
   pagination?: PaginationOptions;
@@ -129,9 +131,6 @@ export interface PaginatedResponse<T> {
   pagination: Pagination;
 }
 
-// For backward compatibility
-export type PaginationParams = PaginationOptions;
-
 // Form related types
 export interface SelectOption {
   value: string | number;
@@ -144,3 +143,5 @@ export interface DateRange {
   startDate: string;
   endDate: string;
 }
+
+export type { PaginationOptions } from './common.types';

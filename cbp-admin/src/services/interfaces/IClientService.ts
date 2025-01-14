@@ -234,4 +234,25 @@ export interface IClientService extends IBaseService {
         activeServices: number;
         lastActivityDate: string;
     }>;
+
+    /**
+     * Get all available permissions
+     * @returns List of all permissions
+     */
+    getPermissions(): Promise<Permission[]>;
+
+    /**
+     * Get client security settings
+     * @param clientId Client identifier
+     * @returns Client security settings
+     */
+    getSecuritySettings(clientId: string): Promise<SecuritySettings>;
+
+    /**
+     * Update client security settings
+     * @param clientId Client identifier
+     * @param settings Updated security settings
+     * @returns Updated security settings
+     */
+    updateSecuritySettings(clientId: string, settings: Partial<SecuritySettings>): Promise<SecuritySettings>;
 }
