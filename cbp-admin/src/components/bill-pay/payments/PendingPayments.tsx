@@ -50,44 +50,43 @@ import HistoryIcon from '@mui/icons-material/History';
 import LockIcon from '@mui/icons-material/Lock';
 import dayjs, { Dayjs } from 'dayjs';
 
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+import { useAuth } from '../../../hooks/useAuth';
 import {
-  Payment,
   PendingPayment,
-  PaymentMethod,
-  PaymentStatus,
-  Priority,
-  PaymentFilters,
-  PendingPaymentFilters,
-  PendingPaymentSearchRequest,
-  PendingPaymentListResponse,
   PendingPaymentSummary,
+  PendingPaymentSearchRequest,
+  PaymentStatus,
+  PaymentMethod,
+  Priority,
   PaymentHistory,
-  PaymentAction,
+  ConfirmationMethod,
   PaymentConfirmationRequest,
   PaymentConfirmationResponse,
-  ConfirmationMethod,
-  ConfirmationStatus,
-  PendingPaymentApproval,
-  PendingPaymentRejection
 } from '../../../types/bill-pay.types';
-
-import { ApiResponse, ApiSuccessResponse, PaymentApiResponse } from '../../../types/api.types';
-import { pendingPaymentsApi } from '../../../services/api/pending-payments.api';
-import { useAuth } from '../../../hooks/useAuth';
 
 interface PaymentDialogState {
   open: boolean;
   payment: PendingPayment | null;
   action: 'view' | 'approve' | 'reject' | 'history' | 'confirm' | null;
+  history?: PaymentHistory[];
 }
 
 interface FilterState {
   startDate: Dayjs | null;
   endDate: Dayjs | null;
-  priority: Priority[];
   searchTerm: string;
-  method?: PaymentMethod[];
-  status?: PaymentStatus[];
+  status?: PaymentStatus;
+  method?: PaymentMethod;
+  priority?: Priority;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  clientId?: string;
+  payeeId?: string;
+  minAmount?: number;
+  maxAmount?: number;
 }
 
 interface ConfirmationState {
@@ -98,6 +97,7 @@ interface ConfirmationState {
   expiresAt: string | null;
   error: string | null;
   processing: boolean;
+  confirmationStatus: string | null;
 }
 
 const initialConfirmationState: ConfirmationState = {
@@ -108,10 +108,12 @@ const initialConfirmationState: ConfirmationState = {
   expiresAt: null,
   error: null,
   processing: false,
+  confirmationStatus: null
 };
 
 const PendingPayments: React.FC = () => {
   const { user } = useAuth();
+  const paymentService = ServiceFactory.getInstance().getPaymentService();
 
   // State
   const [payments, setPayments] = useState<PendingPayment[]>([]);
@@ -119,9 +121,11 @@ const PendingPayments: React.FC = () => {
   const [selectedPayments, setSelectedPayments] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [totalPayments, setTotalPayments] = useState(0);
+  const [pagination, setPagination] = useState({
+    page: 0,
+    limit: 10,
+    total: 0
+  });
   const [dialogState, setDialogState] = useState<PaymentDialogState>({
     open: false,
     payment: null,
@@ -130,20 +134,25 @@ const PendingPayments: React.FC = () => {
   const [filters, setFilters] = useState<FilterState>({
     startDate: null,
     endDate: null,
-    priority: [],
+    priority: undefined,
     searchTerm: '',
-    method: [],
-    status: [PaymentStatus.PENDING],
+    method: undefined,
+    status: PaymentStatus.PENDING,
+    page: 1,
+    limit: 10,
+    sortBy: 'createdAt',
+    sortOrder: 'desc'
   });
   const [summary, setSummary] = useState<PendingPaymentSummary | null>(null);
-  const [history, setHistory] = useState<Array<{
-    action: string;
-    performedBy: string;
-    timestamp: string;
-    details: Record<string, any>;
-  }> | null>(null);
+  const [history, setHistory] = useState<PaymentHistory[]>([]);
   const [processing, setProcessing] = useState<Record<string, boolean>>({});
   const [confirmation, setConfirmation] = useState<ConfirmationState>(initialConfirmationState);
+  const [rejectReason, setRejectReason] = useState('');
+
+  const handleError = (err: unknown, message?: string) => {
+    console.error(message || 'An error occurred', err);
+    setError(message || 'An error occurred');
+  };
 
   // Helper function to get priority color
   const getPriorityColor = (priority: Priority): 'error' | 'warning' | 'info' | 'default' => {
@@ -173,63 +182,66 @@ const PendingPayments: React.FC = () => {
     }
   };
 
-  // Fetch data
+  // Fetch pending payments
   const fetchPayments = useCallback(async () => {
-    setLoading(true);
-    setError(null);
     try {
-      const requestParams = {
-        page: page + 1,
-        limit: rowsPerPage,
-        startDate: filters.startDate?.format('YYYY-MM-DD'),
-        endDate: filters.endDate?.format('YYYY-MM-DD'),
-        status: filters.status?.[0],
-        priority: filters.priority?.[0],
-        method: filters.method?.[0]
+      setLoading(true);
+      setError(null);
+      
+      const searchRequest: PendingPaymentSearchRequest = {
+        status: filters.status,
+        method: filters.method,
+        priority: filters.priority,
+        startDate: filters.startDate?.toISOString(),
+        endDate: filters.endDate?.toISOString(),
+        page: filters.page,
+        limit: filters.limit,
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder,
+        clientId: filters.clientId,
+        payeeId: filters.payeeId,
+        minAmount: filters.minAmount,
+        maxAmount: filters.maxAmount
       };
       
-      console.log('Component - Fetching payments with params:', requestParams);
-
-      const response = await pendingPaymentsApi.fetchPayments(requestParams);
-      
-      console.log('Component - Raw API Response:', response);
-      console.log('Component - Response data:', response.data);
-      
-      // Extract payments from the nested response
-      const paymentsResponse = response.data;
-      console.log('Component - Payments response:', paymentsResponse);
-      
-      setPayments(paymentsResponse.data);
-      setFilteredPayments(paymentsResponse.data);
-      setTotalPayments(paymentsResponse.total || 0);
+      const response = await paymentService.getPendingPayments(searchRequest);
+      setPayments(response.data || []);
+      setFilteredPayments(response.data || []);
+      setPagination(prev => ({ ...prev, total: response.total || 0 }));
     } catch (err) {
-      console.error('Component - Error details:', err);
-      setError('Failed to fetch payments');
+      handleError(err);
       setPayments([]);
       setFilteredPayments([]);
-      setTotalPayments(0);
+      setPagination(prev => ({ ...prev, total: 0 }));
     } finally {
       setLoading(false);
     }
-  }, [filters, page, rowsPerPage]);
+  }, [filters, paymentService]);
 
+  // Fetch payment summary
   const fetchSummary = useCallback(async () => {
     try {
+      setLoading(true);
       const searchRequest: PendingPaymentSearchRequest = {
-        startDate: filters.startDate?.format('YYYY-MM-DD'),
-        endDate: filters.endDate?.format('YYYY-MM-DD'),
-        status: filters.status?.[0],
-        priority: filters.priority?.[0],
-        method: filters.method?.[0],
+        status: filters.status,
+        method: filters.method,
+        priority: filters.priority,
+        startDate: filters.startDate?.toISOString(),
+        endDate: filters.endDate?.toISOString(),
+        clientId: filters.clientId,
+        payeeId: filters.payeeId,
+        minAmount: filters.minAmount,
+        maxAmount: filters.maxAmount
       };
-      const response = await pendingPaymentsApi.getSummary(searchRequest);
-      if (response.success) {
-        setSummary(response.data);
-      }
-    } catch (error) {
-      console.error('Error fetching summary:', error);
+      const response = await paymentService.getPendingPaymentsSummary(searchRequest);
+      setSummary(response);
+    } catch (err) {
+      handleError(err);
+      setSummary(null);
+    } finally {
+      setLoading(false);
     }
-  }, [filters]);
+  }, [filters, paymentService]);
 
   useEffect(() => {
     fetchPayments();
@@ -260,17 +272,19 @@ const PendingPayments: React.FC = () => {
 
   // Update total payments when filtered results change
   useEffect(() => {
-    setTotalPayments(filteredPayments?.length || 0);
+    setPagination(prev => ({ ...prev, total: filteredPayments?.length || 0 }));
   }, [filteredPayments]);
 
   // Handlers
-  const handlePageChange = (_: unknown, newPage: number) => {
-    setPage(newPage);
+  const handlePageChange = (event: unknown, newPage: number) => {
+    setPagination(prev => ({ ...prev, page: newPage }));
+    setFilters(prev => ({ ...prev, page: newPage + 1 }));
   };
 
   const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    const newLimit = parseInt(event.target.value, 10);
+    setPagination(prev => ({ ...prev, limit: newLimit, page: 0 }));
+    setFilters(prev => ({ ...prev, limit: newLimit, page: 1 }));
   };
 
   const handleFilterChange = <K extends keyof FilterState>(
@@ -278,44 +292,32 @@ const PendingPayments: React.FC = () => {
     value: FilterState[K]
   ) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
-    setPage(0);
+    setPagination(prev => ({ ...prev, page: 0 }));
   };
 
   const handleDateChange = (field: 'startDate' | 'endDate') => (date: Dayjs | null) => {
     handleFilterChange(field, date);
   };
 
-  const handleStatusChange = (event: SelectChangeEvent<PaymentStatus[]>) => {
-    const {
-      target: { value },
-    } = event;
+  const handleStatusChange = (event: SelectChangeEvent<PaymentStatus>) => {
     setFilters(prev => ({
       ...prev,
-      status: typeof value === 'string' ? [value as PaymentStatus] : value as PaymentStatus[],
+      status: event.target.value as PaymentStatus
     }));
-    setPage(0);
   };
 
-  const handlePriorityChange = (event: SelectChangeEvent<Priority[]>) => {
-    const {
-      target: { value },
-    } = event;
+  const handlePriorityChange = (event: SelectChangeEvent<Priority>) => {
     setFilters(prev => ({
       ...prev,
-      priority: typeof value === 'string' ? [value as Priority] : value as Priority[],
+      priority: event.target.value as Priority
     }));
-    setPage(0);
   };
 
-  const handleMethodChange = (event: SelectChangeEvent<PaymentMethod[]>) => {
-    const {
-      target: { value },
-    } = event;
+  const handleMethodChange = (event: SelectChangeEvent<PaymentMethod>) => {
     setFilters(prev => ({
       ...prev,
-      method: typeof value === 'string' ? [value as PaymentMethod] : value as PaymentMethod[],
+      method: event.target.value as PaymentMethod
     }));
-    setPage(0);
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -324,12 +326,10 @@ const PendingPayments: React.FC = () => {
 
   const handleExport = async () => {
     try {
-      const blob = await pendingPaymentsApi.exportPayments({
-        startDate: filters.startDate?.format('YYYY-MM-DD'),
-        endDate: filters.endDate?.format('YYYY-MM-DD'),
-        status: filters.status?.[0],
-        priority: filters.priority?.[0],
-        method: filters.method?.[0],
+      const blob = await paymentService.exportPendingPayments({
+        ...filters,
+        startDate: filters.startDate?.toISOString(),
+        endDate: filters.endDate?.toISOString(),
       });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -340,48 +340,40 @@ const PendingPayments: React.FC = () => {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (err) {
-      setError('Failed to export payments');
-      console.error('Error exporting payments:', err);
+      handleError(err, 'Failed to export payments');
     }
   };
 
   const handleApprove = async (payment: PendingPayment) => {
     try {
       setProcessing((prev) => ({ ...prev, [payment.id]: true }));
-      await pendingPaymentsApi.approvePayment(payment.id, {
-        approvedBy: user?.id?.toString() || '',
-        approvedAt: new Date().toISOString(),
-      });
+      await paymentService.approvePayment(payment.id);
       await fetchPayments();
     } catch (err) {
-      setError('Failed to approve payment');
-      console.error('Error approving payment:', err);
+      handleError(err, 'Failed to approve payment');
     } finally {
       setProcessing((prev) => ({ ...prev, [payment.id]: false }));
     }
   };
 
-  const handleRejectPayment = useCallback(async (payment: PendingPayment, reason: string) => {
+  const handleRejectPayment = useCallback(async (paymentId: string) => {
     if (!user?.id) {
       setError('User not authenticated');
       return;
     }
 
     try {
-      setProcessing((prev) => ({ ...prev, [payment.id]: true }));
-      await pendingPaymentsApi.rejectPayment(payment.id, {
-        rejectedBy: user.id.toString(),
-        rejectedAt: new Date().toISOString(),
-        reason,
-      });
+      setProcessing((prev) => ({ ...prev, [paymentId]: true }));
+      await paymentService.rejectPayment(paymentId, rejectReason || 'Rejected by admin');
       await fetchPayments();
+      setDialogState({ open: false, payment: null, action: null });
+      setRejectReason('');
     } catch (err) {
-      console.error('Error rejecting payment:', err);
-      setError('Failed to reject payment');
+      handleError(err, 'Failed to reject payment');
     } finally {
-      setProcessing((prev) => ({ ...prev, [payment.id]: false }));
+      setProcessing((prev) => ({ ...prev, [paymentId]: false }));
     }
-  }, [user?.id, fetchPayments]);
+  }, [user?.id, fetchPayments, rejectReason]);
 
   const handleBulkApprove = async () => {
     if (!user?.id) {
@@ -391,17 +383,13 @@ const PendingPayments: React.FC = () => {
     
     try {
       setProcessing(prev => ({ ...prev, bulk: true }));
-      const results = await pendingPaymentsApi.bulkApprove(selectedPayments, {
-        approvedBy: user.id.toString(),
-        approvedAt: new Date().toISOString(),
-      });
-      if (results.data) {
+      const success = await paymentService.bulkApprove(selectedPayments);
+      if (success) {
         await fetchPayments();
         setSelectedPayments([]);
       }
     } catch (err) {
-      setError('Failed to approve payments');
-      console.error('Error approving payments:', err);
+      handleError(err, 'Failed to approve payments');
     } finally {
       setProcessing(prev => ({ ...prev, bulk: false }));
     }
@@ -415,18 +403,13 @@ const PendingPayments: React.FC = () => {
 
     try {
       setProcessing(prev => ({ ...prev, bulk: true }));
-      const results = await pendingPaymentsApi.bulkReject(selectedPayments, {
-        rejectedBy: user.id.toString(),
-        rejectedAt: new Date().toISOString(),
-        reason: 'Bulk rejection',
-      });
-      if (results.data) {
+      const success = await paymentService.bulkReject(selectedPayments);
+      if (success) {
         await fetchPayments();
         setSelectedPayments([]);
       }
     } catch (err) {
-      setError('Failed to reject payments');
-      console.error('Error rejecting payments:', err);
+      handleError(err, 'Failed to reject payments');
     } finally {
       setProcessing(prev => ({ ...prev, bulk: false }));
     }
@@ -434,18 +417,25 @@ const PendingPayments: React.FC = () => {
 
   const handleViewHistory = async (payment: PendingPayment) => {
     try {
-      const response = await pendingPaymentsApi.getPaymentHistory(payment.id);
-      if (response.data) {
-        setHistory([{
-          action: response.data.action,
-          performedBy: response.data.performedBy,
-          timestamp: response.data.timestamp,
-          details: response.data.details,
-        }]);
-      }
-      setDialogState({ open: true, payment, action: 'history' });
+      setLoading(true);
+      const response = await paymentService.getPaymentHistory(payment.id);
+      const formattedHistory: PaymentHistory = {
+        paymentId: payment.id,
+        action: response.action,
+        performedBy: response.performedBy,
+        timestamp: response.timestamp,
+        details: response.details
+      };
+      setDialogState({
+        open: true,
+        payment,
+        action: 'history',
+        history: [formattedHistory]
+      });
     } catch (err) {
-      setError('Failed to fetch payment history');
+      handleError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -475,49 +465,53 @@ const PendingPayments: React.FC = () => {
     }));
   };
 
-  const handleConfirmPayment = async () => {
-    if (!dialogState.payment) return;
-
+  const handleConfirmPayment = async (confirmationData: PaymentConfirmationRequest) => {
     try {
-      setConfirmation(prev => ({ ...prev, processing: true }));
-      const response = await pendingPaymentsApi.confirmPayment(dialogState.payment.id, {
-        paymentId: dialogState.payment.id,
-        method: PaymentMethod.ACH,
-        confirmationMethod: ConfirmationMethod.OTP,
-        code: confirmation.code,
-        userId: user?.id?.toString(),
+      setLoading(true);
+      const response: PaymentConfirmationResponse = await paymentService.confirmPayment(confirmationData.paymentId, {
+        method: confirmationData.method,
+        confirmationMethod: confirmationData.confirmationMethod,
+        code: confirmationData.code,
+        notes: confirmationData.notes,
+        userId: confirmationData.userId
       });
-
+      setConfirmation(prev => ({
+        ...prev,
+        attempts: response.attempts,
+        maxAttempts: response.maxAttempts,
+        expiresAt: response.expiresAt,
+        error: response.message,
+        processing: false,
+        confirmationStatus: response.confirmationStatus
+      }));
       if (response.success) {
-        setConfirmation(prev => ({
-          ...prev,
-          attempts: response.data.attempts,
-          maxAttempts: response.data.maxAttempts,
-          expiresAt: response.data.expiresAt,
-          error: null,
-          method: ConfirmationMethod.OTP,
-          code: '',
-          processing: false,
-        }));
+        await fetchPayments();
       }
     } catch (err) {
-      handleConfirmationError(err instanceof Error ? err.message : 'Failed to confirm payment');
+      handleError(err);
+      setConfirmation(prev => ({
+        ...prev,
+        error: 'An error occurred during confirmation',
+        processing: false
+      }));
     } finally {
-      setConfirmation(prev => ({ ...prev, processing: false }));
+      setLoading(false);
     }
   };
 
-  const handlePaymentAction = async (paymentId: string, action: 'approve' | 'reject', data: PendingPaymentApproval | PendingPaymentRejection) => {
+  const handlePaymentAction = async (paymentId: string, action: 'approve' | 'reject') => {
     try {
       setProcessing(prev => ({ ...prev, [paymentId]: true }));
-      const response = action === 'approve'
-        ? await pendingPaymentsApi.approvePayment(paymentId, data as PendingPaymentApproval)
-        : await pendingPaymentsApi.rejectPayment(paymentId, data as PendingPaymentRejection);
-      
-      if (response.success) {
-        fetchPayments();
-        setDialogState({ open: false, payment: null, action: null });
+      if (action === 'approve') {
+        await paymentService.approvePayment(paymentId);
+      } else {
+        await paymentService.rejectPayment(paymentId, rejectReason);
       }
+      
+      // Since the operation completed without throwing an error, we can proceed
+      fetchPayments();
+      setDialogState({ open: false, payment: null, action: null });
+      setRejectReason(''); // Clear the reason after successful rejection
     } catch (error) {
       console.error(`Error ${action}ing payment:`, error);
     } finally {
@@ -534,7 +528,7 @@ const PendingPayments: React.FC = () => {
         method: ConfirmationMethod.OTP // Ensure method is set with enum
       }));
 
-      const request: PaymentConfirmationRequest = {
+      const request: any = {
         paymentId,
         method: PaymentMethod.ACH,
         confirmationMethod: ConfirmationMethod.OTP,
@@ -542,18 +536,17 @@ const PendingPayments: React.FC = () => {
         userId: user?.id?.toString() // Convert number to string
       };
 
-      const response = await pendingPaymentsApi.confirmPayment(paymentId, request);
+      const response: PaymentConfirmationResponse = await paymentService.confirmPayment(paymentId, request);
+      setConfirmation(prev => ({
+        ...prev,
+        attempts: response.attempts,
+        maxAttempts: response.maxAttempts,
+        expiresAt: response.expiresAt,
+        error: response.message,
+        processing: false,
+        confirmationStatus: response.confirmationStatus
+      }));
       if (response.success) {
-        setConfirmation(prev => ({
-          ...prev,
-          attempts: response.data.attempts,
-          maxAttempts: response.data.maxAttempts,
-          expiresAt: response.data.expiresAt,
-          error: null,
-          method: ConfirmationMethod.OTP,
-          code: '',
-          processing: false
-        }));
         fetchPayments();
       }
     } catch (error) {
@@ -596,22 +589,9 @@ const PendingPayments: React.FC = () => {
             <FormControl fullWidth size="small">
               <InputLabel>Status</InputLabel>
               <Select
-                multiple
                 value={filters.status}
                 onChange={handleStatusChange}
                 label="Status"
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip
-                        key={value}
-                        label={value}
-                        size="small"
-                        color={getStatusColor(value)}
-                      />
-                    ))}
-                  </Box>
-                )}
               >
                 {Object.values(PaymentStatus).map((status) => (
                   <MenuItem key={status} value={status}>
@@ -625,17 +605,9 @@ const PendingPayments: React.FC = () => {
             <FormControl fullWidth size="small">
               <InputLabel>Priority</InputLabel>
               <Select
-                multiple
                 value={filters.priority}
                 onChange={handlePriorityChange}
                 label="Priority"
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
               >
                 {Object.values(Priority).map((priority) => (
                   <MenuItem key={priority} value={priority}>
@@ -647,12 +619,12 @@ const PendingPayments: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={2}>
             <FormControl fullWidth>
-              <InputLabel>Payment Method</InputLabel>
+              <InputLabel>Method</InputLabel>
               <Select
                 name="method"
                 value={filters.method || ''}
                 onChange={handleMethodChange}
-                label="Payment Method"
+                label="Method"
               >
                 <MenuItem value="">All</MenuItem>
                 {[PaymentMethod.ACH, PaymentMethod.WIRE, PaymentMethod.CHECK, PaymentMethod.CARD].map((method) => (
@@ -689,7 +661,6 @@ const PendingPayments: React.FC = () => {
       );
     }
 
-    console.log('Rendering table with payments:', filteredPayments);
     return (
       <TableContainer component={Paper}>
         <Table>
@@ -810,7 +781,7 @@ const PendingPayments: React.FC = () => {
                             <IconButton
                               size="small"
                               color="error"
-                              onClick={() => handleRejectPayment(payment, 'Rejected by admin')}
+                              onClick={() => handlePaymentAction(payment.id, 'reject')}
                               aria-label="Reject"
                             >
                               <CancelIcon />
@@ -836,10 +807,10 @@ const PendingPayments: React.FC = () => {
         </Table>
         <TablePagination
           component="div"
-          count={totalPayments}
-          page={page}
+          count={pagination.total}
+          page={pagination.page}
           onPageChange={handlePageChange}
-          rowsPerPage={rowsPerPage}
+          rowsPerPage={pagination.limit}
           onRowsPerPageChange={handleRowsPerPageChange}
         />
       </TableContainer>
@@ -919,40 +890,53 @@ const PendingPayments: React.FC = () => {
           </Grid>
         )}
         {dialogState.action === 'reject' && (
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            label="Rejection Reason"
-            required
-            sx={{ mt: 2 }}
-          />
-        )}
-        {dialogState.action === 'history' && history && (
           <Box sx={{ mt: 2 }}>
-            {history.map((entry, index) => (
-              <Box key={index} sx={{ mb: 2 }}>
-                <Typography variant="subtitle2">
-                  {dayjs(entry.timestamp).format('MM/DD/YYYY HH:mm:ss')}
-                </Typography>
-                <Typography>
-                  {entry.action} by {entry.performedBy}
-                </Typography>
-                {Object.entries(entry.details).map(([key, value]) => (
-                  <Typography
-                    key={key}
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ ml: 2 }}
-                  >
-                    {key}: {value}
-                  </Typography>
-                ))}
-                {index < history.length - 1 && (
-                  <Divider sx={{ mt: 1, mb: 1 }} />
-                )}
-              </Box>
-            ))}
+            <TextField
+              fullWidth
+              multiline
+              rows={4}
+              label="Rejection Reason"
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              required
+              placeholder="Please provide a reason for rejecting this payment"
+            />
+          </Box>
+        )}
+        {dialogState.action === 'history' && dialogState.history && (
+          <Box sx={{ mt: 2 }}>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Action</TableCell>
+                    <TableCell>Performed By</TableCell>
+                    <TableCell>Timestamp</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dialogState.history.map((entry, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <Typography variant="body2">
+                          {entry.action}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">
+                          {entry.performedBy}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">
+                          {dayjs(entry.timestamp).format('MM/DD/YYYY HH:mm:ss')}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Box>
         )}
       </DialogContent>
@@ -970,10 +954,7 @@ const PendingPayments: React.FC = () => {
             color="error"
             onClick={() =>
               dialogState.payment &&
-              handleRejectPayment(
-                dialogState.payment,
-                'Rejected by admin' // TODO: Get from text field
-              )
+              handlePaymentAction(dialogState.payment.id, 'reject')
             }
             disabled={processing[dialogState.payment?.id || '']}
             startIcon={
@@ -993,86 +974,101 @@ const PendingPayments: React.FC = () => {
   );
 
   const renderConfirmationDialog = () => {
-    if (dialogState.action !== 'confirm' || !dialogState.payment) return null;
-
-    const timeLeft = confirmation.expiresAt
-      ? Math.max(0, Math.floor((new Date(confirmation.expiresAt).getTime() - Date.now()) / 1000))
-      : 0;
+    if (!dialogState.payment) return null;
 
     return (
-      <Dialog open={dialogState.open} onClose={() => setDialogState({ open: false, payment: null, action: null })}>
+      <Dialog
+        open={dialogState.open}
+        onClose={() => setDialogState({ ...dialogState, open: false })}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Confirm Payment</DialogTitle>
         <DialogContent>
-          <Stack spacing={3} sx={{ minWidth: 400, mt: 2 }}>
-            <Typography variant="body1">
-              Please confirm payment #{dialogState.payment.id} for ${dialogState.payment.amount.toFixed(2)}
-            </Typography>
-
-            <FormControl fullWidth>
-              <InputLabel>Confirmation Method</InputLabel>
-              <Select
-                value={confirmation.method}
-                onChange={handleConfirmationMethodChange}
-                label="Confirmation Method"
-              >
-                <MenuItem value="otp">One-Time Password</MenuItem>
-                <MenuItem value="password">Password</MenuItem>
-                <MenuItem value="biometric">Biometric</MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl fullWidth variant="outlined">
-              <InputLabel>Confirmation Code</InputLabel>
-              <OutlinedInput
-                type="text"
-                value={confirmation.code}
-                onChange={handleConfirmationCodeChange}
-                label="Confirmation Code"
-                error={!!confirmation.error}
-                disabled={confirmation.processing}
-                endAdornment={
-                  <LockIcon color="action" sx={{ mr: 1 }} />
-                }
-              />
-            </FormControl>
-
-            {confirmation.error && (
-              <Alert severity="error" sx={{ mt: 2 }}>
-                {confirmation.error}
-              </Alert>
-            )}
-
-            {confirmation.attempts > 0 && (
-              <Typography color="warning.main">
-                Attempts: {confirmation.attempts} / {confirmation.maxAttempts}
-              </Typography>
-            )}
-
-            {timeLeft > 0 && (
-              <Box>
-                <Typography variant="caption" color="text.secondary">
-                  Expires in: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-                </Typography>
-                <LinearProgress
-                  variant="determinate"
-                  value={(timeLeft / (5 * 60)) * 100}
-                  sx={{ mt: 1 }}
-                />
-              </Box>
-            )}
-          </Stack>
+          <Box sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              label="Confirmation Code"
+              value={confirmation.code}
+              onChange={(e) => setConfirmation(prev => ({ ...prev, code: e.target.value }))}
+              error={!!confirmation.error}
+              helperText={confirmation.error}
+              disabled={confirmation.processing}
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogState({ open: false, payment: null, action: null })}>
+          <Button
+            onClick={() => setDialogState({ ...dialogState, open: false })}
+            disabled={confirmation.processing}
+          >
             Cancel
           </Button>
           <Button
-            onClick={handleConfirmPayment}
+            onClick={() => {
+              if (dialogState.payment) {
+                const confirmationData: PaymentConfirmationRequest = {
+                  paymentId: dialogState.payment.id,
+                  method: dialogState.payment.method,
+                  confirmationMethod: ConfirmationMethod.OTP,
+                  code: confirmation.code,
+                  userId: user?.id?.toString()
+                };
+                handleConfirmPayment(confirmationData);
+              }
+            }}
             disabled={!confirmation.code || confirmation.processing}
             variant="contained"
             aria-label="Confirm payment"
           >
-            {confirmation.processing ? <CircularProgress size={24} /> : 'Confirm'}
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  const renderRejectDialog = () => {
+    if (!dialogState.payment || dialogState.action !== 'reject') return null;
+
+    return (
+      <Dialog
+        open={dialogState.open}
+        onClose={() => setDialogState({ open: false, payment: null, action: null })}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Reject Payment</DialogTitle>
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              multiline
+              rows={4}
+              label="Rejection Reason"
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              required
+              placeholder="Please provide a reason for rejecting this payment"
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setDialogState({ open: false, payment: null, action: null });
+              setRejectReason('');
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => dialogState.payment && handlePaymentAction(dialogState.payment.id, 'reject')}
+            disabled={!rejectReason || (dialogState.payment && processing[dialogState.payment.id])}
+            color="error"
+            variant="contained"
+          >
+            Reject
           </Button>
         </DialogActions>
       </Dialog>
@@ -1111,6 +1107,7 @@ const PendingPayments: React.FC = () => {
       {renderTable()}
       {renderDialog()}
       {renderConfirmationDialog()}
+      {renderRejectDialog()}
     </Box>
   );
 };

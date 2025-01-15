@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ListItem, ListItemIcon, ListItemText, SxProps, Theme } from '@mui/material';
+import logger from '../../utils/logger';
 
 interface MenuItemProps {
   to: string;
@@ -8,6 +9,7 @@ interface MenuItemProps {
   primary: string;
   secondary?: string;
   sx?: SxProps<Theme>;
+  itemId?: string;
 }
 
 export const MenuItem: React.FC<MenuItemProps> = ({ 
@@ -15,10 +17,32 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   icon, 
   primary, 
   secondary,
-  sx = {} 
+  sx = {},
+  itemId = `menu-${primary.toLowerCase().replace(/\s+/g, '-')}`,
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isSelected = location.pathname === to;
+
+  const handleNavigation = useCallback((event: React.MouseEvent) => {
+    // Prevent default Link behavior
+    event.preventDefault();
+
+    logger.info({
+      message: 'Navigation: Menu item clicked',
+      itemId,
+      from: location.pathname,
+      to,
+      item: {
+        primary,
+        secondary,
+        isSelected
+      },
+      timestamp: new Date().toISOString()
+    });
+
+    navigate(to);
+  }, [to, location.pathname, primary, secondary, isSelected, itemId, navigate]);
 
   return (
     <ListItem
@@ -26,6 +50,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
       component={Link}
       to={to}
       selected={isSelected}
+      onClick={handleNavigation}
       sx={{
         pl: 3,
         '&.Mui-selected': {

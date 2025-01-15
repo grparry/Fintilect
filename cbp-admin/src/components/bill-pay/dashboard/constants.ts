@@ -3,20 +3,20 @@ import {
   Assessment as AssessmentIcon,
   AttachMoney as MoneyIcon,
   Payment as PaymentIcon,
-  Warning as WarningIcon,
+  Speed as SpeedIcon,
 } from '@mui/icons-material';
-import { BillPayStats } from '../../../types/bill-pay.types';
 
 interface DashboardCard {
   id: string;
   title: string;
-  dataKey: keyof BillPayStats;
+  dataKey: string;
+  metricType: 'transactions' | 'processor' | 'summary';
   icon: ElementType;
   formatter?: (value: number) => string;
 }
 
 interface TimeRange {
-  value: string;
+  value: 'day' | 'week' | 'month';
   label: string;
   days: number;
 }
@@ -32,6 +32,7 @@ export const DASHBOARD_CARDS: DashboardCard[] = [
     id: 'total-transactions',
     title: 'Total Transactions',
     dataKey: 'totalTransactions',
+    metricType: 'transactions',
     icon: PaymentIcon,
     formatter: (value) => value.toLocaleString(),
   },
@@ -39,6 +40,7 @@ export const DASHBOARD_CARDS: DashboardCard[] = [
     id: 'total-amount',
     title: 'Total Amount',
     dataKey: 'totalAmount',
+    metricType: 'summary',
     icon: MoneyIcon,
     formatter: (value) => `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
   },
@@ -46,28 +48,30 @@ export const DASHBOARD_CARDS: DashboardCard[] = [
     id: 'success-rate',
     title: 'Success Rate',
     dataKey: 'successRate',
+    metricType: 'processor',
     icon: AssessmentIcon,
     formatter: (value) => `${value.toFixed(1)}%`,
   },
   {
-    id: 'average-size',
-    title: 'Average Transaction',
-    dataKey: 'averageTransactionSize',
-    icon: MoneyIcon,
-    formatter: (value) => `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+    id: 'daily-throughput',
+    title: 'Daily Throughput',
+    dataKey: 'throughput',
+    metricType: 'processor',
+    icon: SpeedIcon,
+    formatter: (value) => value.toLocaleString(),
   },
 ];
 
 export const TIME_RANGES: TimeRange[] = [
-  { value: '7d', label: 'Last 7 Days', days: 7 },
-  { value: '30d', label: 'Last 30 Days', days: 30 },
-  { value: '90d', label: 'Last 90 Days', days: 90 },
+  { value: 'day', label: 'Last 24 Hours', days: 1 },
+  { value: 'week', label: 'Last 7 Days', days: 7 },
+  { value: 'month', label: 'Last 30 Days', days: 30 },
 ];
 
 export const CHART_VIEWS: ChartView[] = [
   {
     value: 'payments',
-    label: 'Payment Count',
+    label: 'Transaction Count',
     formatter: (value) => value.toLocaleString(),
   },
   {
@@ -80,18 +84,21 @@ export const CHART_VIEWS: ChartView[] = [
 export const DEFAULT_CHART_OPTIONS = {
   responsive: true,
   maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: 'bottom' as const,
-    },
-    title: {
-      display: true,
-      text: 'Transaction Trends',
-    },
-  },
   scales: {
     y: {
       beginAtZero: true,
+      ticks: {
+        callback: (value: number) => value.toLocaleString(),
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      position: 'top' as const,
+    },
+    tooltip: {
+      mode: 'index' as const,
+      intersect: false,
     },
   },
 };

@@ -1,11 +1,43 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Typography, Button, Container, Paper, Stack } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, To } from 'react-router-dom';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import logger from '../../utils/logger';
 
 const NotFound: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    // Log the 404 occurrence for diagnostics
+    logger.warn({
+      message: 'Navigation: Page not found',
+      path: location.pathname,
+      referrer: document.referrer,
+      userAgent: navigator.userAgent,
+      timestamp: new Date().toISOString()
+    });
+  }, [location.pathname]);
+
+  const handleNavigateBack = () => {
+    logger.info({
+      message: 'Navigation: Redirect from 404',
+      from: location.pathname,
+      action: 'back',
+      timestamp: new Date().toISOString()
+    });
+    navigate(-1);
+  };
+
+  const handleNavigateTo = (to: To) => {
+    logger.info({
+      message: 'Navigation: Redirect from 404',
+      from: location.pathname,
+      to,
+      timestamp: new Date().toISOString()
+    });
+    navigate(to);
+  };
 
   return (
     <Container 
@@ -39,13 +71,13 @@ const NotFound: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => navigate('/admin/clients')}
+            onClick={() => handleNavigateTo('/admin/clients')}
           >
             Go to Clients
           </Button>
           <Button
             variant="outlined"
-            onClick={() => navigate(-1)}
+            onClick={handleNavigateBack}
           >
             Go Back
           </Button>

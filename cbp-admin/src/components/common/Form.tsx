@@ -14,6 +14,8 @@ import {
 } from '@mui/material';
 import { Controller, useForm, Path, FieldValues, DefaultValues } from 'react-hook-form';
 import { SelectOption } from '../../types/index';
+import { ServiceFactory } from '../../services/factory/ServiceFactory';
+import logger from '../../utils/logger';
 
 export interface FormField<T> {
   name: Path<T>;
@@ -38,6 +40,7 @@ export interface FormProps<T extends FieldValues> {
   title?: string;
   submitText?: string;
   loading?: boolean;
+  formId?: string;
 }
 
 const Form = <T extends FieldValues>({
@@ -46,8 +49,15 @@ const Form = <T extends FieldValues>({
   title,
   submitText = 'Submit',
   loading = false,
+  formId = 'dynamic-form',
 }: FormProps<T>): React.ReactElement => {
-  console.log('Form: Initializing with fields:', fields);
+  const auditService = ServiceFactory.getInstance().getAuditService();
+  
+  logger.info({
+    message: 'Form: Initializing',
+    formId,
+    fields: fields.map(f => ({ name: f.name, type: f.type }))
+  });
   
   // Create default values with proper typing
   const defaultValues = fields.reduce((acc, field) => {
@@ -65,7 +75,11 @@ const Form = <T extends FieldValues>({
     return acc;
   }, {} as DefaultValues<T>);
 
-  console.log('Form: Using default values:', defaultValues);
+  logger.info({
+    message: 'Form: Using default values',
+    formId,
+    defaultValues
+  });
 
   const {
     control,
@@ -76,12 +90,64 @@ const Form = <T extends FieldValues>({
   });
 
   const onSubmitHandler = async (data: T) => {
-    console.log('Form: Submitting form with data:', data);
+    logger.info({
+      message: 'Form: Submitting form',
+      formId,
+      data
+    });
+
     try {
       await onSubmit(data);
-      console.log('Form: Submit successful');
+      
+      // Log successful submission to audit service
+      await auditService.logEvent({
+        eventType: 'FORM_SUBMISSION',
+        resourceId: formId,
+        resourceType: 'FORM',
+        status: 'COMPLETED',
+        metadata: {
+          formFields: fields.map(f => f.name),
+          hasErrors: false
+        },
+        timestamp: new Date().toISOString()
+      }).catch(err => {
+        logger.error({
+          message: 'Failed to log form submission to audit service',
+          formId,
+          error: err
+        });
+      });
+
+      logger.info({
+        message: 'Form: Submit successful',
+        formId
+      });
     } catch (error) {
-      console.error('Form: Submit error:', error);
+      // Log failed submission to audit service
+      await auditService.logEvent({
+        eventType: 'FORM_SUBMISSION',
+        resourceId: formId,
+        resourceType: 'FORM',
+        status: 'ERROR',
+        metadata: {
+          formFields: fields.map(f => f.name),
+          hasErrors: true,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        },
+        timestamp: new Date().toISOString()
+      }).catch(err => {
+        logger.error({
+          message: 'Failed to log form error to audit service',
+          formId,
+          error: err
+        });
+      });
+
+      logger.error({
+        message: 'Form: Submit error',
+        formId,
+        error
+      });
     }
   };
 
@@ -93,7 +159,13 @@ const Form = <T extends FieldValues>({
       ...validation,
     };
 
-    console.log(`Form: Rendering field "${name}" with rules:`, rules);
+    logger.info({
+      message: 'Form: Rendering field',
+      formId,
+      fieldName: name,
+      fieldType: type,
+      rules
+    });
 
     switch (type) {
       case 'select':

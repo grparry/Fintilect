@@ -27,14 +27,19 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import SearchIcon from '@mui/icons-material/Search';
 import dayjs from 'dayjs';
 import {
-  ReportData,
   ReportType,
+  ReportData,
   ReportFilters,
   ExportOptions,
   AuditRecord,
   TransactionRecord,
   UserRecord,
 } from '../../../types/report.types';
+import { 
+  ReportRunRequest,
+  ExportReportArguments,
+  BaseReportArguments
+} from '../../../types/report-api.types';
 import { reportService } from '../../../services/factory/ServiceFactory';
 
 const Reports: React.FC = () => {
@@ -59,8 +64,17 @@ const Reports: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await reportService.getReportData(filters);
-      setReportData(data);
+      const request: ReportRunRequest<BaseReportArguments> = {
+        name: filters.reportType,
+        arguments: {
+          startDate: filters.startDate.format('YYYY-MM-DD'),
+          endDate: filters.endDate.format('YYYY-MM-DD'),
+          reportType: filters.reportType,
+          searchTerm: filters.searchTerm
+        }
+      };
+      const response = await reportService.runReport(request);
+      setReportData(response.data);
       setLoading(false);
     } catch (err) {
       setError('Failed to load report data');
@@ -99,13 +113,20 @@ const Reports: React.FC = () => {
       setExporting(true);
       setError(null);
       
-      const exportOptions: ExportOptions = {
-        format: 'csv',
-        includeHeaders: true,
-        dateFormat: 'YYYY-MM-DD'
+      const request: ReportRunRequest<ExportReportArguments> = {
+        name: filters.reportType,
+        arguments: {
+          startDate: filters.startDate.format('YYYY-MM-DD'),
+          endDate: filters.endDate.format('YYYY-MM-DD'),
+          reportType: filters.reportType,
+          searchTerm: filters.searchTerm,
+          format: 'csv',
+          includeHeaders: true,
+          dateFormat: 'YYYY-MM-DD'
+        }
       };
       
-      await reportService.exportReport(filters, exportOptions);
+      await reportService.exportReport(request);
       setSuccess('Report exported successfully');
     } catch (err) {
       setError('Failed to export report');

@@ -20,6 +20,11 @@ import {
     PaymentStatus,
     ExceptionStatus
 } from '../../../types/bill-pay.types';
+import {
+    BillPaySecuritySettings,
+    BillPaySecurityValidation,
+    BillPayOTPMethod
+} from '../../../types/security.types';
 import { PaginatedResponse, Pagination, PaginationOptions } from '../../../types/index';
 import { 
     mockPayments,
@@ -68,6 +73,33 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
     private clients: Client[] = [...mockClients];
     private payees: Payee[] = [...mockPayees];
     private paymentActions: PaymentAction[] = [...mockPaymentActions];
+    private securitySettings: BillPaySecuritySettings = {
+        passwordPolicy: {
+            minLength: 12,
+            requireUppercase: true,
+            requireLowercase: true,
+            requireNumbers: true,
+            requireSpecialChars: true,
+            expiryDays: 90,
+            preventReuse: 5
+        },
+        loginPolicy: {
+            maxAttempts: 3,
+            lockoutDuration: 15,
+            sessionTimeout: 30,
+            requireMFA: true,
+            allowRememberMe: false
+        },
+        ipWhitelist: {
+            enabled: false,
+            addresses: ''
+        },
+        otpSettings: {
+            method: BillPayOTPMethod.EMAIL,
+            email: 'admin@example.com',
+            phone: '+1234567890'
+        }
+    };
 
     async getConfiguration(): Promise<BillPayConfig> {
         return this.config;
@@ -323,5 +355,50 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
         return this.paymentActions.filter(a => 
             a.details && 'paymentId' in a.details && a.details.paymentId === paymentId
         );
+    }
+
+    async getSecuritySettings(): Promise<BillPaySecuritySettings> {
+        return this.securitySettings;
+    }
+
+    async updateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecuritySettings> {
+        this.securitySettings = { ...this.securitySettings, ...settings };
+        return this.securitySettings;
+    }
+
+    async validateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecurityValidation> {
+        const isValid = settings.passwordPolicy.minLength >= 8 && 
+                       settings.passwordPolicy.expiryDays >= 30 &&
+                       settings.loginPolicy.maxAttempts >= 1 &&
+                       settings.loginPolicy.lockoutDuration >= 5 &&
+                       settings.loginPolicy.sessionTimeout >= 5;
+
+        const errors: Record<string, string> = {};
+        
+        if (settings.passwordPolicy.minLength < 8) {
+            errors['passwordPolicy.minLength'] = 'Minimum length must be at least 8';
+        }
+        if (settings.passwordPolicy.expiryDays < 30) {
+            errors['passwordPolicy.expiryDays'] = 'Password must expire after at least 30 days';
+        }
+        if (settings.loginPolicy.maxAttempts < 1) {
+            errors['loginPolicy.maxAttempts'] = 'Max login attempts must be at least 1';
+        }
+        if (settings.loginPolicy.lockoutDuration < 5) {
+            errors['loginPolicy.lockoutDuration'] = 'Lockout duration must be at least 5 minutes';
+        }
+        if (settings.loginPolicy.sessionTimeout < 5) {
+            errors['loginPolicy.sessionTimeout'] = 'Session timeout must be at least 5 minutes';
+        }
+
+        return {
+            isValid,
+            errors
+        };
+    }
+
+    async sendOTP(method: BillPayOTPMethod, destination: string): Promise<void> {
+        // Mock implementation - in real world this would send an actual OTP
+        console.log(`Mock: Sending OTP via ${method} to ${destination}`);
     }
 }

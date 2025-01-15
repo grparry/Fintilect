@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { renderWithRouter } from '../../../../test-utils/navigation';
 import ClientManagementWrapper from '../ClientManagementWrapper';
 import { act } from 'react-dom/test-utils';
-import type { Client, ClientType, ClientStatus, ClientEnvironment } from '../../../../services/clients.service';
+import { Client, ClientType, ClientStatus, Environment as ClientEnvironment } from '../../../../types/client.types';
 import type { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '../../../../utils/api';
 
 // Mock the idEncoder utility
@@ -14,9 +14,68 @@ describe('ClientManagementWrapper', () => {
   const mockClient: Client = {
     id: '1',
     name: 'Test Client',
-    status: 'ACTIVE',
-    type: 'ENTERPRISE',
-    environment: 'DEVELOPMENT'
+    status: ClientStatus.Active,
+    type: ClientType.Enterprise,
+    environment: ClientEnvironment.Development,
+    settings: {
+      general: {
+        timezone: 'America/Denver',
+        dateFormat: 'MM/DD/YYYY',
+        timeFormat: '12h',
+        language: 'en',
+        currency: 'USD'
+      },
+      security: {
+        passwordPolicy: {
+          minLength: 8,
+          requireNumbers: true,
+          requireSpecialChars: true,
+          requireUppercase: true,
+          requireLowercase: true,
+          expirationDays: 90,
+          preventReuse: 5,
+          complexityScore: 3
+        },
+        loginPolicy: {
+          maxAttempts: 5,
+          lockoutDuration: 30,
+          sessionTimeout: 30,
+          requireMFA: false,
+          allowRememberMe: false,
+          allowMultipleSessions: false,
+          requirePasswordChange: false
+        },
+        ipWhitelist: {
+          enabled: false,
+          addresses: [],
+          allowedRanges: []
+        },
+        mfaSettings: {
+          methods: ['email', 'sms'],
+          defaultMethod: 'email',
+          gracePeriod: 24,
+          trustDuration: 30
+        },
+        auditSettings: {
+          retentionDays: 90,
+          highRiskEvents: ['login_failed', 'password_reset'],
+          alertThresholds: {}
+        },
+        alertSettings: {
+          enableEmailAlerts: true,
+          enableSMSAlerts: false,
+          recipients: [],
+          severityLevels: ['high', 'critical']
+        }
+      },
+      notifications: {
+        emailEnabled: true,
+        smsEnabled: false,
+        pushEnabled: false,
+        frequency: 'daily',
+        alertTypes: ['payment', 'security']
+      }
+    }
   };
 
   const mockSuccessResponse: ApiSuccessResponse<Client> = {

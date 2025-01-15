@@ -10,10 +10,9 @@ import {
   Paper,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { Client as UIClient } from '../../types/client.types';
-import { Client as ServiceClient } from '../../services/clients.service';
-import { ApiResponse } from '../../utils/api';
-import { clientService } from '../../services/clients.service';
+import { Client } from '../../types/client.types';
+import { clientService } from '../../services/factory/ServiceFactory';
+import logger from '../../utils/logger';
 
 interface ContactInformationProps {
   clientId: string;
@@ -26,7 +25,6 @@ interface ContactInfo {
 }
 
 const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => {
-  // State
   const [contactInfo, setContactInfo] = useState<ContactInfo>({
     name: '',
     email: '',
@@ -37,25 +35,26 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // Load initial data
   const loadContactInfo = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const response: ApiResponse<ServiceClient> = await clientService.getClient(clientId);
+      const client = await clientService.getClient(clientId);
       
-      if (response.success) {
-        setContactInfo({
-          name: response.data.name || '',
-          email: '', // Contact email is not part of the service client
-          phone: '', // Contact phone is not part of the service client
-        });
-      } else {
-        setError(response.error?.message || 'Failed to load contact information');
+      if (!client) {
+        throw new Error('Client not found');
       }
+
+      setContactInfo({
+        name: client.name || '',
+        email: client.contactEmail || '',
+        phone: client.contactPhone || '',
+      });
+      logger.info(`Contact information loaded for client ${clientId}`);
     } catch (err) {
-      setError('Failed to load contact information');
-      console.error('Error loading contact info:', err);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      logger.error(`Failed to load contact information: ${errorMessage}`);
+      setError('Failed to load contact information. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -72,35 +71,31 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
       ...prev,
       [field]: event.target.value,
     }));
-    // Clear any previous success/error messages
     setSuccess(null);
     setError(null);
-  }, []); // No dependencies needed as it only uses setState
+  }, []);
 
   const handleSave = useCallback(async () => {
     try {
       setSaving(true);
       setError(null);
-      const updateData = {
-        name: contactInfo.name,
-        type: 'ENTERPRISE' as const,
-        status: 'ACTIVE' as const,
-        environment: 'PRODUCTION' as const,
-      };
-      const response: ApiResponse<ServiceClient> = await clientService.updateClient(clientId, updateData);
 
-      if (response.success) {
-        setSuccess('Contact information updated successfully');
-      } else {
-        setError(response.error?.message || 'Failed to update contact information');
-      }
+      await clientService.updateClient(clientId, {
+        contactEmail: contactInfo.email,
+        contactPhone: contactInfo.phone,
+        name: contactInfo.name,
+      });
+
+      setSuccess('Contact information updated successfully');
+      logger.info(`Contact information updated for client ${clientId}`);
     } catch (err) {
-      setError('Failed to update contact information');
-      console.error('Error updating contact info:', err);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      logger.error(`Failed to update contact information: ${errorMessage}`);
+      setError('Failed to update contact information. Please try again later.');
     } finally {
       setSaving(false);
     }
-  }, [clientId, contactInfo]); // Depends on clientId and current contactInfo
+  }, [clientId, contactInfo]);
 
   if (loading) {
     return (

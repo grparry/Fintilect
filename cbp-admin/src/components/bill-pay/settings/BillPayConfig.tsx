@@ -29,7 +29,7 @@ import {
   BillPayConfigUpdate,
   BillPayConfigValidation
 } from '../../../types/bill-pay.types';
-import { billPayService } from '../../../services/factory/ServiceFactory';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 
 type ValidationErrors = Partial<Record<keyof BillPayConfigUpdate, string>>;
 
@@ -52,12 +52,14 @@ const BillPayConfig: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
 
+  const billPayService = ServiceFactory.getInstance().getBillPayService();
+
   // Load initial config
   useEffect(() => {
     const loadConfig = async () => {
       try {
         setLoading(true);
-        const data = await billPayService.getConfig();
+        const data = await billPayService.getConfiguration();
         setOriginalConfig(data);
         setConfig({
           cutoffTime: data.cutoffTime,
@@ -87,8 +89,17 @@ const BillPayConfig: React.FC = () => {
       setError(null);
       setValidationErrors({});
       
-      await billPayService.updateConfig(config);
-      const updatedConfig = await billPayService.getConfig();
+      const validation = await billPayService.updateConfiguration(config);
+      if (!validation.valid) {
+        const errors: ValidationErrors = {};
+        validation.errors.forEach(({ field, message }) => {
+          errors[field] = message;
+        });
+        setValidationErrors(errors);
+        throw new Error('Validation failed');
+      }
+
+      const updatedConfig = await billPayService.getConfiguration();
       setOriginalConfig(updatedConfig);
       setConfig({
         cutoffTime: updatedConfig.cutoffTime,
@@ -101,36 +112,21 @@ const BillPayConfig: React.FC = () => {
         enableEmailNotifications: updatedConfig.enableEmailNotifications,
       });
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        // Check if it's a validation error
-        if (err.message.startsWith('Invalid configuration:')) {
-          const validationMessage = err.message.replace('Invalid configuration: ', '');
-          const errors: ValidationErrors = {};
-          validationMessage.split(', ').forEach(errorStr => {
-            const [field, message] = errorStr.split(': ');
-            if (field && message && field in config) {
-              errors[field as keyof BillPayConfigUpdate] = message;
-            }
-          });
-          setValidationErrors(errors);
-        } else {
-          setError(err.message);
-        }
-      } else {
-        setError('Failed to update configuration');
-      }
+      setError(err instanceof Error ? err.message : 'Failed to update configuration');
     } finally {
       setSaving(false);
     }
   };
 
-  // Test email notification
+  // Handle test email
   const handleTestEmail = async () => {
     try {
       setTestingEmail(true);
       setError(null);
-      await billPayService.testEmailNotification(config.notificationEmail);
-      // Show success message
+      
+      // TODO: Implement test email functionality once service method is available
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to send test email');
     } finally {
@@ -138,7 +134,7 @@ const BillPayConfig: React.FC = () => {
     }
   };
 
-  // Reset form to original values
+  // Handle reset
   const handleReset = () => {
     if (originalConfig) {
       setConfig({
@@ -156,38 +152,22 @@ const BillPayConfig: React.FC = () => {
     }
   };
 
-  // Handle field changes
-  const handleFieldChange = (field: keyof BillPayConfigUpdate, value: string | number | boolean) => {
-    setConfig(prev => ({ ...prev, [field]: value }));
-    setValidationErrors(prev => {
-      const { [field]: _, ...rest } = prev;
-      return rest;
-    });
-  };
-
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: 400,
-        }}
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
         <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h5" sx={{ mb: 3 }}>
+    <Box>
+      <Typography variant="h6" gutterBottom>
         Bill Pay Configuration
       </Typography>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+        <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
@@ -198,19 +178,22 @@ const BillPayConfig: React.FC = () => {
             <Grid item xs={12} md={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <TimePicker
-                  label="Daily Cutoff Time"
+                  label="Cutoff Time"
                   value={dayjs(config.cutoffTime, 'HH:mm')}
-                  onChange={(value) => {
-                    if (value) {
-                      handleFieldChange('cutoffTime', value.format('HH:mm'));
+                  onChange={(newValue: Dayjs | null) => {
+                    if (newValue) {
+                      setConfig(prev => ({
+                        ...prev,
+                        cutoffTime: newValue.format('HH:mm')
+                      }));
                     }
                   }}
                   slotProps={{
                     textField: {
                       fullWidth: true,
-                      error: validationErrors.cutoffTime !== undefined,
-                      helperText: validationErrors.cutoffTime,
-                    },
+                      error: !!validationErrors.cutoffTime,
+                      helperText: validationErrors.cutoffTime
+                    }
                   }}
                 />
               </LocalizationProvider>
@@ -218,204 +201,155 @@ const BillPayConfig: React.FC = () => {
 
             <Grid item xs={12} md={6}>
               <TextField
-                fullWidth
-                type="number"
                 label="Maximum Daily Limit"
+                type="number"
                 value={config.maxDailyLimit}
-                onChange={(event) => {
-                  const value = Number(event.target.value);
-                  handleFieldChange('maxDailyLimit', value);
-                }}
-                error={validationErrors.maxDailyLimit !== undefined}
-                helperText={
-                  validationErrors.maxDailyLimit ||
-                  `Min: $${originalConfig?.validationRules.minDailyLimit.toLocaleString()}, Max: $${originalConfig?.validationRules.maxDailyLimit.toLocaleString()}`
-                }
+                onChange={(e) => setConfig(prev => ({ ...prev, maxDailyLimit: Number(e.target.value) }))}
+                error={!!validationErrors.maxDailyLimit}
+                helperText={validationErrors.maxDailyLimit}
+                fullWidth
                 InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">$</InputAdornment>
-                  ),
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
               />
             </Grid>
 
             <Grid item xs={12} md={6}>
               <TextField
-                fullWidth
-                type="number"
                 label="Maximum Transaction Limit"
-                value={config.maxTransactionLimit}
-                onChange={(event) => {
-                  const value = Number(event.target.value);
-                  handleFieldChange('maxTransactionLimit', value);
-                }}
-                error={validationErrors.maxTransactionLimit !== undefined}
-                helperText={
-                  validationErrors.maxTransactionLimit ||
-                  `Min: $${originalConfig?.validationRules.minTransactionAmount.toLocaleString()}, Max: $${originalConfig?.validationRules.maxTransactionAmount.toLocaleString()}`
-                }
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">$</InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
                 type="number"
-                label="Retry Attempts"
-                value={config.retryAttempts}
-                onChange={(event) => {
-                  const value = Number(event.target.value);
-                  handleFieldChange('retryAttempts', value);
+                value={config.maxTransactionLimit}
+                onChange={(e) => setConfig(prev => ({ ...prev, maxTransactionLimit: Number(e.target.value) }))}
+                error={!!validationErrors.maxTransactionLimit}
+                helperText={validationErrors.maxTransactionLimit}
+                fullWidth
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
-                error={validationErrors.retryAttempts !== undefined}
-                helperText={
-                  validationErrors.retryAttempts ||
-                  `Min: ${originalConfig?.validationRules.minRetryAttempts}, Max: ${originalConfig?.validationRules.maxRetryAttempts}`
-                }
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Divider sx={{ my: 2 }} />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={config.allowWeekendProcessing}
-                    onChange={(event) => {
-                      handleFieldChange('allowWeekendProcessing', event.target.checked);
-                    }}
-                  />
-                }
-                label={
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <span>Allow Weekend Processing</span>
-                    <Tooltip title="Enable processing of payments during weekends">
-                      <InfoIcon color="action" fontSize="small" />
-                    </Tooltip>
-                  </Stack>
-                }
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={config.requireDualApproval}
-                    onChange={(event) => {
-                      handleFieldChange('requireDualApproval', event.target.checked);
-                    }}
-                  />
-                }
-                label={
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <span>Require Dual Approval</span>
-                    <Tooltip title="Require two approvers for payments above certain thresholds">
-                      <InfoIcon color="action" fontSize="small" />
-                    </Tooltip>
-                  </Stack>
-                }
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Divider sx={{ my: 2 }} />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={config.enableEmailNotifications}
-                    onChange={(event) => {
-                      handleFieldChange('enableEmailNotifications', event.target.checked);
-                    }}
-                  />
-                }
-                label="Enable Email Notifications"
               />
             </Grid>
 
             <Grid item xs={12} md={6}>
               <TextField
+                label="Retry Attempts"
+                type="number"
+                value={config.retryAttempts}
+                onChange={(e) => setConfig(prev => ({ ...prev, retryAttempts: Number(e.target.value) }))}
+                error={!!validationErrors.retryAttempts}
+                helperText={validationErrors.retryAttempts}
                 fullWidth
-                label="Notification Email"
-                value={config.notificationEmail}
-                onChange={(event) => {
-                  handleFieldChange('notificationEmail', event.target.value);
-                }}
-                disabled={!config.enableEmailNotifications}
-                error={validationErrors.notificationEmail !== undefined}
-                helperText={validationErrors.notificationEmail}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={handleTestEmail}
-                        disabled={
-                          !config.enableEmailNotifications ||
-                          !config.notificationEmail ||
-                          testingEmail
-                        }
-                      >
-                        {testingEmail ? (
-                          <CircularProgress size={20} />
-                        ) : (
-                          <SendIcon />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
               />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="subtitle1" gutterBottom>
+                Processing Options
+              </Typography>
+              <Stack spacing={2}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={config.allowWeekendProcessing}
+                      onChange={(e) => setConfig(prev => ({ ...prev, allowWeekendProcessing: e.target.checked }))}
+                    />
+                  }
+                  label={
+                    <Box display="flex" alignItems="center">
+                      Allow Weekend Processing
+                      <Tooltip title="Enable processing of payments during weekends">
+                        <IconButton size="small">
+                          <InfoIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  }
+                />
+
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={config.requireDualApproval}
+                      onChange={(e) => setConfig(prev => ({ ...prev, requireDualApproval: e.target.checked }))}
+                    />
+                  }
+                  label={
+                    <Box display="flex" alignItems="center">
+                      Require Dual Approval
+                      <Tooltip title="Require two approvers for payments above certain thresholds">
+                        <IconButton size="small">
+                          <InfoIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  }
+                />
+              </Stack>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="subtitle1" gutterBottom>
+                Notification Settings
+              </Typography>
+              <Stack spacing={2}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={config.enableEmailNotifications}
+                      onChange={(e) => setConfig(prev => ({ ...prev, enableEmailNotifications: e.target.checked }))}
+                    />
+                  }
+                  label="Enable Email Notifications"
+                />
+
+                <TextField
+                  label="Notification Email"
+                  value={config.notificationEmail}
+                  onChange={(e) => setConfig(prev => ({ ...prev, notificationEmail: e.target.value }))}
+                  error={!!validationErrors.notificationEmail}
+                  helperText={validationErrors.notificationEmail}
+                  disabled={!config.enableEmailNotifications}
+                  fullWidth
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Button
+                          size="small"
+                          onClick={handleTestEmail}
+                          disabled={!config.enableEmailNotifications || !config.notificationEmail || testingEmail}
+                          startIcon={testingEmail ? <CircularProgress size={20} /> : <SendIcon />}
+                        >
+                          Test
+                        </Button>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Stack>
             </Grid>
           </Grid>
 
-          <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
-            <Stack direction="row" spacing={2}>
-              <Button
-                variant="outlined"
-                onClick={handleReset}
-                disabled={loading}
-                startIcon={<RestartAltIcon />}
-              >
-                Reset to Defaults
-              </Button>
-              <Button
-                variant="contained"
-                onClick={handleSubmit}
-                disabled={saving}
-                startIcon={
-                  saving ? <CircularProgress size={20} /> : undefined
-                }
-              >
-                Save Changes
-              </Button>
-            </Stack>
+          <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+            <Button
+              variant="outlined"
+              onClick={handleReset}
+              startIcon={<RestartAltIcon />}
+              disabled={saving}
+            >
+              Reset
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              disabled={saving}
+              startIcon={saving && <CircularProgress size={20} />}
+            >
+              Save Changes
+            </Button>
           </Box>
         </CardContent>
       </Card>
-
-      {originalConfig && (
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ mt: 2, display: 'block' }}
-        >
-          Last updated by {originalConfig.lastUpdatedBy} at{' '}
-          {dayjs(originalConfig.lastUpdatedAt).format(
-            'MM/DD/YYYY HH:mm:ss'
-          )}
-        </Typography>
-      )}
     </Box>
   );
 };

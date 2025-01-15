@@ -15,10 +15,14 @@ import {
   Switch,
 } from '@mui/material';
 import { SecuritySettings as SecuritySettingsType } from '../../../types/security.types';
-import { clientService } from '../../../services/clients.service';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import MemberSecuritySettings from './MemberSecuritySettings';
 import AuditSearch from './AuditSearch';
 import { shouldUseMockData } from '../../../config/api.config';
+
+// Get service instances through factory
+const clientService = ServiceFactory.getInstance().getClientService();
+const permissionService = ServiceFactory.getInstance().getPermissionService();
 
 interface SecuritySettingsProps {
   clientId: string;
@@ -31,15 +35,45 @@ const defaultSecuritySettings: SecuritySettingsType = {
     requireLowercase: true,
     requireNumbers: true,
     requireSpecialChars: true,
-    expirationDays: 90
+    expirationDays: 90,
+    preventReuse: 5,
+    complexityScore: 3
   },
   loginPolicy: {
     maxAttempts: 3,
-    lockoutDuration: 30
+    lockoutDuration: 30,
+    sessionTimeout: 30,
+    requireMFA: false,
+    allowRememberMe: true,
+    allowMultipleSessions: false,
+    requirePasswordChange: false
   },
-  sessionTimeout: 30,
-  mfaEnabled: false,
-  ipWhitelist: []
+  ipWhitelist: {
+    enabled: false,
+    addresses: [],
+    allowedRanges: []
+  },
+  mfaSettings: {
+    methods: ['email'],
+    defaultMethod: 'email',
+    gracePeriod: 7,
+    trustDuration: 30
+  },
+  auditSettings: {
+    retentionDays: 90,
+    highRiskEvents: ['login_failure', 'mfa_failure', 'password_reset'],
+    alertThresholds: {
+      'login_failure': 3,
+      'mfa_failure': 2,
+      'password_reset': 1
+    }
+  },
+  alertSettings: {
+    enableEmailAlerts: true,
+    enableSMSAlerts: false,
+    recipients: [],
+    severityLevels: ['high', 'critical']
+  }
 };
 
 const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
@@ -60,12 +94,16 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await clientService.getSecuritySettings(clientId);
+      
+      // Get settings through service factory
+      const response = await clientService.getClientSettings(clientId);
+      
       // Ensure all required fields are present by merging with defaults
       const mergedSettings: SecuritySettingsType = {
         ...defaultSecuritySettings,
-        ...response
+        ...response.security
       };
+      
       setSettings(mergedSettings);
       setIsDirty(false);
     } catch (err) {
@@ -129,8 +167,14 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     if (settings.loginPolicy.lockoutDuration < 1) {
       return 'Lockout duration must be at least 1 minute';
     }
-    if (settings.sessionTimeout < 1) {
+    if (settings.loginPolicy.sessionTimeout < 1) {
       return 'Session timeout must be at least 1 minute';
+    }
+    if (settings.mfaSettings.gracePeriod < 1) {
+      return 'MFA grace period must be at least 1 day';
+    }
+    if (settings.auditSettings.retentionDays < 30) {
+      return 'Audit retention must be at least 30 days';
     }
     return null;
   };
@@ -138,11 +182,23 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
   const handleSave = async () => {
     if (!settings) return;
     
+    // Validate settings locally
+    const validationError = validateSettings(settings);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    
     try {
       setSaving(true);
       setError(null);
-      const updatedSettings = await clientService.updateSecuritySettings(clientId, settings as SecuritySettingsType);
-      setSettings(updatedSettings as SecuritySettingsType);
+      
+      // Update settings through service factory
+      const updatedSettings = await clientService.updateClientSettings(clientId, {
+        security: settings
+      });
+      
+      setSettings(updatedSettings.security);
       setIsDirty(false);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to update security settings';
@@ -293,6 +349,28 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
                     helperText={settings.loginPolicy.lockoutDuration < 1 ? 'Must be at least 1 minute' : ''}
                   />
                 </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Session Timeout (minutes)"
+                    value={settings.loginPolicy.sessionTimeout}
+                    onChange={(e) => handleLoginPolicyChange('sessionTimeout', parseInt(e.target.value))}
+                    error={settings.loginPolicy.sessionTimeout < 1}
+                    helperText={settings.loginPolicy.sessionTimeout < 1 ? 'Must be at least 1 minute' : ''}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={settings.loginPolicy.requireMFA}
+                        onChange={(e) => handleLoginPolicyChange('requireMFA', e.target.checked)}
+                      />
+                    }
+                    label="Require Multi-Factor Authentication"
+                  />
+                </Grid>
               </Grid>
             </Grid>
 
@@ -302,25 +380,14 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="Session Timeout (minutes)"
-                    value={settings.sessionTimeout}
-                    onChange={(e) => handleSettingChange('sessionTimeout', parseInt(e.target.value))}
-                    error={settings.sessionTimeout < 1}
-                    helperText={settings.sessionTimeout < 1 ? 'Must be at least 1 minute' : ''}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
                   <FormControlLabel
                     control={
                       <Switch
-                        checked={settings.mfaEnabled}
-                        onChange={(e) => handleSettingChange('mfaEnabled', e.target.checked)}
+                        checked={settings.mfaSettings.defaultMethod === 'email'}
+                        onChange={(e) => handleSettingChange('mfaSettings', { ...settings.mfaSettings, defaultMethod: e.target.checked ? 'email' : 'sms' })}
                       />
                     }
-                    label="Enable Multi-Factor Authentication"
+                    label="Use Email as Default MFA Method"
                   />
                 </Grid>
               </Grid>

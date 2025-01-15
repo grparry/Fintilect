@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useNavigation } from '../../context/NavigationContext';
 import { getAllRoutes } from '../../routes';
 import { RouteConfig } from '../../types/route.types';
-import { clientService } from '../../services/clients.service';
+import { clientService } from '../../services/factory/ServiceFactory';
 import { decodeId, isValidEncodedId } from '../../utils/idEncoder';
 
 // Map of URL segments to user-friendly titles
@@ -97,75 +97,50 @@ export default function Breadcrumbs() {
     return cache[segment] || (isUser ? 'User' : 'Client');
   };
 
-  // Function to get client name
-  const getClientName = async (encodedId: string) => {
-    if (!shouldBeEncodedId(encodedId)) {
-      console.warn('Not a client ID segment:', encodedId);
-      return;
-    }
-
+  const fetchClientName = async (encodedId: string) => {
     try {
-      const decodedId = decodeId(encodedId);
-      const response = await clientService.getClient(decodedId);
-      if (response.success) {
+      const clientId = decodeId(encodedId);
+      if (!clientId) return null;
+
+      const client = await clientService.getClient(clientId);
+      if (client) {
+        const name = client.name || client.id;
         setCachedNames(prev => ({
           ...prev,
-          clients: {
-            ...prev.clients,
-            [encodedId]: response.data.name
-          }
+          clients: { ...prev.clients, [encodedId]: name }
         }));
-      } else {
-        throw new Error(response.error?.message || 'Failed to fetch client');
+        return name;
       }
-    } catch (err) {
-      console.error('Error fetching client name:', err);
-      setCachedNames(prev => ({
-        ...prev,
-        clients: {
-          ...prev.clients,
-          [encodedId]: 'Client'  // Fallback to generic name on error
-        }
-      }));
+      return null;
+    } catch (error) {
+      console.error('Error fetching client name:', error);
+      return null;
     }
   };
 
-  // Function to get user name
-  const getUserName = async (clientId: string, userId: string) => {
-    if (!shouldBeEncodedId(clientId)) {
-      console.warn('Not a client ID segment:', clientId);
-      return;
-    }
-
-    if (!shouldBeEncodedId(userId)) {
-      console.warn('Not a user ID segment:', userId);
-      return;
-    }
-
+  const fetchUserName = async (encodedId: string, clientId: string) => {
     try {
-      const decodedClientId = decodeId(clientId);
-      const decodedUserId = decodeId(userId);
-      const response = await clientService.getClientUser(decodedClientId, decodedUserId);
-      if (response.success) {
+      const userId = decodeId(encodedId);
+      if (!userId) return null;
+
+      const response = await clientService.getClientUsers(clientId, { 
+        searchTerm: userId,
+        limit: 1
+      });
+      
+      if (response.items.length > 0) {
+        const user = response.items[0];
+        const name = `${user.firstName} ${user.lastName}`;
         setCachedNames(prev => ({
           ...prev,
-          users: {
-            ...prev.users,
-            [userId]: `${response.data.firstName} ${response.data.lastName}`
-          }
+          users: { ...prev.users, [encodedId]: name }
         }));
-      } else {
-        throw new Error(response.error.message || 'Failed to fetch user');
+        return name;
       }
-    } catch (err) {
-      console.error('Error fetching user name:', err);
-      setCachedNames(prev => ({
-        ...prev,
-        users: {
-          ...prev.users,
-          [userId]: 'User'  // Fallback to generic name on error
-        }
-      }));
+      return null;
+    } catch (error) {
+      console.error('Error fetching user name:', error);
+      return null;
     }
   };
 
@@ -182,7 +157,7 @@ export default function Breadcrumbs() {
         if (shouldBeEncodedId(potentialClientId)) {
           clientId = potentialClientId;
           if (!(clientId in cachedNames.clients)) {
-            await getClientName(clientId);
+            await fetchClientName(clientId);
           }
         }
       }
@@ -193,7 +168,7 @@ export default function Breadcrumbs() {
         if (usersIndex !== -1 && segments[usersIndex + 1]) {
           const potentialUserId = segments[usersIndex + 1];
           if (shouldBeEncodedId(potentialUserId) && !(potentialUserId in cachedNames.users)) {
-            await getUserName(clientId, potentialUserId);
+            await fetchUserName(potentialUserId, clientId);
           }
         }
       }

@@ -18,7 +18,8 @@ import {
     ContactInformation,
     Address,
     PaginatedResponse,
-    Contact
+    Contact,
+    UserStatus
 } from '../../../types/client.types';
 import { AuditLog, AuditSearchRequest, SecuritySettings, LoginPolicy } from '../../../types/security.types';
 import { mockClients, mockUsers, defaultSettings, mockPermissions } from './data/client/mockClientData';
@@ -29,7 +30,7 @@ import { mockClients, mockUsers, defaultSettings, mockPermissions } from './data
  */
 export class MockClientService extends BaseMockService implements IClientService {
     private clients: Client[] = [...mockClients];
-    private users: User[] = [...mockUsers];
+    private users: Map<string, User[]> = new Map();
     private apiKeys: Map<string, ClientApiKey[]> = new Map();
     private contacts: Map<string, ClientContact[]> = new Map();
     private services: Map<string, ClientService[]> = new Map();
@@ -58,6 +59,7 @@ export class MockClientService extends BaseMockService implements IClientService
                 zipCode: '80202',
                 country: 'USA'
             });
+            this.users.set(client.id, []);
         });
     }
 
@@ -167,6 +169,7 @@ export class MockClientService extends BaseMockService implements IClientService
         this.userGroups.delete(clientId);
         this.auditLogs.delete(clientId);
         this.addresses.delete(clientId);
+        this.users.delete(clientId);
     }
 
     async getClientSettings(clientId: string): Promise<ClientSettings> {
@@ -338,7 +341,7 @@ export class MockClientService extends BaseMockService implements IClientService
     }): Promise<PaginatedResponse<User>> {
         this.validateRequired({ clientId }, ['clientId']);
 
-        let filteredUsers = this.users.filter(u => u.clientId === clientId);
+        let filteredUsers = this.users.get(clientId) || [];
 
         if (params) {
             if (params.role) {
@@ -461,7 +464,7 @@ export class MockClientService extends BaseMockService implements IClientService
     }> {
         this.validateRequired({ clientId }, ['clientId']);
 
-        const clientUsers = this.users.filter(u => u.clientId === clientId);
+        const clientUsers = this.users.get(clientId) || [];
         const activeUsers = clientUsers.filter(u => !u.locked);
 
         return {
@@ -528,5 +531,134 @@ export class MockClientService extends BaseMockService implements IClientService
         this.validateRequired({ clientId }, ['clientId']);
         const currentSettings = await this.getSecuritySettings(clientId);
         return { ...currentSettings, ...settings };
+    }
+
+    async getGroup(clientId: string, groupId: string): Promise<UserGroup> {
+        this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
+        const groups = this.userGroups.get(clientId) || [];
+        const group = groups.find(g => g.id === groupId);
+        if (!group) {
+            this.createError(`Group not found: ${groupId}`, 404);
+        }
+        return group!;
+    }
+
+    async createGroup(clientId: string, group: Omit<UserGroup, 'id'>): Promise<UserGroup> {
+        this.validateRequired({ clientId, group }, ['clientId', 'group']);
+        const groups = this.userGroups.get(clientId) || [];
+        const newGroup: UserGroup = {
+            ...group,
+            id: Math.random().toString(36).substr(2, 9),
+            clientId,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        groups.push(newGroup);
+        this.userGroups.set(clientId, groups);
+        return newGroup;
+    }
+
+    async updateGroup(clientId: string, groupId: string, group: Partial<UserGroup>): Promise<UserGroup> {
+        this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
+        const groups = this.userGroups.get(clientId) || [];
+        const groupIndex = groups.findIndex(g => g.id === groupId);
+        if (groupIndex === -1) {
+            this.createError(`Group not found: ${groupId}`, 404);
+        }
+        const updatedGroup = {
+            ...groups[groupIndex],
+            ...group,
+            updatedAt: new Date().toISOString()
+        };
+        groups[groupIndex] = updatedGroup;
+        this.userGroups.set(clientId, groups);
+        return updatedGroup;
+    }
+
+    async deleteGroup(clientId: string, groupId: string): Promise<void> {
+        this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
+        const groups = this.userGroups.get(clientId) || [];
+        const groupIndex = groups.findIndex(g => g.id === groupId);
+        if (groupIndex === -1) {
+            this.createError(`Group not found: ${groupId}`, 404);
+        }
+        groups.splice(groupIndex, 1);
+        this.userGroups.set(clientId, groups);
+    }
+
+    async getGroups(clientId: string): Promise<UserGroup[]> {
+        this.validateRequired({ clientId }, ['clientId']);
+        return this.userGroups.get(clientId) || [];
+    }
+
+    async getUser(clientId: string, userId: string): Promise<User> {
+        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+        const users = this.users.get(clientId) || [];
+        const user = users.find(u => u.id === userId);
+        if (!user) {
+            this.createError(`User not found: ${userId}`, 404);
+        }
+        return user!;
+    }
+
+    async createUser(clientId: string, user: Omit<User, 'id'>): Promise<User> {
+        this.validateRequired({ clientId, user }, ['clientId', 'user']);
+        const users = this.users.get(clientId) || [];
+        const newUser: User = {
+            ...user,
+            id: Math.random().toString(36).substr(2, 9),
+            clientId,
+            status: UserStatus.PENDING,
+            locked: false,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        users.push(newUser);
+        this.users.set(clientId, users);
+        return newUser;
+    }
+
+    async updateUser(clientId: string, userId: string, user: Partial<User>): Promise<User> {
+        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+        const users = this.users.get(clientId) || [];
+        const userIndex = users.findIndex(u => u.id === userId);
+        if (userIndex === -1) {
+            this.createError(`User not found: ${userId}`, 404);
+        }
+        const updatedUser = {
+            ...users[userIndex],
+            ...user,
+            updatedAt: new Date().toISOString()
+        };
+        users[userIndex] = updatedUser;
+        this.users.set(clientId, users);
+        return updatedUser;
+    }
+
+    async deleteUser(clientId: string, userId: string): Promise<void> {
+        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+        const users = this.users.get(clientId) || [];
+        const userIndex = users.findIndex(u => u.id === userId);
+        if (userIndex === -1) {
+            this.createError(`User not found: ${userId}`, 404);
+        }
+        users.splice(userIndex, 1);
+        this.users.set(clientId, users);
+    }
+
+    async setUserLockStatus(clientId: string, userId: string, locked: boolean): Promise<void> {
+        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+        const users = this.users.get(clientId) || [];
+        const userIndex = users.findIndex(u => u.id === userId);
+        if (userIndex === -1) {
+            this.createError(`User not found: ${userId}`, 404);
+        }
+        users[userIndex] = {
+            ...users[userIndex],
+            locked,
+            status: locked ? UserStatus.LOCKED : UserStatus.ACTIVE,
+            updatedAt: new Date().toISOString()
+        };
+        this.users.set(clientId, users);
     }
 }

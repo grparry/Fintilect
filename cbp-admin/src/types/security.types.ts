@@ -193,8 +193,14 @@ export interface SecurityMetrics {
 }
 
 // Bill Pay Specific Security Types
-export interface BillPayPasswordPolicy extends PasswordPolicy {
-    // Add any additional bill-pay specific fields here if needed
+export interface BillPayPasswordPolicy {
+    minLength: number;
+    requireUppercase: boolean;
+    requireLowercase: boolean;
+    requireNumbers: boolean;
+    requireSpecialChars: boolean;
+    expiryDays: number;
+    preventReuse: number;
 }
 
 export interface BillPayLoginPolicy {

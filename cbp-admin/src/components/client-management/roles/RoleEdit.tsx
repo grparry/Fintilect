@@ -10,7 +10,10 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { SecurityRole, Permission } from '../../../types/client.types';
-import { clientService, Permission as ServicePermission } from '../../../services/clients.service';
+import { ClientService } from '../../../services/implementations/real/ClientService';
+import { PermissionService } from '../../../services/implementations/real/PermissionService';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+import { PermissionCategory, PermissionAction } from '../../../types/permission.types';
 import { encodeId, decodeId } from '../../../utils/idEncoder';
 import PermissionTreeView from '../groups/PermissionTreeView';
 
@@ -19,14 +22,22 @@ interface RoleEditProps {
   roleId?: string;
 }
 
-// Convert service permission to client permission type
-const mapServicePermissionToClientPermission = (p: ServicePermission): Permission => ({
-  id: p.id,
-  name: p.name,
-  description: p.description,
-  category: p.category as Permission['category'],
-  actions: [p.scope]
-});
+// Get service instances
+const clientService = ServiceFactory.getInstance().getClientService();
+const permissionService = ServiceFactory.getInstance().getPermissionService();
+
+// Convert permissions array to PermissionCategory format
+const convertToPermissionCategory = (permissions: Permission[]): PermissionCategory => {
+  const category: PermissionCategory = {};
+  permissions.forEach(permission => {
+    // Ensure actions are of type PermissionAction
+    const validActions = permission.actions.filter((action): action is PermissionAction => {
+      return ['view', 'edit', 'delete', 'process', 'approve', 'export', 'create'].includes(action);
+    });
+    category[permission.id] = validActions;
+  });
+  return category;
+};
 
 export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
   const navigate = useNavigate();
@@ -44,103 +55,59 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
         setLoading(true);
         setError(null);
 
-        const permissionsResponse = await clientService.getPermissions();
-        
-        if (!permissionsResponse.success) {
-          throw new Error(permissionsResponse.error?.message || 'Failed to load permissions');
-        }
-        
-        // Convert service permissions to client permissions
-        const clientPermissions = permissionsResponse.data.map(mapServicePermissionToClientPermission);
-        setPermissions(clientPermissions);
+        // Fetch all available permissions
+        const permissions = await clientService.getPermissions();
+        setPermissions(permissions);
 
+        // If editing existing role, fetch its data
         if (roleId) {
-          const decodedRoleId = decodeId(roleId);
-          const roleResponse = await clientService.getRole(decodedRoleId);
-          
-          if (!roleResponse.success) {
-            throw new Error(roleResponse.error?.message || 'Failed to load role');
+          const roles = await clientService.getClientRoles(clientId);
+          const role = roles.find((r: SecurityRole) => r.id === roleId);
+          if (!role) {
+            throw new Error('Role not found');
           }
-          
-          // Convert service role to client role type
-          const clientRole: SecurityRole = {
-            ...roleResponse.data,
-            description: roleResponse.data.description || '', // Ensure description is not undefined
-            permissions: roleResponse.data.permissions
-              .map(permId => clientPermissions.find(p => p.id === permId))
-              .filter((p): p is Permission => p !== undefined)
-          };
-          
-          setRole(clientRole);
-          setSelectedPermissions(clientRole.permissions);
-        } else {
-          setRole({
-            id: '',
-            name: '',
-            description: '',
-            permissions: [],
-            isSystem: false,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          });
+          setRole(role);
+          setSelectedPermissions(role.permissions);
         }
 
         setLoading(false);
       } catch (error) {
-        setError(error instanceof Error ? error.message : 'Failed to load role data');
-        console.error('Error loading role data:', error);
+        setError(error instanceof Error ? error.message : 'Failed to load data');
         setLoading(false);
       }
     };
+
     fetchData();
   }, [clientId, roleId]);
 
-  const handlePermissionToggle = (permission: Permission) => {
-    setSelectedPermissions(prev => {
-      const isSelected = prev.some(p => p.id === permission.id);
-      if (isSelected) {
-        return prev.filter(p => p.id !== permission.id);
-      } else {
-        return [...prev, permission];
-      }
-    });
-  };
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!role) return;
+    if (!role?.name) return;
 
     try {
       setSaving(true);
       setError(null);
 
-      // Convert client role type to service role type
       const roleData = {
         name: role.name,
         description: role.description || '',
-        permissions: selectedPermissions.map(p => p.id),
-        isSystem: role.isSystem
+        permissions: convertToPermissionCategory(selectedPermissions),
+        clientId
       };
 
-      let response;
       if (roleId) {
-        const decodedRoleId = decodeId(roleId);
-        response = await clientService.updateRole(decodedRoleId, roleData);
+        // Update existing role
+        await permissionService.updatePermissionGroup(Number(roleId), roleData);
       } else {
-        response = await clientService.createRole(roleData);
+        // Create new role
+        await permissionService.createPermissionGroup(roleData);
       }
 
-      if (response.success) {
-        setSuccess('Role saved successfully');
-        const encodedClientId = encodeId(clientId);
-        navigate(`/clients/${encodedClientId}/roles`);
-      } else {
-        setError(response.error?.message || 'Failed to save role');
-      }
+      setSuccess('Role saved successfully');
+      setSaving(false);
+      setTimeout(() => navigate(`/clients/${encodeId(clientId)}/roles`), 1500);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to save role');
-      console.error('Error saving role:', error);
-    } finally {
       setSaving(false);
     }
   };
@@ -153,14 +120,10 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
     );
   }
 
-  if (!role) {
-    return <div>Role not found</div>;
-  }
-
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>
-        {roleId ? 'Edit Role' : 'Create Role'}
+    <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 800, mx: 'auto', p: 2 }}>
+      <Typography variant="h5" gutterBottom>
+        {roleId ? 'Edit Role' : 'Create New Role'}
       </Typography>
 
       {error && (
@@ -168,6 +131,7 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
           {error}
         </Alert>
       )}
+
       {success && (
         <Alert severity="success" sx={{ mb: 2 }}>
           {success}
@@ -178,62 +142,58 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
         <TextField
           fullWidth
           label="Role Name"
-          value={role.name}
-          onChange={(e) => setRole({ ...role, name: e.target.value })}
+          value={role?.name || ''}
+          onChange={e => setRole(prev => prev ? { ...prev, name: e.target.value } : null)}
+          required
           sx={{ mb: 2 }}
         />
+
         <TextField
           fullWidth
           label="Description"
-          value={role.description}
-          onChange={(e) => setRole({ ...role, description: e.target.value })}
+          value={role?.description || ''}
+          onChange={e => setRole(prev => prev ? { ...prev, description: e.target.value } : null)}
           multiline
-          rows={2}
+          rows={3}
           sx={{ mb: 2 }}
         />
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="subtitle1" gutterBottom>
-            System Role
-          </Typography>
-          <input
-            type="checkbox"
-            checked={role.isSystem || false}
-            onChange={(e) => setRole({ ...role, isSystem: e.target.checked })}
-          />
-        </Box>
-      </Paper>
 
-      <Paper sx={{ p: 2 }}>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="subtitle1" gutterBottom>
           Permissions
         </Typography>
+
         <PermissionTreeView
           permissions={permissions}
           selectedPermissions={selectedPermissions}
-          roles={[]}  // No roles in role editor
+          roles={[]}
           selectedRoles={[]}
-          onPermissionToggle={handlePermissionToggle}
+          onPermissionToggle={(permission: Permission) => {
+            const isSelected = selectedPermissions.some(p => p.id === permission.id);
+            const newSelectedPermissions = isSelected
+              ? selectedPermissions.filter(p => p.id !== permission.id)
+              : [...selectedPermissions, permission];
+            setSelectedPermissions(newSelectedPermissions);
+            setRole(prev => prev ? { ...prev, permissions: newSelectedPermissions } : null);
+          }}
           onRoleToggle={() => {}}  // No-op since we don't handle roles here
         />
       </Paper>
 
-      <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          sx={{ mr: 1 }}
-          disabled={saving || !role.name}
-        >
-          {saving ? 'Saving...' : 'Save Changes'}
-        </Button>
+      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
         <Button
           variant="outlined"
-          onClick={() => {
-            const encodedClientId = encodeId(clientId);
-            navigate(`/clients/${encodedClientId}/roles`);
-          }}
+          onClick={() => navigate(`/clients/${encodeId(clientId)}/roles`)}
+          disabled={saving}
         >
           Cancel
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={saving || !role?.name}
+          startIcon={saving ? <CircularProgress size={20} /> : undefined}
+        >
+          {saving ? 'Saving...' : 'Save Role'}
         </Button>
       </Box>
     </Box>

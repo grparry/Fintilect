@@ -29,8 +29,8 @@ import {
   Search as SearchIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { UserGroup } from '../../../types/client.types';
-import { clientService } from '../../../services/clients.service';
+import { UserGroup as Group } from '../../../types/client.types';
+import { clientService } from '../../../services/factory/ServiceFactory';
 import { shouldUseMockData } from '../../../config/api.config';
 import { decodeId } from '../../../utils/idEncoder';
 
@@ -39,17 +39,17 @@ interface GroupsListProps {
 }
 
 interface GroupsListState {
-  groups: UserGroup[];
+  groups: Group[];
   loading: boolean;
   error: string | null;
   deleteDialogOpen: boolean;
-  groupToDelete: UserGroup | null;
+  groupToDelete: Group | null;
   sortBy: 'name' | 'description' | 'members';
   sortDirection: 'asc' | 'desc';
   filterText: string;
 }
 
-const serviceGroupToUIGroup = (group: any, clientId: string): UserGroup => ({
+const serviceGroupToUIGroup = (group: any, clientId: string): Group => ({
   id: group.id,
   name: group.name,
   description: group.description || '',
@@ -88,28 +88,23 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
       const decodedClientId = decodeId(clientId);
-      const response = await clientService.getGroups(decodedClientId);
-
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Failed to load groups');
-      }
+      const groups = await clientService.getGroups(decodedClientId);
 
       setState(prev => ({
         ...prev,
-        groups: response.data.items.map(group => serviceGroupToUIGroup(group, clientId)),
+        groups: groups.map(group => serviceGroupToUIGroup(group, clientId)),
         loading: false
       }));
-    } catch (error) {
+    } catch (err: any) {
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to load groups',
-        loading: false
+        loading: false,
+        error: err.message || 'Failed to load groups'
       }));
-      console.error('Error loading groups:', error);
     }
   };
 
-  const handleDeleteClick = (group: UserGroup) => {
+  const handleDeleteClick = (group: Group) => {
     setState(prev => ({
       ...prev,
       deleteDialogOpen: true,
@@ -118,33 +113,24 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!state.groupToDelete) return;
-
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
       const decodedClientId = decodeId(clientId);
-      const decodedGroupId = decodeId(state.groupToDelete.id);
-      
-      const response = await clientService.deleteGroup(decodedClientId, decodedGroupId);
-      
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Failed to delete group');
-      }
-
+      const decodedGroupId = decodeId(state.groupToDelete!.id);
+      await clientService.deleteGroup(decodedClientId, decodedGroupId);
       setState(prev => ({
         ...prev,
-        groups: prev.groups.filter(g => g.id !== state.groupToDelete?.id),
+        loading: false,
         deleteDialogOpen: false,
-        groupToDelete: null,
-        loading: false
+        groupToDelete: null
       }));
-    } catch (error) {
+      fetchGroups(); // Refresh the list after deletion
+    } catch (err: any) {
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to delete group',
-        loading: false
+        loading: false,
+        error: err.message || 'Failed to delete group'
       }));
-      console.error('Error deleting group:', error);
     }
   };
 

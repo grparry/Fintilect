@@ -5,8 +5,6 @@ import {
     BillPayConfigValidation,
     Payment,
     PaymentFilters,
-    PaymentMethod,
-    PaymentStatus,
     PaymentHistory,
     PaymentException,
     ExceptionResolution,
@@ -20,6 +18,11 @@ import {
     NotificationTemplate,
     NotificationTemplateInput
 } from '../../types/bill-pay.types';
+import {
+    BillPaySecuritySettings,
+    BillPaySecurityValidation,
+    BillPayOTPMethod
+} from '../../types/security.types';
 import { PaginatedResponse, QueryOptions } from '../../types/index';
 
 /**
@@ -157,4 +160,31 @@ export interface IBillPayService extends IBaseService {
      * @returns List of payment actions
      */
     getPaymentActions(paymentId: string): Promise<PaymentAction[]>;
+
+    /**
+     * Get bill pay security settings
+     * @returns Current bill pay security settings
+     */
+    getSecuritySettings(): Promise<BillPaySecuritySettings>;
+
+    /**
+     * Update bill pay security settings
+     * @param settings Updated security settings
+     * @returns Updated settings
+     */
+    updateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecuritySettings>;
+
+    /**
+     * Validate bill pay security settings
+     * @param settings Settings to validate
+     * @returns Validation result
+     */
+    validateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecurityValidation>;
+
+    /**
+     * Send OTP for verification
+     * @param method OTP delivery method
+     * @param destination Email or phone number to send OTP to
+     */
+    sendOTP(method: BillPayOTPMethod, destination: string): Promise<void>;
 }

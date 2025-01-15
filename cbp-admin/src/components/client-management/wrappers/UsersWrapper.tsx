@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Users from '../Users';
 import UserEditWrapper from './UserEditWrapper'; 
-import { clientService } from '../../../services/clients.service';
+import { clientService } from '../../../services/factory/ServiceFactory';
 import { User } from '../../../types/client.types';
 import { decodeId } from '../../../utils/idEncoder';
 import { Box, CircularProgress, Alert } from '@mui/material';

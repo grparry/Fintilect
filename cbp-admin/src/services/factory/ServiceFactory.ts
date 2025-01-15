@@ -8,6 +8,7 @@ import { INotificationService } from '../interfaces/INotificationService';
 import { IExceptionService } from '../interfaces/IExceptionService';
 import { IPayeeService } from '../interfaces/IPayeeService';
 import { IPaymentProcessorService } from '../interfaces/IPaymentProcessorService';
+import { IPaymentService } from '../interfaces/IPaymentService';
 import { IReportService } from '../interfaces/IReportService';
 import { IHolidayService } from '../interfaces/IHolidayService';
 import { IPermissionService } from '../interfaces/IPermissionService';
@@ -25,6 +26,7 @@ import { NotificationService } from '../implementations/real/NotificationService
 import { ExceptionService } from '../implementations/real/ExceptionService';
 import { PayeeService } from '../implementations/real/PayeeService';
 import { PaymentProcessorService } from '../implementations/real/PaymentProcessorService';
+import { PaymentService } from '../implementations/real/PaymentService';
 import { ReportService } from '../implementations/real/ReportService';
 import { HolidayService } from '../implementations/real/HolidayService';
 import { PermissionService } from '../implementations/real/PermissionService';
@@ -42,6 +44,7 @@ import { MockNotificationService } from '../implementations/mock/MockNotificatio
 import { MockExceptionService } from '../implementations/mock/MockExceptionService';
 import { MockPayeeService } from '../implementations/mock/MockPayeeService';
 import { MockPaymentProcessorService } from '../implementations/mock/MockPaymentProcessorService';
+import { MockPaymentService } from '../implementations/mock/MockPaymentService';
 import { MockReportService } from '../implementations/mock/MockReportService';
 import { MockHolidayService } from '../implementations/mock/MockHolidayService';
 import { MockPermissionService } from '../implementations/mock/MockPermissionService';
@@ -57,8 +60,8 @@ import { getConfig } from '../../config/api.config';
 export class ServiceFactory {
   private static instance: ServiceFactory;
   private services: Map<string, IUserService | IClientService | IBillPayService | IAuthService | ISecurityService | 
-    INotificationService | IExceptionService | IPayeeService | IPaymentProcessorService | IReportService | 
-    IHolidayService | IPermissionService | IDashboardService | IAuditService | IMemberService> = new Map();
+    INotificationService | IExceptionService | IPayeeService | IPaymentProcessorService | IPaymentService | 
+    IReportService | IHolidayService | IPermissionService | IDashboardService | IAuditService | IMemberService> = new Map();
 
   private constructor() {
     // Initialize services
@@ -84,6 +87,7 @@ export class ServiceFactory {
       this.services.set('exception', new MockExceptionService('/api/v1/exceptions'));
       this.services.set('payee', new MockPayeeService('/api/v1/payees'));
       this.services.set('paymentProcessor', new MockPaymentProcessorService('/api/v1/payment-processor'));
+      this.services.set('payment', new MockPaymentService('/api/v1/payments'));
       this.services.set('report', new MockReportService('/api/v1/reports'));
       this.services.set('holiday', new MockHolidayService('/api/v1/holidays'));
       this.services.set('permission', new MockPermissionService('/api/v1/permissions'));
@@ -101,6 +105,7 @@ export class ServiceFactory {
       this.services.set('exception', new ExceptionService('/api/v1/exceptions'));
       this.services.set('payee', new PayeeService('/api/v1/payees'));
       this.services.set('paymentProcessor', new PaymentProcessorService('/api/v1/payment-processor'));
+      this.services.set('payment', new PaymentService('/api/v1/payments'));
       this.services.set('report', new ReportService('/api/v1/reports'));
       this.services.set('holiday', new HolidayService('/api/v1/holidays'));
       this.services.set('permission', new PermissionService('/api/v1/permissions'));
@@ -182,6 +187,14 @@ export class ServiceFactory {
     return service as IPaymentProcessorService;
   }
 
+  getPaymentService(): IPaymentService {
+    const service = this.services.get('payment');
+    if (!service) {
+      throw new Error('PaymentService not initialized');
+    }
+    return service as IPaymentService;
+  }
+
   getReportService(): IReportService {
     const service = this.services.get('report');
     if (!service) {
@@ -241,6 +254,7 @@ export const notificationService = ServiceFactory.getInstance().getNotificationS
 export const exceptionService = ServiceFactory.getInstance().getExceptionService();
 export const payeeService = ServiceFactory.getInstance().getPayeeService();
 export const paymentProcessorService = ServiceFactory.getInstance().getPaymentProcessorService();
+export const paymentService = ServiceFactory.getInstance().getPaymentService();
 export const reportService = ServiceFactory.getInstance().getReportService();
 export const holidayService = ServiceFactory.getInstance().getHolidayService();
 export const permissionService = ServiceFactory.getInstance().getPermissionService();

@@ -10,7 +10,7 @@ import {
   Chip,
 } from '@mui/material';
 import { Client, Environment, ClientStatus, ClientType } from '../../types/client.types';
-import { clientService } from '../../services/clients.service';
+import { clientService } from '../../services/factory/ServiceFactory';
 import ContactInformation from './ContactInformation';
 import Groups from './Groups';
 import UsersWrapper from './wrappers/UsersWrapper';
@@ -92,11 +92,17 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
       setLoading(true);
       setError(null);
       const clientData = await clientService.getClient(clientId);
+      if (!clientData) {
+        throw new Error('Client not found');
+      }
       setClient(clientData);
-      logger.info('Client data loaded successfully', { clientId });
+      logger.info(`Client data loaded successfully for ${clientId}`);
     } catch (err) {
-      logger.error(`Failed to load client data for client ${clientId}: ${err instanceof Error ? err.message : String(err)}`);
-      setError('Failed to load client data. Please try again later.');
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      logger.error(`Failed to load client data: ${errorMessage}`);
+      setError(errorMessage === 'Client not found' 
+        ? 'Client not found. Please check the client ID and try again.' 
+        : 'Failed to load client data. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -202,11 +208,11 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
       </Tabs>
 
       <Routes>
-        <Route path="/" element={<ContactInformation client={client} onUpdate={loadClientData} />} />
-        <Route path="/users/*" element={<UsersWrapper client={client} />} />
-        <Route path="/groups/*" element={<Groups client={client} />} />
-        <Route path="/security" element={<MemberSecuritySettings client={client} onUpdate={loadClientData} />} />
-        <Route path="/audit-log" element={<AuditSearch clientId={client.id} />} />
+        <Route path="/" element={<ContactInformation clientId={clientId} />} />
+        <Route path="/users/*" element={<UsersWrapper />} />
+        <Route path="/groups/*" element={<Groups clientId={clientId} />} />
+        <Route path="/security" element={<MemberSecuritySettings clientId={clientId} />} />
+        <Route path="/audit-log" element={<AuditSearch clientId={clientId} />} />
       </Routes>
     </Box>
   );

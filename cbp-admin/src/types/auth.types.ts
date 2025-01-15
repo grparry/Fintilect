@@ -23,7 +23,11 @@ export interface LoginResponse {
   tokens: AuthTokens;
 }
 
-export interface AuthContextType extends AuthState {
+export interface AuthContextType {
+  isAuthenticated: boolean;
+  user: User | null;
+  loading: boolean;
+  error: string | null;
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<void>;

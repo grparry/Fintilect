@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -14,90 +14,65 @@ import {
   Chip,
   IconButton,
   Tooltip,
+  TablePagination,
 } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { Client, ClientStatus, ClientType, Environment, ClientSettings } from '../../types/client.types';
-import { clientService } from '../../services/clients.service';
+import { Client, ClientStatus, ClientType, Environment } from '../../types/client.types';
+import { clientService } from '../../services/factory/ServiceFactory';
 import { encodeId } from '../../utils/idEncoder';
-import { shouldUseMockData } from '../../config/api.config';
-import { PaginatedResponse } from '../../types/common.types';
 import logger from '../../utils/logger';
-
-const DEFAULT_SETTINGS: ClientSettings = {
-  general: {
-    timezone: 'UTC',
-    dateFormat: 'MM/DD/YYYY',
-    timeFormat: '12h',
-    language: 'en',
-  },
-  security: {
-    passwordPolicy: {
-      minLength: 8,
-      requireUppercase: true,
-      requireLowercase: true,
-      requireNumbers: true,
-      requireSpecialChars: true,
-      expirationDays: 90,
-    },
-    loginPolicy: {
-      maxAttempts: 5,
-      lockoutDuration: 30,
-    },
-    sessionTimeout: 30,
-    mfaEnabled: false,
-    ipWhitelist: [],
-  },
-  notifications: {
-    emailEnabled: true,
-    smsEnabled: false,
-    pushEnabled: false,
-    frequency: 'realtime',
-    alertTypes: ['payment', 'security', 'system'],
-  },
-};
-
-const transformServiceClient = (serviceClient: any): Client => ({
-  id: serviceClient.id,
-  name: serviceClient.name,
-  type: serviceClient.type as ClientType,
-  environment: serviceClient.environment as Environment,
-  status: serviceClient.status as ClientStatus,
-  domain: serviceClient.domain,
-  contactName: serviceClient.contactName,
-  contactEmail: serviceClient.contactEmail,
-  contactPhone: serviceClient.contactPhone,
-  settings: serviceClient.settings || DEFAULT_SETTINGS,
-  createdAt: serviceClient.createdAt,
-  updatedAt: serviceClient.updatedAt,
-});
 
 const ClientList: React.FC = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    loadClients();
-  }, []);
-
-  const loadClients = async () => {
+  const loadClients = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await clientService.getClients();
-      setClients(response.items.map(transformServiceClient));
+      
+      const response = await clientService.getClients({
+        page: page + 1,
+        limit: rowsPerPage
+      });
+
+      if (!response || !response.items) {
+        throw new Error('Failed to load clients');
+      }
+
+      setClients(response.items);
+      setTotalCount(response.pagination.total);
+      logger.info('Clients loaded successfully');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load clients';
+      logger.error('Error loading clients: ' + message);
       setError(message);
       enqueueSnackbar(message, { variant: 'error' });
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, rowsPerPage, enqueueSnackbar]);
+
+  useEffect(() => {
+    loadClients();
+  }, [loadClients]);
+
+  const handleChangePage = useCallback((_event: unknown, newPage: number) => {
+    setPage(newPage);
+  }, []);
+
+  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  }, []);
 
   const getTypeChipColor = (type: ClientType) => {
     switch (type) {
@@ -125,11 +100,13 @@ const ClientList: React.FC = () => {
     }
   };
 
-  const handleEditClick = (clientId: string) => {
-    navigate(`/clients/${encodeId(clientId)}/edit`);
-  };
+  const handleEditClick = useCallback((clientId: string) => {
+    const encodedId = encodeId(clientId);
+    logger.info('Navigating to edit client');
+    navigate(`/clients/${encodedId}/edit`);
+  }, [navigate]);
 
-  if (loading) {
+  if (loading && clients.length === 0) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
         <CircularProgress />
@@ -146,64 +123,75 @@ const ClientList: React.FC = () => {
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell>Environment</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Contact</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {clients.map((client) => (
-            <TableRow key={client.id}>
-              <TableCell>{client.name}</TableCell>
-              <TableCell>
-                <Chip
-                  label={client.type}
-                  color={getTypeChipColor(client.type)}
-                  size="small"
-                />
-              </TableCell>
-              <TableCell>
-                <Chip
-                  label={client.environment}
-                  variant="outlined"
-                  size="small"
-                />
-              </TableCell>
-              <TableCell>
-                <Chip
-                  label={client.status}
-                  color={getStatusChipColor(client.status)}
-                  size="small"
-                />
-              </TableCell>
-              <TableCell>
-                {client.contactName && (
-                  <Tooltip title={`${client.contactEmail || ''}\n${client.contactPhone || ''}`}>
-                    <span>{client.contactName}</span>
-                  </Tooltip>
-                )}
-              </TableCell>
-              <TableCell>
-                <IconButton
-                  size="small"
-                  onClick={() => handleEditClick(client.id)}
-                  aria-label="edit client"
-                >
-                  <EditIcon />
-                </IconButton>
-              </TableCell>
+    <Paper>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Environment</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Contact</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {clients.map((client) => (
+              <TableRow key={client.id}>
+                <TableCell>{client.name}</TableCell>
+                <TableCell>
+                  <Chip
+                    label={client.type}
+                    color={getTypeChipColor(client.type)}
+                    size="small"
+                  />
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    label={client.environment}
+                    variant="outlined"
+                    size="small"
+                  />
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    label={client.status}
+                    color={getStatusChipColor(client.status)}
+                    size="small"
+                  />
+                </TableCell>
+                <TableCell>
+                  {client.contactName && (
+                    <Tooltip title={`${client.contactEmail || ''}\n${client.contactPhone || ''}`}>
+                      <span>{client.contactName}</span>
+                    </Tooltip>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleEditClick(client.id)}
+                    aria-label="edit client"
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        component="div"
+        count={totalCount}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={[5, 10, 25, 50]}
+      />
+    </Paper>
   );
 };
 

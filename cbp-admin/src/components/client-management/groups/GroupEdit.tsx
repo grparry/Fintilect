@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -14,8 +15,8 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-import { clientService } from '../../../services/clients.service';
 import { UserGroup, SecurityRole, Permission, PermissionCategoryType } from '../../../types/client.types';
+import { clientService } from '../../../services/factory/ServiceFactory';
 
 interface GroupEditProps {
   clientId: string;
@@ -32,31 +33,13 @@ interface ServicePermission {
   scope: 'READ' | 'WRITE' | 'ADMIN';
 }
 
-const serviceGroupToUIGroup = (serviceGroup: any, clientId: string): UserGroup => ({
-  id: serviceGroup.id,
-  name: serviceGroup.name,
-  description: serviceGroup.description || '',
-  clientId,
-  roles: [],
-  permissions: serviceGroup.permissions.map((p: string) => ({
-    id: p,
-    name: '',
-    description: '',
-    category: 'user' as PermissionCategoryType,
-    actions: [],
-  })),
-  members: serviceGroup.members || [],
-  createdAt: serviceGroup.createdAt,
-  updatedAt: serviceGroup.updatedAt,
-});
-
-const servicePermissionToUIPermission = (servicePermission: ServicePermission): Permission => ({
-  id: servicePermission.id,
-  name: servicePermission.name,
-  description: servicePermission.description,
-  category: 'user' as PermissionCategoryType,
-  actions: [servicePermission.scope],
-});
+const decodeId = (id: string): string => {
+  try {
+    return atob(id);
+  } catch {
+    return id;
+  }
+};
 
 const GroupEdit: React.FC<GroupEditProps> = ({
   clientId,
@@ -70,52 +53,46 @@ const GroupEdit: React.FC<GroupEditProps> = ({
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    loadData();
-  }, [clientId, groupId]);
+    const loadPermissions = async () => {
+      try {
+        setLoading(true);
+        const permissions = await clientService.getPermissions();
+        setAllPermissions(permissions);
+        setLoading(false);
+      } catch (err: any) {
+        setError('Failed to load permissions');
+        setLoading(false);
+      }
+    };
 
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Load permissions
-      const permissionsResponse = await clientService.getPermissions();
-      if (permissionsResponse.success) {
-        const uiPermissions = permissionsResponse.data.map(servicePermissionToUIPermission);
-        setAllPermissions(uiPermissions);
+    const loadGroup = async () => {
+      if (!groupId) {
+        setLoading(false);
+        return;
       }
 
-      // Load group if editing
-      if (groupId) {
-        const groupResponse = await clientService.getGroup(clientId, groupId);
-        if (groupResponse.success) {
-          const uiGroup = serviceGroupToUIGroup(groupResponse.data, clientId);
-          setGroup(uiGroup);
-          setSelectedPermissions(uiGroup.permissions.map(p => p.id));
-        }
-      } else {
-        // Initialize empty group for creation
-        setGroup({
-          id: '',
-          name: '',
-          description: '',
-          clientId,
-          roles: [],
-          permissions: [],
-          members: [],
-          createdAt: '',
-          updatedAt: '',
-        });
+      try {
+        setLoading(true);
+        const decodedClientId = decodeId(clientId);
+        const decodedGroupId = decodeId(groupId);
+        const group = await clientService.getGroup(decodedClientId, decodedGroupId);
+        setGroup(group);
+        setSelectedPermissions(group.permissions.map(p => p.id));
+        setLoading(false);
+      } catch (err: any) {
+        setError('Failed to load group');
+        setLoading(false);
       }
-    } catch (err) {
-      setError('Failed to load group data');
-      console.error(err);
-    } finally {
+    };
+
+    Promise.all([loadPermissions(), loadGroup()]).catch(err => {
+      setError(err.message || 'Failed to load data');
       setLoading(false);
-    }
-  };
+    });
+  }, [clientId, groupId]);
 
   const handlePermissionToggle = (permissionId: string) => {
     setSelectedPermissions((prev) =>
@@ -131,27 +108,39 @@ const GroupEdit: React.FC<GroupEditProps> = ({
 
     try {
       setSaving(true);
-      setError(null);
-
+      const decodedClientId = decodeId(clientId);
+      const permissions = allPermissions.filter(p => selectedPermissions.includes(p.id));
       const groupData = {
-        name: group.name,
-        description: group.description,
-        permissions: selectedPermissions,
-        members: group.members,
+        ...group,
+        permissions
       };
 
-      const response = groupId
-        ? await clientService.updateGroup(clientId, groupId, groupData)
-        : await clientService.createGroup(clientId, groupData);
-
-      if (response.success) {
-        onSave();
+      if (groupId) {
+        const decodedGroupId = decodeId(groupId);
+        await clientService.updateGroup(decodedClientId, decodedGroupId, groupData);
       } else {
-        setError(response.error?.message || 'Failed to save group');
+        await clientService.createGroup(decodedClientId, groupData);
       }
-    } catch (err) {
-      setError('An error occurred while saving the group');
-      console.error(err);
+
+      onSave();
+    } catch (err: any) {
+      setError(err.message || 'Failed to save group');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!groupId || !group) return;
+
+    try {
+      setSaving(true);
+      const decodedClientId = decodeId(clientId);
+      const decodedGroupId = decodeId(groupId);
+      await clientService.deleteGroup(decodedClientId, decodedGroupId);
+      onSave();
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete group');
     } finally {
       setSaving(false);
     }
@@ -245,6 +234,16 @@ const GroupEdit: React.FC<GroupEditProps> = ({
               >
                 {saving ? <CircularProgress size={24} /> : 'Save'}
               </Button>
+              {groupId && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleDelete}
+                  disabled={saving}
+                >
+                  Delete
+                </Button>
+              )}
             </Box>
           </Grid>
         </Grid>

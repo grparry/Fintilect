@@ -32,26 +32,22 @@ import {
   ExceptionStatus,
   ResolutionHistory,
   FISRetryResult,
+  FISExceptionHistory,
+  ExceptionToolStatus,
 } from '../../../types/bill-pay.types';
-import { ApiResponse } from '../../../types/api.types';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import dayjs from 'dayjs';
 
 interface ExceptionDetailsProps {
   exception: PaymentException;
   onClose: () => void;
   onResolutionComplete: () => void;
-  api: {
-    resolveException: (id: string, resolution: ExceptionResolution) => Promise<ApiResponse<void>>;
-    retryException: (id: string) => Promise<ApiResponse<FISRetryResult>>;
-    getResolutionHistory: (id: string) => Promise<ApiResponse<ResolutionHistory[]>>;
-  };
 }
 
 const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
   exception,
   onClose,
   onResolutionComplete,
-  api,
 }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -67,19 +63,30 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
   const [historyDialogOpen, setHistoryDialogOpen] = useState(false);
   const [retryResult, setRetryResult] = useState<FISRetryResult | null>(null);
 
+  const exceptionService = ServiceFactory.getInstance().getExceptionService();
+
   useEffect(() => {
     loadResolutionHistory();
   }, [exception.id]);
 
+  const mapFISHistoryToResolutionHistory = (fisHistory: FISExceptionHistory[]): ResolutionHistory[] => {
+    return fisHistory.map(item => ({
+      id: parseInt(item.id),
+      exceptionId: parseInt(item.exceptionId),
+      action: item.type,
+      notes: item.details.metadata?.notes as string || '',
+      user: item.userName,
+      timestamp: item.timestamp,
+    }));
+  };
+
   const loadResolutionHistory = async () => {
     try {
       setLoading(true);
-      const response = await api.getResolutionHistory(exception.id);
-      if (response.success) {
-        setHistory(response.data);
-      }
+      const fisHistory = await exceptionService.getFISExceptionHistory(exception.id);
+      setHistory(mapFISHistoryToResolutionHistory(fisHistory));
     } catch (err) {
-      console.error('Failed to load resolution history:', err);
+      setError('Failed to load resolution history. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -93,19 +100,18 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
 
     try {
       setLoading(true);
-      const response = await api.resolveException(exception.id, {
-        ...resolution,
-        userId: user?.id?.toString(),
-        timestamp: new Date().toISOString(),
-      });
-      if (response.success) {
-        onResolutionComplete();
-      } else {
-        setError(response.error?.message || 'Failed to resolve exception');
-      }
+      await exceptionService.updateExceptionStatus(
+        exception.id,
+        'Resolved' as ExceptionToolStatus,
+        resolution.notes
+      );
+      onResolutionComplete();
     } catch (err) {
-      setError('Failed to resolve exception');
-      console.error(err);
+      if (err instanceof Error) {
+        setError(`Failed to resolve exception: ${err.message}`);
+      } else {
+        setError('Failed to resolve exception. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }
@@ -114,16 +120,17 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
   const handleRetry = async () => {
     try {
       setLoading(true);
-      const response = await api.retryException(exception.id);
-      if (response.success) {
-        setRetryResult(response.data);
-        if (response.data.success) {
-          onResolutionComplete();
-        }
+      const result = await exceptionService.retryFISException(exception.id);
+      setRetryResult(result);
+      if (result.success) {
+        onResolutionComplete();
       }
     } catch (err) {
-      setError('Failed to retry exception');
-      console.error(err);
+      if (err instanceof Error) {
+        setError(`Failed to retry exception: ${err.message}`);
+      } else {
+        setError('Failed to retry exception. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }

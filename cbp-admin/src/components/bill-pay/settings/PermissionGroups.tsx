@@ -29,25 +29,38 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import { 
+  Permission,
   PermissionGroup, 
   PermissionGroupInput,
-  PermissionCategoryDefinition,
   PermissionAction,
   PermissionGroupFilters,
-  PermissionCategory
+  PermissionCategory,
+  PermissionCategoryType
 } from '../../../types/permission.types';
-import { permissionService } from '../../../services/factory/ServiceFactory';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+
+const initialCategories: Record<PermissionCategoryType, Permission[]> = {
+  System: [],
+  BillPay: [],
+  Client: [],
+  MoneyDesktop: [],
+  Users: [],
+  Security: [],
+  Settings: [],
+  Reports: []
+};
 
 const PermissionGroups: React.FC = () => {
   // State
   const [groups, setGroups] = useState<PermissionGroup[]>([]);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<PermissionGroup | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [permissionCategories, setPermissionCategories] = useState<PermissionCategoryDefinition>({});
+  const [permissionCategories, setPermissionCategories] = useState<Record<PermissionCategoryType, Permission[]>>(initialCategories);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState<PermissionGroupInput>({
     name: '',
@@ -55,107 +68,75 @@ const PermissionGroups: React.FC = () => {
     permissions: {},
   });
 
-  // Load permission groups and categories
+  const permissionService = ServiceFactory.getInstance().getPermissionService();
+
+  // Load permission groups and available permissions
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
-        const filters: PermissionGroupFilters = {
-          searchTerm: searchTerm || undefined,
-        };
-        
-        const [groupsResponse, categoriesResponse] = await Promise.all([
-          permissionService.getGroups(filters),
-          permissionService.getPermissionCategories(),
+        const [groupsResponse, permissionsResponse] = await Promise.all([
+          permissionService.getPermissionGroups(),
+          permissionService.getPermissions()
         ]);
 
-        setGroups(groupsResponse.groups);
-        setPermissionCategories(categoriesResponse);
+        setGroups(groupsResponse.items);
+        setPermissions(permissionsResponse);
+
+        // Organize permissions by category
+        const categories = permissionsResponse.reduce((acc, permission) => {
+          if (!acc[permission.category]) {
+            acc[permission.category] = [];
+          }
+          acc[permission.category].push(permission);
+          return acc;
+        }, { ...initialCategories });
+
+        setPermissionCategories(categories);
         setError(null);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Failed to load permission groups');
+        setError(err instanceof Error ? err.message : 'Failed to load permission data');
       } finally {
         setLoading(false);
       }
     };
 
     loadData();
-  }, [searchTerm]);
+  }, []);
 
   // Handle form submission
-  const handleSubmit = async () => {
+  const handleSubmit = async (formData: PermissionGroupInput) => {
     try {
       setValidationErrors({});
 
       if (selectedGroup) {
-        await permissionService.updateGroup(selectedGroup.id, formData);
+        await permissionService.updatePermissionGroup(selectedGroup.id, formData);
       } else {
-        await permissionService.createGroup(formData);
+        await permissionService.createPermissionGroup(formData);
       }
 
       // Refresh groups list
-      const response = await permissionService.getGroups({ searchTerm: searchTerm || undefined });
-      setGroups(response.groups);
+      const response = await permissionService.getPermissionGroups();
+      setGroups(response.items);
       
       handleCloseDialog();
     } catch (err: unknown) {
       if (err instanceof Error) {
-        if (err.message.includes('validation failed')) {
-          // Handle validation errors
-          const validationMessage = err.message.replace('validation failed: ', '');
-          const errors: Record<string, string> = {};
-          validationMessage.split(', ').forEach(errorStr => {
-            const [field, message] = errorStr.split(': ');
-            if (field && message) {
-              errors[field] = message;
-            }
-          });
-          setValidationErrors(errors);
-        } else {
-          setError(err.message);
-        }
+        setError(err.message);
       } else {
         setError('Failed to save permission group');
       }
     }
   };
 
-  // Handle permission changes
-  const handlePermissionChange = (category: string, action: PermissionAction) => {
-    setFormData(prev => {
-      const newPermissions: PermissionCategory = { ...prev.permissions };
-      
-      if (!newPermissions[category]) {
-        newPermissions[category] = [];
-      }
-
-      const actionIndex = newPermissions[category].indexOf(action);
-      if (actionIndex === -1) {
-        newPermissions[category] = [...newPermissions[category], action];
-      } else {
-        newPermissions[category] = newPermissions[category].filter(a => a !== action);
-        if (newPermissions[category].length === 0) {
-          delete newPermissions[category];
-        }
-      }
-
-      return {
-        ...prev,
-        permissions: newPermissions,
-      };
-    });
-  };
-
   // Handle group deletion
-  const handleDelete = async () => {
-    if (!selectedGroup) return;
-
+  const handleDelete = async (groupId: number) => {
     try {
-      await permissionService.deleteGroup(selectedGroup.id);
+      await permissionService.deletePermissionGroup(groupId);
       
       // Refresh groups list
-      const response = await permissionService.getGroups({ searchTerm: searchTerm || undefined });
-      setGroups(response.groups);
+      const response = await permissionService.getPermissionGroups();
+      setGroups(response.items);
       
       setDeleteDialogOpen(false);
       setSelectedGroup(null);
@@ -163,6 +144,43 @@ const PermissionGroups: React.FC = () => {
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to delete permission group');
     }
+  };
+
+  // Handle search
+  const handleSearch = async () => {
+    try {
+      const filters: PermissionGroupFilters = {
+        searchTerm: searchTerm || undefined
+      };
+      
+      const response = await permissionService.getPermissionGroups(filters);
+      setGroups(response.items);
+      setError(null);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to search permission groups');
+    }
+  };
+
+  // Handle permission change
+  const handlePermissionChange = (category: PermissionCategoryType, action: PermissionAction) => {
+    setFormData(prev => {
+      const updatedPermissions = { ...prev.permissions };
+      if (!updatedPermissions[category]) {
+        updatedPermissions[category] = [];
+      }
+      
+      const index = updatedPermissions[category].indexOf(action);
+      if (index === -1) {
+        updatedPermissions[category].push(action);
+      } else {
+        updatedPermissions[category].splice(index, 1);
+      }
+      
+      return {
+        ...prev,
+        permissions: updatedPermissions,
+      };
+    });
   };
 
   // Dialog handlers
@@ -188,13 +206,13 @@ const PermissionGroups: React.FC = () => {
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
+    setSelectedGroup(null);
+    setValidationErrors({});
     setFormData({
       name: '',
       description: '',
       permissions: {},
     });
-    setValidationErrors({});
-    setSelectedGroup(null);
   };
 
   return (
@@ -301,7 +319,7 @@ const PermissionGroups: React.FC = () => {
             </Typography>
 
             <Grid container spacing={2}>
-              {Object.entries(permissionCategories).map(([category, actions]) => (
+              {Object.entries(permissionCategories).map(([category, permissions]) => (
                 <Grid item xs={12} key={category}>
                   <Card>
                     <CardContent>
@@ -309,16 +327,19 @@ const PermissionGroups: React.FC = () => {
                         {category}
                       </Typography>
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-                        {actions.map((action) => (
+                        {permissions.map((permission) => (
                           <FormControlLabel
-                            key={`${category}-${action}`}
+                            key={`${category}-${permission.name}`}
                             control={
                               <Checkbox
-                                checked={formData.permissions[category]?.includes(action as PermissionAction) || false}
-                                onChange={() => handlePermissionChange(category, action as PermissionAction)}
+                                checked={formData.permissions[category as PermissionCategoryType]?.includes(permission.actions[0] as PermissionAction) || false}
+                                onChange={() => handlePermissionChange(
+                                  category as PermissionCategoryType,
+                                  permission.actions[0] as PermissionAction
+                                )}
                               />
                             }
-                            label={action}
+                            label={permission.name}
                           />
                         ))}
                       </Box>
@@ -331,7 +352,7 @@ const PermissionGroups: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleSubmit} variant="contained">
+          <Button onClick={() => handleSubmit(formData)} variant="contained">
             {selectedGroup ? 'Update' : 'Add'}
           </Button>
         </DialogActions>
@@ -348,7 +369,7 @@ const PermissionGroups: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleDelete} color="error" variant="contained">
+          <Button onClick={() => handleDelete(selectedGroup?.id || 0)} color="error" variant="contained">
             Delete
           </Button>
         </DialogActions>

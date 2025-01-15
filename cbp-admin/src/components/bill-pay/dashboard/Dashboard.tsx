@@ -39,11 +39,17 @@ import {
   TimeRangeOption,
   ChartViewOption
 } from '../../../types/dashboard.types';
-import { dashboardService } from '../../../services/factory/ServiceFactory';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+import { IBillPayService } from '../../../services/interfaces/IBillPayService';
+import { IPaymentProcessorService } from '../../../services/interfaces/IPaymentProcessorService';
 import { TimeRange } from '../../../types';
+import { BillPayStats } from '../../../types/bill-pay.types';
+import { ProcessorMetrics, TransactionSummary, DateRange } from '../../../types/payment.types';
 
 interface DashboardState {
-  metrics: DashboardMetrics | null;
+  billPayStats: BillPayStats | null;
+  processorMetrics: ProcessorMetrics | null;
+  transactionSummary: TransactionSummary | null;
   loading: boolean;
   error: string | null;
 }
@@ -89,29 +95,40 @@ const CustomTooltip = ({ active, payload, label, isAmount }: CustomTooltipProps)
 };
 
 const Dashboard: React.FC = () => {
+  // Initialize services
+  const billPayService = ServiceFactory.getInstance().getBillPayService();
+  const processorService = ServiceFactory.getInstance().getPaymentProcessorService();
+
   const [state, setState] = useState<DashboardState>({
-    metrics: null,
+    billPayStats: null,
+    processorMetrics: null,
+    transactionSummary: null,
     loading: true,
     error: null
   });
-  const [timeRange, setTimeRange] = useState<TimeRange>('week');
+  const [timeRange, setTimeRange] = useState<'day' | 'week' | 'month'>('day');
   const [chartView, setChartView] = useState<ChartViewOption['value']>('line');
 
   const loadDashboardData = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
-      const response = await dashboardService.getStats(timeRange);
-      if ('error' in response) {
-        setState(prev => ({ 
-          ...prev, 
-          error: response.error.message,
-          loading: false 
-        }));
-        return;
-      }
+
+      const dateRange: DateRange = {
+        startDate: getStartDate(timeRange),
+        endDate: new Date().toISOString()
+      };
+
+      const [billPayStats, processorMetrics, transactionSummary] = await Promise.all([
+        billPayService.getStats(timeRange),
+        processorService.getProcessorMetrics({ dateRange }),
+        processorService.getTransactionSummary({ dateRange })
+      ]);
+
       setState(prev => ({ 
         ...prev, 
-        metrics: response.data,
+        billPayStats: billPayStats,
+        processorMetrics: processorMetrics,
+        transactionSummary: transactionSummary,
         loading: false 
       }));
     } catch (error) {
@@ -121,7 +138,23 @@ const Dashboard: React.FC = () => {
         loading: false 
       }));
     }
-  }, [timeRange]);
+  }, [timeRange, billPayService, processorService]);
+
+  const getStartDate = (range: 'day' | 'week' | 'month'): string => {
+    const now = new Date();
+    switch (range) {
+      case 'day':
+        now.setDate(now.getDate() - 1);
+        break;
+      case 'week':
+        now.setDate(now.getDate() - 7);
+        break;
+      case 'month':
+        now.setMonth(now.getMonth() - 1);
+        break;
+    }
+    return now.toISOString();
+  };
 
   useEffect(() => {
     loadDashboardData();
@@ -131,29 +164,36 @@ const Dashboard: React.FC = () => {
     loadDashboardData();
   };
 
-  const handleTimeRangeChange = (event: SelectChangeEvent<TimeRange>) => {
-    setTimeRange(event.target.value as TimeRange);
+  const handleTimeRangeChange = (event: SelectChangeEvent<'day' | 'week' | 'month'>) => {
+    setTimeRange(event.target.value as 'day' | 'week' | 'month');
   };
 
   const handleChartViewChange = (event: SelectChangeEvent<ChartViewOption['value']>) => {
     setChartView(event.target.value as ChartViewOption['value']);
   };
 
-  const getMetricValue = (metrics: DashboardMetrics, type: 'transactions' | 'userActivity', key: string): number => {
-    const data = metrics[type];
-    if (type === 'transactions') {
-      const transactionData = data as TransactionStats;
-      // Special handling for volume since it's an object with daily/weekly/monthly
-      if (key === 'volume') {
-        // Return the daily volume as that's the most granular metric
-        return transactionData.volume.daily;
-      }
-      // For other transaction stats, they're direct number values
-      return transactionData[key as keyof Omit<TransactionStats, 'volume'>] || 0;
+  const getMetricValue = (type: 'transactions' | 'processor' | 'summary', key: string): number => {
+    if (!state.billPayStats || !state.processorMetrics || !state.transactionSummary) {
+      return 0;
     }
-    // User activity metrics are all direct number values
-    const userData = data as UserActivityData;
-    return userData[key as keyof UserActivityData] || 0;
+
+    switch (type) {
+      case 'transactions':
+        const transactionValue = state.billPayStats[key as keyof BillPayStats];
+        return typeof transactionValue === 'number' ? transactionValue : 0;
+      case 'processor':
+        const metrics = state.processorMetrics;
+        if (key === 'successRate') return metrics.successRate;
+        if (key === 'throughput') return metrics.throughput.daily;
+        return 0;
+      case 'summary':
+        const summary = state.transactionSummary;
+        if (key === 'totalAmount') return summary.totalAmount;
+        if (key === 'totalCount') return summary.totalCount;
+        return 0;
+      default:
+        return 0;
+    }
   };
 
   const renderStatCards = () => (
@@ -162,7 +202,7 @@ const Dashboard: React.FC = () => {
         <Grid item xs={12} sm={6} md={3} key={card.id}>
           <DashboardCard
             title={card.title}
-            value={state.metrics ? getMetricValue(state.metrics, 'transactions', card.dataKey) : undefined}
+            value={state.billPayStats ? getMetricValue(card.metricType, card.dataKey) : undefined}
             icon={card.icon}
             loading={state.loading}
           />
@@ -172,24 +212,28 @@ const Dashboard: React.FC = () => {
   );
 
   const renderChart = () => {
-    if (state.loading || !state.metrics) {
+    if (state.loading || !state.billPayStats) {
       return <Skeleton variant="rectangular" height={400} />;
     }
 
-    const chartData = state.metrics.charts.transactionVolume;
+    const chartData = state.billPayStats.recentActivity.map(activity => ({
+      date: activity.timestamp,
+      amount: activity.amount,
+      status: activity.status
+    }));
 
     return (
       <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={chartData.datasets[0].data}>
+        <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="label" />
+          <XAxis dataKey="date" />
           <YAxis />
           <Tooltip content={<CustomTooltip isAmount={true} />} />
           <Legend />
           <Bar
-            dataKey="value"
+            dataKey="amount"
             fill="#8884d8"
-            name={chartData.datasets[0].label}
+            name="Transaction Amount"
           />
         </BarChart>
       </ResponsiveContainer>
@@ -197,7 +241,7 @@ const Dashboard: React.FC = () => {
   };
 
   if (state.error) {
-    return <div>Error: {state.error}</div>;
+    return <Alert severity="error">{state.error}</Alert>;
   }
 
   return (

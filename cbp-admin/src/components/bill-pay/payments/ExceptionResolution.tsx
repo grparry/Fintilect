@@ -21,26 +21,21 @@ import { useAuth } from '../../../hooks/useAuth';
 import {
   PaymentException,
   ExceptionResolution as ExceptionResolutionType,
-  FISRetryResult,
-  ExceptionStatus,
+  ExceptionToolStatus,
+  ExceptionTool,
 } from '../../../types/bill-pay.types';
-import { ApiSuccessResponse } from '../../../types/api.types';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 
 interface ExceptionResolutionProps {
-  exception: PaymentException;
+  exception: ExceptionTool;
   onClose: () => void;
   onResolutionComplete: () => void;
-  api: {
-    resolveException: (id: string, resolution: ExceptionResolutionType) => Promise<ApiSuccessResponse<void>>;
-    retryException: (id: string) => Promise<ApiSuccessResponse<FISRetryResult>>;
-  };
 }
 
 const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
   exception,
   onClose,
   onResolutionComplete,
-  api,
 }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -52,7 +47,8 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
     userId: user?.id?.toString() || '',
     timestamp: new Date().toISOString(),
   });
-  const [retryResult, setRetryResult] = useState<FISRetryResult | null>(null);
+
+  const exceptionService = ServiceFactory.getInstance().getExceptionService();
 
   const handleResolve = async () => {
     if (!resolution.action || !resolution.notes) {
@@ -62,32 +58,14 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
 
     try {
       setLoading(true);
-      await api.resolveException(exception.id, {
-        ...resolution,
-        userId: user?.id?.toString() || '',
-        timestamp: new Date().toISOString(),
-      });
+      await exceptionService.updateExceptionStatus(
+        exception.id.toString(),
+        resolution.action as ExceptionToolStatus,
+        resolution.notes
+      );
       onResolutionComplete();
     } catch (err) {
       setError('Failed to resolve exception');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRetry = async () => {
-    try {
-      setLoading(true);
-      const response = await api.retryException(exception.id);
-      if (response.success) {
-        setRetryResult(response.data);
-        if (response.data.success) {
-          onResolutionComplete();
-        }
-      }
-    } catch (err) {
-      setError('Failed to retry exception');
       console.error(err);
     } finally {
       setLoading(false);
@@ -103,17 +81,6 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
               {error}
             </Alert>
           )}
-          {retryResult && !retryResult.success && (
-            <Alert severity="warning">
-              Retry failed: {retryResult.message}
-              {retryResult.retryCount > 0 && (
-                <Typography variant="caption" display="block">
-                  Retry count: {retryResult.retryCount}
-                  {retryResult.lastRetryAt && ` (Last attempt: ${retryResult.lastRetryAt})`}
-                </Typography>
-              )}
-            </Alert>
-          )}
 
           <Box>
             <Typography variant="h6">Exception Details</Typography>
@@ -123,19 +90,17 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
                 <Typography>{exception.status}</Typography>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Typography variant="subtitle2">Type</Typography>
-                <Typography>{exception.type}</Typography>
+                <Typography variant="subtitle2">Client</Typography>
+                <Typography>{exception.clientName}</Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="subtitle2">Message</Typography>
-                <Typography>{exception.message}</Typography>
+                <Typography variant="subtitle2">Error Message</Typography>
+                <Typography>{exception.errorMessage}</Typography>
               </Grid>
-              {exception.details && (
+              {exception.errorCode && (
                 <Grid item xs={12}>
-                  <Typography variant="subtitle2">Details</Typography>
-                  <pre style={{ whiteSpace: 'pre-wrap' }}>
-                    {JSON.stringify(exception.details, null, 2)}
-                  </pre>
+                  <Typography variant="subtitle2">Error Code</Typography>
+                  <Typography>{exception.errorCode}</Typography>
                 </Grid>
               )}
             </Grid>
@@ -179,10 +144,8 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
                     }
                     label="Action"
                   >
-                    <MenuItem value="retry">Retry Payment</MenuItem>
-                    <MenuItem value="cancel">Cancel Payment</MenuItem>
-                    <MenuItem value="modify">Modify Payment</MenuItem>
-                    <MenuItem value="ignore">Ignore Exception</MenuItem>
+                    <MenuItem value="resolved">Resolve</MenuItem>
+                    <MenuItem value="ignored">Ignore</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -199,28 +162,21 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
                       notes: e.target.value,
                     }))
                   }
-                  placeholder="Please provide detailed notes about the resolution..."
                 />
               </Grid>
             </Grid>
           </Box>
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-            <Button onClick={onClose}>Cancel</Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleRetry}
-              disabled={loading || exception.status !== ExceptionStatus.PENDING}
-            >
-              {loading ? <CircularProgress size={24} /> : 'Retry Exception'}
+            <Button onClick={onClose} variant="outlined">
+              Cancel
             </Button>
             <Button
-              variant="contained"
               onClick={handleResolve}
+              variant="contained"
               disabled={loading || !resolution.action || !resolution.notes}
             >
-              {loading ? <CircularProgress size={24} /> : 'Resolve Exception'}
+              {loading ? <CircularProgress size={24} /> : 'Resolve'}
             </Button>
           </Box>
         </Stack>

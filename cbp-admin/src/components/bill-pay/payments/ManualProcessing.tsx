@@ -32,18 +32,30 @@ import SendIcon from '@mui/icons-material/Send';
 import SaveIcon from '@mui/icons-material/Save';
 import dayjs, { Dayjs } from 'dayjs';
 import {
-  Client,
+  Client as BillPayClient,
   Payee,
   ManualPayment,
   ManualPaymentFormData,
   ManualPaymentValidation,
-  PaymentMethod,
+  PaymentMethod as BillPayPaymentMethod,
   PendingPayment,
   Payment,
   Priority
 } from '../../../types/bill-pay.types';
-import { paymentApi } from '../../../services/api/payment.api';
+import {
+  PaymentTransaction,
+  PaymentType,
+  PaymentStatus,
+  PaymentPriority,
+  PaymentValidation,
+  ProcessorConfig,
+  PaymentMethod,
+  PaymentSchedule
+} from '../../../types/payment.types';
+import { Client, ClientStatus } from '../../../types/client.types';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { useAuth } from '../../../hooks/useAuth';
+import { AuthContextType } from '../../../types/auth.types';
 
 interface PaymentForm {
   clientId: string;
@@ -79,23 +91,25 @@ const initialPaymentForm: PaymentForm = {
   memo: '',
   accountNumber: '',
   routingNumber: '',
-  bankName: ''
+  bankName: '',
 };
 
 const paymentTypes = [
   { value: PaymentMethod.ACH, label: 'ACH' },
   { value: PaymentMethod.WIRE, label: 'Wire' },
   { value: PaymentMethod.CHECK, label: 'Check' },
-  { value: PaymentMethod.RTP, label: 'RTP' }
+  { value: PaymentMethod.CARD, label: 'Card' }
 ];
 
 const ManualProcessing: React.FC = () => {
-  const { user } = useAuth();
+  const auth = useAuth();
+  const paymentProcessorService = ServiceFactory.getInstance().getPaymentProcessorService();
+  const clientService = ServiceFactory.getInstance().getClientService();
 
   // State
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clients, setClients] = useState<BillPayClient[]>([]);
   const [payees, setPayees] = useState<Payee[]>([]);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [selectedClient, setSelectedClient] = useState<BillPayClient | null>(null);
   const [selectedPayee, setSelectedPayee] = useState<Payee | null>(null);
   const [form, setForm] = useState<PaymentForm>(initialPaymentForm);
   const [loading, setLoading] = useState(false);
@@ -108,7 +122,6 @@ const ManualProcessing: React.FC = () => {
     [PaymentMethod.ACH]: 0,
     [PaymentMethod.WIRE]: 0,
     [PaymentMethod.CHECK]: 0,
-    [PaymentMethod.RTP]: 0,
     [PaymentMethod.CARD]: 0
   });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -117,49 +130,66 @@ const ManualProcessing: React.FC = () => {
   const fetchInitialData = useCallback(async () => {
     try {
       setError(null);
-      const clients = await paymentApi.getClients();
-      setClients(clients.data.filter((client) => client.status === 'active'));
+      const clientsResponse = await clientService.getClients();
+      const filteredClients = clientsResponse.items
+        .filter((client) => client.status === ClientStatus.Active)
+        .map(client => ({
+          id: client.id,
+          name: client.name,
+          status: client.status === ClientStatus.Active ? 'active' : 'inactive',
+          createdAt: client.createdAt || '',
+          updatedAt: client.updatedAt || ''
+        } as BillPayClient));
+      setClients(filteredClients);
     } catch (err) {
       setError('Failed to load clients');
       console.error('Error loading clients:', err);
     }
-  }, []); // No dependencies needed
+  }, [clientService]);
 
   // Fetch payees when client changes
   const fetchPayees = useCallback(async () => {
     if (!selectedClient) return;
     try {
       setError(null);
-      const payees = await paymentApi.getPayees();
-      setPayees(
-        payees.data.filter(
-          (payee) => payee.clientId === selectedClient.id && payee.status === 'active'
-        )
-      );
+      const payeesResponse = await clientService.getClientContacts(selectedClient.id);
+      const filteredPayees = payeesResponse
+        .filter(contact => contact.isPrimary)
+        .map(contact => ({
+          id: contact.id.toString(), // Convert number to string
+          clientId: selectedClient.id,
+          name: contact.name,
+          accountNumber: '', // These will need to be populated from somewhere
+          routingNumber: '',
+          bankName: '',
+          status: 'active',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } as Payee));
+      setPayees(filteredPayees);
     } catch (err) {
       setError('Failed to load payees');
       console.error('Error loading payees:', err);
     }
-  }, [selectedClient]); // Depends on selectedClient
+  }, [selectedClient, clientService]);
 
   // Fetch payment limits when client or payment type changes
   const fetchPaymentLimits = useCallback(async () => {
     if (!selectedClient) return;
     try {
       setError(null);
-      const limits = await paymentApi.getPaymentLimits();
+      const config = await paymentProcessorService.getProcessorConfig();
       setPaymentLimits({
-        [PaymentMethod.ACH]: limits.data[PaymentMethod.ACH] || 0,
-        [PaymentMethod.WIRE]: limits.data[PaymentMethod.WIRE] || 0,
-        [PaymentMethod.CHECK]: limits.data[PaymentMethod.CHECK] || 0,
-        [PaymentMethod.RTP]: limits.data[PaymentMethod.RTP] || 0,
-        [PaymentMethod.CARD]: limits.data[PaymentMethod.CARD] || 0
+        [PaymentMethod.ACH]: config.validationRules.maxAmount || 0,
+        [PaymentMethod.WIRE]: config.validationRules.maxAmount || 0,
+        [PaymentMethod.CHECK]: config.validationRules.maxAmount || 0,
+        [PaymentMethod.CARD]: config.validationRules.maxAmount || 0
       });
     } catch (err) {
       setError('Failed to load payment limits');
       console.error('Error loading payment limits:', err);
     }
-  }, [selectedClient, form.paymentType]); // Depends on selectedClient and payment type
+  }, [selectedClient, form.paymentType, paymentProcessorService]);
 
   useEffect(() => {
     fetchInitialData();
@@ -176,7 +206,7 @@ const ManualProcessing: React.FC = () => {
   // Form handlers
   const handleClientChange = (
     _: React.SyntheticEvent,
-    client: Client | null
+    client: BillPayClient | null
   ) => {
     setSelectedClient(client);
     setSelectedPayee(null);
@@ -305,49 +335,54 @@ const ManualProcessing: React.FC = () => {
     };
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const validation = await validateForm();
-    if (!validation.valid) {
-      return;
-    }
-
+  const handleSubmit = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const payment: Omit<PendingPayment, 'id' | 'createdAt' | 'updatedAt' | 'status'> = {
-        clientId: selectedClient?.id || '',
-        clientName: selectedClient?.name || '',
-        payeeId: selectedPayee?.id || '',
-        payeeName: selectedPayee?.name || '',
+      const transaction: PaymentTransaction = {
+        id: '', // Will be assigned by service
+        clientId: form.clientId,
         amount: parseFloat(form.amount),
         currency: 'USD',
-        method: form.paymentType,
-        effectiveDate: form.effectiveDate.format('YYYY-MM-DD'),
-        description: form.memo,
-        recipient: {
-          name: selectedPayee?.name || '',
+        method: form.paymentType as PaymentMethod,
+        type: PaymentType.DEBIT,
+        status: PaymentStatus.PENDING,
+        scheduledAt: form.effectiveDate.toDate(),
+        priority: PaymentPriority.NORMAL,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        metadata: {
           accountNumber: form.accountNumber,
           routingNumber: form.routingNumber,
-          bankName: form.bankName
-        },
-        priority: Priority.MEDIUM
+          bankName: form.bankName,
+          memo: form.memo
+        }
       };
 
-      const response = await paymentApi.createPendingPayment(payment);
+      const validationResult = await paymentProcessorService.validatePayment(transaction);
 
-      if (response.success) {
-        setForm(initialPaymentForm);
-        setSelectedClient(null);
-        setSelectedPayee(null);
-        setValidation({ errors: {}, warnings: {} });
-        // Show success message
+      if (!validationResult.isValid) {
+        setValidation({
+          errors: validationResult.errors.reduce((acc: Record<string, string>, err: { code: string; message: string }) => ({
+            ...acc,
+            [err.code]: err.message,
+          }), {}),
+          warnings: {},
+        });
+        return;
       }
+
+      const processedPayment = await paymentProcessorService.processPayment(transaction);
+
+      setForm(initialPaymentForm);
+      setSelectedClient(null);
+      setSelectedPayee(null);
+      setConfirmDialogOpen(false);
+      
+      // Show success message or redirect
     } catch (err) {
-      console.error('Submit error:', err);
-      setError('Failed to submit payment. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to create payment');
     } finally {
       setLoading(false);
     }
@@ -363,28 +398,41 @@ const ManualProcessing: React.FC = () => {
     setError(null);
 
     try {
-      const draft: Partial<Payment> = {
+      const transaction: PaymentTransaction = {
+        id: '', // Will be assigned by service
         clientId: form.clientId,
-        payeeId: form.payeeId,
         amount: parseFloat(form.amount || '0'),
-        method: form.paymentType,
-        effectiveDate: form.effectiveDate.format('YYYY-MM-DD'),
-        description: form.memo,
+        currency: 'USD',
+        method: form.paymentType as PaymentMethod,
+        type: PaymentType.DEBIT,
+        status: PaymentStatus.PENDING,
+        scheduledAt: form.effectiveDate.toDate(),
+        priority: PaymentPriority.NORMAL,
+        createdAt: new Date(),
+        updatedAt: new Date(),
         metadata: {
           accountNumber: form.accountNumber,
           routingNumber: form.routingNumber,
-          bankName: form.bankName
+          bankName: form.bankName,
+          memo: form.memo
         }
       };
 
-      const response = await paymentApi.saveDraft(draft);
-      if (response.success) {
+      const schedule: PaymentSchedule = {
+        scheduledDate: form.effectiveDate.toDate()
+      };
+
+      const response = await paymentProcessorService.schedulePayment(transaction, schedule);
+      if (response) {
         // Show success message
-        console.log('Draft saved:', response.data);
+        console.log('Payment scheduled:', response);
+        setForm(initialPaymentForm);
+        setSelectedClient(null);
+        setSelectedPayee(null);
       }
     } catch (err) {
-      console.error('Error saving draft:', err);
-      setError('Failed to save draft. Please try again.');
+      console.error('Error scheduling payment:', err);
+      setError('Failed to schedule payment. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -621,7 +669,7 @@ const ManualProcessing: React.FC = () => {
                 onClick={() => handleSaveDraft()}
                 disabled={loading || !form.clientId}
               >
-                Save Draft
+                Schedule Payment
               </Button>
               <Button
                 variant="contained"

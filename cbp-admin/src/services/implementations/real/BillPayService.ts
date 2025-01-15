@@ -18,6 +18,11 @@ import {
     NotificationTemplate,
     NotificationTemplateInput
 } from '../../../types/bill-pay.types';
+import {
+    BillPaySecuritySettings,
+    BillPaySecurityValidation,
+    BillPayOTPMethod
+} from '../../../types/security.types';
 import { PaginatedResponse, QueryOptions } from '../../../types/index';
 import { ApiResponse } from '../../../utils/api';
 import { ApiClient } from '../../../utils/api';
@@ -208,6 +213,42 @@ export class BillPayService extends BaseService implements IBillPayService {
             return await this.get<PaymentAction[]>(`/payments/${paymentId}/actions`);
         } catch (error) {
             logger.error(`Error getting payment actions: ${error}`);
+            throw error;
+        }
+    }
+
+    async getSecuritySettings(): Promise<BillPaySecuritySettings> {
+        try {
+            return await this.get<BillPaySecuritySettings>('/security/settings');
+        } catch (error) {
+            logger.error(`Error getting security settings: ${error}`);
+            throw error;
+        }
+    }
+
+    async updateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecuritySettings> {
+        try {
+            return await this.put<BillPaySecuritySettings>('/security/settings', settings);
+        } catch (error) {
+            logger.error(`Error updating security settings: ${error}`);
+            throw error;
+        }
+    }
+
+    async validateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecurityValidation> {
+        try {
+            return await this.post<BillPaySecurityValidation>('/security/settings/validate', settings);
+        } catch (error) {
+            logger.error(`Error validating security settings: ${error}`);
+            throw error;
+        }
+    }
+
+    async sendOTP(method: BillPayOTPMethod, destination: string): Promise<void> {
+        try {
+            await this.post('/security/otp/send', { method, destination });
+        } catch (error) {
+            logger.error(`Error sending OTP: ${error}`);
             throw error;
         }
     }

@@ -255,4 +255,83 @@ export interface IClientService extends IBaseService {
      * @returns Updated security settings
      */
     updateSecuritySettings(clientId: string, settings: Partial<SecuritySettings>): Promise<SecuritySettings>;
+
+    /**
+     * Get a specific user group
+     * @param clientId Client identifier
+     * @param groupId Group identifier
+     * @returns User group details
+     */
+    getGroup(clientId: string, groupId: string): Promise<UserGroup>;
+
+    /**
+     * Create a new user group
+     * @param clientId Client identifier
+     * @param group Group to create
+     * @returns Created group
+     */
+    createGroup(clientId: string, group: Omit<UserGroup, 'id'>): Promise<UserGroup>;
+
+    /**
+     * Update an existing user group
+     * @param clientId Client identifier
+     * @param groupId Group identifier
+     * @param group Updated group data
+     * @returns Updated group
+     */
+    updateGroup(clientId: string, groupId: string, group: Partial<UserGroup>): Promise<UserGroup>;
+
+    /**
+     * Delete a user group
+     * @param clientId Client identifier
+     * @param groupId Group identifier
+     */
+    deleteGroup(clientId: string, groupId: string): Promise<void>;
+
+    /**
+     * Get all groups for a client
+     * @param clientId Client identifier
+     * @returns List of user groups
+     */
+    getGroups(clientId: string): Promise<UserGroup[]>;
+
+    /**
+     * Get a specific user
+     * @param clientId Client identifier
+     * @param userId User identifier
+     * @returns User details
+     */
+    getUser(clientId: string, userId: string): Promise<User>;
+
+    /**
+     * Create a new user
+     * @param clientId Client identifier
+     * @param user User to create
+     * @returns Created user
+     */
+    createUser(clientId: string, user: Omit<User, 'id'>): Promise<User>;
+
+    /**
+     * Update an existing user
+     * @param clientId Client identifier
+     * @param userId User identifier
+     * @param user Updated user data
+     * @returns Updated user
+     */
+    updateUser(clientId: string, userId: string, user: Partial<User>): Promise<User>;
+
+    /**
+     * Delete a user
+     * @param clientId Client identifier
+     * @param userId User identifier
+     */
+    deleteUser(clientId: string, userId: string): Promise<void>;
+
+    /**
+     * Lock or unlock a user account
+     * @param clientId Client identifier
+     * @param userId User identifier
+     * @param locked Whether to lock or unlock the account
+     */
+    setUserLockStatus(clientId: string, userId: string, locked: boolean): Promise<void>;
 }

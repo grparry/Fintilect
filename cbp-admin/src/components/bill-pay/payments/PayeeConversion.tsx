@@ -44,11 +44,12 @@ import {
   PayeeConversionFileUploadResponse,
   PayeeConversionProgressResponse,
 } from '../../../types/bill-pay.types';
-import { paymentApi } from '../../../services/api/payment.api';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { useAuth } from '../../../hooks/useAuth';
 
 const PayeeConversion: React.FC = () => {
   const { user } = useAuth();
+  const payeeService = ServiceFactory.getInstance().getPayeeService();
   
   // State
   const [files, setFiles] = useState<PayeeConversionFile[]>([]);
@@ -59,6 +60,132 @@ const PayeeConversion: React.FC = () => {
   const [validation, setValidation] = useState<PayeeConversionValidation | null>(null);
   const [progress, setProgress] = useState<PayeeConversionProgress | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Fetch data
+  const fetchFiles = useCallback(async () => {
+    setLoading(true);
+    try {
+      const files = await payeeService.getConversionFiles();
+      setFiles(files);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching files:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch conversion files');
+    } finally {
+      setLoading(false);
+    }
+  }, [payeeService]);
+
+  const fetchRecords = useCallback(async (fileId: string) => {
+    try {
+      const response = await payeeService.getConversions({ 
+        status: undefined,
+        type: undefined,
+        searchTerm: fileId,
+        startDate: undefined,
+        endDate: undefined,
+        page: 1,
+        limit: 50
+      });
+      setRecords(response.items);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching records:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch conversion records');
+    }
+  }, [payeeService]);
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const response = await payeeService.uploadConversionFile(file, 'default');
+      setValidation({
+        valid: response.validation.invalidRecords === 0,
+        errors: response.validation.errors,
+        warnings: response.validation.warnings,
+        totalRecords: response.validation.totalRecords,
+        validRecords: response.validation.validRecords,
+        invalidRecords: response.validation.invalidRecords
+      });
+      setDialogOpen(true);
+      fetchFiles();
+      setError(null);
+    } catch (err) {
+      console.error('Error uploading file:', err);
+      setError(err instanceof Error ? err.message : 'Failed to upload file');
+    }
+  };
+
+  const handleStartConversion = async (fileId: string) => {
+    try {
+      await payeeService.startConversion(fileId);
+      setProgress({
+        status: 'PROCESSING',
+        totalRecords: 0,
+        processedRecords: 0,
+        progress: 0,
+        currentStep: 'validation',
+        totalSteps: 2,
+        errors: []
+      });
+      pollConversionProgress(fileId);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to start conversion');
+    }
+  };
+
+  const pollConversionProgress = useCallback((fileId: string) => {
+    const poll = async () => {
+      try {
+        const progress = await payeeService.getConversionProgress(fileId);
+        setProgress({
+          status: progress.status,
+          totalRecords: progress.totalRecords,
+          processedRecords: progress.processedRecords,
+          progress: progress.progress,
+          currentStep: progress.currentStep,
+          totalSteps: progress.totalSteps,
+          errors: progress.errors
+        });
+        
+        if (progress.status !== 'PROCESSED') {
+          setTimeout(poll, 2000);
+        } else {
+          fetchFiles();
+        }
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to get conversion progress');
+      }
+    };
+
+    poll();
+  }, [fetchFiles, payeeService]);
+
+  useEffect(() => {
+    let mounted = true;
+    
+    const loadFiles = async () => {
+      if (mounted) {
+        await fetchFiles();
+      }
+    };
+    
+    loadFiles();
+    
+    return () => {
+      mounted = false;
+    };
+  }, [fetchFiles]);
+
+  useEffect(() => {
+    if (selectedFile) {
+      fetchRecords(selectedFile.id);
+    }
+  }, [selectedFile, fetchRecords]);
 
   // Debug state changes
   useEffect(() => {
@@ -100,188 +227,6 @@ const PayeeConversion: React.FC = () => {
       console.log('PayeeConversion component unmounted');
     };
   }, []);
-
-  // Fetch data
-  const fetchFiles = useCallback(async () => {
-    console.log('Fetching payee conversion files...');
-    setLoading(true);
-    try {
-      const response = await paymentApi.getPayeeConversionFiles();
-      console.log('Raw response:', response);
-      console.log('Response stringified:', JSON.stringify(response, null, 2));
-      
-      if (!response.success) {
-        throw new Error('Failed to fetch conversion files');
-      }
-
-      // Handle the response data
-      const filesData = response.data;
-      if (!Array.isArray(filesData)) {
-        console.error('API response data is not an array:', filesData);
-        setError('Failed to fetch conversion files - invalid response format');
-        return;
-      }
-      
-      // Validate each file has the required properties
-      const validFiles = filesData.filter(file => {
-        const isValid = file && 
-          typeof file.id === 'string' && 
-          typeof file.name === 'string' && 
-          typeof file.status === 'string' && 
-          typeof file.createdAt === 'string';
-        
-        if (!isValid) {
-          console.error('Invalid file structure:', file);
-        }
-        return isValid;
-      });
-      
-      console.log('Setting files state with valid files:', validFiles);
-      setFiles(validFiles);
-    } catch (err) {
-      console.error('Error fetching files:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch conversion files');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const fetchRecords = useCallback(async (fileId: string) => {
-    try {
-      const response = await paymentApi.getPayeeConversionRecords(fileId);
-      console.log('Got records response:', response);
-      if (response.success) {
-        setRecords(response.data);
-      } else {
-        setError(response.message || 'Failed to fetch conversion records');
-      }
-    } catch (err) {
-      console.error('Error fetching records:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch conversion records');
-    }
-  }, []);
-
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    try {
-      const response = await paymentApi.uploadPayeeConversionFile(file);
-      console.log('Upload response:', response);
-      
-      if (response.success && response.data) {
-        const uploadResponse = response.data as PayeeConversionFileUploadResponse;
-        // Create validation object from response data
-        const validation: PayeeConversionValidation = {
-          valid: uploadResponse.validation.invalidRecords === 0,
-          errors: uploadResponse.validation.errors.map(error => ({
-            field: error.field,
-            message: error.message
-          })),
-          warnings: uploadResponse.validation.warnings.map(warning => ({
-            field: warning.field,
-            message: warning.message
-          })),
-          totalRecords: uploadResponse.validation.totalRecords,
-          validRecords: uploadResponse.validation.validRecords,
-          invalidRecords: uploadResponse.validation.invalidRecords
-        };
-        console.log('Setting validation state:', validation);
-        setValidation(validation);
-        setDialogOpen(true);
-        fetchFiles();
-      } else {
-        setError(response.message || 'Failed to upload file');
-      }
-    } catch (err) {
-      console.error('Error uploading file:', err);
-      setError(err instanceof Error ? err.message : 'Failed to upload file');
-    }
-  };
-
-  const handleStartConversion = async (fileId: string) => {
-    try {
-      const response = await paymentApi.startPayeeConversion(fileId);
-
-      if (response.success) {
-        // Initialize progress with starting state
-        setProgress({
-          status: 'PROCESSING',
-          totalRecords: 0,
-          processedRecords: 0,
-          progress: 0,
-          currentStep: 'validation',
-          totalSteps: 2,
-          errors: []
-        });
-        // Start polling for progress
-        pollConversionProgress(fileId);
-      } else {
-        setError(response.message || 'Failed to start conversion');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to start conversion');
-    }
-  };
-
-  const pollConversionProgress = useCallback((fileId: string) => {
-    const poll = async () => {
-      try {
-        const response = await paymentApi.getPayeeConversionProgress(fileId);
-        console.log('Got progress response:', response);
-        if (response.success) {
-          const progressResponse = response.data as PayeeConversionProgressResponse;
-          // Transform response into PayeeConversionProgress
-          const progressData: PayeeConversionProgress = {
-            status: progressResponse.status,
-            totalRecords: progressResponse.validation.totalRecords,
-            processedRecords: progressResponse.validation.validRecords + progressResponse.validation.invalidRecords,
-            progress: Math.round(((progressResponse.validation.validRecords + progressResponse.validation.invalidRecords) / progressResponse.validation.totalRecords) * 100) || 0,
-            currentStep: progressResponse.status === 'PENDING' ? 'validation' : 'processing',
-            totalSteps: 2,
-            errors: progressResponse.validation.errors.map(e => e.message)
-          };
-          console.log('Setting progress state:', progressData);
-          setProgress(progressData);
-          
-          if (progressResponse.status !== 'PROCESSED') {
-            setTimeout(poll, 2000);
-          } else {
-            // Final poll - refresh file list
-            fetchFiles();
-          }
-        } else {
-          setError(response.message || 'Failed to get conversion progress');
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to get conversion progress');
-      }
-    };
-
-    poll();
-  }, [fetchFiles]);
-
-  useEffect(() => {
-    let mounted = true;
-    
-    const loadFiles = async () => {
-      if (mounted) {
-        await fetchFiles();
-      }
-    };
-    
-    loadFiles();
-    
-    return () => {
-      mounted = false;
-    };
-  }, [fetchFiles]);
-
-  useEffect(() => {
-    if (selectedFile) {
-      fetchRecords(selectedFile.id);
-    }
-  }, [selectedFile, fetchRecords]);
 
   const renderFileList = () => {
     console.log('Rendering file list with files:', files);

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Outlet, Link as RouterLink } from 'react-router-dom';
-import { Box, Typography, Grid, Paper, Link } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Outlet, Link as RouterLink, useParams } from 'react-router-dom';
+import { Box, Typography, Grid, Paper, Link, Alert, CircularProgress } from '@mui/material';
 import { getAllRoutes } from '../../routes';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonIcon from '@mui/icons-material/Person';
@@ -8,6 +8,10 @@ import ContactMailIcon from '@mui/icons-material/ContactMail';
 import GroupIcon from '@mui/icons-material/Group';
 import SecurityIcon from '@mui/icons-material/Security';
 import HistoryIcon from '@mui/icons-material/History';
+import { clientService } from '../../services/factory/ServiceFactory';
+import { Client } from '../../types/client.types';
+import { decodeId } from '../../utils/idEncoder';
+import logger from '../../utils/logger';
 
 const getRouteIcon = (title: string) => {
   switch (title) {
@@ -31,6 +35,34 @@ const getRouteIcon = (title: string) => {
 };
 
 const ClientManagementHeader: React.FC = () => {
+  const { clientId } = useParams<{ clientId: string }>();
+  const [client, setClient] = useState<Client | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadClientData = async () => {
+      if (!clientId) return;
+
+      try {
+        setLoading(true);
+        setError(null);
+        const decodedClientId = decodeId(clientId);
+        const clientData = await clientService.getClient(decodedClientId);
+        setClient(clientData);
+        logger.info('Client data loaded successfully');
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to load client data';
+        logger.error('Error loading client data: ' + message);
+        setError(message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadClientData();
+  }, [clientId]);
+
   const allRoutes = getAllRoutes();
   const clientRoutes = allRoutes.filter(route => 
     route.sectionId === 'clientManagement' && 
@@ -38,11 +70,25 @@ const ClientManagementHeader: React.FC = () => {
     route.path !== '/admin/client-management'
   );
 
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
-        Client Management
+        {client ? `${client.name} - Client Management` : 'Client Management'}
       </Typography>
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
       
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {clientRoutes.map((route) => (

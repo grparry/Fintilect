@@ -12,31 +12,35 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { 
-  User as UIUser,
-  UserGroup as UIUserGroup,
-  SecurityRole,
-  Permission,
+  User,
+  UserGroup,
   UserStatus,
-  UserRole
+  UserRole,
+  PaginatedResponse,
+  UserFilters
 } from '../../types/client.types';
-import { UserGroup as ServiceUserGroup } from '../../services/clients.service';
-import { clientService } from '../../services/clients.service';
+import { PaginationOptions, FilterOptions } from '../../types/common.types';
+import { clientService, userService } from '../../services/factory/ServiceFactory';
 import UserSearch from './users/UserSearch';
 import UserTable from './users/UserTable';
 import UserForm from './users/UserForm';
-import { shouldUseMockData } from '../../config/api.config';
 import { useNavigate } from 'react-router-dom';
-import { encodeId, decodeId } from '../../utils/idEncoder';
+import { encodeId } from '../../utils/idEncoder';
+import logger from '../../utils/logger';
 
 interface UsersState {
-  users: UIUser[];
-  groups: UIUserGroup[];
+  users: User[];
+  groups: UserGroup[];
   loading: boolean;
   error: string | null;
   success: string | null;
   saving: boolean;
-  selectedUser: UIUser | null;
+  selectedUser: User | undefined;
   isFormOpen: boolean;
+  totalUsers: number;
+  page: number;
+  limit: number;
+  searchTerm: string;
 }
 
 interface UsersProps {
@@ -44,92 +48,8 @@ interface UsersProps {
   loading?: boolean;
 }
 
-interface ServiceUser {
-  id: string;
-  clientId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  status: 'ACTIVE' | 'INACTIVE' | 'LOCKED';
-  role: string;
-  department?: string;
-  lastLogin?: string | null;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-interface ServiceUserCreate {
-  firstName: string;
-  lastName: string;
-  email: string;
-  department?: string;
-  role: string;
-  status: 'ACTIVE' | 'INACTIVE' | 'LOCKED';
-}
-
-const serviceUserToUIUser = (serviceUser: ServiceUser): UIUser => ({
-  id: serviceUser.id,
-  clientId: serviceUser.clientId,
-  username: serviceUser.email,
-  firstName: serviceUser.firstName,
-  lastName: serviceUser.lastName,
-  email: serviceUser.email,
-  department: serviceUser.department || '',
-  role: serviceUser.role === 'ADMIN' ? UserRole.Admin :
-        serviceUser.role === 'MANAGER' ? UserRole.Manager :
-        serviceUser.role === 'SUPPORT' ? UserRole.Support :
-        serviceUser.role === 'USER' ? UserRole.User :
-        UserRole.ReadOnly,
-  status: serviceUser.status === 'ACTIVE' ? UserStatus.ACTIVE :
-          serviceUser.status === 'INACTIVE' ? UserStatus.INACTIVE :
-          UserStatus.LOCKED,
-  lastLogin: serviceUser.lastLogin || null,
-  locked: serviceUser.status === 'LOCKED',
-  createdAt: serviceUser.createdAt || new Date().toISOString(),
-  updatedAt: serviceUser.updatedAt || new Date().toISOString()
-});
-
-const serviceGroupToUIGroup = (group: ServiceUserGroup): UIUserGroup => ({
-  id: group.id,
-  name: group.name,
-  description: group.description || '',
-  clientId: group.clientId,
-  roles: [],
-  permissions: group.permissions.map(id => ({ 
-    id,
-    name: '',
-    description: '',
-    category: 'user',
-    actions: []
-  })),
-  members: group.members,
-  createdAt: group.createdAt,
-  updatedAt: group.updatedAt
-});
-
-const uiUserToServiceUser = (uiUser: Partial<UIUser>): Partial<ServiceUserCreate> => ({
-  ...(uiUser.firstName && { firstName: uiUser.firstName }),
-  ...(uiUser.lastName && { lastName: uiUser.lastName }),
-  ...(uiUser.email && { email: uiUser.email }),
-  ...(uiUser.department && { department: uiUser.department }),
-  ...(uiUser.role && {
-    role: uiUser.role === UserRole.Admin ? 'ADMIN' :
-          uiUser.role === UserRole.Manager ? 'MANAGER' :
-          uiUser.role === UserRole.Support ? 'SUPPORT' :
-          uiUser.role === UserRole.User ? 'USER' :
-          'READONLY'
-  }),
-  ...(uiUser.status && {
-    status: uiUser.status === UserStatus.ACTIVE ? 'ACTIVE' :
-            uiUser.status === UserStatus.INACTIVE ? 'INACTIVE' :
-            'LOCKED'
-  })
-});
-
 const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
   const navigate = useNavigate();
-  const decodedClientId = clientId ? decodeId(clientId) : '';
-
   const [state, setState] = useState<UsersState>({
     users: [],
     groups: [],
@@ -137,213 +57,175 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     error: null,
     success: null,
     saving: false,
-    selectedUser: null,
-    isFormOpen: false
+    selectedUser: undefined,
+    isFormOpen: false,
+    totalUsers: 0,
+    page: 0,
+    limit: 10,
+    searchTerm: ''
   });
-
-  const isMockMode = shouldUseMockData();
 
   const loadData = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
 
-      const [usersResponse, groupsResponse] = await Promise.all([
-        clientService.getClientUsers(decodedClientId),
-        clientService.getGroups(decodedClientId)
-      ]);
+      const filters: FilterOptions = {
+        clientId,
+        ...(state.searchTerm && { searchTerm: state.searchTerm })
+      };
 
-      if (!usersResponse.success || !groupsResponse.success) {
-        setState(prev => ({ 
-          ...prev, 
-          loading: false, 
-          error: (!usersResponse.success ? usersResponse.error.message : undefined) || 
-                (!groupsResponse.success ? groupsResponse.error.message : undefined) || 
-                'Failed to load data'
-        }));
-        return;
-      }
+      const [usersResponse, groupsResponse] = await Promise.all([
+        userService.getUsers({
+          pagination: {
+            page: state.page + 1,
+            limit: state.limit
+          },
+          filter: filters
+        }),
+        clientService.getClientUserGroups(clientId)
+      ]);
 
       setState(prev => ({
         ...prev,
         loading: false,
-        users: usersResponse.data.items.map(serviceUserToUIUser),
-        groups: groupsResponse.data.items.map(serviceGroupToUIGroup)
+        users: usersResponse.items,
+        totalUsers: usersResponse.pagination.total,
+        groups: groupsResponse
       }));
+
+      logger.info('Users and groups loaded successfully');
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to load users and groups';
+      logger.error('Error loading users and groups: ' + message);
       setState(prev => ({ 
         ...prev, 
         loading: false, 
-        error: error instanceof Error ? error.message : 'An unexpected error occurred' 
+        error: message
       }));
     }
-  }, [decodedClientId]);
+  }, [clientId, state.page, state.limit, state.searchTerm]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  const handleCreateUser = async (userData: Partial<UIUser>) => {
+  const handleCreateUser = async (userData: Partial<User>) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
 
-      const serviceUserData = uiUserToServiceUser(userData);
-      const response = await clientService.createClientUser(decodedClientId, serviceUserData);
+      const newUser: Omit<User, 'id'> = {
+        ...userData,
+        clientId,
+        status: userData.status || UserStatus.ACTIVE,
+        role: userData.role || UserRole.User
+      } as Omit<User, 'id'>;
 
-      if (!response.success) {
-        setState(prev => ({ 
-          ...prev, 
-          saving: false, 
-          error: response.error.message || 'Failed to create user'
-        }));
-        return;
-      }
+      await userService.createUser(newUser);
 
       setState(prev => ({
         ...prev,
         saving: false,
-        users: [...prev.users, serviceUserToUIUser(response.data)],
-        success: 'User created successfully',
-        isFormOpen: false
+        isFormOpen: false,
+        success: 'User created successfully'
       }));
+
+      loadData();
+      logger.info('User created successfully');
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to create user';
+      logger.error('Error creating user: ' + message);
       setState(prev => ({ 
         ...prev, 
         saving: false, 
-        error: error instanceof Error ? error.message : 'An unexpected error occurred' 
+        error: message
       }));
     }
   };
 
-  const handleUpdateUser = async (userId: string, userData: Partial<UIUser>) => {
+  const handleUpdateUser = async (userData: Partial<User>) => {
+    if (!state.selectedUser) return;
+
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
 
-      const serviceUserData = uiUserToServiceUser(userData);
-      const response = await clientService.updateClientUser(decodedClientId, userId, serviceUserData);
-
-      if (!response.success) {
-        setState(prev => ({ 
-          ...prev, 
-          saving: false, 
-          error: response.error.message || 'Failed to update user'
-        }));
-        return;
-      }
+      await userService.updateUser(state.selectedUser.id, userData);
 
       setState(prev => ({
         ...prev,
         saving: false,
-        users: prev.users.map(user => user.id === userId ? serviceUserToUIUser(response.data) : user),
+        selectedUser: undefined,
+        isFormOpen: false,
         success: 'User updated successfully'
       }));
+
+      loadData();
+      logger.info('User updated successfully');
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to update user';
+      logger.error('Error updating user: ' + message);
       setState(prev => ({ 
         ...prev, 
         saving: false, 
-        error: error instanceof Error ? error.message : 'An unexpected error occurred' 
+        error: message
       }));
     }
   };
 
-  const handleDeleteUser = async (userId: string) => {
+  const handleDeleteUser = async (user: User) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
 
-      const response = await clientService.deleteClientUser(decodedClientId, userId);
-
-      if (!response.success) {
-        setState(prev => ({ 
-          ...prev, 
-          saving: false, 
-          error: response.error.message || 'Failed to delete user'
-        }));
-        return;
-      }
+      await userService.deleteUser(user.id);
 
       setState(prev => ({
         ...prev,
         saving: false,
-        users: prev.users.filter(user => user.id !== userId),
         success: 'User deleted successfully'
       }));
+
+      loadData();
+      logger.info('User deleted successfully');
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to delete user';
+      logger.error('Error deleting user: ' + message);
       setState(prev => ({ 
         ...prev, 
         saving: false, 
-        error: error instanceof Error ? error.message : 'An unexpected error occurred' 
+        error: message
       }));
     }
   };
 
-  const handleSearch = async (searchTerm: string) => {
-    try {
-      setState(prev => ({ ...prev, loading: true, error: null }));
-      
-      const filteredUsers = state.users.filter(user =>
-        `${user.firstName} ${user.lastName} ${user.email} ${user.role}`
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      );
-      
-      setState(prev => ({ 
-        ...prev,
-        users: filteredUsers,
-        loading: false 
-      }));
-    } catch (error) {
-      setState(prev => ({ 
-        ...prev,
-        error: 'Failed to search users',
-        loading: false 
-      }));
-    }
+  const handleSearch = (searchTerm: string) => {
+    setState(prev => ({
+      ...prev,
+      searchTerm,
+      page: 0
+    }));
   };
 
-  const handleEditUser = (user: UIUser) => {
-    navigate(`/admin/client-management/${encodeId(decodedClientId)}/users/${encodeId(user.id)}`);
+  const handlePageChange = (_event: unknown, newPage: number) => {
+    setState(prev => ({ ...prev, page: newPage }));
   };
 
-  const handleCreateClick = () => {
-    navigate(`/admin/client-management/${encodeId(decodedClientId)}/users/new`);
+  const handleLimitChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState(prev => ({
+      ...prev,
+      limit: parseInt(event.target.value, 10),
+      page: 0
+    }));
   };
 
-  const handleToggleLock = async (user: UIUser) => {
-    try {
-      const newStatus = user.status === UserStatus.LOCKED ? 'ACTIVE' : 'LOCKED';
-      
-      const response = await clientService.updateClientUser(decodedClientId, user.id, {
-        status: newStatus,
-      });
-      
-      if (!response.success) {
-        setState(prev => ({ 
-          ...prev,
-          error: response.error.message || 'Failed to update user status',
-          saving: false 
-        }));
-        return;
-      }
-
-      setState(prev => ({
-        ...prev,
-        users: prev.users.map(u =>
-          u.id === user.id ? serviceUserToUIUser(response.data) : u
-        ),
-        success: 'User status updated successfully',
-        saving: false
-      }));
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error.message : 'An unexpected error occurred',
-        saving: false
-      }));
-    }
+  const handleToggleLock = (user: User) => {
+    handleUpdateUser({
+      id: user.id,
+      status: user.status === UserStatus.LOCKED ? UserStatus.ACTIVE : UserStatus.LOCKED
+    });
   };
 
   if (state.loading || parentLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
         <CircularProgress />
       </Box>
     );
@@ -351,38 +233,61 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
 
   return (
     <Box>
-      {state.error && <Alert severity="error">{state.error}</Alert>}
-      {state.success && <Alert severity="success">{state.success}</Alert>}
-      {isMockMode && (
-        <Alert severity="info" sx={{ mb: 2 }}>
-          Mock mode is enabled
-        </Alert>
-      )}
-
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h5" component="h1">
-          Users
-        </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Typography variant="h5">Users</Typography>
         <Button
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={handleCreateClick}
+          onClick={() => setState(prev => ({ ...prev, isFormOpen: true }))}
+          disabled={state.saving}
         >
           Add User
         </Button>
       </Box>
 
-      <UserSearch onSearch={handleSearch} />
+      {state.error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {state.error}
+        </Alert>
+      )}
+
+      {state.success && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {state.success}
+        </Alert>
+      )}
+
+      <UserSearch onSearch={handleSearch} loading={state.loading} />
 
       <UserTable
         users={state.users}
         groups={state.groups}
-        onEdit={handleEditUser}
-        onDelete={(user: UIUser) => handleDeleteUser(user.id)}
+        onEdit={(user) => setState(prev => ({ ...prev, selectedUser: user, isFormOpen: true }))}
+        onDelete={handleDeleteUser}
         onToggleLock={handleToggleLock}
-        clientId={decodedClientId}
+        clientId={clientId}
       />
+
+      <Dialog
+        open={state.isFormOpen}
+        onClose={() => setState(prev => ({ ...prev, isFormOpen: false, selectedUser: undefined }))}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          {state.selectedUser ? 'Edit User' : 'Add User'}
+        </DialogTitle>
+        <DialogContent>
+          <UserForm
+            user={state.selectedUser}
+            groups={state.groups}
+            onSubmit={state.selectedUser ? handleUpdateUser : handleCreateUser}
+            onCancel={() => setState(prev => ({ ...prev, isFormOpen: false, selectedUser: undefined }))}
+            saving={state.saving}
+          />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

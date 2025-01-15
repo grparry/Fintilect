@@ -110,8 +110,8 @@ const LoginPage: React.FC = () => {
           <Form
             fields={formFields}
             onSubmit={handleSubmit}
-            submitText="Login"
             loading={loading}
+            submitText="Login"
           />
         </Paper>
       </Box>

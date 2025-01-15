@@ -10,6 +10,8 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { Box, Alert } from '@mui/material';
+import { ServiceFactory } from '../../services/factory/ServiceFactory';
+import logger from '../../utils/logger';
 
 export interface Column<T extends GridValidRowModel> {
   field: keyof T;
@@ -39,6 +41,7 @@ export interface DataTableProps<T extends GridValidRowModel> {
   className?: string;
   style?: React.CSSProperties;
   error?: string;
+  tableId?: string;
 }
 
 const DataTable = <T extends GridValidRowModel>({
@@ -59,10 +62,21 @@ const DataTable = <T extends GridValidRowModel>({
   className,
   style,
   error,
+  tableId = 'dynamic-table',
 }: DataTableProps<T>): React.ReactElement => {
+  const auditService = ServiceFactory.getInstance().getAuditService();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize,
+  });
+
+  logger.info({
+    message: 'DataTable: Initializing',
+    tableId,
+    columns: columns.map(c => ({ field: c.field, headerName: c.headerName })),
+    rowCount: rows.length,
+    pageSize,
+    loading
   });
 
   // Convert our Column type to GridColDef
@@ -78,7 +92,35 @@ const DataTable = <T extends GridValidRowModel>({
   }));
 
   const handlePaginationModelChange = (newModel: GridPaginationModel) => {
+    logger.info({
+      message: 'DataTable: Pagination changed',
+      tableId,
+      oldModel: paginationModel,
+      newModel
+    });
+
     setPaginationModel(newModel);
+
+    // Log pagination change to audit service
+    auditService.logEvent({
+      eventType: 'TABLE_PAGINATION',
+      resourceId: tableId,
+      resourceType: 'DATA_TABLE',
+      status: 'COMPLETED',
+      metadata: {
+        page: newModel.page,
+        pageSize: newModel.pageSize,
+        totalRows: rows.length
+      },
+      timestamp: new Date().toISOString()
+    }).catch(err => {
+      logger.error({
+        message: 'Failed to log pagination change to audit service',
+        tableId,
+        error: err
+      });
+    });
+
     if (onPageChange) {
       onPageChange(newModel.page);
     }
@@ -90,17 +132,104 @@ const DataTable = <T extends GridValidRowModel>({
   const handleSortModelChange = (model: GridSortModel) => {
     if (onSortChange && model.length > 0) {
       const { field, sort } = model[0];
+
+      logger.info({
+        message: 'DataTable: Sort changed',
+        tableId,
+        field,
+        sort
+      });
+
+      // Log sort change to audit service
+      auditService.logEvent({
+        eventType: 'TABLE_SORT',
+        resourceId: tableId,
+        resourceType: 'DATA_TABLE',
+        status: 'COMPLETED',
+        metadata: {
+          field,
+          direction: sort
+        },
+        timestamp: new Date().toISOString()
+      }).catch(err => {
+        logger.error({
+          message: 'Failed to log sort change to audit service',
+          tableId,
+          error: err
+        });
+      });
+
       onSortChange(field, sort as 'asc' | 'desc');
     }
   };
 
   const handleRowClick = (params: GridRowParams<T>) => {
     if (onRowClick) {
+      logger.info({
+        message: 'DataTable: Row clicked',
+        tableId,
+        rowId: params.id
+      });
+
+      // Log row click to audit service
+      auditService.logEvent({
+        eventType: 'TABLE_ROW_CLICK',
+        resourceId: tableId,
+        resourceType: 'DATA_TABLE',
+        status: 'COMPLETED',
+        metadata: {
+          rowId: params.id
+        },
+        timestamp: new Date().toISOString()
+      }).catch(err => {
+        logger.error({
+          message: 'Failed to log row click to audit service',
+          tableId,
+          error: err
+        });
+      });
+
       onRowClick(params.row);
     }
   };
 
+  const handleSelectionModelChange = (newModel: GridRowSelectionModel) => {
+    if (onSelectionModelChange) {
+      logger.info({
+        message: 'DataTable: Selection changed',
+        tableId,
+        selectedRows: newModel
+      });
+
+      // Log selection change to audit service
+      auditService.logEvent({
+        eventType: 'TABLE_SELECTION',
+        resourceId: tableId,
+        resourceType: 'DATA_TABLE',
+        status: 'COMPLETED',
+        metadata: {
+          selectedRows: newModel
+        },
+        timestamp: new Date().toISOString()
+      }).catch(err => {
+        logger.error({
+          message: 'Failed to log selection change to audit service',
+          tableId,
+          error: err
+        });
+      });
+
+      onSelectionModelChange(newModel);
+    }
+  };
+
   if (error) {
+    logger.error({
+      message: 'DataTable: Error state',
+      tableId,
+      error
+    });
+
     return (
       <Alert severity="error" sx={{ mb: 2 }}>
         {error}
@@ -122,7 +251,7 @@ const DataTable = <T extends GridValidRowModel>({
         checkboxSelection={checkboxSelection}
         disableRowSelectionOnClick={disableSelectionOnClick}
         rowSelectionModel={selectionModel}
-        onRowSelectionModelChange={onSelectionModelChange}
+        onRowSelectionModelChange={handleSelectionModelChange}
         onSortModelChange={handleSortModelChange}
         getRowId={getRowId}
         sx={{

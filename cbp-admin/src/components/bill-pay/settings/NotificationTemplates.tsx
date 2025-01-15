@@ -30,6 +30,7 @@ import {
   FormControlLabel,
   Switch,
   CircularProgress,
+  TablePagination
 } from '@mui/material';
 import { Editor } from '@tinymce/tinymce-react';
 import EditIcon from '@mui/icons-material/Edit';
@@ -60,6 +61,7 @@ interface PreviewDialogState {
   open: boolean;
   subject: string;
   content: string;
+  sampleData: Record<string, string>;
 }
 
 const NotificationTemplates: React.FC = () => {
@@ -68,12 +70,14 @@ const NotificationTemplates: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<NotificationTemplate | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [filters, setFilters] = useState<NotificationTemplateFilters>({
     searchTerm: '',
     type: 'all',
     category: NotificationCategory.PAYMENT
   });
   const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [templateDialog, setTemplateDialog] = useState<TemplateDialogState>({
     open: false,
     mode: 'create',
@@ -81,7 +85,8 @@ const NotificationTemplates: React.FC = () => {
   const [previewDialog, setPreviewDialog] = useState<PreviewDialogState>({
     open: false,
     subject: '',
-    content: ''
+    content: '',
+    sampleData: {}
   });
   const [formData, setFormData] = useState<NotificationTemplateInput>({
     name: '',
@@ -92,15 +97,24 @@ const NotificationTemplates: React.FC = () => {
     active: true,
   });
   const [formErrors, setFormErrors] = useState<Partial<Record<keyof NotificationTemplateInput, string>>>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Load templates
+  // Load templates with search and pagination
   const loadTemplates = async () => {
     try {
       setLoading(true);
       setError(null);
-      const result = await notificationService.getTemplates(filters);
-      setTemplates(result.templates);
-      setTotal(result.total);
+      const response = await notificationService.getTemplates({
+        searchTerm: searchQuery || undefined,
+        type: filters.type === 'all' ? undefined : filters.type,
+        category: filters.category,
+        active: undefined
+      });
+      setTemplates(response.items);
+      setTotal(response.total);
+      setTotalPages(response.totalPages);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to load templates');
     } finally {
@@ -110,7 +124,7 @@ const NotificationTemplates: React.FC = () => {
 
   useEffect(() => {
     loadTemplates();
-  }, [filters]);
+  }, [searchQuery]);
 
   // Handle template dialog
   const handleOpenTemplateDialog = (mode: 'create' | 'edit', template?: NotificationTemplate) => {
@@ -159,7 +173,8 @@ const NotificationTemplates: React.FC = () => {
     setPreviewDialog({
       open: false,
       subject: '',
-      content: ''
+      content: '',
+      sampleData: {}
     });
   };
 
@@ -172,7 +187,7 @@ const NotificationTemplates: React.FC = () => {
       if (templateDialog.mode === 'create') {
         await notificationService.createTemplate(formData);
       } else if (templateDialog.template) {
-        await notificationService.updateTemplate(templateDialog.template.id.toString(), formData);
+        await notificationService.updateTemplate(templateDialog.template.id, formData);
       }
 
       handleCloseTemplateDialog();
@@ -189,7 +204,7 @@ const NotificationTemplates: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      await notificationService.deleteTemplate(template.id.toString());
+      await notificationService.deleteTemplate(template.id);
       loadTemplates();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to delete template');
@@ -203,11 +218,12 @@ const NotificationTemplates: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const preview = await notificationService.previewTemplate(template.id.toString());
+      const preview = await notificationService.previewTemplate(template.id, {});
       setPreviewDialog({
         open: true,
         subject: preview.subject,
-        content: preview.content
+        content: preview.content,
+        sampleData: preview.sampleData || {}
       });
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to preview template');
@@ -216,19 +232,109 @@ const NotificationTemplates: React.FC = () => {
     }
   };
 
-  // Handle template duplication
-  const handleDuplicate = async (templateId: number) => {
+  // Template actions
+  const handleGetTemplate = async (templateId: string) => {
     try {
-      if (!selectedTemplate) return;
-      const template = await notificationService.cloneTemplate(
-        templateId.toString(),
-        `${selectedTemplate.name} (Copy)`
+      const template = await notificationService.getTemplate(Number(templateId));
+      setTemplateDialog({
+        open: true,
+        mode: 'edit',
+        template
+      });
+    } catch (error) {
+      console.error('Error loading template:', error);
+      setError('Failed to load template for editing');
+    }
+  };
+
+  const handleDuplicate = async (templateId: string) => {
+    try {
+      const template = await notificationService.getTemplate(Number(templateId));
+      const clonedTemplate: NotificationTemplateInput = {
+        name: `${template.name} (Copy)`,
+        type: template.type,
+        category: template.category,
+        subject: template.subject,
+        content: template.content,
+        active: template.active
+      };
+      await notificationService.createTemplate(clonedTemplate);
+      await loadTemplates();
+      setSuccess('Template cloned successfully');
+    } catch (error) {
+      console.error('Error cloning template:', error);
+      setError('Failed to clone template');
+    }
+  };
+
+  const handlePreviewTemplate = async (templateId: string) => {
+    try {
+      const template = await notificationService.getTemplate(Number(templateId));
+      const preview = await notificationService.previewTemplate(
+        Number(templateId),
+        {
+          recipientName: 'John Doe',
+          amount: '$100.00',
+          date: new Date().toLocaleDateString(),
+          paymentId: 'PAY123'
+        }
       );
-      setTemplates(prev => [...prev, template]);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to duplicate template');
-    } finally {
-      setLoading(false);
+      setPreviewDialog({
+        open: true,
+        subject: preview.subject || '',
+        content: preview.content || '',
+        sampleData: preview.sampleData || {}
+      });
+    } catch (error) {
+      console.error('Error loading template preview:', error);
+      setError('Failed to load template preview');
+    }
+  };
+
+  const handleEdit = async (templateId: string) => {
+    try {
+      const template = await notificationService.getTemplate(Number(templateId));
+      setTemplateDialog({
+        open: true,
+        mode: 'edit',
+        template
+      });
+    } catch (error) {
+      console.error('Error loading template:', error);
+      setError('Failed to load template for editing');
+    }
+  };
+
+  const handleClone = async (templateId: string) => {
+    try {
+      const template = await notificationService.getTemplate(Number(templateId));
+      const clonedTemplate: NotificationTemplateInput = {
+        name: `${template.name} (Copy)`,
+        type: template.type,
+        category: template.category,
+        subject: template.subject,
+        content: template.content,
+        active: template.active
+      };
+      await notificationService.createTemplate(clonedTemplate);
+      await loadTemplates();
+      setSuccess('Template cloned successfully');
+    } catch (error) {
+      console.error('Error cloning template:', error);
+      setError('Failed to clone template');
+    }
+  };
+
+  const handleDeleteTemplate = async (templateId: string) => {
+    if (window.confirm('Are you sure you want to delete this template?')) {
+      try {
+        await notificationService.deleteTemplate(Number(templateId));
+        await loadTemplates();
+        setSuccess('Template deleted successfully');
+      } catch (error) {
+        console.error('Error deleting template:', error);
+        setError('Failed to delete template');
+      }
     }
   };
 
@@ -240,53 +346,13 @@ const NotificationTemplates: React.FC = () => {
     setFilters(prev => ({ ...prev, category }));
   };
 
-  const handleGetTemplate = async (id: number) => {
-    try {
-      const template = await notificationService.getTemplate(id.toString());
-      setSelectedTemplate(template);
-      setFormData({
-        name: template.name,
-        type: template.type,
-        category: template.category,
-        subject: template.subject,
-        content: template.content,
-        active: template.active,
-      });
-      setTemplateDialog({ open: true, mode: 'edit', template });
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to load template');
-    }
+  const handlePageChange = (event: unknown, newPage: number) => {
+    setCurrentPage(newPage);
   };
 
-  const handleUpdateTemplate = async (id: number, template: Partial<NotificationTemplateInput>) => {
-    try {
-      const updatedTemplate = await notificationService.updateTemplate(id.toString(), template);
-      setTemplates(prev => prev.map(t => t.id === id ? updatedTemplate : t));
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to update template');
-    }
-  };
-
-  const handleDeleteTemplate = async (id: number) => {
-    try {
-      await notificationService.deleteTemplate(id.toString());
-      setTemplates(prev => prev.filter(t => t.id !== id));
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to delete template');
-    }
-  };
-
-  const handlePreviewTemplate = async (id: number) => {
-    try {
-      const preview = await notificationService.previewTemplate(id.toString());
-      setPreviewDialog({
-        open: true,
-        subject: preview.subject,
-        content: preview.content
-      });
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to preview template');
-    }
+  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setItemsPerPage(parseInt(event.target.value, 10));
+    setCurrentPage(1);
   };
 
   return (
@@ -294,6 +360,11 @@ const NotificationTemplates: React.FC = () => {
       {error && (
         <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
           {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess(null)}>
+          {success}
         </Alert>
       )}
 
@@ -404,7 +475,7 @@ const NotificationTemplates: React.FC = () => {
                       <Tooltip title="Preview">
                         <IconButton
                           size="small"
-                          onClick={() => handlePreviewTemplate(template.id)}
+                          onClick={() => handlePreviewTemplate(template.id.toString())}
                         >
                           <PreviewIcon />
                         </IconButton>
@@ -412,7 +483,7 @@ const NotificationTemplates: React.FC = () => {
                       <Tooltip title="Edit">
                         <IconButton
                           size="small"
-                          onClick={() => handleGetTemplate(template.id)}
+                          onClick={() => handleEdit(template.id.toString())}
                         >
                           <EditIcon />
                         </IconButton>
@@ -420,7 +491,7 @@ const NotificationTemplates: React.FC = () => {
                       <Tooltip title="Duplicate">
                         <IconButton
                           size="small"
-                          onClick={() => handleDuplicate(template.id)}
+                          onClick={() => handleClone(template.id.toString())}
                         >
                           <ContentCopyIcon />
                         </IconButton>
@@ -428,7 +499,7 @@ const NotificationTemplates: React.FC = () => {
                       <Tooltip title="Delete">
                         <IconButton
                           size="small"
-                          onClick={() => handleDeleteTemplate(template.id)}
+                          onClick={() => handleDeleteTemplate(template.id.toString())}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -441,6 +512,17 @@ const NotificationTemplates: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
+        <TablePagination
+          component="div"
+          count={total}
+          page={currentPage - 1}
+          onPageChange={handlePageChange}
+          rowsPerPage={itemsPerPage}
+          onRowsPerPageChange={handleRowsPerPageChange}
+          rowsPerPageOptions={[5, 10, 25, 50]}
+        />
+      </Box>
 
       {/* Template Dialog */}
       <Dialog

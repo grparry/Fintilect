@@ -29,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({
   open,
 }) => {
   const theme = useTheme();
-  const { user } = useAuth();
+  const { state } = useAuth();
 
   return (
     <AppBar
@@ -59,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-          {user ? `Welcome, ${user.firstName}` : 'Welcome'}
+          {state.user ? `Welcome, ${state.user.firstName}` : 'Welcome'}
         </Typography>
         <Box>
           <IconButton 

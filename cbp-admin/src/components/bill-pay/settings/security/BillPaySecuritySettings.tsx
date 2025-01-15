@@ -25,9 +25,11 @@ import {
 import SaveIcon from '@mui/icons-material/Save';
 import SendIcon from '@mui/icons-material/Send';
 import { BillPaySecuritySettings as BillPaySecuritySettingsType, BillPayOTPMethod } from '../../../../types/security.types';
-import { billPaySecurityService } from '../../../../services/bill-pay-security.service';
+import { ServiceFactory } from '../../../../services/factory/ServiceFactory';
 
 const BillPaySecuritySettings: React.FC = () => {
+  const billPayService = ServiceFactory.getInstance().getBillPayService();
+
   const [settings, setSettings] = useState<BillPaySecuritySettingsType>({
     passwordPolicy: {
       minLength: 8,
@@ -64,7 +66,7 @@ const BillPaySecuritySettings: React.FC = () => {
   const loadSettings = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await billPaySecurityService.getSettings();
+      const data = await billPayService.getSecuritySettings();
       setSettings(data);
       setError(null);
     } catch (err) {
@@ -125,7 +127,7 @@ const BillPaySecuritySettings: React.FC = () => {
         ? settings.otpSettings.email 
         : settings.otpSettings.phone;
       
-      await billPaySecurityService.sendOTP(settings.otpSettings.method, destination);
+      await billPayService.sendOTP(settings.otpSettings.method, destination);
       setSuccess('OTP sent successfully');
       setOtpSent(true);
       setTimeout(() => {
@@ -140,13 +142,13 @@ const BillPaySecuritySettings: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const validation = await billPaySecurityService.validateSettings(settings);
+      const validation = await billPayService.validateSecuritySettings(settings);
       if (!validation.isValid) {
         setError('Invalid settings: ' + Object.values(validation.errors).join(', '));
         return;
       }
 
-      await billPaySecurityService.updateSettings(settings);
+      await billPayService.updateSecuritySettings(settings);
       setSuccess('Settings saved successfully');
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {

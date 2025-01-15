@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -9,6 +9,7 @@ import {
   Box,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import logger from '../../utils/logger';
 
 export interface BaseModalProps {
   open: boolean;
@@ -16,6 +17,7 @@ export interface BaseModalProps {
   title?: string;
   children: React.ReactNode;
   'data-testid'?: string;
+  modalId?: string;
 }
 
 const BaseModal: React.FC<BaseModalProps> = ({
@@ -23,12 +25,43 @@ const BaseModal: React.FC<BaseModalProps> = ({
   onClose,
   title,
   children,
-  'data-testid': testId = 'base-modal'
+  'data-testid': testId = 'base-modal',
+  modalId = 'dynamic-modal'
 }) => {
-  const handleClose = (_: React.MouseEvent | {}, reason: string) => {
+  useEffect(() => {
+    if (open) {
+      logger.info({
+        message: 'Modal: Opened',
+        modalId,
+        title: title || 'Untitled',
+        timestamp: new Date().toISOString()
+      });
+    }
+  }, [open, modalId, title]);
+
+  const handleClose = (event: React.MouseEvent | {}, reason: string) => {
+    logger.info({
+      message: 'Modal: Close attempt',
+      modalId,
+      title: title || 'Untitled',
+      reason,
+      allowed: reason !== 'backdropClick',
+      timestamp: new Date().toISOString()
+    });
+
     if (reason !== 'backdropClick') {
       onClose();
     }
+  };
+
+  const handleCloseButtonClick = () => {
+    logger.info({
+      message: 'Modal: Close button clicked',
+      modalId,
+      title: title || 'Untitled',
+      timestamp: new Date().toISOString()
+    });
+    onClose();
   };
 
   return (
@@ -60,7 +93,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
           </Typography>
           <IconButton
             aria-label="close"
-            onClick={() => onClose()}
+            onClick={handleCloseButtonClick}
             sx={{
               position: 'absolute',
               right: 8,

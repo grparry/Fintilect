@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -24,6 +24,8 @@ import * as Icons from '@mui/icons-material';
 import { getNavigationConfig } from '../../routes';
 import { NavigationItem, NavigationSection } from '../../types/navigation.types';
 import { useNavigation } from '../../context/NavigationContext';
+import { permissionService } from '../../services/factory/ServiceFactory';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface SidebarProps {
   open: boolean;
@@ -36,7 +38,52 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state, toggleSection } = useNavigation();
-  const navigationConfig = useMemo<NavigationSection[]>(() => getNavigationConfig(), []);
+  const { state: authState } = useAuth();
+  const [filteredConfig, setFilteredConfig] = useState<NavigationSection[]>([]);
+  
+  useEffect(() => {
+    const filterNavigation = async () => {
+      const allConfig = getNavigationConfig();
+      if (!authState.user) {
+        setFilteredConfig([]);
+        return;
+      }
+
+      // Filter navigation items based on user permissions
+      const filterItems = async (items: NavigationItem[]): Promise<NavigationItem[]> => {
+        const filteredItems = [];
+        for (const item of items) {
+          const permissions = await permissionService.getPermissions('System');
+          const hasPermission = permissions.some(p => p.name === `view:${item.id}`);
+          
+          if (hasPermission) {
+            if (item.children) {
+              const filteredChildren = await filterItems(item.children);
+              if (filteredChildren.length > 0) {
+                filteredItems.push({ ...item, children: filteredChildren });
+              }
+            } else {
+              filteredItems.push(item);
+            }
+          }
+        }
+        return filteredItems;
+      };
+
+      // Filter sections and their items
+      const filteredSections = [];
+      for (const section of allConfig) {
+        const filteredItems = await filterItems(section.items);
+        if (filteredItems.length > 0) {
+          filteredSections.push({ ...section, items: filteredItems });
+        }
+      }
+      
+      setFilteredConfig(filteredSections);
+    };
+
+    filterNavigation();
+  }, [authState.user]);
 
   const handleNavigate = (path: string) => {
     navigate(path);
@@ -180,7 +227,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
         </Box>
       )}
       <List sx={{ pt: 0 }}>
-        {navigationConfig.map((section) => renderNavigationSection(section))}
+        {filteredConfig.map((section) => renderNavigationSection(section))}
       </List>
     </Drawer>
   );

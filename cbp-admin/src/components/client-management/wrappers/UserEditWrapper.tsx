@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Alert, CircularProgress, Box, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { decodeId } from '../../../utils/idEncoder';
-import { clientService } from '../../../services/clients.service';
+import { clientService } from '../../../services/factory/ServiceFactory';
 import { User, UserGroup, UserStatus, UserRole } from '../../../types/client.types';
 import UserForm from '../users/UserForm';
 
@@ -29,9 +29,9 @@ const uiUserToServiceUser = (user: Partial<User>) => {
   const { id, clientId, status, lastLogin, ...rest } = user;
   
   // Convert status, excluding PENDING which is not supported by the service
-  let serviceStatus: 'ACTIVE' | 'INACTIVE' | 'LOCKED' | undefined;
+  let serviceStatus: UserStatus | undefined;
   if (status && status !== UserStatus.PENDING) {
-    serviceStatus = status as 'ACTIVE' | 'INACTIVE' | 'LOCKED';
+    serviceStatus = status;
   }
 
   // Convert lastLogin from string | null to string | undefined
@@ -95,21 +95,13 @@ const UserEditWrapper: React.FC = () => {
         const decodedUserId = decodeId(userId);
 
         // Load user and groups in parallel
-        const [userResponse, groupsResponse] = await Promise.all([
-          clientService.getClientUser(decodedClientId, decodedUserId),
+        const [user, groups] = await Promise.all([
+          clientService.getUser(decodedClientId, decodedUserId),
           clientService.getGroups(decodedClientId)
         ]);
 
-        if (!userResponse.success) {
-          throw new Error(userResponse.error?.message || 'Failed to load user');
-        }
-
-        if (!groupsResponse.success) {
-          throw new Error(groupsResponse.error?.message || 'Failed to load groups');
-        }
-
-        setUser(serviceUserToUIUser(userResponse.data));
-        setGroups(groupsResponse.data.items.map(serviceGroupToUIGroup));
+        setUser(serviceUserToUIUser(user));
+        setGroups(groups.map(serviceGroupToUIGroup));
       } catch (err) {
         console.error('Error loading user data:', err);
         setError('Failed to load user data');
@@ -121,7 +113,7 @@ const UserEditWrapper: React.FC = () => {
     loadData();
   }, [clientId, userId]);
 
-  const handleSave = async (updatedUser: Partial<User>) => {
+  const handleSave = async (formUser: Partial<User>) => {
     if (!clientId || !userId) {
       setError('Missing client or user ID');
       return;
@@ -135,15 +127,11 @@ const UserEditWrapper: React.FC = () => {
       const decodedClientId = decodeId(clientId);
       const decodedUserId = decodeId(userId);
 
-      const response = await clientService.updateClientUser(
+      const updatedUser = await clientService.updateUser(
         decodedClientId, 
         decodedUserId, 
-        uiUserToServiceUser(updatedUser)
+        uiUserToServiceUser(formUser)
       );
-
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Failed to update user');
-      }
 
       console.log('✅ UserEditWrapper.handleSave - Save successful, navigating back');
       navigate(`/admin/client-management/${clientId}/users`, { replace: true });

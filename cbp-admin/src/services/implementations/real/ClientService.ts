@@ -143,6 +143,51 @@ export class ClientService extends BaseService implements IClientService {
         return this.get<PaginatedResponse<User>>(`/${clientId}/users`, { params });
     }
 
+    async getUser(clientId: string, userId: string): Promise<User> {
+        try {
+            this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+            return await this.get<User>(`/${clientId}/users/${userId}`);
+        } catch (error) {
+            throw this.handleError(error, 'Failed to get user');
+        }
+    }
+
+    async createUser(clientId: string, user: Omit<User, 'id'>): Promise<User> {
+        try {
+            this.validateRequired({ clientId, user }, ['clientId', 'user']);
+            return await this.post<User>(`/${clientId}/users`, user);
+        } catch (error) {
+            throw this.handleError(error, 'Failed to create user');
+        }
+    }
+
+    async updateUser(clientId: string, userId: string, user: Partial<User>): Promise<User> {
+        try {
+            this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+            return await this.put<User>(`/${clientId}/users/${userId}`, user);
+        } catch (error) {
+            throw this.handleError(error, 'Failed to update user');
+        }
+    }
+
+    async deleteUser(clientId: string, userId: string): Promise<void> {
+        try {
+            this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+            await this.delete<void>(`/${clientId}/users/${userId}`);
+        } catch (error) {
+            throw this.handleError(error, 'Failed to delete user');
+        }
+    }
+
+    async setUserLockStatus(clientId: string, userId: string, locked: boolean): Promise<void> {
+        try {
+            this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+            await this.put<void>(`/${clientId}/users/${userId}/lock`, { locked });
+        } catch (error) {
+            throw this.handleError(error, 'Failed to set user lock status');
+        }
+    }
+
     async getClientUserGroups(clientId: string): Promise<UserGroup[]> {
         this.validateRequired({ clientId }, ['clientId']);
         return this.get<UserGroup[]>(`/${clientId}/groups`);
@@ -213,6 +258,51 @@ export class ClientService extends BaseService implements IClientService {
             return await this.put<SecuritySettings>(`/${clientId}/security-settings`, settings);
         } catch (error) {
             throw this.handleError(error, 'Failed to update security settings');
+        }
+    }
+
+    async getGroup(clientId: string, groupId: string): Promise<UserGroup> {
+        try {
+            this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
+            return await this.get<UserGroup>(`/${clientId}/groups/${groupId}`);
+        } catch (error) {
+            throw this.handleError(error, 'Failed to get group');
+        }
+    }
+
+    async createGroup(clientId: string, group: Omit<UserGroup, 'id'>): Promise<UserGroup> {
+        try {
+            this.validateRequired({ clientId, group }, ['clientId', 'group']);
+            return await this.post<UserGroup>(`/${clientId}/groups`, group);
+        } catch (error) {
+            throw this.handleError(error, 'Failed to create group');
+        }
+    }
+
+    async updateGroup(clientId: string, groupId: string, group: Partial<UserGroup>): Promise<UserGroup> {
+        try {
+            this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
+            return await this.put<UserGroup>(`/${clientId}/groups/${groupId}`, group);
+        } catch (error) {
+            throw this.handleError(error, 'Failed to update group');
+        }
+    }
+
+    async deleteGroup(clientId: string, groupId: string): Promise<void> {
+        try {
+            this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
+            await this.delete<void>(`/${clientId}/groups/${groupId}`);
+        } catch (error) {
+            throw this.handleError(error, 'Failed to delete group');
+        }
+    }
+
+    async getGroups(clientId: string): Promise<UserGroup[]> {
+        try {
+            this.validateRequired({ clientId }, ['clientId']);
+            return await this.get<UserGroup[]>(`/${clientId}/groups`);
+        } catch (error) {
+            throw this.handleError(error, 'Failed to get groups');
         }
     }
 

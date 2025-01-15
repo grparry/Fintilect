@@ -36,26 +36,23 @@ import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import dayjs from 'dayjs';
 import { useAuth } from '../../../hooks/useAuth';
-import { ApiErrorResponse, ApiSuccessResponse } from '../../../types/api.types';
 import {
   PaymentException,
   ExceptionResolution,
   ResolutionHistory,
-  ExceptionTool as IExceptionTool
+  ExceptionTool as IExceptionTool,
+  ExceptionToolStatus,
+  ExceptionFilters,
+  PaginatedResponse
 } from '../../../types/bill-pay.types';
-
-type PaymentApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 
 interface ExceptionToolProps {
-  api: {
-    getExceptions: () => Promise<PaymentApiResponse<PaymentException[]>>;
-    resolveException: (id: string, resolution: ExceptionResolution) => Promise<PaymentApiResponse<void>>;
-  };
   onClose?: () => void;
 }
 
 const getStatusColor = (status: string) => {
-  switch (status) {
+  switch (status.toLowerCase()) {
     case 'resolved':
       return 'success';
     case 'ignored':
@@ -78,25 +75,28 @@ const getPriorityColor = (priority: string) => {
   }
 };
 
-const ExceptionTool: React.FC<ExceptionToolProps> = ({ api, onClose }) => {
+const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [exceptions, setExceptions] = useState<PaymentException[]>([]);
-  const [selectedException, setSelectedException] = useState<PaymentException | null>(null);
-  const [resolutionHistory, setResolutionHistory] = useState<ResolutionHistory[]>([]);
+  const [exceptions, setExceptions] = useState<IExceptionTool[]>([]);
+  const [selectedException, setSelectedException] = useState<IExceptionTool | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const exceptionService = ServiceFactory.getInstance().getExceptionService();
 
   const loadExceptions = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.getExceptions();
-      if (response.success) {
-        setExceptions(response.data);
-      } else {
-        setError(response.error.message || 'Failed to load exceptions');
-      }
+      const filters: ExceptionFilters = {
+        page: 1,
+        limit: 50,
+        sortBy: 'createdAt',
+        sortOrder: 'desc'
+      };
+      const response = await exceptionService.getExceptions(filters);
+      setExceptions(response.items);
     } catch (err) {
       setError('An error occurred while loading exceptions');
       console.error('Error loading exceptions:', err);
@@ -109,32 +109,25 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ api, onClose }) => {
     loadExceptions();
   }, []);
 
-  const handleExceptionClick = (exception: PaymentException) => {
+  const handleExceptionClick = (exception: IExceptionTool) => {
     setSelectedException(exception);
     setDialogOpen(true);
   };
 
-  const handleResolution = async (type: 'manual' | 'automated' | 'ignore') => {
+  const handleResolution = async (status: string, notes: string = '') => {
     if (!selectedException) return;
 
     try {
       setLoading(true);
       setError(null);
-      const resolution: ExceptionResolution = {
-        type,
-        action: type === 'ignore' ? 'ignore' : 'retry',
-        notes: '',
-        userId: user?.id?.toString(),
-        timestamp: new Date().toISOString()
-      };
-      const response = await api.resolveException(selectedException.id, resolution);
-      if (response.success) {
-        await loadExceptions();
-        setDialogOpen(false);
-        setSelectedException(null);
-      } else {
-        setError(response.error.message || 'Failed to resolve exception');
-      }
+      await exceptionService.updateExceptionStatus(
+        selectedException.id.toString(),
+        status as ExceptionToolStatus,
+        notes
+      );
+      await loadExceptions();
+      setDialogOpen(false);
+      setSelectedException(null);
     } catch (err) {
       setError('An error occurred while resolving the exception');
       console.error('Error resolving exception:', err);
@@ -173,9 +166,9 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ api, onClose }) => {
             <TableHead>
               <TableRow>
                 <TableCell>Payment ID</TableCell>
-                <TableCell>Type</TableCell>
+                <TableCell>Client</TableCell>
                 <TableCell>Status</TableCell>
-                <TableCell>Message</TableCell>
+                <TableCell>Error Message</TableCell>
                 <TableCell>Created At</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
@@ -184,13 +177,7 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ api, onClose }) => {
               {exceptions.map((exception) => (
                 <TableRow key={exception.id}>
                   <TableCell>{exception.paymentId}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={exception.type}
-                      size="small"
-                      color={exception.type === 'system' ? 'error' : 'warning'}
-                    />
-                  </TableCell>
+                  <TableCell>{exception.clientName}</TableCell>
                   <TableCell>
                     <Chip
                       label={exception.status}
@@ -198,17 +185,17 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ api, onClose }) => {
                       size="small"
                     />
                   </TableCell>
-                  <TableCell>{exception.message}</TableCell>
-                  <TableCell>{dayjs(exception.createdAt).format('MM/DD/YYYY HH:mm:ss')}</TableCell>
+                  <TableCell>{exception.errorMessage}</TableCell>
+                  <TableCell>{dayjs(exception.timestamp).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                   <TableCell>
-                    <Tooltip title="View Details">
+                    <Stack direction="row" spacing={1}>
                       <IconButton
                         size="small"
                         onClick={() => handleExceptionClick(exception)}
                       >
                         <VisibilityIcon />
                       </IconButton>
-                    </Tooltip>
+                    </Stack>
                   </TableCell>
                 </TableRow>
               ))}
@@ -217,80 +204,46 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ api, onClose }) => {
         </TableContainer>
       )}
 
-      <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>
         {selectedException && (
           <>
             <DialogTitle>Exception Details</DialogTitle>
             <DialogContent>
               <Grid container spacing={2} sx={{ mt: 1 }}>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle2">Payment ID</Typography>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1">Payment ID</Typography>
                   <Typography>{selectedException.paymentId}</Typography>
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle2">Type</Typography>
-                  <Chip
-                    label={selectedException.type}
-                    size="small"
-                    color={selectedException.type === 'system' ? 'error' : 'warning'}
-                  />
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1">Client</Typography>
+                  <Typography>{selectedException.clientName}</Typography>
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle2">Status</Typography>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1">Error Message</Typography>
+                  <Typography>{selectedException.errorMessage}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1">Status</Typography>
                   <Chip
                     label={selectedException.status}
                     color={getStatusColor(selectedException.status)}
-                    size="small"
                   />
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="subtitle2">Message</Typography>
-                  <Typography>{selectedException.message}</Typography>
-                </Grid>
-                {selectedException.details && (
-                  <Grid item xs={12}>
-                    <Typography variant="subtitle2">Details</Typography>
-                    <pre style={{ whiteSpace: 'pre-wrap' }}>
-                      {JSON.stringify(selectedException.details, null, 2)}
-                    </pre>
-                  </Grid>
-                )}
-                <Grid item xs={12}>
-                  <Typography variant="subtitle2">Resolution History</Typography>
-                  {selectedException.resolutions?.map((resolution, index) => (
-                    <Box key={index} sx={{ mt: 1 }}>
-                      <Typography variant="body2">
-                        {dayjs(resolution.timestamp).format('MM/DD/YYYY HH:mm:ss')} - {resolution.action}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        Type: {resolution.type}
-                        {resolution.notes && ` - Notes: ${resolution.notes}`}
-                      </Typography>
-                    </Box>
-                  ))}
                 </Grid>
               </Grid>
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setDialogOpen(false)}>Close</Button>
-              {selectedException.status === 'pending' && (
+              {selectedException.status.toLowerCase() === 'pending' && (
                 <>
                   <Button
-                    onClick={() => handleResolution('automated')}
-                    color="primary"
-                    disabled={loading}
+                    onClick={() => handleResolution('resolved', 'Resolved manually')}
+                    color="success"
                   >
-                    Retry
+                    Resolve
                   </Button>
                   <Button
-                    onClick={() => handleResolution('ignore')}
-                    color="warning"
-                    disabled={loading}
+                    onClick={() => handleResolution('ignored', 'Ignored by user')}
+                    color="error"
                   >
                     Ignore
                   </Button>

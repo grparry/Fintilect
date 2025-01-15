@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Typography,
+  Alert,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -12,39 +13,30 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Paper,
   IconButton,
-  Tooltip,
-  Alert,
+  FormHelperText,
 } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { DatePicker } from '@mui/x-date-pickers';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import dayjs, { Dayjs } from 'dayjs';
-import { holidayService } from '../../../services/factory/ServiceFactory';
-import {
-  Holiday,
-  HolidayInput,
-  HolidayType,
-  HolidayStatus,
-  HolidayValidation
-} from '../../../types/bill-pay.types';
+import { Holiday, HolidayInput, HolidayType, HolidayStatus } from '../../../types/bill-pay.types';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 
-interface FormData extends Omit<HolidayInput, 'date'> {
+interface FormData {
+  name: string;
   date: Dayjs | null;
+  type: HolidayType;
+  status: HolidayStatus;
 }
 
 const initialFormData: FormData = {
   name: '',
   date: dayjs(),
-  type: 'Federal',
-  status: 'Active',
+  type: HolidayType.FEDERAL,
+  status: HolidayStatus.ACTIVE,
 };
 
 const Holidays: React.FC = () => {
@@ -57,13 +49,15 @@ const Holidays: React.FC = () => {
   const [validationErrors, setValidationErrors] = useState<Partial<Record<keyof HolidayInput, string>>>({});
   const [editingId, setEditingId] = useState<number | null>(null);
 
+  const holidayService = ServiceFactory.getInstance().getHolidayService();
+
   // Load holidays
   useEffect(() => {
     const loadHolidays = async () => {
       try {
         setLoading(true);
-        const response = await holidayService.getHolidays();
-        setHolidays(response.holidays);
+        const holidays = await holidayService.getHolidays();
+        setHolidays(holidays);
         setError(null);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Failed to load holidays');
@@ -88,6 +82,19 @@ const Holidays: React.FC = () => {
         status: formData.status,
       };
 
+      // Validate holiday data
+      const validation = await holidayService.validateHoliday(holidayData);
+      if (!validation.isValid && validation.errors) {
+        const errors: Partial<Record<keyof HolidayInput, string>> = {};
+        Object.entries(validation.errors).forEach(([field, message]) => {
+          if (message) {
+            errors[field as keyof HolidayInput] = message || '';
+          }
+        });
+        setValidationErrors(errors);
+        return;
+      }
+
       if (editingId) {
         await holidayService.updateHoliday(editingId, holidayData);
       } else {
@@ -95,30 +102,13 @@ const Holidays: React.FC = () => {
       }
 
       // Refresh holidays list
-      const response = await holidayService.getHolidays();
-      setHolidays(response.holidays);
+      const updatedHolidays = await holidayService.getHolidays();
+      setHolidays(updatedHolidays);
       
       // Reset form
       handleCloseDialog();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        if (err.message.includes('validation failed')) {
-          // Handle validation errors
-          const validationMessage = err.message.replace('validation failed: ', '');
-          const errors: Partial<Record<keyof HolidayInput, string>> = {};
-          validationMessage.split(', ').forEach(errorStr => {
-            const [field, message] = errorStr.split(': ');
-            if (field && message && field in formData) {
-              errors[field as keyof HolidayInput] = message;
-            }
-          });
-          setValidationErrors(errors);
-        } else {
-          setError(err.message);
-        }
-      } else {
-        setError('Failed to save holiday');
-      }
+      setError(err instanceof Error ? err.message : 'Failed to save holiday');
     }
   };
 
@@ -126,8 +116,8 @@ const Holidays: React.FC = () => {
   const handleDelete = async (id: number) => {
     try {
       await holidayService.deleteHoliday(id);
-      const response = await holidayService.getHolidays();
-      setHolidays(response.holidays);
+      const updatedHolidays = await holidayService.getHolidays();
+      setHolidays(updatedHolidays);
       setError(null);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to delete holiday');
@@ -273,10 +263,13 @@ const Holidays: React.FC = () => {
                 label="Type"
                 onChange={(e) => setFormData((prev) => ({ ...prev, type: e.target.value as HolidayType }))}
               >
-                <MenuItem value="Federal">Federal</MenuItem>
-                <MenuItem value="State">State</MenuItem>
-                <MenuItem value="Custom">Custom</MenuItem>
+                <MenuItem value={HolidayType.FEDERAL}>Federal</MenuItem>
+                <MenuItem value={HolidayType.STATE}>State</MenuItem>
+                <MenuItem value={HolidayType.CUSTOM}>Custom</MenuItem>
               </Select>
+              {validationErrors.type && (
+                <FormHelperText>{validationErrors.type}</FormHelperText>
+              )}
             </FormControl>
 
             <FormControl fullWidth error={!!validationErrors.status}>
@@ -286,9 +279,12 @@ const Holidays: React.FC = () => {
                 label="Status"
                 onChange={(e) => setFormData((prev) => ({ ...prev, status: e.target.value as HolidayStatus }))}
               >
-                <MenuItem value="Active">Active</MenuItem>
-                <MenuItem value="Inactive">Inactive</MenuItem>
+                <MenuItem value={HolidayStatus.ACTIVE}>Active</MenuItem>
+                <MenuItem value={HolidayStatus.INACTIVE}>Inactive</MenuItem>
               </Select>
+              {validationErrors.status && (
+                <FormHelperText>{validationErrors.status}</FormHelperText>
+              )}
             </FormControl>
           </Box>
         </DialogContent>

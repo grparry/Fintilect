@@ -234,7 +234,6 @@ export interface PendingPaymentListResponse {
 }
 
 export interface PendingPaymentSummary {
-  totalAmount: number;
   byMethod: Record<PaymentMethod, { count: number; amount: number }>;
   byStatus: Record<PaymentStatus, number>;
   byPriority: Record<Priority, number>;
@@ -849,6 +848,14 @@ export interface ReportData {
       amount: number;
     }[];
   };
+}
+
+// Generic Types
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 // Data Conversion Types

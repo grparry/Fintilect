@@ -9,7 +9,7 @@ export interface DeliverySettings {
 }
 
 export interface NotificationTemplate {
-    id: string;
+    id: number;
     name: string;
     description?: string;
     subject: string;

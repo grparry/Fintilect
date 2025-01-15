@@ -23,14 +23,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { auditService } from '../../../services/factory/ServiceFactory';
 import { AuditEvent, AuditLogFilters } from '../../../services/interfaces/IAuditService';
 
-interface AuditLogFilters {
-  startDate?: string;
-  endDate?: string;
-  searchTerm?: string;
-  page: number;
-  pageSize: number;
-}
-
 const AuditLog: React.FC = () => {
   // State
   const [auditLogs, setAuditLogs] = useState<AuditEvent[]>([]);
@@ -54,7 +46,7 @@ const AuditLog: React.FC = () => {
         endDate: endDate?.toISOString(),
         searchTerm: searchTerm || undefined,
         page: page + 1,
-        pageSize: rowsPerPage,
+        pageSize: rowsPerPage
       };
 
       const response = await auditService.searchLogs(filters);

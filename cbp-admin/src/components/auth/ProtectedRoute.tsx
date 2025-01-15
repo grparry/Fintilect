@@ -10,10 +10,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requiredRoles = [],
   redirectPath = '/login',
 }) => {
-  const { isAuthenticated, user, loading } = useAuth();
+  const { state } = useAuth();
   const location = useLocation();
 
-  if (loading) {
+  if (state.loading) {
     return (
       <Box
         sx={{
@@ -28,14 +28,19 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  if (!isAuthenticated || !user) {
-    // Save the attempted URL for redirecting after login
+  if (!state.isAuthenticated || !state.user) {
+    console.log('ProtectedRoute: User not authenticated, redirecting to:', redirectPath);
     return <Navigate to={redirectPath} state={{ from: location }} replace />;
   }
 
-  // Check if user has required roles
-  if (requiredRoles.length > 0 && !requiredRoles.includes(user.role)) {
-    return <Navigate to="/unauthorized" replace />;
+  if (requiredRoles.length > 0) {
+    const hasRequiredRole = requiredRoles.includes(state.user.role);
+    console.log('ProtectedRoute: Checking roles:', { required: requiredRoles, userRole: state.user.role, hasAccess: hasRequiredRole });
+    
+    if (!hasRequiredRole) {
+      console.log('ProtectedRoute: User lacks required role, redirecting to unauthorized');
+      return <Navigate to="/unauthorized" replace />;
+    }
   }
 
   return <>{children}</>;
