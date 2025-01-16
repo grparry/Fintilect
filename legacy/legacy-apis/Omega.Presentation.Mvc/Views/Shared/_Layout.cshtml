@@ -1,0 +1,591 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Controllers
+@using Omega.Presentation.Mvc.Models
+@using Psi.Data.Models.Domain
+@using Psi.Data.Models.Domain.OmegaUsers
+@using PSI.Models.ClientConfigurationModels.Agatha
+
+
+@{
+
+    var currentUser = ViewBag.BaseModel is ModelBase ? (User)ViewBag.BaseModel?.User : Util.GetUser();
+    if (currentUser == null)
+    {
+        currentUser = new User { PermissionLevel = PermissionLevel.Basic };
+    }
+    var IsSecurePage = ViewBag.IsNotSecure != true;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+
+    <title>@ViewBag.Title - Omega</title>
+    @Styles.Render("~/datetimepicker/css")
+    @Styles.Render("~/Content/theme/" + (Session["Theme"] != null ? Session["Theme"] : "Dark").ToString().ToLower())
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/toastr/toastr.css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    <script src='@Url.Content("~/Assets/jquery-ui-1.12.0.js")'></script>		@*TODO: Put into bundles (requires refactoring elsewhere too)*@
+    <script src="@Url.Content("~/Scripts/omega-utilities.js")"></script>
+
+    <link href='@Url.Content("~/Content/jquery-ui/redmond/jquery-ui-1.10.3.custom.css")' rel="stylesheet" />
+
+    @if (ViewBag.CodeMirror == true)
+    {
+        <script src="@Url.Content("~/Assets/codemirror/lib/codemirror.js")"></script>
+        <link rel="stylesheet" href="@Url.Content("~/Assets/codemirror/lib/codemirror.css")">
+        <script src="@Url.Content("~/Assets/codemirror/mode/javascript/javascript.js")"></script>
+
+        <script src="@Url.Content("~/Assets/codemirror/addon/display/fullscreen.js")"></script>
+        <link rel="stylesheet" href="@Url.Content("~/Assets/codemirror/addon/display/fullscreen.css")">
+
+        <!-- Syntax Hinting (looking for errors, etc) -->
+        <script src="@Url.Content("~/Assets/jshint/jshint.min.js")"></script>
+        <link rel="stylesheet" href="@Url.Content("~/Assets/codemirror/addon/lint/lint.css")">
+        <script src="@Url.Content("~/Assets/jshint/jsonlint.js")"></script>
+        <script src="@Url.Content("~/Assets/jshint/csslint.js")"></script>
+        <link rel="stylesheet" href="@Url.Content("~/Assets/codemirror/addon/lint/lint.css")">
+        <script src="@Url.Content("~/Assets/codemirror/addon/lint/lint.js")"></script>
+        <script src="@Url.Content("~/Assets/codemirror/addon/lint/javascript-lint.js")"></script>
+        <script src="@Url.Content("~/Assets/codemirror/addon/lint/json-lint.js")"></script>
+        <script src="@Url.Content("~/Assets/codemirror/addon/lint/css-lint.js")"></script>
+        <link rel="stylesheet" href="@Url.Content("~/Assets/codemirror/addon/merge/merge.css")">
+        <script src="@Url.Content("~/Assets/codemirror/addon/merge/diff_match_patch.js")"></script>
+        <script src="@Url.Content("~/Assets/codemirror/addon/merge/merge.js")"></script>
+        <link rel="stylesheet" href="@Url.Content("~/Assets/codemirror/addon/hint/show-hint.css")">
+        <script src="@Url.Content("~/Assets/codemirror/addon/hint/show-hint.js")"></script>
+
+        <link rel="stylesheet" href="@Url.Content("~/Assets/dropzone/dropzone.css")">
+        <script src="@Url.Content("~/Assets/dropzone/dropzone.js")"></script>
+
+    }
+
+    @RenderSection("LinkedStyleSheets", required: false)
+
+
+    <script src="@Url.Content("~/Scripts/historyOverlay.js")"></script>
+
+
+    <script>
+        /* This empty script tag and comment below came with our light blue wrapbootstrap theme.  Not sure if it's still needed, but it's harmless.
+
+           yeah we need this empty stylesheet here. It's cool chrome & chromium fix
+           chrome fix https://code.google.com/p/chromium/issues/detail?id=167083
+                      https://code.google.com/p/chromium/issues/detail?id=332189
+        */
+
+    </script>
+    <style>
+
+        .modal-body .form-horizontal .form-group {
+            margin-left: 0;
+            margin-right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <h4>
+            <a href="@Url.Action("Index", "Home")">Connect <strong>Omega</strong></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Context: <strong>
+                <span style="font-size: larger;">
+                    <span title="Loaded Context: @ApplicationConfigHelper.Config.ClientContextName">
+                        @ApplicationConfigHelper.Config.ClientContextName
+                    </span>
+                </span>
+            </strong>
+        </h4>
+    </div>
+
+    <!-- Side bar -->
+    <nav id="sidebar" class="sidebar nav-collapse collapse">
+        <ul id="side-nav" class="side-nav">
+            <li class="@(ViewBag.ActiveMenu == "home" ? "active" : "")">
+                <a href="@Url.Action("Index", "Home")"><i class="fa fa-home"></i> <span class="name">Dashboard</span></a>
+            </li>
+            <li class="panel">
+                <a class="accordion-toggle collapsed" data-toggle="collapse"
+                   data-parent="#side-nav" href="#config-collapse"><i class="fa fa-cog"></i><span class="name">Configuration</span></a>
+                <ul id="config-collapse" class="panel-collapse collapse ">
+
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.StringResourcesEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.StringResources))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "string-resource" ? "active" : "")">
+                            @Html.ActionLink("String Resource", "Index", "StringResource")
+                        </li>
+                    }
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.ApplicationConfigEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Support))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "application-configuration" ? "active" : "")">
+                            @Html.ActionLink("Application Configuration", "Index", "ApplicationConfiguration")
+                        </li>
+                    }
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.ApplicationConfigEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.SecurityKeys))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "security-keys" ? "active" : "")">
+                            @Html.ActionLink("Security Keys", "Index", "SecurityKeys")
+                        </li>
+                    }
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.ConfigurationComparisonEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Support))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "configuration-comparison" ? "active" : "")">
+                            @Html.ActionLink("Configuration Comparison", "Index", "ConfigurationComparison")
+                        </li>
+                    }
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.XAppConfigEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Dev))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "x-app-config" ? "active" : "")">
+                            @Html.ActionLink("X App Config", "Index", "AppConfig")
+                        </li>
+                    }
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.FeaturesManagerEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Support))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "features-manager" ? "active" : "")">
+                            @Html.ActionLink("Features Manager", "Index", "FeaturesManager")
+                        </li>
+                    }
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.LicenseManagerEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Dev))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "license-manager" ? "active" : "")">
+                            @Html.ActionLink("License Manager", "Index", "LicenseManager")
+                        </li>
+                    }
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.VersionManagementEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.VersionManagement))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "version-management" ? "active" : "")">
+                            @Html.ActionLink("Version Management", "Index", "VersionManagement")
+                        </li>
+                    }
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.CreditUnionContactInfoEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.ChangeCreditUnionContactInformation))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "credit-union-contact-info" ? "active" : "")">
+                            @Html.ActionLink("Contact Information", "Index", "CreditUnionContactInfo")
+                        </li>
+                    }
+
+                </ul>
+            </li>
+
+            <li class="panel">
+                <a class="accordion-toggle collapsed" data-toggle="collapse"
+                   data-parent="#side-nav" href="#users-collapse"><i class="fa fa-users"></i><span class="name">Users</span></a>
+                <ul id="users-collapse" class="panel-collapse collapse">
+
+                    <li class="panel">
+                        <a class="accordion-toggle collapsed" data-toggle="collapse"
+                           data-parent="#users-collapse" href="#omega-users-collapse"><span class="name">Omega</span></a>
+                        <ul id="omega-users-collapse" class="panel-collapse collapse">
+
+
+                            @if (SettingsManager.Settings.OmegaConfiguration.Features.EditUserPermissionsEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.ViewOmegaUsers))
+                            {
+                                <li class="@(ViewBag.ActiveMenu == "edit-users" ? "active" : "")">
+                                    @Html.ActionLink("Edit Users", "EditUserPermissions", "Home")
+                                </li>
+                            }
+                            @if (SettingsManager.Settings.OmegaConfiguration.Features.AddNewUserEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.EditOmegaUsers))
+                            {
+                                <li class="@(ViewBag.ActiveMenu == "add-user" ? "active" : "")">
+                                    @Html.ActionLink("Add User", "AddNewUser", "Home")
+                                </li>
+                            }
+                            @if (SettingsManager.Settings.OmegaConfiguration.Features.PermissionGroupsEnabled  && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.EditOmegaUsers))
+                            {
+                                <li class="@(ViewBag.ActiveMenu == "permission-groups" ? "active" : "")">
+                                    @Html.ActionLink("Permission Groups", "Index", "PermissionGroups")
+                                </li>
+                            }
+                        </ul>
+                    </li>
+
+                    @if ((SettingsManager.Settings.OmegaConfiguration.Features.DeleteOnlineBankingUsersEnabled || SettingsManager.Settings.OmegaConfiguration.Features.AccountNumberAssociation.Enabled)
+                        && currentUser.PermissionLevel.CanView(PermissionLevel.Owner))
+                    {
+                        <li class="panel">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse"
+                               data-parent="#users-collapse" href="#olb-users-collapse"><span class="name">Online Banking</span></a>
+                            <ul id="olb-users-collapse" class="panel-collapse collapse">
+
+                                @if (SettingsManager.Settings.OmegaConfiguration.Features.DeleteOnlineBankingUsersEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.DeleteInactiveOlbUsers))
+                                {
+                                    <li class="@(ViewBag.ActiveMenu == "delete-inactive-olb-users" ? "active" : "")">
+                                        @Html.ActionLink("Inactive Users", "DeleteInactive", "OnlineBankingUsers")
+                                    </li>
+                                }
+
+                                @if (SettingsManager.Settings.OmegaConfiguration.Features.AccountNumberAssociation.Enabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.AccountNumberAssociation))
+                                {
+                                    <li class="@(ViewBag.ActiveMenu == "account-number-association" ? "active" : "")">
+                                        @Html.ActionLink("Account Association", "AccountNumberAssociation", "OnlineBankingUsers")
+                                    </li>
+                                }
+
+                            </ul>
+                        </li>
+                    }
+
+                </ul>
+            </li>
+
+
+            <li class="panel">
+                <a class="accordion-toggle collapsed" data-toggle="collapse"
+                   data-parent="#side-nav" href="#security-collapse"><i class="fa fa-shield"></i><span class="name">Security</span></a>
+                <ul id="security-collapse" class="panel-collapse collapse">
+
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.LayeredSecurityEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Support))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "layered-security" ? "active" : "")">
+                            @Html.ActionLink("Layered Security", "Index", "LayeredSecurity")
+                        </li>
+                    }
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.OnlineBankingApiEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Support))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "online-banking-api" ? "active" : "")">
+                            @Html.ActionLink("Online Banking Api", "Index", "OnlineBankingApi")
+                        </li>
+                    }
+                </ul>
+            </li>
+
+            <li class="panel">
+                <a class="accordion-toggle collapsed" data-toggle="collapse"
+                   data-parent="#side-nav" href="#tools-collapse"><i class="fa fa-wrench"></i><span class="name">Tools</span></a>
+                <ul id="tools-collapse" class="panel-collapse collapse">
+
+                    @if (SettingsManager.Settings.TargetedMarketingSettings.EnableTargetedMarketing && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.TargetedMarketing))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "targeted-marketing" ? "active" : "")">
+                            <a href="@Url.Action("Index", "TargetedMarketing")"><span class="name">Targeted Marketing</span></a>
+                        </li>
+                    }
+
+                    @if (currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.AlertsAdmin))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "alerts-admin" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Alerts2")"><span class="name">Alerts</span></a>
+                        </li>
+                    }
+
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.EnableThirdPartySystemMessages && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.ThirdPartySystemMessages))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "error-messages" ? "active" : "")">
+                            <a href="@Url.Action("Index", "ErrorMessages")"><span class="name">Error Messages</span></a>
+                        </li>
+                    }
+
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.QuickAccessManagementEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.QuickAccessManagement))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "quick-access-management" ? "active" : "")">
+                            <a href="@Url.Action("Index", "QuickAccessManagement")"><span class="name">Quick Access</span></a>
+                        </li>
+                    }
+
+                    @if (SettingsManager.Settings.FeaturesSettings.EnableNewFeatures && currentUser.PermissionLevel.CanView(PermissionLevel.Support))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "new-mobile-features" ? "active" : "")">
+                            <a href="@Url.Action("Index", "NewMobileFeatures")"><span class="name">New Mobile Features</span></a>
+                        </li>
+                    }
+
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.AuditLogExportToolEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Support))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "audit-log-export" ? "active" : "")">
+                            <a href="@Url.Action("Index", "AuditLogExport")"><span class="name">Audit Log Export</span></a>
+                        </li>
+                    }
+
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.QRCodeGeneratorEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner) && currentUser.CanView(OmegaFeatureAccessPermission.QrCodeGenerator))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "qr-code-generator" ? "active" : "")">
+                            <a href="@Url.Action("Index", "QrCodeGenerator")"><span class="name">QR Code Generator</span></a>
+                        </li>
+                    }
+
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.DeleteBillPayUsersEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "bill-pay-removal" ? "active" : "")">
+                            <a href="@Url.Action("Index", "BillPayManagement")"><span class="name">Bill Pay Removal</span></a>
+                        </li>
+                    }
+
+                    @if (SettingsManager.Settings.SecureFormsDesignerSettings.Enabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "secure-forms-designer" ? "active" : "")">
+                            <a href="@Url.Action("Index", "FormsDesigner")"><span class="name">Secure Forms Designer</span></a>
+                        </li>
+                    }
+
+                    @if (SettingsManager.Settings.RestrictedWords.Enabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "restricted-words" ? "active" : "")">
+                            <a href="@Url.Action("Index", "RestrictedWords")"><span class="name">Restricted Words</span></a>
+                        </li>
+                    }
+
+                    @if (SettingsManager.Settings.OmegaConfiguration.Features.AtmBranchLocationsEnabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "atm-branch-locations" ? "active" : "")">
+                            <a href="@Url.Action("Index", "AtmBranchLocations")"><span class="name">ATM &amp; Branch Locations</span></a>
+                        </li>
+                    }
+
+                    @if (SettingsManager.Settings.OmegaConfiguration.DocumentArchitectSso.Enabled && currentUser.PermissionLevel.CanView(PermissionLevel.Owner))
+                    {
+                        <li class="@(ViewBag.ActiveMenu == "document-architect" ? "active" : "")">
+                            <a href="@Url.Action("Index", "DocumentArchitect")"><span class="name">Document Architect</span></a>
+                        </li>
+                    }
+                </ul>
+            </li>
+
+            @if (currentUser.PermissionLevel.CanView(PermissionLevel.Dev))
+            {
+                <li class="@(ViewBag.ActiveMenu == "connect-native-themes" ? "active" : "")">
+                    <a data-parent="#side-nav" href="@Url.Action("Index", "Themes", new { product = "ConnectNative" })"><i class="fa fa-paint-brush"></i><span class="name">Connect Native</span></a>
+                </li>
+            }
+
+            @if (currentUser == null || currentUser.Email.IsNullOrEmpty())
+            {
+                //TODO: Login
+                <li class="visible-xs">
+                    <a href="#SignIn" onclick="loginManager.ShowLoginModal();">Sign In</a>
+                </li>
+            }
+            else
+            {
+                <li class="visible-xs @(ViewBag.ActiveMenu == "change-password" ? "active" : "")">
+                    <a href="@Url.Action("ChangePassword", "Home")">
+                        <i class="fa fa-key"></i>
+                        Change Password
+                    </a>
+                </li>
+                <li class="visible-xs @(ViewBag.ActiveMenu == "log-off" ? "active" : "")">
+                    <a href="@Url.Action("LogOff", "Home")"><i class="fa fa-sign-out"></i> <span class="name">Sign Out</span></a>
+                </li>
+            }
+        </ul>
+
+    </nav>
+    <div class="wrap">
+        <header class="page-header">
+            <div class="navbar">
+                <ul class="nav navbar-nav navbar-right pull-right">
+                    <li class="hidden-xs dropdown">
+                        <a href="#" title="Account" id="account"
+                           class="dropdown-toggle"
+                           data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-cog"></i>
+                        </a>
+                        <ul id="account-menu" class="dropdown-menu account" role="menu">
+
+                            <li class="dropdown-header">THEME</li>
+
+                            <li role="presentation">
+                                <a href="@Url.Action("ChangeTheme", "Home", new {theme = "dark"})" class="link">
+                                    <i class="fa fa-check @(Session["Theme"] == null || Session["Theme"].Equals(HomeController.Theme.Dark.ToString()) ? "" : "transparent")"></i> &nbsp;
+                                    Dark
+                                </a>
+                            </li>
+
+                            <li role="presentation">
+                                <a href="@Url.Action("ChangeTheme", "Home", new {theme = "light"})" class="link">
+                                    <i class="fa fa-check @(Session["Theme"] != null && Session["Theme"].Equals(HomeController.Theme.Light.ToString()) ? "" : "transparent")"></i> &nbsp;
+                                    Light
+                                </a>
+                            </li>
+
+                            <li role="presentation">
+                                <a href="@Url.Action("ChangeTheme", "Home", new {theme = "white"})" class="link">
+                                    <i class="fa fa-check @(Session["Theme"] != null && Session["Theme"].Equals(HomeController.Theme.White.ToString()) ? "" : "transparent")"></i> &nbsp;
+                                    White
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li class="hidden-xs dropdown">
+                        <a href="#" title="Account" id="account"
+                           class="dropdown-toggle"
+                           data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user"></i>
+                        </a>
+                        <ul id="account-menu" class="dropdown-menu account" role="menu">
+                            <li role="presentation" class="account-picture">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <img src="@Url.Content("~/Images/1.png")" alt="">
+                                        </td>
+                                        <td>
+                                            @currentUser.Name
+                                            @if (!string.IsNullOrEmpty(currentUser.Email))
+                                            {
+                                                <div class="extra-info" title="@currentUser.Name has permission level: @currentUser.PermissionLevel">
+                                                    @currentUser.PermissionLevel
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </li>
+
+                            @if (!string.IsNullOrEmpty(currentUser.Email))
+                            {
+                                <li role="presentation">
+                                    <a href="@Url.Action("ChangePassword", "Home")" class="link">
+                                        <i class="fa fa-key"></i>
+                                        Change Password
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="divider"></li>
+
+                            @if (currentUser == null || currentUser.Email.IsNullOrEmpty())
+                            {
+                                //TODO: Login
+                                <li role="presentation"><a href="#SignIn" class="link" onclick="loginManager.ShowLoginModal();">Sign In</a></li>
+                            }
+                            else
+                            {
+                                <li role="presentation">
+                                    <a href="@Url.Action("LogOff", "Home")" class="link">
+                                        <i class="glyphicon glyphicon-off"></i>
+                                        Sign Out
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                    <li class="visible-xs">
+                        <a href="#"
+                           class="btn-navbar"
+                           data-toggle="collapse"
+                           data-target=".sidebar"
+                           title="">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    </li>
+                    @*                <li class="hidden-xs"><a href="login.html"><i class="glyphicon glyphicon-off"></i></a></li>*@
+                </ul>
+            </div>
+        </header>
+
+        <script>
+             @*var GLOBAL_BaseUrl = "@Url.Content("~")";*@
+        </script>
+
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/toastr")
+        @Scripts.Render("~/bundles/datetimepicker")
+        @Scripts.Render("~/bundles/app")
+        @RenderSection("scripts", required: false)
+
+        <div class="content container">
+            <h2 class="page-title">
+                @ViewBag.Title <small>@ViewBag.Subtitle</small>
+            </h2>
+
+            @if (TempData.ContainsKey("resultMessage"))
+            {
+                <div class="alert alert-dismissable alert-@(TempData.ContainsKey("resultClass") ? TempData["resultClass"] : "info")">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @TempData["resultMessage"]
+                </div>
+            }
+
+            @RenderBody()
+
+            <hr />
+            <footer>
+                <div class="row">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-6 text-center">
+                        <p>&copy; @DateTime.Now.Year Connect FSS</p>
+                    </div>
+                    <div class="col-sm-3 text-right" style="font-size: larger;">
+                        <span title="Loaded Context: @ApplicationConfigHelper.Config.ClientContextName">
+                            <span class="glyphicon glyphicon-cog"></span>&nbsp;<strong>@ApplicationConfigHelper.Config.ClientContextName</strong>
+                        </span>
+                    </div>
+                </div>
+
+            </footer>
+        </div>
+    </div>
+
+
+
+    <div id="LoadingCloud" class="hide">
+        <div style="top: 200px; width: 200px; text-align: center; position: relative; margin: 0 auto;">
+            <img src='@Url.Content("~/images/whiteloader.gif")' alt="loading..." title="Loading: Please wait this should only take a few seconds." />
+        </div>
+    </div>
+
+    @if ((currentUser == null || currentUser.Email.IsNullOrEmpty()))
+    {
+        //TODO: create js call to get login in modal
+        <script>
+            $(document).ready(function() {
+                //Login
+                if (@IsSecurePage.ToString().ToLower()) {
+                    loginManager.ShowLoginModal();
+                }
+            });
+
+            var loginManager = {
+                ShowLoginModal: function() {
+                    var title = "Secure Log-In";
+                    $('#homeIndexBaseModalTitle').html(title);
+                    $("#homeIndexBaseModal").modal({ backdrop: 'static', keyboard: false });
+                    Util.ShowLoadingInInnerHtml('#homeIndexBaseModalBody');
+
+                    var callback = function(data, status) {
+                        Util.HideLoading();
+                        if (status == 'success') {
+                            $('#homeIndexBaseModalBody').html(data);
+                        } else {
+                            Util.ShowErrorInInnerHtml('#homeIndexBaseModal', status);
+                        }
+                    };
+
+                    $.get('@Url.Action("Login", "Home")', callback);
+                },
+                Login: function(sender, formId) {
+                    var data = $('#' + formId).serializeObject();
+                    var callback = function(data, status) {
+                        Util.HideLoading();
+                        if (status == 'success') {
+                            $('#homeIndexBaseModalBody').html(data);
+                        } else {
+                            Util.ShowErrorInInnerHtml('#homeIndexBaseModal', status);
+                        }
+                    };
+                    $.post('@Url.Action("Login", "Home")', data, callback);
+                }
+            };
+        </script>
+
+        <div class="modal fade" role="dialog" id="homeIndexBaseModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="homeIndexBaseModalTitle"></h4>
+                    </div>
+                    <div class="modal-body" id="homeIndexBaseModalBody">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</body>
+</html>

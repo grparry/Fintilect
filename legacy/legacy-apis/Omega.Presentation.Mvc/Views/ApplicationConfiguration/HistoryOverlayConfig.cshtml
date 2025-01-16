@@ -1,0 +1,94 @@
+﻿@model Omega.Presentation.Mvc.Models.ApplicationConfiguration.ApplicationConfigurationEditModel
+<div class="modal fade destroy-when-closed" role="dialog"   style="overflow-y: auto;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Edit Application Configuration - History Overlay</h3>
+            </div>
+            <div class="modal-body">
+                <!-- Modal Layout -->
+
+
+
+                @if (Model.SettingUpdated)
+                {
+                    <div class="alert alert-info">
+                        Setting updated at @DateTime.UtcNow
+                    </div>
+                }
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Key</label>
+                        <div class="col-sm-9">
+                            <input type="text" readonly="readonly" class="form-control" value="@Model.Setting.Key" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Description</label>
+                        <div class="col-sm-9">
+                            <textarea type="text" class="form-control" readonly="readonly">@Model.Setting.Description</textarea>
+                            @*<div class="form-control">@Model.Setting.Description</div>*@
+                        </div>
+                    </div>
+                    <input type="hidden" id="configValueInput" value="@Html.Raw(Model.Setting.Value != null ? Model.Setting.Value.UriEscape() : "")" />
+
+
+                    <div>
+                        <h3>History Overlay Rules:</h3>
+                        <div style="max-height: 600px; overflow: auto;">
+                            <table class="table table-hover table-striped" id="HistoryOverlayTable"></table>
+                        </div>
+                        <br />
+                        <br />
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <button class="btn btn-primary" id="saveConfigSetting" type="button">
+                                Save History Overlay Rules
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(function() {
+            $("#saveConfigSetting").on("click", function(e) {
+
+                var value = JSON.stringify(historyOverlay.data);
+
+                $("#saveConfigSetting")
+                    .html("Saving...")
+                    .prop('disabled', true);
+
+                $.post('./ApplicationConfiguration/SaveConfigSetting', { Key: "@Model.Setting.Key", Value: value }, function (data, status) {
+                    if (status === 'success') {
+                        if (typeof ApplicationConfigurationManager !== 'undefined') {
+                            ApplicationConfigurationManager.SearchRows = null;
+                            ApplicationConfigurationManager.SetDisplayValue("@Model.Setting.Key", value);
+                        }
+                        PsiModal.HideTopmost();
+                        toastr.success("@Model.Setting.Key successfully saved!");
+                    } else {
+                        $("#saveConfigSetting")
+                            .html("Save")
+                            .prop('disabled', false);
+
+                        toastr.error("Problem saving.  Please try again.\r\n" + status);
+                    }
+                }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            });
+        });
+
+        historyOverlay.init();
+    </script>
+</div>
+

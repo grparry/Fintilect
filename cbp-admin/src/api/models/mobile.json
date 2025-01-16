@@ -1,0 +1,423 @@
+{
+  "MobileSettings": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "branding": {
+        "$ref": "#/BrandingSettings"
+      },
+      "security": {
+        "$ref": "#/SecuritySettings"
+      },
+      "features": {
+        "$ref": "#/FeatureSettings"
+      },
+      "navigation": {
+        "$ref": "#/NavigationSettings"
+      },
+      "notifications": {
+        "$ref": "#/NotificationSettings"
+      },
+      "versionManagement": {
+        "$ref": "#/VersionManagementSettings"
+      }
+    }
+  },
+  "BrandingSettings": {
+    "type": "object",
+    "properties": {
+      "logo": {
+        "type": "object",
+        "properties": {
+          "lightModeUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "darkModeUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "height": {
+            "type": "integer"
+          },
+          "width": {
+            "type": "integer"
+          }
+        }
+      },
+      "colors": {
+        "type": "object",
+        "properties": {
+          "primary": {
+            "type": "string",
+            "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$"
+          },
+          "secondary": {
+            "type": "string",
+            "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$"
+          },
+          "background": {
+            "type": "string",
+            "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$"
+          }
+        }
+      },
+      "fonts": {
+        "type": "object",
+        "properties": {
+          "primary": {
+            "type": "string"
+          },
+          "secondary": {
+            "type": "string"
+          },
+          "sizes": {
+            "type": "object",
+            "properties": {
+              "heading1": {
+                "type": "integer"
+              },
+              "heading2": {
+                "type": "integer"
+              },
+              "body": {
+                "type": "integer"
+              },
+              "caption": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "SecuritySettings": {
+    "type": "object",
+    "properties": {
+      "biometrics": {
+        "type": "object",
+        "properties": {
+          "faceIdEnabled": {
+            "type": "boolean"
+          },
+          "touchIdEnabled": {
+            "type": "boolean"
+          },
+          "eyeScanEnabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "mfa": {
+        "type": "object",
+        "properties": {
+          "required": {
+            "type": "boolean"
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["SMS", "Email", "Authenticator"]
+            }
+          },
+          "validityPeriod": {
+            "type": "integer",
+            "description": "Validity period in minutes"
+          }
+        }
+      },
+      "appShield": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "jailbreakDetection": {
+            "type": "boolean"
+          },
+          "rootDetection": {
+            "type": "boolean"
+          },
+          "screenshotPrevention": {
+            "type": "boolean"
+          },
+          "secureKeyboard": {
+            "type": "boolean"
+          }
+        }
+      },
+      "sessionManagement": {
+        "type": "object",
+        "properties": {
+          "sessionTimeout": {
+            "type": "integer",
+            "description": "Timeout in minutes"
+          },
+          "maxConcurrentSessions": {
+            "type": "integer"
+          },
+          "rememberDevice": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "FeatureSettings": {
+    "type": "object",
+    "properties": {
+      "billPay": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "photoBillPay": {
+            "type": "boolean"
+          },
+          "recurringPayments": {
+            "type": "boolean"
+          },
+          "payeeManagement": {
+            "type": "boolean"
+          }
+        }
+      },
+      "remoteDeposit": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "limits": {
+            "type": "object",
+            "properties": {
+              "dailyLimit": {
+                "type": "number"
+              },
+              "monthlyLimit": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "cardManagement": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "cardControls": {
+            "type": "boolean"
+          },
+          "travelNotifications": {
+            "type": "boolean"
+          },
+          "virtualCards": {
+            "type": "boolean"
+          }
+        }
+      },
+      "moneyManagement": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "budgeting": {
+            "type": "boolean"
+          },
+          "goals": {
+            "type": "boolean"
+          },
+          "insights": {
+            "type": "boolean"
+          }
+        }
+      },
+      "support": {
+        "type": "object",
+        "properties": {
+          "chat": {
+            "type": "boolean"
+          },
+          "callCenter": {
+            "type": "boolean"
+          },
+          "secureMessaging": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "NavigationSettings": {
+    "type": "object",
+    "properties": {
+      "tabs": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "order": {
+              "type": "integer"
+            },
+            "visible": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "quickActions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "action": {
+              "type": "string"
+            },
+            "visible": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "menu": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "parent": {
+              "type": "string"
+            },
+            "order": {
+              "type": "integer"
+            },
+            "visible": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    }
+  },
+  "NotificationSettings": {
+    "type": "object",
+    "properties": {
+      "push": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Transactions",
+                "Security",
+                "BillPay",
+                "Promotions",
+                "AccountAlerts"
+              ]
+            }
+          }
+        }
+      },
+      "email": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Transactions",
+                "Security",
+                "BillPay",
+                "Statements",
+                "Marketing"
+              ]
+            }
+          }
+        }
+      },
+      "sms": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Security",
+                "AccountAlerts",
+                "FraudAlerts"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "VersionManagementSettings": {
+    "type": "object",
+    "properties": {
+      "minimumVersion": {
+        "type": "string",
+        "pattern": "^\\d+\\.\\d+\\.\\d+$"
+      },
+      "recommendedVersion": {
+        "type": "string",
+        "pattern": "^\\d+\\.\\d+\\.\\d+$"
+      },
+      "forceUpdate": {
+        "type": "boolean"
+      },
+      "updateMessage": {
+        "type": "string"
+      }
+    }
+  }
+}

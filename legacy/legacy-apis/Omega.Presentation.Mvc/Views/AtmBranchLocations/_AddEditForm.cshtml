@@ -1,0 +1,264 @@
+﻿@using Psi.Data.Models.Domain.AtmBranchLocations;
+
+@model AtmBranchLocationsDomainModel
+
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="LocationName">Location Name</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.LocationName, new { @class = "form-control form-control-inline", id = "LocationName", autocomplete = "off", placeholder = "Location Name" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="LocationType">Location Type</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.DropDownListFor(x => x.LocationType, new SelectList(@ViewBag.LocationTypeDropDown, "Value", "Text"), new { @class = "form-control form-control-inline", id = "LocationTypeSelect", style = "cursor: pointer; width:164px;" })
+            @Html.HiddenFor(x => x.LocationTypeLabel, new { id = "LocationTypeLabel" })
+            @Html.HiddenFor(x => x.Id, new { id = "Id" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="RetailOutlet">Retail Outlet</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.RetailOutlet, new { @class = "form-control form-control-inline", id = "RetailOutlet", autocomplete = "off", placeholder = "Retail Outlet" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="Latitude">Latitude</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.Latitude, new { @class = "form-control form-control-inline", id = "Latitude", autocomplete = "off", placeholder = "Latitude" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="Longitude">Longitude</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.Longitude, new { @class = "form-control form-control-inline", id = "Longitude", autocomplete = "off", placeholder = "Longitude" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="AddressLine">Address</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.AddressLine, new { @class = "form-control form-control-inline", id = "AddressLine", autocomplete = "off", placeholder = "Address" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="CityName">City</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.CityName, new { @class = "form-control form-control-inline", id = "CityName", autocomplete = "off", placeholder = "City" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="StateSelect">State</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.DropDownListFor(x => x.StateCode, new SelectList(@ViewBag.StatesDropDown, "Value", "Text"), new { @class = "form-control form-control-inline", name = "StateSelect", id = "StateSelect", style = "cursor: pointer; width:64px;" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="PostalCode">Postal (zip) Code</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.PostalCode, new { @class = "form-control form-control-inline", id = "PostalCode", autocomplete = "off", placeholder = "Postal Code" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="CountryCode">Country Code</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.CountryCode, new { @class = "form-control form-control-inline", id = "CountryCode", autocomplete = "off", placeholder = "Country Code" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="ImageUrl">Image Url</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.ImageUrl, new { @class = "form-control form-control-inline", id = "ImageUrl", autocomplete = "off", placeholder = "Image Url" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="ImageText">Image Text</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.ImageText, new { @class = "form-control form-control-inline", id = "ImageText", autocomplete = "off", placeholder = "Image Text" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="MapIcon">Map Icon</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.MapIcon, new { @class = "form-control form-control-inline", id = "MapIcon", autocomplete = "off", placeholder = "Map Icon" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="MapUrl">Map Url</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.MapUrl, new { @class = "form-control form-control-inline", id = "MapUrl", autocomplete = "off", placeholder = "Map Url" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="AdditionalDetails1">Additional Details 1</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.AdditionalDetails1, new { @class = "form-control form-control-inline", id = "AdditionalDetails1", autocomplete = "off", placeholder = "Additional Details 1" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="AdditionalDetails2">Additional Details 2</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.AdditionalDetails2, new { @class = "form-control form-control-inline", id = "AdditionalDetails2", autocomplete = "off", placeholder = "Additional Details 2" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="Phone">Phone</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.Phone, new { @class = "form-control form-control-inline", id = "Phone", autocomplete = "off", placeholder = "Phone" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="MobileValue">Mobile Value</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.MobileValue, new { @class = "form-control form-control-inline", id = "MobileValue", autocomplete = "off", placeholder = "Mobile Value" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="Fax">Fax</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.Fax, new { @class = "form-control form-control-inline", id = "Fax", autocomplete = "off", placeholder = "Fax" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="Email">Email</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.Email, new { @class = "form-control form-control-inline", id = "Email", autocomplete = "off", placeholder = "Email" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="SurchargeFree">Surcharge Free</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.SurchargeFree, new { @class = "form-control form-control-inline", id = "SurchargeFree", autocomplete = "off", placeholder = "Surcharge Free" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="AcceptDeposit">Accept Deposit</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.AcceptDeposit, new { @class = "form-control form-control-inline", id = "AcceptDeposit", autocomplete = "off", placeholder = "Accept Deposit" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="RestrictedAccess">Restricted Access</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.RestrictedAccess, new { @class = "form-control form-control-inline", id = "RestrictedAccess", autocomplete = "off", placeholder = "Restricted Access" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3 text-align-right">
+            <label class="control-label" for="LimitedHours">Limited Hours</label>
+        </div>
+
+        <div class="col-sm-4">
+            @Html.TextBoxFor(x => x.LimitedHours, new { @class = "form-control form-control-inline", id = "LimitedHours", autocomplete = "off", placeholder = "Limited Hours" })
+        </div>
+    </div>
+
+    <div class="form-group" style="margin: 10px auto 34px 0;">
+        <div class="col-sm-3 text-align-right">
+            <!-- sp -->
+        </div>
+
+        <div class="col-sm-4">
+            <input type="button" value="Submit" id="SubmitButton" class="btn btn-primary" style="margin-right:8px;" />
+            <input type="button" value="Clear Form" id="ClearButton" class="btn btn-info" style="margin-right:8px;" />
+            <input type="button" value="Cancel" id="CancelButton" class="btn btn-default" style="margin-right:8px;" />
+
+            <!-- LOADING -->
+            <div id="LoadingDiv" class="text-center" style="display:none; padding:1rem;">
+                <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" style="width:28px; height:28px;" />
+            </div>
+        </div>
+    </div>
+

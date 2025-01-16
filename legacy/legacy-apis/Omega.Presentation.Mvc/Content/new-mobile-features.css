@@ -1,0 +1,149 @@
+﻿/* new mobile features styles */
+
+ 
+ .main-content-container {
+	 margin-top: 20px;
+ }
+
+.bold {
+	font-weight: bold;
+}
+
+.form-control-inline {
+	display:inline-block;
+    width:100%;
+}
+
+.main-content-container::before {
+	box-shadow:none;
+	border-radius: 0 0 0 0;
+}
+
+.main-content-container {
+	box-shadow:none;
+	border-radius: 0 0 0 0;
+}
+
+.list-row {
+	border:1px solid #E3E3E3;
+	border-radius:7px;
+	margin:5px 10px;
+}
+
+.list-row.header {
+	border:none;
+	border-radius:0;
+	margin:5px 10px -5px 5px;
+}
+
+.list-row.thumbnails {
+	min-height:80px;
+}
+
+.list-row-edit {
+	background-color:#F3F3F3;
+}
+
+.list-row-buttons {
+	margin:10px 0;
+}
+
+.border-right {
+	border-right:solid 1px #E3E3E3;
+}
+
+.puffy {
+	padding:6px 8px;
+	overflow: hidden;
+}
+
+.puffy.flex {
+	display: flex;
+	min-height:80px;
+	align-items: center;
+}
+
+.puffy.flex.center {
+	justify-content: center;
+}
+
+.wow-header-blue {
+	color: #1c4263;
+	background-color: #ebf3f9;
+	text-shadow: 2px 2px 2px rgba(0,0,128,0.1);
+	font-size: 16px;
+	padding:10px;
+	border-radius:5px;
+}
+
+.has-error {
+    border:1px solid #d00d0d;
+}
+
+/* modal styles */
+.modal-body a {
+	color:#005cb3;
+}
+
+.modal-body a.btn {
+	color:#FFFFFF;
+}
+
+.modal-header {
+	background-color: #ebf3f9;
+	border-top-right-radius: 7px;
+	border-top-left-radius: 7px;
+}
+
+.modal-header.green {
+	background-color: #EEFFEE;
+}
+
+.modal-body .alert {
+	color:#222222;
+}
+
+.modal-dialog.large {
+	width: 55%; 
+}
+
+.modal-dialog.xlarge {
+	width: 80%; 
+}
+
+#targeted-marketing-account-group-modal {
+	overflow-y: auto;   /* to prevent standard scrollbox from showing up */
+}
+
+
+/* image upload styles */
+#image-upload-div input[type="text"] {
+    padding: 5px 12px;
+    border-radius: 3px;
+    width: 240px;
+    border: 1px solid #DDDDDD;
+    outline: none;
+    display:inline;
+}
+
+#image-upload-div input[type="file"] {
+    display: none;
+}
+
+#image-upload-div .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background-color: #F7F7F7;
+    cursor: pointer;
+}
+
+#image-upload-div #FileUploadFilenameSpan {
+    color:#666666;
+    margin-left: 10px;
+}
+
+#image-upload-div .text-muted {
+    color:#777777;
+}

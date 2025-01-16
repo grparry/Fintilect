@@ -1,0 +1,91 @@
+﻿@model List<Psi.Data.Models.Domain.Themes.ThemeModel>
+
+<div class="modal fade destroy-when-closed">
+    <!-- Modal Layout -->
+    <div class="modal-dialog modal-lg">
+        <div id="partial-view-modal-content" class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+	            <h4 class="modal-title">
+		            Select Themes
+	            </h4>
+            </div>
+
+	        <div class="modal-body content">
+		        <div class="panel panel-default">
+
+			        <table class="table theme-list">
+				        <tbody>
+							
+							@foreach (var title in Model.Select(x => x.Title).Distinct())
+							{
+								<tr>
+									<td>@title</td>
+									<td>
+										<select class="form-control select-theme-control">
+											<option value=""></option>
+											@foreach (var theme in Model.Where(x => x.Title == title))
+											{
+												<option value="@theme.PublicId">
+													@if (!theme.PublishedDate.HasValue)
+													{
+														<text>
+															Ongoing Development
+														</text>
+													}
+													else
+													{
+														<text>
+															Published
+															@(theme.PublishedDate?.ToShortDateString())
+															@(theme.PublishedDate?.ToLongTimeString())
+														</text>
+													}
+													 -- @theme.Notes
+												</option>
+											}
+										</select>
+									</td>
+								</tr>
+							}
+
+				        </tbody>
+			        </table>
+		        </div>
+
+	        </div><!-- End modal-body -->
+
+
+	        <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		        <button type="button" class="btn btn-primary set-theme-selected-values">Set Selected Values</button>
+	        </div>
+			
+	        <script>
+				$(function () {
+					var ids = $("#configValueInput").val().split(',');
+					for (var i=0; i < ids.length; i++) {
+						$("option[value=" + ids[i] + "]").attr('selected', 'true');
+					}
+
+					$(".set-theme-selected-values").on('click',
+						function () {
+							var vals = [];
+							var selects = $(this).closest(".modal").find(".select-theme-control");
+							for (var i = 0; i < selects.length; i++) {
+								if (selects[i].value !== '')
+									vals.push(selects[i].value);
+							}
+
+							$("#configValueInput").val(vals.join(','));
+							toastr.success("Value set but not yet saved.");
+							PsiModal.HideTopmost();
+						});
+				})
+        	</script>
+			
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

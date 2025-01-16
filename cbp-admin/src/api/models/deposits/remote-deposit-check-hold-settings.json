@@ -1,0 +1,16 @@
+{
+  "RemoteDepositCheckHoldSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/RemoteDepositCheckHoldSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/RemoteDepositCheckHoldFeatures"
+      }
+    }
+  }
+}

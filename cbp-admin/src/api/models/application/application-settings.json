@@ -1,0 +1,22 @@
+{
+  "ApplicationSettings": {
+    "type": "object",
+    "properties": {
+      "appInfo": {
+        "$ref": "./app-info.json#/AppInfoSettings"
+      },
+      "configuration": {
+        "$ref": "./configuration.json#/ApplicationConfiguration"
+      },
+      "flexUi": {
+        "$ref": "./flex-ui.json#/FlexUiConfiguration"
+      },
+      "sparkUi": {
+        "$ref": "./spark-ui.json#/SparkUiConfiguration"
+      },
+      "onlineBanking": {
+        "$ref": "./online-banking.json#/OnlineBankingConfiguration"
+      }
+    }
+  }
+}

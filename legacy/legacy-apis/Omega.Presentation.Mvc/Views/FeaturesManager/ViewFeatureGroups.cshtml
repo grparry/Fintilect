@@ -1,0 +1,437 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.FeaturesManager
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model Omega.Presentation.Mvc.Models.FeaturesManager.FeatureGroupsModel
+
+@{
+    ViewBag.Title = Model.Feature.Name + " Groups";
+    ViewBag.Subtitle = "Manage Groups for " + Model.Feature.Name + " Feature";
+    ViewBag.ActiveMenu = "features-manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BaseModel = Model;
+}
+
+@if (!SettingsManager.Settings.OmegaConfiguration.Features.FeaturesManagerEnabled)
+{
+    <div class="alert alert-info">
+        We are sorry to inform you that this feature is currently unavailable.
+    </div>
+}
+else
+{
+    <script>
+        var FeaturesManager = {
+            LoadFeatureGroups: function () {
+                alert("LoadFeatureGroups");
+                Util.ShowLoading();
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#features-body').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featuresBody', status);
+                    }
+                };
+                $.get('./GetFeatureGroupList', callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadFeatureGroupInProgress: false,
+            LoadFeatureGroup: function (sender) {
+                if (FeaturesManager.LoadFeatureGroupInProgress) return;
+                FeaturesManager.LoadFeatureGroupInProgress = true;
+                var $sender = $(sender);
+                var id = $sender.attr('feature-group-id');
+                var name = $sender.attr('feature-group-name');
+                FeaturesManager.LoadFeatureGroupById(id, name);
+            },
+            LoadFeatureGroupById: function (id, name, sender) {
+                $('.feature-button-selected').removeClass('feature-button-selected');
+                Util.ShowLoadingInInnerHtml('#featuresBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadFeatureGroupInProgress = false;
+                    if (status === 'success') {
+                        $('#featuresBody').html(data);
+                        $('#featureLabel').html(name);
+                        if (sender) sender.addClass('feature-button-selected');
+                        FeaturesManager.SearchFeatureGroupsRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featuresBody', status);
+                    }
+                };
+                $.get('./GetFeatureGroup?id=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadFeatureGroupByName: function (name, sender) {
+                alert("LoadFeatureGroupByName");
+                $('.feature-button-selected').removeClass('feature-button-selected');
+                Util.ShowLoadingInInnerHtml('#featuresBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadFeatureGroupInProgress = false;
+                    if (status === 'success') {
+                        $('#featuresBody').html(data);
+                        $('#featureLabel').html(name);
+                        if (sender) sender.addClass('feature-button-selected');
+                        FeaturesManager.SearchFeatureGroupsRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featuresBody', status);
+                    }
+                };
+                $.get('./GetFeatureGroup?name=' + escape(name), callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadFeatureGroupKey: function (sender) {
+                alert("LoadFeatureGroupKey");
+                var $sender = $(sender);
+                var key = $sender.attr('feature-key');
+                var set = $sender.attr('feature');
+                $('#manageFeatureKey').modal();
+                Util.ShowLoadingInInnerHtml('#manageFeatureKeyBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageFeatureKeyBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageFeatureKeyBody', status);
+                    }
+                };
+                $.get('./GetFeatureGroupKey?key=' + key + '&set=' + set, callback);
+            },
+            GetFeatureGroupValue: function (sender) {
+                alert("GetFeatureGroupValue");
+                var $sender = $(sender);
+                var key = $sender.attr('feature-key');
+                var set = $sender.attr('feature');
+                var id = $sender.attr('feature-id');
+                Util.ShowLoading();
+                var callback = function (data) {
+                    Util.HideLoading();
+                    $('#feature-value-textbox').val(data);
+                };
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: './GetFeatureGroupKeyValue?key=' + key + '&set=' + set + '&id=' + id,
+                    success: callback
+                }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+
+                $('#featureStartAt').val($sender.attr('feature-start'));
+                $('#featureEndAt').val($sender.attr('feature-end'));
+            },
+            GetDefaultFeatureGroupValue: function (sender, input) {
+                alert("GetDefaultFeatureGroupValue");
+                var $sender = $(sender);
+                var key = $sender.attr('feature-key');
+                var set = $sender.attr('feature');
+                var id = $sender.attr('feature-id');
+
+                Util.ShowLoading();
+                var callback = function (data) {
+                    Util.HideLoading();
+                    $(input).val(data);
+                };
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: './GetDefaultFeatureGroupKeyValue?key=' + key + '&set=' + set + '&id=' + id,
+                    success: callback
+                }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            ShowHtmlInModal: function (sender, sourceId) {
+                alert("LoadFeatureGroupByName");
+                var html = $('#' + sourceId).val();
+                $('#previewHtmlModal').modal();
+                $('#previewHtmlModalBody').html(html);
+            },
+            ManageFeatureGroupId: null,
+            ManageFeatureGroup: function (obj) {
+                alert("ManageFeatureGroup");
+                if (obj == null) {
+                    FeaturesManager.ManageFeatureGroupId = 0;
+                } else {
+                    FeaturesManager.ManageFeatureGroupId = $(obj).attr('feature-id');
+                    $('#feature-default-set-textbox').val($(obj).attr('feature'));
+                    $('#feature-default-key-textbox').val($(obj).attr('feature-key'));
+                    $('#feature-default-permission-select').val($(obj).attr('feature-permission'));
+                    FeaturesManager.GetDefaultFeatureGroupValue(obj, '#feature-default-value-textbox');
+                };
+                $('#manageDefaultFeatureModal').modal();
+            },
+            SaveDefaultFeatureGroup: function (sender) {
+                alert("SaveDefaultFeatureGroup");
+                var id = FeaturesManager.ManageFeatureGroupId;
+                var set = $('#feature-default-set-textbox').val();
+                var key = $('#feature-default-key-textbox').val();
+                var value = $('#feature-default-value-textbox').val();
+                var lvl = $('#feature-default-permission-select').val();
+
+                var errorMessage = '';
+                if (set.length <= 0) errorMessage += 'Set name is required\r';
+                if (key.length <= 0) errorMessage += 'Key is required\r';
+
+                if (errorMessage !== '') {
+                    alert('Please fix errors before saving...\r\n' + errorMessage);
+                    return;
+                }
+
+                Util.ShowLoading();
+                var callback = function (data, status) {
+                    alert("callback");
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        FeaturesManager.LoadFeatureGroups();
+                        FeaturesManager.LoadFeatureGroupByName(set);
+                        $('#manageDefaultFeatureModal').modal('hide');
+
+                        $('#feature-default-set-textbox').val('');
+                        $('#feature-default-key-textbox').val('');
+                        $('#feature-default-value-textbox').val('');
+                        $('#feature-default-permission-select').val(0);
+                    } else {
+                        alert('Error saving feature!');
+                    }
+                };
+                $.get('./SaveDefaultFeatureGroup?id=' +
+                    id +
+                    '&Key=' +
+                    key +
+                    '&Feature=' +
+                    set +
+                    '&PermissionLevel=' +
+                    lvl +
+                    '&Value=' +
+                    value +
+                    '&Culture=EN',
+                    callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SaveFeatureGroup: function (sender) {
+                alert("SaveFeatureGroup");
+                var set = $('#feature-textbox').val();
+                var key = $('#feature-key-textbox').val();
+                var value = $('#feature-value-textbox').val();
+                var end = $('#featureEndAt').val();
+                var start = $('#featureStartAt').val();
+
+                var errorMessage = '';
+                if (set.length <= 0) errorMessage += 'Set name is required\r';
+                if (key.length <= 0) errorMessage += 'Key is required\r';
+
+                if (errorMessage !== '') {
+                    alert('Please fix errors before saving...\r\n' + errorMessage);
+                    return;
+                }
+
+                Util.ShowLoading();
+                var callback = function (data, status) {
+                    alert("ShowLoading");
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        FeaturesManager.LoadFeatureGroupByName(set);
+                        $('#manageFeatureKey').modal('hide');
+                    } else {
+                        alert('Error saving feature key!');
+                    }
+                };
+                $.post('./SaveFeatureGroup',
+                    {
+                        Key: key,
+                        Feature: set,
+                        Value: value,
+                        StartAt: start,
+                        EndAt: end,
+                        Culture: 'EN'
+                    },
+                    callback).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SearchFeatureGroupsRows: null,
+            SearchFeatureGroups: function (sender) {
+                var x = sender.value.toLowerCase();
+                x = escape(x);
+                var rows = FeaturesManager.SearchFeatureGroupsRows;
+                if (rows === null) {
+                    FeaturesManager.SearchFeatureGroupsRows = $('[search-row-keys]');
+                    rows = FeaturesManager.SearchFeatureGroupsRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('search-text').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            SearchFeatureGroupRows: null,
+            SearchFeatureGroups: function (sender) {
+                var x = sender.value.toLowerCase();
+                var rows = FeaturesManager.SearchFeatureGroupRows;
+                if (rows === null) {
+                    FeaturesManager.SearchFeatureGroupRows = $('[search-row-sets]');
+                    rows = FeaturesManager.SearchFeatureGroupRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('feature-name').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            EditFeatureGroup: function (sender, id, featureId) {
+                $("#editFeatureGroupModal").modal();
+                Util.ShowLoadingInInnerHtml('#editFeatureGroupModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadFeatureGroupInProgress = false;
+                    if (status === 'success') {
+                        $('#editFeatureGroupModalBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editFeatureGroupModalBody', status);
+                    }
+                };
+                $.get('./EditFeatureGroup?id=' + id + '&featureId=' + featureId, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            }
+        };
+
+        $(function() {
+            AutoSizeTextAreas.Set();
+        });
+        </script>
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading-psi">
+                    Groups: &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="pull-right">
+                        @if (Model.User.PermissionLevel.CanView(PermissionLevel.Support))
+                        {
+                            <button type="button" class="btn btn-default btn-xs" onclick="FeaturesManager.EditFeatureGroup(this, '0', '@Model.Feature.Id');">
+                                New &nbsp;<span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        }
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <div>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control" id="searchFeatureNames" placeholder="Search Features" onkeyup="FeaturesManager.SearchFeatureGroups(this);" /><br />
+                        <div class="config-panel-body" id="features-body">
+                            @Html.Partial("GetFeatureGroupList", Model)
+                        </div>
+                        <br/>
+                        <a class="btn btn-default" href="@Url.Action("Index", "FeaturesManager")">Return to Features</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="panel panel-default" id="featuresBody">
+                @Html.Partial("GetFeatureGroup", new AddUpdateFeatureGroupModel { Feature = Model.Feature })
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="editFeatureGroupModal">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit @Model.Feature.Name Group</h3>
+                </div>
+                <div class="modal-body" id="editFeatureGroupModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="manageFeatureKey">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Manage Feature</h3>
+                </div>
+                <div class="modal-body" id="manageFeatureKeyBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="previewHtmlModal">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Html Preview</h3>
+                </div>
+                <div class="modal-body" id="previewHtmlModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="manageDefaultFeatureModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Manage Default Feature</h3>
+                </div>
+                <div class="modal-body" id="manageDefaultFeatureBody">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Set Name:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="feature-default-set-textbox" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Key:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="feature key" id="feature-default-key-textbox" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Default Value:</label>
+                            <div class="col-md-8">
+                                <textarea class="form-control" rows="4" placeholder="default value" id="feature-default-value-textbox"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Edit Permission:</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="feature-default-permission-select">
+                                    <option selected="selected" value="0">ALL</option>
+                                    <option value="100">Vendor Only</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-8">
+                                <button type="button" class="btn btn-primary" onclick="FeaturesManager.SaveDefaultFeatureGroup(this);">Save &nbsp;<span class="glyphicon glyphicon-save"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

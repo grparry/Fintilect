@@ -1,0 +1,41 @@
+{
+  "ComplianceSettings": {
+    "type": "object",
+    "properties": {
+      "ada": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "docCenter": {
+            "$ref": "./ada/doc-center.json#/DocCenterSettings"
+          }
+        }
+      },
+      "beneficiary": {
+        "$ref": "./beneficiary/beneficiary-settings.json#/BeneficiarySettings"
+      },
+      "businessBanking": {
+        "$ref": "./business-banking/business-banking.json#/BusinessBankingSettings"
+      },
+      "creditScoreHistory": {
+        "$ref": "./credit-score/credit-score-history.json#/CreditScoreHistorySettings"
+      },
+      "institution": {
+        "type": "object",
+        "properties": {
+          "mfaQuestions": {
+            "$ref": "./institution/mfa-questions.json#/MFAQuestionsSettings"
+          }
+        }
+      },
+      "passwordVerification": {
+        "$ref": "./password/password-verification.json#/PasswordVerificationSettings"
+      },
+      "primaryAccountSecurityCode": {
+        "$ref": "./security/primary-account-security-code.json#/PrimaryAccountSecurityCodeSettings"
+      }
+    }
+  }
+}

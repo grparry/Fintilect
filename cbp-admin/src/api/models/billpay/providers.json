@@ -1,0 +1,257 @@
+{
+  "CheckFreeSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "apiEndpoint": {
+        "type": "string"
+      },
+      "credentials": {
+        "type": "object",
+        "properties": {
+          "sponsorId": {
+            "type": "string"
+          },
+          "subscriberId": {
+            "type": "string"
+          },
+          "apiKey": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "features": {
+        "type": "object",
+        "properties": {
+          "expressBillPay": {
+            "type": "boolean"
+          },
+          "eBills": {
+            "type": "boolean"
+          },
+          "rushPayments": {
+            "type": "boolean"
+          },
+          "recurringPayments": {
+            "type": "boolean"
+          }
+        }
+      },
+      "limits": {
+        "type": "object",
+        "properties": {
+          "minPaymentAmount": {
+            "type": "number"
+          },
+          "maxPaymentAmount": {
+            "type": "number"
+          },
+          "maxPayeesPerUser": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  },
+  "BillMatrixSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "serviceUrl": {
+        "type": "string"
+      },
+      "merchantId": {
+        "type": "string"
+      },
+      "apiPassword": {
+        "type": "string",
+        "format": "password"
+      },
+      "paymentTypes": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["ACH", "CreditCard", "DebitCard"]
+        }
+      },
+      "processingRules": {
+        "type": "object",
+        "properties": {
+          "cutoffTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "processingDelay": {
+            "type": "integer",
+            "description": "Processing delay in hours"
+          }
+        }
+      }
+    }
+  },
+  "MetavanteSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "institutionId": {
+        "type": "string"
+      },
+      "routingNumber": {
+        "type": "string"
+      },
+      "environment": {
+        "type": "string",
+        "enum": ["Production", "Test"]
+      },
+      "features": {
+        "type": "object",
+        "properties": {
+          "sameDay": {
+            "type": "boolean"
+          },
+          "overnight": {
+            "type": "boolean"
+          },
+          "standard": {
+            "type": "boolean"
+          }
+        }
+      },
+      "security": {
+        "type": "object",
+        "properties": {
+          "certificateThumbprint": {
+            "type": "string"
+          },
+          "privateKeyPath": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "SymmetryBillPaySettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "clientId": {
+        "type": "string"
+      },
+      "apiKey": {
+        "type": "string",
+        "format": "password"
+      },
+      "features": {
+        "type": "object",
+        "properties": {
+          "billPresentation": {
+            "type": "boolean"
+          },
+          "paymentProcessing": {
+            "type": "boolean"
+          },
+          "payeeDirectory": {
+            "type": "boolean"
+          }
+        }
+      },
+      "processing": {
+        "type": "object",
+        "properties": {
+          "batchSize": {
+            "type": "integer"
+          },
+          "retryAttempts": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  },
+  "CheckFreeAdminSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "adminPortalUrl": {
+        "type": "string"
+      },
+      "credentials": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "permissions": {
+        "type": "object",
+        "properties": {
+          "userManagement": {
+            "type": "boolean"
+          },
+          "payeeManagement": {
+            "type": "boolean"
+          },
+          "reportAccess": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "OutOfBandSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "actions": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "BillPayEnroll",
+            "BillPayAccess",
+            "AddPayee",
+            "TransferAmount",
+            "CreateSubAccount",
+            "AddLinkedAccount",
+            "LinkedTransferAmount",
+            "ChangeAddress",
+            "ChangeEmail"
+          ]
+        }
+      },
+      "authentication": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": ["SMS", "Email", "Push"]
+          },
+          "codeLength": {
+            "type": "integer"
+          },
+          "expirationMinutes": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

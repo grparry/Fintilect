@@ -1,0 +1,65 @@
+﻿@using Omega.Presentation.Mvc.Models.VersionManagement
+@model ManageMinimumVersionViewModel
+
+@{
+    ViewBag.Title = "Manage @Model.Type App Version";
+    ViewBag.BaseModel = Model;
+}
+
+<script>
+
+    $(document).ready(function() {
+            $('#AvailableVersionSelect')
+                .change(function() {
+                    var selectedVal = $('#AvailableVersionSelect').val();
+                    document.getElementById('CurrentSelectedItem').value = selectedVal;
+                    $('#minVersionForm').submit();
+                });
+        });
+
+</script>
+
+<div class="panel-body">
+    @using (Html.BeginForm("SetMinimumVersion", "VersionManagement", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "minVersionForm" }))
+    {
+        <h3 class="text-center">App Versions</h3>
+        <div style="padding-left: 39%">Active to @Model.NumberOfDays days</div>
+            <div id="appVersions" style="width: 100%; height: 100%;"></div>
+            <br />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="col-md-2">App Version Number</th>
+                    <th class="col-md-2">Number of Users</th>
+                    <th class="col-md-1">Percentage</th>
+                </tr>
+            </thead>
+            @foreach (var appVersion in Model.AppVersions)
+            {
+                <tr>
+                    <td>@appVersion.VersionNumber</td>
+                    <td>@appVersion.Count</td>
+                    <td>@appVersion.Percentage %</td>
+                </tr>
+            }
+        </table>
+        <div><h5>Current Minimum Version: @Model.CurrentItem</h5></div>
+        <div class="col-md-4 control-label">
+            @Html.LabelFor(m => m.AvailableVersions, new {style = "width:164px;" })
+        </div>
+        <div class="col-md-4">
+            @Html.HiddenFor(m => m.CurrentItem, new { name = "CurrentSelectedItem", id = "CurrentSelectedItem" })
+            @Html.HiddenFor(m => m.AvailableVersions)
+            @Html.DropDownListFor(x => x.AvailableVersions, new SelectList(Model.AvailableVersions, "Value", "Text"), Model.CurrentItem,
+                new {@class = "form-control form-control-inline", name = "AvailableVersionSelect", id = "AvailableVersionSelect", style = "width:100px; cursor: pointer; cursor: hand;" })
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <a onClick="StringResource.LoadResourceKey(this);" resource-key="appmessages.deprecated.iOS" style="text-align: center; position: absolute; width: 92%; cursor: pointer; cursor: hand;">Manage iOS Version Not Supported Message</a>
+        <br />
+        <a onClick="StringResource.LoadResourceKey(this);" resource-key="appmessages.deprecated.Android" style="text-align: center; position: absolute; width: 92%; cursor: pointer; cursor: hand;">Manage Android Version Not Supported Message</a>
+        <br />
+   }
+</div>

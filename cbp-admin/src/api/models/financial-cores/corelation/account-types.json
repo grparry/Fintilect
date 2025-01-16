@@ -1,0 +1,30 @@
+{
+  "CorelationAccountTypesSettings": {
+    "type": "object",
+    "properties": {
+      "accountTypes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "minimumBalance": {
+              "type": "number"
+            },
+            "maximumBalance": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  }
+}

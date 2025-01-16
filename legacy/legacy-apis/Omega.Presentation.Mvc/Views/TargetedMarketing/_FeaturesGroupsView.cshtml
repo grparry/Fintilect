@@ -1,0 +1,105 @@
+﻿@using System.Web.Mvc.Html
+@using Omega.Presentation.Mvc.Models.TargetedMarketing
+
+
+@model List<Feature>
+
+
+
+<div class="col-md-12" style="margin-bottom: 14px;">
+    Please check the features that you want to apply to this promotion:
+</div>
+
+<form id="TargetedMarketingFeatures">
+    <div class="col-md-12 clearfix">
+        @foreach (var feature in Model)
+        {
+            <div class="row list-row">
+                <div class="col-md-11 border-right puffy">
+                    @feature.Name
+                </div>
+
+                <div class="col-md-1 puffy text-center">
+                    <input type="checkbox" id="features_checkbox_@feature.Id" name="features_checkbox_@feature.Id"
+                           title="check to add @feature.Name" @Html.Raw(feature.isActive == true ? "checked" : string.Empty) />
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-12 text-right" style="margin-top:14px;">
+        <div id="SavingFeaturesItemsDiv" class="text-center" style="display:none; margin-bottom: 14px;">
+            <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Saving...
+        </div>
+
+        <div id="FailureFeaturesItemsDiv" class="alert alert-danger" style="display: none; text-align:left;">
+            We were unable to retrieve/save your data, please try again later.
+        </div>
+
+        <div id="SuccessFeaturesItemsDiv" class="alert alert-success" style="display: none;">
+            <div style="float: right; margin-top: -8px;"><input type="button" class="btn btn-primary" id="SavedFeaturesOkSuccessButton" value="Ok" /></div>
+            <div style="text-align: left; width: 50%;">Your data has been saved.</div>
+        </div>
+    </div>
+
+    <div class="col-md-12 text-right" style="margin-top:14px;">
+        <input type="hidden" name="FeaturesPromotionId" value="@ViewBag.PromotionId" />
+        <input type="submit" value="Save Changes" class="btn btn-primary" id="TargetedMarketingFeaturesSubmitButton" />
+    </div>
+</form>
+
+
+
+<script>
+    $(document).ready(function () {
+        // ok button click after save
+        $("#SavedFeaturesOkSuccessButton").click(function (e) {
+            e.preventDefault();
+            $("#SuccessFeaturesItemsDiv").slideUp();
+            $("#failureFeaturesItemsDiv").slideUp();
+            $("#SavingFeaturesItemsDiv").slideUp();
+            $("#ProcessingFeaturesItemsDiv").slideUp();
+            $("#FeatureItemsDiv").slideUp();
+        });
+
+
+        // Save changes button
+        $("#TargetedMarketingFeaturesSubmitButton").click(function (e) {
+            //console.info("Got here: TargetedMarketingFeaturesSubmitButton click");
+            e.preventDefault();           
+            $("#SavingFeaturesItemsDiv").slideDown();
+
+                // Call to server, passing in the ids from the checkboxes:
+                $.ajax(
+                    {
+                        cache: false,
+                        context: this,
+                        dataType: "text",
+                        error: function (reply) {
+                            console.log("error. ", reply);
+                      
+                            $("#FailureFeaturesItemsDiv").show("normal");
+                            $("#SavingFeaturesItemsDiv").hide();
+                        },
+                        success: function (reply) {
+                            console.log("success. ", reply);
+
+                            if (reply.toLowerCase() === "success") {
+                         
+                                $("#FailureFeaturesItemsDiv").hide();
+                                $("#SavingFeaturesItemsDiv").hide();
+                                $("#SuccessFeaturesItemsDiv").slideDown();
+                            } else {                  
+                                $("#FailureFeaturesItemsDiv").show("normal");
+                                $("#SavingFeaturesItemsDiv").hide();
+                            }
+                        },
+                        type: "Post",
+                        data: $("#TargetedMarketingFeatures").serialize(),
+                        url: location.protocol + "//" + location.hostname + "/Omega/TargetedMarketing/SaveFeaturesForThisPromotion"
+                    }
+                );
+      
+        });
+    });
+</script>

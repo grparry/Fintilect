@@ -1,0 +1,197 @@
+﻿@using System.Web.Mvc.Html
+@using Omega.Presentation.Mvc.Models.TargetedMarketing
+
+@model PromotionFiltersViewModel 
+
+@{
+    ViewBag.Title = "Manage Promotion Filters";
+    ViewBag.ActiveMenu = "targeted-marketing";
+}
+
+@section LinkedStyleSheets {
+    <link href='@Url.Content("~/Content/targeted-marketing.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/Content/jquery-ui/redmond/jquery-ui-1.10.3.custom.css")' rel="stylesheet" />
+}
+
+
+<div class="main-content-container">
+    <div class="panel panel-default">
+        <header class="panel-heading-psi clearfix">
+            <strong>@ViewBag.Title</strong>
+        </header>
+
+        <div id="divLoading" class="text-center" style="display:none;">
+            <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Loading...
+        </div>
+
+        <div id="divFailure" class="alert alert-danger text-center" style="display: none;">
+            Data Load Failure.
+        </div>
+
+        <div class="panel-body">
+            @if (Model.AccountGroupList == null || Model.AccountGroupList.Count < 1)
+            {
+
+                <div class="group-panel-body">
+                    <div class="alert alert-danger">
+                        There are no Account Groups to show
+                    </div>
+
+                    <div class="row list-row-buttons">
+                        <div class="col-md-12 text-right">
+                                @Ajax.ActionLink("Add New Account Group", "ManageAccountGroup", new { id = 0, mode = "create" }, new AjaxOptions
+                           {
+                               UpdateTargetId = "partial-view-modal-content",
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               OnBegin = "OmegaTargetedMarketingPromotionFiltersModule.logAjaxBegin",
+                               OnComplete = "OmegaTargetedMarketingPromotionFiltersModule.showDetailModal",
+                               OnFailure = "OmegaTargetedMarketingPromotionFiltersModule.showFailure"
+                           }, new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div><!-- end group-panel-body -->
+
+            }
+            else {
+
+                <div class="group-panel-body">
+                    <div class="row list-row">
+                        <div class="col-md-12 puffy bold wow-header-green">Account Groups</div>
+                    </div>
+
+                    @foreach (var accountGroup in Model.AccountGroupList)
+                {
+
+                        <div class="row list-row">
+                            <div class="col-md-10 border-right puffy">
+                                @accountGroup.GroupName
+                            </div>
+
+                            <div class="col-md-1 border-right puffy text-center">
+                                @if (accountGroup.IsActive)
+                                {
+                                    @:Active
+                                }
+                                else
+                                {
+                                    @:Inactive
+                                }
+                            </div>
+
+                            <div class="col-md-1 puffy text-center">
+                                @Ajax.ActionLink("manage", "ManageAccountGroup", new { id = accountGroup.AccountNumberGroupId, mode = "update" }, new AjaxOptions
+                           {
+                               UpdateTargetId = "partial-view-modal-content",
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               OnBegin = "OmegaTargetedMarketingPromotionFiltersModule.logAjaxBegin",
+                               OnComplete = "OmegaTargetedMarketingPromotionFiltersModule.showDetailModal",
+                               OnFailure = "OmegaTargetedMarketingPromotionFiltersModule.showFailure"
+                           })
+                            </div>
+                        </div>
+
+                    }
+
+                    <hr/>
+
+                    <div class="row list-row-buttons">
+                        <div class="col-md-12 text-right">
+                            @Ajax.ActionLink("Add New Account Group", "ManageAccountGroup", new { id = 0, mode = "create" }, new AjaxOptions
+                       {
+                           UpdateTargetId = "partial-view-modal-content",
+                           InsertionMode = InsertionMode.Replace,
+                           HttpMethod = "GET",
+                           OnBegin = "OmegaTargetedMarketingPromotionFiltersModule.logAjaxBegin",
+                           OnComplete = "OmegaTargetedMarketingPromotionFiltersModule.showDetailModal",
+                           OnFailure = "OmegaTargetedMarketingPromotionFiltersModule.showFailure"
+                       }, new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div><!-- end group-panel-body -->
+
+            }
+
+            <div>
+                @Html.ActionLink("Back to Promotion List", "Index", "TargetedMarketing", null, new {  @class= "btn btn-default"})
+            </div>
+
+        </div><!-- end panel-body -->
+    </div><!-- end panel panel-default -->
+</div><!-- end main-content-container -->
+
+
+
+<div id="account-group-detail-modal" class="modal fade">
+    <div class="modal-dialog large">
+        <div id="partial-view-modal-content" class="modal-content">
+            <!-- content will be rendered here with a partialView from the AJAX call -->
+        </div>
+    </div><!-- End modal-dialog -->
+</div><!-- End targeted-marketing-detail-modal -->
+
+
+@section scripts {
+    <script src='@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery-ui-1.12.0.min.js")'></script>
+
+    <script>
+        $(document).ready(function() {
+
+        });
+
+        // Create a namespace for this page
+        var OmegaTargetedMarketingPromotionFiltersModule = OmegaTargetedMarketingPromotionFiltersModule || {};
+
+        OmegaTargetedMarketingPromotionFiltersModule = (function () {
+            // local vars:
+            var _inDelay = false;
+
+            // Ajax starting, getting a record detail
+            var _logAjaxBegin = function() {
+                console.log("We are logging this click from ajax. - Action Begun");
+                _inDelay = setTimeout(_showSpinner, 1000); // using setTimeout because jQuery delay only works on animate
+                $("#divFailure").hide();
+            }
+
+            // show the spinner in a div to let the user know that the record is loading
+            var _showSpinner = function() {
+                $('#divLoading').show("normal");
+            }
+
+            // Ajax complete, show the modal
+            var _showDetailModal = function() {
+                console.log("We are logging this click from ajax. - Action Complete");
+                clearTimeout(_inDelay);
+                $("#divLoading").hide("normal");
+                $("#divFailure").hide();
+                $("#account-group-detail-modal").modal();
+
+            }
+
+            // Ajax failure, show the warning
+            var _showFailure = function() {
+                console.log("We are logging this click from ajax. - Action Failed");
+                if (_inDelay == true) {
+                    _inDelay = null;
+                }
+                $("#divLoading").hide();
+                $("#account-group-detail-modal").hide();
+                $("#divFailure").show("normal");
+
+            }
+
+            // Public interface
+            return {
+                logAjaxBegin: _logAjaxBegin,
+                showDetailModal:  _showDetailModal,
+                showFailure:   _showFailure
+            }
+
+        })();
+    </script>
+
+}

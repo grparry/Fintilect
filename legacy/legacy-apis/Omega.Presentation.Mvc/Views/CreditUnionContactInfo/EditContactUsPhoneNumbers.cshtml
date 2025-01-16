@@ -1,0 +1,21 @@
+﻿@using Omega.Presentation.Mvc.Models.CreditUnionContactInfo
+@model AddUpdateContactUsPhoneNumberModel
+
+@{
+    ViewBag.ActiveMenu = "";
+    ViewBag.BaseModel = Model;
+}
+
+<div class="panel-body">
+    @using (Html.BeginForm("UpdateContactUsPhoneNumber", "CreditUnionContactInfo", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "editPhoneNumberForm" }))
+    {
+        @Html.EditorFor(m => m.ContactUsPhoneNumber)
+
+        if (Model.ContactUsPhoneNumber.Id > 0)
+        {
+            @Html.ActionLink("Delete Phone Number", "DeleteContactUsPhoneNumber", new { numberId = Model.ContactUsPhoneNumber.Id }, new { @class = "btn btn-default pull-right" })
+            <span class="pull-right">&nbsp;&nbsp;</span>
+        }
+        <button class="btn btn-default pull-right" onclick="$('#editPhoneNumberForm').submit()">Save</button>
+    }
+</div>

@@ -1,0 +1,26 @@
+﻿@model Omega.Presentation.Mvc.Models.Forms.FormsDesignerViewModel
+
+@{
+    ViewBag.Title = "Secure Forms Designer";
+    ViewBag.ActiveMenu = "secure-forms-designer";
+}
+
+<hr />
+
+<div>
+    <h4>Use this tool to design your own custom forms</h4>
+</div>
+
+<hr style="border-bottom:1px solid rgba(255,255,255,0.2);" />
+
+@if (!String.IsNullOrEmpty(Model.iFrameUrl))
+{
+    <div>
+        <iframe src="@Model.iFrameUrl" style="border:none; min-width:100%; min-height:840px"></iframe>
+    </div>
+}
+else
+{
+    <div>No URL Found.</div>
+}
+

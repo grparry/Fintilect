@@ -1,0 +1,259 @@
+{
+  "WidgetModel": {
+    "type": "object",
+    "description": "Configuration model for dashboard widgets",
+    "required": ["widgetConfiguration", "dashboardLayout"],
+    "properties": {
+      "widgetConfiguration": {
+        "type": "object",
+        "description": "Core widget configuration settings",
+        "required": ["availableWidgets", "nonHideableWidgets"],
+        "properties": {
+          "availableWidgets": {
+            "type": "object",
+            "description": "Configuration for all available widgets",
+            "properties": {
+              "accountSummary": {
+                "type": "object",
+                "description": "Account summary widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "expandedHeight": {
+                    "type": "string",
+                    "description": "Height in rem when expanded",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$"
+                  },
+                  "headerLinks": {
+                    "type": "object",
+                    "properties": {
+                      "newAccount": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "creditCardApply": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "loanApply": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "linkAccount": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    }
+                  }
+                }
+              },
+              "scheduledTransfers": {
+                "type": "object",
+                "description": "Scheduled transfers widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "expandedHeight": {
+                    "type": "string",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$"
+                  }
+                }
+              },
+              "savedTransfers": {
+                "type": "object",
+                "description": "Saved transfers widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              },
+              "cardlytics": {
+                "type": "object",
+                "description": "Cardlytics widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "expandedHeight": {
+                    "type": "string",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$"
+                  },
+                  "showOnWelcomeSummary": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              },
+              "savvyMoney": {
+                "type": "object",
+                "description": "Savvy Money widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              },
+              "moneyDesktop": {
+                "type": "object",
+                "description": "Money Desktop widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              },
+              "cunexus": {
+                "type": "object",
+                "description": "Cunexus widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              },
+              "billPay": {
+                "type": "object",
+                "description": "Bill Pay widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          },
+          "nonHideableWidgets": {
+            "type": "array",
+            "description": "List of widget IDs that cannot be hidden by users",
+            "items": {
+              "type": "string",
+              "enum": [
+                "account-summary",
+                "scheduled-transfers",
+                "saved-transfers",
+                "cardlytics",
+                "savvy-money",
+                "money-desktop",
+                "cunexus",
+                "bill-pay"
+              ]
+            }
+          }
+        }
+      },
+      "dashboardLayout": {
+        "type": "object",
+        "description": "Dashboard layout configuration",
+        "required": ["initialSortOrder", "layoutRules"],
+        "properties": {
+          "initialSortOrder": {
+            "type": "object",
+            "description": "Initial sort order for dashboard widgets",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "layoutRules": {
+            "type": "object",
+            "description": "Rules for widget layout",
+            "properties": {
+              "columns": {
+                "type": "object",
+                "properties": {
+                  "desktop": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 3
+                  },
+                  "tablet": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 2
+                  },
+                  "mobile": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 1
+                  }
+                }
+              },
+              "spacing": {
+                "type": "object",
+                "properties": {
+                  "between": {
+                    "type": "string",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$",
+                    "default": "1rem"
+                  },
+                  "margin": {
+                    "type": "string",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$",
+                    "default": "1rem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "widgetBehavior": {
+        "type": "object",
+        "description": "General widget behavior settings",
+        "properties": {
+          "animations": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": true
+              },
+              "duration": {
+                "type": "string",
+                "pattern": "^[0-9]+(\\.[0-9]+)?s$",
+                "default": "0.3s"
+              }
+            }
+          },
+          "persistence": {
+            "type": "object",
+            "properties": {
+              "saveLayout": {
+                "type": "boolean",
+                "default": true
+              },
+              "saveCollapsedState": {
+                "type": "boolean",
+                "default": true
+              }
+            }
+          },
+          "accessibility": {
+            "type": "object",
+            "properties": {
+              "keyboardNavigation": {
+                "type": "boolean",
+                "default": true
+              },
+              "screenReaderSupport": {
+                "type": "boolean",
+                "default": true
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

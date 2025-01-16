@@ -1,0 +1,71 @@
+﻿@model Psi.Data.Models.Domain.Keys.KeyModel
+
+<div class="modal fade">
+    <!-- Modal Layout -->
+    <div class="modal-dialog modal-lg">
+        <div id="partial-view-modal-content" class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                <h4 class="modal-title">
+                    Add Key
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="key-options">
+                    <div class="form-group Key-form-group">
+                        @Html.Label("Key Name")
+                        @Html.TextBox("KeyName", "", new { id="key-name", @class = "form-control" })
+                    </div>
+                </div>
+
+
+                <div class="key-results" style="display: none;">
+                    <div class="alert alert-success" style="color: #3c763d;">
+                        <div>
+                            <b id="key-status">Key Added Successfully</b>
+                        </div>
+
+                    </div>
+                </div>
+            </div><!-- End modal-body -->
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default key-cancel" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary key-button" onclick="submitKey()">
+                    <span class='key-submitting' style="display: none;">
+                        <i class='fa fa-spin fa-spinner'></i>
+                        Adding Key
+                    </span>
+                    <span class="key-not-submitting">
+                        Add Key
+                    </span>
+                </button>
+            </div>
+
+            <script>
+                function submitKey() {
+                    $(".key-submitting").show();
+                    $(".key-not-submitting").hide();
+
+                    var keyName = $('#key-name').val();
+                    var callback = function (data, status) {
+                        if (status === 'success') {
+                            $('#key-status').text('Key Added Successfully');
+                            $('.key-button').hide();
+                            $('.key-cancel').text('Close');
+                        } else {
+                            Util.ShowErrorInInnerHtml('#key-status', status);
+                        }
+                        $('.key-results').show();
+                    };
+
+                    $.post('@Url.Action("AddKey")', { keyName }, callback).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+                }
+            </script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

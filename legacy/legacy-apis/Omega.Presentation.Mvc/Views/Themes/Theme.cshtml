@@ -1,0 +1,247 @@
+﻿@using Omega.Presentation.Mvc.Views.Themes
+@using Psi.Data.Models.Domain.Themes
+@model ThemeModel
+
+@{
+    ViewBag.Title = Model.Title;
+    ViewBag.Subtitle = $"{Model.ProductTitle} Theme";
+    ViewBag.ActiveMenu = Model.Product == ThemeProduct.ConnectNative ? "connect-native-themes" : "flex-ui-themes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.CodeMirror = true;
+}
+
+<div class="row" style="font-size: 125%;">
+    <div class="col-md-1 text-right" style="font-weight: bold;">Guid</div>
+    <div class="col-md-11">
+        <span class="extra-info" id="guidDisplay">
+            @Model.PublicId
+        </span>
+        &nbsp;
+        <a id="copyGuid" href="#"><i class="fa fa-copy"></i></a>
+    </div>
+@*    TODO: Make the child and parent links prettier.*@
+    @if (Model.ChildThemeIds?.Any() == true)
+    {
+        <div class="col-md-11">
+            <span class="extra-info" id="childThemes">
+                Child Themes:<br/> 
+                @foreach (var childThemeId in Model.ChildThemeIds)
+                {
+                    <a href="@childThemeId.ToString()">@childThemeId.ToString()</a><br/>
+                }
+            </span>
+        </div>
+    }
+    
+    @if (Model.ParentThemePublicId.HasValue)
+    {
+        <div class="col-md-11">
+            <span class="extra-info" id="parentTheme">
+                Parent Themes: 
+                <a href="@Model.ParentThemePublicId.ToString()">@(Model.ParentThemePublicId.ToString())</a>
+            </span>
+        </div>
+    }
+    
+</div>
+<br />
+
+<div class="row">
+    <div class="panel panel-default col-lg-8 col-md-12">
+        <div class="panel-body">
+
+	        <div>
+		        <a modal-href="@Url.Action("EditFileModal", new {id = Guid.Empty, themePublicId = Model.PublicId})" class="btn btn-default"><i class="fa fa-plus"></i>&nbsp; New File</a>
+		        <a modal-href="@Url.Action("UploadFileModal", new {themePublicId = Model.PublicId})" class="btn btn-default"><i class="fa fa-upload"></i>&nbsp; Upload</a>
+		        <a href="@Url.Action("DownloadTheme", "ThemeDownload", new {publicId = Model.PublicId})" class="btn btn-default"><i class="fa fa-download"></i>&nbsp; Download</a>
+				<a modal-href="@Url.Action("PublishThemeModal", new {id = Model.PublicId})" href="#" class="btn btn-default"><i class="fa fa-share"></i>&nbsp; Publish</a>
+	        </div>
+
+	        <table id="fileListing" class="table">
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th></th>
+@*                        <th class="text-right">Size</th>*@
+@*                        <th class="text-center">Created</th>*@
+@*                        <th class="text-center">Modified</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{ string lastPath = null; }
+
+                    @foreach (var file in Model.AllFiles())
+                    {
+                        if (file.Path != lastPath && !string.IsNullOrEmpty(file.Path))
+                        {
+                            lastPath = file.Path;
+
+                            <tr>
+                                <td colspan="100">
+                                    <i class="fa fa-folder"></i>
+                                    @file.Path
+                                </td>
+                            </tr>
+						}
+	                    var isParentThemeFile = file.ThemePublicId != Model.PublicId;
+						var editAction = isParentThemeFile ? ThemeInstanceFileParentAction.Replace : (ThemeInstanceFileParentAction?)null;
+                        <tr data-file-id="@file.PublicId" style="background-color: rgba(51, 51, 51, 0.3);" class="@(!file.ThemeFileParentAction.HasValue && file.ThemePublicId != Model.PublicId ? "parent-file" : string.Empty) @ThemeFileParentActionToString(file.ThemeFileParentAction).ToLower()">
+	                        <td class="filename-cell">
+		                        
+								@{  var defaultActionHref = Url.Action("EditFileModal", new
+                                    {
+                                        id = file.PublicId,
+                                        filename = file.FileName,
+                                        themePublicId = Model.PublicId,
+                                        fileEditAction = editAction
+                                    });
+
+                                    if (file.FileType == FileType.Json)
+                                    {
+                                        defaultActionHref = Url.Action("EditFileModal", new
+                                        {
+                                            id = file.PublicId, 
+                                            filename = file.FileName, 
+                                            themePublicId = Model.PublicId, 
+                                            fileEditAction = ThemeInstanceFileParentAction.Modify
+                                        });
+                                    }
+                                    else if (file.FileType == FileType.Image)
+                                    {
+                                        defaultActionHref = Url.Action("ViewFileModal", new
+                                        {
+                                            id = file.PublicId,
+                                            filename = file.FileName,
+                                            themePublicId = Model.PublicId
+                                        });
+                                    }
+								}
+
+		                        <a style="padding-left: @(file.Path.IsNullOrEmpty() ? 0 : 30)px;" modal-href="@defaultActionHref">
+			                        @file.FileNameOnly
+		                        </a>
+		                        @if (file.ThemeFileParentAction.HasValue)
+		                        {
+			                        <span class="extra-info">&nbsp;&nbsp; [ @ThemeFileParentActionToString(file.ThemeFileParentAction) ]</span>
+		                        }
+	                        </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-default btn-xs dropdown-toggle" style="transform: scale(1.5); background-color: rgba(100, 100, 100, 0.4);" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <span class="caret"></span>
+                                    </button>
+	                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+		                                <li><a modal-href="@Url.Action("ViewFileModal", new {id = file.PublicId, filename = file.FileName, themePublicId = Model.PublicId })" href="#">View</a></li>
+
+		                                @if (isParentThemeFile && file.FileType == FileType.Json)
+		                                {
+			                                <li><a style="font-weight: bold;" modal-href="@Url.Action("EditFileModal", new {id = file.PublicId, filename = file.FileName, themePublicId = Model.PublicId, fileEditAction = ThemeInstanceFileParentAction.Modify})" href="#">Modify</a></li>
+		                                }
+										
+										@if (file.FileType != FileType.Image)
+										{
+											<li>
+												<a modal-href="@Url.Action("EditFileModal", new {id = file.PublicId, filename = file.FileName, themePublicId = Model.PublicId, fileEditAction = editAction})" href="#">
+													@if (isParentThemeFile)
+													{
+														<span>Replace</span>
+													}
+													else if (file.ThemeFileParentAction == ThemeInstanceFileParentAction.Modify)
+													{
+														<span>Edit Modifications</span>
+													}
+													else
+													{
+														<span>Edit</span>
+													}
+												</a>
+											</li>
+										}
+
+		                                @if (isParentThemeFile && file.FileType != FileType.Json && file.FileType != FileType.Image)
+		                                {
+			                                <li><a modal-href="@Url.Action("EditFileModal", new {id = file.PublicId, filename = file.FileName, themePublicId = Model.PublicId, fileEditAction = ThemeInstanceFileParentAction.Prepend})" href="#">Prepend</a></li>
+			                                <li><a modal-href="@Url.Action("EditFileModal", new {id = file.PublicId, filename = file.FileName, themePublicId = Model.PublicId, fileEditAction = ThemeInstanceFileParentAction.Append})" href="#">Append</a></li>
+		                                }
+		                                <li role="separator" class="divider"></li>
+		                                <li><a modal-href="@Url.Action("DeleteFileModal", new {fileId = file.PublicId, filename = file.FileName, themeIdBeingEdited = Model.PublicId, fileEditAction = isParentThemeFile ? ThemeInstanceFileParentAction.Delete : (ThemeInstanceFileParentAction?) null})" class="text-danger action-delete-file" style="color: #f25118;">@file.DeleteFileVerb()</a></li>
+
+
+	                                </ul>
+
+								</div>
+
+							</td>
+							
+@*							<td class="text-right">*@
+@*                                @file.FileSizeString*@
+@*							</td>*@
+@*                            <td class="text-center">@file.CreatedDate.ToShortDateString()</td>*@
+@*                            <td class="text-center">@file.ModifiedDate.ToShortDateString()</td>*@
+                        </tr>
+                    }
+
+
+					@if (Model == null || Model.AllFiles().Count == 0)
+											{
+
+						<tr>
+
+							<td class="text-center extra-info" colspan="500">
+                                No files exist yet.
+
+							</td>
+                        </tr>
+
+					}
+
+                </tbody>
+            </table>
+
+            <div style="display: flex; align-items: baseline; justify-content: space-between;">
+
+	            <div></div>
+	            <div>
+                    Total Files: @Model.AllFiles().Count
+				</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@functions
+{
+
+	public static string ThemeFileParentActionToString(ThemeInstanceFileParentAction? parentAction)
+	{
+		switch (parentAction)
+		{
+			case ThemeInstanceFileParentAction.Replace:
+			case ThemeInstanceFileParentAction.Append:
+			case ThemeInstanceFileParentAction.Prepend:
+			case ThemeInstanceFileParentAction.Delete:
+			case ThemeInstanceFileParentAction.Modify:
+				return parentAction.ToString();
+			default:
+				return string.Empty;
+		}
+	}
+
+}
+
+@section scripts {
+    @* Use the line below to get Ajax form javascript to work (OnBegin, etc) *@
+    <script src='@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")'></script>
+    <script>
+		$(function() {
+			$("#copyGuid").on('click',
+				function() {
+					OmegaUtilies.copyToClipboard("@Model.PublicId");
+					toastr.success("Guid copied to clipboard!");
+				});
+		})
+    </script>
+}

@@ -1,0 +1,497 @@
+﻿@model  Omega.Presentation.Mvc.Views.Themes.ThemeFileViewModel
+
+<div class="modal full-screen destroy-when-closed edit-file-modal" data-keyboard="false">
+    <!-- Modal Layout -->
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+	        <!--
+	        <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+		        <h4 class="modal-title">
+			        @(Model.FileName ?? "Create New File")
+		        </h4>
+	        </div>
+	        -->
+
+            @using (Ajax.BeginForm("ThemeFile", null, null, new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnBegin = "newThemeModalFileBeginSubmit",
+                OnFailure = "PsiModal.FormSubmitFailed",
+                OnSuccess = "newThemeModalFileSubmitted"
+            }, new { @id="editFileModalForm" }))
+            {
+                <div class="modal-body" style="padding:0;">
+
+                    <div class="form-group Filename-form-group" style="margin: 0;">
+                        @Html.TextBoxFor(x => x.FileName, new { @class = "form-control", placeholder = "Filename" })
+                    </div>
+
+                    @Html.HiddenFor(x => x.ThemePublicId)
+                    @Html.HiddenFor(x => x.PublicId)
+                    @Html.HiddenFor(x => x.ThemeFileParentAction)
+                    @Html.HiddenFor(x => x.FileType)
+			
+					@if (!string.IsNullOrWhiteSpace(Model.ParentContentString))
+					{
+						<div class="code-container code-container-top">
+							<div id="mergeView" style="height: 100%;"></div>
+						</div>
+
+						<div style="display: none;">
+							<div id="existingFileContents" class="code-outer-container">
+								<div class="code-description">Original Template</div>
+								<div class="code-container code-container-bottom">
+									@Html.TextAreaFor(x => x.ParentContentString)
+								</div>
+							</div>
+						</div>
+					}
+                    
+					
+                    <div class="code-outer-container" id="editingArea">
+		                @if (!string.IsNullOrWhiteSpace(Model.ParentContentString))
+		                {
+			                <div style="margin-top: 12px; padding-left: 15px; font-family: monospace;">
+				                <span id="itemAtCursor"></span>
+				                &nbsp;
+				                <span id="itemAtCursorOptions" style="display: none;">
+					                <a href="#" title="Copy this element location to clipboard" id="copyItemAtCursor"><i class="fa fa-copy"></i></a>
+					                <a href="#" title="Insert this element location at cursor location below" id="putItemAtCursor"><i class="fa fa-arrow-down"></i></a>
+				                </span>
+			                </div>
+			                <div class="merge-between-bar">
+				                <div class="merge-display-options">
+					                <a id="testModifications" class="btn btn-default btn-sm">Validate</a>
+					                &nbsp; &nbsp;
+					                <label>
+						                <input type="checkbox" id="showDifferences" checked/>
+						                Highlight Differences
+					                </label>
+					                &nbsp; &nbsp;
+					                @*								TODO: This isn't working for some reason.  Get to work if we can.*@
+					                @*								<label>*@
+					                @*									<input type="checkbox" id="showOnlyDifferences" />*@
+					                @*									Show only differences*@
+					                @*								</label>*@
+					                @*								&nbsp; &nbsp;*@
+					                <label>
+						                <input type="checkbox" id="alignDifferences" checked/>
+						                Align
+					                </label>
+				                </div>
+				                <div style="padding-top: 4px;">
+					                <span id="previewResultsPending">
+						                <i class="fa fa-clock-o"></i>
+					                </span>
+					                <span id="previewResultGood">
+						                <span id="previewResultGoodText">Looks good!</span>
+						                &nbsp;
+						                <i class="fa fa-check"></i>
+					                </span>
+					                <span id="previewResultBad">
+						                <span id="previewResultsBadText"></span>
+						                &nbsp;
+						                <i class="fa fa-exclamation-circle"></i>
+					                </span>
+				                </div>
+			                </div>
+			                <div class="code-description">Modifications</div>
+		                }
+		                <div class="code-container @(!string.IsNullOrWhiteSpace(Model.ParentContentString) ? "code-container-bottom" : "code-container-full")">
+			                @Html.TextAreaFor(x => x.ContentString, new {@class = "form-control", placeholder = "Enter contents here"})
+		                </div>
+	                </div>
+
+				</div><!-- End modal-body -->
+
+                <div style="display: none">
+                    @Html.TextAreaFor(x => x.OutputContentString)
+                </div>
+
+                <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 7px;">
+	                <div>
+		                <!--
+		                F11 = Toggle full-screen editing
+		                -->
+	                </div>
+                    <div>
+						<input type="button" class="btn btn-default" id="saveEditModal" value="Save" title="Ctrl-S" />
+	                    <input type="button" class="btn btn-default" id="saveAndCloseEditModal" value="Save and Close" title="Ctrl-Enter" />
+                        <button type="button" class="btn btn-default" id="closeEditModal" title="ESC">Close</button>
+                    </div>
+                </div>
+            }
+
+        <script>
+
+	        function newThemeModalFileBeginSubmit() {
+				// Want to cancel?
+                if (!$(".edit-file-modal").hasClass("preview-good") && window["codeMirrorMerge"]) {
+			        if (!confirm("Your code isn't 'green'.  Still want to save?"))
+				        return false;
+		        }
+
+				PsiModal.BeginFormSubmit();
+			}
+
+	        function newThemeModalFileSubmitted(newThemeFile) {
+		        // TODO: Update list via AJAX
+
+		        if (window["editModalCloseAfterSave"])
+			        location.reload();
+		        else {
+			        window["originalModificationContents"] = window["mainCodeMirrorEditor"].getValue();
+			        toastr.success("File successfully saved.");
+		        }
+	        }
+
+	        function ShowContentTemplateTest() {
+		        try {
+			        // Preserve current scroll position
+			        var oldScrollPosition = window["codeMirrorMerge"].right.orig.getScrollInfo();
+
+			        // Grab the object from the parent
+		            let fileType = $('input[name=FileType]').val();
+                
+		            if (fileType === 'Javascript') {
+		                // Grab the object from the parent
+		                eval('window["originalContentTemplateFunction"] = function() { var t = {}; ' +
+		                    window["parentCodeMirrorEditor"].getValue() +
+		                    ' return t; };');
+		            } else if (fileType === 'Json') {
+		                window["originalContentTemplateFunction"] = function() {
+                            return JSON.parse(window["parentCodeMirrorEditor"].getValue());
+		                }
+		            }
+			        var contentTemplateObject = window["originalContentTemplateFunction"]();
+			        var originalTemplateObject = JSON.stringify(contentTemplateObject);
+
+			        // Now run it through our modifications function
+			        eval('window["contentTemplateModificationFunction"] = function(t) { ' +
+				        window["mainCodeMirrorEditor"].getValue() +
+				        ' };');
+			        window["contentTemplateModificationFunction"](contentTemplateObject);
+
+			        window["codeMirrorMerge"].right.orig.setValue(JSON.stringify(contentTemplateObject, null, 2));
+			        window["codeMirrorMerge"].right.orig.scrollTo(oldScrollPosition.left, oldScrollPosition.top);
+
+			        var successMessage = "Looks good!";
+
+			        if (JSON.stringify(contentTemplateObject) === originalTemplateObject)
+				        successMessage = "Looks good!  <b>(Objects are identical though)</b>";
+
+			        $("#previewResultGoodText").html(successMessage);
+			        $(".edit-file-modal").removeClass("preview-bad").addClass("preview-good");
+		        } catch (e) {
+			        $(".edit-file-modal").removeClass("preview-good").addClass("preview-bad");
+
+			        var message = e;
+
+			        try {
+				        message = e.message;
+			        } catch (e) {
+				        ;
+			        }
+
+			        $("#previewResultsBadText").html(message);
+		        }
+	        }
+
+	        var showOnlyDifferences = false;
+	        var alignDifferences = true;
+
+	        function SetupMergeView() {
+		        if (!$("#mergeView").length > 0)
+			        return;
+
+		        $("#mergeView").empty();
+
+	            let fileType = $('input[name=FileType]').val();
+                
+                if (fileType === 'Javascript') {
+                    // Grab the object from the parent
+                    eval('window["originalContentTemplateFunction"] = function() { var t = {}; ' +
+                        $("textarea[name=ParentContentString]").val() +
+                        ' return t; };');
+                } else if (fileType === 'Json') {
+                    window["originalContentTemplateFunction"] = function() {
+                        return JSON.parse($("textarea[name=ParentContentString]").val());
+                    }
+                }
+
+		        window["codeMirrorMerge"] = CodeMirror.MergeView(document.getElementById("mergeView"),
+			        {
+				        orig: "",
+				        value: JSON.stringify(window["originalContentTemplateFunction"](), null, 2),
+				        lineNumbers: true,
+				        lint: true,
+				        readOnly: true,
+				        //mode: "text/html",
+				        highlightDifferences: true,
+				        connect: alignDifferences ? "align" : null,
+				        collapseIdentical: showOnlyDifferences ? 3 : false,
+			        });
+
+		        ShowContentTemplateTest();
+	        }
+
+	        var uniqueString = "&*(&*(#$#$%#$%#$%";
+	        var foundPath = "";
+
+			function GetCodePath(object, currentPath) {
+
+				if (typeof currentPath === 'undefined' || currentPath === null) {
+					foundPath = "";
+					currentPath = "";
+				}
+
+				for (var key in object) {
+					var additionToPath = "." + key;
+
+					// funny characters?  Let's be safe and enclose in brackets.
+					if (key.search(/[^a-zA-Z]+/) !== -1)
+						additionToPath = '["' + key + '"]';
+
+					if (typeof object[key] === 'string') {
+						if (object[key] == uniqueString) {
+							foundPath = currentPath + additionToPath;
+							return;
+						}
+					} else if (object[key] instanceof Array) {
+						for (var i = 0; i < object[key].length; i++) {
+							GetCodePath(object[key][i], currentPath + additionToPath + "[" + i + "]");
+						}
+					} else {
+						GetCodePath(object[key], currentPath + additionToPath);
+					}
+				}
+
+				return currentPath;
+			}
+
+			function detectObjectReferenceAtCursor() {
+				// Find the cursor position
+				var editor = window["codeMirrorMerge"].editor();
+				var doc = editor.getDoc();
+				var cursor = editor.getCursor();
+				var currentLine = doc.getLine(cursor.line).trim();
+				var toEval = doc.getRange({line: 0, ch: 0}, {line: cursor.line-1, ch:9999});
+
+				if (currentLine.indexOf('"') === 0 && currentLine.indexOf('":') > 0) {
+					toEval = "var q = " + toEval + currentLine.substr(0, currentLine.indexOf('":') + 2) + '"' + uniqueString + '"';
+					var elementName = currentLine.substr(currentLine.indexOf('"') + 1, currentLine.indexOf('":') - 1);
+
+					// We now have the original object up including the element on the current line (but we have replaced its value with a unique string for later).
+					// At this point, we have what we need and want to gracefully close the object.
+					var isValidObject = false;
+					var maxIterations = 100;		// prevent infinite looping
+
+					while (!isValidObject) {
+						maxIterations--;
+						if (maxIterations === 0)
+							return;
+
+						try {
+							eval(toEval);
+							isValidObject = true;
+						}
+						catch (e) {
+							var objectLength = toEval.length;
+
+							if (e.message.indexOf("Unexpected end of input") >= 0) {
+								// Looks like we need another } or ].  Which one?
+								try {
+									eval(toEval + "]");
+									toEval += "]";
+									isValidObject = true;
+								} catch (err) {
+									if (err.message.indexOf("Unexpected end of input") >= 0)
+										toEval += "]";
+									else if (err.message.indexOf("Unexpected token") >= 0)
+										toEval += "}";
+								}
+							}
+
+							// Maybe there is nothing left for us to do here.
+							if (objectLength === toEval.length && !isValidObject)
+								return;
+						}
+					}
+				}
+
+				GetCodePath(q, "t");
+			}
+
+			function showCurrentPathAtCursor() {
+				foundPath = "";
+
+				try {
+					detectObjectReferenceAtCursor();
+				} catch (e) {}
+
+				$("#itemAtCursor").html(foundPath === '' ? '&nbsp;' : foundPath);
+
+				if (foundPath === "")
+					$("#itemAtCursorOptions").hide();
+				else
+					$("#itemAtCursorOptions").show();
+			}
+
+	        $(function () {
+		        setTimeout(function () {
+				        var myCodeMirror = CodeMirror.fromTextArea($("textarea[name=ContentString]")[0],
+					        {
+						        lineNumbers: true,
+						        lint: true,
+						        gutters: ["CodeMirror-lint-markers"],
+						        autofocus: true,
+						        value: "blah",
+						        extraKeys: {
+							        /*
+                                    "F11": function (cm, e) {
+                                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                                    },
+                                    "Esc": function (cm, e) {
+                                        if (cm.getOption("fullScreen")) {
+                                            cm.setOption("fullScreen", false);
+                                        }
+                                    }
+							        */
+						        }
+					        });
+
+				        myCodeMirror.on('refresh', function () {
+					        if (myCodeMirror.options.fullScreen) {
+						        $('body').addClass('simplemde-fullscreen');
+					        } else {
+						        $('body').removeClass('simplemde-fullscreen');
+					        }
+				        });
+
+				        window["mainCodeMirrorEditor"] = myCodeMirror;
+
+
+				        var autoTestTimer = setTimeout(ShowContentTemplateTest, 1000);
+
+				        myCodeMirror.on('change',function(cMirror) {
+					        clearTimeout(autoTestTimer);
+					        $(".edit-file-modal").removeClass("preview-good").removeClass("preview-bad");
+					        autoTestTimer = setTimeout(ShowContentTemplateTest, 1000);
+				        });
+
+				        if ($("textarea[name=ParentContentString]").length)
+					        window["parentCodeMirrorEditor"] = CodeMirror.fromTextArea($("textarea[name=ParentContentString]")[0], {
+						        lineNumbers: true,
+						        lint: true,
+						        gutters: ["CodeMirror-lint-markers"],
+						        readOnly: true,
+					        });
+
+				        if ($("textarea[name=preview]").length)
+					        window["previewCodeMirrorEditor"] = CodeMirror.fromTextArea($("textarea[name=preview]")[0], {
+						        lineNumbers: true,
+						        gutters: ["CodeMirror-lint-markers"],
+						        readOnly: true,
+					        });
+
+				        SetupMergeView();
+
+				        $("#testModifications").on('click', function() { alert('TODO: Enhanced validation coming soon...'); });
+				        $("#putItemAtCursor").on('click', function() { mainCodeMirrorEditor.getDoc().replaceSelection($("#itemAtCursor").html()) });
+				        $("#copyItemAtCursor").on('click', function() {
+							OmegaUtilies.copyToClipboard($("#itemAtCursor").html());
+							toastr.success("Element address copied to clipboard!");
+						});
+
+				        window["originalModificationContents"] = window["mainCodeMirrorEditor"].getValue();
+
+				        window["codeMirrorMerge"].editor().on("cursorActivity", showCurrentPathAtCursor);
+			        },
+			        200);
+
+		        $("#showDifferences").on('click', function() {
+			        window["codeMirrorMerge"].setShowDifferences($("#showDifferences:checked").length > 0);
+		        });
+
+		        $("#showOnlyDifferences").on('click', function() {
+			        showOnlyDifferences = $("#showOnlyDifferences:checked").length > 0;
+			        SetupMergeView();
+		        });
+
+		        $("#alignDifferences").on('click', function() {
+			        alignDifferences = $("#alignDifferences:checked").length > 0;
+			        SetupMergeView();
+		        });
+
+		        $("#closeEditModal").on('click', function() {
+			        if (window["originalModificationContents"] !== window["mainCodeMirrorEditor"].getValue())
+				        if (!confirm("You haven't saved your latest changes.  Close anyway?"))
+					        return;
+
+			        PsiModal.HideTopmost();
+		        });
+
+		        $("#saveEditModal").on('click', function() {
+			        window["editModalCloseAfterSave"] = false;
+			        $("textarea[name=ContentString]").val(window["mainCodeMirrorEditor"].getValue());
+                    $("textarea[name=OutputContentString]").val(window["codeMirrorMerge"].right.orig.getValue());
+			        $("#editFileModalForm").submit();
+		        });
+
+		        $("#saveAndCloseEditModal").on('click', function() {
+			        window["editModalCloseAfterSave"] = true;
+			        $("textarea[name=ContentString]").val(window["mainCodeMirrorEditor"].getValue());
+                    if (window["codeMirrorMerge"]) {
+                        $("textarea[name=OutputContentString]").val(window["codeMirrorMerge"].right.orig.getValue());
+                    }
+			        $("#editFileModalForm").submit();
+		        });
+
+				// Need to unbind first because this is set each time the modal appears.  Will probably refactor the editor out of the modal soon anyway.
+		        $(window).unbind('keydown');
+		        $(window).bind('keydown', function(event) {
+
+			        if (event.ctrlKey || event.metaKey) {
+
+				        if (event.keyCode === 13)
+					        $("#saveAndCloseEditModal").click();
+				        else {
+					        switch (String.fromCharCode(event.which).toLowerCase()) {
+					        case 's':
+						        event.preventDefault();
+						        $("#saveEditModal").click();
+						        break;
+					        }
+				        }
+			        } else {
+				        if (event.keyCode === 27) // ESC
+					        $("#closeEditModal").click();
+			        }
+
+		        });
+
+	        });
+
+            function changeAllComponentsOfType(node, type, action) {
+                if (!node || typeof node !== 'object') {
+                    return;
+                }
+                if (Array.isArray(node)) {
+                    node.forEach(item => changeAllComponentsOfType(item, type, action));
+                    return;
+                }
+
+                if (node.type === type) {
+                    action(node);
+                }
+                for (const value of Object.values(node)) {
+                    changeAllComponentsOfType(value, type, action);
+                }
+            }
+        </script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

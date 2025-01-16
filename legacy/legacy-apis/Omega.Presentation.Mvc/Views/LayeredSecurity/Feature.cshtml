@@ -1,0 +1,44 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.LayeredSecurity
+@model LayeredSecurityFeaturesViewModel
+
+@{
+    ViewBag.Title = "Layered Security - " + Model.Feature.Name;
+    ViewBag.BaseModel = Model;
+}
+
+<div class="panel-heading-psi">
+    <strong>@Model.Feature.Name</strong> Actions
+    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+    {
+        <div class="pull-right">
+            <button class="btn btn-default btn-xs" onclick="layeredSecurity.AddAction(this, '@Model.Feature.ApplicationId',
+                                        '@Model.Feature.FeatureId')">
+                New &nbsp;<span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+    }
+</div>
+
+<div class="panel-body">
+    <p>@Model.Feature.Description</p>
+    <h4>Feature Actions</h4>
+    @if (!Model.FeatureActions.Any())
+    {
+        <div class="alert alert-info"><strong>There are no actions for this feature yet.</strong></div>
+    }
+    @foreach (var featureAction in Model.FeatureActions)
+    {
+        <div>
+            @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+            {
+                <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit Feature"  onclick="layeredSecurity.UpdateAction(this, '@Model.Feature.ApplicationId', '@Model.Feature.FeatureId',
+                '@featureAction.ActionId', '@featureAction.Name', '@featureAction.Description', '@featureAction.MinimumApplicationVersion', '@featureAction.PublicId',
+                '@featureAction.StrongAuthenticationWeight', '@featureAction.IsLoginAction.ToString()')"><span class="glyphicon glyphicon-cog"></span></span>
+            }
+            <div class="btn btn-submit" onclick="layeredSecurity.showAction(this, '@Model.Feature.FeatureId', '@Model.Feature.ApplicationId', '@Model.Feature.Name',
+                '@Model.Feature.Description', '@Model.Feature.FeatureKey','@featureAction.ActionId', '@featureAction.Name', '@featureAction.Description',
+                '@featureAction.MinimumApplicationVersion', '@featureAction.PublicId', '@featureAction.StrongAuthenticationWeight')">@featureAction.Name - @featureAction.Description.First(100)</div>
+        </div>
+    }
+</div>

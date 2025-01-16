@@ -1,0 +1,134 @@
+﻿@using System.Web.Mvc.Html
+@using Omega.Presentation.Mvc.Models.AuditLogExport
+@model AuditLogExportViewModel
+
+@{
+    ViewBag.Title = "Audit Log Export";
+    ViewBag.Subtitle = "This feature allows you to manually create audit log export files for a selected date range";
+    ViewBag.ActiveMenu = "audit-log-export";
+    ViewBag.BaseModel = Model;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+ 
+<div style="padding: 20px; position:relative;">
+    <h5 style="margin-bottom: 8px;">
+        Please enter start and ending dates and click the button below to generate an Audit-Log report:
+    </h5>
+
+    <hr style="opacity: 0.3" />
+
+    <div id="ValidationDiv" class="alert alert-warning" style="display: none;">
+        <!-- text is dynamically populated in js below -->
+    </div>
+
+    @using (Html.BeginForm("GenerateAuditLogExportFile", "AuditLogExport", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "generateAuditLogExportFile" }))
+    {
+        <div style="margin-bottom: 8px;">
+            Start Date:
+        </div>
+
+        <div style="position:relative;">
+            @Html.TextBoxFor(x => x.StartDate, new { @class = "form-control form-control-inline", id = "StartDateTextbox", style = "width: 180px; margin-bottom: 15px;", autocomplete = "off" })
+        </div>
+
+        <div style="margin-bottom: 8px;">
+            Ending Date:
+        </div>
+
+        <div style="position:relative;">
+            @Html.TextBoxFor(x => x.EndDate, new { @class = "form-control form-control-inline", id = "EndDateTextbox", style = "width: 180px; margin-bottom: 24px;", autocomplete = "off" })
+        </div>
+
+        <div>
+            <input type="submit" class="btn btn-default" value="Generate Export File" name="submitButton" id="submitButton" />
+        </div>
+    }
+
+    <hr style="opacity: 0.3" />
+
+    @if (Model.Success == true)
+    {
+        <div id="ResultDiv" style="padding:10px 14px; border:1px solid #00b318; border-radius:5px; color:#000000; background-color: #ccffd3; font-size:105%;">
+            Success!
+        </div>
+    }
+    else if (Model.Success == false)
+    {
+        <div id="ResultDiv" style="padding:10px 14px; border:1px solid #ff0000; border-radius:5px; color:#000000; background-color: #ffcccc; font-size:105%;">
+            Your export failed to generate. Please try again later.
+        </div>
+    }
+
+    <div style="height:100px;"></div>
+</div>
+
+<script>
+    // generic event handlers:
+    $("#submitButton").click(function (e) {
+        e.preventDefault();
+        AuditLogExportModule.validateAndSubmitForm();
+    });
+
+
+    // namespace object for this view:
+    var AuditLogExportModule = AuditLogExportModule || {};
+
+    AuditLogExportModule = (function () {
+        // local vars
+        var startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - 1);
+        var endDate = new Date();
+        
+        // check model if it has any dates and use them instead:
+        var modelStartDate = new Date("@Model.StartDate");
+        var modelEndDate = new Date("@Model.EndDate");
+
+        if (modelStartDate > new Date("1/1/0001")) {
+            startDate = modelStartDate;
+        }
+
+        if (modelEndDate > new Date("1/1/0001")) {
+            endDate = modelEndDate;
+        }
+
+        var dateTimePickerOptions = {            
+            maxDate: 'now',
+            showClose: true,
+        };
+
+        $("#StartDateTextbox").datetimepicker(dateTimePickerOptions).data("DateTimePicker").date(startDate);
+        $("#EndDateTextbox").datetimepicker(dateTimePickerOptions).data("DateTimePicker").date(endDate);
+        
+        var _validateAndSubmitForm = function () {
+            var startDate = new Date(document.getElementById("StartDateTextbox").value);
+            var endDate = new Date(document.getElementById("EndDateTextbox").value);
+            var isValid = true;
+
+            $("#ValidationDiv").empty();
+            $("#ValidationDiv").html("Please correct the following errors:");
+
+            // validate date choices:
+            if (startDate >= endDate) {
+                $("#ValidationDiv").append("<br>&nbsp;&nbsp;&nbsp;&bull; Start date must be before End date.");
+                isValid = false;
+            };
+
+            if (isValid == false) {
+                $("#ValidationDiv").slideDown();
+                return;
+            }
+
+            // all is well: submit the form:
+            $("#ValidationDiv").empty();
+            $("#ValidationDiv").slideUp("fast");
+
+            document.forms[0].submit();
+        };
+
+        // public interface:
+        return {
+            validateAndSubmitForm: _validateAndSubmitForm
+        }
+    }());
+</script>

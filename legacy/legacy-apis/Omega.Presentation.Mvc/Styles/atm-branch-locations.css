@@ -1,0 +1,31 @@
+﻿/* atm & branch locations styles */
+
+.color-container {
+    width: 100%;
+}
+
+.table-bordered.locations {
+    background-color:rgba(255,255,255,0.02);
+}
+
+.error-red {
+    color: RGBA(204,46,54,0.99);
+}
+
+.trash-icon {
+    display: inline;
+    margin-right: 16px;
+    font-size: 16px;
+}
+
+.control-label {
+    position:relative;
+    top:5px;
+    font-weight:500;
+}
+
+.form-group {
+    display: block;
+    clear: both;
+    height: 24px;
+}

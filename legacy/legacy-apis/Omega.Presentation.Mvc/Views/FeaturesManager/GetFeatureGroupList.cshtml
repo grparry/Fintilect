@@ -1,0 +1,12 @@
+﻿@model Omega.Presentation.Mvc.Models.FeaturesManager.FeatureGroupsModel
+<div id="allFeatureGroups">
+    @{
+        var featureGroups = Model.FeatureGroups.OrderBy(f => f.Name).ToList();
+        foreach (var featureGroup in featureGroups)
+        {
+            <div search-row-sets class="search-list-button" feature-group-id="@featureGroup.Id" feature-group-name="@featureGroup.Name" onclick="FeaturesManager.LoadFeatureGroup(this);">
+                @featureGroup.Name
+            </div>
+        }
+    }
+</div>    

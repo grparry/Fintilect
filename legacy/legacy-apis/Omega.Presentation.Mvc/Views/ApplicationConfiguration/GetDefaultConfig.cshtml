@@ -1,0 +1,258 @@
+﻿@model Omega.Presentation.Mvc.Models.ApplicationConfiguration.ApplicationDefaultConfigurationModel
+@using Omega.Presentation.Mvc.Business
+@using Psi.Data.Models.Domain.ApplicationConfigurationSettings
+<div class="modal fade destroy-when-closed" role="dialog">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Edit Application Configuration</h3>
+        </div>
+        <div class="modal-body">
+            <!-- Modal Layout -->
+
+
+            @if (Model.WasUpdated)
+            {
+                <div class="alert alert-info">
+                    Updated at @DateTime.UtcNow
+                </div>
+            }
+
+            <form id="manageDefaultConfigForm">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Key</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="Key" value="@Model.Key"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Application Version</label>
+                        <div class="col-sm-4">
+                            <select type="text" class="form-control" name="Version">
+                                @if (!string.IsNullOrEmpty(Model.Version))
+                                {
+                                    if (Util.UsersApplicationSettings.ApplicationVersions.Any())
+                                    {
+                                        foreach (var version in Util.UsersApplicationSettings.ApplicationVersions)
+                                        {
+                                            <option @Html.Raw(version == Model.Version ? "selected='selected'" : string.Empty)>@version</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option selected="selected">@Model.Version</option>
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (var version in Util.UsersApplicationSettings.ApplicationVersions)
+                                    {
+                                        <option>@version</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Value Type</label>
+                        <div class="col-sm-4">
+                            <select type="text" class="form-control" name="ValueType">
+                                <option value="Boolean" @Html.Raw(Model.ValueType == "Boolean" ? "selected='selected'" : String.Empty)>Boolean</option>
+                                <option value="DateTime" @Html.Raw(Model.ValueType == "DateTime" ? "selected='selected'" : String.Empty)>DateTime</option>
+                                <option value="Double" @Html.Raw(Model.ValueType == "Double" ? "selected='selected'" : String.Empty)>Double</option>
+                                <option value="Int" @Html.Raw(Model.ValueType == "Int" ? "selected='selected'" : String.Empty)>Int</option>
+                                <option value="Object-Json" @Html.Raw(Model.ValueType == "Object-Json" ? "selected='selected'" : String.Empty)>Object JSON</option>
+                                <option value="Object-Xml" @Html.Raw(Model.ValueType == "Object-Xml" ? "selected='selected'" : String.Empty)>Object Xml</option>
+                                <option value="Set-List" @Html.Raw(Model.ValueType == "Set-List" ? "selected='selected'" : String.Empty)>Set List</option>
+                                <option value="String-Small" @Html.Raw(Model.ValueType == "String-Small" ? "selected='selected'" : String.Empty)>String (small)</option>
+                                <option value="String-Large" @Html.Raw(Model.ValueType == "String-Large" ? "selected='selected'" : String.Empty)>String (large)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Description</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" rows="4" name="Description">@Model.Description</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group" id="setSourceOfValuesRow">
+                        <label class="control-label col-sm-4">Source of Values</label>
+                        <div class="col-sm-8">
+                            @Html.DropDownList("SourceOfValues", EnumHelper.GetSelectList(typeof (SourceOfValues)), new {@class = "form-control"})
+                            or
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Enter Possible Values</label>
+                        <div class="col-sm-5">
+                            <textarea class="form-control" rows="4" name="PossibleValuesString" placeholder="Enter value on each line">@string.Join(Environment.NewLine, Model.PossibleValues ?? new List<string>())</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Default Value</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="DefaultValue" value="@Model.DefaultValue"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Value Is Null</label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" class="form-control" name="ValueIsNull" @Html.Raw(Model.DefaultValue == null && !string.IsNullOrEmpty(Model.Key) ? "checked='checked'" : string.Empty)/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Environment Specific</label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" class="form-control" name="IsEnvironmentSpecific" @Html.Raw(Model.IsEnvironmentSpecific && !string.IsNullOrEmpty(Model.Key) ? "checked='checked'" : string.Empty)/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Production Unique</label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" class="form-control" name="MustProductionValueBeUnique" @Html.Raw(Model.MustProductionValueBeUnique && !string.IsNullOrEmpty(Model.Key) ? "checked='checked'" : string.Empty)/>
+                            <br/>
+                            * If this is checked, configuration must be a JSON object with keys for each environment. The Production value must be provided, or the configuration will be invalid.
+                            If the current environment is not Production and the current configuration equals the production setting, then the configuration will be reported as invalid.
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Internal Only</label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" class="form-control" name="IsInternalOnly" @Html.Raw(Model.IsInternalOnly && !string.IsNullOrEmpty(Model.Key) ? "checked='checked'" : string.Empty)/>
+                        </div>
+                    </div>
+
+                    @if (Model.AvailableFeatures != null && Model.AvailableFeatures.Count > 0)
+                    {
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Feature</label>
+                            <div class="col-sm-8">
+                                <select type="text" class="form-control" name="FeatureId" id="FeatureSelect">
+                                    <option value="">-- Select --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="FeatureGroupDiv" class="form-group" style="display: none;">
+                            <label class="control-label col-sm-4">Feature Group</label>
+                            <div class="col-sm-8">
+                                <select type="text" class="form-control" name="FeatureGroupId" id="FeatureGroupSelect">
+                                    <option value="">-- Select --</option>
+                                </select>
+                            </div>
+                        </div>
+                    }
+
+
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-4">
+                            <button class="btn btn-primary" type="button" id="saveDefaultConfigSetting">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#saveDefaultConfigSetting").on("click", function(e) {
+
+            var data = $('#manageDefaultConfigForm').serializeObject();
+            if (data.ValueIsNull) data.ValueIsNull = 'True';
+            if (data.IsEnvironmentSpecific) data.IsEnvironmentSpecific = 'True';
+            if (data.MustProductionValueBeUnique) data.MustProductionValueBeUnique = 'True';
+            if (data.IsInternalOnly) data.IsInternalOnly = 'True';
+
+            $("#saveDefaultConfigSetting")
+                .html("Saving...")
+                .prop('disabled', true);
+
+            $.post('./ApplicationConfiguration/SaveDefaultConfig', data, function (data, status) {
+                Util.HideLoading();
+                if (status === 'success') {
+                    PsiModal.HideTopmost();
+                    toastr.success("@Model.Key successfully saved!");
+                } else {
+                    $("#saveConfigSetting")
+                        .html("Save")
+                        .prop('disabled', false);
+
+                    toastr.error("Problem saving.  Please try again.\r\n" + status);
+                }
+            }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+        });
+    });
+
+
+
+    $(document).ready(function() {
+        var availableFeaturesModel = @Html.Raw(Json.Encode(Model.AvailableFeatures)); // capture the features set in a javascript var
+
+        if (availableFeaturesModel != null) {
+            for (var i = 0; i < availableFeaturesModel.length; i++) {
+                var selectItem = document.createElement('option');
+                selectItem.value = availableFeaturesModel[i].Id;
+                selectItem.innerHTML = availableFeaturesModel[i].Name;
+                $("#FeatureSelect").append(selectItem);
+            }
+        }
+
+        // -------------------------------
+        // Show source of values only if "set list" is selected
+        $("select[name=ValueType]").change(function() {
+            if ($(this).val() === "Set-List")
+                $("#setSourceOfValuesRow").slideDown("fast");
+            else
+                $("#setSourceOfValuesRow").slideUp("fast");
+        });
+
+        // Initially
+        if ($("select[name=ValueType]").val() === "Set-List")
+            $("#setSourceOfValuesRow").show();
+        else
+            $("#setSourceOfValuesRow").hide();
+        // -------------------------------
+
+
+        // on change, get the feature groups and populate the second drop down
+		$("#FeatureSelect").change(function () {
+			$("#FeatureGroupSelect").empty();
+
+            if ($(this).val() === "") {
+                if ($("#FeatureGroupDiv").is(":visible")) {
+                    $("#FeatureGroupDiv").slideUp("fast");
+                }
+
+                return;
+            }
+
+			var id = parseInt($(this).val());
+			var featureGroups = @Html.Raw(Json.Encode(Model.AvailableFeatureGroups));
+
+			for (var i = 0; i < featureGroups.length; i++) {
+				var group = featureGroups[i];
+				if (group.FeatureId === id) {
+					var selectItem = document.createElement('option');
+					selectItem.value = group.Id;
+					selectItem.innerHTML = group.Name;
+					$("#FeatureGroupSelect").append(selectItem);
+				}
+			}
+
+	        if (! $("#FeatureGroupDiv").is(":visible")) {
+		        $("#FeatureGroupDiv").slideDown("normal");
+			}
+        });
+
+        AutoSizeTextAreas.Set();
+    });
+
+</script>
+</div>

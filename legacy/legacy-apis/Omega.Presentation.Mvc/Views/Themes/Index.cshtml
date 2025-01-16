@@ -1,0 +1,167 @@
+﻿@using Psi.Data.Models.Domain.Themes
+@model Omega.Presentation.Mvc.Models.Themes.ListThemesViewModel
+
+@helper AddThemeRow(ThemeModel theme)
+    {
+        var subThemeClass = theme.ParentThemePublicId.HasValue ? "sub-theme" : string.Empty;
+        <tr data-public-id="@theme.PublicId" class="@subThemeClass">
+	        <td class="theme-title">
+		        @if (theme.PublicId == Guid.Empty)
+		        {
+			        <i>@theme.Title</i>
+		        }
+		        else
+		        {
+			        @Html.ActionLink(theme.Title, "Theme", new {id = theme.PublicId})
+		        }
+	        </td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-default btn-xs dropdown-toggle" style="transform: scale(1.5); background-color: rgba(100, 100, 100, 0.4);" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span class="caret"></span>
+                    </button>
+	                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+		                @if (theme.PublicId != Guid.Empty)
+		                {
+			                <li>@Html.ActionLink("View Files", "Theme", new {id = theme.PublicId})</li>
+
+			                <li>
+				                <a modal-href="@Url.Action("EditThemeModal", new {id = theme.PublicId})" href="#">Rename</a>
+			                </li>
+			                <li>@Html.ActionLink("Download", "DownloadTheme", "ThemeDownload", new {publicId = theme.PublicId}, null)</li>
+			                if (theme.ParentThemePublicId == null) //Only allow the creation of sub themes for root themes.  No sub sub themes allowed.
+			                {
+				                 <li>
+					                 <a modal-href="@Url.Action("EditThemeModal", new {id = Guid.Empty, product = Model.Product, parentId = theme.PublicId})" href="#">Create Sub Theme</a>
+				                 </li>
+							}
+							<li role="separator" class="divider"></li>
+							<li><a modal-href="@Url.Action("PublishThemeModal", new {id = theme.PublicId})" href="#">Publish</a></li>
+		                }
+
+		                @if (theme.PublicId != Guid.Empty)
+		                {
+			                <li role="separator" class="divider"></li>
+			                <li>
+				                <a modal-href="@Url.Action("DeprecateThemeModal", new {id = theme.PublicId})" class="text-danger action-delete-file" style="color: #f25118;">Deprecate</a>
+			                </li>
+		                }
+	                </ul>
+                </div>
+            </td>
+
+	        <td>
+		        @if (theme.PublicId != Guid.Empty)
+		        {
+			        <span>
+						<span class="extra-info">@theme.PublicId</span> &nbsp; <a href="#" class="copy-public-id">
+							<i class="fa fa-copy"></i>
+						</a>
+			        </span>
+		        }
+	        </td>
+	        <td class="text-center">
+		        @if (theme.PublicId != Guid.Empty)
+		        {
+			        @theme.CreatedDate.ToShortDateString()
+		        }
+	        </td>
+			<td class="text-center">@theme.ModifiedDate.ToShortDateString()</td>
+	        <td class="text-center">
+		        @if (theme.PublishedDate.HasValue)
+		        {
+			        <span>
+				        @(theme.PublishedDate?.ToShortDateString()) &nbsp;
+				        <a modal-href="@Url.Action("PublishDetailsModal", new {id = theme.PublicId})" href="#"><i class="fa fa-list-alt"></i></a>
+			        </span>
+		        }
+	        </td>
+			<td class="text-center">@(theme.DeprecatedDate?.ToShortDateString() ?? "")</td>
+        </tr>
+}
+
+@{
+    ViewBag.Title = $"{(Model.Product == ThemeProduct.ConnectNative ? "Connect Native" : "Flex Ui")} Themes";
+    ViewBag.BaseModel = Model;
+    ViewBag.ActiveMenu = Model.Product == ThemeProduct.ConnectNative ? "connect-native-themes" : "flex-ui-themes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="panel panel-default col-md-12">
+        <div class="panel-body">
+
+            <table class="table table-striped theme-list">
+                <thead>
+                    <tr>
+                        <th>Theme</th>
+                        <td></td>
+                        <th>Guid</th>
+						<th class="text-center">Created</th>
+						<th class="text-center">Modified</th>
+                        <th class="text-center">Last Published</th>
+                        <th class="text-center">Deprecated</th>
+                    </tr>
+                </thead>
+	            <tbody>
+	            
+	            @AddThemeRow(new ThemeModel
+	            {
+		            PublicId = Guid.Empty,
+					Title = "[ Base Theme ]",
+	            })
+					
+	            <tr style="height: 3px;"><td colspan="10" style="height: 3px; background-color: #999; padding: 0;"></td></tr>
+
+	            @foreach (var theme in Model.Themes.Where(x => x.ParentThemePublicId == null))
+	            {
+		            @AddThemeRow(theme)
+		            //Perhaps it would be better to change the Themes model to have a list of children?  Maybe that would not be worth it?  Could be worth a refactor later?
+		            var currentThemesChildren = Model.Themes.Where(x => x.ParentThemePublicId.HasValue && x.ParentThemePublicId == theme.PublicId);
+		            foreach (var currentThemesChild in currentThemesChildren)
+		            {
+			            @AddThemeRow(currentThemesChild)
+			            ;
+		            }
+	            }
+
+	            @if (Model == null || Model.Themes.Count == 0)
+	            {
+		            <tr>
+			            <td class="text-center extra-info" colspan="500">
+				            No themes exist yet.
+			            </td>
+		            </tr>
+	            }
+
+	            </tbody>
+            </table>
+
+            <div style="display: flex; align-items: baseline; justify-content: space-between;">
+                <div>
+					<a modal-href="@Url.Action("EditThemeModal", new {id = Guid.Empty, product = Model.Product} )" class="btn btn-default"><i class="fa fa-plus"></i>&nbsp; Create New Theme</a>
+					<a href="@Url.Action("DownloadAll", "ThemeDownload", new {product = Model.Product} )" class="btn btn-default"><i class="fa fa-download"></i>&nbsp; Download All</a>
+                </div>
+                <div>
+                    Count: @Model.Themes.Count
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    @* Use the line below to get Ajax form javascript to work (OnBegin, etc) *@
+    <script src='@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")'></script>
+
+    <script>
+        $(function () {
+            $(".copy-public-id").on('click', function () {
+                OmegaUtilies.copyToClipboard($(this).closest("tr").attr("data-public-id"));
+                toastr.success("Guid copied to clipboard!");
+            });
+        })
+    </script>
+}

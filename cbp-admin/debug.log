@@ -130,3 +130,5 @@
 2025-01-11T21:16:59.272Z "ClientList - Using mock data: true"
 2025-01-11T21:16:59.273Z "Error loading clients: TypeError: Failed to fetch"
 2025-01-11T21:16:59.277Z "Error loading clients: TypeError: Failed to fetch"
+2025-01-15T16:27:42.777Z "Failed to get current session: AxiosError: Network Error"
+2025-01-15T16:27:42.785Z "Failed to get current session: AxiosError: Network Error"

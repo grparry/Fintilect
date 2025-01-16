@@ -1,0 +1,225 @@
+﻿@using System.Web.Mvc.Html
+@using Omega.Presentation.Mvc.Models.TargetedMarketing
+
+@model List<Promotion>
+
+@{
+    ViewBag.Title = "Manage Promotions";
+    ViewBag.ActiveMenu = "targeted-marketing";
+}
+ 
+@section LinkedStyleSheets {
+    <link href='@Url.Content("~/Content/targeted-marketing.css")' rel="stylesheet"/>
+    <link href='@Url.Content("~/Content/jquery-ui/redmond/jquery-ui-1.10.3.custom.css")' rel="stylesheet" />
+}
+
+
+<div class="main-content-container">
+    <div class="panel panel-default">
+        <header class="panel-heading-psi clearfix">
+            <strong>@ViewBag.Title</strong>
+        </header>
+
+        <div id="divLoading" class="text-center" style="display:none;">
+            <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Loading...
+        </div>
+
+        <div id="divFailure" class="alert alert-danger text-center" style="display:none;">
+            Data Load Failure.
+        </div>
+
+        @if (Model == null || Model.Count < 1)
+        {
+
+            <div class="panel-body">
+                <div class="alert alert-danger">
+                    There are no promotions to show
+                </div>
+
+                <div class="row list-row-buttons">
+                    <div class="col-md-12 text-left">
+                        @Ajax.ActionLink("Add New Promotion", "ManagePromotion", new { id = 0, mode = "create" }, new AjaxOptions
+                   {
+                       UpdateTargetId = "partial-view-modal-content",
+                       InsertionMode = InsertionMode.Replace,
+                       HttpMethod = "GET",
+                       OnBegin = "OmegaTargetedMarketingIndexModule.logAjaxBegin",
+                       OnComplete = "OmegaTargetedMarketingIndexModule.showDetailModal",
+                       OnFailure = "OmegaTargetedMarketingIndexModule.showFailure"
+                   }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+            </div><!-- end panel-body -->
+
+        } else {
+
+            <div class="panel-body">
+                <div class="row list-row">
+                    <div class="col-md-12 puffy bold wow-header-blue">Promotion Name</div>
+                </div>
+
+                @foreach (var promo in Model)
+                {
+
+                    <div class="row list-row">
+                        <div class="col-md-11 border-right puffy">
+                            @promo.Name
+                        </div>
+
+                        <div class="col-md-1 puffy text-center">
+                            @Ajax.ActionLink("manage", "ManagePromotion", new {id = promo.PromotionId, mode = "update"}, new AjaxOptions  { UpdateTargetId = "partial-view-modal-content",
+                           InsertionMode = InsertionMode.Replace,
+                           HttpMethod = "GET",
+                           OnBegin = "OmegaTargetedMarketingIndexModule.logAjaxBegin",
+                           OnComplete = "OmegaTargetedMarketingIndexModule.showDetailModal",
+                           OnFailure = "OmegaTargetedMarketingIndexModule.showFailure"
+                       })
+                        </div>
+                    </div>
+
+                }
+
+                <hr/>
+
+                <div class="row list-row-buttons">
+                    <div class="col-md-6 text-left">
+                        @Html.ActionLink("Manage Account Groups", "ManagePromotionFilters", null, new { @class = "btn btn-default" }) 
+                        @Html.ActionLink("Manage Promotion Images", "ManageImages", null, new { @class = "btn btn-default" }) 
+                    </div>
+
+                    <div class="col-md-6 text-right">
+                        @Ajax.ActionLink("Add New Promotion", "ManagePromotion", new { id = 0, mode = "create" }, new AjaxOptions
+                   {
+                       UpdateTargetId = "partial-view-modal-content",
+                       InsertionMode = InsertionMode.Replace,
+                       HttpMethod = "GET",
+                       OnBegin = "OmegaTargetedMarketingIndexModule.logAjaxBegin",
+                       OnComplete = "OmegaTargetedMarketingIndexModule.showDetailModal",
+                       OnFailure = "OmegaTargetedMarketingIndexModule.showFailure"
+                   }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+            </div><!-- end panel-body -->
+
+        }
+
+    </div><!-- end panel panel-default -->
+</div><!-- end main-content-container -->
+
+
+ 
+<div id="targeted-marketing-detail-modal" class="modal fade">
+    <div class="modal-dialog large">
+        <div id="partial-view-modal-content" class="modal-content">
+            <!-- content will be rendered here with a partialView from the AJAX call (_PromoDetailModal.cshtml) -->
+        </div>
+    </div><!-- End modal-dialog -->
+</div><!-- End targeted-marketing-detail-modal -->
+
+
+<div id="targeted-marketing-account-group-modal" class="modal fade"  data-backdrop="static">
+    <div class="modal-dialog large">
+        <div id="account-list-partial-view-modal-content" class="modal-content">
+            <!-- content will be rendered here with a partialView from the AJAX call -->
+        </div>
+    </div><!-- End modal-dialog -->
+</div><!-- End targeted-marketing-account-group-modal -->
+
+
+<div id="targeted-marketing-content-item-modal" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog large">
+        <div id="content-item-partial-view-modal-content" class="modal-content">
+            <!-- content will be rendered here with a partialView from the AJAX call -->
+        </div>
+    </div><!-- End modal-dialog -->
+</div><!-- End targeted-marketing-content-item-modal -->
+
+<div id="targeted-marketing-slotimage-detail-modal" class="modal fade">
+    <div class="modal-dialog xlarge">
+        <div id="targeted-marketing-slotimage-detail-modal-partial-view-modal-content" class="modal-content">
+            <!-- content will be rendered here with a partialView from the AJAX call (_ImagesView.cshtml or _ImageDetailModal.cshtml) -->
+        </div>
+    </div><!-- End modal-dialog -->
+</div>
+<div id="targeted-marketing-slotimage-image-modal" class="modal fade">
+    <div class="modal-dialog large">
+        <div id="targeted-marketing-slotimage-image-modal-partial-view-modal-content" class="modal-content">
+            <!-- content will be rendered here with a partialView from the AJAX call -->
+        </div>
+    </div><!-- End modal-dialog -->
+</div>
+<div id="targeted-marketing-slotimage-image-Add-modal" class="modal fade">
+    <div class="modal-dialog xlarge">
+        <div id="targeted-marketing-slotimage-image-Add-modal-content" class="modal-content">
+            <!-- content will be rendered here with a partialView from the AJAX call (_PromoImageAddSelect.cshtml) -->
+        </div>
+    </div><!-- End modal-dialog -->
+</div>
+
+@section scripts {
+    <script src='@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery-ui-1.12.0.min.js")'></script>
+    <script src='@Url.Content("~/Scripts/TargetMarketing/OmegaTargetedMarketingPromotionModal.js")'></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#targeted-marketing-detail-modal').on('hidden.bs.modal', function () {
+                setTimeout(function () { self.location.href = location.protocol + "//" + location.hostname + "/Omega/TargetedMarketing/Index"; }, 30);
+            });
+        });
+
+        // Create a namespace for this page 
+        var OmegaTargetedMarketingIndexModule = OmegaTargetedMarketingIndexModule || {};
+
+        OmegaTargetedMarketingIndexModule = (function () {
+            // local vars:
+            var _inDelay = false;
+
+            // Ajax starting, getting a record detail
+            var _logAjaxBegin = function() {
+                console.log("We are logging this click from ajax. - Action Begun");
+                _inDelay = setTimeout(_showSpinner, 1000); // using setTimeout because jQuery delay only works on animate
+                $("#divFailure").hide();
+            }
+
+            // show the spinner in a div to let the user know that the record is loading
+            var _showSpinner = function() {
+                $('#divLoading').show("normal");
+            }
+
+            // Ajax complete, show the modal
+            var _showDetailModal = function() {
+                console.log("We are logging this click from ajax. - Action Complete");
+                clearTimeout(_inDelay);
+                $("#divLoading").hide("normal");
+                $("#divFailure").hide();
+                $("#targeted-marketing-detail-modal").modal();
+                 
+            }
+
+            // Ajax failure, show the warning
+            var _showFailure = function() {
+                console.log("We are logging this click from ajax. - Action Failed");
+                if (_inDelay == true) {
+                    _inDelay = null;
+                }
+                $("#divLoading").hide();
+                $("#targeted-marketing-detail-modal").hide();
+                $("#divFailure").show("normal");
+
+            }
+
+            // Public interface
+            return {
+                logAjaxBegin: _logAjaxBegin,
+                showDetailModal:  _showDetailModal,
+                showFailure:   _showFailure 
+            }
+
+        })();
+    </script>
+
+}
+ 

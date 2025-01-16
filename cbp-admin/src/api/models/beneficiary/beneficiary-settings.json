@@ -1,0 +1,16 @@
+{
+  "BeneficiarySettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/BeneficiarySettings"
+      },
+      "features": {
+        "$ref": "./features.json#/BeneficiaryFeatures"
+      }
+    }
+  }
+}

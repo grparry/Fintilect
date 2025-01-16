@@ -1,0 +1,17 @@
+{
+  "BillPayHelpSettings": {
+    "type": "object",
+    "properties": {
+      "messageType": {
+        "type": "string",
+        "enum": ["Email", "SecureMessage"]
+      },
+      "emailAddress": {
+        "type": "string"
+      },
+      "secureMessageCategoryName": {
+        "type": "string"
+      }
+    }
+  }
+}

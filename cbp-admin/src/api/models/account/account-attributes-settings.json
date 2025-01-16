@@ -1,0 +1,16 @@
+{
+  "AccountAttributesSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/AccountAttributesSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/AccountAttributesFeatures"
+      }
+    }
+  }
+}

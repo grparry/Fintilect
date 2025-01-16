@@ -1,0 +1,57 @@
+﻿/* styles for the layered security pages */
+
+.bold {
+    font-weight: bold;
+}
+
+#ProgressWell {
+    width: 240px;
+    height: 24px;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    display: inline-block;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#ProgressIndicatorBar {
+    background-color: #0A6;
+    height: 100%;
+    width: 0;
+}
+
+#PercentageSpan {
+    position: relative;
+    top: -6px;
+}
+
+.form-control-inline {
+    display: inline-block;
+}
+
+.sorting-container {
+    border: solid 1px #E7E7E7;
+    border-radius: 5px;
+    width: 400px;
+    overflow: visible;
+    padding-top: 10px;
+    display: inline-block;
+}
+
+#sortable {
+    margin-left: -20px;
+    width: 300px;
+    margin-bottom: 24px;
+}
+
+#sortable li {
+    list-style-image: url(../images/hamburger-16.png);
+    cursor: move;
+    background: url(../images/hamburger-12.png) no-repeat;
+    background-position-x: 0;
+    background-position-y: 5px;
+    padding: 0 0 3px 22px;
+    list-style: none;
+    margin: 0;
+}
+

@@ -1,0 +1,19 @@
+{
+  "MarketingSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "targetedMarketing": {
+        "$ref": "./providers/targeted-marketing.json#/TargetedMarketingSettings"
+      },
+      "cardlytics": {
+        "$ref": "./providers/cardlytics.json#/CardlyticsSettings"
+      },
+      "segMint": {
+        "$ref": "./providers/segmint.json#/SegMintSettings"
+      }
+    }
+  }
+}

@@ -1,0 +1,264 @@
+﻿@model Omega.Presentation.Mvc.Models.ApplicationConfiguration.ApplicationConfigurationEditModel
+<div class="modal fade destroy-when-closed" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Edit Application Configuration</h3>
+            </div>
+            <div class="modal-body">
+                <!-- Modal Layout -->
+
+
+
+                @if (Model.SettingUpdated)
+                {
+                    <div class="alert alert-info">
+                        Setting updated at @DateTime.UtcNow
+                    </div>
+                }
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Key</label>
+                        <div class="col-sm-9">
+                            <input type="text" readonly="readonly" class="form-control" value="@Model.Setting.Key" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Description</label>
+                        <div class="col-sm-9">
+                            <textarea type="text" class="form-control" readonly="readonly">@Model.Setting.Description</textarea>
+                            @*<div class="form-control">@Model.Setting.Description</div>*@
+                        </div>
+                    </div>
+                    
+                    @if (Model.Setting.MustProductionValueBeUnique)
+                    {
+                        <div class="form-group">
+                            This setting is marked as <strong>Production Value Must Be Unique</strong>. When this is set, the value <strong>must</strong>
+                            be a JSON string with at least a "production" entry with the production value. Additional entries should be added for each
+                            environment besides production. None of these can match the production entry.
+                            <br/>
+                            Example Value:
+                            <br/>
+                            <pre>
+{
+  "production": "https://www.thirdparty.com/service",
+  "development": "https://sandbox.thirdparty.com/service",
+  "test": "https://sandbox.thirdparty.com/service",
+  "stage": "https://certification.thirdparty.com/service"
+}
+</pre>
+                        </div>
+                    }
+
+                    @switch (
+                        Model.Setting.MustProductionValueBeUnique
+                            ? "OBJECT-JSON"
+                            : Model.Setting.ValueType.ToUpper())
+                    {
+                        case ("BOOLEAN"):
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Value</label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" id="configValueInput" class="form-control" @Html.Raw(Model.Setting.Value.ToBool() ? "checked='checked'" : string.Empty)>
+                                </div>
+                                <div class="col-sm-7 form-control-static">Checked: True, On, or Yes</div>
+                            </div>
+                            break;
+                        case ("DATETIME"):
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Value</label>
+                                <div class="col-sm-9">
+                                    <input type="datetime" id="configValueInput" class="form-control" placeholder="insert value here..." value="@Model.Setting.Value" />
+                                </div>
+                            </div>
+                            break;
+                        case ("DOUBLE"):
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Value</label>
+                                <div class="col-sm-9">
+                                    <input type="number" id="configValueInput" class="form-control" placeholder="insert value here..." value="@Model.Setting.Value" />
+                                </div>
+                            </div>
+                            break;
+                        case ("INT"):
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Value</label>
+                                <div class="col-sm-9">
+                                    <input type="number" id="configValueInput" class="form-control" placeholder="insert value here..." value="@Model.Setting.Value" />
+                                </div>
+                            </div>
+                            break;
+                        case ("OBJECT-JSON"):
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Value</label>
+                                <div class="col-sm-9">
+                                    <textarea type="text" id="configValueInput" class="form-control json" placeholder="insert JSON here...">@Model.Setting.Value</textarea>
+
+                                    <div class="json-check">
+                                        <div class="check-looks-good">
+                                            <span class="message">Json is valid</span>
+                                            <i class="fa fa-check"></i>
+                                        </div>
+                                        <div class="check-error">
+                                            <span class="message">There is an error in your json.  Use <a href="https://jsonlint.com/">jsonlint.com</a> or <a href="https://www.w3schools.com/js/js_json_syntax.asp">w3schools</a> for further assistance if needed.</span>
+                                            <i class="fa fa-times"></i>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            break;
+                        case ("OBJECT-XML"):
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Value</label>
+                                <div class="col-sm-9">
+                                    <textarea type="text" id="configValueInput" class="form-control" placeholder="insert XML here...">@Model.Setting.Value</textarea>
+                                </div>
+                            </div>
+                            break;
+                        case ("STRING-SMALL"):
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Value</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="configValueInput" class="form-control" placeholder="insert value here..." value="@Model.Setting.Value" />
+                                </div>
+                            </div>
+                            break;
+                        case ("STRING-LARGE"):
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Value</label>
+                                <div class="col-sm-9">
+                                    <textarea type="text" id="configValueInput" class="form-control" placeholder="insert value here...">@Model.Setting.Value</textarea>
+                                </div>
+                            </div>
+                            break;
+                        case ("SET-LIST"):
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Value</label>
+                                <div class="col-sm-9">
+                                    <select id="configValueInput" class="form-control" placeholder="insert value here...">
+                                        @if (Model.PossibleValuesFromSource != null)
+                                        {
+                                            foreach (var possibleValue in Model.PossibleValuesFromSource)
+                                            {
+                                                <option value="@possibleValue.Key" @Html.Raw(Model.Setting.Value == possibleValue.Key ? "selected='selected'" : String.Empty)>@possibleValue.Value</option>
+                                            }
+                                        }
+
+                                        @foreach (var possibleValue in Model.Setting.PossibleValues)
+                                        {
+                                            <option @Html.Raw(Model.Setting.Value == possibleValue ? "selected='selected'" : String.Empty)>@possibleValue</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            break;
+                        default:
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Value</label>
+                                <div class="col-sm-9">
+                                    <textarea type="text" id="configValueInput" class="form-control" placeholder="insert value here...">@Model.Setting.Value</textarea>
+                                </div>
+                            </div>
+                            break;
+                    }
+
+                    @if (Model.Setting.Key == "PassThroughMessageRules")
+                    {
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-sm-9">
+                                <a class="btn btn-default" modal-href="./ApplicationConfigurationTests/PassThroughMessageRules">Test Value</a> (Recommended)
+                            </div>
+                        </div>
+                    }
+					
+					@if (Model.Setting.Key == "Themes.ConnectNative.DeployedThemes" || Model.Setting.Key == "Themes.ConnectNative.BrowserThemes")
+					{
+						<div class="form-group">
+							<label class="col-sm-3 control-label"></label>
+							<div class="col-sm-9">
+								<a class="btn btn-default" modal-href="./Themes/SelectThemesModal">Select Themes</a>
+							</div>
+						</div>
+					}
+
+	                <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-7">
+                            <button class="btn btn-primary" id="saveConfigSetting" type="button">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    $(function() {
+        $("#saveConfigSetting").on("click", function(e) {
+
+            var value = $('#configValueInput').val();
+            if ($('#configValueInput').is(':checkbox'))
+                value = $('#configValueInput').prop('checked');
+
+            $("#saveConfigSetting")
+                .html("Saving...")
+                .prop('disabled', true);
+
+            $.post('./ApplicationConfiguration/SaveConfigSetting', { Key: "@Model.Setting.Key", Value: value }, function (data, status) {
+                if (status === 'success') {
+                    if (typeof ApplicationConfigurationManager !== 'undefined') {
+                        ApplicationConfigurationManager.SearchRows = null;
+                        ApplicationConfigurationManager.SetDisplayValue("@Model.Setting.Key", value);
+                    }
+                    PsiModal.HideTopmost();
+                    toastr.success("@Model.Setting.Key successfully saved!");
+                } else {
+                    $("#saveConfigSetting")
+                        .html("Save")
+                        .prop('disabled', false);
+
+                    toastr.error("Problem saving.  Please try again.\r\n" + status);
+                }
+            }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+        });
+    });
+
+    function checkJson(textarea) {
+        if (typeof textarea === 'undefined')
+            return;
+
+        try {
+            JSON.parse($(textarea).val());
+        } catch (e) {
+            $(".check-looks-good").hide();
+            $(".check-error").show();
+            return;
+        }
+
+        $(".check-looks-good").show();
+        $(".check-error").hide();
+    }
+
+    $(function () {
+        AutoSizeTextAreas.Set();
+        PsiModal.ProcessModalLinks();
+
+        $("textarea.json").not(".json-processed")
+            .addClass("json-processed")
+            .bind('input propertychange', function () {
+                checkJson(this);
+            });
+
+        checkJson($("textarea.json"));
+    });
+</script>
+</div>

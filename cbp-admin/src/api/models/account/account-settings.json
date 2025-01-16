@@ -1,0 +1,49 @@
+{
+  "AccountSettings": {
+    "type": "object",
+    "properties": {
+      "masking": {
+        "$ref": "./account-masking.json#/AccountMaskingSettings"
+      },
+      "achTransfer": {
+        "$ref": "./ach-transfer.json#/AchTransferSettings"
+      },
+      "anyMemberTransfers": {
+        "$ref": "./any-member-transfers.json#/AnyMemberTransfersSettings"
+      },
+      "cards": {
+        "$ref": "./cards.json#/CardsSettings"
+      },
+      "crossAccount": {
+        "$ref": "./cross-account.json#/CrossAccountSettings"
+      },
+      "escheat": {
+        "$ref": "./escheat.json#/EscheatSettings"
+      },
+      "jointOwners": {
+        "$ref": "./joint-owners.json#/JointOwnersSettings"
+      },
+      "linkedAccount": {
+        "$ref": "./linked-account.json#/LinkedAccountSettings"
+      },
+      "placeHoldsOnAch": {
+        "$ref": "./place-holds-on-ach.json#/PlaceHoldsOnAchSettings"
+      },
+      "scheduledTransfers": {
+        "$ref": "./scheduled-transfers.json#/ScheduledTransfersSettings"
+      },
+      "transferLimits": {
+        "$ref": "./transfer-limits.json#/TransferLimitsSettings"
+      },
+      "transferTimeouts": {
+        "$ref": "./transfer-timeouts.json#/TransferTimeoutsSettings"
+      },
+      "transfers": {
+        "$ref": "./transfers.json#/TransfersSettings"
+      },
+      "usaEpay": {
+        "$ref": "./usa-epay.json#/UsaEpaySettings"
+      }
+    }
+  }
+}

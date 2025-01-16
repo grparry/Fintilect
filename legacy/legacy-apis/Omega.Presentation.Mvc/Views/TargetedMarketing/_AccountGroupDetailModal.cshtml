@@ -1,0 +1,335 @@
+﻿@using System.Web.Mvc.Html
+@using Omega.Presentation.Mvc.Models.TargetedMarketing
+
+@model Criteria_AccountNumberGroup
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+    <h4 class="modal-title">
+        Manage Account Group - @(ViewBag.Mode == "update" ? Model.GroupName : "Create New Account Group")
+    </h4>
+</div>
+
+<div class="modal-body">
+    <div id="ValidatorDiv" class="alert alert-danger" style="display: none;">
+        There were errors in your form entries:
+    </div>
+
+    <div id="successDiv" class="alert alert-success" style="display: none;">
+        <div style="float: right; margin-top: -8px;"><input type="button" class="btn btn-default" id="CancelModalButton" value="Continue" data-dismiss="modal" /></div>
+        <div style="width: 50%;">Your promotion data has been saved.</div>
+    </div>
+
+    <div id="notFoundDiv" class="alert alert-info" style="display: none;">
+        <div style="float: right; margin-top: -8px;"><input type="button" class="btn btn-default" id="CancelInfoButton" value="Continue" data-dismiss="modal" /></div>
+        <div style="width: 50%;">No Accounts Found.</div>
+    </div>
+
+    <div id="failureDiv" class="alert alert-danger" style="display: none;">
+        We were unable to save your data, please try again later.
+    </div>
+
+    <div id="deleteDiv" class="alert alert-warning" style="display: none;">
+        <div style="float: right; margin-top: -8px;"><input type="button" class="btn btn-default" id="CancelDeleteButton" value="Continue" data-dismiss="modal" /></div>
+        <div style="width: 50%;">Your promotion has been deleted.</div>
+
+    </div>
+
+    <div id="divProcessing" class="text-center" style="display:none; margin-bottom: 14px;">
+        <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Processing Request...
+    </div>
+
+    @using (Ajax.BeginForm((ViewBag.Mode == "update" ? "UpdateAccountGroup" : "CreateAccountGroup"), "TargetedMarketing", new AjaxOptions { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "AccountGroupForm" }))
+    {
+
+        <div class="form-horizontal">
+
+            <div class="form-group">
+                <label class="col-md-5 control-label">Account Group Name</label>
+                <div class="col-md-5">
+                    <div Class="form-control-inline">
+                        @Html.TextBoxFor(x => x.GroupName, new { @class = "form-control" })
+                        @Html.HiddenFor(x => x.AccountNumberGroupId)
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="form-group"> This is the deleted flag not sure if we need this or need to add a marked deleted
+                    <label class="col-md-5 control-label">Active?</label>
+                    <div class="col-md-4">
+                        <div Class="form-control-static">
+                            @Html.RadioButtonFor(m => m.IsActive, true)&nbsp;yes&nbsp;&nbsp;&nbsp;&nbsp;
+                            @Html.RadioButtonFor(m => m.IsActive, false)&nbsp;no
+                        </div>
+                    </div>
+                </div>*@
+
+            <div class="form-group">
+                <label class="col-md-5 control-label">Include These Accounts</label>
+                <div id="radiosDiv" class="col-md-5">
+                    <div Class="form-control-static">
+                        <div>
+                            @Html.RadioButtonFor(m => m.SelectedGroupKind, AccountGroupsKind.All, new { id = AccountGroupsKind.All })&nbsp;All Accounts
+                        </div>
+                        <div class="space-above-sm">
+                            @Html.RadioButtonFor(m => m.SelectedGroupKind, AccountGroupsKind.List, new { id = AccountGroupsKind.List })&nbsp;List of Accounts
+                        </div>
+                        <div id="AccountListDiv" class="space-above-sm" style="display: none;">
+                            <div>
+                                @Html.TextBoxFor(m => m.AccountNumberList, new { @class = "form-control" })
+                            </div>
+
+                            <div class="space-above-sm">
+                                Please include account numbers separated by commas; eg: 12345, 67890, 98765, 23456
+                            </div>
+                        </div>
+                        <div class="space-above-sm">
+                            @Html.RadioButtonFor(m => m.SelectedGroupKind, AccountGroupsKind.Upload, new { id = AccountGroupsKind.Upload })&nbsp;Upload .csv File
+                        </div>
+                        <div id="AccountFileUploadDiv" class="space-above-sm" style="display: none;">
+                            <div>
+                                <input type="file" id="csvFileUpload" name="file" />
+                            </div>
+                        </div>
+                        @if (Model.CanMapMemberNumberToEAgreementNumber)
+                        {
+                            <div style="margin-top: 8px;">
+                                @Html.CheckBoxFor(m => m.ShouldMapMemberNumbersToEAgreementNumbers, new { id = nameof(Model.ShouldMapMemberNumbersToEAgreementNumbers) }) Map Member Numbers to EAgreement Numbers?
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end form-horizontal -->
+
+
+        <hr />
+
+        <div class="text-center space-below-lg">
+
+        </div>
+
+
+        <div class="row list-row-buttons">
+            <div class="col-md-6 text-left">
+                <input type="button" class="btn btn-default" id="btnCancel" value="Cancel" data-dismiss="modal" />
+            </div>
+
+            <div class="col-md-6 text-right">
+
+                @if (ViewBag.Mode == "update")
+                {
+                    @Ajax.ActionLink("Delete Account Group", "DeleteAccountGroup", "TargetedMarketing", new { id = Model.AccountNumberGroupId }, new AjaxOptions
+               {
+                   HttpMethod = "GET",
+                   OnBegin = "OmegaTargetedMarketingManagePromotionsModal.logAjaxBegin",
+                   OnComplete = "OmegaTargetedMarketingManagePromotionsModal.showComplete",
+                   OnFailure = "OmegaTargetedMarketingManagePromotionsModal.showFailure",
+                   Confirm = "Are you really sure you want to delete this account group: " + Model.GroupName + " ?"
+               }, new { @class = "btn btn-danger", @id = "DeleteButton" })
+                }
+                &nbsp;
+                &nbsp;<input type="submit" value="Save Changes" class="btn btn-primary" id="SubmitButton" />
+            </div>
+        </div>
+
+    }
+</div><!-- End modal-body -->
+
+<script>
+    $(document).ready(function () {
+        // document event functions:
+        $('#account-group-detail-modal').on('hidden.bs.modal', function () {
+            setTimeout(function () { self.location.href = "ManagePromotionFilters" }, 100);
+        });
+
+        if ($("#List").is(":checked"))
+        {
+            $("#AccountListDiv").show();
+        }
+
+        // reload the base page after notication continue click
+        $("#CancelDeleteButton, #CancelModalButton, #CancelInfoButton").click(function () {
+            setTimeout(function () { self.location.href = "ManagePromotionFilters" }, 1000);
+        });
+
+        // Toggle account numbers text box on radio toggle
+        $("#List").change(function () {
+            if ($("#List").is(":checked")) {
+                $("#AccountListDiv").show("normal");
+                $("#AccountFileUploadDiv").hide("fast");
+            }
+        });
+
+        $("#All").change(function () {
+            if ($("#All").is(":checked")) {
+                $("#AccountListDiv").hide("fast");
+                $("#AccountFileUploadDiv").hide("fast");
+            }
+        });
+
+        $("#Upload").change(function () {
+            if ($("#Upload").is(":checked")) {
+                $("#AccountListDiv").hide("fast");
+                $("#AccountFileUploadDiv").show("normal");
+            }
+        });
+
+        $("#SubmitButton").prop("disabled", false);
+        $("#DeleteButton").prop("disabled", false);
+
+
+        // FORM SUBMIT:
+        // Submit the form via AJAX:
+        $("#AccountGroupForm").submit(function (e) {
+            $("#ValidatorDiv").text("There were errors in your form entries:");
+
+            var OmegaTargetedMarketingAccountGroupNameRegex = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
+            var OmegaTargetedMarketingFormValid;
+
+            // Client side validation
+            if ($("#GroupName").val() === "" ) {
+                $("#GroupName").parent().addClass("has-error");
+                $("#ValidatorDiv").append("<br>&bull; Please enter an Account Name.");
+                OmegaTargetedMarketingFormValid = false;
+            } else if (!OmegaTargetedMarketingAccountGroupNameRegex.test($("#GroupName").val())) {
+                $("#GroupName").parent().addClass("has-error");
+                $("#ValidatorDiv").append("<br>&bull; Please enter a valid Name. Only letters, numbers, spaces and the underscore character are allowed.");
+                OmegaTargetedMarketingFormValid = false;
+            } else {
+                $("#GroupName").parent().removeClass("has-error");
+            }
+
+            if ($("#Upload").is(":checked") && $("#csvFileUpload").val().length < 4) {
+                $("#AccountFileUploadDiv").addClass("has-error");
+                $("#ValidatorDiv").append("<br>&bull; Please select a .csv file with a comma-delimited list of members.");
+                OmegaTargetedMarketingFormValid = false;
+            } else if ($("#Upload").is(":checked") && $("#csvFileUpload").val().length >= 4 && !OmegaTargetedMarketingManagePromotionsModal.hasExtension('csvFileUpload', ['.csv'])) {
+                $("#AccountFileUploadDiv").addClass("has-error");
+                $("#ValidatorDiv").append("<br>&bull; The file upload MUST be .csv file.");
+                OmegaTargetedMarketingFormValid = false;
+            } else if ($("#List").is(":checked") && $("#AccountNumberList").val() == "") {
+                $("#AccountNumberList").addClass("has-error");
+                $("#ValidatorDiv").append("<br>&bull; Please enter in a list of accounts.");
+                OmegaTargetedMarketingFormValid = false;
+            } else {
+                $("#AccountNumberList").removeClass("has-error");
+                $("#AccountFileUploadDiv").removeClass("has-error");
+            }
+
+            // show errors if form is not valid:
+            if (OmegaTargetedMarketingFormValid == false) {
+                $("#ValidatorDiv").show("normal");
+                return false;
+            }
+
+            // Validation passed: submit the form
+            var AccountGroupForm = e.target;
+
+            if ($(AccountGroupForm).attr("enctype") === "multipart/form-data") {
+                $("#SubmitButton").prop("disabled", true);
+                $("#DeleteButton").prop("disabled", true);
+                $("#GroupName").parent().removeClass("has-error");
+                $("#AccountNumberList").removeClass("has-error");
+                $("#AccountFileUploadDiv").removeClass("has-error");
+                $("#ValidatorDiv").hide("normal");
+                $('#divProcessing').show("normal");
+
+                console.info("entering the submit process...");
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                var xhr = new XMLHttpRequest();
+                xhr.open(AccountGroupForm.method, AccountGroupForm.action);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200 && xhr.response.toLowerCase() === "success") {         // success
+                        $('#successDiv').show("normal");
+                        $('#failureDiv').hide();
+                        $('#divProcessing').hide();
+                        $('#notFoundDiv').hide();
+                    } else if (xhr.response.toLowerCase() === 'notfound') {
+                        $('#successDiv').hide();
+                        $('#notFoundDiv').show("normal");
+                        $('#failureDiv').hide();
+                        $('#divProcessing').hide();
+                    } else if (xhr.readyState == 4 && xhr.response.toLowerCase() === "error") {
+                        $('#successDiv').hide();
+                        $('#failureDiv').show("normal");
+                        $('#divProcessing').hide();
+                        $("#SubmitButton").prop("disabled", false);
+                        $('#notFoundDiv').hide();
+                    } 
+                };
+                xhr.send(new FormData(AccountGroupForm));
+            }
+        });
+    }); // end document ready
+
+
+    var OmegaTargetedMarketingManagePromotionsModal = OmegaTargetedMarketingManagePromotionsModal || {};
+    OmegaTargetedMarketingManagePromotionsModal = (function () {OmegaTargetedMarketingManagePromotionsModal
+        // local vars:
+        var _inDelay = false;
+
+        // Ajax starting for the delete process
+        var _logAjaxBegin = function () {
+            console.log("We are logging this click from ajax. - Action Begun from OmegaTargetedMarketingManagePromotionsModal");
+            _inDelay = setTimeout(_showSpinner, 1000); // using setTimeout because jQuery delay only works on animate
+            $("#failureDiv").hide();
+            $("#SubmitButton").prop("disabled", true);
+            $("#DeleteButton").prop("disabled", true);
+        }
+
+        // show the spinner in a div to let the user know that the record is in the process of deleting...
+        var _showSpinner = function () {
+            $('#divProcessing').show("normal");
+        }
+
+        // Ajax complete, show the result div
+        var _showComplete = function (result) {
+            console.log("We are logging this click from ajax. - Action Complete");
+            clearTimeout(_inDelay);
+            if (result.responseText.toLowerCase() === 'success' && result.statusText.toLowerCase() === 'ok') {
+                $('#deleteDiv').show("normal");
+                $('#notFoundDiv').hide();
+                $('#failureDiv').hide();
+                $('#divProcessing').hide();
+            } else {
+                $('#deleteDiv').hide();
+                $('#notFoundDiv').hide();
+                $('#failureDiv').show("normal");
+                $('#divProcessing').hide();
+            }
+        }
+
+        // Ajax failure, show the warning
+        var _showFailure = function () {
+            console.log("We are logging this click from ajax. - Action Failed");
+            if (_inDelay == true) {
+                _inDelay = null;
+            }
+            $("#divProcessing").hide(); 
+            $('#notFoundDiv').hide();
+            $("#failureDiv").show("normal");
+
+        }
+
+        // see if a file upload has a specific extension:
+        var _hasExtension = function (inputID, exts) {
+            var fileName = document.getElementById(inputID).value;
+            return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
+        }
+
+        // Public interface
+        return {
+            logAjaxBegin: _logAjaxBegin,
+            showComplete: _showComplete,
+            showFailure: _showFailure,
+            hasExtension: _hasExtension
+        }
+
+    })();
+</script>

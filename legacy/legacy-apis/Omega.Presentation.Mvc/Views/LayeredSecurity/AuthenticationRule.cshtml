@@ -1,0 +1,192 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.LayeredSecurity
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model AuthenticationRuleViewModel
+
+@{
+    ViewBag.Title = @Model.FeatureAction.Name + " - Authentication Rule " + @Model.AuthenticationRule.Priority;
+    ViewBag.ActiveMenu = "layered-security";
+    ViewBag.BaseModel = Model;
+}
+
+<script>
+    $("button[data-number=5]")
+        .click(function () {
+            $('#manageAuthenticationRuleModal').modal('hide');
+        });
+</script>
+
+<!-- NOTE: this view is shown as the contents of a MODAL from the index.cshtml page -->
+<div>
+    <div>
+        <h2>@Model.FeatureAction.Name</h2>
+    </div>
+
+    <div>
+        @Model.FeatureAction.Description
+    </div>
+
+    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Owner))
+    {
+        using (Html.BeginForm("AuthenticationRule", "LayeredSecurity", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="form-group">
+                <label class="col-md-4 control-label">
+                    Rules                
+                </label>
+
+                <div class="col-md-7" style="margin-top: 6px;">
+                    @{
+                        var idList = new []{""};
+                        if (!string.IsNullOrEmpty(Model.AuthenticationRule.AuthenticationMethods))
+                        {
+                            idList = Model.AuthenticationRule.AuthenticationMethods.Split(',');
+                            
+                        }
+                        foreach (var item in Model.AuthenticationMethods)
+                        {
+                            var active = Array.IndexOf(idList, item.Id.ToString()) > -1;
+
+                            if (active)
+                            {
+                            <input type="checkbox" name="checkbox_auth_@item.Id.ToString()" meta-data="@item.Weight" checked />
+                                    @:&nbsp;@item.Description<br />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="checkbox_auth_@item.Id.ToString()" meta-data="@item.Weight" />
+                                                    @:&nbsp;@item.Description<br />
+                            }
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4 control-label">
+                    @Html.LabelFor(m => m.AuthenticationRule.NumberOfRequiredMethods)
+                </div>
+
+                <div class="col-md-4">
+                    @Html.DropDownListFor(m => m.AuthenticationRule.NumberOfRequiredMethods, new SelectList(ViewBag.RequiredMethodsList, "Value", "Text"),
+                        new {@class = "form-control form-control-inline", @style = "width:80px;"}) <span class="glyphicon glyphicon-question-sign rules-popover" data-toggle="popover" data-placement="auto" data-trigger="hover" data-original-title="Required Methods" data-content="This value allows you to set how many of the authentication methods listed above will be required for the user to achieve a successful login. For example, if you list 4 authentication methods and set this value to 2, the user will only have to successfully authenticate to 2 of the 4 methods listed. The mobile apps will allow the user to choose which 2 of the 4 authentication methods listed they want to perform in order to authenticate."></span>
+                    <script>
+                        $(".rules-popover").popover();
+                    </script>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4 control-label bold">
+                    Progress Indicator
+                </div>
+
+                <div class="col-md-4">
+                    <div id="ProgressWell">
+                        <div id="ProgressIndicatorBar"></div>
+                    </div>&nbsp;&nbsp;<span id="PercentageSpan"><!-- content will be drawn here dynamically --></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-4 col-md-8">
+                    @Html.HiddenFor(m => m.FeatureAction.ActionId)
+                    @Html.HiddenFor(m => m.FeatureAction.FeatureId)
+                    @Html.HiddenFor(m => m.FeatureAction.PublicId)
+                    @Html.HiddenFor(m => m.FeatureAction.Name)
+                    @Html.HiddenFor(m => m.FeatureAction.Description)
+                    @Html.HiddenFor(m => m.FeatureAction.StrongAuthenticationWeight)
+                    @Html.HiddenFor(m => m.FeatureAction.MinimumApplicationVersion)
+                    @Html.HiddenFor(m => m.AuthenticationRule.Priority)
+                    @Html.HiddenFor(m => m.AuthenticationRule.Id)
+                    @Html.HiddenFor(m => m.AuthenticationRule.PublicId)
+                    @Html.HiddenFor(m => m.AuthenticationRule.TotalWeight)
+                    @Html.HiddenFor(m => m.NewRule)
+                    @if (@Model.NewRule)
+                    {
+                        <input type="submit" class="btn btn-primary" value="Save New Rule" />
+                    }
+                    else
+                    {
+                        <input type="submit" class="btn btn-info" value="Update Rule" />
+                    }
+                </div>
+            </div>
+        }   // end using
+    }
+</div>
+
+<script>
+    // Create Private Namespace:
+    var LayeredSecurityAuthenticationRuleWeight = (function () {
+        var totalWeight = 0;
+
+        /* update the progress bar based on checkbox events */
+        var updateProgressBar = function () {
+            var newWidth = 0;
+            var weight = parseInt($(this).attr("meta-data"));
+            var strongWeight = @Model.FeatureAction.StrongAuthenticationWeight; //get the StrongAuthenticationWeight of the action
+
+            if ($(this).is(':checked')) { // 'this' is the checkbox passed in by 'call' above
+                totalWeight = totalWeight + weight; //add weight of the selected methods to the total
+
+                newWidth = totalWeight / strongWeight * 100;
+                if (newWidth > 100) {
+                    newWidth = 100;
+                }
+
+                $("#ProgressIndicatorBar").width(Math.round(parseFloat(newWidth).toString()) + "%");
+            } else {        // unchecking a box
+                totalWeight = totalWeight - weight; //substract weight of the unselected method from the total
+
+                newWidth = totalWeight / strongWeight * 100;
+                if (newWidth > 100) {
+                    newWidth = 100;
+                }
+                else {
+                    $("#ProgressIndicatorBar").width(Math.round(parseFloat(newWidth).toString()) + "%");
+                }
+            }
+
+            $("#PercentageSpan").text(Math.round(parseFloat(newWidth).toString()) + "%");
+        };
+
+        /* load the progress bar on page load */
+        var loadProgressBar = function () {
+            $("input[type='checkbox']").each(function () {
+                var newWidth;
+                var weight = parseInt($(this).attr("meta-data"));
+                var strongWeight = @Model.FeatureAction.StrongAuthenticationWeight; //get the StrongAuthenticationWeight of the action
+
+                if ($(this).is(":checked")) {
+                    totalWeight += weight; //add weight of the selected methods to the total
+
+                    newWidth = totalWeight / strongWeight * 100; //compute the percentage: totalWeight of the rule to strongWeight of the action
+
+                    if (newWidth > 100) {
+                        newWidth = 100;
+                    }
+
+                    $("#ProgressIndicatorBar").width((newWidth.toString() + "%"));
+                    $("#PercentageSpan").text(Math.round(parseFloat(newWidth).toString()) + "%");
+                }
+            });
+        };
+
+
+        /* Public interface: */
+        return {
+            UpdateProgressBar: updateProgressBar,
+            LoadProgressBar: loadProgressBar
+        };
+    }()); // end LayeredSecurityAuthenticationRuleWeight namespace
+
+    $(document).ready(function () {
+        LayeredSecurityAuthenticationRuleWeight.LoadProgressBar();
+
+        $("input[type='checkbox']").change(function () {
+            LayeredSecurityAuthenticationRuleWeight.UpdateProgressBar.call($(this), null); // use 'call' to pass the context of the checkbox as 'this' to the function in the namespace. 'null' means no args.
+        });
+    }); // end document ready
+
+</script>

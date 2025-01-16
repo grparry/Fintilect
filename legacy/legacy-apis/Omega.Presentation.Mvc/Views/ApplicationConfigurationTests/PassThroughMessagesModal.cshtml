@@ -1,0 +1,78 @@
+﻿<div class="modal fade destroy-when-closed" id="passthroughTestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <!-- Modal Layout -->
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Test PassThrough Rules</h4>
+            </div>
+            <div class="modal-body">
+
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">PassThrough Rules Value</label>
+                        <div class="col-sm-9">
+                            <textarea type="text" name="PassThroughValue" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Test Message Text</label>
+                        <div class="col-sm-9">
+                            <textarea type="text" name="PassThroughTestText" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="col-sm-9">
+                            <button id="PassThroughTestButton" class="btn btn-primary">Run Test</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Result</label>
+                        <div class="col-sm-9">
+                            <span style="font-size: 1.2em;" id="PassThroughTestResults"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default modal-generated-primary-button modal-generated-button" data-dismiss="modal" id="PassThroughTestOk">OK</button>
+                <button type="button" class="btn btn-default modal-generated-button" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            AutoSizeTextAreas.Set();
+
+            // Initialize with the current value
+            $("textarea[name=PassThroughValue]").val($("#configValueInput").val());
+
+            $("#PassThroughTestButton").on("click", function () {
+                $("#PassThroughTestButton").attr('disabled', true);
+                $("#PassThroughTestResults").html("<i class='fa fa-spin fa-cog' style='font-size:20px; opacity:0.5;' />");
+                
+                $.post('./ApplicationConfigurationTests/PassThroughMessageRules',
+                    {
+                        rulesJson: $("textarea[name=PassThroughValue]").val(),
+                        testText: $("textarea[name=PassThroughTestText]").val(),
+                    },
+                    function (data) {
+                        if (typeof data.error !== 'undefined') {
+                            $("#PassThroughTestResults").html("<i class='fa fa-exclamation-circle' style='color:darkred;' /> " + data.error);
+                        } else {
+                            $("#PassThroughTestResults").html("<i class='fa fa-check' style='color:darkgreen;' /> " + data.message + " <b>" + data.result + "</b>");
+                        }
+
+                        $("#PassThroughTestButton").attr('disabled', false);
+                    }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            });
+
+            $("#PassThroughTestOk").on("click", function () {
+                $("#configValueInput").val($("textarea[name=PassThroughValue]").val());
+            });
+        });
+    </script>
+</div>

@@ -1,0 +1,64 @@
+﻿@model string
+
+<div class="modal fade destroy-when-closed">
+    <!-- Modal Layout -->
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+	            <h4 class="modal-title">
+		            Upload files
+	            </h4>
+            </div>
+
+		    <div class="modal-body">
+			
+			    <div class="form-group>
+				    @Html.Label("Folder to upload into")
+				    @Html.TextBox("FolderForUpload", null, new {@class = "form-control"})
+			    </div>
+				
+				<div id="dropzoneArea" class="dropzone">
+			    </div>
+
+		    </div><!-- End modal-body -->
+
+
+			<div class="modal-footer">
+				<button type="button" id="DoneUploading" class="btn btn-default" data-dismiss="modal">Done</button>
+			</div>
+			
+	        <script>
+        		var successfulUpload = false;
+        		$(function() {
+
+        			$("#DoneUploading").on('click',
+        				function() {
+							if (successfulUpload)
+        						location.reload();
+        				});
+
+        			new Dropzone(document.getElementById("dropzoneArea"),
+        				{
+        					//clickable: "#fileUploadButton",
+        					url: "@Url.Action("UploadFile")",
+        					uploadMultiple: true,
+					        createImageThumbnails: false,
+        					successmultiple: function() {
+						        successfulUpload = true;
+					        },
+        					init: function() {
+        						this.on("sending", function(file, xhr, formData) {
+							        formData.append("folder", $("input[name=FolderForUpload]").val()); // Append all the additional input data of your form here!
+							        formData.append("theme", "@Model"); // Append all the additional input data of your form here!
+        						});
+        					}
+        				});
+        		});
+        	</script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

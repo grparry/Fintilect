@@ -1,0 +1,13 @@
+{
+  "EstatementsSettings": {
+    "type": "object",
+    "properties": {
+      "synergy": {
+        "$ref": "./providers/synergy.json#/SynergyEstatementsSettings"
+      },
+      "infoImage": {
+        "$ref": "./providers/info-image.json#/InfoImageEstatementsSettings"
+      }
+    }
+  }
+}

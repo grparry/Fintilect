@@ -1,0 +1,16 @@
+{
+  "GoodFundsSettings": {
+    "type": "object",
+    "properties": {
+      "micrNumberStart": {
+        "type": "string"
+      },
+      "billPayFundingType": {
+        "type": "string"
+      },
+      "accountAndSuffixUseSuffixFromFile": {
+        "type": "boolean"
+      }
+    }
+  }
+}

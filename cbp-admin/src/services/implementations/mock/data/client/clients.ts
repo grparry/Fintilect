@@ -15,7 +15,7 @@ export const paymentMethodOptions: PaymentMethod[] = [
   'Wire',
   'RTP',
   'Check'
-] as const;
+];
 
 export const environmentOptions: Environment[] = [
   Environment.Production,

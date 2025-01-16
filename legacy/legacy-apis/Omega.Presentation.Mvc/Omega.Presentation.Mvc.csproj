@@ -1,0 +1,805 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B1C6BA79-6F71-431F-ADA5-5B25E84CDB21}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Omega.Presentation.Mvc</RootNamespace>
+    <AssemblyName>Omega.Presentation.Mvc</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Agatha.Common, Version=1.3.2.0, Culture=neutral, PublicKeyToken=6f21cf452a4ffa13, processorArchitecture=MSIL">
+      <HintPath>..\packages\Agatha.Common.1.3.2\lib\net40\Agatha.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.2.0.4\lib\net46\CommonServiceLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="Gma.QrCodeNet.Encoding, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QrCode.Net.0.4.0.0\lib\net45\Gma.QrCodeNet.Encoding.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Nager.Date, Version=1.22.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nager.Date.1.22.3\lib\net461\Nager.Date.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Psi.Utilities, Version=1.0.5805.20937, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Psi.Utilities.1.0.5805.20937\lib\net45\Psi.Utilities.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.5.4.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.5.4\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.6\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.6\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Unity.Abstractions, Version=3.3.1.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net45\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Configuration, Version=5.2.5.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net45\Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.8.11.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net45\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Interception, Version=5.5.5.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net45\Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Interception.Configuration, Version=5.1.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net45\Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RegistrationByConvention, Version=2.1.9.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net45\Unity.RegistrationByConvention.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ServiceLocation, Version=2.1.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net45\Unity.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="xPSI, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\xPSI.2.3.0.0\lib\net461\xPSI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\JsonFormatterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Business\AtmBranchLocationsHelper.cs" />
+    <Compile Include="Business\BillPayRepository.cs" />
+    <Compile Include="Business\DocumentArchitectHelper.cs" />
+    <Compile Include="Business\NewMobileFeaturesRepository.cs" />
+    <Compile Include="Business\CreditUnionContactInfoRepository.cs" />
+    <Compile Include="Business\Extensions.cs" />
+    <Compile Include="Business\LayeredSecurityRepository.cs" />
+    <Compile Include="Business\LicenseManagerRepository.cs" />
+    <Compile Include="Business\FeaturesManagerRepository.cs" />
+    <Compile Include="Business\OmegaUserPermissionGroupRepository.cs" />
+    <Compile Include="Business\OmegaUserRepository.cs" />
+    <Compile Include="Business\ThemesRepository.cs" />
+    <Compile Include="Business\OnlineBankingUsersRepository.cs" />
+    <Compile Include="Business\OnlineBankingApiRepository.cs" />
+    <Compile Include="Business\PermissionLevel.cs" />
+    <Compile Include="Business\PsiServiceHostResult.cs" />
+    <Compile Include="Business\PsiServiceHostService.cs" />
+    <Compile Include="Business\QrCodeGeneratorRepository.cs" />
+    <Compile Include="Business\QuickAccessManagementRepository.cs" />
+    <Compile Include="Business\StringResourceRepository.cs" />
+    <Compile Include="Business\SystemMessageRepository.cs" />
+    <Compile Include="Business\TargetetMarketingRepository.cs" />
+    <Compile Include="Business\Util.cs" />
+    <Compile Include="Business\VersionManagementRepository.cs" />
+    <Compile Include="Controllers\Alerts2.cs" />
+    <Compile Include="Controllers\AppConfigController.cs" />
+    <Compile Include="Controllers\ApplicationConfigurationTestsController.cs" />
+    <Compile Include="Controllers\ApplicationConfigurationController.cs" />
+    <Compile Include="Controllers\AtmBranchLocationsController.cs" />
+    <Compile Include="Controllers\AuditLogExportController.cs" />
+    <Compile Include="Controllers\BillPayManagementController.cs" />
+    <Compile Include="Controllers\ConfigurationComparisonController.cs" />
+    <Compile Include="Controllers\CreditUnionContactInfoController.cs" />
+    <Compile Include="Controllers\DocumentArchitectController.cs" />
+    <Compile Include="Controllers\ErrorMessagesController.cs" />
+    <Compile Include="Controllers\FeaturesManagerController.cs" />
+    <Compile Include="Controllers\FormsController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OmegaBaseController.cs" />
+    <Compile Include="Controllers\PermissionGroupsController.cs" />
+    <Compile Include="Controllers\RestrictedWordsController.cs" />
+    <Compile Include="Controllers\FormsDesignerController.cs" />
+    <Compile Include="Controllers\SecurityKeysController.cs" />
+    <Compile Include="Controllers\ThemeDeploymentController.cs" />
+    <Compile Include="Controllers\ThemeDownloadController.cs" />
+    <Compile Include="Controllers\ThemesController.cs" />
+    <Compile Include="Controllers\OnlineBankingUsersController.cs" />
+    <Compile Include="Controllers\LayeredSecurityController.cs" />
+    <Compile Include="Controllers\LicenseManagerController.cs" />
+    <Compile Include="Controllers\NewMobileFeaturesController.cs" />
+    <Compile Include="Controllers\OnlineBankingApiController.cs" />
+    <Compile Include="Controllers\QrCodeGeneratorController.cs" />
+    <Compile Include="Controllers\QuickAccessManagementController.cs" />
+    <Compile Include="Controllers\StringResourceController.cs" />
+    <Compile Include="Controllers\TargetedMarketingController.cs" />
+    <Compile Include="Controllers\VersionManagementController.cs" />
+    <Compile Include="Filters\PermissionFilterAttribute.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Alerts2\Alerts2Model.cs" />
+    <Compile Include="Models\AppConfig\AppConfig.cs" />
+    <Compile Include="Models\ApplicationConfiguration\ApplicationConfiguration.cs" />
+    <Compile Include="Models\ApplicationConfiguration\ApplicationConfigurationModel.cs" />
+    <Compile Include="Models\AtmBranchLocations\AtmBranchLocationsViewModel.cs" />
+    <Compile Include="Models\AuditLogExport\AuditLogExportViewModel.cs" />
+    <Compile Include="Models\Authentication\AuthenticationModel.cs" />
+    <Compile Include="Models\BillPayManagement\BillPayRemoveViewModel.cs" />
+    <Compile Include="Models\BillPayManagement\RemoveUserModel.cs" />
+    <Compile Include="Models\ConfigurationComparison\ConfigurationComparisonModel.cs" />
+    <Compile Include="Models\CreditUnionContactInfo\CreditUnionContactInfoModels.cs" />
+    <Compile Include="Models\DocumentArchitect\DocumentArchitectViewModel.cs" />
+    <Compile Include="Models\ErrorMessages\ErrorMessagesModel.cs" />
+    <Compile Include="Models\ErrorMessages\MeaningfulErrorMessagePresentationModel.cs" />
+    <Compile Include="Models\FeaturesManager\FeaturesManagerModels.cs" />
+    <Compile Include="Models\Forms\FormTemplatetJobjectRequest.cs" />
+    <Compile Include="Models\LayeredSecurity\LayeredSecurityModel.cs" />
+    <Compile Include="Models\LicenseManager\LicenseManagerModels.cs" />
+    <Compile Include="Models\ManageUsers\ManageUserModel.cs" />
+    <Compile Include="Models\Members\DnaMemberPresentationModel.cs" />
+    <Compile Include="Models\Members\MemberPresentationModel.cs" />
+    <Compile Include="Models\Members\MemberSearchViewModel.cs" />
+    <Compile Include="Models\ModelBase.cs" />
+    <Compile Include="Models\NewMobileFeatures\NewMobileFeaturesModel.cs" />
+    <Compile Include="Models\OmegaUser.cs" />
+    <Compile Include="Models\OnlineBankingApi\OnlineBankingApiModels.cs" />
+    <Compile Include="Models\OnlineBankingUsers\AccountNumberAssociationModels.cs" />
+    <Compile Include="Models\OnlineBankingUsers\DeleteInactiveModels.cs" />
+    <Compile Include="Models\PermissionGroups\PermissionGroupsViewModel.cs" />
+    <Compile Include="Models\QrCodeGenerator\QrAuthorizationCode.cs" />
+    <Compile Include="Models\QrCodeGenerator\QrCodeGeneratorModels.cs" />
+    <Compile Include="Models\QrCodeGenerator\WebServiceUrlModels.cs" />
+    <Compile Include="Models\QuickAccessManagement\QuickAccessManagementIndexModel.cs" />
+    <Compile Include="Models\RestrictedWords\RestrictedWordsRequestObject.cs" />
+    <Compile Include="Models\RestrictedWords\RestrictedWordsViewModel.cs" />
+    <Compile Include="Models\Forms\FormsDesignerViewModel.cs" />
+    <Compile Include="Models\Forms\SecureMessageQueuesResponse.cs" />
+    <Compile Include="Models\SecurityKeys\AddKeyVersionClientModel.cs" />
+    <Compile Include="Models\StringResources\StringResouceModel.cs" />
+    <Compile Include="Models\TargetedMarketing\Channel.cs" />
+    <Compile Include="Models\TargetedMarketing\ContentItemUImodel.cs" />
+    <Compile Include="Models\TargetedMarketing\Criteria_AccountNumberGroup.cs" />
+    <Compile Include="Models\TargetedMarketing\Criteria_AccountNumberMatch.cs" />
+    <Compile Include="Models\TargetedMarketing\Criteria_GeoLocationMatch.cs" />
+    <Compile Include="Models\TargetedMarketing\CrudResponse.cs" />
+    <Compile Include="Models\TargetedMarketing\Features.cs" />
+    <Compile Include="Models\TargetedMarketing\Image.cs" />
+    <Compile Include="Models\TargetedMarketing\PromoImage.cs" />
+    <Compile Include="Models\TargetedMarketing\PromoSlot.cs" />
+    <Compile Include="Models\TargetedMarketing\Promotion.cs" />
+    <Compile Include="Models\TargetedMarketing\PromotionFiltersViewModel.cs" />
+    <Compile Include="Models\TargetedMarketing\PromotionImage.cs" />
+    <Compile Include="Models\TargetedMarketing\PromotionImageContainer.cs" />
+    <Compile Include="Models\TargetedMarketing\PromotionRequest.cs" />
+    <Compile Include="Models\TargetedMarketing\PromotionResponse.cs" />
+    <Compile Include="Models\TargetedMarketing\PromotionSlots.cs" />
+    <Compile Include="Models\TargetedMarketing\Qualification.cs" />
+    <Compile Include="Models\TargetedMarketing\Qualification_AccountNumberMatch.cs" />
+    <Compile Include="Models\TargetedMarketing\Qualification_GeoLocationMatch.cs" />
+    <Compile Include="Models\TargetedMarketing\Slot.cs" />
+    <Compile Include="Models\TargetedMarketing\TargetedMarketingModel.cs" />
+    <Compile Include="Models\TargetedMarketing\Xref_PromoSlot.cs" />
+    <Compile Include="Models\TargetedMarketing\Xref_PromoSlotImage.cs" />
+    <Compile Include="Models\TargetedMarketing\Xref_Qualification_AccountNumberGroup.cs" />
+    <Compile Include="Models\ThemeDeployment\ListDeploys.cs" />
+    <Compile Include="Models\ThemeDeployment\SaveDeployment.cs" />
+    <Compile Include="Models\Themes\ListThemes.cs" />
+    <Compile Include="Models\VersionManagement\VersionManagementModels.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Models\ThemeDeployment\UpdateBundle.cs" />
+    <Compile Include="Views\Themes\ThemeFileViewModel.cs" />
+    <Compile Include="Views\Themes\ThemeFileViewModelExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\AlertsAdmin\Content\alerts-admin.css" />
+    <Content Include="Assets\codemirror\addon\display\fullscreen.css" />
+    <Content Include="Assets\codemirror\addon\display\fullscreen.js" />
+    <Content Include="Assets\codemirror\addon\hint\anyword-hint.js" />
+    <Content Include="Assets\codemirror\addon\hint\css-hint.js" />
+    <Content Include="Assets\codemirror\addon\hint\html-hint.js" />
+    <Content Include="Assets\codemirror\addon\hint\javascript-hint.js" />
+    <Content Include="Assets\codemirror\addon\hint\show-hint.css" />
+    <Content Include="Assets\codemirror\addon\hint\show-hint.js" />
+    <Content Include="Assets\codemirror\addon\hint\sql-hint.js" />
+    <Content Include="Assets\codemirror\addon\hint\xml-hint.js" />
+    <Content Include="Assets\codemirror\addon\lint\coffeescript-lint.js" />
+    <Content Include="Assets\codemirror\addon\lint\css-lint.js" />
+    <Content Include="Assets\codemirror\addon\lint\html-lint.js" />
+    <Content Include="Assets\codemirror\addon\lint\javascript-lint.js" />
+    <Content Include="Assets\codemirror\addon\lint\json-lint.js" />
+    <Content Include="Assets\codemirror\addon\lint\lint.css" />
+    <Content Include="Assets\codemirror\addon\lint\lint.js" />
+    <Content Include="Assets\codemirror\addon\lint\yaml-lint.js" />
+    <Content Include="Assets\codemirror\addon\merge\diff_match_patch.js" />
+    <Content Include="Assets\codemirror\addon\merge\merge.css" />
+    <Content Include="Assets\codemirror\addon\merge\merge.js" />
+    <Content Include="Assets\codemirror\lib\codemirror.css" />
+    <Content Include="Assets\codemirror\mode\javascript\index.html" />
+    <Content Include="Assets\codemirror\mode\javascript\javascript.js" />
+    <Content Include="Assets\codemirror\mode\javascript\json-ld.html" />
+    <Content Include="Assets\codemirror\mode\javascript\test.js" />
+    <Content Include="Assets\codemirror\mode\javascript\typescript.html" />
+    <Content Include="Assets\dropzone\dropzone.css" />
+    <Content Include="Assets\dropzone\dropzone.js" />
+    <Content Include="Assets\fontawesome-pro\css\fa-brands.css" />
+    <Content Include="Assets\fontawesome-pro\css\fa-brands.min.css" />
+    <Content Include="Assets\fontawesome-pro\css\fa-light.css" />
+    <Content Include="Assets\fontawesome-pro\css\fa-light.min.css" />
+    <Content Include="Assets\fontawesome-pro\css\fa-regular.css" />
+    <Content Include="Assets\fontawesome-pro\css\fa-regular.min.css" />
+    <Content Include="Assets\fontawesome-pro\css\fa-solid.css" />
+    <Content Include="Assets\fontawesome-pro\css\fa-solid.min.css" />
+    <Content Include="Assets\fontawesome-pro\css\fontawesome-all.css" />
+    <Content Include="Assets\fontawesome-pro\css\fontawesome-all.min.css" />
+    <Content Include="Assets\fontawesome-pro\css\fontawesome.css" />
+    <Content Include="Assets\fontawesome-pro\css\fontawesome.min.css" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-brands-400.svg" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-light-300.svg" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-regular-400.svg" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-solid-900.svg" />
+    <Content Include="Assets\jshint\csslint.js" />
+    <Content Include="Assets\jshint\jshint.min.js" />
+    <Content Include="Assets\jshint\jsonlint.js" />
+    <Content Include="Content\configuration-comparison.css" />
+    <Content Include="Images\arrow-sort-down.png" />
+    <Content Include="Images\arrow-sort-up.png" />
+    <Content Include="Images\icon_alert_44.png" />
+    <Content Include="Images\icon_check_44.png" />
+    <Content Include="Images\icon_fail.png" />
+    <Content Include="Images\ThemeVersionControl.png" />
+    <Content Include="Images\ThemeVersionControlPonyTool.png" />
+    <Content Include="Scripts\HistoryOverlay.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\modal.js" />
+    <Content Include="Scripts\omega-utilities.js" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\new-mobile-features.css" />
+    <Content Include="Content\quick-access.css" />
+    <Content Include="Content\toastr\toastr.css" />
+    <Content Include="Content\toastr\toastr.min.js" />
+    <Content Include="Scripts\autosize.min.js" />
+    <Content Include="Assets\bootstrap-3.3.7.min.js" />
+    <Content Include="Assets\bootstrap\css\bootstrap.css" />
+    <Content Include="Assets\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Assets\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Assets\bootstrap\js\bootstrap.js" />
+    <Content Include="Assets\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Assets\jquery-1.12.4.js" />
+    <Content Include="Assets\jquery-ui-1.12.0.js" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap-themed-light.css" />
+    <Content Include="Content\bootstrap-themed-white.css" />
+    <Content Include="Content\bootstrap-themed-dark.css" />
+    <Content Include="Content\bootstrap-datetimepicker.css" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\error-messages.css" />
+    <Content Include="Content\fonts\bootstrap\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\fonts\font-awesome\fontawesome-webfont.svg" />
+    <Content Include="Content\jquery-ui-1.10.3.custom.css" />
+    <Content Include="Content\jquery-ui\redmond\images\animated-overlay.gif" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-bg_flat_55_fbec88_40x100.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-bg_glass_75_d0e5f5_1x400.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-bg_glass_85_dfeffc_1x400.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-icons_217bc0_256x240.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-icons_469bdd_256x240.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-icons_6da8d5_256x240.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="Content\jquery-ui\redmond\images\ui-icons_f9bd01_256x240.png" />
+    <Content Include="Content\jquery-ui\redmond\jquery-ui-1.10.3.custom.css" />
+    <Content Include="Content\jquery-ui\redmond\jquery-ui-1.10.3.custom.min.css" />
+    <Content Include="Content\layered-security.css" />
+    <Content Include="Content\targeted-marketing.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\fonts\bootstrap\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\bootstrap\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\bootstrap\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\bootstrap\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\fonts\font-awesome\fontawesome-webfont.eot" />
+    <Content Include="Content\fonts\font-awesome\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\font-awesome\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\font-awesome\fontawesome-webfont.woff2" />
+    <Content Include="Content\fonts\font-awesome\FontAwesome.otf" />
+    <Content Include="Content\fonts\google\open-sans-bold.woff" />
+    <Content Include="Content\fonts\google\open-sans-italic-light.woff" />
+    <Content Include="Content\fonts\google\open-sans-italic.woff" />
+    <Content Include="Content\fonts\google\open-sans-light.woff" />
+    <Content Include="Content\fonts\google\open-sans-semibold.woff" />
+    <Content Include="Content\fonts\google\open-sans.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Assets\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Assets\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Assets\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Assets\fontawesome-pro\less\fa-brands.less" />
+    <Content Include="Assets\fontawesome-pro\less\fa-light.less" />
+    <Content Include="Assets\fontawesome-pro\less\fa-regular.less" />
+    <Content Include="Assets\fontawesome-pro\less\fa-solid.less" />
+    <Content Include="Assets\fontawesome-pro\less\fontawesome.less" />
+    <Content Include="Assets\fontawesome-pro\less\_animated.less" />
+    <Content Include="Assets\fontawesome-pro\less\_bordered-pulled.less" />
+    <Content Include="Assets\fontawesome-pro\less\_core.less" />
+    <Content Include="Assets\fontawesome-pro\less\_fixed-width.less" />
+    <Content Include="Assets\fontawesome-pro\less\_icons.less" />
+    <Content Include="Assets\fontawesome-pro\less\_larger.less" />
+    <Content Include="Assets\fontawesome-pro\less\_list.less" />
+    <Content Include="Assets\fontawesome-pro\less\_mixins.less" />
+    <Content Include="Assets\fontawesome-pro\less\_rotated-flipped.less" />
+    <Content Include="Assets\fontawesome-pro\less\_screen-reader.less" />
+    <Content Include="Assets\fontawesome-pro\less\_stacked.less" />
+    <Content Include="Assets\fontawesome-pro\less\_variables.less" />
+    <Content Include="Assets\fontawesome-pro\scss\fa-brands.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\fa-light.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\fa-regular.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\fa-solid.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\fontawesome.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_animated.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_bordered-pulled.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_core.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_fixed-width.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_icons.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_larger.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_list.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_mixins.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_rotated-flipped.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_screen-reader.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_stacked.scss" />
+    <Content Include="Assets\fontawesome-pro\scss\_variables.scss" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-brands-400.eot" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-brands-400.ttf" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-brands-400.woff" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-brands-400.woff2" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-light-300.eot" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-light-300.ttf" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-light-300.woff" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-light-300.woff2" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-regular-400.eot" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-regular-400.ttf" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-regular-400.woff" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-regular-400.woff2" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-solid-900.eot" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-solid-900.ttf" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-solid-900.woff" />
+    <Content Include="Assets\fontawesome-pro\webfonts\fa-solid-900.woff2" />
+    <None Include="Properties\PublishProfiles\DevBuild.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Images\1.png" />
+    <Content Include="Images\ajax_loader.gif" />
+    <Content Include="Images\icon_add_20px.png" />
+    <Content Include="Images\icon_delete_16px.png" />
+    <Content Include="Images\icon_show_less.png" />
+    <Content Include="Images\icon_show_more.png" />
+    <Content Include="Images\icon_trash.png" />
+    <Content Include="Images\whiteLoader.gif" />
+    <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Assets\codemirror\lib\codemirror.js" />
+    <Content Include="Scripts\dhtmlgoodies_nav.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui-1.12.0.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.16.custom.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\loader.js" />
+    <Content Include="Scripts\reset-config.js" />
+    <Content Include="Scripts\Main.js" />
+    <Content Include="Scripts\MasterPage.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\TargetMarketing\OmegaTargetedMarketingPromotionModal.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Styles\atm-branch-locations.css" />
+    <Content Include="Styles\bill-pay-removal.css" />
+    <Content Include="Styles\account-number-association.css" />
+    <Content Include="Styles\alerts2.css" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-icons_222222_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\jquery-ui-1.8.16.custom.css" />
+    <Content Include="Styles\jquery-ui-theme\jquery-ui-timepicker-addon-1.4.3.css" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\animated-overlay.gif" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-bg_flat_55_fbec88_40x100.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-bg_glass_75_d0e5f5_1x400.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-bg_glass_85_dfeffc_1x400.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-icons_217bc0_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-icons_469bdd_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-icons_6da8d5_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\images\ui-icons_f9bd01_256x240.png" />
+    <Content Include="Styles\jquery-ui-theme\redmond\jquery-ui-1.10.3.custom.css" />
+    <Content Include="Styles\jquery-ui-theme\redmond\jquery-ui-1.10.3.custom.min.css" />
+    <Content Include="Styles\permission-groups.css" />
+    <Content Include="Styles\restricted-words.css" />
+    <Content Include="Views\_MainLayout.vbhtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\StringResource\Index.cshtml" />
+    <Content Include="Views\StringResource\GetResources.cshtml" />
+    <Content Include="Views\StringResource\GetResourceKey.cshtml" />
+    <Content Include="Views\StringResource\GetResourceSets.cshtml" />
+    <Content Include="Views\ApplicationConfiguration\Index.cshtml" />
+    <Content Include="Views\ApplicationConfiguration\GetConfigSetting.cshtml" />
+    <Content Include="Views\ApplicationConfiguration\GetDefaultConfig.cshtml" />
+    <Content Include="Views\AppConfig\index.cshtml" />
+    <Content Include="Views\AppConfig\GetConfigSetting.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Home\ForgotPassword.cshtml" />
+    <Content Include="Views\Home\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Home\ResetPassword.cshtml" />
+    <Content Include="Views\Home\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Home\AddNewUser.cshtml" />
+    <Content Include="Views\Home\EditUserPermissions.cshtml" />
+    <Content Include="Views\LayeredSecurity\Index.cshtml" />
+    <Content Include="Views\LayeredSecurity\Feature.cshtml" />
+    <Content Include="Views\LayeredSecurity\Action.cshtml" />
+    <Content Include="Views\LayeredSecurity\AuthenticationMethod.cshtml" />
+    <Content Include="Views\LayeredSecurity\AuthenticationRule.cshtml" />
+    <Content Include="Views\LayeredSecurity\AddUpdateFeature.cshtml" />
+    <Content Include="Views\LayeredSecurity\AddUpdateAction.cshtml" />
+    <Content Include="Views\LayeredSecurity\AddUpdateAuthenticationMethod.cshtml" />
+    <Content Include="Views\TargetedMarketing\Index.cshtml" />
+    <Content Include="Views\TargetedMarketing\_PromoDetailModal.cshtml" />
+    <Content Include="Views\TargetedMarketing\ManagePromotionFilters.cshtml" />
+    <Content Include="Views\TargetedMarketing\_AccountGroupDetailModal.cshtml" />
+    <Content Include="Views\TargetedMarketing\_AccountGroupsView.cshtml" />
+    <Content Include="Views\TargetedMarketing\_AccountGroupsAddListModal.cshtml" />
+    <Content Include="Views\TargetedMarketing\_ContentItemsAddListModal.cshtml" />
+    <Content Include="Views\VersionManagement\Index.cshtml" />
+    <Content Include="Views\VersionManagement\ManageMinimumAppVersion.cshtml" />
+    <Content Include="Views\Home\ChangePassword.cshtml" />
+    <Content Include="Views\TargetedMarketing\_ImagesView.cshtml" />
+    <Content Include="Views\TargetedMarketing\ManageImages.cshtml" />
+    <Content Include="Views\TargetedMarketing\_ImageDetailModal.cshtml" />
+    <Content Include="Views\TargetedMarketing\_PromoDetailModelSlotDetail.cshtml" />
+    <Content Include="Views\VersionManagement\DefaultVersionManagement.cshtml" />
+    <Content Include="Views\TargetedMarketing\_PromoImageAddSelect.cshtml" />
+    <Content Include="Views\LicenseManager\Index.cshtml" />
+    <Content Include="Views\QrCodeGenerator\Index.cshtml" />
+    <Content Include="Views\FeaturesManager\AddUpdateFeature.cshtml" />
+    <Content Include="Views\FeaturesManager\AddUpdateFeatureGroup.cshtml" />
+    <Content Include="Views\FeaturesManager\AddUpdateSetting.cshtml" />
+    <Content Include="Views\FeaturesManager\GetFeature.cshtml" />
+    <Content Include="Views\FeaturesManager\GetFeatureList.cshtml" />
+    <Content Include="Views\FeaturesManager\Index.cshtml" />
+    <Content Include="Views\FeaturesManager\ViewFeatureGroups.cshtml" />
+    <Content Include="Views\FeaturesManager\ViewSettings.cshtml" />
+    <Content Include="Views\FeaturesManager\GetFeatureGroupList.cshtml" />
+    <Content Include="Views\FeaturesManager\GetFeatureGroup.cshtml" />
+    <Content Include="Views\FeaturesManager\GetSetting.cshtml" />
+    <Content Include="Views\FeaturesManager\GetSettingList.cshtml" />
+    <Content Include="Views\Home\DashboardDemo.cshtml" />
+    <Content Include="Views\CreditUnionContactInfo\Index.cshtml" />
+    <Content Include="Views\CreditUnionContactInfo\EditContactUsGroup.cshtml" />
+    <Content Include="Views\CreditUnionContactInfo\EditContactUsPhoneNumbers.cshtml" />
+    <Content Include="Views\CreditUnionContactInfo\EditContactUsPhoneHours.cshtml" />
+    <Content Include="Views\CreditUnionContactInfo\EditorTemplates\ContactUsPhoneHourModel.cshtml" />
+    <Content Include="Views\CreditUnionContactInfo\EditorTemplates\ContactUsPhoneNumberModel.cshtml" />
+    <Content Include="Views\OnlineBankingApi\Index.cshtml" />
+    <Content Include="Views\OnlineBankingApi\AddUpdateApiCredentials.cshtml" />
+    <Content Include="Views\OnlineBankingApi\GetApiCredentialsList.cshtml" />
+    <Content Include="Views\Alerts2\Index.cshtml" />
+    <Content Include="Views\QrCodeGenerator\EditUrls.cshtml" />
+    <Content Include="Views\QrCodeGenerator\AddUpdateUrl.cshtml" />
+    <Content Include="Views\ErrorMessages\Index.cshtml" />
+    <Content Include="Views\ErrorMessages\_MeaningfulErrorMessagesList.cshtml" />
+    <Content Include="Views\Shared\_MemberSearch.cshtml" />
+    <Content Include="Views\Shared\_MemberSearchResult.cshtml" />
+    <Content Include="Views\LicenseManager\GetFeaturesForClient.cshtml" />
+    <Content Include="Views\TargetedMarketing\_FeaturesGroupsView.cshtml" />
+    <Content Include="Views\QuickAccessManagement\Index.cshtml" />
+    <Content Include="Views\QuickAccessManagement\UserDeviceList.cshtml" />
+    <Content Include="Views\ApplicationConfigurationTests\PassThroughMessagesModal.cshtml" />
+    <Content Include="Views\NewMobileFeatures\Index.cshtml" />
+    <Content Include="Views\NewMobileFeatures\_MobileFeatureDetailModal.cshtml" />
+    <Content Include="Views\OnlineBankingUsers\DeleteInactive.cshtml" />
+    <Content Include="Views\Shared\FeatureNotAvailable.cshtml" />
+    <Content Include="Views\Themes\Index.cshtml" />
+    <Content Include="Views\Themes\_EditThemeModal.cshtml" />
+    <Content Include="Views\Themes\Theme.cshtml" />
+    <Content Include="Views\Themes\_EditFileModal.cshtml" />
+    <Content Include="Views\Themes\_DeleteFileModal.cshtml" />
+    <Content Include="Views\Themes\_UploadFileModal.cshtml" />
+    <Content Include="Views\Themes\_DeprecateThemeModal.cshtml" />
+    <Content Include="Views\ConfigurationComparison\Index.cshtml" />
+    <Content Include="Views\ConfigurationComparison\_ConfigurationComparisonsView.cshtml" />
+    <Content Include="Views\ConfigurationComparison\_SettingModal.cshtml" />
+    <Content Include="Views\Themes\_ViewFileModal.cshtml" />
+    <Content Include="Views\Themes\_PublishThemeModal.cshtml" />
+    <Content Include="Views\Themes\_PublishDetailsModal.cshtml" />
+    <Content Include="Views\Themes\_SelectThemesModal.cshtml" />
+    <Content Include="Views\ApplicationConfiguration\HistoryOverlayConfig.cshtml" />
+    <Content Include="Views\AuditLogExport\Index.cshtml" />
+    <Content Include="Views\CreditUnionContactInfo\EditContactUsLinks.cshtml" />
+    <Content Include="Views\CreditUnionContactInfo\EditorTemplates\ContactUsLinkModel.cshtml" />
+    <Content Include="Views\OnlineBankingUsers\AccountNumberAssociation.cshtml" />
+    <Content Include="Views\SecurityKeys\Index.cshtml" />
+    <Content Include="Views\SecurityKeys\_AddKeyVersionModal.cshtml" />
+    <Content Include="Views\SecurityKeys\_ListKeyVersionsModal.cshtml" />
+    <Content Include="Views\SecurityKeys\_AddKeyModal.cshtml" />
+    <Content Include="Views\SecurityKeys\_RotateKeyModal.cshtml" />
+    <Content Include="Views\ThemeDeployment\Index.cshtml" />
+    <Content Include="Views\ThemeDeployment\_EditDeployModal.cshtml" />
+    <Content Include="Views\ThemeDeployment\_UpdateBundleModal.cshtml" />
+    <Content Include="Views\BillPayManagement\BillPayRemoval.cshtml" />
+    <Content Include="Views\PermissionGroups\Index.cshtml" />
+    <Content Include="Views\PermissionGroups\_AddEditModal.cshtml" />
+    <Content Include="Views\FormsDesigner\Index.cshtml" />
+    <Content Include="Views\RestrictedWords\Index.cshtml" />
+    <Content Include="Views\AtmBranchLocations\Index.cshtml" />
+    <Content Include="Views\AtmBranchLocations\_AddEditForm.cshtml" />
+    <Content Include="Views\DocumentArchitect\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Views\OmegaBase\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Project_Readme.html" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Connect.OnlineBanking.Business\OnlineBanking.Business.csproj">
+      <Project>{7D5BC538-5F39-49A5-886F-9CE64153069B}</Project>
+      <Name>OnlineBanking.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Connect.Presentation.HomeBanking.Admin\Connect.Presentation.HomeBanking.Admin.vbproj">
+      <Project>{0738be02-bc8f-4705-a457-a88ae1fa3531}</Project>
+      <Name>Connect.Presentation.HomeBanking.Admin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Connect.Utilities.HomeBanking\Connect.Utilities.HomeBanking.csproj">
+      <Project>{0345d646-f7a8-431a-8176-1afdc9ec08ae}</Project>
+      <Name>Connect.Utilities.HomeBanking</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PSI.Models.ClientConfigurationModels.Agatha\Psi.Models.ClientConfigurationModels.Agatha.csproj">
+      <Project>{71ec05b4-4f89-4c4a-877b-4e09b67b98dd}</Project>
+      <Name>Psi.Models.ClientConfigurationModels.Agatha</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psi.Models.ClientConfigurationModels\Psi.Models.ClientConfigurationModels.csproj">
+      <Project>{0f02a8a3-4374-4d6a-bc59-e4e74dadc133}</Project>
+      <Name>Psi.Models.ClientConfigurationModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psi.Models.Domain\Psi.Models.Domain.csproj">
+      <Project>{6A851A11-0B4F-4A58-B069-9E4142E1BB31}</Project>
+      <Name>Psi.Models.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psi.Models.HomeBanking\Psi.Models.HomeBanking.csproj">
+      <Project>{AC1FC647-3A5B-45F0-9306-BA15D1DE0C1B}</Project>
+      <Name>Psi.Models.HomeBanking</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psi.Models.RequestResponse\Psi.Models.RequestResponse.csproj">
+      <Project>{341D5E72-4D51-4453-BB80-E27585304C3B}</Project>
+      <Name>Psi.Models.RequestResponse</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psi.ServiceHost.Client.Implementation\Psi.ServiceHost.Client.Implementation.csproj">
+      <Project>{d2c49132-16ad-41ff-a696-611aabebfdaa}</Project>
+      <Name>Psi.ServiceHost.Client.Implementation</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>60434</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost/Omega</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <Target Name="CopyLinkedContentFiles" BeforeTargets="Build">
+    <Copy SourceFiles="%(Content.Identity)" DestinationFiles="%(Content.Link)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Condition="'%(Content.Link)' != ''" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

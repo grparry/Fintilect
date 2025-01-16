@@ -1,0 +1,38 @@
+﻿@using Psi.Data.Models.Domain;
+
+@model List<SystemMessage>
+
+<hr />
+ 
+ <table class="table table-bordered table-striped table-responsive" >
+     <thead>
+         <tr>
+             <th>Date</th>
+             <th>Type</th>
+             <th>Sub-Type</th>
+             <th>Message</th>
+         </tr>
+     </thead>
+
+     <tbody>
+         @if (Model.Count > 0)
+         {
+             foreach (var item in Model)
+             {
+                <tr>
+                    <td Data-title="Date">@item.AtUtc.ToString()</td>
+                    <td Data-title="Type">@item.Type</td>
+                    <td Data-title="Sub-Type">@item.SubType</td>
+                    <td Data-title="Message">@item.Message</td>
+                </tr>
+             }
+         }
+         else
+         {
+            <tr>
+                <td colspan="4">No message found</td>
+            </tr>
+         }
+     </tbody>
+ </table>
+

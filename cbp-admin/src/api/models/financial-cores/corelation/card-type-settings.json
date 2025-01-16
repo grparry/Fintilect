@@ -1,0 +1,35 @@
+{
+  "CorelationCardTypeSettings": {
+    "type": "object",
+    "properties": {
+      "cardTypes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "limits": {
+              "type": "object",
+              "properties": {
+                "daily": {
+                  "type": "number"
+                },
+                "monthly": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

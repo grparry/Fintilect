@@ -1,0 +1,77 @@
+﻿@model Psi.Data.Models.Domain.Themes.ThemeModel
+
+<div class="modal fade">
+    <!-- Modal Layout -->
+    <div class="modal-dialog">
+        <div id="partial-view-modal-content" class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                <h4 class="modal-title">
+                    @if (Model.ParentTheme != null)
+                    {
+                        <text>
+                            Create Sub Theme Of @Model.ParentTheme.Title
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            Create New Theme
+                        </text>
+                    }
+                    
+                </h4>
+            </div>
+
+	        @using (Ajax.BeginForm("Theme", new AjaxOptions
+			{
+				HttpMethod = "POST",
+				OnBegin = "PsiModal.BeginFormSubmit",
+				OnFailure = "PsiModal.FormSubmitFailed",
+				OnSuccess = "newThemeModalSubmitted"
+			}))
+			{
+		        <div class="modal-body">
+			
+			        <div class="form-group Title-form-group">
+				        @Html.LabelFor(x => x.Title)
+				        @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+			        </div>
+
+					@Html.HiddenFor(x => x.Product)
+					@Html.HiddenFor(x => x.ParentThemePublicId)
+					@Html.HiddenFor(x => x.MinimumAndroidVersion)
+					@Html.HiddenFor(x => x.MinimumIosVersion)
+		        </div><!-- End modal-body --> 
+
+
+		        <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			        <input type="submit" class="btn btn-primary" value="@(Model.PublicId == Guid.Empty ? "Create Theme" : "Save Theme")" />
+		        </div>
+	        }
+			
+	        <script>
+        		function newThemeModalSubmitted(newTheme) {
+					@if (Model.PublicId == Guid.Empty)
+					{
+						<text>
+							// Take the user to the new theme page
+							window.location = newTheme.url;
+						</text>
+					}
+					else
+					{
+						<text>
+							// Take the user to the new theme page ?DBD:  Where should this go?  This is not the new theme page.
+							window.location.reload();
+						</text>
+					}
+		        }
+        	</script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

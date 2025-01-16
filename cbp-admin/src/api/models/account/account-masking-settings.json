@@ -1,0 +1,16 @@
+{
+  "AccountMaskingSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/AccountMaskingSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/AccountMaskingFeatures"
+      }
+    }
+  }
+}

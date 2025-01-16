@@ -1,0 +1,16 @@
+{
+  "VirusScanningSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/VirusScanningSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/VirusScanningFeatures"
+      }
+    }
+  }
+}

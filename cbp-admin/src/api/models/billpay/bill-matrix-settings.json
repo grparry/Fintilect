@@ -1,0 +1,16 @@
+{
+  "BillMatrixSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/BillMatrixSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/BillMatrixFeatures"
+      }
+    }
+  }
+}

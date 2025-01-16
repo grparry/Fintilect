@@ -1,0 +1,13 @@
+{
+  "CardSettings": {
+    "type": "object",
+    "properties": {
+      "cardManagement": {
+        "$ref": "./management/card-management.json#/CardManagementSettings"
+      },
+      "offlineCard": {
+        "$ref": "./offline/offline-card.json#/OfflineCardSettings"
+      }
+    }
+  }
+}

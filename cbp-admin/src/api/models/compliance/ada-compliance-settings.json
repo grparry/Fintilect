@@ -1,0 +1,13 @@
+{
+  "ADAComplianceSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/ADASettings"
+      }
+    }
+  }
+}

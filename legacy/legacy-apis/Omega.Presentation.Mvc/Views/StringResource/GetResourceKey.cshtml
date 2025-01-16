@@ -1,0 +1,130 @@
+﻿@using Omega.Presentation.Mvc.Business
+@model Omega.Presentation.Mvc.Models.StringResources.GetResourceModel
+
+@{
+    var activeResource = Model.GetCurrentKey();   
+}
+<div class="row">
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading-psi">
+                <strong>Values</strong>
+            </div>
+            <div class="panel-body resouce-panel-body">
+                <button type="button" onclick="StringResource.GetResourceValue(this);" class="btn btn-primary btn-block" resource-key="@Model.DefaultKey.Key" resource-set="@Model.DefaultKey.ResourceSet" resource-id="0">Default</button>
+                @foreach (var resource in Model.Keys)
+                {
+                    <button type="button" onclick="StringResource.GetResourceValue(this);" class="btn btn-default btn-block" title="Value: @resource.Value.First(100)" resource-key="@resource.Key" resource-set="@resource.ResourceSet" resource-id="@resource.Id" resource-start="@resource.StartAt.ToLocal()" resource-end="@(resource.EndAt?.ToLocal().ToString() ?? "")">
+                        From: @resource.StartAt.ToLocal().ToString("d")
+                        @if (resource.EndAt.HasValue)
+                        {
+                            Html.Raw($" To: {resource.EndAt.ToLocal()?.ToString("d")}");
+                        }
+                        @if (resource == activeResource)
+                        {
+                            <span class="text-success">&nbsp;&nbsp;<span class="glyphicon glyphicon-check"></span></span>
+                        }
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-heading-psi">
+                <strong>Update Resource Panel</strong>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    <strong><span class="glyphicon glyphicon-exclamation-sign"></span></strong>&nbsp;&nbsp;
+                    When you save changes it creates a new record it does not edit or modify an existing record. You can plan to have a new resource value go into effect at a future date.
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Resource Set</label>
+                        <div class="col-md-8">
+                            <input type="text" id="resource-set-textbox" class="form-control" value="@Model.DefaultKey.ResourceSet" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Key</label>
+                        <div class="col-md-8">
+                            <input type="text" id="resource-key-textbox" class="form-control" value="@Model.DefaultKey.Key" readonly="readonly"/>
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                        <label class="control-label col-md-4">Start At</label>
+                        <div class="col-md-8">
+                            <input type="datetime" id="resource-start-textbox" id="resourceStartAt" class="form-control" value=""/>
+                        </div>
+                    </div>*@
+
+
+
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Start At</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="resourceStartAt" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4">End At</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="resourceEndAt" value=""/>
+                        </div>
+                    </div>
+
+
+
+                    @*<div class="form-group">
+                        <label class="control-label col-md-4">End At</label>
+                        <div class="col-md-8">
+                            <input type="datetime" id="resource-end-textbox" id="resourceEndAt" class="form-control" value=""/>
+                        </div>
+                    </div>*@
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Value</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" id="resource-value-textbox" rows="10"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-4 col-md-8">
+                            @if (Util.CanEdit(Model, Model.DefaultKey))
+                            {
+                                <button type="button" class="btn btn-primary" onclick="StringResource.SaveResource(this);">Save & Close</button>
+                            }
+
+                            <button type="button" class="btn btn-default" onclick="StringResource.ShowHtmlInModal(this, 'resource-value-textbox');">Show as HTML</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.DefaultKey.PermissionLevel.HasValue && Model.DefaultKey.PermissionLevel.Value == (int) PermissionLevel.Owner)
+{
+    <div class="col-md-12">
+        <div class="alert alert-info">
+            <span class="glyphicon glyphicon-lock"></span>&nbsp; This setting can only be updated by the software vendor.
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#resourceStartAt').datetimepicker();
+        $('#resourceEndAt').datetimepicker({
+            useCurrent: false //Important! See issue #1075
+        });
+        $("#resourceStartAt").on("dp.change", function (e) {
+            $('#resourceEndAt').data("DateTimePicker").minDate(e.date);
+        });
+        $("#resourceEndAt").on("dp.change", function (e) {
+            $('#resourceStartAt').data("DateTimePicker").maxDate(e.date);
+        });
+
+        AutoSizeTextAreas.Set();
+    });
+</script>

@@ -1,0 +1,16 @@
+{
+  "AchFileServiceSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/AchFileServiceSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/AchFileServiceFeatures"
+      }
+    }
+  }
+}

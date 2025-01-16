@@ -1,0 +1,101 @@
+﻿@using Omega.Presentation.Mvc.Models.QuickAccessManagement
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model QuickAccessManagementIndexModel
+
+@{
+    ViewBag.Title = "Quick Access Management";
+    ViewBag.Subtitle = "This feature allows you to delete quick access tokens for certain devices";
+    ViewBag.ActiveMenu = "quick-access-management";
+    ViewBag.BaseModel = Model;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section LinkedStyleSheets {
+    <link href='@Url.Content("~/Content/quick-access.css")' rel="stylesheet" />
+}
+
+@if (!SettingsManager.Settings.OmegaConfiguration.Features.QuickAccessManagementEnabled)
+{
+    <div class="alert alert-info">
+        We are sorry to inform you that this feature is currently unavailable.
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <label for="memberUuid">Member Account</label>
+            <input type="text" class="form-control" id="memberUuid" placeholder="Member Id" />
+            <button id="quickAccessMemberSearchButton" type="button" class="btn btn-default" onclick="quickAccessTokenManagement.LoadDevices()">Search</button>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+        <div class="col-md-12">
+            <div id="userDeviceList">
+                @* Content will be rendered here dynamically. *@
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="tokensDeletedSuccessModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Quick Access Tokens Successfully Deleted</h3>
+                </div>
+                <div class="modal-body" id="tokensDeletedSuccessModalBody">
+                    The tokens were deleted successfully.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="tokensDeletedFailureModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Error</h3>
+                </div>
+                <div class="modal-body" id="tokensDeletedFailureModalBody">
+                    An error occurened when trying to delete the tokens.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var quickAccessTokenManagement = {
+            LoadDevices: function () {
+                Util.ShowLoading();
+                var uuid = $('#memberUuid').val();
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#userDeviceList').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#userDeviceList', status);
+                    }
+                };
+                $.get('./QuickAccessManagement/GetUserDevices?uuid=' + uuid, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            DeleteTokensForDevice: function (account, uuid, deviceGuid) {
+                Util.ShowLoading();
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success' && data === 'True') {
+                        $('#tokensDeletedSuccessModal').modal();
+                        quickAccessTokenManagement.LoadDevices();
+                    } else {
+                        $('#tokensDeletedFailureModal').modal();
+                    }
+                };
+                $.post('./QuickAccessManagement/DeleteQuickAccessTokens?Uuid=' + uuid + '&Account=' + account + '&DeviceGuid=' + deviceGuid, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            }
+        };
+    </script>
+}

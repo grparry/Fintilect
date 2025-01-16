@@ -1,0 +1,152 @@
+﻿@using System.Web.Mvc.Html
+@using JetBrains.Annotations
+@using Psi.Data.Models.Domain.ThemeDeploy;
+@using Psi.Data.Models.Domain.Themes
+@model Omega.Presentation.Mvc.Models.ThemeDeployment.ListDeployViewModel
+
+@helper AddThemeRow(ThemeDeployModel deploy, string className)
+{
+<tr class="@className" data-public-id="@deploy.DeploymentId" data-parent-id="@deploy.DefaultDeploymentVersion">
+
+    <td class="theme-title">
+        <i>@deploy.Title</i>
+    </td>
+    <td>
+        <div class="dropdown">
+            <button class="btn btn-default btn-xs dropdown-toggle" style="transform: scale(1.5); background-color: rgba(100, 100, 100, 0.4);" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                @if (deploy.DeploymentId != Guid.Empty)
+                {
+
+                    <li>
+                        <a modal-href="@Url.Action("UpdateBundleModal", new {id = deploy.DeploymentId, product = ThemeProduct.ConnectNative})" href="#">Add Theme Bundle to Deploy</a>
+                    </li>
+
+
+                    <li>
+                        <a modal-href="@Url.Action("EditDeployModal", new {id = deploy.DeploymentId})" href="#">Rename</a>
+                    </li>
+
+
+                    <li>@Html.ActionLink("Download", "DownloadTheme", "ThemeDownload", new { publicId = deploy.DeploymentId }, null)</li>
+                    if (deploy.DefaultDeploymentVersion == null) //Only allow the creation of sub themes for root themes.  No sub sub themes allowed.
+                    {
+                        <li>
+                            <a modal-href="@Url.Action("EditDeployModal", new {id = Guid.Empty, parentId = deploy.DeploymentId})" href="#">Create Sub Deployment</a>
+                        </li>
+                    }
+
+                }
+
+            </ul>
+        </div>
+    </td>
+
+    <td>
+        @if (deploy.DeploymentId != Guid.Empty)
+        {
+            <span>
+                <span class="extra-info">@deploy.DeploymentId</span> &nbsp;
+                <a href="#" class="copy-public-id">
+                    <i class="fa fa-copy"></i>
+                </a>
+            </span>
+        }
+    </td>
+
+    <td class="text-center">@deploy.Description</td>
+    <td class="text-center">@deploy.DateCreatedUtc.ToShortDateString()</td>
+    <td class="text-center">@deploy.LastUpdatedUtc.ToShortDateString()</td>
+    <td class="text-center">@deploy.MinIosVersion</td>
+    <td class="text-center">@deploy.MinAndroidVersion</td>
+    <td class="text-center">@deploy.DeploymentVersion</td>
+    <td class="text-center">@deploy.DefaultDeploymentVersion</td>
+
+
+</tr>
+}
+@{
+    ViewBag.Title = "Connect Native";
+    ViewBag.Subtitle = "Theme Deployment";
+    ViewBag.ActiveMenu = "connect-native-theme-deployment";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.CodeMirror = true;
+}
+<script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<div class="row">
+    <div class="panel panel-default col-md-12">
+        <div class="panel-body">
+
+            <table class="table table-striped theme-list">
+                <thead>
+                <tr>
+                    <th>Theme</th>
+                    <td></td>
+                    <th>Guid</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">Created</th>
+                    <th class="text-center">Modified</th>
+                    <th class="text-center">Min iOS Version</th>
+                    <th class="text-center">Min Android Version</th>
+                    <th class="text-center">Deployment Version</th>
+                    <th class="text-center">Default Deployment Version</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr style="height: 3px;"><td colspan="10" style="height: 3px; background-color: #999; padding: 0;"></td></tr>
+
+                @foreach (var deploy in Model.Deploys.Where(x => x.DefaultDeploymentVersion == null).OrderBy(x => x.DateCreatedUtc))
+                {
+                    @AddThemeRow(deploy,"")
+                    var currentThemesChildren = Model.Deploys.Where(x => x.DefaultDeploymentVersion.HasValue && x.DefaultDeploymentVersion == deploy.DeploymentId).OrderBy(x => x.DateCreatedUtc);
+                    foreach (var currentThemesChild in currentThemesChildren)
+                    {
+                        @AddThemeRow(currentThemesChild,"deploy-child-row");
+                    }
+                }
+
+                @if (Model == null || Model.Deploys.Count == 0)
+                {
+                    <tr>
+                        <td class="text-center extra-info" colspan="500">
+                            No deploys exist yet.
+                        </td>
+                    </tr>
+                }
+
+                </tbody>
+            </table>
+            <div style="display: flex; align-items: baseline; justify-content: space-between;">
+                <div>
+                    @if (Model.Deploys.Any(x => x.DefaultDeploymentVersion == null))
+                    {
+                        <a modal-href="@Url.Action("EditDeployModal", new {id = Model.Deploys.First(x => x.DefaultDeploymentVersion == null).DeploymentId})" class="btn btn-default"><i class="fa fa-plus"></i>&nbsp; Create Sub Deployment</a>
+                    }
+                    else
+                    {
+                        <a modal-href="@Url.Action("EditDeployModal", new {id = Guid.Empty})" class="btn btn-default"><i class="fa fa-plus"></i>&nbsp; Create New Deployment</a>
+                    }
+                </div>
+                <div>
+                    Count: @Model.Deploys.Count
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        $('.show-nested').click(function (e) {
+            var guid = $(this).data('public-id');
+            $(this).toggleClass('fa-plus-square');
+            $(this).toggleClass('fa-minus-square');
+            console.log(guid);
+            $(`[data-parent-id='${guid}']`).toggle();
+        })
+    })
+</script>

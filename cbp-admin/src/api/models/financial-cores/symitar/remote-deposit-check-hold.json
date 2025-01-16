@@ -1,0 +1,27 @@
+{
+  "SymitarRemoteDepositCheckHoldSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "holdDuration": {
+        "type": "integer"
+      },
+      "thresholds": {
+        "type": "object",
+        "properties": {
+          "noHold": {
+            "type": "number"
+          },
+          "standardHold": {
+            "type": "number"
+          },
+          "extendedHold": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}

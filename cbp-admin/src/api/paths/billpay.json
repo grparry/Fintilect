@@ -1,0 +1,172 @@
+{
+  "/bill-pay": {
+    "get": {
+      "tags": ["billpay"],
+      "summary": "List all bill pay configurations",
+      "operationId": "listBillPayConfigs",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 20
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Bill pay configurations retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../models/billpay.json#/BillPaySettings"
+                    }
+                  },
+                  "total": {
+                    "type": "integer"
+                  },
+                  "page": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["billpay"],
+      "summary": "Create a new bill pay configuration",
+      "operationId": "createBillPayConfig",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/billpay.json#/BillPaySettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Bill pay configuration created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/billpay.json#/BillPaySettings"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/bill-pay/{id}": {
+    "get": {
+      "tags": ["billpay"],
+      "summary": "Get a specific bill pay configuration",
+      "operationId": "getBillPayConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Bill pay configuration retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/billpay.json#/BillPaySettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["billpay"],
+      "summary": "Update a bill pay configuration",
+      "operationId": "updateBillPayConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/billpay.json#/BillPaySettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Bill pay configuration updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/billpay.json#/BillPaySettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["billpay"],
+      "summary": "Delete a bill pay configuration",
+      "operationId": "deleteBillPayConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Bill pay configuration deleted successfully"
+        }
+      }
+    }
+  }
+}

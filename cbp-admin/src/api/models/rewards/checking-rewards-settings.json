@@ -1,0 +1,13 @@
+{
+  "CheckingRewardsSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "realTimeRedemption": {
+        "$ref": "./real-time-redemption.json#/RealTimeRedemptionSettings"
+      }
+    }
+  }
+}

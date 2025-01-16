@@ -1,0 +1,25 @@
+﻿@model Psi.Data.Models.Domain.ContactUs.ContactUsPhoneHourModel
+
+<div class="form-group">
+    @Html.LabelFor(m => m.DayRange, new {@class = "col-md-3 control-label"})
+    <div class="col-md-7">
+        @Html.TextBoxFor(m => m.DayRange, new {@class = "form-control"})
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.FromTime, new {@class = "col-md-3 control-label"})
+    <div class="col-md-7">
+        @Html.TextBoxFor(m => m.FromTime, new {@class = "form-control", type="time"})
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ToTime, new {@class = "col-md-3 control-label"})
+    <div class="col-md-7">
+        @Html.TextBoxFor(m => m.ToTime, new {@class = "form-control", type="time"})
+    </div>
+</div>
+@Html.HiddenFor(m => m.Id)
+@Html.HiddenFor(m => m.ContactUsGroupId)
+@Html.HiddenFor(m => m.ContactUsPhoneNumberId)
+<br />
+<br />

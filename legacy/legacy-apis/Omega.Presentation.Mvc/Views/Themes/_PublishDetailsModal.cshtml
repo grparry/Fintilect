@@ -1,0 +1,81 @@
+﻿@model List<Psi.Data.Models.Domain.Themes.ThemeModel>
+
+<div class="modal fade destroy-when-closed">
+    <!-- Modal Layout -->
+    <div class="modal-dialog modal-lg">
+        <div id="partial-view-modal-content" class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+	            <h4 class="modal-title">
+		            Publish History for "@(Model.FirstOrDefault()?.Title)"
+	            </h4>
+            </div>
+
+	        <div class="modal-body content">
+		        <div class="panel panel-default">
+
+			        <table class="table table-striped theme-list">
+				        <thead>
+				        <tr>
+					        <th>Published On</th>
+							<th> </th>
+							<th>Notes</th>
+							<th>Guid</th>
+				        </tr>
+				        </thead>
+				        <tbody>
+
+				        @foreach (var theme in Model)
+				        {
+					        <tr data-public-id="@theme.PublicId">
+						        <td>
+							        @(theme.PublishedDate?.ToShortDateString() ?? "")
+							        @(theme.PublishedDate?.ToLongTimeString() ?? "")
+						        </td>
+						        <td>
+									<div class="dropdown">
+										<button class="btn btn-default btn-xs dropdown-toggle" style="transform: scale(1.5); background-color: rgba(100, 100, 100, 0.4);" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+											<span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+											<li>@Html.ActionLink("Download", "DownloadTheme", "ThemeDownload", new { publicId = theme.PublicId }, null)</li>
+
+											@* TODO: Eventually add ability to test in browser?  Deprecate? etc. *@
+										</ul>
+									</div>
+						        </td>
+						        <td>@theme.Notes</td>
+						        <td>
+							        <span>
+								        <span class="extra-info">@theme.PublicId</span> &nbsp; <a href="#" class="copy-public-id">
+									        <i class="fa fa-copy"></i>
+								        </a>
+							        </span>
+						        </td>
+					        </tr>
+				        }
+				        </tbody>
+			        </table>
+		        </div>
+
+	        </div><!-- End modal-body -->
+
+
+	        <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        </div>
+			
+	        <script>
+        		$(function () {
+        			$(".copy-public-id").on('click', function () {
+        				OmegaUtilies.copyToClipboard($(this).closest("tr").attr("data-public-id"));
+        				toastr.success("Guid copied to clipboard!");
+        			});
+        		})
+        	</script>
+			
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

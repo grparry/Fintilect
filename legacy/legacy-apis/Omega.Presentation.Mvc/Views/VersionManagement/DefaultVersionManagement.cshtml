@@ -1,0 +1,102 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.VersionManagement
+@using Psi.Data.Models.Domain
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model DefaultVersionManagementModel
+
+@{
+    ViewBag.Title = "Default Version Management";
+    ViewBag.ActiveMenu = "version-management";
+    ViewBag.BaseModel = Model;
+}
+
+
+@if (!SettingsManager.Settings.OmegaConfiguration.Features.VersionManagementEnabled && Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+{
+    <div class="alert alert-info">
+        We are sorry to inform you that this feature is currently unavailable.
+    </div>
+}
+else
+{
+    <h2>Default Version Version Management</h2>
+
+    <div class="row">
+        This feature displays table information of the different mobile app versions and also Client information.
+    </div>
+    <br />
+    <br />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/loader.js")"></script>
+    <script type="text/javascript">
+        
+
+    </script>
+        <h3 class="text-center">Default Application Versions</h3>
+        <div id="appVersions" style="width: 100%; height: 100%;"></div>
+            <br />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="col-md-1">Version</th>
+                </tr>
+            </thead>
+            @foreach (var appVersion in Model.AppVersions)
+            {
+                <tr>
+                    <td>@appVersion.Version</td>
+                </tr>
+            }
+        </table>
+
+        using (Html.BeginForm("AddNewVersion", "VersionManagement", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
+        {
+        <div style="padding-left: 0%">
+            Add Application Version&nbsp;
+            @Html.TextBoxFor(m => m.NewVersion, new
+            {
+                type = "decimal",
+                style = "width: 90px;"
+            })
+            <input type="submit" class="btn btn-default" value="Submit" style="height: 26px; font-size: 11px"/>
+        </div>
+        }
+
+
+    <h3 class="text-center">Clients Mobile Versions</h3>
+        <div id="appVersions" style="width: 100%; height: 100%;"></div>
+        <br />
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-md-1">Client Context</th>
+                        <th class="col-md-1">CurrentIosAppVersion</th>
+                        <th class="col-md-1">CurrentAndroidAppVersion</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>@ApplicationConfigHelper.Config.ClientContextName</td>
+                    <td>@Model.ClientContextVersions.CurrentIosAppVersion</td>
+                    <td>@Model.ClientContextVersions.CurrentAndroidAppVersion</td>
+                </tr>
+            </table>
+
+    using (Html.BeginForm("UpdateClients", "VersionManagement", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        <div style="padding-left: 14%">
+            Update Client Versions
+            @Html.TextBoxFor(m => m.ClientContextVersions.CurrentIosAppVersion, new
+               {
+                   type = "text",
+                   style = "width: 190px; margin-left: 15px;"
+               })
+            @Html.TextBoxFor(m => m.ClientContextVersions.CurrentAndroidAppVersion, new
+               {
+                   type = "text",
+                   style = "width: 190px; margin-left: 200px;"
+               })
+            <input type="submit" class="btn btn-default" value="Submit" style="height: 26px; font-size: 11px; margin-left: 15px"/>
+
+        </div>
+    }
+
+}

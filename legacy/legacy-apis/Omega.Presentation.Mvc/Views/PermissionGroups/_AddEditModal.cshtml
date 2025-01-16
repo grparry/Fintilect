@@ -1,0 +1,102 @@
+﻿@using Psi.Data.Models.Domain.OmegaUsers;
+
+@model Omega.Presentation.Mvc.Models.PermissionGroups.PermissionGroupsViewModel
+
+<div id="permission-group-edit-modal" class="modal fade">
+    <!-- Modal Layout -->
+    <div class="modal-dialog large">
+        <div id="partial-view-modal-content" class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    @(ViewBag.Mode == "update" ? Model.SelectedPermissionGroup.Name : "Create New Permission Group")
+                </h4>
+            </div>
+
+            <div class="modal-body permission-group-modal-body">
+                <!-- VALIDATION DIV -->
+                <div id="ModalValidatorDiv" class="alert alert-danger" style="display: none; color: #771908;">
+                    There were errors in your form entries:
+                </div>
+
+                <!-- SUCCESS DIV -->
+                <div id="ModalSuccessDiv" class="alert alert-success" style="display: none; color: #222222;">
+                    <div style="float: right; margin-top: -8px;"><input type="button" class="btn btn-primary" id="CancelFeatureModalButton" value="Continue" data-dismiss="modal" /></div>
+                    <div style="width: 50%;">Your Permission Group data has been saved.</div>
+                </div>
+
+                <!-- FAILURE DIV -->
+                <div id="ModalFailureDiv" class="alert alert-danger" style="display: none; color: #222222;">
+                    <div style="float: right; margin-top: -8px;"><input type="button" class="btn btn-primary" id="CancelFeatureFailureButton" value="Continue" data-dismiss="modal" /></div>
+                    We were unable to save your data, please try again later.
+                </div>
+
+                <!-- PROCESSING DIV -->
+                <div id="ModalProcessingDiv" class="text-center" style="display:none; margin-bottom: 14px;">
+                    <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Processing Request...
+                </div>
+
+                <form id="PermissionGroupForm">
+                    <div class="form-horizontal">
+
+                        @if (ViewBag.Mode == "update")
+                        {
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Permission Group Id</label>
+                                <div class="col-md-7">
+                                    <div class="form-control-static" id="groupId">
+                                        @Model.SelectedPermissionGroup.Id
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Permission Group Name</label>
+                            <div class="col-md-5">
+                                <div class="form-control-inline">
+                                    @Html.TextBoxFor(x => x.SelectedPermissionGroup.Name, new { @class = "form-control" })
+                                    @Html.HiddenFor(x => x.SelectedPermissionGroup.Id)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Permission(s) To Include</label>
+                            <div class="col-md-5">
+                                <div id="checkboxContainerDiv" class="form-control-inline">
+                                    @{
+                                        foreach (var item in Model.AvailablePermissions)
+                                        {
+                                            <div>
+                                                <input type="checkbox" name="SelectedPermissions" value="@item"
+                                                        @if (ViewBag.Mode == "update" && Model.SelectedPermissions.Contains(item)) { <text> checked</text>
+                                                } /> @item
+                                        </div>
+                                    }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-5 col-md-offset-4">
+                                <div class="form-control-inline">
+                                    <input type="button" id="AddEditPermissionGroupSaveButton" data-mode="@ViewBag.Mode" value="Save" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>                  
+                </form>
+
+                <hr />
+
+                <div class="row list-row-buttons">
+                    <div class="col-md-6 text-left">
+                        <input type="button" class="btn btn-default" id="btnCancel" value="Cancel" data-dismiss="modal" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

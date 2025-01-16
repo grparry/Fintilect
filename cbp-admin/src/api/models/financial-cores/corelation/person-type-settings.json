@@ -1,0 +1,24 @@
+{
+  "CorelationPersonTypeSettings": {
+    "type": "object",
+    "properties": {
+      "personTypes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "enabled": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    }
+  }
+}

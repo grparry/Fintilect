@@ -1,0 +1,45 @@
+{
+  "BillPaySettings": {
+    "type": "object",
+    "properties": {
+      "billMatrix": {
+        "$ref": "./providers/bill-matrix.json#/BillMatrixSettings"
+      },
+      "checkFree": {
+        "$ref": "./providers/check-free.json#/CheckFreeSettings"
+      },
+      "metavante": {
+        "$ref": "./providers/metavante.json#/MetavanteSettings"
+      },
+      "symmetry": {
+        "$ref": "./providers/symmetry.json#/SymmetrySettings"
+      },
+      "billPay2": {
+        "$ref": "./providers/bill-pay-2.json#/BillPay2Settings"
+      },
+      "goodFunds": {
+        "$ref": "./good-funds.json#/GoodFundsSettings"
+      },
+      "outOfBand": {
+        "$ref": "./security/out-of-band.json#/OutOfBandSettings"
+      },
+      "recurringBillPay": {
+        "$ref": "./recurring/recurring-settings.json#/RecurringBillPaySettings"
+      },
+      "help": {
+        "$ref": "./help/help-settings.json#/HelpSettings"
+      },
+      "admin": {
+        "type": "object",
+        "properties": {
+          "memberMenu": {
+            "$ref": "./admin/member-menu.json#/BillPayAdminMemberMenuSettings"
+          },
+          "checkFree": {
+            "$ref": "./admin/check-free.json#/CheckFreeAdminSettings"
+          }
+        }
+      }
+    }
+  }
+}

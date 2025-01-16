@@ -1,0 +1,127 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.OnlineBankingApi
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model OnlineBankingApiViewModel
+
+@{
+    ViewBag.Title = "Online Banking API";
+    ViewBag.Subtitle = "Manage Security Credentials for the Online Banking API";
+    ViewBag.ActiveMenu = "online-banking-api";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BaseModel = Model;
+}
+
+@if (!Model.User.PermissionLevel.CanView(PermissionLevel.Support) || !SettingsManager.Settings.OmegaConfiguration.Features.OnlineBankingApiEnabled)
+{
+    <div class="alert alert-info">
+        I'm sorry, this feature is unavailable at this time.
+    </div>
+}
+else
+{
+    <script>
+        var CredentialsManager = {
+            EditCredentials: function (sender, id, title) {
+                $("#editApiCredentialsModal").modal();
+                Util.ShowLoadingInInnerHtml('#editApiCredentialsModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#editApiCredentialsModalBody').html(data);
+                        $('#editApiCredentialsTitle').html(title);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editPhoneNumberModalBody', status);
+                    }
+                };
+                $.get('./OnlineBankingApi/GetCredentials?&credentialsId=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            AddCredentials: function () {
+                $("#editApiCredentialsModal").modal();
+                Util.ShowLoadingInInnerHtml('#editApiCredentialsModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#editApiCredentialsModalBody').html(data);
+                        $('#editApiCredentialsTitle').html("Add Api Credentials");
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editPhoneNumberModalBody', status);
+                    }
+                };
+                $.get('./OnlineBankingApi/GetCredentials?&credentialsId=0', callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadCredentials: function () {
+                Util.ShowLoading();
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#credentials-body').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#credentials-body', status);
+                    }
+                };
+                $.get('./OnlineBankingApi/GetApiCredentialsList', callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SearchCredentialRows: null,
+            SearchCredentials: function (sender) {
+                var x = sender.value.toLowerCase();
+                var rows = CredentialsManager.SearchCredentialRows;
+                if (rows === null) {
+                    CredentialsManager.SearchCredentialRows = $('[search-row-sets]');
+                    rows = CredentialsManager.SearchCredentialRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('credentials-name').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            }
+        };
+    </script>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading-psi">
+                    Credentials: &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="pull-right">
+                        @if (Model.User.PermissionLevel.CanView(PermissionLevel.Owner))
+                        {
+                            <button type="button" class="btn btn-default btn-xs" onclick="CredentialsManager.AddCredentials();">
+                                New &nbsp;<span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        }
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <input type="text" class="form-control" id="searchCredentialNames" placeholder="Search Credentials" onkeyup="CredentialsManager.SearchCredentials(this);"/><br/>
+                    <div class="config-panel-body" id="credentials-body">
+                        @Html.Partial("GetApiCredentialsList", Model)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="editApiCredentialsModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title" id="editApiCredentialsTitle">Add Api Credentials</h3>
+                </div>
+                <div class="modal-body" id="editApiCredentialsModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+}

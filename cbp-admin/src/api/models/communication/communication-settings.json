@@ -1,0 +1,27 @@
+{
+  "CommunicationSettings": {
+    "type": "object",
+    "properties": {
+      "email": {
+        "type": "object",
+        "properties": {
+          "changeEmail": {
+            "$ref": "./email/change-email.json#/ChangeEmailSettings"
+          },
+          "multipleEmail": {
+            "$ref": "./email/multiple-email.json#/MultipleEmailSettings"
+          }
+        }
+      },
+      "smtp": {
+        "$ref": "./smtp/smtp-settings.json#/SMTPSettings"
+      },
+      "secureMessage": {
+        "$ref": "./secure-message/secure-message-settings.json#/SecureMessageSettings"
+      },
+      "virusScanning": {
+        "$ref": "./secure-message/virus-scanning-settings.json#/VirusScanningSettings"
+      }
+    }
+  }
+}

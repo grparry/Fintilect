@@ -1,0 +1,251 @@
+{
+  "ChatServicesSettings": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "provider": {
+        "type": "string",
+        "enum": ["Comm100", "LivePerson", "Zendesk", "Custom"]
+      },
+      "enabled": {
+        "type": "boolean"
+      },
+      "authentication": {
+        "type": "object",
+        "properties": {
+          "siteId": {
+            "type": "string"
+          },
+          "apiKey": {
+            "type": "string",
+            "format": "password"
+          },
+          "secretKey": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "channels": {
+        "type": "object",
+        "properties": {
+          "webChat": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "buttonStyle": {
+                "type": "string",
+                "enum": ["Fixed", "Floating", "Embedded"]
+              },
+              "position": {
+                "type": "string",
+                "enum": ["BottomRight", "BottomLeft", "Custom"]
+              },
+              "customCSS": {
+                "type": "string"
+              }
+            }
+          },
+          "mobileChat": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "nativeIntegration": {
+                "type": "boolean"
+              },
+              "pushNotifications": {
+                "type": "boolean"
+              }
+            }
+          },
+          "socialMedia": {
+            "type": "object",
+            "properties": {
+              "facebook": {
+                "type": "boolean"
+              },
+              "twitter": {
+                "type": "boolean"
+              },
+              "whatsapp": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "features": {
+        "type": "object",
+        "properties": {
+          "cobrowsing": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "requiresPermission": {
+                "type": "boolean"
+              },
+              "maskedFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "fileSharing": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "maxFileSize": {
+                "type": "integer"
+              },
+              "allowedTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "audioVideo": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "videoEnabled": {
+                "type": "boolean"
+              },
+              "screenSharing": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "routing": {
+        "type": "object",
+        "properties": {
+          "defaultDepartment": {
+            "type": "string"
+          },
+          "skillBasedRouting": {
+            "type": "boolean"
+          },
+          "priorityRouting": {
+            "type": "boolean"
+          },
+          "customRules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "condition": {
+                  "type": "string"
+                },
+                "department": {
+                  "type": "string"
+                },
+                "priority": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "availability": {
+        "type": "object",
+        "properties": {
+          "schedule": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "day": {
+                  "type": "string",
+                  "enum": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+                },
+                "startTime": {
+                  "type": "string",
+                  "format": "time"
+                },
+                "endTime": {
+                  "type": "string",
+                  "format": "time"
+                },
+                "timezone": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "holidays": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "offlineMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "security": {
+        "type": "object",
+        "properties": {
+          "encryption": {
+            "type": "boolean"
+          },
+          "dataRetention": {
+            "type": "object",
+            "properties": {
+              "chatLogs": {
+                "type": "integer",
+                "description": "Days to retain chat logs"
+              },
+              "fileUploads": {
+                "type": "integer",
+                "description": "Days to retain uploaded files"
+              }
+            }
+          },
+          "ipBlocking": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "blockedIPs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

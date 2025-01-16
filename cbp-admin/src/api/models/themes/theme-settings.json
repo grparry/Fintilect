@@ -1,0 +1,19 @@
+{
+  "ThemeSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "deployment": {
+        "$ref": "./deployment.json#/ThemeDeploymentSettings"
+      },
+      "customPages": {
+        "$ref": "./custom-pages.json#/CustomPagesSettings"
+      },
+      "widgets": {
+        "$ref": "./widgets.json#/WidgetSettings"
+      }
+    }
+  }
+}

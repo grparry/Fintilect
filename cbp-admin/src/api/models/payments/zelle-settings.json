@@ -1,0 +1,16 @@
+{
+  "ZelleSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/ZelleSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/ZelleFeatures"
+      }
+    }
+  }
+}

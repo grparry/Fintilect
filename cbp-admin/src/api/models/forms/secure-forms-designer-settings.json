@@ -1,0 +1,16 @@
+{
+  "SecureFormsDesignerSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/SecureFormsDesignerSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/SecureFormsDesignerFeatures"
+      }
+    }
+  }
+}

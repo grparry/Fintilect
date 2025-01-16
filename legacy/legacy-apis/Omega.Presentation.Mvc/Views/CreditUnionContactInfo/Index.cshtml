@@ -1,0 +1,288 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.CreditUnionContactInfo
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model CreditUnionContactInfoViewModel
+
+@{
+    ViewBag.Title = "Manage Credit Union Contact Information";
+    ViewBag.Subtitle = "";
+    ViewBag.ActiveMenu = "credit-union-contact-info";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BaseModel = Model;
+}
+
+@if (!Model.User.PermissionLevel.CanView(PermissionLevel.Owner) || !SettingsManager.Settings.OmegaConfiguration.Features.CreditUnionContactInfoEnabled)
+{
+    <div class="alert alert-info">
+        I'm sorry, this feature is unavailable at this time.
+    </div>
+}
+else
+{
+    <script>
+        var CreditUnionContactInfo = {
+            AddGroup: function (sender, id) {
+                $("#editGroupModal").modal();
+                Util.ShowLoadingInInnerHtml('#editGroupModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#editGroupModalBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editGroupModalBody', status);
+                    }
+                };
+                $.get('./CreditUnionContactInfo/CreateContactUsGroup?contactUsId=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            EditGroup: function (sender, id, title) {
+                $("#editGroupModal").modal();
+                Util.ShowLoadingInInnerHtml('#editGroupModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#editGroupModalBody').html(data);
+                        $('#editGroupTitle').html(title);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editGroupModalBody', status);
+                    }
+                };
+                $.get('./CreditUnionContactInfo/GetContactUsGroup?id=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")'; });
+            },
+            AddPhoneNumber: function (sender, groupId) {
+                $("#editPhoneNumberModal").modal();
+                Util.ShowLoadingInInnerHtml('#editPhoneNumberModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#editPhoneNumberModalBody').html(data);
+                        $('#editPhoneNumberTitle').html('Add Phone Number');
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editPhoneNumberModalBody', status);
+                    }
+                };
+                $.get('./CreditUnionContactInfo/CreateContactUsPhoneNumber?groupId=' + groupId, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            EditPhoneNumber: function (sender, groupId, id, title) {
+                $("#editPhoneNumberModal").modal();
+                Util.ShowLoadingInInnerHtml('#editPhoneNumberModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#editPhoneNumberModalBody').html(data);
+                        $('#editPhoneNumberTitle').html(title);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editPhoneNumberModalBody', status);
+                    }
+                };
+                $.get('./CreditUnionContactInfo/GetContactUsPhoneNumber?groupId=' + groupId + '&id=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            AddPhoneHour: function (sender, groupId, numberId) {
+                $("#editPhoneHourModal").modal();
+                Util.ShowLoadingInInnerHtml('#editPhoneHourModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#editPhoneHourModalBody').html(data);
+                        $('#editPhoneHourTitle').html('Add Contact Hours');
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editPhoneHourModalBody', status);
+                    }
+                };
+                $.get('./CreditUnionContactInfo/CreateContactUsPhoneHour?groupId=' + groupId + '&numberId=' + numberId, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            EditPhoneHour: function (sender, groupId, numberId, id, title) {
+                $("#editPhoneHourModal").modal();
+                Util.ShowLoadingInInnerHtml('#editPhoneHourModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#editPhoneHourModalBody').html(data);
+                        $('#editPhoneHourTitle').html(title);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editPhoneHourModalBody', status);
+                    }
+                };
+                $.get('./CreditUnionContactInfo/GetContactUsPhoneHour?groupId=' + groupId + '&numberId=' + numberId + '&id=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+			},
+            AddLink: function (sender, groupId) {
+	            $("#editLinkModal").modal();
+	            Util.ShowLoadingInInnerHtml('#editLinkModalBody');
+
+	            var callback = function (data, status) {
+		            Util.HideLoading();
+		            if (status === 'success') {
+			            $('#editLinkModalBody').html(data);
+			            $('#editLinkTitle').html('Add Link');
+		            } else {
+			            Util.ShowErrorInInnerHtml('#editLinkModalBody', status);
+		            }
+	            };
+                $.get('./CreditUnionContactInfo/CreateContactUsLink?groupId=' + groupId, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")'; });
+            },
+            EditLink: function (sender, groupId, id, label) {
+	            $("#editLinkModal").modal();
+	            Util.ShowLoadingInInnerHtml('#editLinkModalBody');
+
+	            var callback = function (data, status) {
+		            Util.HideLoading();
+		            if (status === 'success') {
+			            $('#editLinkModalBody').html(data);
+			            $('#editLinkTitle').html(label);
+		            } else {
+			            Util.ShowErrorInInnerHtml('#editLinkModalBody', status);
+					}
+	            };
+                $.get('./CreditUnionContactInfo/GetContactUsLink?groupId=' + groupId + '&id=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            }
+        };
+    </script>
+
+    <div class="row">
+        @using (Html.BeginForm("UpdateContactUsInfo", "CreditUnionContactInfo", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="col-md-8 panel panel-default" style="max-height: 800px; overflow-y: auto;">
+                <div class="panel-heading-psi">
+                    <h2>Contact Information</h2>
+                </div>
+                <div class="panel-body">
+                    @* TODO: Display String Resource for the Contact Us Description and provide a link to change it. *@
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ContactUsInfo.Email, new { @class = "col-md-1 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.ContactUsInfo.Email, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ContactUsInfo.WebsiteUrl, new { @class = "col-md-1 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.ContactUsInfo.WebsiteUrl, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(m => m.ContactUsInfo.Id)
+
+                    @if (Model.ContactUsInfo.Id > 0)
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading-psi">
+                                <span style="font-size: 16pt">Groups</span>
+                                <span class="pull-right">
+                                    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Owner))
+                                    {
+                                        <button type="button" class="btn btn-default btn-xs" onclick="CreditUnionContactInfo.AddGroup(this, '@Model.ContactUsInfo.Id');">
+                                            New &nbsp;<span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                    }
+                                </span>
+                            </div>
+
+                            @foreach (var group in Model.ContactUsInfo.ContactUsGroups)
+                            {
+                                <div class="panel-body">
+                                    <div>
+                                        <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit Contact Group" onclick="CreditUnionContactInfo.EditGroup(this, '@group.Id', 'Edit @group.Title')"><span class="glyphicon glyphicon-cog"></span></span>
+                                        &nbsp;<span style="font-size: 12pt">@group.Title</span>
+                                    </div>
+                                    <div>Email: @group.Email</div>
+                                    @foreach (var phoneNumber in group.ContactUsPhoneNumbers)
+                                    {
+                                        <div>@phoneNumber.Title: @phoneNumber.PhoneNumber</div>
+                                        foreach (var phoneHour in phoneNumber.ContactUsPhoneHours)
+                                        {
+                                            <div>@phoneHour.DayRange @phoneHour.TimeRange</div>
+                                        }
+                                    }
+                                    @foreach (var phoneHour in group.ContactUsPhoneHours)
+                                    {
+                                        <div>@phoneHour.DayRange @phoneHour.TimeRange</div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <p>Add an email and website so you can add contact groups.</p>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-md-9"></div>
+                        <input type="submit" class="btn btn-primary" value="Save Changes" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    
+    <div class="modal fade" role="dialog" id="editGroupModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title" id="editGroupTitle">Add Group</h3>
+                </div>
+                <div class="modal-body" id="editGroupModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" role="dialog" id="editPhoneNumberModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title" id="editPhoneNumberTitle">Add Phone Number</h3>
+                </div>
+                <div class="modal-body" id="editPhoneNumberModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<div class="modal fade" role="dialog" id="editPhoneHourModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h3 class="modal-title" id="editPhoneHourTitle">Add Phone Hours</h3>
+				</div>
+				<div class="modal-body" id="editPhoneHourModalBody">
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" role="dialog" id="editLinkModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h3 class="modal-title" id="editLinkTitle">Add Link</h3>
+				</div>
+				<div class="modal-body" id="editLinkModalBody">
+
+				</div>
+			</div>
+		</div>
+	</div>
+}
+

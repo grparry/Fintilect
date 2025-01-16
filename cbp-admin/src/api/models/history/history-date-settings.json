@@ -1,0 +1,16 @@
+{
+  "HistoryDateSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/HistoryDateSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/HistoryDateFeatures"
+      }
+    }
+  }
+}

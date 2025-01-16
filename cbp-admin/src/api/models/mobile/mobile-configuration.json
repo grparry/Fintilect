@@ -1,0 +1,300 @@
+{
+  "MobileConfiguration": {
+    "type": "object",
+    "properties": {
+      "activation": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "alerts": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "appMessages": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "cardControl": {
+        "type": "object",
+        "properties": {
+          "debitCard": {
+            "$ref": "./card-control/debit-card.json#/DebitCardSettings"
+          },
+          "creditCard": {
+            "$ref": "./card-control/credit-card.json#/CreditCardSettings"
+          },
+          "ondotDx": {
+            "$ref": "./card-control/ondot-dx.json#/OndotDxSettings"
+          }
+        }
+      },
+      "contactUs": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "digitalWallet": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "documentCenter": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "enrollment": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "estatements": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ficoCreditScore": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "forgotUsername": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "houseHolding": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "login": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "marketing": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "mobileAccounts": {
+        "type": "object",
+        "properties": {
+          "accountHistoryQuickActions": {
+            "$ref": "./accounts/account-history-quick-actions.json#/AccountHistoryQuickActionsSettings"
+          },
+          "linkedAccounts": {
+            "$ref": "./accounts/linked-accounts.json#/LinkedAccountsSettings"
+          },
+          "nicknames": {
+            "$ref": "./accounts/nicknames.json#/NicknamesSettings"
+          }
+        }
+      },
+      "mobileMenu": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "mobileWebViews": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "myCardInfo": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "myCuClub": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "nextLoginSteps": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "passwordEncryption": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "pinChange": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "pushNotification": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "quickAccountInfo": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "quickBalance": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "preferences": {
+            "$ref": "./quick-balance/preferences.json#/PreferencesSettings"
+          }
+        }
+      },
+      "rateAndReview": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "rates": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "savvyMoney": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "secureForms": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "sendMoney": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "stopPay": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "transfers": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "savedTransfers": {
+            "$ref": "./transfers/saved-transfers.json#/SavedTransfersSettings"
+          },
+          "scheduledTransfers": {
+            "$ref": "./transfers/scheduled-transfers.json#/ScheduledTransfersSettings"
+          }
+        }
+      },
+      "userDevices": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "welcome": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

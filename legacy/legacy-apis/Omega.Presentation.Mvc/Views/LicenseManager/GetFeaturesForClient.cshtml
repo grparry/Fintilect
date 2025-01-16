@@ -1,0 +1,16 @@
+﻿@model Omega.Presentation.Mvc.Models.LicenseManager.ClientFeaturesModel
+
+@foreach (var feature in Model.ClientFeatures)
+{
+    <div search-row-sets class="search-list-button" feature-id="@feature.Id" feature-name="@feature.Name" onclick="LicenseManager.LoadFeatureById(this, '@feature.Id', '@feature.Name', '@feature.Licensed.ToString()');">
+        @if (feature.Licensed)
+        {
+            <span class="glyphicon  glyphicon-check"></span>
+        }
+        else
+        {
+            <span class="glyphicon  glyphicon-unchecked"></span>
+        }
+        &nbsp;@feature.Name
+    </div>
+}

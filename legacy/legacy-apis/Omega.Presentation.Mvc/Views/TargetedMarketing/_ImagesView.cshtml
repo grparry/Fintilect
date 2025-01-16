@@ -1,0 +1,370 @@
+﻿@using Omega.Presentation.Mvc.Models.TargetedMarketing
+@model List<PromoImage>
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+    <h4 class="modal-title">
+        Slot Images
+    </h4>
+</div>
+
+<div class="modal-body">
+    <div id="successImageAllLoading" class="alert alert-success" style="display: none;">
+        <div style="float: right; margin-top: -8px;"><input type="button" class="btn btn-default" id="CancelAddGroupsModalButton" value="Continue" data-dismiss="modal" /></div>
+        <div style="width: 70%;">The Image has been successfully added.</div>
+    </div>
+
+    <div id="failureImageAllLoading" class="alert alert-danger" style="display: none;">
+        We were unable to save your data, please try again later.
+    </div>
+
+    <div id="processingImageAllLoading" class="text-center" style="display:none; margin-bottom: 14px;">
+        <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Processing Request...
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-right">
+            @Ajax.ActionLink("Add More Images", "GetAllImagesToAdd", new { id = ViewBag.PromoSlotId }, new AjaxOptions
+       {
+           UpdateTargetId = "targeted-marketing-slotimage-image-Add-modal-content",
+           InsertionMode = InsertionMode.Replace,
+           HttpMethod = "GET",
+           OnBegin = "OmegaTargetedMarketingPromotionSlotImageModule.logAjaxBegin",
+           OnComplete = "OmegaTargetedMarketingPromotionSlotImageModule.showDetailModal",
+           OnFailure = "OmegaTargetedMarketingPromotionSlotImageModule.showFailure"
+       }, new { @class = "btn btn-primary", @id = "AddMoreContentItemsButton" })
+
+        </div>
+    </div><!-- end row -->
+
+    <div class="vert-sp-lg clearfix"><!-- sp --></div>
+
+    <div class="row">
+        <div class="col-md-12">
+            @if (Model == null || Model.Count < 1)
+            {
+                <div class="alert alert-danger clearfix">
+                    There are no content items to show
+                </div>
+            }
+            else
+            {
+                <div id="successDeleteImageSlotDiv" class="alert alert-success clearfix" style="display: none;">
+                    <div style="float: right; margin-top: -8px;">
+                        <input type="button" class="btn btn-default" id="CancelDeleteImageSlotButton" value="Continue" />
+                    </div>
+                    <div style="width: 50%;">The Promotion Slot was deleted.</div>
+                </div>
+
+                <div id="failureDeleteImageSlotDiv" class="alert alert-danger clearfix" style="display: none;">
+                    We were unable to process your request, please try again later.
+                </div>
+
+                <div id="processingDeletImageeSlotDiv" class="text-center clearfix" style="display: none; margin-bottom: 14px;">
+                    <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Processing Request...
+                </div>
+
+                <!-- header row -->
+                <div class="row list-row header">
+
+                    <div class="col-md-2 puffy bold">
+                        Image Name
+                    </div>
+                    <div class="col-md-2 puffy bold">
+                        Thumbnail View
+                    </div>
+                    <div class="col-md-3 puffy bold">
+                        Descriptions
+                    </div>
+                    <div class="col-md-4 puffy bold">
+                        Image ID
+                    </div>
+                    <div class="col-md-1 puffy text-center">
+                        <!-- sp -->
+                    </div>
+                </div>
+
+                foreach (var content in Model)
+                {
+                    <div class="row list-row thumbnails" id='@String.Concat("imagerow", content.ImageId)'>
+
+                        <div class="col-md-2 border-right puffy flex">
+                            @content.ImageName
+                        </div>
+                        <div class="col-md-2 border-right puffy flex center">
+                            @if (content.ImageURL?.Length > 8)
+                            {
+                                <img src="@content.ImageURL" class="image-thumbnail-lg" />
+                            }
+                            else
+                            {
+                                string srcString = "data:" + content.MimeType + ";base64," + content.FileContentBase64;
+                                <img src="@srcString" class="image-thumbnail-lg" />
+                            }
+                        </div>
+                        <div class="col-md-3 border-right puffy flex">
+                            @content.ImageDescription
+                        </div>
+                        <div class="col-md-4 border-right puffy flex">
+                            Id: @content.ImageId
+                        </div>
+                        <div class="col-md-1 puffy  flex center">
+                            <a href="#" class="deleteImage" data-id="@content.PromoSlotImageId" data-name="@content.ImageName"><img class="trash-can-icon" src='@Url.Content("~/Images/icon_trash.png")' title="Delete this item" /></a>
+                        </div>
+                    </div>
+                }
+            }
+            <div class="vert-sp-lg"><!-- sp --></div>
+        </div><!-- end col 12 -->
+    </div><!-- end row -->
+
+
+    <div class="row">
+        <div class="col-md-12 bold" style="padding-left: 30px;">
+            Rotation Information for this slot:
+        </div>
+
+        <div class="col-md-12" style="padding-left: 30px;">
+            Rotating Image?&nbsp;&nbsp;<span id="IsRotatorSpan">@ViewBag.IsRotator</span> <br />
+            Number of Images:&nbsp;&nbsp;<span id="NumberImagesSpan">@ViewBag.NumberInRotation</span>
+        </div>
+    </div>
+
+    <hr />
+
+
+    @if (Model != null && Model.Count > 1)
+    {
+        <div id="RotationOptionsDiv">
+            <hr />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="multiple-image-row bold">
+                        There is more than one image in your list, or, you have just added additional images.
+                    </div>
+
+                    <div class="multiple-image-row">
+                        Do you wish for this slot to be a rotating slot? if not, then only the first image will be shown.
+                    </div>
+
+                    <div class="multiple-image-row radio-input">
+                        <input type="radio" id="RotatorRadioYes" name="RotatorRadio" value="yes" />Yes, make this slot a rotating slot, showing all images in succession.
+                    </div>
+
+                    <div class="multiple-image-row radio-input">
+                        <input type="radio" id="RotatorRadioNo" name="RotatorRadio" value="no" />No, do NOT make this slot a rotating slot. Show only the first image in the list.
+                    </div>
+
+                    <div class="multiple-image-row" style="margin-top:8px;">
+                        <input type="button" id="RotatorSubmitButton" name="RotatorSubmitButton" value="Set Rotation Selection" class="btn btn-primary" style="margin-right:10px;" />
+                        <img id="RotationOptionSpinnerImage" src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading spinner image" style="width:24px; height:24px; display:none;" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="vert-sp-lg"><!-- sp --></div>
+
+            <hr />
+        </div>
+    }
+
+
+
+    <div class="row list-row-buttons">
+        <div class="col-md-6 text-left">
+            <input type="button" class="btn btn-default" id="CancelContentItemsButton" value="Close" data-dismiss="modal" />
+        </div>
+    </div>
+</div><!-- End modal-body -->
+
+<script>
+        $(document).ready(function() {
+                // When clicking the 'continue' button after a successful delete, dismiss the panel so it can be recycled.
+                $("#CancelDeleteImageSlotButton").click(function (e) {
+                    e.preventDefault();
+                    setTimeout(function () { $("#plusContentItem").click(); $("#successDeleteImageSlotDiv").hide(); }, 500);   // Recycle the view
+
+                    OmegaTargetedMarketingPromotionSlotImageModule.calculateRemainingImageCount();
+            });
+
+            // rotator submit button click event handler
+            $("#RotatorSubmitButton").click(function (e) {
+                e.preventDefault();
+                OmegaTargetedMarketingPromotionSlotImageModule.setRotationOption(false);
+            });
+
+                // Delete slot image button click
+                $(".deleteImage").click(function (e) {
+                    e.preventDefault();
+                    //alert($(this).data("id"));
+
+                    var resultDeleteSlotFromPromotion = confirm("Do you really want to remove this image: " + $(this).data("name") + " from the promotion slot?");
+
+                    if (!resultDeleteSlotFromPromotion) {
+                        return false
+                    } else {
+                        $("#processingDeletImageeSlotDiv").show("normal");
+
+                        // Call to server, passing in the id:
+                        $.ajax(
+                            {
+                                cache: false,
+                                context: this,
+                                dataType: "text",
+                                error: function (reply) {
+                                    console.log("error.");
+                                    $("#successDeleteImageSlotDiv").hide();
+                                    $("#failureDeleteImageSlotDiv").show("normal");
+                                    $("#processingDeletImageeSlotDiv").hide();
+                                },
+                                success: function (reply) {
+                                    console.log("success.");
+
+                                    if (reply.toLowerCase() === "success") {
+                                        //OmegaTargetedMarketingPromotionModal.getSlotsForThisPromotion();
+                                        $("#successDeleteImageSlotDiv").show("normal");
+                                        $("#failureDeleteImageSlotDiv").hide();
+                                        $("#processingDeletImageeSlotDiv").hide();
+                                        $(this).parent().parent('.list-row').addClass("hide");
+                                    } else {
+                                        $("#successDeleteImageSlotDiv").hide();
+                                        $("#failureDeleteImageSlotDiv").show("normal");
+                                        $("#processingDeletImageeSlotDiv").hide();
+                                    }
+                                },
+                                type: "Get",
+                                data: { id: $(this).data("id") },
+                                url: location.protocol + "//" + location.hostname + "/Omega/TargetedMarketing/DeleteImageThisPromotionSlot"
+                            }
+                        );
+                    };
+                });
+        });
+
+        // Create a namespace for this page
+        var OmegaTargetedMarketingPromotionSlotImageModule = OmegaTargetedMarketingPromotionSlotImageModule || {};
+
+        OmegaTargetedMarketingPromotionSlotImageModule = (function () {
+            // local vars:
+            var _inDelay = false;
+            var _modelListLength = @Model.Count;
+
+            // Ajax starting, getting a record detail
+            var _logAjaxBegin = function() {
+                console.log("We are logging this click from ajax. - Action Begun");
+                _inDelay = setTimeout(_showSpinner, 1000); // using setTimeout because jQuery delay only works on animate
+                $("#failureImageAllLoading").hide();
+            }
+
+            // show the spinner in a div to let the user know that the record is loading
+            var _showSpinner = function() {
+                $('#processingImageAllLoading').show("normal");
+            }
+
+            // Ajax complete, show the modal
+            var _showDetailModal = function () {
+
+                console.log("We are logging this click from ajax. - Action Complete ");
+                clearTimeout(_inDelay);
+                $("#processingImageAllLoading").hide("normal");
+                $("#failureImageAllLoading").hide();
+                $("#targeted-marketing-slotimage-image-Add-modal").modal();
+
+            }
+
+            // Ajax failure, show the warning
+            var _showFailure = function() {
+                console.log("We are logging this click from ajax. - Action Failed");
+                if (_inDelay == true) {
+                    _inDelay = null;
+                }
+                $("#processingImageAllLoading").hide();
+                $("#targeted-marketing-slotimage-image-Add-modal").hide();
+                $("#failureImageAllLoading").show("normal");
+
+            }
+
+
+            // Set rotation option
+            var _setRotationOption = function (setSilently) {
+                console.log("Got here: _setRotationOption");
+
+                // if user actively clicks the button, but no radios are set, do nothing:
+                if (!setSilently && document.getElementById("RotatorRadioYes").checked === false && document.getElementById("RotatorRadioNo").checked === false) {
+                    return;
+                }
+
+                $("#RotationOptionSpinnerImage").slideDown();
+
+                var isRotator = document.getElementById("RotatorRadioYes").checked ? true : false;
+                var id = "@ViewBag.PromoSlotId";
+
+                var sendData = {
+                    id: parseInt(id),
+                    rotator: _modelListLength < 2 ? false : isRotator,      // if only one image, it can't be a rotator
+                    maxRotatorImages: _modelListLength
+                }
+
+                // Call to controller method, passing in the id and if it is a rotator and the number of images:
+                $.ajax(
+                    {
+                        cache: false,
+                        dataType: "text",
+                        type: "Get",
+                        data: sendData,
+                        url: location.protocol + "//" + location.hostname + "/Omega/TargetedMarketing/SetRotationForPromotionSlot",
+                        error: function (reply) {
+                            console.log("error.");
+                            if (!setSilently) {
+                                $("#RotationOptionSpinnerImage").prop("src", "../Omega/Images/icon_fail.png");
+                            }
+                        },
+                        success: function (reply) {
+                            console.log("reply: ", reply);
+
+                            if (reply.toLocaleLowerCase() === "success") {
+                                // set a bit of a delay so the user can see the spinner, so they know something is going on:
+                                setTimeout(function () { $("#RotationOptionSpinnerImage").slideUp() }, 1200);
+
+                                $("#IsRotatorSpan").text(sendData.rotator);
+                                $("#NumberImagesSpan").text(_modelListLength);
+                            } else {
+                                if (!setSilently) {
+                                    $("#RotationOptionSpinnerImage").prop("src", "../Omega/Images/icon_fail.png");
+                                }
+                            }
+                        }
+                    }
+                );      // end ajax for image rotation
+            }
+
+
+            // calculate remaining image count in case images are deleted. hide rotator option section if there is only one image:
+            var _calculateRemainingImageCount = function () {
+                _modelListLength -= 1;
+
+                if (_modelListLength < 2) {
+                    $("#RotationOptionsDiv").hide();
+                }
+
+                // if user has taken away an image, update maxRotatorImages in the db silently:
+                OmegaTargetedMarketingPromotionSlotImageModule.setRotationOption(true);
+            }
+
+            //
+            //
+            //
+            // Public interface
+            return {
+                logAjaxBegin: _logAjaxBegin,
+                showDetailModal:  _showDetailModal,
+                showFailure: _showFailure,
+                setRotationOption: _setRotationOption,
+                calculateRemainingImageCount: _calculateRemainingImageCount
+            }
+
+        })();
+</script>

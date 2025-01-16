@@ -1,0 +1,16 @@
+{
+  "MultipleEmailSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/MultipleEmailSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/MultipleEmailFeatures"
+      }
+    }
+  }
+}

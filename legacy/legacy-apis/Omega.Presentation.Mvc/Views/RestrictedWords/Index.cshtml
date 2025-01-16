@@ -1,0 +1,219 @@
+﻿@model Omega.Presentation.Mvc.Models.RestrictedWords.RestrictedWordsViewModel
+
+@{
+    ViewBag.Title = "Restricted Words";
+    ViewBag.ActiveMenu = "restricted-words";
+}
+
+@section LinkedStyleSheets {
+    <link href='@Url.Content("~/Styles/restricted-words.css")' rel="stylesheet" />
+}
+<hr />
+
+<div style="float:right"><button class="reset-config-button"></button></div>
+
+<div style="width: 500px; margin-bottom: 16px;">
+    Use this tool to add and remove restricted words. Restricted words will be disallowed from user input throughout your online and mobile banking applications.
+</div>
+
+<!-- LOADING -->
+<div id="LoadingDiv" class="text-center" style="display:none; padding:1rem;">
+    <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Loading...
+</div>
+
+<!-- FAILURE -->
+<div id="FailureDiv" class="alert alert-danger" style="display:none; color: #FFFFFF;">
+    The operation could not be completed. Please try again later.
+</div>
+
+<!-- SUCCESS -->
+<div id="SuccessDiv" class="alert alert-success" style="display:none; color: #FFFFFF;">
+    Your word has been added. The page will automatically refresh soon.
+</div>
+
+<!-- DELETE -->
+<div id="DeleteDiv" class="alert alert-warning" style="display: none; color: #FFFFFF;">
+    Your word has been deleted. The page will automatically refresh soon.
+</div>
+
+<div class="color-container">
+    <div style="margin-bottom: 40px">
+        <div style="margin-bottom: 2px">Add New Restricted Word</div>
+        <input id="RestrictedWordInput" name="RestrictedWordInput" placeholder="Enter Restricted Word" type="text" />
+        <button id="WordSubmitButton" class="btn-default">Add</button>
+        <label style="margin-left: 4px;">Shift+Enter</label>
+        <div id="ErrorDuplicateWordDiv" style="font-weight: 600; display: none" class="error-red">Duplicate word not added</div>
+        <div id="ErrorEmptyWordDiv" style="font-weight: 600; display: none" class="error-red">Please enter a word</div>
+    </div>
+
+    @if (Model.RestrictedWordsList.Count > 0)
+    {
+        <h5 style="font-weight: 600">RESTRICTED WORD</h5>
+
+        foreach (var item in Model.RestrictedWordsList)
+        {
+            <div class="word-container">
+                <a class="trash-can" href="#" data-id="@item"><div class="trash-icon error-red"><i class="fa fa-trash"></i></div></a>
+                <div class="word">@item</div>
+            </div>
+        }
+    }
+    else
+    {
+        <div>No restricted words found.</div>
+    }
+</div>
+
+<script>
+    // generic event handlers
+
+    // click event handler for submit button
+    document.querySelector("#WordSubmitButton").addEventListener("click", function (e) {
+        e.preventDefault();
+        OmegaRestrictedWordsModule.validateTextbox();
+    });
+
+    // keydown press handler for the text box
+    document.querySelector("#RestrictedWordInput").addEventListener("keydown", function (e) {
+        if (e.keyCode === 13 && e.shiftKey) {
+            OmegaRestrictedWordsModule.validateTextbox();
+        }
+    });
+
+    // click event handlers for the trashcan icons
+    $(".trash-can").click(function (e) {
+        e.preventDefault();
+        OmegaRestrictedWordsModule.deleteRestrictedWord(e);
+    });
+
+    // namespace object
+    var OmegaRestrictedWordsModule = OmegaRestrictedWordsModule || {};
+
+    OmegaRestrictedWordsModule = (function () {
+        // private vars, namespace vars
+        var restrictedWordArray = @Html.Raw(Json.Encode(Model.RestrictedWordsList));
+
+        // validate text box to make sure it's not empty
+        var _validateTextbox = function () {
+            // hiding the error messages by default
+            $("#ErrorDuplicateWordDiv").hide();
+            $("#ErrorEmptyWordDiv").hide();
+
+            var wordToSubmit = document.querySelector("#RestrictedWordInput").value;            
+
+            if (document.querySelector("#RestrictedWordInput").value.length === 0) {
+                $("#ErrorDuplicateWordDiv").hide();
+                $("#ErrorEmptyWordDiv").slideDown();
+                document.querySelector("#RestrictedWordInput").style.outline = "1px solid RGBA(204,46,54,0.99)";
+                return;
+            } else if (restrictedWordArray.indexOf(wordToSubmit) > -1) {
+                // This is a check for any duplicate words
+                $("#ErrorEmptyWordDiv").hide();
+                $("#ErrorDuplicateWordDiv").slideDown();
+                document.querySelector("#RestrictedWordInput").style.outline = "1px solid RGBA(204,46,54,0.99)";
+                return;
+            } else {
+                document.querySelector("#RestrictedWordInput").style.outline = "none";
+                $("#ErrorEmptyWordDiv").hide();
+                $("#ErrorDuplicateWordDiv").hide();
+                _submit();
+            }
+        };
+
+        // ajax call to controller method
+        var _submit = function () {
+            var wordToSubmit = document.querySelector("#RestrictedWordInput").value;
+
+            var inDelay;
+            inDelay = setTimeout(function () { $("#LoadingDiv").slideDown() }, 300);
+
+            var data = {
+                    RestrictedWord: wordToSubmit
+                }
+
+            $.ajax({
+                url: '@Url.Action("SubmitRestrictedWord", "RestrictedWords")', // action, controller
+                dataType: "text",
+                type: "Put",
+                data: data,
+                cache: false,        
+                statusCode: {
+                    200: function (data) {
+                        $("#LoadingDiv").slideUp();
+                        clearTimeout(inDelay);
+                        $("#SuccessDiv").slideDown();
+                        document.querySelector("#RestrictedWordInput").value = "";
+                        setTimeout(function () {
+                            window.location.href = '@Url.Action("Index", "RestrictedWords")';
+                        }, 3000);
+                    },
+                    400: function () {
+                        $("#LoadingDiv").slideUp();
+                        $("#FailureDiv").slideDown();
+                        clearTimeout(inDelay);
+                    }
+                },
+                error: function (xhr, err) {
+                    var terseError = xhr.statusText;
+                    console.log("terseError: ", terseError);
+                    console.log("Request Failed: " + err);
+                    $("#LoadingDiv").slideUp();
+                    $("#FailureDiv").slideDown();
+                    clearTimeout(inDelay);
+                }
+            });
+
+        }
+
+        // delete restricted word ajax call
+        var _deleteRestrictedWord = function (e) {
+            var currItem = e.currentTarget;
+            var currWord = currItem.dataset["id"];
+
+            if (confirm("Are you sure you want to delete the following word: " + currWord + "?")) {
+                var inDelay;
+                inDelay = setTimeout(function () { $("#LoadingDiv").slideDown() }, 300);
+                var data = {
+                    RestrictedWord: currWord
+                }
+
+                $.ajax({
+                    url: '@Url.Action("DeleteRestrictedWord", "RestrictedWords")',  // action, controller
+                    dataType: "text",
+                    type: "Delete",
+                    data: data,
+                    cache: false,
+                    statusCode: {
+                        200: function (data) {
+                            $("#LoadingDiv").slideUp();
+                            clearTimeout(inDelay);
+                            $("#DeleteDiv").slideDown();
+                            setTimeout(function () {
+                                window.location.href = '@Url.Action("Index", "RestrictedWords")';
+                            }, 3000);
+                        },
+                        400: function () {
+                            $("#LoadingDiv").slideUp();
+                            $("#FailureDiv").slideDown();
+                            clearTimeout(inDelay);
+                        }
+                    },
+                    error: function (xhr, err) {
+                        var terseError = xhr.statusText;
+                        console.log("terseError: ", terseError);
+                        console.log("Request Failed: " + err);
+                        $("#LoadingDiv").slideUp();
+                        $("#FailureDiv").slideDown();
+                        clearTimeout(inDelay);
+                    }
+                });
+            }
+        };
+
+        // public interface
+        return {
+            validateTextbox: _validateTextbox,
+            deleteRestrictedWord: _deleteRestrictedWord
+        };
+    }());
+</script>

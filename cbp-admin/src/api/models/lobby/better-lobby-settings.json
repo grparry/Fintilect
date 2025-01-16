@@ -1,0 +1,16 @@
+{
+  "BetterLobbySettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/BetterLobbySettings"
+      },
+      "features": {
+        "$ref": "./features.json#/BetterLobbyFeatures"
+      }
+    }
+  }
+}

@@ -1,0 +1,138 @@
+﻿@model Psi.Data.Models.Domain.Themes.ThemeModel
+
+<div class="modal fade">
+    <!-- Modal Layout -->
+    <div class="modal-dialog modal-lg">
+        <div id="partial-view-modal-content" class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+	            <h4 class="modal-title">
+		            Publish "@Model.Title"
+	            </h4>
+            </div>
+
+	        			@using (Ajax.BeginForm($"../../PsiServiceHost/api/theme/themes/v1/{Model.PublicId}/publish", new AjaxOptions
+			{
+				HttpMethod = "POST",
+				OnBegin = "submitPublish",
+				OnFailure = "publishFailed",
+				OnSuccess = "publishDone"
+			}))
+			{
+				<div class="modal-body">
+					<div class="publish-options">
+						<p>
+							Generally, you should check changes into source control at the time of publishing.
+						</p>
+						<p>
+							The Base Theme is edited in-place in version control.
+						</p>
+						<p>
+							Sub-themes are stored in the database but we have a tool that updates them in version control.
+							<a href="#" class="version-control-see-how-link">See how</a>
+							<div style="display: none;" class="version-control-see-how">
+								<p>
+									<div>Simply use this feature in the pony tool.</div>
+									<img src="~/Images/ThemeVersionControlPonyTool.png" />
+									<br />
+									<br />
+									<div>Once you click that, the pending changes should appear in version control.</div>
+									<img src="~/Images/ThemeVersionControl.png" />
+								</p>
+								<br />
+							</div>
+						</p>
+
+					    <div class="form-group Notes-form-group">
+					        @Html.Label("Add a publish note")
+					        @Html.TextBoxFor(x => x.Notes, new { @class = "form-control", placeholder = "(optional)" })
+
+					        @Html.Label("Add Minimum iOS Version")
+					        @Html.TextBoxFor(x => x.MinimumIosVersion, new { @class = "form-control", placeholder = "xxx.xxx.xxxxx", required = true, pattern = "^\\d{1,6}\\.\\d{1,6}\\.\\d{1,6}(?:\\.\\d{1,6})?" })
+
+					        @Html.Label("Add Minimum Android Version")
+					        @Html.TextBoxFor(x => x.MinimumAndroidVersion, new { @class = "form-control", placeholder = "xxx.xxx.xxxxx", required = true, pattern = "^\\d{1,6}\\.\\d{1,6}\\.\\d{1,6}(?:\\.\\d{1,6})?" })
+					    </div>
+
+					    @Html.HiddenFor(x => x.Product)
+						@Html.HiddenFor(x => x.PublicId)
+						@Html.HiddenFor(x => x.ParentThemePublicId)
+					</div>
+			
+			
+					<div class="publish-results" style="display: none;">
+						<div class="alert alert-success" style="color: #3c763d;">
+							<div>
+								<b>Published Successfully</b> But this theme won't be used until the Themes.ConnectNative.DeployedThemes config is updated with this new guid:
+							</div>
+							<br/>
+							<div class="text-center">
+								<div class="publish-guid" style="font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;"></div>
+								<a href="#" class="btn btn-default btn-xs copy-public-id" style="margin-top: 5px;">
+									<i class="fa fa-copy"></i> Copy to Clipboard
+								</a>
+							</div>
+
+						</div>
+					</div>
+				</div><!-- End modal-body -->
+
+
+		        <div class="modal-footer">
+			        <button type="button" class="btn btn-default publishing-cancel" data-dismiss="modal">Cancel</button>
+			        <button type="submit" class="btn btn-primary publishing-button">
+				        <span class='publish-submitting' style="display: none;">
+					        <i class='fa fa-spin fa-spinner'></i>
+					        Publishing Theme
+				        </span>
+				        <span class="publish-not-submitting">
+					        Publish Theme
+				        </span>
+			        </button>
+		        </div>
+	        }
+			
+	        <script>
+				function submitPublish() {
+					$(".publish-submitting").show();
+					$(".publish-not-submitting").hide();
+					PsiModal.BeginFormSubmit();
+				}
+
+				function publishFailed() {
+					$(".publish-submitting").hide();
+					$(".publish-not-submitting").show();
+					PsiModal.FormSubmitFailed();
+				}
+
+        		function publishDone(data) {
+			        $(".publish-submitting").hide();
+			        $(".publish-not-submitting").show();
+			        $(".publishing-button").hide('slow');
+			        $(".publishing-cancel").html('Done');
+			        $(".publish-options").hide('slow');
+			        $(".publish-results").show('slow');
+			        $(".publish-guid").html(data.guid);
+
+			        $(function() {
+				        $(".copy-public-id").on('click', function () {
+					        OmegaUtilies.copyToClipboard(data.guid);
+					        toastr.success("Guid copied to clipboard!");
+				        });
+			        });
+		        }
+
+        		$(function() {
+        			$(".version-control-see-how-link").on('click',
+        				function() {
+        					$(".version-control-see-how").show('slow');
+        					$(".version-control-see-how-link").hide();
+        				});
+        		});
+        	</script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

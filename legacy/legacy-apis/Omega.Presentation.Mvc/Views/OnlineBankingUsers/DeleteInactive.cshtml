@@ -1,0 +1,665 @@
+﻿@using PSI.Models.ClientConfigurationModels.Agatha
+@model Omega.Presentation.Mvc.Models.OnlineBankingUsers.DeleteInactiveParametersViewModel
+
+@{
+    ViewBag.Title = "Inactive Online Banking Users";
+    ViewBag.Subtitle = "With an option to delete";
+    ViewBag.BaseModel = Model;
+    ViewBag.ActiveMenu = "delete-inactive-olb-users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="panel panel-default col-md-12">
+        @if (Model == null)
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        <br/>
+                        First, select a date to show a report of users who haven't logged into Online Banking for a while.
+                    </p>
+                </div>
+            </div>
+        }
+
+        <div class="panel-body">
+            @using (Html.BeginForm("GetList", "OnlineBankingUsers", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
+            {
+                <div class="form-group row">
+                    <div class="col-md-3 text-right">
+                        @Html.LabelFor(x => x.NotLoggedInSince, new {@class = "control-label"})
+                    </div>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(x => x.NotLoggedInSince, "{0:MM/dd/yyy}", new {placeholder = "Date", @class = "form-control", autocomplete = "off"})
+                        @Html.ValidationMessageFor(x => x.NotLoggedInSince)
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 col-md-offset-3">
+                        <label>
+                            @* NOTE: Requester decided to remove this checkbox for now.
+                                    @Html.CheckBoxFor(x => x.IncludeWithScheduledTransfers)
+                                Include members with scheduled transfers
+                            *@
+                            Members with active scheduled transfers not included.
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group row" style="margin-bottom: 0;">
+                    <div class="col-md-9 col-md-offset-3">
+
+                        <input type="submit" class="btn @(Model == null ? "btn-primary" : "btn-default")" value="Search"/>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@if (Model.OnlineBankingUsersToDelete != null)
+{
+    if (!Model.OnlineBankingUsersToDelete.Any())
+    {
+        <div class="row">
+            <div class="panel panel-default col-md-12">
+                <div class="panel-body">
+                    <span class="extra-info">No results found</span>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div id="DeleteInactiveUsersSuccessDiv" class="col-md-12" style="display: none;">
+                <div tabIndex="0" class="alert alert-success" style="min-height: 68px">
+                    <div style="float: left">The users listed below were sucessfully deleted. </div>
+                    <div style="float: right">
+                        <input id="ExportCsvButton" type="button" class="btn btn-default" value="Export List as .CSV file" tabIndex="0" style="margin-right: 8px;"/>
+                        <input id="ContinueAfterSuccessButton" type="button" class="btn btn-info" value="Continue" tabIndex="0"/>
+                    </div>
+
+                    <div id="UnsuccessfulDeletesDiv" style="clear: both; color: #ffb3b3; display: none; margin-top: 44px;">
+                        <!-- this message will be populated dynamically if there are unsuccessful deletes -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default col-md-12">
+                @using (Html.BeginForm("DeleteSelected", "OnlineBankingUsers", FormMethod.Post, new {role = "form", name = "UsersToDeleteForm"}))
+                {
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>
+                                    Account
+                                    <a href="#" id="SortByAccountDescButton" meta="Account Descending" class="list-sort" title="Sort Descending">
+                                        <img src="@Url.Content("~/Images/arrow-sort-down.png")"/>
+                                    </a>&nbsp;
+                                    <a href="#" id="SortByAccountAscButton" meta="Account Ascending" class="list-sort" title="Sort Ascending">
+                                        <img src="@Url.Content("~/Images/arrow-sort-up.png")"/>
+                                    </a>
+                                </th>
+                                <th>
+                                    User
+                                    <a href="#" id="SortByUserNameDescButton" meta="UserName Descending" class="list-sort" title="Sort Descending">
+                                        <img src="@Url.Content("~/Images/arrow-sort-down.png")" />
+                                    </a>&nbsp;
+                                    <a href="#" id="SortByUserNameDescButton" meta="UserName Ascending" class="list-sort" title="Sort Ascending">
+                                        <img src="@Url.Content("~/Images/arrow-sort-up.png")" />
+                                    </a>
+                                </th>
+                                <th class="text-center">
+                                    Last Login
+                                    <a href="#" id="SortByLastLoginDescButton" meta="LastLogin Descending" class="list-sort" title="Sort Descending">
+                                        <img src="@Url.Content("~/Images/arrow-sort-down.png")"/>
+                                    </a>&nbsp;
+                                    <a href="#" id="SortByLastLoginDescButton" meta="LastLogin Ascending" class="list-sort" title="Sort Ascending">
+                                        <img src="@Url.Content("~/Images/arrow-sort-up.png")"/>
+                                    </a>
+                                </th>
+                                <th class="text-center">
+                                    Created Date
+                                    <a href="#" id="SortByCreateDateDescButton" meta="CreateDate Descending" class="list-sort" title="Sort Descending">
+                                        <img src="@Url.Content("~/Images/arrow-sort-down.png")"/>
+                                    </a>&nbsp;
+                                    <a href="#" id="SortByCreateDateDescButton" meta="CreateDate Ascending" class="list-sort" title="Sort Ascending">
+                                        <img src="@Url.Content("~/Images/arrow-sort-up.png")"/>
+                                    </a>
+                                </th>
+                                <th class="text-center">
+                                    Last Modified
+                                    <a href="#" id="SortByLastModifiedDescButton" meta="LastModified Descending" class="list-sort" title="Sort Descending">
+                                        <img src="@Url.Content("~/Images/arrow-sort-down.png")"/>
+                                    </a>&nbsp;
+                                    <a href="#" id="SortByLastModifiedDescButton" meta="LastModified Ascending" class="list-sort" title="Sort Ascending">
+                                        <img src="@Url.Content("~/Images/arrow-sort-up.png")"/>
+                                    </a>
+                                </th>
+                                <th class="text-center">Sched. Transfers</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @{
+                                var counter = 1;
+                                var maskAccounts = SettingsManager.Settings.OmegaConfiguration.Features.DeleteOnlineBankingUsersMaskAccountNumbers;
+                                foreach (var user in Model.OnlineBankingUsersToDelete)
+                                {
+                                    <tr id="tr-@user.UUID" class="uuid-row">
+                                        <td id="cb-td-@user.UUID">
+                                            <input id="cb-@counter" type="checkbox" name="UuidsToDelete" value="@user.UUID" class="uuids-to-delete-checkbox"/>
+                                        </td>
+
+                                        <td>
+                                            <div id="mask-@user.UUID" style="display: inline-block;">
+                                                @(maskAccounts ? user.MaskedAccountNumber : user.AccountNumber.ToString())
+                                            </div>
+                                            <div id="spinner-@user.UUID" style="display: none;">
+                                                <i class="fa fa-spinner fa-spin"></i>
+                                            </div>
+                                        </td>
+                                        <td>@user.Username</td>
+                                        <td class="text-center">@user.LastLogin.ToFormattedString("MM/dd/yyyy")</td>
+                                        <td class="text-center">@user.CreateDate.ToFormattedString("MM/dd/yyyy")</td>
+                                        <td class="text-center">@user.LastModified.ToFormattedString("MM/dd/yyyy")</td>
+                                        <td class="text-center">
+                                            @if (user.ScheduledTransfersExist)
+                                            {
+                                                <span style="font-weight: bold;">Yes</span>
+                                            }
+                                            else
+                                            {
+                                                <span class='extra-info'>No</span>
+                                            }
+                                        </td>
+                                    </tr>
+
+                                    counter += 1;
+                                }
+                            }
+
+                            <tr>
+                                <td colspan="5">
+                                    <input type="button" value="select all" class="btn btn-info select-all-delete-checkboxes-button" tabindex="0"/>&nbsp;
+                                    <input id="ExportCsvFromSelection" type="button" value="export selected accounts as .csv file" class="btn btn-default" style="display: none;" tabindex="0"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div style="align-items: baseline; display: flex; justify-content: space-between;">
+                            <div>
+                                <button type="button" class="btn btn-primary" id="UsersToDeleteSubmit">
+                                    Remove Selected Users From Home Banking
+                                    <i class="fa fa-spinner fa-spin" id="spinner-indicator" style="display: none; margin-left: 8px;"></i>
+                                </button>
+                            </div>
+
+                            <div>
+                                Count: @Model.OnlineBankingUsersToDelete.Count
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+
+
+<script>
+    $(document).ready(function() {
+        // generic event handling:
+        $("input[name=NotLoggedInSince]").datepicker();
+
+        $("#UsersToDeleteSubmit").click(function(e) {
+            e.preventDefault();
+            OmegaDeleteInactiveModule.validateDeleteUsers();
+        });
+
+        $(".select-all-delete-checkboxes-button").click(function(e) {
+            e.preventDefault();
+            OmegaDeleteInactiveModule.toggleDeleteCheckboxes();
+        });
+
+        $("#ContinueAfterSuccessButton").click(function(e) {
+            location.reload();
+        });
+
+        $("#ExportCsvButton").click(function(e) {
+            OmegaDeleteInactiveModule.initiateCsvFileSetup(false);
+        });
+
+        // sort buttons click event
+        $(".list-sort").click(function(e) {
+            e.preventDefault();
+            OmegaDeleteInactiveModule.sortByType(e.currentTarget);
+        });
+
+        // show export csv file on checkbox click
+        $(".uuids-to-delete-checkbox").change(function() {
+            OmegaDeleteInactiveModule.showExportCsvFromSelectionButton();
+        });
+
+        // handle export csv file from selection click event
+        $("#ExportCsvFromSelection").click(function() {
+            OmegaDeleteInactiveModule.exportCsvFromCheckboxSelections();
+        });
+
+        //attach keepAlive to checkboxes
+        $(".uuids-to-delete-checkbox").click(function() {
+            keepAlive(); //don't let the session timeout
+        });
+
+        // NAMESPACE OBJECT
+        //
+        //
+        // create namespace for this page
+        var OmegaDeleteInactiveModule = OmegaDeleteInactiveModule || {};
+
+        OmegaDeleteInactiveModule = (function() {
+            // local vars:
+            var _deletesChecked = false;
+            var _uuidsToDeleteArray = [];
+            var _uuidsSelectedToBeDeletedArray = [];
+            var _numberOfUsersSelected;
+            var _successfullyDeletedArray = [];
+            var _unSuccessfullyDeletedArray = [];
+            var _deleteCounter = 0;
+            var _csvContent = '';
+            var _canExportCsvBeforeDeleting =  ("@Model.AllowCsvExportBeforeDeletingUsers.ToString().ToLower()" === "true");
+
+            // local methods:
+            var _toggleDeleteCheckboxes = function() {
+                if (_deletesChecked === false) {
+                    $('.uuids-to-delete-checkbox').prop('checked', true);
+                    $(".select-all-delete-checkboxes-button").prop('value', 'Un-select all');
+                    _deletesChecked = true;
+                } else {
+                    $('.uuids-to-delete-checkbox').prop('checked', false);
+                    $(".select-all-delete-checkboxes-button").prop('value', 'Select all');
+                    _deletesChecked = false;
+                }
+
+                OmegaDeleteInactiveModule.showExportCsvFromSelectionButton();
+            };
+
+            // validate delete button click before deleting the users:
+            var _validateDeleteUsers = function() {
+                _numberOfUsersSelected = $("input[name=UuidsToDelete]:checked").length;
+
+                if (_numberOfUsersSelected === 0) {
+                    PsiModal.Alert("You must select at least one user to delete first.  (Check the box on the row.)");
+                    return;
+                }
+
+                PsiModal.Confirm(
+                    (_numberOfUsersSelected === 1
+                        ? "Remove this user"
+                        : "Remove these " + _numberOfUsersSelected + " users") +
+                    " from Home Banking?",
+                    function() {
+                        OmegaDeleteInactiveModule.deleteSelectedUsers();
+                    },
+                    null,
+                    { title: "Are you sure?" });
+            };
+
+
+            // hide non-deleted users after a delete:
+            var _hideNonDeletedUsers = function(usersArray) {
+                $("input:checkbox:not(:checked)").closest("tr").slideUp();
+                $("input:checkbox:checked").slideUp();
+
+
+                // scroll to the top of the view so the user can see the 'result' div
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+
+                // show the results div and hide main spinner
+                $("#DeleteInactiveUsersSuccessDiv").slideDown();
+                $("#spinner-indicator").slideUp();
+
+                // if there were unsuccesful deletes, show them in a message in the result div
+                if (_unSuccessfullyDeletedArray.length > 0) {
+                    $("#UnsuccessfulDeletesDiv")
+                        .html("There were users that were NOT completely deleted. See the rows below:");
+                    $("#UnsuccessfulDeletesDiv").slideDown();
+
+                    // show the row for each unsuccesful deletes:
+                    for (var i = 0; i < _unSuccessfullyDeletedArray.length; i++) {
+                        //console.log("here is the failure table: ", "mask-" + _unSuccessfullyDeletedArray[i].id);
+
+                        $("#mask-" + _unSuccessfullyDeletedArray[i].id).html(
+                            "<span style=color:red; margin-left:6px;>" +
+                            _unSuccessfullyDeletedArray[i].id +
+                            " - Tables Unaffected: " +
+                            _unSuccessfullyDeletedArray[i].tables +
+                            "</span>");
+                        $("#mask-" + _unSuccessfullyDeletedArray[i].id).slideDown();
+                        $("#spinner-" + _unSuccessfullyDeletedArray[i].id).slideUp();
+                    }
+                }
+            };
+
+
+            // _initiateCsvFileSetup,
+            var _initiateCsvFileSetup = function (useSelectedRows) {
+                var todayString = moment().format("_MM-DD-YYYY");
+                var accountInfoRows =
+                    @Html.Raw(Json.Encode(Model.OnlineBankingUsersToDelete)); // get the model of delete candidate id's   
+                var itemsArray = _successfullyDeletedArray;
+                var downloadFileName = "deletedUsersList" + todayString + ".csv";
+                _csvContent = "Account Number,User name,Last Login,Create Date,Last Modified,Scheduled Transfers?\n";
+
+                // if calling from 'export selected accounts' button then use the Selected items array
+                if (useSelectedRows) {
+                    itemsArray = _uuidsSelectedToBeDeletedArray;
+                    downloadFileName = "deleteCandidatesList" + todayString + ".csv";
+                }
+
+                // create csv content by examining each account item in the rows
+                itemsArray.forEach(function(item, index) {
+                    $.each(accountInfoRows,
+                        function(key, value) {
+                            // match deleted account numbers to the OnlineBankingUsersToDelete model. if a match, build up the csv content:
+                            if (value.AccountNumber === Number(item)) {
+                                // get a human-readable string for the last login date:
+                                var lastLoginString = value.LastLogin.substring((value.LastLogin.indexOf("(") + 1),
+                                    value.LastLogin.indexOf(")"));
+                                var lastLogin = new Date(parseInt(lastLoginString));
+                                lastLoginString =
+                                    lastLogin.getFullYear() +
+                                    "/" +
+                                    (lastLogin.getMonth() + 1) +
+                                    "/" +
+                                    (lastLogin.getUTCDate());
+
+                                // get a human-readable string for the create date:
+                                var createDateString = value.CreateDate.substring((value.CreateDate.indexOf("(") + 1),
+                                    value.CreateDate.indexOf(")"));
+                                var createDate = new Date(parseInt(createDateString));
+                                createDateString = createDate.getFullYear() +
+                                    "/" +
+                                    (createDate.getMonth() + 1) +
+                                    "/" +
+                                    (createDate.getUTCDate());
+
+                                // get a human readable string for the last modified date:
+                                var lastModifiedDateString = "unknown";
+                                if (value.LastModied != null) {
+                                    lastModifiedDateString =
+                                        value.LastModied.substring((value.LastModied.indexOf("(") + 1),
+                                            value.LastModied.indexOf(")"));
+                                    var lastModied = new Date(parseInt(lastModifiedDateString));
+                                    lastModifiedDateString = lastModied.getFullYear() +
+                                        "/" +
+                                        (lastModied.getMonth() + 1) +
+                                        "/" +
+                                        (lastModied.getUTCDate());
+                                }
+
+                                // get a 'yes' or 'no' for scheduled transfer usage for this user:
+                                var scheduleTransfersString = value.ScheduledTransferExist ? 'yes' : 'no';
+
+                                // write out the columns for each account that has been deleted to comma-delimited var:
+                                _csvContent += value.AccountNumber +
+                                    "," +
+                                    value.Username +
+                                    "," +
+                                    lastLoginString +
+                                    "," +
+                                    createDateString +
+                                    "," +
+                                    lastModifiedDateString +
+                                    "," +
+                                    scheduleTransfersString +
+                                    "\n";
+                            }
+                        });
+                });
+
+                // report on any UN Successfully deleted accounts:
+                if (!useSelectedRows && _unSuccessfullyDeletedArray.length > 0) {
+                    _csvContent += "\nAccount(s) NOT Deleted, table(s) with error\n";
+
+                    // create csv content by examining each account item in the rows
+                    _unSuccessfullyDeletedArray.forEach(function(item, index) {
+                        // write out the columns for each account that has NOT been deleted to comma-delimited var:
+                        _csvContent += item.id + "," + item.tables + "\n";
+                    });
+                }
+
+                OmegaDeleteInactiveModule.saveCsvFile(_csvContent, downloadFileName, 'text/csv;encoding:utf-8');
+            };
+
+
+            // The download function takes a CSV string, the filename and mimeType as parameters
+            var _saveCsvFile = function(content, fileName, mimeType) {
+                var a = document.createElement('a');
+                mimeType = mimeType || 'application/octet-stream';
+
+                if (navigator.msSaveBlob) { // IE10
+                    navigator.msSaveBlob(new Blob([content],
+                            {
+                                type: mimeType
+                            }),
+                        fileName);
+                } else if (URL && 'download' in a) { //html5 A[download]
+                    a.href = URL.createObjectURL(new Blob([content],
+                        {
+                            type: mimeType
+                        }));
+                    a.setAttribute('download', fileName);
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } else {
+                    location.href =
+                        'data:application/octet-stream,' +
+                        encodeURIComponent(content); // only this mime type is supported
+                }
+            };
+
+
+            // delete selected users one at a time
+            var _deleteSelectedUsers = function() {
+                $("#ExportCsvFromSelection").slideUp(); // hide the 'export selected accounts as .csv file' button
+                var formBlob = $("form[name=UsersToDeleteForm]");
+                var tempDeleteIdArray = $("input[name=UuidsToDelete]:checked").toArray();
+                var tempAllUsersArray = $(".uuid-row").toArray();
+                _successfullyDeletedArray = []; // empty if something already in it
+                _unSuccessfullyDeletedArray = []; // empty if something already in it
+
+                // sort by id
+                tempDeleteIdArray.sort(function(a, b) {
+                    return (a.id.replace("cb-", "") > b.id.replace("cb-", "")) ? 1 : 0;
+                });
+
+                $("#UsersToDeleteSubmit").prop("disabled", true);
+                $(".select-all-delete-checkboxes-button").prop("disabled", true);
+                $("#spinner-indicator").css("display", "inline-block");
+
+                // populate an array of all the checked checkbox id's for ajax form:
+                $.each(tempDeleteIdArray,
+                    function(key, item) { // key/value pair is passed
+                        _uuidsToDeleteArray.push(item.value);
+                    });
+
+                // show a spinner for each row:
+                for (var i = 0; i < _uuidsToDeleteArray.length; i++) {
+                    $("#spinner-" + _uuidsToDeleteArray[i]).slideDown();
+                    $("#mask-" + _uuidsToDeleteArray[i]).slideUp();
+                }
+
+                // call ajax to delete users
+                OmegaDeleteInactiveModule.ajaxDelete();
+            };
+
+
+            // AJAX
+            // Ajax action to take per each user:
+            var _ajaxDelete = function() {
+                var postData = [_uuidsToDeleteArray[_deleteCounter]];
+
+                $.ajax({
+                    url:
+                        '@Url.Action("DeleteSingleUser", "OnlineBankingUsers")', // "ActionName", "Controller" - Don't forget to add '' around the url - must be a valid string in the final webpage
+                    dataType: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(postData),
+                    success: function(data) { // result from the controller method
+                        //console.log("data", JSON.stringify(data, null, 4))
+
+                        //if unaffectedTables returns null assume is empty to simplify the following logic
+                        if (data.unaffectedTables === null)
+                            data.unaffectedTables = '';
+
+
+                        if (data.unaffectedTables.length === 0 &&
+                            OmegaUtilies.isNumeric(parseInt(data.successfulDeletes[0]))) {
+                            $("#spinner-" + data.successfulDeletes[0]).slideUp();
+                            $("#mask-" + data.successfulDeletes[0]).slideDown();
+                            _successfullyDeletedArray.push(data.successfulDeletes[0].toString());
+                            _deleteCounter ++;
+                        } else if (data.unaffectedTables.length > 0 &&
+                            data.unaffectedTables.toLocaleLowerCase() !== "failure") {
+                            _unSuccessfullyDeletedArray.push({
+                                id: _uuidsToDeleteArray[_deleteCounter],
+                                tables: data.unaffectedTables
+                            });
+                            _deleteCounter++;
+                        } else {
+                            _unSuccessfullyDeletedArray.push({
+                                id: _uuidsToDeleteArray[_deleteCounter],
+                                tables: "unknown failure"
+                            });
+                            _deleteCounter++;
+                        }
+
+                        if (_deleteCounter === _uuidsToDeleteArray.length) {
+                            setTimeout(OmegaDeleteInactiveModule.hideNonDeletedUsers, 500);
+                        } else {
+                            OmegaDeleteInactiveModule.ajaxDelete(); // keep going until all id's have been processed
+                        }
+                    },
+
+                    error: function(xhr, err) {
+                        if (xhr.status === 401) {
+                            window.location.href = '@Url.Action("index", "home")';
+                        } else {
+                            var terseError = $.parseJSON(xhr.responseText);
+                            console.log("terseError: ", terseError);
+                            console.log("Request Failed: " + err);
+
+                            _unSuccessfullyDeletedArray.push(_uuidsToDeleteArray[_deleteCounter]);
+                            _deleteCounter++;
+
+                            if (_deleteCounter === _uuidsToDeleteArray.length) {
+                                setTimeout(OmegaDeleteInactiveModule.hideNonDeletedUsers, 500);
+                            } else {
+                                OmegaDeleteInactiveModule.ajaxDelete(); // keep going until all id's have been processed
+                            }
+                        }
+                    }
+                });
+            };
+
+            // sorting operations:
+            var _sortByType = function(whichButton) {
+                var sortData = {};
+                sortData.SortCategory = whichButton.attributes.meta.value;
+                sortData.NotLoggedInSince = $("#NotLoggedInSince").val();
+
+                $.ajax({
+                    url: '@Url.Action("GetList", "OnlineBankingUsers")', // "ActionName", "Controller" 
+                    dataType: "text",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(sortData),
+                    success: function(data) { // result from the controller method
+                        $("body").html(data); // refresh page
+                    },
+
+                    error: function(xhr, err) {
+                        var terseError = $.parseJSON(xhr.responseText);
+                        console.log("terseError: ", terseError);
+                        console.log("Request Failed: " + err);
+
+                        if (xhr.status === 401) window.location.href = '@Url.Action("index", "home")';
+                    }
+                });
+            };
+
+
+            // show export csv button from selection button
+            var _showExportCsvFromSelectionButton = function() {
+                if (_canExportCsvBeforeDeleting) {
+                    if ($("input[name=UuidsToDelete]:checked").length > 0) {
+                        document.querySelector("#ExportCsvFromSelection").style.display = "inline-block";
+                    } else {
+                        document.querySelector("#ExportCsvFromSelection").style.display = "none";
+                    }
+                }
+            };
+
+
+            // export csv file from checked selections
+            var _exportCsvFromCheckboxSelections = function() {
+                // get all the rows that are checked:
+                var tempExportArray = $("input[name=UuidsToDelete]:checked").toArray();
+
+                // sort by id
+                tempExportArray.sort(function(a, b) {
+                    return (a.id.replace("cb-", "") > b.id.replace("cb-", "")) ? 1 : 0;
+                });
+
+                // populate an array of all the checked checkbox id's for the csv file export:
+                $.each(tempExportArray,
+                    function(key, item) { // key/value pair is passed
+                        _uuidsSelectedToBeDeletedArray.push(item.value);
+                    });
+
+                OmegaDeleteInactiveModule.initiateCsvFileSetup(true); // true means use selected rows for export
+                _uuidsSelectedToBeDeletedArray = []; // empty the array for the next export
+            };
+
+
+            // public interface:
+            return {
+                toggleDeleteCheckboxes: _toggleDeleteCheckboxes,
+                validateDeleteUsers: _validateDeleteUsers,
+                deleteSelectedUsers: _deleteSelectedUsers,
+                hideNonDeletedUsers: _hideNonDeletedUsers,
+                initiateCsvFileSetup: _initiateCsvFileSetup,
+                saveCsvFile: _saveCsvFile,
+                ajaxDelete: _ajaxDelete,
+                sortByType: _sortByType,
+                showExportCsvFromSelectionButton: _showExportCsvFromSelectionButton,
+                exportCsvFromCheckboxSelections: _exportCsvFromCheckboxSelections
+            };
+        })();
+
+        function keepAlive() {
+            $.get('@Url.Action("keepAlive", "home")',
+                function(data) {
+                    // nothing to do unless there is a failure which most
+                    // likely is a 401
+
+                }).fail(function(data) {
+
+                window.location.href = '@Url.Action("index", "home")';
+
+            }).fail(function() { window.location.href = '@Url.Action("index", "home")'; });
+        }
+
+        // set up a keep alive signal to the session
+        // page has proved problematic for long running queries
+        // run 1 minute less than the session timeout window (there are 60000 milliseconds in every minute)
+        setInterval(keepAlive, @((HttpContext.Current.Session.Timeout - 1) * 60000));
+    });
+
+
+</script>

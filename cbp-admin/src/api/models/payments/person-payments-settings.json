@@ -1,0 +1,16 @@
+{
+  "PersonPaymentsSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "security": {
+        "$ref": "./security.json#/PersonPaymentSecuritySettings"
+      },
+      "features": {
+        "$ref": "./features.json#/PersonPaymentFeatures"
+      }
+    }
+  }
+}

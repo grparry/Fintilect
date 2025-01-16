@@ -1,0 +1,51 @@
+﻿@model Psi.Data.Models.Domain.Themes.ThemeModel
+
+<div class="modal fade destroy-when-closed">
+    <!-- Modal Layout -->
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+	            <h4 class="modal-title">
+		            Are you Sure?
+	            </h4>
+            </div>
+
+	        @using (Ajax.BeginForm("DeprecateTheme", new AjaxOptions
+			{
+				HttpMethod = "POST",
+				OnBegin = "PsiModal.BeginFormSubmit",
+				OnFailure = "PsiModal.FormSubmitFailed",
+				OnSuccess = "deprecateThemeModalSubmitted"
+			}))
+			{
+		        <div class="modal-body">
+			
+			        About to deprecate @(Model.Title)
+			        <br />
+			        <br/>
+			        <div class="extra-info">This theme will be hidden but not deleted.</div>
+					@Html.HiddenFor(x=>x.PublicId)
+					@Html.HiddenFor(x => x.Title)
+
+		        </div><!-- End modal-body -->
+
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<input type="submit" class="btn btn-danger" value="Deprecate Theme"/>
+				</div>
+	        }
+			
+	        <script>
+        		function deprecateThemeModalSubmitted(data) {
+					// TODO: Update list via AJAX
+			        location.reload();
+		        }
+        	</script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

@@ -1,0 +1,227 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+    <h4 class="modal-title">
+        Upload an Image
+    </h4>
+</div>
+
+<div class="modal-body">
+    <div id="ImageUploadSuccessDiv" class="alert alert-success" style="display: none;">
+        <div style="float: right; margin-top: -8px;"><input type="button" class="btn btn-default"  value="Continue" data-dismiss="modal" /></div>
+        <div style="width: 70%;">The Image has been successfully uploaded.</div>
+    </div>
+
+    <div id="ImageUploadFailureDiv" class="alert alert-danger" style="display: none;">
+        <div style="float: right; margin-top: -8px;"><input type="button" class="btn btn-default" value="Continue" data-dismiss="modal" /></div>
+        <div style="width: 70%;">We were unable to save your data, please try again later.</div>
+    </div>
+
+    <div id="ImageUploadLoadingDiv" class="text-center" style="display:none; margin-bottom: 14px;">
+        <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Uploading Image...
+    </div>
+
+    <div id="ValidatorDiv" class="alert alert-danger" style="display: none;">
+        <!-- content will be rendered here dynamically -->
+    </div>
+
+    <div>
+        <div class="upload-instructions">
+            Use this form to upload an image.
+        </div>
+
+        @using (Ajax.BeginForm("UploadImage", "TargetedMarketing", new AjaxOptions { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "ImageUploadForm" })) { 
+            <div class="form-container">
+                <div class="sub-div div-1">
+                    <span class="form-label-static">Image</span>
+                </div>
+
+                <div class="sub-div div-2">
+                    <label id="CustomFileUploadLabel" for="file-1" class="custom-file-upload">Choose File</label><span id="FileUploadFilenameSpan"></span>
+                    <input id="file-1" type="file" name="file" class="file-upload" /><br />
+                    <span class="small text-muted">(4MB max file size - Only .png, .jpg or .gif file types allowed)</span>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div class="sub-div div-1">
+                    <span class="form-label-static">User Friendly Name</span>
+                </div>
+
+                <div class="sub-div div-2">
+                    <input type="text" id="UserFriendlyNameTextbox" name="UserFriendlyNameTextbox" placeholder="User Friendly Name" /> 
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="form-container">
+                <div class="sub-div div-1"><!-- sp --></div>
+
+                <div class="sub-div div-2">
+                    <input type="hidden" id="UploadFileTypesHidden" value="jpg,jpeg,png,gif" />
+                    <input type="submit" id="ImageUploadSubmitButton" class="btn btn-primary" value="Submit" />
+                    <input type="button" id="ImageUploadCancelButton" class="btn btn-default" data-dismiss="modal" value="Cancel" />
+                </div>
+            </div>
+        }
+    </div>
+</div><!-- End modal-body -->
+
+<script>
+        // create module object for this view:
+        var OmegaTargetedMarketingImageUploadModal = OmegaTargetedMarketingImageUploadModal || {};
+
+        // execute the module:
+        OmegaTargetedMarketingImageUploadModal = (function () {
+            console.log("Got here: OmegaTargetedMarketingImageUploadModal")
+ 
+            // reset all items in modal:
+            var _resetAll = function() {
+                $("#ImageUploadSubmitButton").prop("disabled", false);
+                $("#ImageUploadCancelButton").prop("disabled", false);
+                $("#file-1").val("");
+                $("#FileUploadFilenameSpan").text("");
+                $("#UserFriendlyNameTextbox").val("");
+               
+                $("#ValidatorDiv").hide();
+                $("#ValidatorDiv").empty();
+                $('#ImageUploadSuccessDiv').hide();
+                $('#ImageUploadFailureDiv').hide();
+                $('#ImageUploadProcessingDiv').hide();
+
+                document.getElementById("CustomFileUploadLabel").style.outline = "none";
+                document.getElementById("UserFriendlyNameTextbox").style.outline = "none";
+            }
+
+   
+            // reset modal on modal closed event
+            $("#image-upload-modal").on('hide.bs.modal', function () {
+                _resetAll();
+            });
+
+
+            // Check the file while the user is choosing the upload file before form submit:
+            $(".file-upload").bind('change', function() {
+                // Check the file size:
+                if (this.files[0].size >= 4194304 ) {   // 4MB -> 4 * 1024 * 1024
+                    alert('File is to large for uploading.\n\nThis file size is: ' + this.files[0].size/1024/1024 + " MB.");
+                    this.value = "";
+                    return;
+                }
+
+                // Check the file extention:
+                if ($("#UploadFileTypesHidden").val().length > 0) {
+                    if (this.files[0] != undefined) {
+                        var fileExt = this.files[0].name.split('.').pop();
+                    
+                        if ($("#UploadFileTypesHidden").val().indexOf(fileExt) == -1) {
+                            this.value = "";
+                            alert('File is not the right type.\n\nOnly files of this type are allowed: \n\n' + $("#UploadFileTypesHidden").val() + ".");
+                            return;
+                        }
+                    }
+                }
+
+                // set the text next to the file upload:
+                if (this.files[0]) {
+                    $("#FileUploadFilenameSpan").text(this.files[0].name);
+                }
+            });
+
+
+            // form submit intercept for Ajax.BeginForm:
+            $("#ImageUploadForm").submit(function (e) {
+                console.log("We are logging this submit for an Ajax action. - Action Begun from ImageUploadForm.Submit");
+                 
+                var ImageUploadFormValid;
+                var ImageUploadFormTextRegx = /^[A-Za-z\d\-_.,!"'?\s]+$/;
+
+                $("#ValidatorDiv").empty();
+                $("#ValidatorDiv").html("Please make the following corrections:");
+
+                // Check to see if file selection is empty:
+                if ($("#file-1")[0].files[0] === undefined || $("#file-1")[0].files[0] === null) {
+                    $("#file-1").val("");
+                    document.getElementById("CustomFileUploadLabel").style.outline = "1px solid red";
+                    $("#ValidatorDiv").append("<br>&bull; Please select an image to upload by clicking the 'Choose File' button.");
+                    ImageUploadFormValid = false;
+                } else {
+                    document.getElementById("CustomFileUploadLabel").style.outline = "none";
+                }
+
+                // Check size of file selection (technically, we should never get here because of the binding check above):
+                if ($("#file-1")[0].files[0] != undefined && $("#file-1")[0].files[0].size >= 4194304) {     // 4MB -> 4 * 1024 * 1024
+                    $("#file-1").val(""); 
+                    ImageUploadFormValid = false;
+                }
+
+                // Check type of file selection (.jpg, .png, .gif) (technically, we should never get here because of the binding check above):
+                if ($("#file-1")[0].files[0] != undefined) {
+                    var fileExt = $("#file-1")[0].files[0].name.split('.').pop();
+
+                    if ($("#UploadFileTypesHidden").val().indexOf(fileExt) == -1) {
+                        $("#file-1").val(""); 
+                        ImageUploadFormValid = false;
+                    } 
+                }              
+
+                // check user friendly name field:
+                if ($("#UserFriendlyNameTextbox").val() === "" || $("#file-1")[0].files[0] === null) {
+                    document.getElementById("UserFriendlyNameTextbox").style.outline = "1px solid red";
+                    $("#ValidatorDiv").append("<br>&bull; Please enter a user friendly name.");
+                    ImageUploadFormValid = false;
+                } else if (!ImageUploadFormTextRegx.test(document.getElementById("UserFriendlyNameTextbox").value)) {
+                    document.getElementById("UserFriendlyNameTextbox").style.outline = "1px solid red";
+                    $("#ValidatorDiv").append("<br>&bull; Please enter a valid user friendly name with any special characters.");
+                    ImageUploadFormValid = false;
+                } else {
+                    document.getElementById("UserFriendlyNameTextbox").style.outline = "none";
+                }
+
+                // if anything above fails, return false and halt form submit:
+                if (ImageUploadFormValid === false) {
+                    $("#ValidatorDiv").show("normal");
+                    return false;
+                }
+        
+                // Form is valid, submit it:
+                var ImageUploadDelay = setTimeout(function() {$('#addMessageProcessingDiv').show("normal");}, 1000); // using setTimeout because jQuery delay only works on animate
+                $("#ValidatorDiv").hide();
+                $("#ImageUploadFailureDiv").hide();
+                $("#ImageUploadSubmitButton").prop("disabled", true);
+                $("#ImageUploadCancelButton").prop("disabled", true);
+                document.getElementById("CustomFileUploadLabel").style.outline = "none";
+                document.getElementById("UserFriendlyNameTextbox").style.outline = "none";
+
+                var ImageUploadForm = e.target;
+                if ($(ImageUploadForm).attr("enctype") === "multipart/form-data") {
+                    console.info("entering the submit process...");
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    var xhr = new XMLHttpRequest();
+                    xhr.open(ImageUploadForm.method, ImageUploadForm.action);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState == 4 && xhr.status == 200 && xhr.response.toLowerCase() === "success") {         // success
+                            clearTimeout(ImageUploadDelay);
+                            $('#ImageUploadSuccessDiv').show("normal");
+                            $('#ImageUploadFailureDiv').hide();
+                            $('#ImageUploadProcessingDiv').hide();
+                        } else if (xhr.readyState == 4 && xhr.response.toLowerCase() !== "success") {
+                            clearTimeout(ImageUploadDelay);
+                            $('#ImageUploadSuccessDiv').hide();
+                            $('#ImageUploadFailureDiv').show("normal");
+                            $('#ImageUploadProcessingDiv').hide();
+                            $("#ImageUploadCancelButton").prop("disabled", false);
+                        }
+                    };
+                    xhr.send(new FormData(ImageUploadForm));
+                }
+            })
+
+            // Public interface
+            return {
+                // nothing
+            }
+        })();
+</script>

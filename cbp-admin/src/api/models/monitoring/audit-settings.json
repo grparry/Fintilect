@@ -1,0 +1,16 @@
+{
+  "AuditSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "auditLogging": {
+        "$ref": "./audit-logging.json#/AuditLoggingSettings"
+      },
+      "monitoring": {
+        "$ref": "./monitoring.json#/MonitoringSettings"
+      }
+    }
+  }
+}

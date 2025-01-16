@@ -1,0 +1,337 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.LayeredSecurity
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model LayeredSecurityViewModel
+
+@{
+    ViewBag.Title = "Layered Security";
+    ViewBag.ActiveMenu = "layered-security";
+    ViewBag.BaseModel = Model;
+}
+
+@section LinkedStyleSheets {
+    <link href='@Url.Content("~/Content/layered-security.css")' rel="stylesheet"/>
+}
+
+@if (!SettingsManager.Settings.OmegaConfiguration.Features.LayeredSecurityEnabled)
+{
+    <div class="alert alert-info">
+        We are sorry to inform you that this feature is currently unavailable.
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6">
+            <div class="pull-right">
+                @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+                {<br/>
+                    <a class="btn btn-default" href="@Url.Action("AuthenticationMethod", "LayeredSecurity")">Authentication Methods</a>
+                    <br />
+                    <br/>
+                }
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default" style="min-height: 820px; max-height: 820px; overflow-y: auto;">
+                <div class="panel-heading-psi">
+                    <strong>Features</strong>
+                    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+                    {
+                        <div class="pull-right">
+                            <button class="btn btn-default btn-xs" onclick="layeredSecurity.AddFeature()"><span class="glyphicon glyphicon-plus"></span> &nbsp; Add Feature</button>
+                        </div>
+                    }
+                </div>
+                <div class="panel-body">
+                    @foreach (var feature in Model.Features)
+                    {
+                        <div>
+                            @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+                            {
+                                <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit Feature" onclick="layeredSecurity.UpdateFeature(this,
+                                    '@feature.FeatureId', '@feature.ApplicationId', '@feature.Name', '@feature.Description', '@feature.FeatureKey')"><span class="glyphicon glyphicon-cog"></span></span>
+                            }
+                            <div class="btn btn-submit" onclick="layeredSecurity.showFeature(this, '@feature.FeatureId', '@feature.ApplicationId', '@feature.Name', '@feature.Description', '@feature.FeatureKey')">@feature.Name</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div id="featurePanel" class="panel panel-default" style="min-height: 400px; max-height: 400px; overflow-y: auto;">
+                <!-- content will be rendered here dynamically by Feature.cshtml -->
+                <div class="panel-heading-psi"><strong>Select a Feature</strong></div>
+                <div class="panel-body">
+                    <div class="alert alert-info">
+                        <p>Select a Feature to view, edit, and manage it.</p>
+                    </div>
+                </div>
+            </div>
+            <div id="featureActionPanel1" class="panel panel-default" style="min-height: 400px; max-height: 400px; overflow-y: auto;">
+                <!-- Placeholder for action.cshtml to overwrite. Displays this again if a different feature is selected -->
+                <div class="panel-heading-psi"><strong>Select an Action</strong></div>
+                <div class="panel-body">
+                    <div class="panel-body">
+                        <div class="alert alert-info">
+                            <p>Select an Action to view, edit, and manage it.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="featureActionPanel2" class="panel panel-default" style="min-height: 400px; max-height: 400px; overflow-y: auto; display: none;">
+                <!-- content will be rendered here dynamically by Action.cshtml -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="manageFeatureModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add or Update a Feature</h3>
+                </div>
+                <div class="modal-body" id="manageFeatureBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="manageActionModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add or Update an Action</h3>
+                </div>
+                <div class="modal-body" id="manageActionBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var layeredSecurity = {
+            ModalBaseUrl: function () {
+                return "./LayeredSecurity/";
+            },
+            AddFeature: function() {
+                $("#manageFeatureModal").modal();
+                Util.ShowLoadingInInnerHtml('#manageFeatureBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageFeatureBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageFeatureBody', status);
+                    }
+                };
+
+                $.get(layeredSecurity.ModalBaseUrl() + 'AddUpdateFeature', callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            UpdateFeature: function(sender, featureId, appId, name, description, featureKey) {
+                $("#manageFeatureModal").modal();
+                Util.ShowLoadingInInnerHtml('#manageFeatureBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageFeatureBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageFeatureBody', status);
+                    }
+                };
+
+                $.get(layeredSecurity.ModalBaseUrl() + 'AddUpdateFeature?Feature.FeatureId=' + featureId + '&Feature.ApplicationId=' + appId +
+                    '&Feature.Name=' + name + '&Feature.Description=' + description + '&Feature.FeatureKey=' + featureKey, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            AddAction: function(sender, appId, featureId) {
+                $("#manageActionModal").modal();
+                Util.ShowLoadingInInnerHtml('#manageActionBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageActionBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageActionBody', status);
+                    }
+                };
+
+                $.get(layeredSecurity.ModalBaseUrl() + 'AddUpdateAction?Feature.ApplicationId=' + appId + '&Feature.FeatureId=' + featureId, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            UpdateAction: function(sender, appId, featureId, actionId, name, description, minAppVersion, publicId, strongAuthWeight, isLoginAction) {
+                $("#manageActionModal").modal();
+                Util.ShowLoadingInInnerHtml('#manageActionBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageActionBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageActionBody', status);
+                    }
+                };
+
+                $.get(layeredSecurity.ModalBaseUrl() + 'AddUpdateAction?Feature.ApplicationId=' + appId + '&Feature.FeatureId=' + featureId + '&FeatureAction.FeatureId=' + featureId
+                    + '&FeatureAction.ActionId=' + actionId + '&FeatureAction.Name=' + name + '&FeatureAction.Description=' + description + '&FeatureAction.MinimumApplicationVersion=' + minAppVersion +
+                    "&FeatureAction.StrongAuthenticationWeight=" + strongAuthWeight + '&FeatureAction.PublicId=' + publicId + '&FeatureAction.IsLoginAction=' + isLoginAction, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            AddRule: function(sender, actionId, actionName, actionDesc, strongAuthWeight, actionPublicId, featureId, minAppVersion) {
+                $("#manageAuthenticationRuleModal").modal();
+                Util.ShowLoadingInInnerHtml('#manageAuthenticationRuleBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageAuthenticationRuleBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageAuthenticationRuleBody', status);
+                    }
+                };
+
+                $.get(layeredSecurity.ModalBaseUrl() + 'AuthenticationRule?FeatureAction.ActionId=' + actionId + '&FeatureAction.Name=' + actionName + '&FeatureAction.Description=' + actionDesc + '&FeatureAction.MinimumApplicationVersion=' + minAppVersion +
+                    "&FeatureAction.StrongAuthenticationWeight=" + strongAuthWeight + '&FeatureAction.PublicId=' + actionPublicId + '&FeatureAction.FeatureId=' + featureId, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadRule: function(sender, id, publicId, actionId, authMethods, totalWeight, numRequiredMethods, priority, actionName, actionDesc, strongAuthWeight, actionPublicId, featureId, minAppVersion) {
+                $("#manageAuthenticationRuleModal").modal();
+                Util.ShowLoadingInInnerHtml('#manageAuthenticationRuleBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageAuthenticationRuleBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageAuthenticationRuleBody', status);
+                    }
+                };
+
+                $.get(layeredSecurity.ModalBaseUrl() + 'AuthenticationRule?AuthenticationRule.Id=' + id + '&AuthenticationRule.PublicId=' + publicId + '&FeatureAction.ActionId=' + actionId + '&FeatureAction.PublicId=' + actionPublicId +
+                    '&AuthenticationRule.AuthenticationMethods=' + authMethods + '&AuthenticationRule.TotalWeight=' + totalWeight + '&AuthenticationRule.NumberOfRequiredMethods=' + numRequiredMethods +
+                    '&AuthenticationRule.Priority=' + priority + '&FeatureAction.Name=' + actionName + '&FeatureAction.StrongAuthenticationWeight=' + strongAuthWeight + "&FeatureAction.Description=" + actionDesc +
+                    '&FeatureAction.FeatureId=' + featureId + '&FeatureAction.MinimumApplicationVersion=' + minAppVersion, callback);
+            },
+            UpdateRulePriority: function (sender, actionId) {
+                var items = $(".rule-sort-item");
+                var ruleIds = [];
+
+                for (var i = 0; i < items.length; i++) {
+                    var id = items[i].id;
+                    ruleIds.push(id);
+                }
+
+                ruleIds.push(actionId); // add the action id so we can get the rules to update.
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'LayeredSecurity/UpdateRulePriority',
+                    data: JSON.stringify(ruleIds),
+                    dataType: 'text',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.toLocaleLowerCase() === 'true') {
+                            $("#LayeredSecuritySuccessImage").slideDown();
+                        } else {
+                            $("#LayeredSecurityFailureImage").slideDown();
+                        }
+                    },
+                    error: function (xhr, err) {
+                        var terseError = $.parseJSON(xhr.responseText);
+                        console.log("terseError: ", terseError);
+                        console.log("Request Failed: " + err);
+
+                        $("#LayeredSecurityFailureImage").slideDown();
+                    }
+                }).fail(function () {
+                    window.location.href = '@Url.Action("index", "home")';
+                });
+            },
+            showFeature: function(sender, featureId, appId, name, description, featureKey) {
+                $('#featureActionPanel2').hide();
+                $('#featureActionPanel2').empty();
+                $('#featureActionPanel1').show();
+                var callback = function(data, status) {
+                    if (status === 'success') {
+                        $("#featurePanel").html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featurePanel', status);
+                    }
+                };
+
+                $.get(layeredSecurity.ModalBaseUrl() + 'Feature?Feature.FeatureId=' + featureId + '&Feature.ApplicationId=' + appId +
+                    '&Feature.Name=' + name + '&Feature.Description=' + description + '&Feature.FeatureKey=' + featureKey, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            showAction: function(sender, featureId, appId, featureName, featureDesc, featureKey, actionId, name, description, minAppVersion, publicId, strongAuthWeight) {
+                $('#featureActionPanel2').show();
+                $('#featureActionPanel1').hide();
+                var callback = function(data, status) {
+                    if (status === 'success') {
+                        $("#featureActionPanel2").html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featureActionPanel2', status);
+                    }
+                };
+
+                $.get(layeredSecurity.ModalBaseUrl() +
+                    'Action?Feature.FeatureId=' +
+                    featureId +
+                    '&Feature.ApplicationId=' +
+                    appId +
+                    '&Feature.Name=' +
+                    featureName +
+                    '&Feature.Description=' +
+                    featureDesc +
+                    '&Feature.FeatureKey=' +
+                    featureKey +
+                    '&FeatureAction.ActionId=' +
+                    actionId +
+                    '&FeatureAction.Name=' +
+                    name +
+                    '&FeatureAction.Description=' +
+                    description +
+                    '&FeatureAction.MinimumApplicationVersion=' +
+                    minAppVersion +
+                    '&FeatureAction.PublicId=' +
+                    publicId +
+                    '&FeatureAction.StrongAuthenticationWeight=' +
+                    strongAuthWeight,
+                    callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+
+            }
+        };
+        $(document).ready(function () {
+            @{ 
+                if(Model.Feature != null && Model.Feature.FeatureId > 0)
+                {
+                    @Html.Raw("layeredSecurity.showFeature(this, '" + Model.Feature.FeatureId + "', '" + Model.Feature.ApplicationId + "', '" + 
+                                Model.Feature.Name + "', '"+ Model.Feature.Description + "', '" + Model.Feature.FeatureKey + "');");
+                }
+            }
+        @{ 
+                if(Model.Feature != null && Model.FeatureAction != null)
+                {
+                    @Html.Raw("layeredSecurity.showAction(this, '" + Model.Feature.FeatureId + "', '" + Model.Feature.ApplicationId + "', '" + Model.Feature.Name + "', '"+ Model.Feature.Description + "', '" +
+                                Model.Feature.FeatureKey + "', '" + Model.FeatureAction.ActionId + "', '" + Model.FeatureAction.Name + "', '" + Model.FeatureAction.Description + "', '" +
+                                Model.FeatureAction.MinimumApplicationVersion + "', '" + Model.FeatureAction.PublicId + "', '" + Model.FeatureAction.StrongAuthenticationWeight + "');");
+                }
+            }
+
+            $("#LayeredSecuritySuccessImage").hide();
+            $("#LayeredSecurityFailureImage").hide();
+        });
+    </script>
+}

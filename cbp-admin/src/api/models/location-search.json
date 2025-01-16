@@ -1,0 +1,187 @@
+{
+  "LocationSearchSettings": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "provider": {
+        "type": "string",
+        "enum": ["Google", "MapQuest", "Here", "Custom"]
+      },
+      "apiConfiguration": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "format": "password"
+          },
+          "clientId": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string",
+            "format": "uri"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
+      "searchTypes": {
+        "type": "object",
+        "properties": {
+          "branches": {
+            "type": "boolean"
+          },
+          "atms": {
+            "type": "boolean"
+          },
+          "sharedBranches": {
+            "type": "boolean"
+          },
+          "partnerAtms": {
+            "type": "boolean"
+          }
+        }
+      },
+      "filters": {
+        "type": "object",
+        "properties": {
+          "radius": {
+            "type": "object",
+            "properties": {
+              "defaultRadius": {
+                "type": "number",
+                "format": "float"
+              },
+              "maxRadius": {
+                "type": "number",
+                "format": "float"
+              },
+              "unit": {
+                "type": "string",
+                "enum": ["Miles", "Kilometers"]
+              }
+            }
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "DriveThru",
+                "SafetyDeposit",
+                "NotaryService",
+                "WealthManagement",
+                "MortgageServices",
+                "BusinessServices",
+                "HandicapAccess"
+              ]
+            }
+          },
+          "atmFeatures": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Deposits",
+                "CardlessCash",
+                "DriveThru",
+                "24Hour",
+                "HandicapAccess",
+                "MultipleCurrency"
+              ]
+            }
+          }
+        }
+      },
+      "locationDetails": {
+        "type": "object",
+        "properties": {
+          "includeHours": {
+            "type": "boolean"
+          },
+          "includeServices": {
+            "type": "boolean"
+          },
+          "includePhotos": {
+            "type": "boolean"
+          },
+          "includeDirections": {
+            "type": "boolean"
+          },
+          "includeWaitTimes": {
+            "type": "boolean"
+          }
+        }
+      },
+      "caching": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "ttlMinutes": {
+            "type": "integer"
+          },
+          "maxCacheSize": {
+            "type": "integer"
+          }
+        }
+      },
+      "customization": {
+        "type": "object",
+        "properties": {
+          "mapStyle": {
+            "type": "object",
+            "properties": {
+              "theme": {
+                "type": "string",
+                "enum": ["Default", "Light", "Dark", "Custom"]
+              },
+              "markerIcons": {
+                "type": "object",
+                "properties": {
+                  "branch": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "atm": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "sharedBranch": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "partnerAtm": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              }
+            }
+          },
+          "listView": {
+            "type": "object",
+            "properties": {
+              "defaultView": {
+                "type": "string",
+                "enum": ["Map", "List", "Split"]
+              },
+              "sortOptions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["Distance", "Name", "Services", "Hours"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

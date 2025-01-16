@@ -1,0 +1,62 @@
+﻿@using Omega.Presentation.Mvc.Business
+@model Omega.Presentation.Mvc.Models.FeaturesManager.AddUpdateFeatureGroupModel
+
+@{
+    ViewBag.BaseModel = Model;
+}
+
+
+@if (Model.FeatureGroup != null)
+{
+    <div class="panel-heading-psi">
+        <strong><span id="featureLabel"></span></strong>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="pull-right">
+            @if (Model.User.PermissionLevel.CanView(PermissionLevel.Support))
+            {
+                <span style="font-size: larger; cursor: pointer;" class="text-white" title="Add Setting" onclick="FeaturesManager.EditSetting(this, '0', '@Model.FeatureGroup.FeatureId', '@Model.FeatureGroup.Id');"><span class="glyphicon glyphicon-plus"></span></span>
+                <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit Feature Group" onclick="FeaturesManager.EditFeatureGroup(this, '@Model.FeatureGroup.Id', '@Model.FeatureGroup.FeatureId')"><span class="glyphicon glyphicon-cog"></span></span>
+            }
+        </span>
+    </div>
+}
+else
+{
+    <div class="panel-heading-psi">
+        <strong><span id="featureLabel"></span></strong>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+}
+
+<div class="panel-body">
+    @if (Model.FeatureGroup != null)
+    {
+        <div class="panel panel-default" style="min-height: 600px; max-height: 600px; overflow-y: auto;">
+            <div class="panel-body">
+                @{
+                    @*var fee = Model.FeatureGroup.FeeAdjustment ?? decimal.Zero;
+                    var mnt = Model.FeatureGroup.MaintenanceFee ?? decimal.Zero;*@
+                }
+                <div>
+                    <p>@Model.FeatureGroup.Description</p>
+                    @*<p>Fee Adjustment: @fee.ToString("C")</p>
+                    <p>Maintenance Fee: @mnt.ToString("C") </p>*@
+                    @*<a class="btn btn-default" href="@Url.Action("ViewSettings", "FeaturesManager", new {featureId = Model.FeatureGroup.FeatureId, groupId = Model.FeatureGroup.Id})">View Settings</a>*@
+                    <p>Minimum Version: @Model.FeatureGroup.MinimumVersion</p>
+                    <p>Deprecated Version: @Model.FeatureGroup.DeprecatedVersion</p>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <h3>@if (Model.Feature != null)
+                {
+                    @Model.Feature.Name
+                }
+                Groups</h3>
+            <p>Select a Group to view, edit, and manage.</p>
+        </div>
+    }
+</div>

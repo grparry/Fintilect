@@ -1,0 +1,72 @@
+﻿@model Omega.Presentation.Mvc.Models.FeaturesManager.AddUpdateFeatureGroupModel
+
+@{
+    ViewBag.Title = "Add/Edit Feature Groups";
+    ViewBag.Subtitle = "Manage Feature Group Desciption Information";
+    ViewBag.ActiveMenu = "features-manager";
+    ViewBag.BaseModel = Model;
+}
+
+<div>
+    <div class="panel-body">
+        <div class="form-group">
+            @Html.LabelFor(m => m.FeatureGroup.Id, new { @class = "col-md-3 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.FeatureGroup.Id, new { @class = "form-control", @readonly = true, id = "groupId" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.LabelFor(m => m.FeatureGroup.Name, new { @class = "col-md-3 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.FeatureGroup.Name, new { @class = "form-control", id = "groupName" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.LabelFor(m => m.FeatureGroup.Description, new { @class = "col-md-3 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.FeatureGroup.Description, new { @class = "form-control", id = "groupDescription" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.LabelFor(m => m.FeatureGroup.FeatureId, new { @class = "col-md-3 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.FeatureGroup.FeatureId, new { @class = "form-control", @readonly = true, id = "groupFeatureId" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.LabelFor(m => m.FeatureGroup.MinimumVersion, new { @class = "col-md-3 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.FeatureGroup.MinimumVersion, new { @class = "form-control", id = "groupMinimumVersion" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.LabelFor(m => m.FeatureGroup.DeprecatedVersion, new { @class = "col-md-3 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.FeatureGroup.DeprecatedVersion, new { @class = "form-control", id = "groupDeprecatedVersion" })
+            </div>
+        </div>
+        <br/>
+        @Html.HiddenFor(m => m.FeatureGroup.FeeAdjustment, new { id = "groupFeeAdjustment" })
+        @Html.HiddenFor(m => m.FeatureGroup.MaintenanceFee, new { id = "groupMaintenanceFee" })
+        @*<div class="form-group">
+            @Html.LabelFor(m => m.FeatureGroup.FeeAdjustment, new { @class = "col-md-3 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.FeatureGroup.FeeAdjustment, new { @class = "form-control" })
+            </div>
+        </div>
+        <br/>
+        <div class="form-group">
+            @Html.LabelFor(m => m.FeatureGroup.MaintenanceFee, new { @class = "col-md-3 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.FeatureGroup.MaintenanceFee, new { @class = "form-control" })
+            </div>
+        </div>
+        <br/>*@
+        <button onclick="FeaturesManager.AddUpdateFeatureGroup(this);">Submit</button>
+    </div>
+</div>

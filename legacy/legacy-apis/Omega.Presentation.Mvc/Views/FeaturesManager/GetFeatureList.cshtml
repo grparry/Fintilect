@@ -1,0 +1,77 @@
+﻿@model Omega.Presentation.Mvc.Models.FeaturesManager.ManagedFeaturesModel
+
+
+<style type="text/css">
+    .search-list-button {
+        font-size: 14px;
+    }
+
+    .search-list-button.after-icon {
+        display: inline-block;
+    }
+
+    .search-list-button.active {
+        font-weight: bold;
+    }
+
+    /* NOTE: Commented this out.  It was messing with all font awesome icons.  Not sure why this is here.
+    .fa {
+        font-size: 5px;
+        line-height: 4px;
+        position: relative;
+        top: -2px;
+    }
+        */
+
+    .feature-pivot, .group-pivot {
+        display: inline-block;
+        box-sizing: border-box;
+        cursor: pointer;
+        color: #00FFFF;
+        font-size: 1.6rem;
+        font-weight: bold;
+    }
+
+    .group-pivot {
+        position: relative;
+        left: 24px;
+    }
+</style>
+
+<ul id="allFeatures">
+    @{
+        var features = Model.Features.OrderBy(f => f.Name).ToList();
+        foreach (var feature in features)
+        {
+            <li>
+                <div search-row-sets feature-id="@feature.Id" feature-name="@feature.Name">
+                    <div class="feature-pivot">&ndash;</div>
+                    <div class="search-list-button after-icon @(ViewBag.ActiveListItem == $"Feature:{feature.Id}" ? "active" : "")" feature-id="@feature.Id" feature-name="@feature.Name" onclick="FeaturesManager.LoadFeature(this);">
+                        &nbsp;@feature.Name
+                    </div>
+                </div>
+                <ul>
+                    @foreach (var group in feature.FeatureGroups)
+                    {
+                        <li>
+                            <div search-group-row-sets feature-id="@feature.Id" feature-group-id="@group.Id" feature-group-name="@group.Name">
+                                <div class="group-pivot">&ndash;</div>
+                                <div class="search-list-button after-icon @(ViewBag.ActiveListItem == $"Group:{group.Id}" ? "active" : "")" feature-id="@feature.Id" feature-group-id="@group.Id" feature-group-name="@group.Name" onclick="FeaturesManager.LoadFeatureGroup(this);" style="padding-left: 2em">
+                                    &nbsp;@group.Name
+                                </div>
+                            </div>
+                            <ul>
+                                @foreach (var setting in group.Settings)
+                                {
+                                    <li search-setting-row-sets class="search-list-button @(ViewBag.ActiveListItem == $"Setting:{setting.Id}" ? "active" : "")" feature-id="@feature.Id" feature-group-id="@group.Id" setting-id="@setting.Id" setting-name="@setting.Name" onclick="FeaturesManager.LoadSetting(this);" style="padding-left: 4em">
+                                        &nbsp;@setting.Name
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+    }
+</ul>

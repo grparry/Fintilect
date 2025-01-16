@@ -1,0 +1,272 @@
+﻿@using Psi.Data.Models.Domain.OmegaUsers
+@model Omega.Presentation.Mvc.Models.PermissionGroups.PermissionGroupsViewModel
+
+@{
+    ViewBag.Title = "Permission Groups Administration";
+    ViewBag.ActiveMenu = "permission-groups";
+}
+
+@section LinkedStyleSheets {
+    <link href='@Url.Content("~/Styles/permission-groups.css")' rel="stylesheet" />
+}
+
+
+<div class="row">
+    <div class="panel panel-default col-md-12">
+        <header class="panel-heading-psi clearfix">
+            <h4><strong>Permission Groups</strong></h4>
+        </header>
+
+        <div class="panel-body">
+            <!-- LOADING -->
+            <div id="LoadingDiv" class="text-center" style="display:none; padding:1rem;">
+                <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Loading...
+            </div>
+
+            <!-- FAILURE -->
+            <div id="FailureDiv" class="alert alert-danger" style="display:none; color: #FFFFFF;">
+                Failure.
+            </div>
+
+            <!-- SUCCESS -->
+            <div id="SuccessDiv" class="alert alert-success" style="display:none; color: #FFFFFF;">
+                Success.
+            </div>
+
+            <!-- DELETE -->
+            <div id="DeleteDiv" class="alert alert-warning" style="display: none; color: #FFFFFF;">
+                <div style="float: right; margin-top: -8px;"><input type="button" class="btn btn-primary" id="CancelFeatureDeleteButton" value="Continue" data-dismiss="modal" /></div>
+                <div style="width: 50%;">Your Permission Group has been deleted.</div>
+            </div>
+
+            @{if (Model.PermissionGroups.Count > 0)
+                {
+                    <div class="form-inline flex">
+                        <div class="flex-one-of-two">
+                            Permission Group Name
+                        </div>
+
+                        <div class="flex-two-of-two">
+                            Permissions
+                        </div>
+                    </div>
+
+                    foreach (OmegaUserPermissionGroup item in Model.PermissionGroups)
+                    {
+                        <div class="form-inline flex">
+                            <div class="flex-one-of-three">
+                                @item.Name
+                            </div>
+
+                            <div class="flex-two-of-three">
+                                @{string permissions = string.Join(", ", item.Permissions);
+
+                                    <span>
+                                        @permissions
+                                    </span>
+                                }
+                            </div>
+
+                            <div class="flex-three-of-three">
+                                <a modal-href="@Url.Action("ManagePermissionGroup", "PermissionGroups", new { id = item.Id, mode = "update"})" class=" btn btn-primary btn-sm" style="margin-right: .67rem">Edit</a>
+                                <a data-id="@item.Id" data-name="@item.Name" class=" btn btn-default btn-sm delete-btn">Delete</a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="form-inline flex">
+                        No Permission Groups were found.
+                    </div>
+                }
+            }
+
+            <hr />
+
+            <div class="form-inline flex">
+                <div class="flex-one-of-two">
+                    <a modal-href="@Url.Action("ManagePermissionGroup", "PermissionGroups", new { id = 0, mode = "create"})" class="btn btn-primary">Create New Permission Group</a>
+                </div>
+
+                <div class="flex-two-of-two" style="text-align: right;">
+                    <a href="@Url.Action("EditUserPermissions", "Home")" class="btn btn-info" style="margin-right: .75rem">Edit Users</a><a href="@Url.Action("AddNewUser", "Home")" class="btn btn-info">Add a New User</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src='@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery-ui-1.12.0.min.js")'></script>
+}
+
+<script>
+    // generic event handlers:
+    // reload the base page after notication continue click from modal
+    $("body").on("click", "#CancelFeatureDeleteButton, #CancelFeatureModalButton, #CancelFeatureFailureButton", function () {
+        setTimeout(function () { self.location.assign("PermissionGroups"); }, 1000);
+    });
+
+    // delete button click handler:
+    $(".delete-btn").click(function (e) {
+        e.preventDefault();
+        OmegaPermissionsGroupModule.deletePermissionGroup(e.target);
+    });
+
+    // save for Add/Edit in the modal click handler:
+    $("body").on("click", "#AddEditPermissionGroupSaveButton", function (e) {
+        e.preventDefault();
+        OmegaPermissionsGroupModule.submitPermissionGroup(e.target);
+    });
+
+    // NAMESPACE:
+    var OmegaPermissionsGroupModule = OmegaPermissionsGroupModule || {};
+    OmegaPermissionsGroupModule = (function () {
+        // methods:
+        // DELETE a Permission Group
+        var _deletePermissionGroup = function (item) {
+            if (!confirm("Are you sure you want to delete the Permission Group '" + item.dataset.name + "'?")) { return; };
+
+            var inDelay;
+            inDelay = setTimeout(function () { $("#LoadingDiv").slideDown() }, 300);
+                
+            $.ajax({
+                url: '@Url.Action("DeletePermissionGroup", "PermissionGroups")' + '?id=' + item.dataset.id, // action, controller
+                dataType: "text",
+                type: "Get",
+                statusCode: {
+                    200: function (data) {
+                        $("#LoadingDiv").slideUp();
+                        clearTimeout(inDelay);
+                        $("#DeleteDiv").slideDown();        
+                    },
+                    400: function () {
+                        $("#LoadingDiv").slideUp();
+                        $("#FailureDiv").slideDown();
+                        clearTimeout(inDelay);
+                    }               
+                },
+                error: function (xhr, err) {
+                    var terseError = xhr.statusText;
+                    console.log("terseError: ", terseError);
+                    console.log("Request Failed: " + err);
+                    $("#LoadingDiv").slideUp();
+                    $("#FailureDiv").slideDown();
+                    clearTimeout(inDelay);
+                }
+            });
+        }
+
+        // SUBMIT a Permission Group for CREATE / UPDATE
+        var _submitPermissionGroup = function (item) {
+            var addEditMode = item.dataset.mode;
+            var isValid = true;
+            var existingNames = @Html.Raw(Json.Encode(Model.ExistingGroupNames));
+
+            $("#ModalValidatorDiv").empty();
+            $("#ModalValidatorDiv").text("There were errors in your form entries:");  
+
+            // Validate that there is a name:
+            if ($("#SelectedPermissionGroup_Name").val().length === 0) {
+                document.querySelector("#SelectedPermissionGroup_Name").style.outline = '1px solid red';
+                $("#ModalValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please Enter a Name");  
+                isValid = false;
+                // No duplicate names if in 'create' mode, please:
+            } else if (addEditMode.toLocaleLowerCase() !== 'update' && existingNames.indexOf($("#SelectedPermissionGroup_Name").val()) > -1) {
+                document.querySelector("#SelectedPermissionGroup_Name").style.outline = '1px solid red';
+                $("#ModalValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please Enter a Different Name. The Name You Entered is Already Used.");  
+                isValid = false;
+            } else {
+                document.querySelector("#SelectedPermissionGroup_Name").style.outline = 'none';
+            }
+
+            // Validate that at least one checkbox has been checked:
+            var sl = document.querySelector("#PermissionGroupForm").elements['SelectedPermissions'];
+            var sa = [];
+
+            // push the checked permissions into an array, which becomes a valid 'list' in c#:
+            for (var i = 0; i < sl.length; i++) {
+                if (sl[i].checked) sa.push(sl[i].value);
+            }
+
+            if (sa.length === 0) {
+                document.querySelector("#checkboxContainerDiv").style.outline = '1px solid red';
+                $("#ModalValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please Select at Least One Permission");  
+                isValid = false;
+            } else {
+                document.querySelector("#checkboxContainerDiv").style.outline = 'none';
+            }
+
+            if (!isValid) {
+                $("#ModalValidatorDiv").slideDown();
+                return;
+            }
+
+            // validation is good, submit the form
+            $("#ModalValidatorDiv").slideUp();
+            var inDelay;
+            inDelay = setTimeout(function () { $("#ModalProcessingDiv").slideDown() }, 300);
+            var submitUrl = '@Url.Action("UpdatePermissionGroup", "PermissionGroups")';
+
+            if (addEditMode.toLocaleLowerCase() === 'create') {
+                submitUrl = '@Url.Action("CreatePermissionGroup", "PermissionGroups")';
+            }
+            
+            // set up the model structure for the database. Remember, we are a child object of the view model:
+            // make a valid permission group object. model: Psi.Data.Models.Domain.OmegaUsers.OmegaUserPermissionGroup
+            var permissionGroup = {
+                Name: $("#SelectedPermissionGroup_Name").val(),
+                Permissions: sa
+            }
+
+            // if in 'update' mode, we need to send back the Id value so the back-end knows which one to update:
+            if (addEditMode.toLocaleLowerCase() === 'update') {
+                permissionGroup.Id = parseInt($("#SelectedPermissionGroup_Id").val());
+            }
+
+            // buid up the form data.  model: Omega.Presentation.Mvc.Models.PermissionGroups.PermissionsGroupViewModel
+            var postData = {
+                SelectedPermissionGroup: permissionGroup,
+            };
+
+            $.ajax({
+                url: submitUrl,
+                dataType: "text",
+                type: "POST",
+                data: postData,
+                statusCode: {
+                    200: function (data) {
+                        $("#ModalProcessingDiv").slideUp();
+                        clearTimeout(inDelay);
+                        $("#ModalSuccessDiv").slideDown();
+                    },
+                    400: function () {
+                        $("#ModalProcessingDiv").slideUp();
+                        $("#ModalFailureDiv").slideDown();
+                        clearTimeout(inDelay);
+                    }               
+                },
+                error: function (xhr, err) {
+                    var terseError = xhr.statusText;
+                    console.log("terseError: ", terseError);
+                    console.log("Request Failed: " + err);
+                    $("#ModalProcessingDiv").slideUp();
+                    $("#ModalFailureDiv").slideDown();
+                    clearTimeout(inDelay);
+                }
+            });
+        }
+
+        // public interface:
+        return {
+            deletePermissionGroup: _deletePermissionGroup,
+            submitPermissionGroup: _submitPermissionGroup
+        }
+    })();
+</script>
+

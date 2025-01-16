@@ -1,0 +1,119 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.LayeredSecurity
+@model LayeredSecurityActionsViewModel
+
+@{
+    ViewBag.Title = "Layered Security - " + Model.Feature.Name + " - " + Model.FeatureAction.Name;
+    ViewBag.BaseModel = Model;
+}
+
+<script src='@Url.Content("~/Assets/jquery-1.12.4.js")'></script>
+<script src='@Url.Content("~/Assets/jquery-ui-1.12.0.js")'></script>
+<script src='@Url.Content("~/Assets/bootstrap-3.3.7.min.js")'></script>
+
+<script>
+    // jQuery draggable invocation:
+    function initScripts() {
+        $("#sortable").sortable();
+        $("#sortable").disableSelection();
+    };
+</script>
+
+<div class="panel-heading-psi">
+    <strong>@Model.FeatureAction.Name</strong> Authentication Rules
+    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Owner))
+    {
+        <div class="pull-right">
+            <button class="btn btn-default btn-xs" onclick="layeredSecurity.AddRule(this, '@Model.FeatureAction.ActionId', '@Model.FeatureAction.Name', '@Model.FeatureAction.Description',
+                '@Model.FeatureAction.StrongAuthenticationWeight', '@Model.FeatureAction.PublicId', '@Model.FeatureAction.FeatureId', '@Model.FeatureAction.MinimumApplicationVersion')">
+                New &nbsp;<span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+    }
+</div>
+
+
+<div class="panel-body" style="width: 100%">
+    <div>
+        <p>@Model.FeatureAction.Description</p>
+        <p>
+            Edit the authentication rules for the @Model.FeatureAction.Name action. The rules will be checked in order of priority (the top rule will be first). If the user's device is unable to perform enough methods
+            to satisfy the rule,the next rule will be checked. If the device is unable to authenticate any of the rules, the default method (password) will be used. You may click on a rule to edit it or click on the
+            trash can icon to delete the rule.
+        </p>
+        @if (!Model.AuthenticationRules.Any())
+        {
+            <p>
+                <span class="bold">Note</span>: If no rules are made, the default rule is to sign in using a password.
+            </p>
+            <div class="alert alert-info">
+                Sorry there are no authentication rules for this action yet. Please define some by clicking the <strong>New</strong> button.
+            </div>
+        }
+        else
+        {
+            <div>
+                <div class="panel panel-default">
+                    <div class="panel-heading-psi"><strong>Authentication Rule Requirements</strong></div>
+                    <div class="panel-body">
+                        <ul id="sortable" class="rule-sort-order">
+                            @foreach (var authenticationRule in Model.AuthenticationRules)
+                            {
+                                <li id="@authenticationRule.Id" class="rule-sort-item">
+                                    <a onclick="layeredSecurity.LoadRule(this,    '@authenticationRule.Id',    '@authenticationRule.PublicId',    '@authenticationRule.ActionId',    '@authenticationRule.AuthenticationMethods',    '@authenticationRule.TotalWeight',
+    '@authenticationRule.NumberOfRequiredMethods',    '@authenticationRule.Priority',    '@Model.FeatureAction.Name',    '@Model.FeatureAction.Description',    '@Model.FeatureAction.StrongAuthenticationWeight',
+    '@Model.FeatureAction.PublicId',    '@Model.FeatureAction.FeatureId',    '@Model.FeatureAction.MinimumApplicationVersion')">
+                                        @{
+                                            var methodIds = authenticationRule.AuthenticationMethods.Split(',').ToList();
+                                            var ruleName = "";
+                                            foreach (var methodId in methodIds)
+                                            {
+                                                if (!Model.AuthenticationMethods.Any(x => x.Id == methodId.ToInt()))
+                                                {
+                                                    continue;
+                                                }
+                                                var authMethod = Model.AuthenticationMethods.Select(x => new AuthenticationMethod
+                                                { Id = x.Id, Name = x.Name }).FirstOrDefault(x => x.Id == methodId.ToInt());
+                                                ruleName += authMethod?.Name + ", ";
+                                            }
+                                            ruleName = ruleName.TrimEnd(' ').TrimEnd(',');
+                                        }
+                                        @ruleName
+                                    </a>
+                                    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Owner))
+                                    {
+                                        authenticationRule.FeatureId = Model.FeatureAction.FeatureId;
+                                        <a class="glyphicon glyphicon-trash" href="@Url.Action("DeleteRule", "LayeredSecurity", authenticationRule)"></a>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                        <button class="btn btn-info" style="margin-right: 10px;" onclick="layeredSecurity.UpdateRulePriority(this, '@Model.FeatureAction.ActionId')">
+                            Update Rule Priority / Order
+                        </button>
+                        <img src='@Url.Content("~/Images/icon_check_44.png")' alt="sucess" style="display:none; width:24px; height:24px;" id="LayeredSecuritySuccessImage" />
+                        <img src='@Url.Content("~/Images/icon_alert_44.png")' alt="failure" style="display:none; width:24px; height:24px;" id="LayeredSecurityFailureImage" />
+                    </div>
+                </div>
+            </div>
+                                            }
+    </div>
+</div>
+
+<div class="modal fade" role="dialog" id="manageAuthenticationRuleModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-number="5">&times;</button>
+                <h3 class="modal-title">Authentication Rules</h3>
+            </div>
+            <div class="modal-body" id="manageAuthenticationRuleBody">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script defer="defer">
+    initScripts();
+</script>

@@ -1,0 +1,535 @@
+﻿@using Omega.Presentation.Mvc.Models.OnlineBankingUsers
+@model Omega.Presentation.Mvc.Models.OnlineBankingUsers.AccountNumberAssociationViewModel
+
+@{
+    ViewBag.ActiveMenu = "account-number-association";
+    ViewBag.Title = "Account Number Association";
+}
+
+@section LinkedStyleSheets {
+    <link type="text/css" rel=stylesheet href="../Styles/account-number-association.css">
+}
+
+<div class="row">
+    <div class="panel panel-default col-md-12">
+
+        <!-- SUCCESS -->
+        <div id="successDiv" class="alert alert-success" style="margin:14px auto; display: none;">
+            <div style="float: right; margin-top:-8px;">
+                <input id="successContinueButton" type="button" value="Continue" class="btn btn-default form-control-inline" />
+            </div>
+
+            <div>
+                Success. Your old account number has been added to the history.
+            </div>
+        </div>
+
+        <!-- FAILURE -->
+        <div id="failureDiv" class="alert alert-danger" style="margin:14px auto; display: none;">
+            <div style="float: right; margin-top: -8px;">
+                <input id="failureContinueButton" type="button" value="Continue" class="btn btn-default form-control-inline" />
+            </div>
+
+            <div>
+                Failure. Your old account number has not been added to the history. Please try again later.
+            </div>
+        </div>
+
+        <!-- NOT ENABLED -->
+        <div id="notEnabledDiv" class="alert alert-danger" style="margin:14px auto; display: none;">
+            <div style="float: right; margin-top: -8px;">
+                <input id="notEnabledContinueButton" type="button" value="Continue" class="btn btn-default form-control-inline" />
+            </div>
+
+            <div>
+                Sorry, this feature is not enabled.
+            </div>
+        </div>
+
+        <!-- LOADING -->
+        <div id="loadingDiv" class="loading-div">
+            <img src="~/Images/ajax_loader.gif" alt="calculating..." style="padding: 10px" />Calculating...
+        </div>
+
+
+        <!-- SEARCH -->
+        @if (Model.SearchMode == "Search")
+        {
+            <div id="searchDiv" class="space-below-sm" style="margin-top:8px;">
+                <div style="margin:14px auto;">
+                    First, find an account by entering their User Id or Account Number.
+                </div>
+
+                <div class="search-member-block">
+                    <div>
+                        <input id="userIdTextbox" name="accountIdTextbox" type="text" placeholder="Enter User Id" class="form-control form-control-inline input-field" style="width:240px;" />
+                        <input id="userIdSearchButton" type="button" value="Search" class="btn btn-primary form-control-inline button-field" />
+                    </div>
+
+                    <div class="or-div">or</div>
+
+                    <div>
+                        <input id="accountNumberTextbox" name="accountIdNumberbox" type="text" placeholder="Enter Account No" class="form-control form-control-inline input-field" style="width:240px;" />
+                        <input id="accountNumberSearchButton" type="button" value="Search" class="btn btn-primary form-control-inline button-field" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- NOT FOUND -->
+        <div id="NotFoundDiv" class="space-below-sm" style="display:none; margin-top:8px;">
+            No member was found. Please try again.
+        </div>
+
+        <!-- FOUND MULTIPLE -->
+        <div id="FoundMultipleDiv" class="space-below-sm" style="display:none; margin-top:8px;">
+            <div class="multiple-header">Multiple Members use this account number. Please select the desired user.</div>
+            <div id="MultipleDiv">
+                <!-- dynamic content -->
+            </div>
+        </div>
+
+        <!-- SINGLE -->
+        <div id="FoundSingleDiv" class="space-below-sm" style="display:none; margin-top: 8px;">
+            <div class="space-below-sm">
+                We have found the member's account:
+            </div>
+
+            <div id="memberIdentifierDiv" class="space-below-sm">
+                <!-- Dynamic data from AJAX call -->
+            </div>
+        </div>
+
+        <!-- HISTORY -->
+        <div id="HistoryDiv" class="space-below-sm" style="display:none; margin-top: 8px;">
+            <div class="space-below-sm">
+                This account has previous account associations:
+            </div>
+
+            <div id="HistoryDataDiv" class="space-below-sm">
+                <!-- Dynamic data from AJAX call -->
+            </div>
+        </div>
+
+        <!-- BUTTONS -->
+        <div id="ButtonsDiv" class="space-below-sm" style="display:none; margin-top:24px;">
+            <div class="space-below-sm">
+                To associate the account number for this account to an old account number, enter the old account number and click 'associate'.
+            </div>
+
+            <div class="space-below-sm">
+                <input id="oldAccountNumberTextbox" name="accountIdTextbox" type="text" placeholder="Enter Old Account Number" class="form-control form-control-inline input-field" style="width:240px;" />
+                <input id="oldAccountNumberButton" type="button" value="Associate" class="btn btn-primary form-control-inline button-field" />
+            </div>
+
+            <div class="space-below-sm" style="margin-top:24px;">
+                <input id="searchAnotherAccountButton" type="button" value="Search for a Different Member" class="btn btn-default form-control-inline button-field" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // generic event handling:
+    // user Id search button click handler:
+    $("#userIdSearchButton").click(function (e) {
+        e.preventDefault();
+        OmegaAccountNumberAssociationModule.getMemberByUserId();
+    });
+
+    // account number search button click handler:
+    $("#accountNumberSearchButton").click(function (e) {
+        e.preventDefault();
+        OmegaAccountNumberAssociationModule.getMemberByAccountNumber();
+    });
+
+    // select buttons click handler:
+    $(".select-from-account-list").click(function (e) {
+        e.preventDefault();
+        OmegaAccountNumberAssociationModule.getMemberByUserId(e.currentTarget.id);
+    });
+
+    // old account number assignment button click handler:
+    $("#oldAccountNumberButton").click(function (e) {
+        e.preventDefault();
+        OmegaAccountNumberAssociationModule.assignOldAccountNumber();
+    });
+
+    // search another account button click handler:
+    $("#searchAnotherAccountButton").click(function (e) {
+        e.preventDefault();
+        location.reload();
+    });
+
+    // reload after success/failure
+    $("#successContinueButton, #failureContinueButton, #notEnabledContinueButton").click(function (e) {
+        e.preventDefault();
+        location.reload();
+    });
+
+    // delegated event handler for clicking on the "select" buttons in multiple user rows
+    $("body").on("click", ".selectButton", (function (e) {
+        OmegaAccountNumberAssociationModule.getMemberByUserId(e.target.dataset.id);     // gets the 'data-id' attribute value which should be the uuid of the member
+    }));
+
+
+        // NAMESPACE OBJECT
+        //
+        //
+        // create namespace for this page
+        var OmegaAccountNumberAssociationModule = OmegaAccountNumberAssociationModule || {};
+
+        OmegaAccountNumberAssociationModule = (function () {
+            // local vars:
+            var _uuid;
+            var _currAccountNumber;
+
+
+            // local methods:
+            // get member by user Id:
+            var _getMemberByUserId = function (id) {
+                console.log("Got here: _getMemberByUserId");
+
+                var userId = document.getElementById("userIdTextbox").value;
+                var myTimer;
+                document.getElementById("accountNumberTextbox").style.outline = "none";
+
+                if (id) {
+                    userId = id;
+                }
+
+                // validation
+                if (typeof userId === "undefined" || userId === null || userId === "") {
+                    document.getElementById("userIdTextbox").style.outline = "1px solid red";
+                    return false;
+                }
+
+                document.getElementById("userIdSearchButton").disabled = true;
+                document.getElementById("accountNumberSearchButton").disabled = true;
+                document.getElementById("userIdTextbox").style.outline = "none";
+                $("#FoundMultipleDiv").slideUp();
+                myTimer = setTimeout(function () { $("#loadingDiv").slideDown(); }, 500);
+
+                $.ajax({
+                    url: '@Url.Action("GetUserByUserId", "OnlineBankingUsers")?id=' + userId,  // "ActionName", "Controller"
+                    dataType: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {      // result from the controller method
+                        console.log("data: ", JSON.stringify(data, null, 4));
+
+                        clearTimeout(myTimer);
+                        $("#loadingDiv").slideUp();
+
+                        // no member found:
+                        if (typeof data === "string" && data === "failure") {
+                            $("#FoundSingleDiv").slideUp();
+                            $("#FoundMultipleDiv").slideUp();
+                            $("#ButtonsDiv").slideUp();
+                            $("#NotFoundDiv").slideDown();
+                            document.getElementById("userIdSearchButton").disabled = false;
+                            document.getElementById("accountNumberSearchButton").disabled = false;
+                        }
+
+                        // member found:
+                        if (typeof data === "object") {
+                            $("#FoundSingleDiv").slideDown();
+                            $("#ButtonsDiv").slideDown();
+                            $("#searchDiv").slideUp();
+                            $("#NotFoundDiv").slideUp();
+                            document.querySelector("#memberIdentifierDiv").innerHTML = "";
+                            document.querySelector("#memberIdentifierDiv").innerHTML = "User Name: <strong>" + data.Username +
+                                "</strong>. Account Number: <strong>" + OmegaAccountNumberAssociationModule.maskAccount(data.AccountNumber) + "</strong>";
+                            _uuid = data.UUID;
+                            _currAccountNumber = data.AccountNumber;
+
+                            // check for history
+                            if (data.History.length > 0) {
+                                OmegaAccountNumberAssociationModule.renderHistory(data.History);
+                            }
+                        }
+                    },
+
+                    error: function (xhr, err) {
+                        var terseError = $.parseJSON(xhr.responseText);
+                        console.log("terseError: ", terseError);
+                        console.log("Request Failed: " + err);
+
+                        $("#failureDiv").slideDown();
+                        document.getElementById("userIdSearchButton").disabled = false;
+                        document.getElementById("accountNumberSearchButton").disabled = false;
+                        if(xhr.status === 401) window.location.href = '@Url.Action("index", "home")';
+                    }
+                });
+            };
+
+
+            // get member(s) by account number:
+            var _getMemberByAccountNumber = function () {
+                console.log("Got here: getMemberByAccountNumber");
+
+                var accountNumber = document.getElementById("accountNumberTextbox").value;
+                var myTimer;
+                document.getElementById("userIdTextbox").style.outline = "none";
+
+                // validation
+                if (typeof accountNumber === "undefined" || accountNumber === null || accountNumber === "") {
+                    document.getElementById("accountNumberTextbox").style.outline = "1px solid red";
+                    return false;
+                }
+
+                if (!Number.isInteger(Number(accountNumber))) {
+                    document.getElementById("accountNumberTextbox").style.outline = "1px solid red";
+                    return false;
+                }
+
+                document.getElementById("userIdSearchButton").disabled = true;
+                document.getElementById("accountNumberSearchButton").disabled = true;
+                document.getElementById("accountNumberTextbox").style.outline = "none";
+                myTimer = setTimeout(function () { $("#loadingDiv").slideDown(); }, 500);
+
+                $.ajax({
+                    url: '@Url.Action("GetUserByaccountNumber", "OnlineBankingUsers")?account=' + accountNumber,  // "ActionName", "Controller"
+                    dataType: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {      // result from the controller method
+                        console.log("data: ", JSON.stringify(data, null, 4));
+
+                        clearTimeout(myTimer);
+                        $("#loadingDiv").slideUp();
+
+                        // no members found:
+                        if (typeof data === "string" && data === "failure") {
+                            $("#FoundSingleDiv").slideUp();
+                            $("#FoundMultipleDiv").slideUp();
+                            $("#ButtonsDiv").slideUp();
+                            $("#NotFoundDiv").slideDown();
+                            document.getElementById("userIdSearchButton").disabled = false;
+                            document.getElementById("accountNumberSearchButton").disabled = false;
+                        }
+
+                        // member(s) found:
+                        if (typeof data === "object" && data.length > 0) {
+                            if (data.length === 1) {
+                                // single member returned:
+                                $("#FoundSingleDiv").slideDown();
+                                $("#ButtonsDiv").slideDown();
+                                $("#searchDiv").slideUp();
+                                $("#NotFoundDiv").slideUp();
+                                document.querySelector("#memberIdentifierDiv").innerHTML = "";
+                                document.querySelector("#memberIdentifierDiv").innerHTML = "User Name: <strong>" + data[0].Username +
+                                    "</strong>. Account Number: <strong>" + OmegaAccountNumberAssociationModule.maskAccount(data[0].AccountNumber) + "</strong>";
+                                _uuid = data[0].UUID;
+                                _currAccountNumber = data[0].AccountNumber;
+
+                                // check for history
+                                if (data[0].History.length > 0) {
+                                    OmegaAccountNumberAssociationModule.renderHistory(data[0].History);
+                                }
+
+                            // we found more than one member with this account number
+                            } else if (data.length > 1) {
+                                $("#FoundMultipleDiv").slideDown();
+                                $("#searchDiv").slideUp();
+                                $("#NotFoundDiv").slideUp();
+
+                                var multipleDiv = document.querySelector("#MultipleDiv");
+
+                                data.forEach(function (item) {
+                                    // outer div as row:
+                                    var row = document.createElement("div");
+                                    row.setAttribute("class", "flex-container info-bar");
+
+                                    // alias column:
+                                    var div1 = document.createElement("div");
+                                    div1.setAttribute("class", "sub-div div-1-of-3");
+                                    div1.innerHTML = "Member Id: " + item.Username;
+                                    row.appendChild(div1);
+
+                                    // account column:
+                                    var div2 = document.createElement("div");
+                                    div2.setAttribute("class", "sub-div div-2-of-3");
+                                    div2.innerHTML = "Account: " + OmegaAccountNumberAssociationModule.maskAccount(item.AccountNumber + "");
+                                    row.appendChild(div2);
+
+                                    // button column:
+                                    var div3 = document.createElement("div");
+                                    div3.setAttribute("class", "sub-div div-3-of-3");
+                                    //div3.innerHTML = "UUID: " + item.UUID;
+
+                                    var selectButton = document.createElement("button");
+                                    selectButton.setAttribute("class", "btn btn-sm btn-default selectButton");
+                                    selectButton.setAttribute("data-id", item.Username);
+                                    selectButton.innerHTML = "Select";
+                                    div3.appendChild(selectButton);
+                                    row.appendChild(div3);
+
+                                    // add everything to the MultipleDiv
+                                    multipleDiv.appendChild(row);
+                                });
+                            }
+                        }
+                    },
+
+                    error: function (xhr, err) {
+                        var terseError = $.parseJSON(xhr.responseText);
+                        console.log("terseError: ", terseError);
+                        console.log("Request Failed: " + err);
+
+                        $("#failureDiv").slideDown();
+                        $("#ButtonsDiv").slideUp();
+                        document.getElementById("userIdSearchButton").disabled = false;
+                        document.getElementById("accountNumberSearchButton").disabled = false;
+
+                        if(xhr.status === 401) window.location.href = '@Url.Action("index", "home")';
+                    }
+                });
+            };
+
+
+            // assign old account number to new account number:
+            var _assignOldAccountNumber = function () {
+                console.log("Got here: assignOldAccountNumber");
+
+                var oldAccountNumber = document.getElementById("oldAccountNumberTextbox").value;
+                var myTimer;
+                document.getElementById("oldAccountNumberTextbox").style.outline = "none";
+
+                // validation
+                if (typeof oldAccountNumber === "undefined" || oldAccountNumber === null || oldAccountNumber === "") {
+                    document.getElementById("oldAccountNumberTextbox").style.outline = "1px solid red";
+                    return false;
+                }
+
+                if (!Number.isInteger(Number(oldAccountNumber))) {
+                    document.getElementById("oldAccountNumberTextbox").style.outline = "1px solid red";
+                    return false;
+                }
+
+                document.getElementById("oldAccountNumberButton").disabled = true;
+                myTimer = setTimeout(function () { $("#loadingDiv").slideDown(); }, 500);
+
+                $.ajax({
+                    url: '@Url.Action("SetOldAccountNumber", "OnlineBankingUsers")?oldAccount=' + oldAccountNumber + "&currAccount=" + _currAccountNumber + "&id=" + _uuid,  // "ActionName", "Controller"
+                    dataType: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {      // result from the controller method
+                        console.log("data: ", JSON.stringify(data, null, 4));
+
+                        clearTimeout(myTimer);
+                        $("#loadingDiv").slideUp();
+
+                        // Admin.Account.AccountNumberReassignment.ChangeUuidWhenAccountNumberMatches is false
+                        if (typeof data === "string" && data === "not_enabled") {
+                            $("#FoundSingleDiv").slideUp();
+                            $("#FoundMultipleDiv").slideUp();
+                            $("#ButtonsDiv").slideUp();
+                            document.getElementById("userIdSearchButton").disabled = false;
+                            document.getElementById("accountNumberSearchButton").disabled = false;
+                            $("#notEnabledDiv").slideDown();
+                        }
+
+                        // network failure
+                        if (typeof data === "string" && data === "failure") {
+                            $("#FoundSingleDiv").slideUp();
+                            $("#FoundMultipleDiv").slideUp();
+                            $("#ButtonsDiv").slideUp();
+                            document.getElementById("userIdSearchButton").disabled = false;
+                            document.getElementById("accountNumberSearchButton").disabled = false;
+                            $("#failureDiv").slideDown();
+                        }
+
+                        // db update response
+                        if (typeof data === "object") {
+                            if (data.wasSuccessful === false) {     // db was not updated
+                                $("#FoundSingleDiv").slideUp();
+                                $("#FoundMultipleDiv").slideUp();
+                                $("#ButtonsDiv").slideUp();
+                                document.getElementById("userIdSearchButton").disabled = false;
+                                document.getElementById("accountNumberSearchButton").disabled = false;
+                            } else if (data.wasSuccessful === true) {
+                                $("#successDiv").slideDown();
+                            }
+                        }
+                    },
+
+                    error: function (xhr, err) {
+                        var terseError = $.parseJSON(xhr.responseText);
+                        console.log("terseError: ", terseError);
+                        console.log("Request Failed: " + err);
+
+                        $("#failureDiv").slideDown();
+                        $("#FoundSingleDiv").slideUp();
+                        $("#FoundMultipleDiv").slideUp();
+                        $("#ButtonsDiv").slideUp();
+                        document.getElementById("userIdSearchButton").disabled = false;
+                        document.getElementById("accountNumberSearchButton").disabled = false;
+
+                        if(xhr.status === 401) window.location.href = '@Url.Action("index", "home")';
+                    }
+                });
+            };
+
+
+            // render the history for this user:
+            var _renderHistory = function (data) {
+                var histroryDataDiv = document.querySelector("#HistoryDataDiv");
+                var multipleDiv = document.querySelector("#MultipleDiv");
+                $("#HistoryDiv").slideDown();
+
+                data.forEach(function (item) {
+                    // outer div as row:
+                    var row = document.createElement("div");
+                    row.setAttribute("class", "flex-container info-bar");
+
+                    // current account number column:
+                    var div1 = document.createElement("div");
+                    div1.setAttribute("class", "sub-div div-1-of-2");
+                    div1.innerHTML = "Current Account: " + OmegaAccountNumberAssociationModule.maskAccount(item.NewAccountNumber + "");
+                    row.appendChild(div1);
+
+                    // old account number column:
+                    var div2 = document.createElement("div");
+                    div2.setAttribute("class", "sub-div div-2-of-2");
+                    div2.innerHTML = "Old Account: " + item.OldAccountNumber;
+                    row.appendChild(div2);
+
+                    // add everything to the histroryDataDiv
+                    histroryDataDiv.appendChild(row);
+                });
+            };
+
+
+            // Mask the account numbers
+            var _maskAccount = function (accountString) {
+                if (accountString === null || accountString === "undefined" || accountString === "") {
+                    return "---";
+                }
+
+                if (accountString === "n/a") {
+                    return "n/a";
+                }
+
+                var acctString = String(accountString);
+
+                // show last three digits of account number only
+                var nativeString = "****" + acctString.substring(acctString.length - 3);
+                return nativeString;
+            };
+
+
+            //
+            //
+            // public interface:
+            return {
+                getMemberByUserId: _getMemberByUserId,
+                getMemberByAccountNumber: _getMemberByAccountNumber,
+                assignOldAccountNumber: _assignOldAccountNumber,
+                maskAccount: _maskAccount,
+                renderHistory: _renderHistory
+            }
+        })();
+</script>

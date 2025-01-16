@@ -1,0 +1,132 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.LicenseManager
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model ManageLicensesModel
+
+@{
+    ViewBag.Title = "Manage Licenses";
+    ViewBag.Subtitle = "Manage Licensed Features By Client";
+    ViewBag.ActiveMenu = "license-manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BaseModel = Model;
+}
+
+@if (!Model.User.PermissionLevel.CanView(PermissionLevel.Dev) || !SettingsManager.Settings.OmegaConfiguration.Features.LicenseManagerEnabled)
+{
+    <div class="alert alert-info">
+        I'm sorry, this feature is unavailable at this time.
+    </div>
+}
+else
+{
+    <script type="text/javascript">
+        var LicenseManager = {
+            LoadFeatures: function () {
+                Util.ShowLoadingInInnerHtml('#features-body');
+                var selectedClientId = $("#selectedClientId").val();
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#features-body').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#features-body', status);
+                    }
+                };
+
+                $.get('./LicenseManager/GetFeaturesForClient?selectedClientId=' + selectedClientId, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            EditLicense: function (sender, featureId, clientId, license, name) {
+                Util.ShowLoadingInInnerHtml('#features-body');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        LicenseManager.LoadFeatures();
+                        LicenseManager.LoadFeatureById(sender, featureId, name, license);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#features-body', status);
+                    }
+                }
+
+                $.post('./LicenseManager/EditLicense?featureId= ' + featureId + '&clientId=' + clientId + ' &license=' + license, callback).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SearchFeaturesRows: null,
+            SearchFeatures: function (sender) {
+                var x = sender.value.toLowerCase();
+                var rows = LicenseManager.SearchFeaturesRows;
+                if (rows === null) {
+                    LicenseManager.SearchFeaturesRows = $('[search-row-sets]');
+                    rows = LicenseManager.SearchFeaturesRows;
+                }
+
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('feature-name').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            LoadFeatureById: function (sender, id, name, licensed) {
+                Util.ShowLoadingInInnerHtml('#featuresBody');
+                var selectedClientId = $("#selectedClientId").val();
+
+                var attr = $('#feature-panel').attr('hidden');
+                if (typeof attr !== typeof undefined && attr !== false) {
+                    $('#feature-panel').removeAttr('hidden');
+                }
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#featuresBody').html(data);
+                        $('#featureLabel').html(name);
+                        LicenseManager.SearchFeaturesRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featuresBody', status);
+                    }
+                };
+
+                $.get('./FeaturesManager/GetFeature?id=' + id + '&licensed=' + licensed + '&selectedClientId=' + selectedClientId, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            }
+        };
+    </script>
+
+    <div>
+        <div class="row license-manager">
+            <div class="col-md-3">
+                <div class="panel panel-default" style="overflow-y: auto; overflow-x: auto;">
+                    <div class="panel-heading-psi">
+                        Clients:
+                    </div>
+                    <div class="panel-body">
+                        <div>
+                            @Html.DropDownListFor(x => x.SelectedClientId, new SelectList(Model.Clients, "Value", "Text"), string.Empty, new {@class = "form-control form-control-inline", name = "Clients", style = "cursor: pointer; cursor: hand;", id = "selectedClientId", onchange = "LicenseManager.LoadFeatures();"})
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading-psi">Available Features:</div>
+                    <div class="panel-body">
+                        <input type="text" class="form-control" id="searchFeatureNames" placeholder="Search Features" onkeyup="LicenseManager.SearchFeatures(this);" /><br />
+                        <div class="config-panel-body" id="features-body" style="max-height: 400px; overflow-y: auto; overflow-x: auto">
+                            @* Content will be loaded here dynamically. *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="panel panel-default" style="overflow-y: auto;" hidden="hidden" id="feature-panel">
+                    <div class="panel-body" id="featuresBody">
+                        @* Content will be loaded here dynamically. *@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

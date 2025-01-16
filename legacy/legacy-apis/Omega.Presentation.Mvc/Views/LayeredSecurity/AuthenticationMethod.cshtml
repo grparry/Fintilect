@@ -1,0 +1,90 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.LayeredSecurity
+@model AuthenticationMethodViewModel
+
+@{
+    ViewBag.Title = "Layered Security Authentication Methods" ;
+    ViewBag.ActiveMenu = "layered-security";
+    ViewBag.BaseModel = Model;
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="panel panel-default" style="min-height: 400px; max-height: 800px;">
+            <div class="panel-heading-psi">
+                <strong>Methods</strong>
+                @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+                {
+                    <div class="pull-right">
+                        <button class="btn btn-default btn-xs" onclick="layeredSecurity.AddMethod()">New &nbsp;<span class="glyphicon glyphicon-plus"></span></button>
+                    </div>
+                }
+            </div>
+            <div class="panel-body" style="overflow-y: auto;">
+                @foreach (var authMethod in @Model.AuthenticationMethods)
+                {
+                    <div>
+                        @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+                        {
+                            <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit Feature" onclick="layeredSecurity.UpdateMethod(this, '@authMethod.Name',
+                                  '@authMethod.Description', '@authMethod.Id', '@authMethod.MinimumApplicationVersion', '@authMethod.PublicId', '@authMethod.Weight')"><span class="glyphicon glyphicon-cog"></span></span>
+                        }
+                        @authMethod.Name
+                    </div>
+                    <br/>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" role="dialog" id="manageAuthenticationMethodModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add or Update an Authentication Method</h3>
+            </div>
+            <div class="modal-body" id="manageAuthenticationMethodBody">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var layeredSecurity = {
+        UpdateMethod: function(sender, name, desc, id, minAppVersion, publicId, weight) {
+            $("#manageAuthenticationMethodModal").modal();
+            Util.ShowLoadingInInnerHtml('#manageAuthenticationMethodBody');
+
+            var callback = function(data, status) {
+                Util.HideLoading();
+                if (status === 'success') {
+                    $('#manageAuthenticationMethodBody').html(data);
+                } else {
+                    Util.ShowErrorInInnerHtml('#manageAuthenticationMethodBody', status);
+                }
+            };
+
+            $.get('./AddUpdateMethod?AuthenticationMethod.Name=' + name + '&AuthenticationMethod.Description=' + desc +
+                        '&AuthenticationMethod.Id=' + id, + '&AuthenticationMethod.MinimumApplicationVersion=' + minAppVersion + '&AuthenticationMethod.PublicId=' + publicId +
+                '&AuthenticationMethod.Weight=' + weight, callback)
+                .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+        },
+        AddMethod: function() {
+            $("#manageAuthenticationMethodModal").modal();
+            Util.ShowLoadingInInnerHtml('#manageAuthenticationMethodBody');
+
+            var callback = function (data, status) {
+                Util.HideLoading();
+                if (status === 'success') {
+                    $('#manageAuthenticationMethodBody').html(data);
+                } else {
+                    Util.ShowErrorInInnerHtml('#manageAuthenticationMethodBody', status);
+                }
+            };
+
+            $.get('./AddUpdateMethod', callback);
+        }
+    };
+</script>

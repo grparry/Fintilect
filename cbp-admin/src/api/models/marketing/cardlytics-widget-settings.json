@@ -1,0 +1,16 @@
+{
+  "CardlyticsWidgetSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/CardlyticsWidgetSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/CardlyticsWidgetFeatures"
+      }
+    }
+  }
+}

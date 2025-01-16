@@ -1,0 +1,62 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.LayeredSecurity
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model LayeredSecurityViewModel
+
+@{
+    ViewBag.Title = "Add or Update a Feature";
+    ViewBag.BaseModel = Model;
+}
+
+
+<div class="panel-body">
+    @using (Html.BeginForm("AddUpdateFeature", "LayeredSecurity", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.Feature.FeatureKey, new {@class = "col-md-3 control-label"})
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Feature.FeatureKey, new {@class = "form-control"})
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Feature.Name, new {@class = "col-md-3 control-label"})
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Feature.Name, new {@class = "form-control"})
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Feature.Description, new {@class = "col-md-3 control-label"})
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Feature.Description, new {@class = "form-control"})
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Feature.IsUserFacing, new {@class = "col-md-3 control-label"})
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Feature.IsUserFacing, new {@class = "form-control"})
+            </div>
+        </div>
+        @Html.HiddenFor(m => m.Feature.FeatureId)
+        for (var i = 0; i < Model.Features.Count; i++)
+        {
+            @Html.HiddenFor(m => m.Features[i].FeatureId)
+            @Html.HiddenFor(m => m.Features[i].ApplicationId)
+            @Html.HiddenFor(m => m.Features[i].FeatureKey)
+            @Html.HiddenFor(m => m.Features[i].Name)
+            @Html.HiddenFor(m => m.Features[i].Description)
+            @Html.HiddenFor(m => m.Features[i].IsUserFacing)
+        }
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-8">
+                @if (Model.Feature.FeatureId == 0)
+                {
+                    <input type="submit" class="btn btn-default" value="Add New Feature"/>
+                }
+                else
+                {
+                    <input type="submit" class="btn btn-default" value="Update Feature" />
+                }
+            </div>
+        </div>
+    }
+</div>

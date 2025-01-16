@@ -1,0 +1,75 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.QrCodeGenerator
+@model EditUrlsModel
+
+@{
+    ViewBag.Title = "Edit Web Service URLs";
+    ViewBag.Subtitle = "This feature allows you to add, update, or delete available web service URLs";
+    ViewBag.ActiveMenu = "";
+    ViewBag.BaseModel = Model;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading-psi">
+                Web Service URLs: &nbsp;&nbsp;&nbsp;&nbsp;
+                <span class="pull-right">
+                    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Owner))
+                    {
+                        <button type="button" class="btn btn-default btn-xs" onclick="webServiceUrls.EditUrl(this, '0');">New &nbsp;<span class="glyphicon glyphicon-plus"></span></button>
+                    }
+                </span>
+            </div>
+            <div class="panel-body">
+                <div class="config-panel-body">
+                    @foreach (var webServiceUrl in Model.WebServiceUrls)
+                    {
+                        <div>
+                            @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+                            {
+                                <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit URL" onclick="webServiceUrls.EditUrl(this, '@webServiceUrl.Id')"><span class="glyphicon glyphicon-cog"></span></span>
+                            }
+                            @webServiceUrl.EnvironmentName: @webServiceUrl.EnvironmentUrl
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" role="dialog" id="editUrlModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Edit Web Service Url</h3>
+            </div>
+            <div class="modal-body" id="editUrlModalBody">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var webServiceUrls = {
+        EditUrl: function (sender, id) {
+            $("#editUrlModal").modal();
+            Util.ShowLoadingInInnerHtml('#editUrlModalBody');
+
+            var callback = function (data, status) {
+                Util.HideLoading();
+                if (status === 'success') {
+                    $('#editUrlModalBody').html(data);
+                } else {
+                    Util.ShowErrorInInnerHtml('#editUrlModalBody', status);
+                }
+            };
+            $.get('./AddUpdateUrl?urlId=' + id, callback)
+                .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+        }
+    }
+</script>

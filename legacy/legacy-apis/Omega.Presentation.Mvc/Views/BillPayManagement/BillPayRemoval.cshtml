@@ -1,0 +1,344 @@
+﻿@using PSI.Models.ClientConfigurationModels.Agatha
+@model Omega.Presentation.Mvc.Models.BillPayManagement.BillPayRemoveViewModel
+
+@{
+    ViewBag.Title = "Bill Pay Removal";
+    ViewBag.ActiveMenu = "bill-pay-removal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section LinkedStyleSheets {
+    <link type="text/css" rel=stylesheet href="@Url.Content("~/Styles/bill-pay-removal.css")">
+}
+
+<div class="row">
+    <div class="panel panel-default col-md-12">
+        <div class="instructions">
+            Use this tool to remove Bill Pay records from your database
+        </div>
+
+        <!-- SUCCESS -->
+        <div id="successDiv" class="alert alert-success" style="margin:14px auto; display: none;">
+            <div style="float: right; margin-top:-8px;">
+                <input id="successContinueButton" type="button" value="Continue" class="btn btn-default form-control-inline" />
+            </div>
+
+            <div>
+                Success. The Bill Pay user has been removed.
+            </div>
+        </div>
+
+        <!-- FAILURE -->
+        <div id="failureDiv" class="alert alert-danger" style="margin:14px auto; display: none;">
+            <div style="float: right; margin-top: -8px;">
+                <input id="failureContinueButton" type="button" value="Continue" class="btn btn-default form-control-inline" />
+            </div>
+
+            <div>
+                Failure. The Bill Pay user has not been removed. Please try again later.
+            </div>
+        </div>
+
+        <!-- LOADING -->
+        <div id="loadingDiv" class="loading-div">
+            <img src="~/Images/ajax_loader.gif" alt="calculating..." style="padding: 10px" />Calculating...
+        </div>
+
+
+        <!-- SEARCH -->
+        @if (Model.SearchMode == "Search")
+        {
+            <div id="searchDiv" class="space-below-lg" style="margin-top:8px;">
+                <div style="margin:14px auto;">
+                    Enter User's Account Number.
+                </div>
+
+                <div class="search-member-block">
+                    <input id="accountNumberTextbox" name="accountIdNumberbox" type="text" placeholder="Enter Account No" class="form-control form-control-inline input-field" style="width:240px;" />
+                    <input id="accountNumberSearchButton" type="button" value="Search" class="btn btn-primary form-control-inline button-field" />
+                </div>
+            </div>
+        }
+
+        <!-- NOT FOUND -->
+        <div id="NotFoundDiv" class="space-below-sm" style="display:none; margin-top:8px;">
+            No member was found. Please try again.
+        </div>
+
+        <!-- FOUND MULTIPLE -->
+        <div id="FoundMultipleDiv" class="space-below-sm" style="display:none; margin-top:8px;">
+            <div class="multiple-header">Multiple Members use this account number. Please select the desired user.</div>
+            <div id="MultipleDiv">
+                <!-- dynamic content -->
+            </div>
+        </div>
+
+        <!-- SINGLE -->
+        <div id="FoundSingleDiv" class="space-below-sm" style="display:none; margin-top: 8px;">
+            <div class="space-below-sm">
+                We have found the member's account:
+            </div>
+
+            <div id="memberIdentifierDiv" class="space-below-sm">
+                <!-- Dynamic data from AJAX call -->
+            </div>
+        </div>
+
+        <!-- BUTTONS -->
+        <div id="ButtonsDiv" class="space-below-sm" style="display:none; margin-top:24px;">
+            @*<div class="space-below-sm">
+                To associate the account number for this account to an old account number, enter the old account number and click 'associate'.
+            </div>*@
+
+            <div class="space-below-sm">
+                @*<input id="oldAccountNumberTextbox" name="accountIdTextbox" type="text" placeholder="Enter Old Account Number" class="form-control form-control-inline input-field" style="width:240px;" />*@
+                <input id="deleteRecordButton" type="button" value="Delete Record" class="btn btn-primary form-control-inline button-field" />
+            </div>
+
+            <div class="space-below-sm" style="margin-top:24px;">
+                <input id="searchAnotherAccountButton" type="button" value="Search for a Different Member" class="btn btn-default form-control-inline button-field" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // generic event handling:
+    // account number search button click handler:
+    $("#accountNumberSearchButton").click(function (e) {
+        e.preventDefault();
+        OmegaBillPayRemoveModule.getMemberByAccountNumber();
+    });
+
+    // old account number assignment button click handler:
+    $("#deleteRecordButton").click(function (e) {
+        e.preventDefault();
+        OmegaBillPayRemoveModule.deleteBillPayRecord();
+    });
+
+    // search another account button click handler:
+    $("#searchAnotherAccountButton").click(function (e) {
+        e.preventDefault();
+        location.reload();
+    });
+
+    // reload after success/failure
+    $("#successContinueButton, #failureContinueButton").click(function (e) {
+        e.preventDefault();
+        location.reload();
+    });
+
+
+    // NAMESPACE OBJECT
+    //
+    //
+    // create namespace for this page
+    var OmegaBillPayRemoveModule = OmegaBillPayRemoveModule || {};
+
+    OmegaBillPayRemoveModule = (function () {
+        // local vars:
+        var _uuid;
+        var _currAccountNumber;
+
+
+        // local methods:
+        // get member(s) by account number:
+        var _getMemberByAccountNumber = function () {
+            console.log("Got here: getMemberByAccountNumber");
+
+            var accountNumber = document.getElementById("accountNumberTextbox").value;
+            var myTimer;
+
+            // validation
+            if (typeof accountNumber === "undefined" || accountNumber === null || accountNumber === "") {
+                document.getElementById("accountNumberTextbox").style.outline = "1px solid red";
+                return false;
+            }
+
+            if (!_isInteger(Number(accountNumber))) {
+                document.getElementById("accountNumberTextbox").style.outline = "1px solid red";
+                return false;
+            }
+
+            document.getElementById("accountNumberSearchButton").disabled = true;
+            document.getElementById("accountNumberTextbox").style.outline = "none";
+            myTimer = setTimeout(function () { $("#loadingDiv").slideDown(); }, 500);
+
+            $.ajax({
+                url: '@Url.Action("GetUserByaccountNumber", "BillPayManagement")?account=' + accountNumber,  // "ActionName", "Controller"
+                dataType: "json",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {      // result from the controller method
+                    console.log("data: ", JSON.stringify(data, null, 4));
+
+                    clearTimeout(myTimer);
+                    $("#loadingDiv").slideUp();
+
+                    // no members found:
+                    if (typeof data === "string" && data === "failure") {
+                        $("#FoundSingleDiv").slideUp();
+                        $("#FoundMultipleDiv").slideUp();
+                        $("#ButtonsDiv").slideUp();
+                        $("#NotFoundDiv").slideDown();
+                        document.getElementById("accountNumberSearchButton").disabled = false;
+                    }
+
+                    // member(s) found:
+                    if (typeof data === "object" && data.length > 0) {
+                        if (data.length === 1) {
+                            // single member returned:
+                            $("#FoundSingleDiv").slideDown();
+                            $("#ButtonsDiv").slideDown();
+                            $("#searchDiv").slideUp();
+                            $("#NotFoundDiv").slideUp();
+                            var el = document.querySelector("#memberIdentifierDiv");
+                            el.innerHTML = "";
+                            el.innerHTML += "<div>Account Number: <strong> " + OmegaBillPayRemoveModule.maskAccount(data[0].AccountNumber) + "</strong></div>";
+                            el.innerHTML += "<div>MICR Number: <strong> " + data[0].Micr + "</strong></div>";
+                            el.innerHTML += "<div>User Name: <strong> " + data[0].Username + "</strong></div>";
+                            el.innerHTML += "<div>Member Address: <strong> " + data[0].MemberAddress + "</strong></div>";
+                            _uuid = data[0].UUID;
+                            _currAccountNumber = data[0].AccountNumber;
+
+                        // we found more than one member with this account number
+                        } else if (data.length > 1) {
+                            $("#FoundMultipleDiv").slideDown();
+                            $("#searchDiv").slideUp();
+                            $("#NotFoundDiv").slideUp();
+
+                            var multipleDiv = document.querySelector("#MultipleDiv");
+
+                            data.forEach(function (item) {
+                                // outer div as row:
+                                var row = document.createElement("div");
+                                row.setAttribute("class", "flex-container info-bar");
+
+                                // alias column:
+                                var div1 = document.createElement("div");
+                                div1.setAttribute("class", "sub-div div-1-of-3");
+                                div1.innerHTML = "Member Id: " + item.Username;
+                                row.appendChild(div1);
+
+                                // account column:
+                                var div2 = document.createElement("div");
+                                div2.setAttribute("class", "sub-div div-2-of-3");
+                                div2.innerHTML = "Account: " + OmegaBillPayRemoveModule.maskAccount(item.Account + "");
+                                row.appendChild(div2);
+
+                                // button column:
+                                var div3 = document.createElement("div");
+                                div3.setAttribute("class", "sub-div div-3-of-3");
+
+                                var selectButton = document.createElement("button");
+                                selectButton.setAttribute("class", "btn btn-sm btn-default selectButton");
+                                selectButton.setAttribute("data-id", item.Username);
+                                selectButton.innerHTML = "Select";
+                                div3.appendChild(selectButton);
+                                row.appendChild(div3);
+
+                                // add everything to the MultipleDiv
+                                multipleDiv.appendChild(row);
+                            });
+                        }
+                    }
+                },
+
+                error: function (xhr, err) {
+                    var terseError = $.parseJSON(xhr.responseText);
+                    console.log("terseError: ", terseError);
+                    console.log("Request Failed: " + err);
+
+                    $("#failureDiv").slideDown();
+                    $("#ButtonsDiv").slideUp();
+                    document.getElementById("accountNumberSearchButton").disabled = false;
+
+                    if(xhr.status === 401) window.location.href = '@Url.Action("index", "home")';
+                }
+            });
+        };
+
+
+        // Delete a Bill Pay User:
+        var _deleteBillPayRecord = function () {
+            if (!confirm("Are you sure you want to delete this record? \n\nThis action cannot be undone.")) {
+                return;
+            };
+
+            var myTimer;
+            document.querySelector("#deleteRecordButton").disabled = true;
+            myTimer = setTimeout(function () { $("#loadingDiv").slideDown(); }, 500);
+
+            $.ajax({
+                url: '@Url.Action("DeleteBillPayRecord", "BillPayManagement")?&account=' + _currAccountNumber + '&id=' + _uuid,  // "ActionName", "Controller"
+                dataType: "text",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {      // result from the controller method
+                    // console.log("data: ", data);
+
+                    clearTimeout(myTimer);
+                    $("#loadingDiv").slideUp();
+
+                    // network failure
+                    if (typeof data === "string" && data === "failure") {
+                        $("#FoundSingleDiv").slideUp();
+                        $("#FoundMultipleDiv").slideUp();
+                        $("#ButtonsDiv").slideUp();
+                        document.getElementById("accountNumberSearchButton").disabled = false;
+                    } else if (data === "success") {
+                        $("#successDiv").slideDown();
+                    }
+                },
+
+                error: function (xhr, err) {
+                    var terseError = $.parseJSON(xhr.responseText);
+                    console.log("terseError: ", terseError);
+                    console.log("Request Failed: " + err);
+
+                    $("#failureDiv").slideDown();
+                    $("#FoundSingleDiv").slideUp();
+                    $("#FoundMultipleDiv").slideUp();
+                    $("#ButtonsDiv").slideUp();
+                    document.getElementById("accountNumberSearchButton").disabled = false;
+
+                    if(xhr.status === 401) window.location.href = '@Url.Action("index", "home")';
+                }
+            });
+        };
+
+        // Mask the account numbers
+        var _maskAccount = function (accountString) {
+            if (accountString === null || accountString === "undefined" || accountString === "") {
+                return "---";
+            }
+
+            if (accountString === "n/a") {
+                return "n/a";
+            }
+
+            var acctString = String(accountString);
+
+            // show last three digits of account number only
+            var nativeString = "****" + acctString.substring(acctString.length - 3);
+            return nativeString;
+        };
+
+        // for IE support... to find out if num is an integer
+        var _isInteger = function(num) {
+          return (num ^ 0) === num;
+        }
+
+
+
+        //
+        //
+        // public interface:
+        return {
+            getMemberByAccountNumber: _getMemberByAccountNumber,
+            deleteBillPayRecord: _deleteBillPayRecord,
+            maskAccount: _maskAccount
+        }
+    })();
+</script>

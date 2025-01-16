@@ -1,0 +1,152 @@
+﻿@using System.Activities.Expressions
+@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.ConfigurationComparison
+
+@model ConfigurationComparisonViewModel
+
+@functions {
+    private bool UserIsAllowedToEditEnvironmentSpecificSettings()
+    {
+        return Model.User.PermissionLevel >= PermissionLevel.Dev;
+    }
+
+    private bool UserIsAllowedToSelectAll()
+    {
+        return Model.User.PermissionLevel >= PermissionLevel.Dev;
+    }
+
+}
+
+<script>
+    //filter the items in the settingRowContainer based off the search text provided in the sender, hide items not containing the search text
+    var filterComparisonResults = function (sender) {
+        var searchTerm = sender.value.toLowerCase();
+        searchTerm = escape(searchTerm);
+
+        var dataSet = $('#SettingRowContainer').find('.container-five');
+        //show all the data to remove any from being hidden by previous searches
+        dataSet.show();
+
+        var itemsToHide = dataSet.filter(function (index, item) {
+            var itemText = $(item).find('.two-of-five').text().toLowerCase().trim();
+            var startsWithText = itemText.includes(searchTerm);
+            //return the NOT because we are filtering to have the list of items that don't include the text
+            return !startsWithText; 
+        });
+
+        itemsToHide.hide();
+    }
+</script>
+
+@helper BuildDestinationDisplay(ConfigurationComparisonPresentationModel configurationComparison)
+{
+    if (!configurationComparison.IsEnvironmentSpecific || UserIsAllowedToEditEnvironmentSpecificSettings()) 
+    {
+        <a href="#" class="red-text bold setting-link" name="@configurationComparison.Key" title="Edit Setting">
+            @configurationComparison.DestinationValue
+        </a>
+    }
+    else
+    {
+        <span class="red-text bold">
+            @configurationComparison.DestinationValue
+        </span>
+    }
+}
+
+@using (Html.BeginForm("UpdateSettings", "ConfigurationComparison", FormMethod.Post, new { role = "form", id = "SettingsForm" }))
+{
+    
+    if (Model.SettingComparisons != null && Model.SettingComparisons.Count > 0)
+    {
+        <div id="ConfigComparisonSearchDiv" class="form-group">
+            <div class="col-sm-6">
+                <input type="text" id="comparisonSearchInput" class="form-control" placeholder="Search Settings" value="@Model.ConfigCompareSearchString" onkeyup="filterComparisonResults(this)"/>
+            </div>
+        </div>
+
+        <br/>
+        <br/>
+        <hr/>
+        
+        <div id="ResultsHeaderDiv" class="container-five" style="border-bottom:1px solid #E7E7E7; padding-bottom:4px;">
+            <div class="sub-div one-of-five ">
+                <!-- sp -->
+            </div>
+            <div class="sub-div two-of-five bold">
+                Setting Name
+            </div>
+            <div class="sub-div three-of-five bold">
+                Source Value
+            </div>
+            <div class="sub-div four-of-five bold">
+                Destination Value
+            </div>
+            <div class="sub-div five-of-five bold">
+                Setting Description
+            </div>
+        </div>
+        @Html.HiddenFor(x => x.DestinationEnvironment)
+        @Html.HiddenFor(x => x.SourceEnvironment)
+
+        <div id="SettingRowContainer">
+            @for (var i = 0; i < Model.SettingComparisons.Count; i++)
+            {
+                <div class="container-five">
+                    <div class="sub-div one-of-five">
+                        @if (!Model.SettingComparisons[i].IsEnvironmentSpecific || UserIsAllowedToEditEnvironmentSpecificSettings()) 
+                        {
+                            @Html.CheckBoxFor(x => x.SettingComparisons[i].IsSelected, new { @class = "tbd" })
+                        }
+                        @Html.HiddenFor(x => x.SettingComparisons[i].Id)
+                        @Html.HiddenFor(x => x.SettingComparisons[i].Key)
+                        @Html.HiddenFor(x => x.SettingComparisons[i].SourceValue)
+                    </div>
+                    <div class="sub-div two-of-five">
+                        @Model.SettingComparisons[i].Key
+                    </div>
+                    <div class="sub-div three-of-five">
+                        <span class="green-text bold">@Model.SettingComparisons[i].SourceValue</span>
+                    </div>
+                    <div class="sub-div four-of-five">
+                        @BuildDestinationDisplay(Model.SettingComparisons[i])
+                    </div>
+                    <div class="sub-div five-of-five">
+                        @Model.SettingComparisons[i].Description <br />
+                        Default Value: @Model.SettingComparisons[i].DefaultValue<br />
+                        Environment Specific: @Model.SettingComparisons[i].IsEnvironmentSpecific
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <div id="ResultsButtonDiv" class="button-row">
+            @if (UserIsAllowedToSelectAll())
+            {
+                @:<input type="button" value="Select All" class="btn btn-default" id="SelectAllButton" name="SelectAllButton"/>
+            }
+        </div>
+
+        <hr />
+
+        <div id="divFailure" class="alert alert-danger" style="display:none;">
+            Data Load Failure.
+        </div>
+
+        <div id="divSuccess" class="alert alert-success" style="display:none;">
+            <button id="SuccessCloseButton" type="button" class="btn btn-close" style="float:right;"><span>&times;</span></button>
+            Your data has been saved.
+        </div>
+
+        <div id="CopyButtonDiv" class="button-row">
+            <input type="button" value="Copy Source Value to Destination Value for checked items" class="btn btn-primary" id="CopySourceToDestinationButton" name="CopySourceToDestinationButton" />
+        </div>
+    }
+    else
+    {
+        <div class="button-row">
+            No differences were found between the source and destination settings.
+        </div>
+    }
+}

@@ -1,0 +1,151 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Psi.Data.Models.Domain.OmegaUsers
+@model Omega.Presentation.Mvc.Models.ManageUsers.EditUserPermissionsViewModel
+@{
+    ViewBag.Title = "Edit Users";
+    ViewBag.ActiveMenu = "edit-users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BaseModel = Model;
+}
+
+@using (Html.BeginForm("EditUserPermissions", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    if (ViewBag.Button == "Update")
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.UserToEdit.Email, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.UserToEdit.Email, new { @class = "form-control", id = "userEmail" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.UserToEdit.Name, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.UserToEdit.Name, new { @class = "form-control", id = "userName" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.UserToEdit.PermissionLevel, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.UserToEdit.PermissionLevel, (SelectList)ViewBag.PermissionLevelList, new { @class = "form-control", id = "permissionLevel", style = "width: 320px" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.UserToEdit.SelectedPermissionGroup, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.UserToEdit.SelectedPermissionGroup, (SelectList)ViewBag.PermissionGroupList, new { @class = "form-control", id = "permissionGroup", style = "width: 320px" })
+            </div>
+        </div>
+
+        @Html.HiddenFor(m => m.UserToEdit.Id)
+        @Html.HiddenFor(m => m.UserToEdit.PublicId)
+        @Html.HiddenFor(m => m.UserToEdit.Deleted)
+        @Html.HiddenFor(m => m.UserToEdit.UserName)
+        @Html.HiddenFor(m => m.UserToEdit.Password)
+        @Html.HiddenFor(m => m.UserToEdit.PermissionLevel)
+    }
+    else
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.UserToEdit.Email, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                @Html.DropDownListFor(m => m.UserToEdit.Email, (SelectList)ViewBag.EmailList, new { @class = "form-control" })
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            @if (ViewBag.Button == "Update")
+            {
+                if (Model.User.CanView(OmegaFeatureAccessPermission.EditOmegaUsers))
+                {
+                    <input type="submit" class="btn btn-default" value="Update" name="button" />
+                    <text>&nbsp;</text>
+                }
+                <input type="submit" class="btn btn-default" value="Cancel" name="button" />
+                <text>&nbsp;</text>
+                if (Model.UserToEdit.Deleted.HasValue && Model.UserToEdit.Deleted.Value && Model.User.PermissionLevel.CanView(PermissionLevel.Owner) && Model.User.PermissionLevel >= Model.UserToEdit.PermissionLevel && Model.User.CanView(OmegaFeatureAccessPermission.EditOmegaUsers))
+                {
+                    <input type="submit" class="btn btn-default" value="Reactivate User" name="button" />
+                }
+                else if (Model.User.PermissionLevel.CanView(PermissionLevel.Owner) && Model.User.PermissionLevel >= Model.UserToEdit.PermissionLevel && Model.User.CanView(OmegaFeatureAccessPermission.EditOmegaUsers))
+                {
+                    <input type="submit" class="btn btn-default" value="Delete User" name="button" />
+                }
+            }
+            else
+            {
+                <input type="submit" class="btn btn-primary" value="Get User" name="button" />
+            }
+        </div>
+    </div>
+    if (ViewBag.Button == "Update")
+    {
+        <text>&nbsp;</text>
+        <h2>History for @Model.UserToEdit.Name</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="col-md-2">Name</th>
+                    <th class="col-md-3">Email</th>
+                    <th class="col-md-1">Permission Level</th>
+                    <th class="col-md-2">Action Taken</th>
+                    <th class="col-md-2">Modified Date</th>
+                    <th class="col-md-1">Modified By</th>
+                    <th class="col-md-1">Deleted</th>
+                </tr>
+            </thead>
+            @foreach (var history in Model.UserToEdit.History)
+            {
+                <tr>
+                    <td>@history.Name</td>
+                    <td>@history.Email</td>
+                    <td>@history.PermissionLevel</td>
+                    <td>@history.ActionTaken</td>
+                    <td>@history.ModifiedDate.ToString("MM/dd/yy H:mm:ss")</td>
+                    <td>@history.ModifiedBy</td>
+                    <td>@history.Deleted</td>
+                </tr>
+            }
+        </table>
+    }
+}
+
+<script>
+    $(document)
+        .ready(function() {
+            if (document.getElementById("permissionLevel") != null) {
+                $("#permissionLevel").attr("@ViewBag.EditPermissionLevelEnabled", "@ViewBag.EditPermissionLevelEnabled");
+                $("#permissionGroup").attr("@ViewBag.EditPermissionLevelEnabled", "@ViewBag.EditPermissionLevelEnabled");
+            }
+
+            if ('@Model.User.CanView(OmegaFeatureAccessPermission.EditOmegaUsers).ToString().ToLower()' !== 'true') {
+                $("#userEmail").attr("readonly", "readonly");
+                $("#userName").attr("readonly", "readonly");
+                $("#permissionLevel").attr("disabled", "disabled");
+                $("#permissionGroup").attr("disabled", "disabled");
+            }
+
+            // event handler for the PermissionLevel drop-down change event
+            document.querySelector("#permissionLevel").addEventListener("change", function (e) {
+                var permissionGroupDropDown = document.querySelector("#permissionGroup");
+
+                // if 'owner' or higher, this user can subscribe to a permission group:
+                if (parseInt(e.target.value) > 0) {
+                    permissionGroupDropDown.disabled = false;          
+                } else {
+                    permissionGroupDropDown.disabled = true;
+                    permissionGroupDropDown.selectedIndex = 0;
+                }
+            }
+
+            // On page load, if the user you are editing has 'Basic' as a permission level, then disable permission groups:
+            if ('@Model.UserToEdit.PermissionLevel' === 'Basic') {
+                document.querySelector("#permissionGroup").disabled = true;
+            }
+        });
+</script>

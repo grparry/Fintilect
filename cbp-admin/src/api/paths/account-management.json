@@ -1,0 +1,186 @@
+{
+  "/account-management": {
+    "get": {
+      "tags": ["account-management"],
+      "summary": "List all account management configurations",
+      "operationId": "listAccountManagementConfigs",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 20
+          }
+        },
+        {
+          "name": "feature",
+          "in": "query",
+          "schema": {
+            "type": "string",
+            "enum": [
+              "linkedAccounts",
+              "accountNicknames",
+              "quickActions",
+              "quickInfo",
+              "householding"
+            ]
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Account management configurations retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../models/account-management.json#/AccountManagementSettings"
+                    }
+                  },
+                  "total": {
+                    "type": "integer"
+                  },
+                  "page": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["account-management"],
+      "summary": "Create a new account management configuration",
+      "operationId": "createAccountManagementConfig",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/account-management.json#/AccountManagementSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Account management configuration created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/account-management.json#/AccountManagementSettings"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/account-management/{id}": {
+    "get": {
+      "tags": ["account-management"],
+      "summary": "Get a specific account management configuration",
+      "operationId": "getAccountManagementConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Account management configuration retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/account-management.json#/AccountManagementSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["account-management"],
+      "summary": "Update an account management configuration",
+      "operationId": "updateAccountManagementConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/account-management.json#/AccountManagementSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Account management configuration updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/account-management.json#/AccountManagementSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["account-management"],
+      "summary": "Delete an account management configuration",
+      "operationId": "deleteAccountManagementConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Account management configuration deleted successfully"
+        }
+      }
+    }
+  }
+}

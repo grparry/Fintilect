@@ -1,0 +1,243 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model Omega.Presentation.Mvc.Models.ApplicationConfiguration.ApplicationConfigurationModel
+
+@{
+    ViewBag.Title = "Application Configuration";
+    ViewBag.Subtitle = "Preferred area for settings";
+    ViewBag.ActiveMenu = "application-configuration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BaseModel = Model;
+}
+@if (!SettingsManager.Settings.OmegaConfiguration.Features.ApplicationConfigEnabled)
+{
+    <div class="alert alert-info">
+        We are sorry to enform you that this feature is not enable.
+    </div>
+}
+else
+{
+
+    <script>
+        var ApplicationConfigurationManager = {
+            SearchRows: null,
+            Search: function (sender) {
+                var x = sender.value.toLowerCase();
+                var rows = ApplicationConfigurationManager.SearchRows;
+                if (rows === null) {
+                    ApplicationConfigurationManager.SearchRows = $('[search-row-app-config]');
+                    rows = ApplicationConfigurationManager.SearchRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('search-text').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    }
+                    else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            SetDisplayValue: function(key, displayValue) {
+                if (displayValue.length > 200)
+                    displayValue = displayValue.substring(0, 197) + "...";
+
+				$('[data-display-setting-key="' + key + '"]').text(displayValue);
+            }
+        };
+
+    </script>
+
+
+    <div class="form-horizontal application-configuration">
+        <div class="form-group">
+            <div class="col-sm-6">
+                <input type="text" class="form-control config-search" id="applicationSearchTextbox" readonly placeholder="search by name or value" onchange="ApplicationConfigurationManager.Search(this);" onkeyup="ApplicationConfigurationManager.Search(this);" />
+            </div>
+            <div class="col-sm-6 text-right">
+                @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+                {
+                    <a modal-href="./ApplicationConfiguration/GetDefaultConfig?key=" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> &nbsp; Add Setting</a>
+                }
+                <button class="reset-config-button"></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 app-config-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Key/Name</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    @foreach (var resource in Model.Settings.OrderBy(x => x.Key))
+                    {
+                        <tr search-row-app-config search-text="@resource.Key.UrlEscape()|@resource.Value.First(200).UrlEscape()">
+                            <td></td>
+                            <td>
+                                <a modal-href="./ApplicationConfiguration/GetConfigSetting?key=@resource.Key" style="font-size: larger; cursor: pointer;" class="text-primary" title="Manage resource overrides"><span class="glyphicon glyphicon-edit"></span></a>
+                            </td>
+                            <td>
+                                @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+                                {
+                                    <a modal-href="./ApplicationConfiguration/GetDefaultConfig?key=@resource.Key" style="font-size: larger; cursor: pointer;" class="text-success" title="Edit default config"><span class="glyphicon glyphicon-cog"></span></a>
+                                }
+                            </td>
+
+                            <td>@resource.Key</td>
+                            <td data-display-setting-key="@resource.Key">@resource.Value.First(200)</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="history-overlay-modal" role="dialog" style="overflow-y: auto;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit Application Configuration - History Overlay</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal" id="history-overlay-edit-panel">
+                        <div class="panel-heading">
+                            <h4>History Overlay Rule</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="history-overlay-priority">Priority:</label>
+                                <div class="col-sm-7">
+                                    <input type="number" class="form-control" maxlength="5" id="history-overlay-priority" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Conditions:</label>
+                                <div class="col-sm-7">
+                                    <table class="table table-striped" id="history-overlay-conditions-table"></table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">New Description:</label>
+                                <div class="col-sm-7">
+                                    <table class="table table-striped" id="history-overlay-descriptions-table"></table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-7 col-sm-offset-4">
+                                    <button type="button" class="btn btn-info" onclick="historyOverlay.UpdateRule();">Save Rule</button>
+                                    <button type="button" class="btn btn-danger" onclick="historyOverlay.RemoveRule();">Delete Rule</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="history-overlay-condition-modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">History Overlay - Condition</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="history-overlay-condition-pivot">Pivot:</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="history-overlay-condition-pivot">
+                                        <option value=""></option>
+                                        <option value="AmountEqualTo">Amount Equal To</option>
+                                        <option value="AmountGreaterThan">Amount Greater Than</option>
+                                        <option value="AmountLessThan">Amount Less Than</option>
+                                        <option value="DescriptionEquals">Description Equals</option>
+                                        <option value="DescriptionStartsWith">Description Starts With</option>
+                                        <option value="DescriptionContains">Description Contains</option>
+                                        <option value="SourceCode">Source Code</option>
+                                        <option value="ActionType">Action Type</option>
+                                        <option value="SlType">SL Type</option>
+                                        <option value="Branch">Branch</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="history-overlay-condition-value">Value:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" maxlength="100" class="form-control" id="history-overlay-condition-value" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-7 col-sm-offset-4">
+                                    <button type="button" class="btn btn-info" onclick="historyOverlay.UpdateCondition();">Save Condition</button>
+                                    <button type="button" class="btn btn-danger" onclick="historyOverlay.RemoveCondition();">Delete Condition</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="history-overlay-description-modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">History Overlay - Description Part</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="history-overlay-description-type">Description Part:</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="history-overlay-description-type">
+                                        <option value=""></option>
+                                        <option value="Text">Text</option>
+                                        <option value="MaskedTransferToAccount">Masked Transfer To Account</option>
+                                        <option value="Suffix">Suffix</option>
+                                        <option value="Description1">Description 1</option>
+                                        <option value="Description2">Description 2</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="history-overlay-description-for">Field to Affect:</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="history-overlay-description-for">
+                                        <option value=""></option>
+                                        <option value="DescriptionField1">Description Field 1</option>
+                                        <option value="DescriptionField2">Description Field 2</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="history-overlay-description-value">Value:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" maxlength="100" class="form-control" id="history-overlay-description-value" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-4">
+                                    <button type="button" class="btn btn-info" onclick="historyOverlay.UpdateDescription();">Save Description Part</button>
+                                    <button type="button" class="btn btn-danger" onclick="historyOverlay.RemoveDescription();">Delete Description</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,56 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.LayeredSecurity
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model AuthenticationMethodViewModel
+
+@{
+    ViewBag.Title = "Layered Security Authentication Methods";
+    ViewBag.BaseModel = Model;
+}
+
+<div class="panel-body">
+    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+    {
+        <div>
+            @using (Html.BeginForm("Index", "LayeredSecurity", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="form-group">
+                    @Html.LabelFor(m => m.AuthenticationMethod.Name, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(m => m.AuthenticationMethod.Name, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.AuthenticationMethod.Description, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(m => m.AuthenticationMethod.Description, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.AuthenticationMethod.Weight, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(m => m.AuthenticationMethod.Weight, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.AuthenticationMethod.MinimumApplicationVersion, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(m => m.AuthenticationMethod.MinimumApplicationVersion, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-8">
+                        @if (Model.AuthenticationMethod.Id == 0)
+                        {
+                            <input type="submit" class="btn btn-default" value="Add New Method" />
+                        }
+                        else
+                        {
+                            <input type="submit" class="btn btn-default" value="Update Method" />
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

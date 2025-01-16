@@ -1,0 +1,40 @@
+﻿
+.color-container {
+    background-color: RGBA(1,41,84,0.4);
+    padding: 20px;
+    width: 500px;
+}
+
+.word-container {
+    padding: 6px 14px;
+    background-color: RGBA(1,26,70,0.4);
+}
+
+.error-red {
+    color: RGBA(204,46,54,0.99);
+}
+
+.word-container:nth-child(even) {
+    background-color: transparent;
+}
+
+.trash-icon {
+    display: inline;
+    margin-right: 16px;
+    font-size: 16px;
+}
+
+.word {
+    display: inline;
+}
+
+#RestrictedWordInput {
+    width: 280px;
+    color: black;
+    margin-right: 8px;
+}
+
+.alert {
+    width: 500px;
+}
+

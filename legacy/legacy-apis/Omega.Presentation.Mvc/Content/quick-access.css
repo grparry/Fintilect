@@ -1,0 +1,26 @@
+﻿/* quick access styles */
+
+ 
+ #memberUuid {
+     color: #D7D7D7 !important;
+     margin-bottom: 14px;
+     width: 280px;
+     display: inline-block;
+ }
+
+#quickAccessMemberSearchButton {
+     display: inline-block;
+     position: relative;
+     top: -2px;
+     left: 8px;
+     background-color: #999999;
+ }
+
+.row label {
+    display: inline-block;
+    margin-right:6px;
+}
+
+#quickAccessMemberSearchButton:hover  {
+     background-color: #777777;
+ }

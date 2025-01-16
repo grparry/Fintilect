@@ -1,0 +1,16 @@
+{
+  "CardHistorySettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/CardHistorySettings"
+      },
+      "features": {
+        "$ref": "./features.json#/CardHistoryFeatures"
+      }
+    }
+  }
+}

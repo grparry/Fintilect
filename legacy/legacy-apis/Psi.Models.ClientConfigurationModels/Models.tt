@@ -1,0 +1,162 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Xml.dll" #>
+<#@ Assembly Name="System.Xml.Linq.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ Assembly Name="System.Data.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ import namespace="System.Data" #> 
+<#@ import namespace="System.Data.SqlClient" #> 
+
+
+<#   
+    var connectionString = @"data source=utsql01\utsql01;initial catalog=Ims_Meta;user id=Dev;password=imsmeta;";
+    var configs = GetConfigs(connectionString);
+
+    foreach(var parentConfig in configs.Where(r=>r.IsParent && r.ParentId == 0))
+    {
+        var className = parentConfig.Key;
+        if(className.Contains('.')) className = className.Substring(className.LastIndexOf('.')+1);
+
+        var properties = configs.Where(r=>r.ParentId == parentConfig.Id && r.ParentId != 0 && !r.IsParent).ToList();
+#>
+        
+// This is generated code changes made here will not be persisted.
+using System.Collections.Generic;
+using Psi.Data.Entities.ImsMeta;
+using Psi.Data.Models.ImsClient;
+using Psi.Data.Models.Domain;
+using System.Linq;
+
+
+namespace Psi.Data.Models.ClientConfigurationModels
+{
+  public class <#=className#> : SettingsGroupBase
+  {
+    public <#=className#>(List<ClientConfiguration> clientConfigurations, ClientContext clientContext) : base(clientConfigurations, clientContext){}
+<#
+        foreach(var p in properties)
+        {
+            var propertyName = p.Key;
+            if(propertyName.Contains('.')) propertyName = propertyName.Substring(propertyName.LastIndexOf('.')+1);
+
+            #><#=SetProperty(p);#><#
+        } //End Foreach Properties
+
+        
+#>
+  }
+}        
+
+
+<#
+        SaveOutput("Models/"+className+".cs");
+    }//End foreach of parent configs
+
+#>
+
+ 
+<#+  
+
+private string SetProperty(Config p)
+{
+    if(p.ClrType.ToUpper().Trim() != "STRING")
+    {
+        var output = Environment.NewLine;
+#>
+
+    public <#=p.ClrType#> <#=propertyName#>
+    {
+        get
+        { 
+            <#=p.ClrType#> x;
+            <#=p.ClrType#>.TryParse(_clientConfigurations.Single(r => r.Key == "<#=p.Key#>").Value, out x);
+            return x;
+        }
+        set{ Update("<#=p.Key#>", value.ToString());}
+    }
+<#
+    }
+    else
+    {
+#>
+
+    public <#=p.ClrType#> <#=propertyName#>
+    {
+        get{ return _clientConfigurations.Single(r => r.Key == "<#=p.Key#>").Value; }
+        set{ Update("<#=p.Key#>", value);}
+    }
+<#
+    }
+}
+
+private List<Config> GetConfigs(string connectionString)
+{
+	var queryString = "SELECT *  FROM [dbo].[ApplicationConfigurationDefault]";
+	
+	var configs = new List<Config>();
+
+	using (var connection = new SqlConnection(connectionString))
+	{
+		var command = new SqlCommand(queryString, connection);
+		connection.Open();
+		var reader = command.ExecuteReader();
+		try
+		{
+			while (reader.Read())
+			{
+				var parentId = reader["ParentId"].ToString().Trim();
+				if(parentId == string.Empty) parentId = "0";
+				
+				configs.Add(new Config()
+				{
+					Id = int.Parse(reader["ApplicationConfigurationDefaultId"].ToString()),
+					ParentId = int.Parse(parentId),
+					IsParent = bool.Parse(reader["IsParent"].ToString()),
+					Key = reader["Key"].ToString(),
+					Description = reader["Description"].ToString(),
+					DefaultValue = reader["DefaultValue"].ToString(),
+					PossibleValues = reader["PossibleValues"].ToString().Split(',').Where(r=>r.Trim().Length > 0).Select(r=>r.Trim()).ToList(),
+					ClrType = reader["ClrType"].ToString()
+				});
+			}
+		}
+		finally
+		{
+			// Always call Close when done reading.
+			reader.Close();
+		}
+	}
+	
+	return configs;
+	
+}
+
+void SaveOutput(string outputFileName)
+{
+    var templateDirectory = Path.GetDirectoryName(Host.TemplateFile);
+    var outputFilePath = Path.Combine(templateDirectory, outputFileName);
+    File.WriteAllText(outputFilePath, this.GenerationEnvironment.ToString()); 
+
+    this.GenerationEnvironment.Remove(0, this.GenerationEnvironment.Length);
+}
+
+public class Config
+{
+	public string Key {get;set;}
+	public string DefaultValue {get;set;}
+	public List<string> PossibleValues {get;set;}
+	public string Description {get;set;}
+	public string ClrType {get;set;}
+	public bool IsParent {get;set;}	
+	public int Id {get;set;}
+	public int ParentId {get;set;}
+}
+#>

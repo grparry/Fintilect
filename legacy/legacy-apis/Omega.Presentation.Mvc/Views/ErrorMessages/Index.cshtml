@@ -1,0 +1,169 @@
+﻿@using PSI.Models.ClientConfigurationModels.Agatha
+
+@{
+    ViewBag.Title = "3rd Party System Messages";
+    ViewBag.ActiveMenu = "error-messages";
+}
+
+
+@section LinkedStyleSheets {
+    <link href='@Url.Content("~/Content/error-messages.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/Content/jquery-ui/redmond/jquery-ui-1.10.3.custom.css")' rel="stylesheet" />
+}
+
+@if (!SettingsManager.Settings.OmegaConfiguration.Features.EnableThirdPartySystemMessages)
+{
+    <div class="alert alert-info">
+        We are sorry to inform you that this feature is currently unavailable.
+    </div>
+}
+else
+{
+    <div class="main-content-container">
+        <div class="panel panel-default">
+            <header class="panel-heading-psi clearfix">
+                <h4><strong>@ViewBag.Title</strong></h4>
+            </header>
+     
+                <div class="panel-body">
+
+                    <div id="divLoading" class="text-center" style="display:none;">
+                        <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Loading...
+                    </div>
+
+                    <div id="divFailure" class="alert alert-danger text-center" style="display:none;">
+                        Data Load Failure.
+                    </div>
+
+                    <div class="form-inline flex">
+                        <div><span>Member: </span><span id="MemberNumberSpan">Please search for a member</span></div>
+                        <div>
+                            <input type="button" id="memberSearchButton" value="Member Search" class="btn btn-primary" />
+                            @Ajax.ActionLink("Refresh", "RefreshMessages", new { mode = "refresh" }, new AjaxOptions
+                       {
+                           UpdateTargetId = "SearchResultDiv",
+                           InsertionMode = InsertionMode.Replace,
+                           HttpMethod = "GET",
+                           OnBegin = "OmegaErrorMessagesIndexModule.ajaxBegin",
+                           OnComplete = "OmegaErrorMessagesIndexModule.showSuccess",
+                           OnFailure = "OmegaErrorMessagesIndexModule.showFailure"
+                       }, new { id = "RefreshMessagesButton", @class = "btn btn-default", style = "display:none;" })
+                        </div>
+                    </div>
+
+                    <hr />
+
+
+                    <div class="message-result-header" style="display:none;">
+                        3rd Party System Messages Search Results:
+                    </div>
+
+                    <div class="message-result-search" style="display:none;">
+                        <input id="SearchMessagesDomTextbox" type="text" placeholder="Enter Search" class="form-control form-control-inline" /> <input id="SearchMessagesDomButton" type="button" value="Search Messages" class="btn btn-primary" />
+                    </div>  
+
+                    <div id="SearchResultDiv" style="display:none;">
+                        <!-- content will be rendered here dynamically -->
+                    </div>
+                </div><!-- end panel-body -->
+        </div><!-- end panel panel-default -->
+    </div><!-- end main-content-container -->
+
+
+
+    <div id="search-member-modal" class="modal fade">
+        <div class="modal-dialog">
+            <div id="partial-view-modal-content" class="modal-content">
+                @Html.Partial("_MemberSearch")
+            </div>
+        </div><!-- End modal-dialog -->
+    </div><!-- End targeted-marketing-detail-modal -->
+}
+
+
+@section scripts {
+    <script src='@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery-ui-1.12.0.min.js")'></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#memberSearchButton").click(function () {
+                $('#search-member-modal').modal();
+            });
+
+            $("#SearchMessagesDomButton").click(function () {
+                if($("#SearchMessagesDomTextbox").val() === "") {
+                    return false;
+                };
+
+                var rows = $("td[Data-title='Message'").toArray();
+ 
+                for (var i = 0; i < rows.length; i++) {
+                    if (rows[i].innerText.toLowerCase().indexOf($("#SearchMessagesDomTextbox").val().toLowerCase()) === -1) {
+                        rows[i].parentElement.style.display = "none";
+                    }
+                }
+            });
+
+            $('#search-member-modal').on('hidden.bs.modal', function () {
+                $("#SearchMemberResultsDiv").hide();
+            });
+        });
+
+        // Create a namespace for this page
+        var OmegaErrorMessagesIndexModule = OmegaErrorMessagesIndexModule || {};
+
+        OmegaErrorMessagesIndexModule = (function () {
+            // local vars:
+            var _inDelay = false;
+
+            // Ajax starting, getting a record detail
+            var _ajaxBegin = function() {
+                console.log("We are logging this click from ajax. - Action Begun");
+                _inDelay = setTimeout(_showSpinner, 1000); // using setTimeout because jQuery delay only works on animate
+                $("#divFailure").hide();
+            }
+
+            // show the spinner in a div to let the user know that the record is loading
+            var _showSpinner = function() {
+                $('#divLoading').show("normal");
+            }
+
+            // Ajax complete, show the message list
+            var _showSuccess = function() {
+                console.log("We are logging this click from ajax. - Action Complete");
+                clearTimeout(_inDelay);
+                $("#divLoading").hide("normal");
+                $("#divFailure").hide();
+               
+                $(".message-result-header").show();
+                $(".message-result-search").show();
+                $("#SearchResultDiv").show();
+            }
+
+            // Ajax failure, show the warning
+            var _showFailure = function() {
+                console.log("We are logging this click from ajax. - Action Failed");
+                if (_inDelay == true) {
+                    _inDelay = null;
+                }
+                $("#divLoading").hide();
+                $("#targeted-marketing-detail-modal").hide();
+                $("#divFailure").show("normal");
+
+            }
+
+            // Public interface
+            return {
+                ajaxBegin: _ajaxBegin,
+                showSuccess:  _showSuccess,
+                showFailure:   _showFailure
+            }
+
+        })();
+    </script>
+
+}
+

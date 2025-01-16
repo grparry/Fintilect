@@ -1,0 +1,16 @@
+{
+  "MenuSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/MenuSettings"
+      },
+      "pageDisplay": {
+        "$ref": "./page-display.json#/PageDisplaySettings"
+      }
+    }
+  }
+}

@@ -1,0 +1,156 @@
+﻿@model List<Omega.Presentation.Mvc.Models.TargetedMarketing.Image> 
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+    <h4 class="modal-title">
+        Add Image(s) To Slot
+    </h4>
+</div>
+
+<div class="modal-body">
+    
+    @if (Model == null || Model.Count < 1)
+    {
+        <div class="alert alert-danger">
+            There are no promotions to show
+        </div>
+    }
+    else
+    {
+        using (Ajax.BeginForm("SetImageForPromotionSlot", "TargetedMarketing", new AjaxOptions
+        {
+            HttpMethod = "POST",
+            OnBegin = "OmegaTargetedMarketingPromotionAddImageModal.logAjaxBegin",
+            OnComplete = "OmegaTargetedMarketingPromotionAddImageModal.showComplete",
+            OnFailure = "OmegaTargetedMarketingPromotionAddImageModal.showFailure"
+        }))
+        {
+            <input type="hidden" id="promotionId" name="promotionId" value="@ViewBag.PromotionSlotId" />
+            foreach (var content in Model)
+            {
+
+                <div class="row list-row" id='@String.Concat("imagerow", content.ImageId)'>
+                    <div class="col-md-2 border-right puffy flex">
+                        @content.ImageName
+                    </div>
+
+                    <div class="col-md-2 border-right puffy flex center">
+                        @{ string srcString = "data:" + content.MimeType + ";base64," + content.FileContentBase64; }
+                        <img src="@srcString" class="image-thumbnail-lg" />
+                    </div>  
+
+                    <div class="col-md-3 border-right puffy flex">
+                        @content.ImageDescription
+                    </div>
+
+                    <div class="col-md-4 border-right puffy flex">
+                        Id: @content.ImageId
+                    </div>
+   
+                    <div class="col-md-1 puffy flex center">
+                        <input type="checkbox" name="IM_@content.ImageId" />
+                    </div>
+                </div>
+            }
+
+            <div id="successslotimage" class="alert alert-success" style="display: none;">
+                <div style="float: right; margin-top: -8px;">
+                    <input type="button" class="btn btn-default" id="CancelAddImageSlotsModalButton" value="Continue" />
+                </div>
+                <div style="width: 70%;">The image(s) have been successfully added.</div>
+            </div>
+
+            <div id="failureslotimage" class="alert alert-danger" style="display: none;">
+                We were unable to save your data, please try again later.
+            </div>
+
+            <div id="processingslotimage" class="text-center" style="display:none; margin-bottom: 14px;">
+                <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Processing Request...
+            </div>
+
+            <div class="row list-row-buttons">
+                <div class="col-md-6 text-left">
+                    <input type="button" class="btn btn-default" id="CancelImageSlotButton" value="Cancel" data-dismiss="modal" />
+                </div>
+
+                <div class="col-md-6 text-right">
+
+                    &nbsp;
+                    &nbsp;<input type="submit" value="Add Selected Images" class="btn btn-primary" id="ImageSlotSubmitButton" />
+                </div>
+            </div>
+        }
+    }
+
+</div><!-- End modal-body -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#CancelAddImageSlotsModalButton").click(function () {
+            $("#targeted-marketing-slotimage-image-Add-modal").modal("hide");
+            $("#targeted-marketing-slotimage-detail-modal").modal("hide");
+            document.getElementById(OmegaTargetedMarketingPromotionSlotModule.currButton).click();
+        });
+
+        $("#CancelImageSlotButton").click(function () {
+            $("#targeted-marketing-slotimage-image-Add-modal").modal("hide");
+            $("#targeted-marketing-slotimage-detail-modal").modal("hide");
+        });
+    });
+
+    var OmegaTargetedMarketingPromotionAddImageModal = OmegaTargetedMarketingPromotionAddImageModal || {};
+
+    OmegaTargetedMarketingPromotionAddImageModal = (function () {
+        // local vars:
+        var _inDelay = false;
+
+        // Ajax starting, getting a record detail
+        var _logAjaxBegin = function () {
+            console.log("We are logging this click from ajax. - Action Begun from OmegaTargetedMarketingPromotionAddImageModal");
+            _inDelay = setTimeout(_showSpinner, 1000); // using setTimeout because jQuery delay only works on animate
+            $("#failureslotimage").hide();
+            $("#ImageSlotSubmitButton").prop("disabled", true);
+            $("#CancelImageSlotButton").prop("disabled", true);
+        }
+
+        // show the spinner in a div to let the user know that the record is loading
+        var _showSpinner = function () {
+            $('#processingslotimage').show("normal");
+        }
+
+        // Ajax complete, show the modal
+        var _showComplete = function (result) { 
+            console.log("We are logging this click from ajax. - Action Complete");
+            clearTimeout(_inDelay);
+            if (result.responseText.toLowerCase() === 'success' && result.statusText.toLowerCase() === 'ok') {
+                $('#successslotimage').show("normal");
+                $('#failureslotimage').hide();
+                $('#divProcessing').hide();
+            } else {
+                $('#deleteDiv').hide();
+                $('#failureslotimage').show("normal");
+                $('#divProcessing').hide();
+            }
+        }
+
+        // Ajax failure, show the warning
+        var _showFailure = function () {
+            console.log("We are logging this click from ajax. - Action Failed");
+            if (_inDelay == true) {
+                _inDelay = null;
+            }
+            $("#divProcessing").hide();
+            $("#failureDiv").show("normal");
+
+        }
+
+        // Public interface
+        return {
+            logAjaxBegin: _logAjaxBegin,
+            showComplete: _showComplete,
+            showFailure: _showFailure
+        }
+
+    })();
+</script>

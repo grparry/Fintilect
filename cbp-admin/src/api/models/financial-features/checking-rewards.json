@@ -1,0 +1,41 @@
+{
+  "CheckingRewardsSettings": {
+    "type": "object",
+    "properties": {
+      "realTimeRedemption": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "minVersion": {
+            "type": "number"
+          },
+          "generalLedgerAccountNumber": {
+            "type": "string"
+          },
+          "generalLedgerTransactionDescription": {
+            "type": "string"
+          }
+        }
+      },
+      "rewardsProgram": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "programName": {
+            "type": "string"
+          },
+          "pointsPerDollar": {
+            "type": "number"
+          },
+          "minimumPointsForRedemption": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

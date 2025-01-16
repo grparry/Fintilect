@@ -1,0 +1,987 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.FeaturesManager
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model ManagedFeaturesModel
+
+@{
+    ViewBag.Title = "Features Manager";
+    ViewBag.Subtitle = "Manage Features and Their Settings";
+    ViewBag.ActiveMenu = "features-manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BaseModel = Model;
+}
+
+@if (!SettingsManager.Settings.OmegaConfiguration.Features.FeaturesManagerEnabled)
+{
+    <div class="alert alert-info">
+        We are sorry to inform you that this feature is currently unavailable.
+    </div>
+}
+else
+{
+    <script>
+        var FeaturesManager = {
+            LoadFeatures: function(activeListItem) {
+                Util.ShowLoading();
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#features-body').html(data);
+                        FeaturesManager.BindPivots();
+                        FeaturesManager.SearchFeatureRows = null;
+                        FeaturesManager.SearchFeatureGroupRows = null;
+                        FeaturesManager.SearchSettingRows = null;
+                        FeaturesManager.SearchFeatures();
+                    } else {
+                        Util.ShowErrorInInnerHtml('#features-body', status);
+                    }
+                };
+                $.get('./FeaturesManager/GetFeatureList?activeListItem=' + activeListItem, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadFeatureInProgress: false,
+            LoadFeature: function(sender) {
+                if (FeaturesManager.LoadFeatureInProgress) return;
+                FeaturesManager.LoadFeatureInProgress = true;
+                var $sender = $(sender);
+                var id = $sender.attr('feature-id');
+                var name = $sender.attr('feature-name');
+                FeaturesManager.LoadFeatureById(id, name, $sender);
+            },
+            LoadFeatureById: function(id, name, sender) {
+                $('.active').removeClass('active');
+                Util.ShowLoadingInInnerHtml('#featuresBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadFeatureInProgress = false;
+                    if (status === 'success') {
+                        $('#featuresBody').html(data);
+                        $('#featureLabel').html(name);
+                        if (sender) sender.addClass('active');
+                        FeaturesManager.SearchFeaturesRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featuresBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/GetFeature?id=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadFeatureByName: function(name, sender) {
+                $('.active').removeClass('active');
+                Util.ShowLoadingInInnerHtml('#featuresBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadFeatureInProgress = false;
+                    if (status === 'success') {
+                        $('#featuresBody').html(data);
+                        $('#featureLabel').html(name);
+                        if (sender) sender.addClass('active');
+                        FeaturesManager.SearchFeaturesRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featuresBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/GetFeature?name=' + escape(name), callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadFeatureKey: function(sender) {
+                var $sender = $(sender);
+                var key = $sender.attr('feature-key');
+                var set = $sender.attr('feature');
+                $('#manageFeatureKey').modal();
+                Util.ShowLoadingInInnerHtml('#manageFeatureKeyBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageFeatureKeyBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageFeatureKeyBody', status);
+                    }
+                }
+
+                $.get('./FeaturesManager/GetFeatureKey?key=' + key + '&set=' + set, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            GetFeatureValue: function(sender) {
+                var $sender = $(sender);
+                var key = $sender.attr('feature-key');
+                var set = $sender.attr('feature');
+                var id = $sender.attr('feature-id');
+                Util.ShowLoading();
+                var callback = function(data) {
+                    Util.HideLoading();
+                    $('#feature-value-textbox').val(data);
+                }
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: './FeaturesManager/GetFeatureKeyValue?key=' + key + '&set=' + set + '&id=' + id,
+                    success: callback
+                }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+
+                $('#featureStartAt').val($sender.attr('feature-start'));
+                $('#featureEndAt').val($sender.attr('feature-end'));
+            },
+            GetDefaultFeatureValue: function(sender, input) {
+                var $sender = $(sender);
+                var key = $sender.attr('feature-key');
+                var set = $sender.attr('feature');
+                var id = $sender.attr('feature-id');
+
+                Util.ShowLoading();
+                var callback = function(data) {
+                    Util.HideLoading();
+                    $(input).val(data);
+                }
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: './FeaturesManager/GetDefaultFeatureKeyValue?key=' + key + '&set=' + set + '&id=' + id,
+                    success: callback
+                }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            ShowHtmlInModal: function(sender, sourceId) {
+                var html = $('#' + sourceId).val();
+                $('#previewHtmlModal').modal();
+                $('#previewHtmlModalBody').html(html);
+            },
+            ManageFeatureId: null,
+            ManageFeature: function(obj) {
+                if (obj == null) {
+                    FeaturesManager.ManageFeatureId = 0;
+                } else {
+                    FeaturesManager.ManageFeatureId = $(obj).attr('feature-id');
+                    $('#feature-default-set-textbox').val($(obj).attr('feature'));
+                    $('#feature-default-key-textbox').val($(obj).attr('feature-key'));
+                    $('#feature-default-permission-select').val($(obj).attr('feature-permission'));
+                    FeaturesManager.GetDefaultFeatureValue(obj, '#feature-default-value-textbox');
+                };
+                $('#manageDefaultFeatureModal').modal();
+            },
+            SaveDefaultFeature: function(sender) {
+                var id = FeaturesManager.ManageFeatureId;
+                var set = $('#feature-default-set-textbox').val();
+                var key = $('#feature-default-key-textbox').val();
+                var value = $('#feature-default-value-textbox').val();
+                var lvl = $('#feature-default-permission-select').val();
+
+                var errorMessage = '';
+                if (set.length <= 0) errorMessage += 'Set name is required\r';
+                if (key.length <= 0) errorMessage += 'Key is required\r';
+
+                if (errorMessage !== '') {
+                    alert('Please fix errors before saving...\r\n' + errorMessage);
+                    return;
+                }
+
+                Util.ShowLoading();
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        FeaturesManager.LoadFeatures(@ViewBag.ActiveListItem);
+                        FeaturesManager.LoadFeatureByName(set);
+                        $('#manageDefaultFeatureModal').modal('hide');
+
+                        $('#feature-default-set-textbox').val('');
+                        $('#feature-default-key-textbox').val('');
+                        $('#feature-default-value-textbox').val('');
+                        $('#feature-default-permission-select').val(0);
+                    } else {
+                        alert('Error saving feature!');
+                    }
+                }
+
+                $.get('./FeaturesManager/SaveDefaultFeature?id=' +
+                    id +
+                    '&Key=' +
+                    key +
+                    '&Feature=' +
+                    set +
+                    '&PermissionLevel=' +
+                    lvl +
+                    '&Value=' +
+                    value +
+                    '&Culture=EN',
+                    callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SaveFeature: function(sender) {
+                var set = $('#feature-textbox').val();
+                var key = $('#feature-key-textbox').val();
+                var value = $('#feature-value-textbox').val();
+                var end = $('#featureEndAt').val();
+                var start = $('#featureStartAt').val();
+
+                var errorMessage = '';
+                if (set.length <= 0) errorMessage += 'Set name is required\r';
+                if (key.length <= 0) errorMessage += 'Key is required\r';
+
+                if (errorMessage !== '') {
+                    alert('Please fix errors before saving...\r\n' + errorMessage);
+                    return;
+                }
+
+                Util.ShowLoading();
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        FeaturesManager.LoadFeatureByName(set);
+                        $('#manageFeatureKey').modal('hide');
+                    } else {
+                        alert('Error saving feature key!');
+                    }
+                }
+
+                $.post('./FeaturesManager/SaveFeature',
+                    {
+                        Key: key,
+                        Feature: set,
+                        Value: value,
+                        StartAt: start,
+                        EndAt: end,
+                        Culture: 'EN'
+                    },
+                    callback).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SearchFeaturesRows: null,
+            SearchFeature: function(sender) {
+                var x = sender.value.toLowerCase();
+                x = escape(x);
+                var rows = FeaturesManager.SearchFeaturesRows;
+                if (rows === null) {
+                    FeaturesManager.SearchFeaturesRows = $('[search-row-keys]');
+                    rows = FeaturesManager.SearchFeaturesRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('search-text').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            SearchFeatureRows: null,
+            FilterRows: function(rows, groupRows, settingRows) {
+                var ret = [];
+                $.each(rows,
+                    function(i, v) {
+                        var newValue = v;
+                        v.type = 'row';
+                        ret.push(newValue);
+                    });
+                $.each(groupRows,
+                    function(i, v) {
+                        var newValue = v;
+                        v.type = 'group';
+                        ret.push(newValue);
+                    });
+                $.each(settingRows,
+                    function(i, v) {
+                        var newValue = v;
+                        v.type = 'setting';
+                        ret.push(newValue);
+                    });
+
+                return ret;
+            },
+            SearchFeatureRowsIndicated: null,
+            SearchFeatures: function (sender) {
+                var x = $('#searchFeatureNames').val().toLowerCase();
+
+                var rows = FeaturesManager.SearchFeatureRows;
+                if (rows === null) {
+                    FeaturesManager.SearchFeatureRows = $('[search-row-sets]');
+                    rows = FeaturesManager.SearchFeatureRows;
+                }
+                var groupRows = FeaturesManager.SearchFeatureGroupRows;
+                if (groupRows === null) {
+                    FeaturesManager.SearchFeatureGroupRows = $('[search-group-row-sets]');
+                    groupRows = FeaturesManager.SearchFeatureGroupRows;
+                }
+                var settingRows = FeaturesManager.SearchSettingRows;
+                if (settingRows === null) {
+                    FeaturesManager.SearchSettingRows = $('[search-setting-row-sets]');
+                    settingRows = FeaturesManager.SearchSettingRows;
+                }
+                FeaturesManager.SearchFeatureRowsIndicated = (FeaturesManager.SearchFeatureRowsIndicated !== null? FeaturesManager.SearchFeatureRowsIndicated : FeaturesManager.FilterRows(rows, groupRows, settingRows));
+
+                $('#allFeatures li').addClass('hide');
+
+                $.each(FeaturesManager.SearchFeatureRowsIndicated, function (i, v) {            
+                    if (v.type === 'row') {
+                        var featureID = v.attributes['feature-id'].value;
+                        var featureName = v.attributes['feature-name'].value;
+                        if (featureName.toLowerCase().indexOf(x) !== -1) {
+                            var row = $(v).parent().removeClass('hide');
+                            var groups = row.find('[search-group-row-sets]').parent().removeClass('hide');
+                            var settings = groups.find('[search-setting-row-sets]').removeClass('hide');
+                        }
+                    }
+                    if (v.type === 'group') {
+                        var featureID = v.attributes['feature-id'].value;
+                        var groupName = v.attributes['feature-group-name'].value;
+                        if (groupName.toLowerCase().indexOf(x) !== -1) {
+                            var group = $(v).parent();
+                            group.removeClass('hide');
+                            var row = $(`[search-row-sets] [feature-id="${featureID}"]`).parent().parent().removeClass('hide');
+                            var settings = group.find('[search-setting-row-sets]').removeClass('hide');
+                        }
+                    }
+                    if (v.type === 'setting') {
+                        var featureID = v.attributes['feature-id'].value;
+                        var settingName = v.attributes['setting-name'].value;
+                        var settingId = v.attributes['setting-id'].value;
+                        
+                        if (settingName.toLowerCase().indexOf(x) !== -1) {
+                            var setting = $(v).removeClass('hide');  
+                            var row = $(`[search-row-sets] [feature-id="${featureID}"]`).parent().parent().removeClass('hide');
+                            var group = setting.parent().parent().removeClass('hide');
+
+                            // after a db update and screen re-draw, brute force the containers back open because the code above doesn't work:
+                            var item = $(`li[setting-id=${settingId}]`)[0]; // get the actual setting <li> item. it is the first property in the returned object.
+                            item.classList.remove('hide');
+                            item.parentNode.classList.remove('hide');
+                            item.parentNode.parentNode.classList.remove('hide');
+                        }
+                    }
+                });
+            },
+            EditFeature: function (sender, id) {
+                $("#editFeatureModal").modal();
+                Util.ShowLoadingInInnerHtml('#editFeatureModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadFeatureInProgress = false;
+                    if (status === 'success') {
+                        $('#editFeatureModalBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editFeatureModalBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/EditFeature?id=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")'; });
+            },
+            LoadFeatureGroups: function () {
+                alert("LoadFeatureGroups");
+                Util.ShowLoading();
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#features-body').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featuresBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/GetFeatureGroupList', callback);
+            },
+            LoadFeatureGroupInProgress: false,
+            LoadFeatureGroup: function (sender) {
+                if (FeaturesManager.LoadFeatureGroupInProgress) return;
+                FeaturesManager.LoadFeatureGroupInProgress = true;
+                var $sender = $(sender);
+                var id = $sender.attr('feature-group-id');
+                var name = $sender.attr('feature-group-name');
+                FeaturesManager.LoadFeatureGroupById(id, name, $sender);
+            },
+            LoadFeatureGroupById: function (id, name, sender) {
+                $('.active').removeClass('active');
+                Util.ShowLoadingInInnerHtml('#featuresBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadFeatureGroupInProgress = false;
+                    if (status === 'success') {
+                        $('#featuresBody').html(data);
+                        $('#featureLabel').html(name);
+                        if (sender) sender.addClass('active');
+                        FeaturesManager.SearchFeatureGroupsRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featuresBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/GetFeatureGroup?id=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadFeatureGroupByName: function (name, sender) {
+                alert("LoadFeatureGroupByName");
+                $('.active').removeClass('active');
+                Util.ShowLoadingInInnerHtml('#featuresBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadFeatureGroupInProgress = false;
+                    if (status === 'success') {
+                        $('#featuresBody').html(data);
+                        $('#featureLabel').html(name);
+                        if (sender) sender.addClass('active');
+                        FeaturesManager.SearchFeatureGroupsRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featuresBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/GetFeatureGroup?name=' + escape(name), callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")'; });
+            },
+            LoadFeatureGroupKey: function (sender) {
+                alert("LoadFeatureGroupKey");
+                var $sender = $(sender);
+                var key = $sender.attr('feature-key');
+                var set = $sender.attr('feature');
+                $('#manageFeatureKey').modal();
+                Util.ShowLoadingInInnerHtml('#manageFeatureKeyBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageFeatureKeyBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageFeatureKeyBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/GetFeatureGroupKey?key=' + key + '&set=' + set, callback);
+            },
+            GetFeatureGroupValue: function (sender) {
+                alert("GetFeatureGroupValue");
+                var $sender = $(sender);
+                var key = $sender.attr('feature-key');
+                var set = $sender.attr('feature');
+                var id = $sender.attr('feature-id');
+                Util.ShowLoading();
+                var callback = function (data) {
+                    Util.HideLoading();
+                    $('#feature-value-textbox').val(data);
+                };
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: './FeaturesManager/GetFeatureGroupKeyValue?key=' + key + '&set=' + set + '&id=' + id,
+                    success: callback
+                }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+
+                $('#featureStartAt').val($sender.attr('feature-start'));
+                $('#featureEndAt').val($sender.attr('feature-end'));
+            },
+            GetDefaultFeatureGroupValue: function (sender, input) {
+                alert("GetDefaultFeatureGroupValue");
+                var $sender = $(sender);
+                var key = $sender.attr('feature-key');
+                var set = $sender.attr('feature');
+                var id = $sender.attr('feature-id');
+
+                Util.ShowLoading();
+                var callback = function (data) {
+                    Util.HideLoading();
+                    $(input).val(data);
+                };
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: './FeaturesManager/GetDefaultFeatureGroupKeyValue?key=' + key + '&set=' + set + '&id=' + id,
+                    success: callback
+                }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            ManageFeatureGroupId: null,
+            ManageFeatureGroup: function (obj) {
+                alert("ManageFeatureGroup");
+                if (obj == null) {
+                    FeaturesManager.ManageFeatureGroupId = 0;
+                } else {
+                    FeaturesManager.ManageFeatureGroupId = $(obj).attr('feature-id');
+                    $('#feature-default-set-textbox').val($(obj).attr('feature'));
+                    $('#feature-default-key-textbox').val($(obj).attr('feature-key'));
+                    $('#feature-default-permission-select').val($(obj).attr('feature-permission'));
+                    FeaturesManager.GetDefaultFeatureGroupValue(obj, '#feature-default-value-textbox');
+                };
+                $('#manageDefaultFeatureModal').modal();
+            },
+            SaveDefaultFeatureGroup: function (sender) {
+                alert("SaveDefaultFeatureGroup");
+                var id = FeaturesManager.ManageFeatureGroupId;
+                var set = $('#feature-default-set-textbox').val();
+                var key = $('#feature-default-key-textbox').val();
+                var value = $('#feature-default-value-textbox').val();
+                var lvl = $('#feature-default-permission-select').val();
+
+                var errorMessage = '';
+                if (set.length <= 0) errorMessage += 'Set name is required\r';
+                if (key.length <= 0) errorMessage += 'Key is required\r';
+
+                if (errorMessage !== '') {
+                    alert('Please fix errors before saving...\r\n' + errorMessage);
+                    return;
+                }
+
+                Util.ShowLoading();
+                var callback = function (data, status) {
+                    alert("callback");
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        FeaturesManager.LoadFeatureGroups();
+                        FeaturesManager.LoadFeatureGroupByName(set);
+                        $('#manageDefaultFeatureModal').modal('hide');
+
+                        $('#feature-default-set-textbox').val('');
+                        $('#feature-default-key-textbox').val('');
+                        $('#feature-default-value-textbox').val('');
+                        $('#feature-default-permission-select').val(0);
+                    } else {
+                        alert('Error saving feature!');
+                    }
+                };
+                $.get('./FeaturesManager/SaveDefaultFeatureGroup?id=' + id + '&Key=' + key + '&Feature=' + set + '&PermissionLevel=' + lvl + '&Value=' + value + '&Culture=EN', callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SaveFeatureGroup: function (sender) {
+                alert("SaveFeatureGroup");
+                var set = $('#feature-textbox').val();
+                var key = $('#feature-key-textbox').val();
+                var value = $('#feature-value-textbox').val();
+                var end = $('#featureEndAt').val();
+                var start = $('#featureStartAt').val();
+
+                var errorMessage = '';
+                if (set.length <= 0) errorMessage += 'Set name is required\r';
+                if (key.length <= 0) errorMessage += 'Key is required\r';
+
+                if (errorMessage !== '') {
+                    alert('Please fix errors before saving...\r\n' + errorMessage);
+                    return;
+                }
+
+                Util.ShowLoading();
+                var callback = function (data, status) {
+                    alert("ShowLoading");
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        FeaturesManager.LoadFeatureGroupByName(set);
+                        $('#manageFeatureKey').modal('hide');
+                    } else {
+                        alert('Error saving feature key!');
+                    }
+                };
+                $.post('./FeaturesManager/SaveFeatureGroup',
+                    {
+                        Key: key,
+                        Feature: set,
+                        Value: value,
+                        StartAt: start,
+                        EndAt: end,
+                        Culture: 'EN'
+                    },
+                    callback).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SearchFeatureGroupsRows: null,
+            SearchFeatureGroups: function (sender) {
+                var x = sender.value.toLowerCase();
+                x = escape(x);
+                var rows = FeaturesManager.SearchFeatureGroupsRows;
+                if (rows === null) {
+                    FeaturesManager.SearchFeatureGroupsRows = $('[search-row-keys]');
+                    rows = FeaturesManager.SearchFeatureGroupsRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('search-text').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            SearchFeatureGroupRows: null,
+            SearchFeatureGroups: function (sender) {
+                var x = sender.value.toLowerCase();
+                var rows = FeaturesManager.SearchFeatureGroupRows;
+                if (rows === null) {
+                    FeaturesManager.SearchFeatureGroupRows = $('[search-row-sets]');
+                    rows = FeaturesManager.SearchFeatureGroupRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('feature-name').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            EditFeatureGroup: function (sender, id, featureId) {
+                $("#editFeatureGroupModal").modal();
+                Util.ShowLoadingInInnerHtml('#editFeatureGroupModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadFeatureGroupInProgress = false;
+                    if (status === 'success') {
+                        $('#editFeatureGroupModalBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editFeatureGroupModalBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/EditFeatureGroup?id=' + id + '&featureId=' + featureId, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")'; });
+            },
+            LoadSettings: function () {
+                alert("LoadSettings");
+                Util.ShowLoading();
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#setting-body').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#settingsBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/GetSettingList', callback);
+            },
+            LoadSettingInProgress: false,
+            LoadSetting: function (sender) {
+                if (FeaturesManager.LoadSettingInProgress) return;
+                FeaturesManager.LoadSettingInProgress = true;
+                var $sender = $(sender);
+                var id = $sender.attr('setting-id');
+                var name = $sender.attr('setting-name');
+                FeaturesManager.LoadSettingById(id, name, $sender);
+            },
+            LoadSettingById: function (id, name, sender) {
+                $('.active').removeClass('active');
+                Util.ShowLoadingInInnerHtml('#settingsBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadSettingInProgress = false;
+                    if (status === 'success') {
+                        $('#featuresBody').html(data);
+                        $('#featureLabel').html(name);
+                        if (sender) sender.addClass('active');
+                        FeaturesManager.SearchSettingsRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featuresBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/GetSetting?id=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadSettingByName: function (name, sender) {
+                alert("LoadSettingByName");
+                $('.active').removeClass('active');
+                Util.ShowLoadingInInnerHtml('#settingsBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadSettingInProgress = false;
+                    if (status === 'success') {
+                        $('#featuresBody').html(data);
+                        $('#featureLabel').html(name);
+                        if (sender) sender.addClass('active');
+                        FeaturesManager.SearchSettingsRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#featuresBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/GetSetting?name=' + escape(name), callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SearchSettingsRows: null,
+            SearchSettings: function (sender) {
+                var x = sender.value.toLowerCase();
+                x = escape(x);
+                var rows = FeaturesManager.SearchSettingsRows;
+                if (rows === null) {
+                    FeaturesManager.SearchSettingsRows = $('[search-row-keys]');
+                    rows = FeaturesManager.SearchSettingsRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('search-text').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            SearchSettingRows: null,
+            SearchSettings: function (sender) {
+                var x = sender.value.toLowerCase();
+                var rows = FeaturesManager.SearchSettingRows;
+                if (rows === null) {
+                    FeaturesManager.SearchSettingRows = $('[search-row-sets]');
+                    rows = FeaturesManager.SearchSettingRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('setting-name').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            EditSetting: function (sender, id, featureId, groupId) {
+                $("#editSettingModal").modal();
+                Util.ShowLoadingInInnerHtml('#editSettingModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadSettingInProgress = false;
+                    if (status === 'success') {
+                        $('#editSettingModalBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editSettingModalBody', status);
+                    }
+                };
+                $.get('./FeaturesManager/EditSetting?id=' + id + '&featureId=' + featureId + '&groupId=' + groupId, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            AddUpdateFeatureGroup: function (sender) {
+                var id = $('#groupId').val();
+                var name = $('#groupName').val();
+                var description = $('#groupDescription').val();
+                var featureId = $('#groupFeatureId').val();
+                var feeAdjustment = $('#groupFeeAdjustment').val();
+                var maintenanceFee = $('#groupMainenanceFee').val();
+                var minVersion = $('#groupMinimumVersion').val();
+                var deprecatedVersion = $('#groupDeprecatedVersion').val();
+                var callback = function (data, status) {
+                    if (status === 'success') {
+                        $('#editFeatureGroupModal').modal("hide");
+                        FeaturesManager.LoadFeatures(@ViewBag.ActiveListItem);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editFeatureGroupModalBody', status);
+                    }
+                };
+
+                $.post('./FeaturesManager/AddUpdateFeatureGroup', { Id: id, Name: name, Description: description, FeatureId: featureId, FeeAdjustment: feeAdjustment, MaintenanceFee: maintenanceFee, MinimumVersion: minVersion, DeprecatedVersion: deprecatedVersion }, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            AddUpdateSetting: function (sender) {
+                var id = $('#settingId').val();
+                var name = $('#settingName').val();
+                var description = $('#settingDescription').val();
+                var featureId = $('#settingFeatureId').val();
+                var groupId = $('#settingGroupId').val();
+                var isInternalOnly = $('#settingIsInternalOnly').prop('checked');
+                var callback = function (data, status) {
+                    if (status === 'success') {
+                        $('#editSettingModal').modal("hide");
+                        FeaturesManager.LoadFeatures(@ViewBag.ActiveListItem);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editSettingModal', status);
+                    }
+                };
+
+                $.post('./FeaturesManager/AddUpdateSetting', { Id: id, Name: name, Description: description, FeatureId: featureId, GroupId: groupId, IsInternalOnly: isInternalOnly }, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")'; });
+            },
+            GetSettingDescription: function (key) {
+                var id = $('#settingId').val();
+                if (id > 0) { return; }
+
+                var callback = function (data, status) {
+                    if (status === 'success') {
+                        if (data === null || data === "") {
+                            data = "The setting could not be found. Make sure the setting name is correct before continuing.";
+                        }
+                        $('#settingDescription').val(data);
+                    }
+                };
+
+                $.get('./FeaturesManager/GetSettingDescription?key=' + key, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            BindPivots: function () {
+                $(".feature-pivot, .group-pivot").click(function (e) {
+                    e.preventDefault();
+
+                    if ($(this).parent().parent().find("ul").first("ul").is(":visible")) {
+                        $(this).parent().parent().find("ul").first("ul").hide("normal");
+                        $(this).context.innerHTML = "+";
+                    } else {
+                        $(this).parent().parent().find("ul").first("ul").show("normal");
+                        $(this).context.innerHTML = "&ndash;";
+                    }
+                });
+            }
+        };
+
+        var ApplicationConfigurationManager = {
+            SearchRows: null,
+            SetDisplayValue: function (key, displayValue) {
+                if (displayValue.length > 200)
+                    displayValue = displayValue.substring(0, 197) + "...";
+
+                $('[data-display-setting-key="' + key + '"]').text(displayValue);
+            },
+        };
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            FeaturesManager.BindPivots();
+            AutoSizeTextAreas.Set();
+        });
+    </script>
+
+    <br />
+
+    <div class="row features-manager">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading-psi">
+                    Features: &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="pull-right">
+                        @if (Model.User.PermissionLevel.CanView(PermissionLevel.Support))
+                        {
+                            <button type="button" class="btn btn-default btn-xs" onclick="FeaturesManager.EditFeature(this, '0');">
+                                New &nbsp;<span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        }
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <div>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control" id="searchFeatureNames" placeholder="Search Features" onkeyup="FeaturesManager.SearchFeatures(this);" /><br />
+                        <div class="config-panel-body" id="features-body" style="max-height: 600px; overflow-y: auto; overflow-x: auto">
+                            @Html.Partial("GetFeatureList", Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="reset-config-button"></button>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default" id="featuresBody">
+                @Html.Partial("GetFeature", new AddUpdateFeatureModel())
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="editFeatureModal">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit Feature</h3>
+                </div>
+                <div class="modal-body" id="editFeatureModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="manageFeatureKey">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Manage Feature</h3>
+                </div>
+                <div class="modal-body" id="manageFeatureKeyBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="previewHtmlModal">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Html Preview</h3>
+                </div>
+                <div class="modal-body" id="previewHtmlModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="manageDefaultFeatureModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Manage Default Feature</h3>
+                </div>
+                <div class="modal-body" id="manageDefaultFeatureBody">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Set Name:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="feature-default-set-textbox" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Key:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="feature key" id="feature-default-key-textbox" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Default Value:</label>
+                            <div class="col-md-8">
+                                <textarea class="form-control" rows="4" placeholder="default value" id="feature-default-value-textbox"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Edit Permission:</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="feature-default-permission-select">
+                                    <option selected="selected" value="0">ALL</option>
+                                    <option value="100">Vendor Only</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-8">
+                                <button type="button" class="btn btn-primary" onclick="FeaturesManager.SaveDefaultFeature(this);">Save &nbsp;<span class="glyphicon glyphicon-save"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="editFeatureGroupModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit Feature Group</h3>
+                </div>
+                <div class="modal-body" id="editFeatureGroupModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="editSettingModal">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit Setting</h3>
+                </div>
+                <div class="modal-body" id="editSettingModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+}

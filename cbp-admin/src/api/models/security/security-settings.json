@@ -1,0 +1,53 @@
+{
+  "SecuritySettings": {
+    "type": "object",
+    "properties": {
+      "authentication": {
+        "type": "object",
+        "properties": {
+          "onlineBankingApi": {
+            "$ref": "./authentication/online-banking-api.json#/OnlineBankingApiSettings"
+          },
+          "outOfBandAuthentication": {
+            "$ref": "./authentication/out-of-band.json#/OutOfBandAuthenticationSettings"
+          }
+        }
+      },
+      "login": {
+        "$ref": "./login/login-settings.json#/LoginSettings"
+      },
+      "monitoring": {
+        "$ref": "./monitoring/monitoring-settings.json#/MonitoringSettings"
+      },
+      "mobile": {
+        "type": "object",
+        "properties": {
+          "adbResponse": {
+            "type": "string",
+            "enum": ["Allow", "Block", "Warn"]
+          },
+          "bluetoothControlResponse": {
+            "type": "string",
+            "enum": ["Allow", "Block", "Warn"]
+          },
+          "bluetoothEnabledResponse": {
+            "type": "string",
+            "enum": ["Allow", "Block", "Warn"]
+          },
+          "developerResponse": {
+            "type": "string",
+            "enum": ["Allow", "Block", "Warn"]
+          },
+          "gpsEnabledResponse": {
+            "type": "string",
+            "enum": ["Allow", "Block", "Warn"]
+          },
+          "hardwareKeyboardResponse": {
+            "type": "string",
+            "enum": ["Allow", "Block", "Warn"]
+          }
+        }
+      }
+    }
+  }
+}

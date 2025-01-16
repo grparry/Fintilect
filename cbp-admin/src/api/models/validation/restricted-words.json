@@ -1,0 +1,65 @@
+{
+  "RestrictedWordsSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "wordLists": {
+        "type": "object",
+        "properties": {
+          "usernames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "passwords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "customFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "validation": {
+        "type": "object",
+        "properties": {
+          "caseSensitive": {
+            "type": "boolean"
+          },
+          "wholeWordOnly": {
+            "type": "boolean"
+          },
+          "allowPartialMatches": {
+            "type": "boolean"
+          }
+        }
+      },
+      "actions": {
+        "type": "object",
+        "properties": {
+          "onMatch": {
+            "type": "string",
+            "enum": ["Block", "Warn", "Log"]
+          },
+          "customMessage": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

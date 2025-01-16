@@ -1,0 +1,393 @@
+﻿
+
+    <!-- sorry, these styles have to be local. No telling what page will call this view -->
+    <style type="text/css">
+        .search-member-modal-body table th {
+            color:#222222;
+        }
+
+        .search-member-modal-body .form-control {
+            display: inline-block;
+        }
+
+        .search-member-modal-body .alert-danger {
+            margin-bottom: 14px;
+            color: #b94a48;
+              background-color: #f2dede;
+              border-color: #eed3d7;
+        }
+
+        .label-div {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right:10px;
+        }
+
+        .nav-tabs > li > a {
+            border-radius: 3px 3px 0 0;
+            color: #999999;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            border: 1px solid #DDDDDD;
+            border-bottom:2px solid #FFFFFF;
+        }
+
+        .tab-pane {
+            padding:20px 10px;
+        }
+
+        .tab-content {
+            border:1px solid #DDDDDD;
+            border-radius:3px;
+        }
+
+        #SearchMemberResultsDiv {
+            margin:20px 14px;
+        }
+        
+        .member-form-inline.flex {
+            box-sizing: border-box;
+            display: -webkit-flex;  /* Safari */
+            display: flex;
+            align-items: center;
+            margin-bottom:14px; 
+            clear:both;
+        }
+
+        .member-form-inline div:first-child {
+            flex: 1;
+            text-align: right;
+        }
+
+        .member-form-inline div:last-child {
+            flex: 2;
+            text-align: left;
+        }
+
+        @@media (max-width: 540px) {
+            .member-form-inline.flex {
+                display: block;   
+            }
+
+            .member-form-inline div:first-child {
+                flex: 1;
+                text-align: left;
+            }
+
+            .member-form-inline div:last-child {
+                flex: 1;
+                text-align: left;
+            }
+        }
+
+    </style>
+ 
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">
+        Member Search
+    </h4>
+</div>
+
+<div class="modal-body search-member-modal-body">
+    <!-- FAILURE DIV -->
+    <div id="FailureDiv" class="alert alert-danger space-below-md" style="display:none;">
+        Failure. A network error has occured. Please try again.
+    </div>
+
+    <!-- NO MEMBERS FOUND DIV -->
+    <div id="FailureDiv" class="alert alert-warning space-below-md" style="display:none;">
+        Sorry. No members were found. Please try again.
+    </div>
+
+    <!-- VALIDATION DIV -->
+    <div id="ValidationWarningDiv" class="alert alert-danger space-below-md" style="display:none;">
+        Please enter valid account information.
+    </div>
+     
+    <div id="MemberSearchDiv">
+
+        @if (@ViewBag.CoreType == "dna")
+        {
+            <div id="DnaSearch">
+                @using (Ajax.BeginForm("GetDnaMember", "ErrorMessages", null, new AjaxOptions
+                    {
+                        HttpMethod = "GET",
+                        OnBegin = "OmegaSearchMemberPartialViewModule.onFindDnaMemberBegin",
+                        OnSuccess = "OmegaSearchMemberPartialViewModule.onFindDnaMemberSuccess",
+                        OnFailure = "OmegaSearchMemberPartialViewModule.onFailure"
+                    }, new { id = "dnaForm" }))
+
+                    {
+                    <div>
+                        <div class="member-form-inline flex">
+                            <div class="label-div">DNA Member Number</div>
+                            <div>
+                                <input id="DnaMemberNumberTextbox" name="DnaMemberNumberTextbox" type="text" placeholder="Enter DNA Member Number" class="form-control" style="width:280px; vertical-align: middle; display:inline-block;" />&nbsp;&nbsp;OR
+                            </div>
+                        </div>
+
+                        <div class="member-form-inline flex">
+                            <div class="label-div">Person Record Number</div>
+                            <div>
+                                <input id="DnaPersonRecordNumberTextbox" name="DnaPersonRecordNumberTextbox" type="text" placeholder="Enter Person Record Number" class="form-control form-control-inline" style="width:280px; vertical-align: middle;" />&nbsp;&nbsp;OR
+                            </div>
+                        </div>
+
+                        <div class="member-form-inline flex">
+                            <div class="label-div">E-Agreement Number</div>
+                            <div>
+                                <input id="DnaEAgreementTextbox" name="DnaEAgreementTextbox" type="text" placeholder="Enter E-Agreement Number" class="form-control form-control-inline" style="width:280px; vertical-align: middle;" />&nbsp;&nbsp;OR
+                            </div>
+                        </div>
+
+                        <div class="member-form-inline flex">
+                            <div class="label-div">User ID (Account Alias)</div>
+                            <div>
+                                <input id="DnaUserIdTextbox" name="DnaUserIdTextbox" type="text" placeholder="Enter User ID" class="form-control form-control-inline" style="width:280px; vertical-align: middle;" />
+                            </div>
+                        </div>
+
+                        <div class="member-form-inline flex">
+                            <div class="label-div"><!-- sp --></div>
+                            <div>
+                                <input id="DnaSearchSubmitButton" type="submit" value="Search" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div><!-- END DnaSearch -->
+        }
+        else
+        {
+            <div id="MemberSearch">
+
+                @using (Ajax.BeginForm("GetMember", "ErrorMessages", null, new AjaxOptions
+                    {
+                        HttpMethod = "GET",
+                        OnBegin = "OmegaSearchMemberPartialViewModule.onFindMemberBegin",
+                        OnSuccess = "OmegaSearchMemberPartialViewModule.onFindMemberSuccess",
+                        OnFailure = "OmegaSearchMemberPartialViewModule.onFailure"
+
+                    }, new { id = "memberForm" }))
+
+                    {
+                    <div class="form-horizontal" style="margin-bottom:14px;">
+                        <div class="label-div">Member Number</div>
+                        <input id="MemberNumberTextbox" name="MemberNumberTextbox" type="text" placeholder="Enter Member Number" class="form-control form-control-inline" style="width:280px; vertical-align: middle;" />&nbsp;
+                        <input id="MemberSearchSubmitButton" type="submit" value="Search" class="btn btn-primary form-control-inline" style="vertical-align: middle;" />
+                    </div>
+                }
+
+            </div><!-- END MemberSearch -->
+        }
+ 
+        <!-- LOADING DIV -->
+        <div id="SpinningLoaderDiv" class="text-center" style="display:none; margin-top:10px;">
+            <img src="~/Images/ajax_loader.gif" alt="loading" /> &nbsp;Loading...
+        </div>
+    </div><!-- END MemberSearchDiv -->
+
+    <!-- FOUND MULTIPLE MEMBERS -->
+    <div id="SearchMemberResultsDiv" style="display:none;">
+        <!-- content here will be replaced by _MemberSearchResult partial view if multiple members are found -->
+    </div>
+
+    <hr style="border-bottom:1px solid #DDDDDD;" />
+
+ </div><!-- End modal-body -->
+
+        <script>
+            $("#MemberSearchSubmitButton").click(function () {
+                document.getElementById("MemberNumberSpan").innerHTML = $("#MemberNumberTextbox").val();
+            });
+
+            $("#DnaSearchSubmitButton").click(function () {
+                if ($("#DnaMemberNumberTextbox").val() != "") {
+                    document.getElementById("MemberNumberSpan").innerHTML = $("#DnaMemberNumberTextbox").val()
+                }
+                if ($("#DnaPersonRecordNumberTextbox").val() != "") {
+                    document.getElementById("MemberNumberSpan").innerHTML = $("#DnaPersonRecordNumberTextbox").val()
+                }
+                if ($("#DnaEAgreementTextbox").val() != "") {
+                    document.getElementById("MemberNumberSpan").innerHTML = $("#DnaEAgreementTextbox").val()
+                }
+                if ($("#DnaUserIdTextbox").val() != "") {
+                    document.getElementById("MemberNumberSpan").innerHTML = $("#DnaUserIdTextbox").val()
+                }
+            });
+
+            var OmegaSearchMemberPartialViewModule = OmegaSearchMemberPartialViewModule || {};
+
+            OmegaSearchMemberPartialViewModule = (function () {
+                var _inDelay = false;
+
+                // REGULAR MEMBER:
+                // Validate form before attempting to submit it:
+                var _onFindMemberBegin = function () {
+                    console.log("Got here: _onFindMemberBegin");
+
+                    document.getElementById("MemberNumberTextbox").style.outline = "none";
+                    $("#SearchMemberResultsDiv").hide();
+                    $("#FailureDiv").hide();
+
+                    var re = new RegExp("^[0-9]+$");
+
+                    if (!re.test($("#MemberNumberTextbox").val())) {
+                        $("#ValidationWarningDiv").show();
+                        document.getElementById("MemberNumberTextbox").style.outline = "solid 1px #b94a48";
+                        return false;
+                    } else {
+                        _resetFields();
+                        _inDelay = setTimeout(_showSpinner, 1000); // using setTimeout because jQuery delay only works on animate
+                    };
+                };
+
+                // DNA MEMBER:
+                // Validate form before attempting to submit it:
+                var _onFindDnaMemberBegin = function () {
+                    console.log("Got here: _onFindDnaMemberBegin");
+
+                    $("#SearchMemberResultsDiv").hide();
+                    $("#FailureDiv").hide();
+
+                    // First, see if they are all empty:
+                    if ($("#DnaMemberNumberTextbox").val() == "" && $("#DnaPersonRecordNumberTextbox").val() == "" &&
+                            $("#DnaEAgreementTextbox").val() == "" && $("#DnaUserIdTextbox").val() == "") {
+                        $("#ValidationWarningDiv").show();
+                        document.getElementById("DnaMemberNumberTextbox").style.outline = "solid 1px #b94a48";
+                        document.getElementById("DnaPersonRecordNumberTextbox").style.outline = "solid 1px #b94a48";
+                        document.getElementById("DnaEAgreementTextbox").style.outline = "solid 1px #b94a48";
+                        document.getElementById("DnaUserIdTextbox").style.outline = "solid 1px #b94a48";
+                        return false;
+                    }
+
+                    // Check for a filled out field:
+                    var dnaMemberPersonPattern = /^\d{1,25}$/;
+                    var eAgreementUserPattern = /^[a-zA-Z0-9]*$/;
+
+                    if (!dnaMemberPersonPattern.test($("#DnaMemberNumberTextbox").val()) && $("#DnaMemberNumberTextbox").val().length > 0) {                             // Check for Dna Member Number
+                        $("#ValidationWarningDiv").show();
+                        document.getElementById("DnaMemberNumberTextbox").style.outline = "solid 1px #b94a48";
+                        return false;
+                    } else if (!dnaMemberPersonPattern.test($("#DnaPersonRecordNumberTextbox").val()) && $("#DnaPersonRecordNumberTextbox").val().length > 0) {                             // Check for Dna Member Number
+                        $("#ValidationWarningDiv").show();
+                        document.getElementById("DnaPersonRecordNumberTextbox").style.outline = "solid 1px #b94a48";
+                        return false;
+                    } else if (!eAgreementUserPattern.test($("#DnaEAgreementTextbox").val()) && $("#DnaEAgreementTextbox").val().length > 0) {                             // Check for Dna Member Number
+                        $("#ValidationWarningDiv").show();
+                        document.getElementById("DnaEAgreementTextbox").style.outline = "solid 1px #b94a48";
+                        return false;
+                    } else if (!eAgreementUserPattern.test($("#DnaUserIdTextbox").val()) && $("#DnaUserIdTextbox").val().length > 0) {                             // Check for Dna Member Number
+                        $("#ValidationWarningDiv").show();
+                        document.getElementById("DnaUserIdTextbox").style.outline = "solid 1px #b94a48";
+                        return false;
+                    } else {
+                        $("#ValidationWarningDiv").hide();
+                        _resetDnaFields();
+                        _inDelay = setTimeout(_showSpinner, 1000); // using setTimeout because jQuery delay only works on animate
+                    };
+                };
+
+                // show the spinner in a div to let the user know that the record is loading
+                var _showSpinner = function () {
+                    $('#SpinningLoaderDiv').show("normal");
+                }
+
+                var _resetDnaFields = function () {
+                    document.getElementById("DnaMemberNumberTextbox").style.outline = "none";
+                    document.getElementById("DnaPersonRecordNumberTextbox").style.outline = "none";
+                    document.getElementById("DnaEAgreementTextbox").style.outline = "none";
+                    document.getElementById("DnaUserIdTextbox").style.outline = "none";
+
+                    document.getElementById("DnaMemberNumberTextbox").value = "";
+                    document.getElementById("DnaPersonRecordNumberTextbox").value = "";
+                    document.getElementById("DnaEAgreementTextbox").value = "";
+                    document.getElementById("DnaUserIdTextbox").value = "";
+
+                    $("#ValidationWarningDiv").hide();
+                };
+
+                var _resetFields = function () {
+                    document.getElementById("MemberNumberTextbox").style.outline = "none";
+                    document.getElementById("MemberNumberTextbox").value = "";
+
+                    $("#ValidationWarningDiv").hide();
+                };
+
+                // Success handler member
+                var _onFindMemberSuccess = function (data) {
+                    console.log("Got here: _onFindMemberSuccess");
+                    clearTimeout(_inDelay);
+                    $("#SpinningLoaderDiv").hide();
+                    $("#FailureDiv").hide();
+
+                    if (data.indexOf("OmegaSearchMemberResultPartialViewModule") != -1) {   // the result is a list of members
+                        $("#SearchMemberResultsDiv").empty();
+                        $("#SearchMemberResultsDiv").append(data);      // since we are appending a complex data set, do not use .innerHTML
+                        $("#SearchMemberResultsDiv").show("normal");    // this is cool... we are replacing this div with a the _MemberSearchResult partial view through javascript.
+                    } else {
+                        $(".message-result-header").show();             // note, these id's are on the index page, not in this partial view
+                        $(".message-result-search").show();
+                        $("#SearchResultDiv").empty();
+                        $("#SearchResultDiv").append(data);             // fill the div with the _MeaningfulErrorMessagesList.cshtml partial view.
+                        $("#SearchResultDiv").show();                   // these are the meaningful messages
+                        $("#SearchMemberResultsDiv").hide();            // hide search results of Member Search, not meaningful messages
+                        _resetFields();
+                        $("#RefreshMessagesButton").show();
+                        $("#search-member-modal").modal("hide");
+                    }
+                }
+
+                // Success handler DNA
+                var _onFindDnaMemberSuccess = function (data) {
+                    console.log("Got here: _onFindDnaMemberSuccess");
+                    clearTimeout(_inDelay);
+                    $("#SpinningLoaderDiv").hide();
+                    $("#FailureDiv").hide();
+                    if (data.indexOf("OmegaSearchMemberResultPartialViewModule") != -1) {   // the result is a list of members
+                        $("#SearchMemberResultsDiv").empty();
+                        $("#SearchMemberResultsDiv").append(data);      // since we are appending a complex data set, do not use .innerHTML
+                        $("#SearchMemberResultsDiv").show("normal");    // this is cool... we are replacing this div with a the _MemberSearchResult partial view through javascript.
+                    } else {                                            // we have messages. close this modal and show them on the index view
+                        $(".message-result-header").show();             // note, these id's are on the index page, not in this partial view
+                        $(".message-result-search").show();
+                        $("#SearchResultDiv").empty();
+                        $("#SearchResultDiv").append(data);             // fill the div with the _MeaningfulErrorMessagesList.cshtml partial view.
+                        $("#SearchResultDiv").show("normal");           // these are the meaningful messages
+                        $("#SearchMemberResultsDiv").hide();            // hide search results of Member Search, not meaningful messages
+                        _resetDnaFields();
+                        $("#RefreshMessagesButton").show();
+                        $("#search-member-modal").modal("hide");
+                    }
+                }
+
+                // Failure handler
+                var _onFailure = function () {
+                    console.log("Got here: _onFailure")
+                    clearTimeout(_inDelay);
+                    $("#SpinningLoaderDiv").hide();
+                    $("#FailureDiv").show("normal");
+                    document.getElementById("MemberNumberSpan").innerHTML = "";
+                }
+
+
+                // public interface:
+                return {
+                    onFindMemberBegin: _onFindMemberBegin,
+                    onFindDnaMemberBegin: _onFindDnaMemberBegin,
+                    onFindMemberSuccess: _onFindMemberSuccess,
+                    onFindDnaMemberSuccess: _onFindDnaMemberSuccess,
+                    onFailure: _onFailure
+                }
+
+            })();
+
+        </script>
+
+
+
+
+    

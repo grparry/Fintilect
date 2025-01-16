@@ -1,0 +1,22 @@
+{
+  "CheckImagesSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/CheckImagesSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/CheckImagesFeatures"
+      },
+      "simnetConfiguration": {
+        "$ref": "./simnet-configuration.json#/SimnetConfiguration"
+      },
+      "validation": {
+        "$ref": "./validation.json#/ValidationSettings"
+      }
+    }
+  }
+}

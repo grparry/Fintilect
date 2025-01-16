@@ -1,0 +1,170 @@
+﻿ /* Alerts 2.0 styles */
+
+.main-content {
+	 font-size: 14px;
+ }
+
+.main-content table {
+	 background-color: #ffffff;
+ }
+
+.main-content th {
+	color: #222222;
+	text-align: left;
+	padding: 5px;
+	letter-spacing: normal;
+	font-size: 14px;
+	text-transform: uppercase;
+	background: none;
+	background-color: #FFFFFF;
+}
+
+.main-content tbody tr td {
+	font-size: 14px;
+	vertical-align: middle;
+}
+
+.main-content table .text-center {
+	text-align: center;
+ }
+
+.form-control-inline {
+	display: inline-block;
+	width: 85%;
+}
+
+ .form-control-inline-wide {
+	display: inline-block;
+	width: 95%;
+	 position: relative;
+	 top: 0;
+}
+ 
+h1 {
+	font-family: Arial, sans-serif;
+	font-size: 16px;
+	letter-spacing:0;
+}
+
+a {
+	font-weight: normal;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.div-clear {
+	position: relative;
+	top: 0;
+}
+
+.main-content .panel-heading   {
+	padding: 4px 15px;
+}
+
+.bottom-nav-link {
+	display:inline-block; 
+	margin-bottom: 4px;
+}
+
+.member-info-bar {
+	border: solid 1px #D4D4D4;
+	margin-bottom: 14px;
+	padding: 12px 15px 8px 15px;
+	background-color: #F7F7F7;
+}
+
+.member-info-bar-header {
+	font-size: 18px;
+}
+
+.member-info-bar-details {
+	margin-top: 6px;
+	font-size: 90%;
+	color: #999999;
+}
+
+.member-info-bar-detail-item {
+	display: inline-block;
+}
+
+.pad-left {
+	margin-left: 24px;
+}
+
+#divGridview {
+	position: relative;
+	top: 0;
+	margin-bottom: 32px;
+}
+
+.section-heading {
+	background-color: #F3F3F3;
+	border-bottom: none;
+	border-left: solid 1px #DDDDDD;
+	border-right: solid 1px #DDDDDD;
+	border-top: solid 1px #DDDDDD;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	display: block;
+	line-height: normal;
+	padding: 8px 8px;
+	font-weight: bold;
+}
+
+.div-details-section {
+	border-left: solid 1px #DDDDDD;
+	border-right: solid 1px #DDDDDD;
+	border-bottom: solid 1px #DDDDDD;
+	padding: 14px;
+	min-height: 340px;
+
+}
+
+.tab-content {
+	padding: 14px;
+	border-left: solid 1px #DDDDDD;
+	border-right: solid 1px #DDDDDD;
+	border-bottom: solid 1px #DDDDDD;
+}
+
+.nav.nav-tabs a {
+	display: inline-block;
+}
+
+ .trigger-table-header th {
+	 text-transform:initial;
+ }
+
+ .popover-online-banking, .popover-email-message, .popover-sms, .popover-pushnotification {
+	 float: right;
+	 left: -14px;
+ }
+
+ #template-list {
+	 margin-top: 38px;
+	 margin-left: -10px;
+	 padding-left: 0;
+	 border: 0px solid #FFF;
+	 padding-right: 10px;
+	 height: 124px;
+ }
+
+.selectTemplatePlaceholdersSelector {
+	border: none;
+	width: 100%;
+	line-height: 24px;
+}
+
+.selectTemplatePlaceholdersSelector option {
+	padding: 3px 2px;
+}
+
+.empty {
+	 color: gray;
+}
+
+.hideGridColumn {
+	display: none;
+}

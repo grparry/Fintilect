@@ -15,13 +15,13 @@ export const TIME_RANGES: TimeRangeOption[] = [
   { label: 'This Week', value: TimeRange.WEEK },
   { label: 'This Month', value: TimeRange.MONTH },
   { label: 'This Year', value: TimeRange.YEAR }
-] as const;
+];
 
 export const CHART_VIEWS: ChartViewOption[] = [
   { label: 'Line', value: 'line' },
   { label: 'Bar', value: 'bar' },
   { label: 'Pie', value: 'pie' }
-] as const;
+];
 
 export const mockDashboardStats = (): BillPayStats => ({
   totalTransactions: 450,

@@ -1,0 +1,40 @@
+{
+  "AdminSettings": {
+    "type": "object",
+    "properties": {
+      "account": {
+        "$ref": "./account-settings.json#/AdminAccountSettings"
+      },
+      "accountNumberReassignment": {
+        "$ref": "./account-number-reassignment.json#/AccountNumberReassignmentSettings"
+      },
+      "auditLogs": {
+        "$ref": "./audit-logs.json#/AuditLogsSettings"
+      },
+      "device": {
+        "$ref": "./device-settings.json#/DeviceSettings"
+      },
+      "enrollment": {
+        "$ref": "./enrollment.json#/EnrollmentSettings"
+      },
+      "member": {
+        "$ref": "./member-settings.json#/MemberSettings"
+      },
+      "memberView": {
+        "$ref": "./member-view.json#/MemberViewSettings"
+      },
+      "mfa": {
+        "$ref": "./mfa-settings.json#/MfaSettings"
+      },
+      "securityCodeVerification": {
+        "$ref": "./security-code-verification.json#/SecurityCodeVerificationSettings"
+      },
+      "sms": {
+        "$ref": "./sms-settings.json#/SmsSettings"
+      },
+      "transfer": {
+        "$ref": "./transfer-settings.json#/TransferSettings"
+      }
+    }
+  }
+}

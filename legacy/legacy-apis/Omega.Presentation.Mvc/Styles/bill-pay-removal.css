@@ -1,0 +1,110 @@
+﻿/*  bill pay removal styles */
+
+.instructions {
+    margin-top: 1.2rem;
+    margin-bottom: 3rem;
+    font-size: 110%;
+}
+
+#memberIdentifierDiv div {
+    margin-bottom: 1rem;
+}
+
+.form-control-inline {
+    display: inline-block;
+}
+
+.or-div {
+    margin: 6px auto;
+}
+
+.search-member-block {
+    margin-bottom: 14px;
+}
+
+.space-below-sm {
+    margin-bottom: 14px;
+}
+
+.space-below-lg {
+    margin-bottom: 48px;
+}
+
+.button-field {
+    position: relative;
+    top: -2px;
+    left: 4px;
+}
+
+.loading-div {
+    margin: 14px auto;
+    min-height: 40px;
+    display: none;
+    background-color: #ffffff;
+    border-radius: 3px;
+    color: #222222;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Flex Columns */
+.info-bar {
+    background-color: rgba(255,255,255,0.3);
+    border-radius: 3px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 5px 10px;
+}
+
+.flex-container {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+}
+
+.sub-div {
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.div-1-of-2 {
+    -webkit-flex: 1;
+    flex: 1;
+    text-align: left;
+    margin-right: auto;
+    width: 50%;
+}
+
+.div-2-of-2 {
+    -webkit-flex: 1;
+    flex: 1;
+    text-align: right;
+    margin-left: auto;
+    width: 49%;
+}
+
+.div-1-of-3 {
+    -webkit-flex: 1;
+    flex: 1;
+    text-align: left;
+    margin-right: auto;
+    width: 33%;
+}
+
+.div-2-of-3 {
+    -webkit-flex: 1;
+    flex: 1;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 33%;
+}
+
+.div-3-of-3 {
+    -webkit-flex: 1;
+    flex: 1;
+    text-align: right;
+    margin-left: auto;
+    width: 32%;
+}

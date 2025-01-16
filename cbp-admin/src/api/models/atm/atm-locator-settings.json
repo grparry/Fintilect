@@ -1,0 +1,16 @@
+{
+  "ATMLocatorSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/ATMLocatorSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/ATMLocatorFeatures"
+      }
+    }
+  }
+}

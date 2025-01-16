@@ -1,0 +1,12 @@
+﻿@model Omega.Presentation.Mvc.Models.FeaturesManager.SettingsModel
+<div id="allSettings">
+    @{
+        var settings = Model.Settings.OrderBy(f => f.Name).ToList();
+        foreach (var setting in settings)
+        {
+            <div search-row-sets class="search-list-button" setting-id="@setting.Id" setting-name="@setting.Name" onclick="FeaturesManager.LoadSetting(this);">
+                @setting.Name
+            </div>
+        }
+    }
+</div>    

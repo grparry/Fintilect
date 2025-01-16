@@ -1,0 +1,141 @@
+﻿@model Omega.Presentation.Mvc.Models.ThemeDeployment.UpdateBundleViewModel
+
+<div class="modal fade destroy-when-closed">
+    <!-- Modal Layout -->
+    <div class="modal-dialog modal-lg">
+        <div id="partial-view-modal-content" class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                <h4 class="modal-title">
+                    Select Theme Bundles
+                </h4>
+            </div>
+
+            <div class="modal-body content">
+                <div class="panel panel-default">
+
+                    <table class="table theme-list">
+                        <thead>
+                            <tr style="border-bottom: 0px solid black;">
+                                <td>Theme</td>
+                                <td>Include In Deploy?</td>
+                                <td>Min iOS Version</td>
+                                <td>Min Android Version</td>
+                                <td>Addt. Notes</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>@Model.Deploy.MinIosVersion</td>
+                                <td>@Model.Deploy.MinIosVersion</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var theme in Model.Themes)
+                            {
+                                <tr>
+                                    <td>@theme.Title</td>
+                                    <td>
+
+                                        <div>
+                                            @if (Model.Deploy.ThemeBundles != null && Model.Deploy.ThemeBundles.Contains(theme.PublicId.ToString()))
+                                            {
+
+                                                <input class="bundle-selection" type="checkbox" value="@theme.PublicId" checked/>
+                                            }
+                                            else
+                                            { 
+                                                <input class="bundle-selection" type="checkbox" value="@theme.PublicId"/>
+                                            }
+
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        -- @theme.MinimumIosVersion
+                                        @if (System.Version.Parse(Model.Deploy.MinIosVersion == null ? "0.0.0.0" : Model.Deploy.MinIosVersion) > System.Version.Parse(theme.MinimumIosVersion == null ? "0.0.0.0" : theme.MinimumIosVersion))
+                                        {
+                                            <p class="text-danger">Theme minimum iOS version is less than the deploy version</p>
+                                        }
+                                    </td>
+                                    <td>
+                                        -- @theme.MinimumIosVersion
+                                        @if (System.Version.Parse(Model.Deploy.MinAndroidVersion == null ? "0.0.0.0" : Model.Deploy.MinAndroidVersion) > System.Version.Parse(theme.MinimumAndroidVersion == null ? "0.0.0.0" : theme.MinimumAndroidVersion))
+                                        {
+                                            <p class="text-danger">Theme minimum android version is less than the deploy version</p>
+                                        }
+                                    </td>
+                                    <td>
+                                        -- @theme.Notes
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div><!-- End modal-body -->
+
+            @using (Ajax.BeginForm("UpdateBundle", "ThemeDeployment", new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnBegin = "PsiModal.BeginFormSubmit",
+                OnFailure = "PsiModal.FormSubmitFailed",
+                OnSuccess = "BundleUpdated"
+            }))
+            {
+                @Html.HiddenFor(x => x.Deploy.ThemeBundles, new {@id = "BundleData"})
+                @Html.HiddenFor(x => x.Deploy.DeploymentId)
+                @Html.HiddenFor(x => x.Deploy.Title)
+                @Html.HiddenFor(x => x.Deploy.Description)
+                @Html.HiddenFor(x => x.Deploy.DateCreatedUtc)
+                @Html.HiddenFor(x => x.Deploy.LastUpdatedUtc)
+                @Html.HiddenFor(x => x.Deploy.MinIosVersion)
+                @Html.HiddenFor(x => x.Deploy.MinAndroidVersion)
+                @Html.HiddenFor(x => x.Deploy.DeploymentVersion)
+                @Html.HiddenFor(x => x.Deploy.DefaultDeploymentVersion)
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary set-theme-selected-values">Add Selected Theme Bundles</button>
+                </div>
+            }
+
+            <script>
+                $(function () {
+
+                        $(".bundle-selection").on("change",function () {
+                            console.log("test");
+                            var vals = [];
+                            var checks = $(this).closest(".modal").find(".bundle-selection");
+                            for (var i = 0; i < checks.length; i++) {
+                                if (checks[i].value !== '' && checks[i].checked)
+                                    vals.push(checks[i].value);
+                            }
+
+                            $("#BundleData").val(vals.join(','));
+                        });
+                    })
+                    
+                    function BundleUpdated() {
+
+                                window.location.reload();
+                        
+                    }
+            
+            </script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

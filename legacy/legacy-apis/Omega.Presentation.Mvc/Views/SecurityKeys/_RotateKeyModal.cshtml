@@ -1,0 +1,83 @@
+﻿@model Psi.Data.Models.Domain.Keys.KeyModel
+
+<div class="modal fade">
+    <!-- Modal Layout -->
+    <div class="modal-dialog modal-lg">
+        <div id="partial-view-modal-content" class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+	            <h4 class="modal-title">
+		            Rotate Key "@Model.KeyName"
+	            </h4>
+            </div>
+
+	        @using (Ajax.BeginForm("AddKeyVersion", new AjaxOptions
+			{
+				HttpMethod = "POST",
+				OnBegin = "submitKeyVersion",
+				OnFailure = "addKeyVersionFailed",
+				OnSuccess = "addKeyVersionDone"
+			}))
+			{
+				<div class="modal-body">
+					<div class="rotate-options">
+						<p>
+							This will rotate the key and update CheckFree.
+						</p>
+
+                        @Html.HiddenFor(x => x.KeyId)
+					</div>
+			
+			
+					<div class="rotate-results" style="display: none;">
+						<div class="alert alert-success" style="color: #3c763d;">
+							<div>
+								<b id="key-status">Key Version Added Successfully</b>
+							</div>
+
+						</div>
+					</div>
+				</div><!-- End modal-body -->
+
+
+		        <div class="modal-footer">
+			        <button type="button" class="btn btn-default rotate-cancel" data-dismiss="modal">Cancel</button>
+			        <button type="button" class="btn btn-primary rotate-button" onclick="submitKeyRotate()">
+				        <span class='rotate-submitting' style="display: none;">
+					        <i class='fa fa-spin fa-spinner'></i>
+					        Rotating Key
+				        </span>
+				        <span class="rotate-not-submitting">
+					        Rotate Key
+				        </span>
+			        </button>
+		        </div>
+	        }
+			
+	        <script>
+                function submitKeyRotate() {
+                    $(".rotate-submitting").show();
+                    $(".rotate-not-submitting").hide();
+
+                    var keyId = "@Model.KeyId";
+                    var callback = function (data, status) {
+                        if (status === 'success') {
+                            $('#key-status').text('Key Rotated Successfully');
+                            $('.rotate-button').hide();
+                            $('.rotate-cancel').text('Close');
+                        } else {
+                            Util.ShowErrorInInnerHtml('#key-status', status);
+                        }
+                        $('.rotate-results').show();
+                    };
+
+                    $.post('@Url.Action("RotateKeyVersion")', { keyId }, callback)
+                        .fail(function () { window.location.href = '@Url.Action("index", "home")'; });
+                }
+            </script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

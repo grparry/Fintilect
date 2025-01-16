@@ -1,0 +1,16 @@
+{
+  "AccountHistorySettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/AccountHistorySettings"
+      },
+      "features": {
+        "$ref": "./features.json#/AccountHistoryFeatures"
+      }
+    }
+  }
+}

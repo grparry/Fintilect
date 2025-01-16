@@ -1,0 +1,18 @@
+﻿@model Psi.Data.Models.Domain.ContactUs.ContactUsLinkModel
+
+<div class="form-group">
+	@Html.LabelFor(m => m.Label, new {@class = "col-md-3 control-label"})
+	<div class="col-md-7">
+		@Html.TextBoxFor(m => m.Label, new {@class = "form-control"})
+	</div>
+</div>
+<div class="form-group">
+	@Html.LabelFor(m => m.Url, new {@class = "col-md-3 control-label"})
+	<div class="col-md-7">
+		@Html.TextBoxFor(m => m.Url, new {@class = "form-control"})
+	</div>
+</div>
+@Html.HiddenFor(m => m.Id)
+@Html.HiddenFor(m => m.ContactUsGroupId)
+<br />
+<br />

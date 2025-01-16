@@ -1,0 +1,22 @@
+{
+  "RegularAchTransfersSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "maxTransferAmount": {
+        "type": "number"
+      },
+      "minTransferAmount": {
+        "type": "number"
+      },
+      "transferFrequencies": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

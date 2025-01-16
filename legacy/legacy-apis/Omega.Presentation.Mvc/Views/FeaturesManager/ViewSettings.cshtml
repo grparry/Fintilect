@@ -1,0 +1,202 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.FeaturesManager
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model SettingsModel
+
+@{
+    ViewBag.Title = Model.FeatureGroup.Name + " Settings";
+    ViewBag.Subtitle = "Manage Settings for " + Model.Feature.Name + " Feature - " + Model.FeatureGroup.Name + " Group";
+    ViewBag.ActiveMenu = "features-manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BaseModel = Model;
+}
+
+@if (!SettingsManager.Settings.OmegaConfiguration.Features.FeaturesManagerEnabled)
+{
+    <div class="alert alert-info">
+        We are sorry to inform you that this feature is currently unavailable.
+    </div>
+}
+else
+{
+    <script>
+        var FeaturesManager = {
+            LoadSettings: function () {
+                alert("LoadSettings");
+                Util.ShowLoading();
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#setting-body').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#settingsBody', status);
+                    }
+                };
+                $.get('./GetSettingList', callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadSettingInProgress: false,
+            LoadSetting: function (sender) {
+                if (FeaturesManager.LoadSettingInProgress) return;
+                FeaturesManager.LoadSettingInProgress = true;
+                var $sender = $(sender);
+                var id = $sender.attr('setting-id');
+                var name = $sender.attr('setting-name');
+                FeaturesManager.LoadSettingById(id, name);
+            },
+            LoadSettingById: function (id, name, sender) {
+                $('.setting-button-selected').removeClass('feature-button-selected');
+                Util.ShowLoadingInInnerHtml('#settingsBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadSettingInProgress = false;
+                    if (status === 'success') {
+                        $('#settingsBody').html(data);
+                        $('#settingLabel').html(name);
+                        if (sender) sender.addClass('feature-button-selected');
+                        FeaturesManager.SearchSettingsRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#settingsBody', status);
+                    }
+                };
+                $.get('./GetSetting?id=' + id, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadSettingByName: function (name, sender) {
+                alert("LoadSettingByName");
+                $('.setting-button-selected').removeClass('feature-button-selected');
+                Util.ShowLoadingInInnerHtml('#settingsBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadSettingInProgress = false;
+                    if (status === 'success') {
+                        $('#settingsBody').html(data);
+                        $('#settingLabel').html(name);
+                        if (sender) sender.addClass('feature-button-selected');
+                        FeaturesManager.SearchSettingsRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#settingsBody', status);
+                    }
+                };
+                $.get('./GetSetting?name=' + escape(name), callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SearchSettingsRows: null,
+            SearchSettings: function (sender) {
+                var x = sender.value.toLowerCase();
+                x = escape(x);
+                var rows = FeaturesManager.SearchSettingsRows;
+                if (rows === null) {
+                    FeaturesManager.SearchSettingsRows = $('[search-row-keys]');
+                    rows = FeaturesManager.SearchSettingsRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('search-text').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            SearchSettingRows: null,
+            SearchSettings: function (sender) {
+                var x = sender.value.toLowerCase();
+                var rows = FeaturesManager.SearchSettingRows;
+                if (rows === null) {
+                    FeaturesManager.SearchSettingRows = $('[search-row-sets]');
+                    rows = FeaturesManager.SearchSettingRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('setting-name').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            EditSetting: function (sender, id, featureId, groupId) {
+                $("#editSettingModal").modal();
+                Util.ShowLoadingInInnerHtml('#editSettingModalBody');
+
+                var callback = function (data, status) {
+                    Util.HideLoading();
+                    FeaturesManager.LoadSettingInProgress = false;
+                    if (status === 'success') {
+                        $('#editSettingModalBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#editSettingModalBody', status);
+                    }
+                };
+                $.get('./EditSetting?id=' + id + '&featureId=' + featureId + '&groupId=' + groupId, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            }
+        }
+
+        var ApplicationConfigurationManager = {
+            SearchRows: null,
+            SetDisplayValue: function (key, displayValue) {
+                if (displayValue.length > 200)
+                    displayValue = displayValue.substring(0, 197) + "...";
+
+				$('[data-display-setting-key="' + key + '"]').text(displayValue);
+            },
+        };
+    </script>
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading-psi">
+                    Settings: &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="pull-right">
+                        @if (Model.User.PermissionLevel.CanView(PermissionLevel.Support))
+                        {
+                            <button type="button" class="btn btn-default btn-xs" onclick="FeaturesManager.EditSetting(this, '0', '@Model.Feature.Id', '@Model.FeatureGroup.Id');">
+                                New &nbsp;<span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        }
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <div>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control" id="searchSettingNames" placeholder="Search Settings" onkeyup="FeaturesManager.SearchSettings(this);" /><br />
+                        <div class="config-panel-body" id="settings-body">
+                            @Html.Partial("GetSettingList", Model)
+                        </div>
+                        <br />
+                        <a class="btn btn-default" href="@Url.Action("ViewFeatureGroups", "FeaturesManager", new {featureId = Model.Feature.Id})">Return to Groups</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="panel panel-default" id="settingsBody">
+                @Html.Partial("GetSetting", new AddUpdateSettingModel { Feature = Model.Feature, FeatureGroup = Model.FeatureGroup })
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="editSettingModal">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit @Model.FeatureGroup.Name Setting</h3>
+                </div>
+                <div class="modal-body" id="editSettingModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+}

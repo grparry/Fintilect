@@ -1,0 +1,49 @@
+﻿@using Omega.Presentation.Mvc.Views.Themes
+@model  Omega.Presentation.Mvc.Views.Themes.ThemeFileViewModel
+
+<div class="modal @(Model.FileType != FileType.Image ? "full-screen" : "") destroy-when-closed view-file-modal">
+    <!-- Modal Layout -->
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+	        <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title">@(Model.FileName)</h4>
+	        </div>
+
+                <div class="modal-body" style="padding:0;">
+					
+					@if (Model.FileType == FileType.Javascript || Model.FileType == FileType.Html)
+					{
+						<div class="code-container-full">
+							@Html.TextAreaFor(x => x.ContentString)
+						</div>
+					} else if (Model.FileType == FileType.Image)
+					{
+						<div class="img-container text-center">
+							<img class="img-responsive" src="@Url.Action("BrowserTestFile", "ThemeDownload", new {id = Model.ThemePublicId, filename = Model.FileName})" />
+						</div>
+					}
+
+				</div><!-- End modal-body -->
+
+
+                <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+        <script>
+	        $(function () {
+		        setTimeout(function () {
+					if ($("textarea[name=ContentString]").length)
+						CodeMirror.fromTextArea($("textarea[name=ContentString]")[0], {
+							lineNumbers: true,
+							lint: true,
+							readOnly: true,
+							gutters: ["CodeMirror-lint-markers"]});
+						}, 200);
+	        });
+        </script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

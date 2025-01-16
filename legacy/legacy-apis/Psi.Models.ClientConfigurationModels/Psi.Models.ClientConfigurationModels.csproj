@@ -1,0 +1,476 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0F02A8A3-4374-4D6A-BC59-E4E74DADC133}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Psi.Data.Models.ClientConfigurationModels</RootNamespace>
+    <AssemblyName>Psi.Data.Models.ClientConfigurationModels</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Agatha.Common, Version=1.3.2.0, Culture=neutral, PublicKeyToken=6f21cf452a4ffa13, processorArchitecture=MSIL">
+      <HintPath>..\packages\Agatha.Common.1.3.2\lib\net40\Agatha.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ApplicationConfiguration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ApplicationConfiguration.1.0.0.1\lib\net40\ApplicationConfiguration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.NLog444, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.NLog444.3.4.1\lib\net40\Common.Logging.NLog444.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Nager.Date, Version=1.22.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nager.Date.1.22.3\lib\net461\Nager.Date.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="SymitarShareDepositConfiguration">
+      <HintPath>..\..\OLB_Libs\Contracts\SymitarShareDepositConfiguration.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xPSI, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\xPSI.2.3.0.0\lib\net461\xPSI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Account\AccountAttributesSettings.cs" />
+    <Compile Include="Account\AccountMaskingSettings.cs" />
+    <Compile Include="Account\AccountOpening.cs" />
+    <Compile Include="Account\AccountSettings.cs" />
+    <Compile Include="Account\Cards.cs" />
+    <Compile Include="Account\CrossAccountSettings.cs" />
+    <Compile Include="Account\DebitCards.cs" />
+    <Compile Include="Account\Escheat.cs" />
+    <Compile Include="Account\JointOwners.cs" />
+    <Compile Include="Account\LinkedAccount.cs" />
+    <Compile Include="Account\PlaceHoldsOnAchTransactions.cs" />
+    <Compile Include="Account\ScheduledTransfers.cs" />
+    <Compile Include="Account\TransferLimits.cs" />
+    <Compile Include="Account\TransferTimeouts.cs" />
+    <Compile Include="Account\UsaEpay.cs" />
+    <Compile Include="Account\UseInformationalNoteInsteadOfTransferForAchTransactions.cs" />
+    <Compile Include="Account\WireTransfer.cs" />
+    <Compile Include="Account\AchTransfer.cs" />
+    <Compile Include="Account\Transfers.cs" />
+    <Compile Include="AchService\AchFileService.cs" />
+    <Compile Include="ADACompliance\ADAComplianceSettings.cs" />
+    <Compile Include="ADACompliance\DocCenterSettings.cs" />
+    <Compile Include="Address\ChangeAddress.cs" />
+    <Compile Include="Address\MultipleAddressesPage.cs" />
+    <Compile Include="Address\MultipleAddressesSettings.cs" />
+    <Compile Include="Admin\AccountNumberReassignmentSettings.cs" />
+    <Compile Include="Admin\AccountSettings.cs" />
+    <Compile Include="Admin\AdminSettings.cs" />
+    <Compile Include="Admin\AuditLogs.cs" />
+    <Compile Include="Admin\DeviceSettings.cs" />
+    <Compile Include="Admin\Enrollment.cs" />
+    <Compile Include="Admin\MemberSettings.cs" />
+    <Compile Include="Admin\MemberView.cs" />
+    <Compile Include="Admin\MfaSettings.cs" />
+    <Compile Include="Admin\SecurityCodeVerificationSettings.cs" />
+    <Compile Include="Admin\SmsSettings.cs" />
+    <Compile Include="Admin\TransferSettings.cs" />
+    <Compile Include="Alerts\AdHocAlerts.cs" />
+    <Compile Include="Alerts\Alert.cs" />
+    <Compile Include="Alerts\ConnectNative.cs" />
+    <Compile Include="Alerts\ExternalEvents.cs" />
+    <Compile Include="Alerts\MessagePumps.cs" />
+    <Compile Include="Alexa\AlexaFeature.cs" />
+    <Compile Include="AppInfoSettings\AppInfoSettings.cs" />
+    <Compile Include="Application\Omega\AccountNumberAssociation.cs" />
+    <Compile Include="Application\Omega\DocumentArchitectSso.cs" />
+    <Compile Include="AtmLocator\AtmLocatorSettings.cs" />
+    <Compile Include="Authentication\OutOfBandActionSetting.cs" />
+    <Compile Include="Authentication\OutOfBandAuthentication.cs" />
+    <Compile Include="Beneficiary\BeneficiarySettings.cs" />
+    <Compile Include="BillPay\BillMatrix.cs" />
+    <Compile Include="BillPay\CheckFreeAdmin.cs" />
+    <Compile Include="BillPay\Metavante.cs" />
+    <Compile Include="BillPay\SymmetryBillPay.cs" />
+    <Compile Include="Boku\BokuSettings.cs" />
+    <Compile Include="Chat\Comm100.cs" />
+    <Compile Include="Chat\GliaSettings.cs" />
+    <Compile Include="Chat\TalkativeChatSettings.cs" />
+    <Compile Include="CheckReorder\MainStreetCheckReorder.cs" />
+    <Compile Include="ConnectNative\ConnectNativeAccountHistory.cs" />
+    <Compile Include="CreditCards\GoToMyCard.cs" />
+    <Compile Include="CreditCards\PscuSso.cs" />
+    <Compile Include="CreditScoreHistory\CreditScoreHistorySettings.cs" />
+    <Compile Include="CustomPages\DiscountTicketsSettings.cs" />
+    <Compile Include="Email\MultipleEmailSettings.cs" />
+    <Compile Include="Estatements\BitEstatements.cs" />
+    <Compile Include="Estatements\NcpEstatements.cs" />
+    <Compile Include="Estatements\WebApiEstatementsSettings.cs" />
+    <Compile Include="History\LinkedAccountHistory.cs" />
+    <Compile Include="HomeBankingLogin\UsernameSettings.cs" />
+    <Compile Include="ImiMobileTextBanking\ImiMobileTextBankingSettings.cs" />
+    <Compile Include="InfoImageEstatements\InfoImageEstatementsSettings.cs" />
+    <Compile Include="IntegratedEnrollment\IntegratedEnrollmentSettings.cs" />
+    <Compile Include="LoanOffersSso\CuNexusLoanOfferSso.cs" />
+    <Compile Include="LoanOffers\LoanOfferSettings.cs" />
+    <Compile Include="Marketing\Marketing.cs" />
+    <Compile Include="Marketing\NextMarketing.cs" />
+    <Compile Include="Membership\MultiAccountAccess.cs" />
+    <Compile Include="MeridianLinkSso\MeridianLinkSsoSettings.cs" />
+    <Compile Include="MobileConfigurations\Accounts\LinkedAccounts.cs" />
+    <Compile Include="MobileConfigurations\BillPay\BillMatrix.cs" />
+    <Compile Include="MobileConfigurations\CardControl\CreditCardSettings.cs" />
+    <Compile Include="MobileConfigurations\CardControl\DebitCardSettings.cs" />
+    <Compile Include="MobileConfigurations\CardControl\Locations\CreditCardLocationSettings.cs" />
+    <Compile Include="MobileConfigurations\CardControl\Locations\DebitCardLocationSettings.cs" />
+    <Compile Include="MobileConfigurations\CardControl\LostOrStolenCardSettings.cs" />
+    <Compile Include="MobileConfigurations\CardControl\OnDotSdkSettings.cs" />
+    <Compile Include="MobileConfigurations\DirectDeposit.cs" />
+    <Compile Include="MobileConfigurations\Larky.cs" />
+    <Compile Include="MobileConfigurations\LoanOffers\LoanOffers.cs" />
+    <Compile Include="MobileConfigurations\RateAndReview.cs" />
+    <Compile Include="MobileConfigurations\Rates.cs" />
+    <Compile Include="MobileConfigurations\SecureForms.cs" />
+    <Compile Include="MobileConfigurations\Security\Biometrics\FaceUnlock.cs" />
+    <Compile Include="MobileConfigurations\Security\Mfa\SmsSecurityCode.cs" />
+    <Compile Include="MobileConfigurations\Settings\ChangeUserInformation\ChangePhoneNumbers.cs" />
+    <Compile Include="MobileConfigurations\Settings\ChangeUserInformation\RequiredPhoneNumberField.cs" />
+    <Compile Include="Account\AnyMemberTransfers.cs" />
+    <Compile Include="MoneyDesktop\Enrollment.cs" />
+    <Compile Include="CreditCards\CreditCardSettings.cs" />
+    <Compile Include="CreditCards\OmahaSso.cs" />
+    <Compile Include="PersonPaymentSecuritySettings.cs" />
+    <Compile Include="PersonPayments\ZelleSettings.cs" />
+    <Compile Include="PhoneNumber\ChangePhone.cs" />
+    <Compile Include="Promotions\DeepTargetSettings.cs" />
+    <Compile Include="QcashLoanApplication\QcashLoanApplicationSettings.cs" />
+    <Compile Include="RemoteDeposit\ProfitStars.cs" />
+    <Compile Include="RestrictedWords\RestrictedWords.cs" />
+    <Compile Include="SecureFormsDesigner\SecureFormsDesignerSettings.cs" />
+    <Compile Include="SegMint\SegMintSettings.cs" />
+    <Compile Include="SynergyEstatements\SynergyEstatementsSettings.cs" />
+    <Compile Include="ThemeDeployment\ThemeDeployment.cs" />
+    <Compile Include="Login\LoginSettings.cs" />
+    <Compile Include="Application\ApplicationConfiguration.cs" />
+    <Compile Include="Application\Omega\Feature.cs" />
+    <Compile Include="Application\OnlineBankingConfiguration.cs" />
+    <Compile Include="Application\FlexUiConfiguration.cs" />
+    <Compile Include="Application\SparkUiConfiguration.cs" />
+    <Compile Include="AuditLogging\AuditLoggingFeature.cs" />
+    <Compile Include="Authentication\OnlineBankingApi.cs" />
+    <Compile Include="BetterLobby\BetterLobbySettings.cs" />
+    <Compile Include="BillPay\BillPayAdminMemberMenu.cs" />
+    <Compile Include="BillPay\BillPaySettings.cs" />
+    <Compile Include="BillPay\BillPay2.cs" />
+    <Compile Include="BillPay\CheckFree.cs" />
+    <Compile Include="BillPay\GoodFunds.cs" />
+    <Compile Include="BillPay\Help.cs" />
+    <Compile Include="BillPay\OutOfBand.cs" />
+    <Compile Include="BillPay\RecurringBillPay.cs" />
+    <Compile Include="BusinessBanking\BusinessBanking.cs" />
+    <Compile Include="BusinessBanking\TieredAccessFeature.cs" />
+    <Compile Include="Cardlytics\CardlyticsSettings.cs" />
+    <Compile Include="Cardlytics\CardlyticsWidget.cs" />
+    <Compile Include="CardManagement\CardManagementSettings.cs" />
+    <Compile Include="CheckImages\CheckImageOutputTypes.cs" />
+    <Compile Include="CheckImages\CheckImages.cs" />
+    <Compile Include="CheckImages\SimnetConfiguration.cs" />
+    <Compile Include="CheckImages\Validation.cs" />
+    <Compile Include="CheckingRewards\RealTimeRedemption.cs" />
+    <Compile Include="CheckReorder\CheckReorder.cs" />
+    <Compile Include="CheckReorder\HarlandCheckReorder.cs" />
+    <Compile Include="ClientConfigurationRepository.cs" />
+    <Compile Include="CoBrowse\CoBrowseSettings.cs" />
+    <Compile Include="ConfigProvider.cs" />
+    <Compile Include="ConnectNative\ConnectNativeSettings.cs" />
+    <Compile Include="ConnectNative\ConnectNativeTransfers.cs" />
+    <Compile Include="DirectDeposit\DirectDepositConfiguration.cs" />
+    <Compile Include="Email\ChangeEmail.cs" />
+    <Compile Include="Enrollment\EnrollmentFeature.cs" />
+    <Compile Include="ErrorMessages\ErrorMessageConfiguration.cs" />
+    <Compile Include="Estatements\DoximEstatements.cs" />
+    <Compile Include="Estatements\EplEstatements.cs" />
+    <Compile Include="Estatements\Estatements.cs" />
+    <Compile Include="Features\FeaturesSettings.cs" />
+    <Compile Include="FICO\FicoCreditScore.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\AccountTypeSettings.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\ApplicationSettings.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\CardTypeSettings.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\Enrollment.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\Funding.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\LossScreeningSettings.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\PersonTypeSettings.cs" />
+    <Compile Include="FinancialCores\LoanOriginationSettings.cs" />
+    <Compile Include="FinancialCores\PsiCore.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\PullCreditSettings.cs" />
+    <Compile Include="FinancialCores\Summit.cs" />
+    <Compile Include="FinancialCores\Corelation.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\AccountTypes.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\Identification.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\Notes.cs" />
+    <Compile Include="FinancialCores\DNA.cs" />
+    <Compile Include="FinancialCores\CorelationSettings\DraftLookup.cs" />
+    <Compile Include="FinancialCores\Epl.cs" />
+    <Compile Include="FinancialCores\FinancialCore.cs" />
+    <Compile Include="FinancialCores\Notes.cs" />
+    <Compile Include="FinancialCores\SummitSettings\RegularAchTransfers.cs" />
+    <Compile Include="FinancialCores\SymitarSettings\RemoteDepositCheckHoldSettings.cs" />
+    <Compile Include="FinancialCores\SymitarSettings\Symitar.cs" />
+    <Compile Include="Google\GoogleTags.cs" />
+    <Compile Include="History\DisplayCheckHolds.cs" />
+    <Compile Include="History\CardHistory.cs" />
+    <Compile Include="History\AccountHistory.cs" />
+    <Compile Include="History\HistoryDate.cs" />
+    <Compile Include="History\HistoryShare.cs" />
+    <Compile Include="HomeBankingLogin\HomeBankingLoginConfiguration.cs" />
+    <Compile Include="HomeBankingLogin\PasswordSettings.cs" />
+    <Compile Include="HomeBankingLogin\ReCaptchaSettings.cs" />
+    <Compile Include="Institution\Institution.cs" />
+    <Compile Include="Institution\MFAQuestions.cs" />
+    <Compile Include="Chat\LiveChatSettings.cs" />
+    <Compile Include="LoanSSO\ShowApplyForLoanOrCardButton.cs" />
+    <Compile Include="LoanSSO\CUDirectLoanSso.cs" />
+    <Compile Include="LoanSSO\HarlandLoanEngine.cs" />
+    <Compile Include="Loans\LoanSettings.cs" />
+    <Compile Include="Membership\Flags.cs" />
+    <Compile Include="Membership\MemberProfile.cs" />
+    <Compile Include="Membership\MembershipFeature.cs" />
+    <Compile Include="Membership\RemoveMemberFromOnlineBanking.cs" />
+    <Compile Include="Menu\MenuItems.cs" />
+    <Compile Include="MiniOao\MiniOaoSettings.cs" />
+    <Compile Include="MobileConfigurations\AccountOpening\AccountOpening.cs" />
+    <Compile Include="MobileConfigurations\AccountOpening\JoinCreditUnion\JoinCreditUnion.cs" />
+    <Compile Include="MobileConfigurations\AccountOpening\MiniOao\MiniOao.cs" />
+    <Compile Include="MobileConfigurations\Accounts\AccountHistoryQuickActions.cs" />
+    <Compile Include="MobileConfigurations\Accounts\Accounts.cs" />
+    <Compile Include="MobileConfigurations\Accounts\Nicknames.cs" />
+    <Compile Include="MobileConfigurations\AdvancePay.cs" />
+    <Compile Include="MobileConfigurations\Alerts.cs" />
+    <Compile Include="MobileConfigurations\AppMessages\AppMessages.cs" />
+    <Compile Include="MobileConfigurations\Authentication\Authentication.cs" />
+    <Compile Include="MobileConfigurations\BillPay\AddPayee\AddPayee.cs" />
+    <Compile Include="MobileConfigurations\BillPay\BillPay.cs" />
+    <Compile Include="MobileConfigurations\BillPay\CheckFree.cs" />
+    <Compile Include="MobileConfigurations\BillPay\MakePayment.cs" />
+    <Compile Include="MobileConfigurations\BillPay\NewBillPayInterface.cs" />
+    <Compile Include="MobileConfigurations\BillPay\PhotoBillPay\PhotoBillPay.cs" />
+    <Compile Include="MobileConfigurations\BillPay\RecurringBillPay.cs" />
+    <Compile Include="MobileConfigurations\Branding\Branding.cs" />
+    <Compile Include="MobileConfigurations\Branding\Font\Font.cs" />
+    <Compile Include="MobileConfigurations\Branding\Font\FontColor.cs" />
+    <Compile Include="MobileConfigurations\CardAlerts.cs" />
+    <Compile Include="MobileConfigurations\CardControl\CardControl.cs" />
+    <Compile Include="MobileConfigurations\CardControl\Locations\CardControlLocations.cs" />
+    <Compile Include="MobileConfigurations\CardControl\OndotDxSettings.cs" />
+    <Compile Include="MobileConfigurations\Chat\Comm100.cs" />
+    <Compile Include="MobileConfigurations\CheckDeposit.cs" />
+    <Compile Include="MobileConfigurations\ConnectNative.cs" />
+    <Compile Include="MobileConfigurations\ContactUs.cs" />
+    <Compile Include="MobileConfigurations\Deals\Cardlytics\Cardlytics.cs" />
+    <Compile Include="MobileConfigurations\Deals\CheckingRewards\CheckingRewards.cs" />
+    <Compile Include="MobileConfigurations\Deals\Deals.cs" />
+    <Compile Include="MobileConfigurations\Deals\RelevantSolutions\RelevantSolutions.cs" />
+    <Compile Include="MobileConfigurations\DigitalWallet.cs" />
+    <Compile Include="MobileConfigurations\DocumentCenter.cs" />
+    <Compile Include="MobileConfigurations\FicoCreditScore.cs" />
+    <Compile Include="MobileConfigurations\Enrollment.cs" />
+    <Compile Include="MobileConfigurations\Estatements.cs" />
+    <Compile Include="MobileConfigurations\ForgotUsername.cs" />
+    <Compile Include="MobileConfigurations\HouseHolding.cs" />
+    <Compile Include="MobileConfigurations\Loan\Applications\LoanApplication.cs" />
+    <Compile Include="MobileConfigurations\Loan\Calculators\AutoLoan.cs" />
+    <Compile Include="MobileConfigurations\Loan\Calculators\LoanCalculator.cs" />
+    <Compile Include="MobileConfigurations\Loan\Loan.cs" />
+    <Compile Include="MobileConfigurations\Loan\Payments\LoanPayment.cs" />
+    <Compile Include="MobileConfigurations\LocationSearch.cs" />
+    <Compile Include="MobileConfigurations\Login.cs" />
+    <Compile Include="MobileConfigurations\Marketing.cs" />
+    <Compile Include="MobileConfigurations\MobileConfiguration.cs" />
+    <Compile Include="MobileConfigurations\MobileMenu.cs" />
+    <Compile Include="MobileConfigurations\MobileWebViews.cs" />
+    <Compile Include="MobileConfigurations\MoneyDesktop.cs" />
+    <Compile Include="MobileConfigurations\MyCardInfo.cs" />
+    <Compile Include="MobileConfigurations\MyCuClub.cs" />
+    <Compile Include="MobileConfigurations\NextLoginSteps.cs" />
+    <Compile Include="MobileConfigurations\PinEncryption.cs" />
+    <Compile Include="MobileConfigurations\PasswordEncryption.cs" />
+    <Compile Include="MobileConfigurations\PinChange.cs" />
+    <Compile Include="MobileConfigurations\Promotions\Promotions.cs" />
+    <Compile Include="MobileConfigurations\PushNotification.cs" />
+    <Compile Include="MobileConfigurations\QuickAccountInfo.cs" />
+    <Compile Include="MobileConfigurations\QuickBalance\Preferences.cs" />
+    <Compile Include="MobileConfigurations\QuickBalance\QuickBalance.cs" />
+    <Compile Include="MobileConfigurations\SavvyMoney.cs" />
+    <Compile Include="MobileConfigurations\Security\AppShield\AppShield.cs" />
+    <Compile Include="MobileConfigurations\Security\AppShield\AppWhiteList\ModulePortAuthority.cs" />
+    <Compile Include="MobileConfigurations\Security\AppShield\AppWhiteList\ModuleSecureCamera.cs" />
+    <Compile Include="MobileConfigurations\Security\AppShield\AppWhiteList\ModuleSecureKeyboard.cs" />
+    <Compile Include="MobileConfigurations\Security\Biometrics\Biometrics.cs" />
+    <Compile Include="MobileConfigurations\Security\Biometrics\EyeScan.cs" />
+    <Compile Include="MobileConfigurations\Security\LayeredSecurity\LayeredSecurity.cs" />
+    <Compile Include="MobileConfigurations\Security\PermissionLevel\PermissionLevel.cs" />
+    <Compile Include="MobileConfigurations\Security\QuickAccess\QuickAccess.cs" />
+    <Compile Include="MobileConfigurations\Security\QuickAccess\QuickAccessPin.cs" />
+    <Compile Include="MobileConfigurations\Security\Security.cs" />
+    <Compile Include="MobileConfigurations\Activation\Activation.cs" />
+    <Compile Include="MobileConfigurations\Security\Settings\Settings.cs" />
+    <Compile Include="MobileConfigurations\SendMoney.cs" />
+    <Compile Include="MobileConfigurations\Settings\ChangeUserInformation\ChangeAddress.cs" />
+    <Compile Include="MobileConfigurations\Settings\ChangeUserInformation\ChangeEmail.cs" />
+    <Compile Include="MobileConfigurations\Settings\Notifications\Notifications.cs" />
+    <Compile Include="MobileConfigurations\Settings\Notifications\Travel.cs" />
+    <Compile Include="MobileConfigurations\Settings\ChangeUserInformation\ResetPassword.cs" />
+    <Compile Include="MobileConfigurations\Settings\Settings.cs" />
+    <Compile Include="MobileConfigurations\Settings\TieredAccessAdmin.cs" />
+    <Compile Include="MobileConfigurations\StopPay.cs" />
+    <Compile Include="MobileConfigurations\Transfers\SavedTransfers.cs" />
+    <Compile Include="MobileConfigurations\Transfers\ScheduledTransfersSettings.cs" />
+    <Compile Include="MobileConfigurations\UserDevices\UserDevices.cs" />
+    <Compile Include="MobileConfigurations\VersionManagement.cs" />
+    <Compile Include="MoneyDesktop\Dashboard.cs" />
+    <Compile Include="MoneyDesktop\MoneyDesktop.cs" />
+    <Compile Include="MoneyDesktop\Summary.cs" />
+    <Compile Include="Monitoring\MonitoringSettings.cs" />
+    <Compile Include="OfxConfigurations\OfxConfigurations.cs" />
+    <Compile Include="OverdraftProtection\OverdraftProtection.cs" />
+    <Compile Include="PageDisplay\jQuerySettings.cs" />
+    <Compile Include="PageDisplay\PageDisplaySettings.cs" />
+    <Compile Include="PersonPayments\Payzur.cs" />
+    <Compile Include="PrimaryAccountSecurityCode\PrimaryAccountSecurityCodeSettings.cs" />
+    <Compile Include="Promotions\Promotions.cs" />
+    <Compile Include="Promotions\SkipPay.cs" />
+    <Compile Include="PublicApi\PublicApiSettings.cs" />
+    <Compile Include="RegularExpressions\RegularExpressionsFeature.cs" />
+    <Compile Include="RemoteDeposit\Ensenta.cs" />
+    <Compile Include="RemoteDeposit\Vertifi.cs" />
+    <Compile Include="SavvyMoney\SavvyMoneySettings.cs" />
+    <Compile Include="SecureCommunication\SecureMessageSettings.cs" />
+    <Compile Include="SecureCommunication\VirusScanningSettings.cs" />
+    <Compile Include="Services\StopPayment.cs" />
+    <Compile Include="SmsSecurityCode\SmsSecurityCodeSettings.cs" />
+    <Compile Include="SMTP\SMTPSettings.cs" />
+    <Compile Include="Summary\Controls.cs" />
+    <Compile Include="Summary\CreditCards.cs" />
+    <Compile Include="TargetedMarketing\TargetedMarketingSettings.cs" />
+    <Compile Include="Themes\ConnectNative.cs" />
+    <Compile Include="Themes\Themes.cs" />
+    <Compile Include="TieredAccessConfigurations\TieredAccess.cs" />
+    <Compile Include="MobileConfigurations\Transfers\Transfers.cs" />
+    <Compile Include="MobileConfigurations\Welcome.cs" />
+    <Compile Include="Application\Omega\OmegaConfiguration.cs" />
+    <Compile Include="PasswordVerification\PasswordVerificationSettings.cs" />
+    <Compile Include="PaydayLoans\AdvancePay.cs" />
+    <Compile Include="PaydayLoans\PaydayLoan.cs" />
+    <Compile Include="RemoteDeposit\RemoteDeposit.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="ISettingsBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingsBaseHelper.cs" />
+    <Compile Include="Address\AddressVerificationSettings.cs" />
+    <Compile Include="TravelNotification\TravelNotificationFeature.cs" />
+    <Compile Include="Widgets\WidgetSettings.cs" />
+    <Compile Include="WindowsService\PscuLogFileTransformServiceSettings.cs" />
+    <Compile Include="WindowsService\PsiServicesSettings.cs" />
+    <Compile Include="WindowsService\VerafinFileBatchServiceSettings.cs" />
+    <Compile Include="WireTransfer\WireTransferFeatures.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Psi.Models.HomeBanking\Psi.Models.HomeBanking.csproj">
+      <Project>{AC1FC647-3A5B-45F0-9306-BA15D1DE0C1B}</Project>
+      <Name>Psi.Models.HomeBanking</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psi.Models.Domain\Psi.Models.Domain.csproj">
+      <Project>{6A851A11-0B4F-4A58-B069-9E4142E1BB31}</Project>
+      <Name>Psi.Models.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Psi.Models.RequestResponse\Psi.Models.RequestResponse.csproj">
+      <Project>{341d5e72-4d51-4453-bb80-e27585304c3b}</Project>
+      <Name>Psi.Models.RequestResponse</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="OfflineCard\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

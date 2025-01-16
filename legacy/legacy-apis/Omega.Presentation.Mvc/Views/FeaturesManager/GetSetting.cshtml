@@ -1,0 +1,74 @@
+﻿@using Omega.Presentation.Mvc.Business
+@model Omega.Presentation.Mvc.Models.FeaturesManager.AddUpdateSettingModel
+
+@{
+    ViewBag.BaseModel = Model;
+}
+
+@if (Model.Setting != null)
+{
+    <div class="panel-heading-psi">
+        <strong><span id="featureLabel"></span></strong>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="pull-right">
+            <a modal-href="./ApplicationConfiguration/GetConfigSetting?key=@Model.Setting.Name" style="font-size: larger; cursor: pointer;" class="text-white" title="Manage setting overrides"><span class="glyphicon glyphicon-edit"></span></a>
+            @if (Model.User.PermissionLevel.CanView(PermissionLevel.Support))
+            {
+                <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit Setting" onclick="FeaturesManager.EditSetting(this, '@Model.Setting.Id', '@Model.Setting.FeatureId', '@Model.Setting.GroupId')"><span class="glyphicon glyphicon-cog"></span></span>
+            }
+        </span>
+    </div>
+}
+else
+{
+    <div class="panel-heading-psi">
+        <strong><span id="featureLabel"></span></strong>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+}
+
+<div class="panel-body">
+    @if (Model.Setting != null)
+    {
+        <div class="panel panel-default" style="min-height: 600px; max-height: 600px; overflow-y: auto;">
+            <div class="panel-body">
+                <div>
+                    <p>@Model.Setting.Description</p>
+                    <p>Is Internal Only: @Model.Setting.IsInternalOnly</p>
+                    @{var currentValue = Model.Setting.CurrentConfigValue ?? Model.Setting.DefaultConfigValue;}
+	                <p>Current Setting: <span data-display-setting-key="@Model.Setting.Name">@currentValue</span></p>
+                    <br/>
+                    @if (Model.Setting.PossibleValues.Count > 0)
+                    {
+                        <p>
+                            <strong>Possible Values</strong>
+                        </p>
+                        foreach (var value in Model.Setting.PossibleValues)
+                        {
+                            <p>&nbsp;@value</p>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <h3>
+                @if (Model.Setting != null)
+            {
+                @Model.Setting.Name
+            }
+            Settings
+        </h3>
+        <p>Select a Setting to view, edit, and manage.</p>
+    </div>
+    }
+</div>
+
+<script>
+    $(function() {
+        PsiModal.ProcessModalLinks();
+    });
+</script>

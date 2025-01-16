@@ -1,0 +1,440 @@
+﻿@using Omega.Presentation.Mvc.Models.AtmBranchLocations;
+@model AtmBranchLocationsViewModel
+
+@{
+    ViewBag.Title = "ATM & Branch Locations";
+    ViewBag.ActiveMenu = "atm-branch-locations";
+}
+
+@section LinkedStyleSheets {
+    <link href='@Url.Content("~/Styles/atm-branch-locations.css")' rel="stylesheet" />
+}
+<hr />
+
+<div style="width: 500px; margin-bottom: 16px;">
+    Use this tool to add and remove ATM &amp; Branch Locations.
+</div>
+
+<!-- FAILURE -->
+<div id="FailureDiv" class="alert alert-danger" style="display:none; color: #FFFFFF;">
+    The operation could not be completed. Please try again later.
+</div>
+
+<!-- SUCCESS -->
+<div id="SuccessDiv" class="alert alert-success" style="display:none; color: #FFFFFF;">
+    Your location has been successfully added/edited. The page will automatically refresh soon.
+</div>
+
+<!-- DELETE -->
+<div id="DeleteDiv" class="alert alert-warning" style="display: none; color: #FFFFFF;">
+    Your location has been successfully deleted. The page will automatically refresh soon.
+</div>
+
+<div class="color-container">
+    @if (Model.Locations.Count > 0)
+    {
+        <table class="table table-bordered locations">
+            <thead>
+                <tr>
+                    <th style="width:18%">Location Name</th>
+                    <th style="width:18%">Location Type</th>
+                    <th style="width:36%">Address</th>
+                    <th style="width:18%">Google Map</th>
+                    <th style="width:5%"><!-- sp --></th>
+                    <th style="width:5%"><!-- sp --></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model.Locations)
+                {
+                    <tr>
+                        <td class="title">@item.LocationName</td>
+                        <td>@item.LocationType</td>
+                        <td>@item.AddressLine @item.CityName @item.StateCode</td>
+                        <td><a href="@item.MapUrl" target="_blank">Map</a></td>
+                        <td style="text-align: center"><a class="edit-link" href="#" data-id="@item.Id">edit</a></td>
+                        <td style="text-align: center"><a class="trash-can" href="#" data-id="@item.Id" data-name="@item.LocationName"><div class="trash-icon"><i class="fa fa-trash"></i></div></a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div>No Locations found.</div>
+    }
+
+    <div style="margin: 30px 0">
+        <div>
+            <button id="add-form-button" class="btn btn-default">Add New ATM or Branch Location</button>
+        </div>
+    </div>
+
+    <!-- VALIDATION DIV -->
+    <div id="ValidatorDiv" class="alert alert-danger" style="display: none;">
+        There were errors in your form entries:
+    </div>
+
+    <!-- ADD FORM -->
+    <div id="location-form-div" style="display: none;">
+        <form id="location-form">
+            @Html.Partial("_AddEditForm", Model.SingleLocation)
+        </form><!-- end form -->
+    </div><!-- end form div -->
+</div><!-- end color container -->
+
+    <script>
+    // generic event handlers
+    // click event handler for add new location button
+    document.querySelector("#add-form-button").addEventListener("click", function (e) {
+        e.preventDefault();
+        OmegaAtmBranchLocationsModule.revealAddLocationForm();
+    });
+
+    // click event handler for the submit button
+    // this element is created dynamically by the partial view if the 'edit' button was clicked, so we listen on the body:
+    $("body").on("click", "#SubmitButton", function (e) {
+        e.preventDefault();
+        OmegaAtmBranchLocationsModule.validateForm();
+    });
+
+    // click event handlers for the trashcan icons
+    $(".trash-can").click(function (e) {
+        e.preventDefault();
+        OmegaAtmBranchLocationsModule.deleteLocation(e);
+    });
+
+    // click event handlers for the trashcan icons
+    $(".edit-link").click(function (e) {
+        e.preventDefault();
+        OmegaAtmBranchLocationsModule.revealEditLocationForm(e);
+    });
+
+    // click event handler for the clear button. resets the form:
+    // this element is created dynamically by the partial view if the 'edit' button was clicked, so we listen on the body:
+    $("body").on("click", "#ClearButton", function (e) {
+        e.preventDefault();
+        OmegaAtmBranchLocationsModule.clearForm();
+    });
+
+    // click event handler for the cancel button. resets and hides the form
+    // this element is created dynamically by the partial view if the 'edit' button was clicked, so we listen on the body:
+    $("body").on("click", "#CancelButton", function (e) {
+        e.preventDefault();
+        OmegaAtmBranchLocationsModule.cancelForm();
+    });
+
+    // namespace object
+    var OmegaAtmBranchLocationsModule = OmegaAtmBranchLocationsModule || {};
+
+    OmegaAtmBranchLocationsModule = (function () {
+        // private vars
+        var mode = "add";
+        var currId = "";
+
+        // validate the form entries for the minimum to create a new location entry in the db:
+        var _validateForm = function () {
+            var formValid = true;
+
+            $("#ValidatorDiv").empty();
+            $("#ValidatorDiv").text("There were errors in your form entries:");
+
+            if (document.querySelector("#LocationName").value.length === 0) {
+                $("#ValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please enter the location name");
+                document.querySelector("#LocationName").style.outline = "1px solid RGBA(204,46,54,0.99)";
+                formValid = false;
+            } else {
+                document.querySelector("#LocationName").style.outline = "none";
+            }
+
+            if (document.querySelector("#Latitude").value.length === 0) {
+                $("#ValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please enter the Latitude");
+                document.querySelector("#Latitude").style.outline = "1px solid RGBA(204,46,54,0.99)";
+                formValid = false;
+            } else {
+                document.querySelector("#Latitude").style.outline = "none";
+            }
+
+            if (document.querySelector("#Longitude").value.length === 0) {
+                $("#ValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please enter the Longitude");
+                document.querySelector("#Longitude").style.outline = "1px solid RGBA(204,46,54,0.99)";
+                formValid = false;
+            } else {
+                document.querySelector("#Longitude").style.outline = "none";
+            }
+
+            if (document.querySelector("#AddressLine").value.length === 0) {
+                $("#ValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please enter the Address");
+                document.querySelector("#AddressLine").style.outline = "1px solid RGBA(204,46,54,0.99)";
+                formValid = false;
+            } else {
+                document.querySelector("#AddressLine").style.outline = "none";
+            }
+
+            if (document.querySelector("#CityName").value.length === 0) {
+                $("#ValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please enter the City");
+                document.querySelector("#CityName").style.outline = "1px solid RGBA(204,46,54,0.99)";
+                formValid = false;
+            } else {
+                document.querySelector("#CityName").style.outline = "none";
+            }
+
+            if (document.querySelector("#StateSelect").value === 'none') {
+                $("#ValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please enter the State");
+                document.querySelector("#StateSelect").style.outline = "1px solid RGBA(204,46,54,0.99)";
+                formValid = false;
+            } else {
+                document.querySelector("#StateSelect").style.outline = "none";
+            }
+
+            if (document.querySelector("#PostalCode").value.length === 0) {
+                $("#ValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please enter the Postal code");
+                document.querySelector("#PostalCode").style.outline = "1px solid RGBA(204,46,54,0.99)";
+                formValid = false;
+            } else {
+                document.querySelector("#PostalCode").style.outline = "none";
+            }
+
+            if (document.querySelector("#CountryCode").value.length === 0) {
+                $("#ValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please enter the Country code");
+                document.querySelector("#CountryCode").style.outline = "1px solid RGBA(204,46,54,0.99)";
+                formValid = false;
+            } else {
+                document.querySelector("#CountryCode").style.outline = "none";
+            }
+
+            if (document.querySelector("#MapUrl").value.length === 0) {
+                $("#ValidatorDiv").append("<br>&nbsp;&nbsp;&bull; Please enter the Google Map Url");
+                document.querySelector("#MapUrl").style.outline = "1px solid RGBA(204,46,54,0.99)";
+                formValid = false;
+            } else {
+                document.querySelector("#MapUrl").style.outline = "none";
+            }
+
+            if (!formValid) {
+                $("#ValidatorDiv").slideDown();
+                window.scrollTo(0, 0);
+                return;
+            }
+
+            if (formValid) {
+                $("#ValidatorDiv").slideUp();
+                _submit();
+            }
+        };
+
+        // ajax call to controller method to add/edit a location
+        var _submit = function () {
+            var inDelay = setTimeout(function () { document.querySelector("#LoadingDiv").style.display = "inline" }, 300);
+            var submitUrl = '@Url.Action("AddLocation", "AtmBranchLocations")'; // action, controller
+
+            var theForm = document.querySelector("#location-form");
+            theForm["LocationTypeLabel"].value = theForm["LocationType"].value;
+
+            if (mode === 'edit') {
+                theForm["Id"].value = currId
+                submitUrl = '@Url.Action("UpdateLocation", "AtmBranchLocations")';
+            }
+
+            var data = $('#location-form').serializeObject();
+
+            $.ajax({
+                url: submitUrl, 
+                dataType: "text",
+                type: "POST",
+                data: data,
+                cache: false,
+                statusCode: {
+                    200: function (data) {
+                        $("#LoadingDiv").slideUp();
+                        clearTimeout(inDelay);
+                        $("#SuccessDiv").slideDown();
+                        setTimeout(function () {
+                            window.location.href = '@Url.Action("Index", "AtmBranchLocations")';
+                        }, 3000);
+                        window.scrollTo(0, 0);
+                    },
+                    400: function () {
+                        $("#LoadingDiv").slideUp();
+                        $("#FailureDiv").slideDown();
+                        clearTimeout(inDelay);
+                        window.scrollTo(0, 0);
+                    }
+                },
+                error: function (xhr, err) {
+                    var terseError = xhr.statusText;
+                    console.log("terseError: ", terseError);
+                    console.log("Request Failed: " + err);
+                    $("#LoadingDiv").slideUp();
+                    $("#FailureDiv").slideDown();
+                    clearTimeout(inDelay);
+                    window.scrollTo(0, 0);
+                }
+            });
+        }
+
+        // delete selected location from trash-can icon click
+        var _deleteLocation = function (e) {
+            var currItem = e.currentTarget;
+            var itemId = currItem.dataset["id"];
+            var itemName = currItem.dataset["name"];
+
+            if (confirm("Are you sure you want to delete the location " + itemName + "?")) {
+                var inDelay;
+                inDelay = setTimeout(function () { document.querySelector("#LoadingDiv").style.display = "inline" }, 300);
+
+                var data = {
+                    id: itemId
+                }
+
+                $.ajax({
+                    url: '@Url.Action("DeleteLocation", "AtmBranchLocations")',  // action, controller
+                    dataType: "text",
+                    type: "Delete",
+                    data: data,
+                    cache: false,
+                    statusCode: {
+                        200: function (data) {
+                            $("#LoadingDiv").slideUp();
+                            clearTimeout(inDelay);
+                            $("#DeleteDiv").slideDown();
+                            setTimeout(function () {
+                                window.location.href = '@Url.Action("Index", "AtmBranchLocations")';
+                            }, 3000);
+                            window.scrollTo(0, 0);
+                        },
+                        400: function () {
+                            $("#LoadingDiv").slideUp();
+                            $("#FailureDiv").slideDown();
+                            clearTimeout(inDelay);
+                            window.scrollTo(0, 0);
+                        }
+                    },
+                    error: function (xhr, err) {
+                        var terseError = xhr.statusText;
+                        console.log("terseError: ", terseError);
+                        console.log("Request Failed: " + err);
+                        $("#LoadingDiv").slideUp();
+                        $("#FailureDiv").slideDown();
+                        clearTimeout(inDelay);
+                        window.scrollTo(0, 0);
+                    }
+                });
+            }
+        };
+
+        // clear the form on button click
+        var _clearForm = function () {
+            var theForm = document.querySelector("#location-form");
+
+            // We have to manually clear the form because the fields are created dynamically in 'edit' mode:
+            theForm['LocationName'].value = "";
+            theForm['LocationType'].selectedIndex = 0;
+            theForm['LocationTypeLabel'].value = "";
+            theForm['Id'].value = "";
+            theForm['RetailOutlet'].value = "";
+            theForm['Latitude'].value = 0;
+            theForm['Longitude'].value = 0;
+            theForm['AddressLine'].value = "";
+            theForm['CityName'].value = "";
+            theForm['StateCode'].selectedIndex = 0;
+            theForm['PostalCode'].value = "";
+            theForm['CountryCode'].value = "";
+            theForm['ImageUrl'].value = "";
+            theForm['ImageText'].value = "";
+            theForm['MapIcon'].value = "";
+            theForm['AdditionalDetails1'].value = "";
+            theForm['AdditionalDetails2'].value = "";
+            theForm['Phone'].value = "";
+            theForm['MobileValue'].value = "";
+            theForm['Fax'].value = "";
+            theForm['MapIcon'].value = "";
+            theForm['Email'].value = "";
+            theForm['SurchargeFree'].value = "";
+            theForm['AcceptDeposit'].value = "";
+            theForm['RestrictedAccess'].value = "";
+            theForm['LimitedHours'].value = "";
+
+            $("#ValidatorDiv").slideUp();
+        }
+
+        // cancel the form by clearing it and hiding it out of the way
+        var _cancelForm = function () {
+            OmegaAtmBranchLocationsModule.clearForm();
+            $("#ValidatorDiv").slideUp();
+            $("#location-form-div").slideUp();
+            $("#add-form-button").slideDown();
+        }
+
+        // reveal the form to the user when they click the 'add new location' button at the bottom of the locations table
+        var _revealAddLocationForm = function () {
+            mode = "add";
+
+            if (document.querySelector("#location-form-div").style.display === "none") {
+                $("#location-form-div").slideDown();
+            } else {
+                $("#location-form-div").slideUp();
+            }
+        }
+
+        // reveal the form to the user when they click the 'edit' button in the table row for that location
+        var _revealEditLocationForm = function (e) {
+            mode = "edit";
+            $("#add-form-button").slideUp();
+
+            var currItem = e.currentTarget;
+            var itemId = currItem.dataset["id"];
+            currId = itemId;    // must set this for submitting the form in 'edit' mode
+
+            var data = {
+                id: itemId
+            }
+
+            $("#location-form-div").slideDown();
+
+            $.ajax({
+                url: '@Url.Action("GetLocation", "AtmBranchLocations")?id=' + itemId,  // action, controller
+                dataType: "text",
+                type: "Delete",
+                data: data,
+                cache: false,
+                    statusCode: {
+                        200: function (data) {
+                            $("#LoadingDiv").slideUp();
+
+                            document.querySelector("#location-form").innerHTML = "";
+                            document.querySelector("#location-form").innerHTML = data;    // place partial view that was returned from the controller in here (_AddEditForm.cshtml) 
+
+                        },
+                        400: function () {
+                            $("#LoadingDiv").slideUp();
+                            $("#FailureDiv").slideDown();
+                            clearTimeout(inDelay);
+                            window.scrollTo(0, 0);
+                        }
+                    },
+                    error: function (xhr, err) {
+                        var terseError = xhr.statusText;
+                        console.log("terseError: ", terseError);
+                        console.log("Request Failed: " + err);
+                        $("#LoadingDiv").slideUp();
+                        $("#FailureDiv").slideDown();
+                        clearTimeout(inDelay);
+                        window.scrollTo(0, 0);
+                    }
+            });
+        }
+
+        // public interface
+        return {
+            validateForm: _validateForm,
+            deleteLocation: _deleteLocation,
+            revealAddLocationForm: _revealAddLocationForm,
+            revealEditLocationForm: _revealEditLocationForm,
+            clearForm: _clearForm,
+            cancelForm: _cancelForm
+        };
+    }());
+    </script>

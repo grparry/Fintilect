@@ -1,0 +1,16 @@
+{
+  "HomeBankingLoginSettings": {
+    "type": "object",
+    "properties": {
+      "password": {
+        "$ref": "./password-settings.json#/PasswordSettings"
+      },
+      "username": {
+        "$ref": "./username-settings.json#/UsernameSettings"
+      },
+      "reCaptcha": {
+        "$ref": "./recaptcha-settings.json#/ReCaptchaSettings"
+      }
+    }
+  }
+}

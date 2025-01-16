@@ -1,0 +1,91 @@
+﻿@model Omega.Presentation.Mvc.Models.FeaturesManager.AddUpdateFeatureModel
+
+@{
+    ViewBag.Title = "Add/Edit Features";
+    ViewBag.Subtitle = "Manage Feature Desciption Information";
+    ViewBag.ActiveMenu = "features-manager";
+    ViewBag.BaseModel = Model;
+}
+
+<div>
+    <div class="panel-body">
+        @using (Html.BeginForm("AddUpdateFeature", "FeaturesManager", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.Feature.Id, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @Html.TextBoxFor(m => m.Feature.Id, new {@class = "form-control", @readonly = true})
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Feature.ApplicationId, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @Html.TextBoxFor(m => m.Feature.ApplicationId, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Feature.FeatureKey, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @Html.TextBoxFor(m => m.Feature.FeatureKey, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Feature.Name, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @Html.TextBoxFor(m => m.Feature.Name, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Feature.Description, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @Html.TextAreaFor(m => m.Feature.Description, new {@class = "form-control", style = "min-height: 100px;" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Feature.Benifits, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @Html.TextBoxFor(m => m.Feature.Benifits, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Feature.Dependancies, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @Html.TextBoxFor(m => m.Feature.Dependancies, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Feature.MinimumVersion, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @Html.TextBoxFor(m => m.Feature.MinimumVersion, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Feature.DeprecatedVersion, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @Html.TextBoxFor(m => m.Feature.DeprecatedVersion, new {@class = "form-control"})
+                </div>
+            </div>
+            @*<div class="form-group">
+                @Html.LabelFor(m => m.Feature.LicenseFee, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @{ var formattedLicenseFee = Model.Feature.LicenseFee.HasValue ? $"{Model.Feature.LicenseFee:0.00}" : "";}
+                    @Html.TextBoxFor(m => m.Feature.LicenseFee, formattedLicenseFee, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Feature.MaintenanceFee, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @{ var formattedMaintenanceFee = Model.Feature.MaintenanceFee.HasValue ? $"{Model.Feature.MaintenanceFee:0.00}" : "";}
+                    @Html.TextBoxFor(m => m.Feature.MaintenanceFee, formattedMaintenanceFee, new {@class = "form-control"})
+                </div>
+            </div>*@
+            <div class="form-group">
+                @Html.LabelFor(m => m.Feature.IsActive, new {@class = "col-md-3 control-label"})
+                <div class="col-md-8">
+                    @Html.CheckBoxFor(m => m.Feature.IsActive, new {@class = "form-control", @readonly = true})
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Submit"/>
+        }
+    </div>
+</div>

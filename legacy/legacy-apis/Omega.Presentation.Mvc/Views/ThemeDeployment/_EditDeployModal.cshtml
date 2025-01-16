@@ -1,0 +1,81 @@
+﻿@using Psi.Data.Models.Domain.ThemeDeploy
+@model Psi.Data.Models.Domain.ThemeDeploy.ThemeDeployModel
+
+<div class="modal fade">
+    <!-- Modal Layout -->
+    <div class="modal-dialog">
+        <div id="partial-view-modal-content" class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                <h4 class="modal-title">
+                    @if (Model.DefaultDeploymentVersion != null)
+                    {
+                        <text>
+                            Create Sub Deploy Of @Model.Title
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            Create New Deploy
+                        </text>
+                    }
+
+                </h4>
+            </div>
+
+            @using (Ajax.BeginForm("Deploy","ThemeDeployment", new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnBegin = "PsiModal.BeginFormSubmit",
+                OnFailure = "PsiModal.FormSubmitFailed",
+                OnSuccess = "DeployModalSubmitted"
+            }))
+            {
+            <div class="modal-body">
+
+                <div class="form-group Title-form-group">
+                    @Html.LabelFor(x => x.Title)
+                    @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+                </div>
+
+                <div class="form-group Title-form-group">
+                    @Html.LabelFor(x => x.Description)
+                    @Html.TextAreaFor(x => x.Description, new { @class = "form-control" })
+                </div>
+                <div class="form-group Title-form-group">
+                    @Html.LabelFor(x => x.MinIosVersion)
+                    @Html.TextBoxFor(x => x.MinIosVersion, new { @class = "form-control", pattern = "\\d{1,12}\\.\\d{1,12}\\.\\d{1,12}\\.\\d{1,12}" })
+                </div>
+                <div class="form-group Title-form-group">
+                    @Html.LabelFor(x => x.MinAndroidVersion)
+                    @Html.TextBoxFor(x => x.MinAndroidVersion, new { @class = "form-control", pattern = "\\d{1,12}\\.\\d{1,12}\\.\\d{1,12}\\.\\d{1,12}" })
+                </div>
+                <div class="form-group Title-form-group">
+                    @Html.LabelFor(x => x.DeploymentVersion)
+                    @Html.TextBoxFor(x => x.DeploymentVersion, new { @class = "form-control", pattern= "\\d{1,12}\\.\\d{1,12}\\.\\d{1,12}\\.\\d{1,12}" })
+                </div>
+
+
+                @Html.HiddenFor(x => x.DefaultDeploymentVersion)
+                @Html.HiddenFor(x => x.DeploymentId)
+            </div><!-- End modal-body -->
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <input type="submit" class="btn btn-primary" value="@(Model.DeploymentId == Guid.Empty ? "Create Deploy" : "Save Deploy")" />
+                </div>
+            }
+
+            <script>
+        		function DeployModalSubmitted() {
+						    window.location.reload();
+		        }
+            </script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

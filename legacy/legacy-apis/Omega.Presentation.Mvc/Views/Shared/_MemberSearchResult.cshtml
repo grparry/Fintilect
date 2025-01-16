@@ -1,0 +1,170 @@
+﻿@using Omega.Presentation.Mvc.Models.Members;
+
+@model MemberSearchViewModel
+
+<hr />
+
+<table class="table table-bordered table-striped table-responsive">
+    @if (Model.dnaMemberPresentationModelList != null && Model.dnaMemberPresentationModelList.Count > 0) {
+		<thead>
+			<tr>
+				<th>User Id</th>
+				<th>E-Agreement Number</th>
+				<th>Person Record Number</th>
+				<th>Member Number</th>
+				<th><!-- space --></th>
+			</tr>
+		</thead>
+
+		<tbody>
+            @foreach (var item in Model.dnaMemberPresentationModelList)
+            {
+                <tr>
+                    <td Data-title="User Id">@item.UserId</td>
+                    <td Data-title="E-Agreement">@item.EAgreementNumber</td>
+                    <td Data-title="Person Number">@item.PersonRecordNumber</td>
+                    <td Data-title="Member Number">@item.MemberNumber</td>
+                    <td Data-title="Choose">
+
+                        @Ajax.ActionLink("Select", "GetMessagesForMember", "ErrorMessages", new { id = item.EAgreementNumber }, new AjaxOptions
+                        {
+                            UpdateTargetId = "SearchResultDiv",
+                            InsertionMode = InsertionMode.Replace,
+                            HttpMethod = "GET",
+                            OnBegin = "OmegaSearchMemberResultPartialViewModule.onSelectMemberBegin",
+                            OnSuccess = "OmegaSearchMemberResultPartialViewModule.onSuccess",
+                            OnFailure = "OmegaSearchMemberResultPartialViewModule.onFailure"
+                        }, new { id = item.EAgreementNumber, @class = "btn btn-default data-member-number"})
+                    </td>
+                </tr>
+            }
+		</tbody>
+	} else if (Model.memberPresentationModelList != null && Model.memberPresentationModelList.Count > 0) {
+		<thead>
+			<tr>
+				<th>Member Name</th>
+				<th>Account Number</th>
+				<th><!-- space --></th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			@foreach (var item in Model.memberPresentationModelList)
+			{
+				<tr>
+					<td Data-title="Member Name">@item.MemberName</td>
+					<td Data-title="Account Number">@item.AccountNumber</td>
+					<td Data-title="Choose">
+
+						@Ajax.ActionLink("Select", "GetMessagesForMember", "ErrorMessages", new { id = item.AccountNumber }, new AjaxOptions
+								   {
+									   UpdateTargetId = "SearchResultDiv",
+									   InsertionMode = InsertionMode.Replace,
+									   HttpMethod = "GET",
+									   OnBegin = "OmegaSearchMemberResultPartialViewModule.onSelectMemberBegin",
+									   OnSuccess = "OmegaSearchMemberResultPartialViewModule.onSuccess",
+									   OnFailure = "OmegaSearchMemberResultPartialViewModule.onFailure"
+								   }, new { id = item.AccountNumber, @class = "btn btn-default data-member-number" })
+					</td>
+				</tr>
+			}	
+		</tbody>
+	}
+	else
+	{
+		<tbody>
+			<tr>
+				<td colspan="5">No Members Found</td>
+			</tr>
+		</tbody>			
+	}
+    
+</table>
+
+<script>
+    $(".data-member-number").click(function () {
+            document.getElementById("MemberNumberSpan").innerHTML = this.id;
+        });
+
+    var OmegaSearchMemberResultPartialViewModule = OmegaSearchMemberResultPartialViewModule || {};
+
+    OmegaSearchMemberResultPartialViewModule = (function () {
+        var _inDelay = false;
+ 
+        var _onSelectMemberBegin = function () {
+            console.log("Got here: _onFindMemberBegin");
+            _inDelay = setTimeout(_showSpinner, 1000); // using setTimeout because jQuery delay only works on animate
+        };
+
+        // show the spinner in a div to let the user know that the record is loading
+        var _showSpinner = function () {
+            $('#SpinningLoaderDiv').show("normal");
+        }
+ 
+        // Success handler
+        var _onSuccess = function (reply) {
+            console.log("Got here: _onSuccess reply: ");
+            clearTimeout(_inDelay);
+            $("#SpinningLoaderDiv").hide();                     // note, these id's are on the modal _MemberSearch, not in this partial view
+            $("#FailureDiv").hide();
+
+            $(".message-result-header").show();                 // note, these id's are on the index page, not in this partial view
+            $(".message-result-search").show();
+            $("#SearchResultDiv").show();                       // these are the meaningful messages
+            $("#SearchMemberResultsDiv").hide();                // hide search results of Member Search, not meaningful messages
+            _resetFields();
+            $("#RefreshMessagesButton").show();
+            $("#search-member-modal").modal("hide");
+        }
+
+        var _resetFields = function () {
+            // need to check if these exist because if the core isn't DNA, then most of these fields aren't rendered onto the page:
+            if (document.getElementById("DnaMemberNumberTextbox")) {
+                document.getElementById("DnaMemberNumberTextbox").style.outline = "none";
+                document.getElementById("DnaMemberNumberTextbox").value = "";
+            }
+
+            if (document.getElementById("DnaPersonRecordNumberTextbox")) {
+                document.getElementById("DnaPersonRecordNumberTextbox").style.outline = "none";
+                document.getElementById("DnaPersonRecordNumberTextbox").value = "";
+            }
+
+            if (document.getElementById("DnaEAgreementTextbox")) {
+                document.getElementById("DnaEAgreementTextbox").style.outline = "none";
+                document.getElementById("DnaEAgreementTextbox").value = "";
+            }
+
+            if (document.getElementById("DnaUserIdTextbox")) {
+                document.getElementById("DnaUserIdTextbox").style.outline = "none";
+                document.getElementById("DnaUserIdTextbox").value = "";
+            }
+
+            if (document.getElementById("MemberNumberTextbox")) {
+                document.getElementById("MemberNumberTextbox").style.outline = "none";
+                document.getElementById("MemberNumberTextbox").value = "";
+            }
+
+            $("#ValidationWarningDiv").hide();
+        };
+
+        // Failure handler
+        var _onFailure = function () {
+            console.log("Got here: _onFailure");
+            if (_inDelay == true) {
+                _inDelay = null;
+            }
+            $("#SpinningLoaderDiv").hide();                // note, these id's are on the modal _MemberSearch, not in this partial view
+            $("#FailureDiv").show("normal");
+        }
+
+
+        // public interface:
+        return {
+            onSelectMemberBegin: _onSelectMemberBegin,
+            onSuccess: _onSuccess,
+            onFailure: _onFailure
+        }
+
+    })();
+
+</script>

@@ -1,0 +1,16 @@
+{
+  "ChangeAddressSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/ChangeAddressSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/ChangeAddressFeatures"
+      }
+    }
+  }
+}

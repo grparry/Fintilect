@@ -1,0 +1,16 @@
+{
+  "TalkativeChatSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/TalkativeChatSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/TalkativeChatFeatures"
+      }
+    }
+  }
+}

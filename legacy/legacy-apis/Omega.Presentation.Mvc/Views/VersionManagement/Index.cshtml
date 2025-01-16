@@ -1,0 +1,487 @@
+﻿@using Omega.Presentation.Mvc.Models.VersionManagement
+@using Omega.Presentation.Mvc.Business
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model VersionManagementViewModel
+
+@{
+    ViewBag.Title = "Version Management";
+    ViewBag.Subtitle = "Usage of mobile apps and mobile OS versions";
+    ViewBag.ActiveMenu = "version-management";
+    ViewBag.BaseModel = Model;
+}
+
+@if (!SettingsManager.Settings.OmegaConfiguration.Features.VersionManagementEnabled)
+{
+    <div class="alert alert-info">
+        We are sorry to inform you that this feature is currently unavailable.
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            @if (Model.User.PermissionLevel.CanView(PermissionLevel.Support))
+            {
+                <a modal-href="./ApplicationConfiguration/GetConfigSetting?key=Mobile.VersionManagement.EnableDeprecationMessages" style="cursor: pointer; cursor: hand;">Enable/Disable Deprecation</a>
+                <br />
+                <a onClick="StringResource.ShowManageMinVersionInModal(this);" id="iOS" style="cursor: pointer; cursor: hand;">Manage Minimum App Version</a>
+                <br />
+                <a href="VersionManagement/DefaultVersions" style="cursor: pointer; cursor: hand;">Manage Default Versions</a>
+            }
+        </div>
+    </div>
+        <br />
+        <br/>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/loader.js")"></script>
+
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+        var chartOptions = {
+            legend: 'none',
+            backgroundColor: 'transparent',
+            // NOTE: Default colors found here and still appear accurate: https://groups.google.com/forum/#!msg/google-visualization-api/ePpJQEeUX8M/W5pneVDnH9oJ
+            colors: ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac", "#b77322", "#16d620", "#b91383", "#f4359e", "#9c5935", "#a9c413", "#2a778d", "#668d1c", "#bea413", "#0c5922", "#743411"]
+        };
+
+        function drawChart() {
+
+            var iosAppDataArray = new Array((@Model.iOSAppVersions.Count + 1));
+            iosAppDataArray[0] = new Array("Version Number", "Count");
+
+            var i = 1;
+            @foreach (var version in Model.iOSAppVersions)
+            {
+                @:iosAppDataArray[i] = new Array("@version.VersionNumber" , @version.Count);
+                @:i++;
+            }
+
+            var iosAppData = google.visualization.arrayToDataTable(iosAppDataArray);
+
+            var iosAppChart = new google.visualization.PieChart(document.getElementById('iosAppVersions'));
+
+            iosAppChart.draw(iosAppData, chartOptions);
+
+            var iosDataArray = new Array((@Model.iOSVersions.Count + 1));
+            iosDataArray[0] = new Array("Version Number", "Count");
+
+            i = 1;
+            @foreach (var version in Model.iOSVersions)
+            {
+                @:iosDataArray[i] = new Array("@version.VersionNumber" , @version.Count);
+                @:i++;
+            }
+
+            var iosData = google.visualization.arrayToDataTable(iosDataArray);
+
+            var iosChart = new google.visualization.PieChart(document.getElementById('iosOsVersions'));
+
+            iosChart.draw(iosData, chartOptions);
+
+            var androidAppDataArray = new Array((@Model.AndroidAppVersions.Count + 1));
+            androidAppDataArray[0] = new Array("Version Number", "Count");
+
+            i = 1;
+            @foreach (var version in Model.AndroidAppVersions)
+            {
+                @:androidAppDataArray[i] = new Array("@version.VersionNumber" , @version.Count);
+                @:i++;
+            }
+
+            var androidAppData = google.visualization.arrayToDataTable(androidAppDataArray);
+
+            var androidAppChart = new google.visualization.PieChart(document.getElementById('androidAppVersions'));
+
+            androidAppChart.draw(androidAppData, chartOptions);
+
+            var androidDataArray = new Array((@Model.AndroidVersions.Count + 1));
+            androidDataArray[0] = new Array("Version Number", "Count");
+
+            i = 1;
+            @foreach (var version in Model.AndroidVersions)
+            {
+                @:androidDataArray[i] = new Array("@version.VersionNumber" , @version.Count);
+                @:i++;
+            }
+
+            var androidData = google.visualization.arrayToDataTable(androidDataArray);
+
+            var androidChart = new google.visualization.PieChart(document.getElementById('androidOsVersions'));
+
+            androidChart.draw(androidData, chartOptions);
+        }
+
+        $(function() {
+            // Add color to the chart legend
+            $("table.add-chart-color").each(function() {
+                $(this).find("td.add-chart-color").each(function(index) {
+                    $(this).prepend("<div class='chart-color' style='background-color: " + chartOptions.colors[index] + ";'> &nbsp; &nbsp; </div>");
+                });
+            });
+
+            $('[data-toggle="popover"]').popover();
+        });
+
+        var StringResource = {
+            GetResourceValue: function(sender) {
+                var $sender = $(sender);
+                var key = $sender.attr('resource-key');
+                var set = $sender.attr('resource-set');
+                var id = $sender.attr('resource-id');
+                Util.ShowLoading();
+                var callback = function(data) {
+                    Util.HideLoading();
+                    $('#resource-value-textbox').val(data);
+                }
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: './StringResource/GetResourceKeyValue?key=' + key + '&set=' + set + '&id=' + id,
+                    success: callback
+                }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+                $('#resourceStartAt').val($sender.attr('resource-start'));
+                $('#resourceEndAt').val($sender.attr('resource-end'));
+            },
+            LoadResourceSetInProgress: false,
+            LoadResourceSetByName: function(name, sender) {
+                $('.resouce-set-button-selected').removeClass('resouce-set-button-selected');
+                Util.ShowLoadingInInnerHtml('#stringResourceBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    StringResource.LoadResourceSetInProgress = false;
+                    if (status === 'success') {
+                        $('#stringResourceBody').html(data);
+                        $('#resourceSetLabel').html(name);
+                        if (sender) sender.addClass('resouce-set-button-selected');
+                        StringResource.SearchResourcesRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#stringResourceBody', status);
+                    }
+                };
+                $.get('./StringResource/GetResourceSet?name=' + escape(name), callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadResourceKey: function(sender) {
+                $('#manageMinimumVersion').modal('hide');
+                var $sender = $(sender);
+                var key = $sender.attr('resource-key');
+                var set = 'mobile';
+                $('#manageResourceKey').modal();
+                Util.ShowLoadingInInnerHtml('#manageResourceKeyBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageResourceKeyBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageResourceKeyBody', status);
+                    }
+                }
+
+                $.get('./StringResource/GetResourceKey?key=' + key + '&set=' + set, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            ShowHtmlInModal: function(sender, sourceId) {
+                var html = $('#' + sourceId).val();
+                $('#previewHtmlModal').modal();
+                $('#previewHtmlModalBody').html(html);
+            },
+            ShowManageMinVersionInModal: function(sender) {
+                $('#manageMinimumVersion').modal();
+                var $sender = $(sender);
+                var type = $sender.attr('id');
+                Util.ShowLoadingInInnerHtml('#manageMinimumVersionBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageMinimumVersionBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageMinimumVersionBody', status);
+                    }
+                };
+
+                $.get('./VersionManagement/GetMinimumVersion?NumberOfDays=90', callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SaveResource: function(sender) {
+                var set = $('#resource-set-textbox').val();
+                var key = $('#resource-key-textbox').val();
+                var value = $('#resource-value-textbox').val();
+                var end = $('#resourceEndAt').val();
+                var start = $('#resourceStartAt').val();
+
+                var errorMessage = '';
+                if (set.length <= 0) errorMessage += 'Set name is required\r';
+                if (key.length <= 0) errorMessage += 'Key is required\r';
+
+                if (errorMessage !== '') {
+                    alert('Please fix errors before saving...\r\n' + errorMessage);
+                    return;
+                }
+
+                Util.ShowLoading();
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        StringResource.LoadResourceSetByName(set);
+                        $('#manageResourceKey').modal('hide');
+                    } else {
+                        alert('Error saving resource key!');
+                    }
+                }
+
+                $.post('./StringResource/SaveResource',
+                    {
+                        Key: key,
+                        ResourceSet: set,
+                        Value: value,
+                        StartAt: start,
+                        EndAt: end,
+                        Culture: 'EN'
+                    },
+                    callback).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SearchResourcesRows: null
+        };
+    </script>
+
+    
+    using (Html.BeginForm("Index", "VersionManagement", FormMethod.Get, new { @class = "form-horizontal", role = "form", id = "txtform" }))
+    {
+        <div class="row">
+            <div class="col-lg-5 col-md-6">
+                <section class="widget">
+                    <header>
+                        <h4><i class="fa fa-desktop"></i> &nbsp; iOS OS Versions</h4>
+                    </header>
+                    <div class="body">
+                        <div id="iosOsVersions" style="width: 100%; height: 300px;"></div>
+                        <div class="text-center">
+                            Active to 
+                            @Html.TextBoxFor(m => m.iOSNumberOfDays, new
+                               {
+                                   type = "number",
+                                   min = "0",
+                                   style = "width: 90px; display:inline;",
+                                   @class = "form-control"
+                               })
+                            days &nbsp;
+                            <input type="submit" class="btn btn-default" value="Submit" />
+                        </div>
+                        <br />
+                        <table class="table table-striped add-chart-color">
+                            <thead>
+                                <tr>
+                                    <th class="">Version Number</th>
+                                    <th class="text-right">Users</th>
+                                    <th class="text-right">Percentage</th>
+                                </tr>
+                            </thead>
+                            @foreach (var appVersion in Model.iOSVersions)
+                            {
+                                <tr>
+                                    <td class="add-chart-color">@appVersion.VersionNumber</td>
+                                    <td class="text-right">@appVersion.Count</td>
+                                    <td class="text-right">@appVersion.Percentage %</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <div class="col-lg-5 col-md-6">
+                <section class="widget">
+                    <header>
+                        <h4><i class="fa fa-mobile"></i> &nbsp; iOS App Versions</h4>
+@* Use the following if you want to put the "days" setting in the top of the panel instead of prominently in the middle of the panel. *@
+@*                        <div class="widget-controls">*@
+@*                            <a href="#" rel="popover" data-html="true" data-toggle="popover" data-placement="bottom" data-content="<div class='form-inline' style='width: 200px;'><input class='form-control' type='number' min='0' style='width: 90px; display:inline;'> days <button class='btn btn-primary'>submit</button></div>">*@
+@*                                <i class="glyphicon glyphicon-cog"></i>*@
+@*                                Active to 30 days*@
+@*                            </a>*@
+@*                        </div>*@
+                    </header>
+                    <div class="body">
+                        <div id="iosAppVersions" style="width: 100%; height: 300px;"></div>
+                        <div class="text-center">
+                            Active to
+                            @Html.TextBoxFor(m => m.iOSAppNumberOfDays, new
+                            {
+                                type = "number",
+                                min = "0",
+                                style = "width: 90px; display:inline;",
+                                @class = "form-control"
+                            })
+                            days &nbsp;
+                            <input type="submit" class="btn btn-default" value="Submit"/>
+                        </div>
+                        <br/>
+                        @if (Model.User.PermissionLevel.CanView(PermissionLevel.Support))
+                        {
+                            <a onClick="StringResource.LoadResourceKey(this);" resource-key="appmessages.deprecated.apptitleios" style="text-align: center; position: absolute; width: 96%; cursor: pointer; cursor: hand;">Manage iOS Minimum Version</a>
+                        }
+                        <br/>
+                        <br/>
+                        <table class="table table-striped add-chart-color">
+                            <thead>
+                            <tr>
+                                <th>App Version Number</th>
+                                <th class="text-right">Users</th>
+                                <th class="text-right">Percentage</th>
+                            </tr>
+                            </thead>
+                            @foreach (var appVersion in Model.iOSAppVersions)
+                            {
+                                <tr>
+                                    <td class="add-chart-color">@appVersion.VersionNumber</td>
+                                    <td class="text-right">@appVersion.Count</td>
+                                    <td class="text-right">@appVersion.Percentage %</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5 col-md-6">
+                <section class="widget">
+                    <header>
+                        <h4><i class="fa fa-desktop"></i> &nbsp; Android OS Versions</h4>
+                    </header>
+                    <div class="body">
+                        <div id="androidOsVersions" style="width: 100%; height: 300px;"></div>
+                        <div class="text-center">
+                            Active to
+                            @Html.TextBoxFor(m => m.AndroidNumberOfDays, new
+                       {
+                           type = "number",
+                           min = "0",
+                           style = "width: 90px; display:inline;",
+                           @class = "form-control"
+                       })
+                            days &nbsp;
+                            <input type="submit" class="btn btn-default" value="Submit" />
+                        </div>
+                        <br />
+                        <table class="table table-striped add-chart-color">
+                            <thead>
+                                <tr>
+                                    <th>Version Number</th>
+                                    <th class="text-right">Users</th>
+                                    <th class="text-right">Percentage</th>
+                                </tr>
+                            </thead>
+                            @foreach (var appVersion in Model.AndroidVersions)
+                            {
+                                <tr>
+                                    <td class="add-chart-color">@appVersion.VersionNumber</td>
+                                    <td class="text-right">@appVersion.Count</td>
+                                    <td class="text-right">@appVersion.Percentage %</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <div class="col-lg-5 col-md-6">
+                <section class="widget">
+                    <header>
+                        <h4><i class="fa fa-mobile"></i> &nbsp; Android App Versions</h4>
+                    </header>
+                    <div class="body">
+                        <div id="androidAppVersions" style="width: 100%; height: 300px;"></div>
+                        <div class="text-center">
+                            Active to
+                            @Html.TextBoxFor(m => m.AndroidAppNumberOfDays, new
+                            {
+                                type = "number",
+                                min = "0",
+                                style = "width: 90px; display:inline;",
+                                @class = "form-control"
+                            })
+                            days &nbsp;
+                            <input type="submit" class="btn btn-default" value="Submit"/>
+                        </div>
+
+                        <br/>
+                        @if (Model.User.PermissionLevel.CanView(PermissionLevel.Support))
+                        {
+                            <a onClick="StringResource.LoadResourceKey(this);" resource-key="appmessages.deprecated.apptitleandroid" style="text-align: center; position: absolute; width: 96%; cursor: pointer; cursor: hand;">Manage Android Minimum Version</a>
+                        }
+                        <br/>
+                        <br/>
+                        <table class="table table-striped add-chart-color">
+                            <thead>
+                            <tr>
+                                <th>App Version Number</th>
+                                <th class="text-right">Users</th>
+                                <th class="text-right">Percentage</th>
+                            </tr>
+                            </thead>
+                            @foreach (var appVersion in Model.AndroidAppVersions)
+                            {
+                                <tr>
+                                    <td class="add-chart-color">@appVersion.VersionNumber</td>
+                                    <td class="text-right">@appVersion.Count</td>
+                                    <td class="text-right">@appVersion.Percentage %</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <br />
+        <br/>
+        <div id="piechart" style="width: 40%; height: 40%;"></div>
+
+    }
+
+    <div class="modal fade" role="dialog" id="manageResourceKey">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Manage Resource</h3>
+                </div>
+                <div class="modal-body" id="manageResourceKeyBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="previewHtmlModal">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Html Preview</h3>
+                </div>
+                <div class="modal-body" id="previewHtmlModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="manageMinimumVersion">
+        <div class="modal-dialog medium">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Manage Minimum Version</h3>
+                </div>
+                <div class="modal-body" id="manageMinimumVersionBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

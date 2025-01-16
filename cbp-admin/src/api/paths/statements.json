@@ -1,0 +1,180 @@
+{
+  "/statements": {
+    "get": {
+      "tags": ["statements"],
+      "summary": "List all statement configurations",
+      "operationId": "listStatementConfigs",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 20
+          }
+        },
+        {
+          "name": "provider",
+          "in": "query",
+          "schema": {
+            "type": "string",
+            "enum": ["Synergy", "InfoImage"]
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Statement configurations retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../models/statements.json#/StatementsSettings"
+                    }
+                  },
+                  "total": {
+                    "type": "integer"
+                  },
+                  "page": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["statements"],
+      "summary": "Create a new statement configuration",
+      "operationId": "createStatementConfig",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/statements.json#/StatementsSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Statement configuration created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/statements.json#/StatementsSettings"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/statements/{id}": {
+    "get": {
+      "tags": ["statements"],
+      "summary": "Get a specific statement configuration",
+      "operationId": "getStatementConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Statement configuration retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/statements.json#/StatementsSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["statements"],
+      "summary": "Update a statement configuration",
+      "operationId": "updateStatementConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/statements.json#/StatementsSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Statement configuration updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/statements.json#/StatementsSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["statements"],
+      "summary": "Delete a statement configuration",
+      "operationId": "deleteStatementConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Statement configuration deleted successfully"
+        }
+      }
+    }
+  }
+}

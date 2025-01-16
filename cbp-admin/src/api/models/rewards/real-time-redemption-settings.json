@@ -1,0 +1,111 @@
+{
+  "RealTimeRedemptionSettings": {
+    "type": "object",
+    "description": "Configuration settings for real-time reward redemption functionality",
+    "required": ["enabled", "generalLedger"],
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether real-time redemption is enabled",
+        "default": false
+      },
+      "versionRequirements": {
+        "type": "object",
+        "description": "Version requirements for real-time redemption",
+        "required": ["minimumVersion"],
+        "properties": {
+          "minimumVersion": {
+            "type": "number",
+            "description": "Minimum version required for real-time redemption",
+            "minimum": 0
+          }
+        }
+      },
+      "generalLedger": {
+        "type": "object",
+        "description": "General ledger settings for redemption transactions",
+        "required": ["accountNumber", "transactionDescription"],
+        "properties": {
+          "accountNumber": {
+            "type": "string",
+            "description": "General ledger account number for redemption transactions",
+            "pattern": "^[0-9-]+$"
+          },
+          "transactionDescription": {
+            "type": "string",
+            "description": "Description template for redemption transactions",
+            "minLength": 1
+          },
+          "transactionCode": {
+            "type": "string",
+            "description": "Optional transaction code for redemption entries",
+            "pattern": "^[A-Z0-9-]*$"
+          }
+        }
+      },
+      "redemptionRules": {
+        "type": "object",
+        "description": "Rules governing reward redemption",
+        "properties": {
+          "minimumPoints": {
+            "type": "integer",
+            "description": "Minimum points required for redemption",
+            "minimum": 0,
+            "default": 0
+          },
+          "maximumPoints": {
+            "type": "integer",
+            "description": "Maximum points that can be redeemed at once",
+            "minimum": 0
+          },
+          "pointToCashRatio": {
+            "type": "number",
+            "description": "Conversion ratio from points to cash value",
+            "minimum": 0,
+            "default": 1
+          },
+          "roundingRule": {
+            "type": "string",
+            "description": "How to round redemption amounts",
+            "enum": ["up", "down", "nearest"],
+            "default": "nearest"
+          }
+        }
+      },
+      "notifications": {
+        "type": "object",
+        "description": "Notification settings for redemption events",
+        "properties": {
+          "confirmationEmail": {
+            "type": "boolean",
+            "description": "Whether to send confirmation emails for redemptions",
+            "default": true
+          },
+          "smsAlerts": {
+            "type": "boolean",
+            "description": "Whether to send SMS alerts for redemptions",
+            "default": false
+          },
+          "templates": {
+            "type": "object",
+            "description": "Message templates for notifications",
+            "properties": {
+              "emailSubject": {
+                "type": "string",
+                "description": "Subject template for confirmation emails"
+              },
+              "emailBody": {
+                "type": "string",
+                "description": "Body template for confirmation emails"
+              },
+              "smsText": {
+                "type": "string",
+                "description": "Template for SMS notifications"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

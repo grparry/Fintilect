@@ -1,0 +1,16 @@
+{
+  "LinkedAccountSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/LinkedAccountSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/LinkedAccountFeatures"
+      }
+    }
+  }
+}

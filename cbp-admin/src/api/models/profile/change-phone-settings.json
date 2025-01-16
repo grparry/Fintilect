@@ -1,0 +1,16 @@
+{
+  "ChangePhoneSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/ChangePhoneSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/ChangePhoneFeatures"
+      }
+    }
+  }
+}

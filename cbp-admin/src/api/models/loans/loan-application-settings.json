@@ -1,0 +1,22 @@
+{
+  "LoanApplicationSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "qcash": {
+        "$ref": "./providers/qcash.json#/QCashSettings"
+      },
+      "meridianLink": {
+        "$ref": "./providers/meridian-link.json#/MeridianLinkSettings"
+      },
+      "paydayLoans": {
+        "$ref": "./providers/payday-loans.json#/PaydayLoanSettings"
+      },
+      "loanOffers": {
+        "$ref": "./providers/loan-offers.json#/LoanOfferSettings"
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+﻿@using System.Web.Mvc.Html
+@using PSI.Models.ClientConfigurationModels.Agatha
+@using Psi.Data.Models.Domain.NewMobileFeatures;
+
+@model List<NewMobileFeatureModel>
+
+@{
+    ViewBag.Title = "New Mobile Features";
+    ViewBag.Subtitle = "This feature allows you to manage 'new features' for your mobile apps";
+    ViewBag.ActiveMenu = "new-mobile-features";
+}
+
+@section LinkedStyleSheets {
+    <link href='@Url.Content("~/Content/new-mobile-features.css")' rel="stylesheet" />
+}
+
+
+<div class="main-content-container">
+    <div class="panel panel-default">
+        <header class="panel-heading-psi clearfix">
+            <strong>@ViewBag.Title</strong>
+        </header>
+
+        <div id="divLoading" class="text-center" style="display:none;">
+            <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Loading...
+        </div>
+
+        <div id="divFailure" class="alert alert-danger text-center" style="display:none;">
+            Data Load Failure.
+        </div>
+
+        @if (Model == null || Model.Count < 1)
+        {
+
+            <div class="panel-body">
+                <div class="alert alert-danger">
+                    There are no new mobile features to show
+                </div>
+
+                <div class="row list-row-buttons">
+                    <div class="col-md-12 text-left">
+                        <a modal-href="@Url.Action("ManageFeature", "NewMobileFeatures", new { id = 0, mode = "create"})" class="btn btn-primary">Add New Mobile Feature</a> 
+                    </div>
+                </div>
+            </div><!-- end panel-body -->
+
+        }
+        else
+        {
+            <div class="panel-body">
+                <div class="row list-row">
+                    <div class="col-md-12 bold wow-header-blue">Mobile Feature Name</div>
+                </div>
+
+                @foreach (var feature in Model)
+                {
+
+                    <div class="row list-row">
+                        <div class="col-md-11 border-right puffy">
+                            @feature.Name
+                        </div>
+
+                        <div class="col-md-1 puffy text-center">
+                            <a modal-href="@Url.Action("ManageFeature", "NewMobileFeatures", new { id = feature.Id, mode = "update"})" >manage</a>
+                        </div>
+                    </div>
+                }
+
+                <hr />
+
+                <div class="row list-row-buttons">
+                    <div class="col-md-6 col-md-offset-6 text-right">
+                        <a modal-href="@Url.Action("ManageFeature", "NewMobileFeatures", new { id = 0, mode = "create"})" class="btn btn-primary">Add New Mobile Feature</a>                       
+                    </div>
+                </div>
+            </div><!-- end panel-body -->
+        }
+
+    </div><!-- end panel panel-default -->
+</div><!-- end main-content-container -->
+
+
+@section scripts {
+
+    <script src='@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")'></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#targeted-marketing-detail-modal').on('hidden.bs.modal', function () {
+                setTimeout(function () { self.location.href = location.protocol + "//" + location.hostname + "/Omega/NewMobileFeatures/Index"; }, 30);
+            });
+        });
+    </script>
+}

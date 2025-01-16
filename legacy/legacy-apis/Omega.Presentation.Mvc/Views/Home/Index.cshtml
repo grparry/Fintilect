@@ -1,0 +1,71 @@
+﻿@using Omega.Presentation.Mvc.Models.ApplicationConfiguration
+@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.Authentication
+@using PSI.Models.ClientConfigurationModels.Agatha
+@using Omega.Presentation.Mvc.Models.StringResources;
+@model Omega.Presentation.Mvc.Models.HomePageModel
+
+@{
+    ViewBag.Title = "";
+    ViewBag.Subtitle = "";
+    ViewBag.ActiveMenu = "home";
+    ViewBag.BaseModel = Model;
+}
+
+@if (Model.User == null){return;}
+
+
+
+
+<div class="row">
+    <div class="omega-message-header">
+        Omega Tool Home Page Messaging
+    </div>
+
+    <hr />
+
+
+
+    @if (Model.stringResources.Count > 0)
+    {
+        foreach (var resource in Model.stringResources)
+        {
+            if (!String.IsNullOrEmpty(resource.Value))
+            {
+                <div class="col-md-3" id="item_@resource.DefaultId">
+                    <section class="widget">
+                        @*<div id="will we do this in the future">
+                            @Html.ActionLink("deletez", "Delete", "StringResource", routeValues: new { @id = resource.DefaultId }, htmlAttributes: new { @class = "delete-string-resource", @title = "delete new string resource" })
+                        </div>*@
+                        <div>@Html.Raw(resource.Value.First(1024))</div>
+                        <hr />
+                        <small>Resource Key: @resource.Key</small>
+                    </section>
+                </div>
+            }
+        }
+    }
+    else
+    {
+        <div class="col-md-3">
+            To create a custom message for this page, go to 'String Resources' from the menu, and add a new message under the 'OmegaMessaging' resource set. To hide a message from this page for other clients, leave the default value blank.<br><br> Messages can support html tags such as <strong>&lt;strong&gt;</strong>, <em>&lt;em&gt; (emphasis)</em>, and &lt;br&gt; tags, etc. 
+        </div>
+    }
+ 
+    @if (SettingsManager.Settings.OmegaConfiguration.Features.StringResourcesEnabled && Model.User.PermissionLevel.CanView(PermissionLevel.Owner))
+    {
+        <div class="col-md-3 info">
+            <div class="well">
+                @Html.ActionLink("Create a new String Resource", "Index", "StringResource", routeValues: null, htmlAttributes: new { @id = "stringResourcesLinkIcon", @class = "add-string-resource", @title = "add new string resource" })
+                <br/><br/>
+            </div>
+        </div>
+    }
+
+</div><!-- end row-->
+
+<script>
+    $(document).ready(function () {
+        // nothing yet
+    });
+</script>

@@ -1,0 +1,16 @@
+{
+  "OutOfBandSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/OutOfBandSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/OutOfBandFeatures"
+      }
+    }
+  }
+}

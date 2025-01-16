@@ -1,0 +1,51 @@
+{
+  "RegularExpressionsSettings": {
+    "type": "object",
+    "properties": {
+      "patterns": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "pattern": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "flags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["i", "m", "s", "u"]
+              }
+            }
+          }
+        }
+      },
+      "validations": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "routingNumber": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

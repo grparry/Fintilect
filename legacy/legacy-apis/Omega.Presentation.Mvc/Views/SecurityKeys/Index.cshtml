@@ -1,0 +1,59 @@
+﻿@model Psi.Data.Models.Domain.Keys.KeyListModel
+@{
+    ViewBag.Title = "Security Keys";
+    ViewBag.ActiveMenu = "security-keys";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="col-md-2">Name</th>
+            <th class="col-md-3">Current Key Version</th>
+            <th class="col-md-1">Max Version</th>
+            <th class="col-md-2">Created Date</th>
+            <th class="col-md-2">Modified Date</th>
+            <th class="col-md-2">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var key in Model.Keys)
+        {
+            <tr>
+                <td>
+                    <a modal-href="@Url.Action("ListKeyVersionsModal", new { id = key.KeyId})" href="#">@key.KeyName</a>
+                </td>
+                <td>@key.CurrentKeyVersionId</td>
+                <td>@key.MaxVersion</td>
+                <td>@key.CreatedAtUtc</td>
+                <td>@key.LastUpdatedAtUtc</td>
+                <td>
+                    <a modal-href="@Url.Action("AddKeyVersionModal", new { id = key.KeyId })" href="#">Add Version</a>
+                    @if (key.SupportsRotation)
+                    {
+                        <a modal-href="@Url.Action("RotateKeyModal", new { id = key.KeyId })" href="#">Rotate Key</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a modal-href="@Url.Action("AddKeyModal")" href="#">Add Key</a>
+@if (Model.TotalPages > 1)
+{
+    <div>
+        @if (Model.Page > 0)
+        {
+            @Html.ActionLink("<<", "Index", new { p = 0 })
+            @Html.ActionLink("<", "Index", new { p = Model.Page - 1 })
+        }
+        @foreach (var page in Enumerable.Range(Math.Max(1, Model.TotalPages - 10), Model.TotalPages))
+        {
+            @Html.ActionLink(page.ToString(), "Index", new { p = page })
+        }
+        @if (Model.Page < Model.TotalPages - 1)
+        {
+            @Html.ActionLink(">", "Index", new { p = Model.Page + 1 })
+            @Html.ActionLink(">>", "Index", new { p = Model.TotalPages - 1 })
+        }
+    </div>
+}

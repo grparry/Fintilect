@@ -1,0 +1,174 @@
+{
+  "EplEstatementsSettings": {
+    "type": "object",
+    "description": "Configuration settings for EPL estatements integration",
+    "required": ["enabled", "authentication", "endpoints"],
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether EPL estatements integration is enabled",
+        "default": false
+      },
+      "versionRequirements": {
+        "type": "object",
+        "description": "Version requirements for EPL estatements",
+        "required": ["minimumVersion"],
+        "properties": {
+          "minimumVersion": {
+            "type": "number",
+            "description": "Minimum version required for EPL estatements",
+            "minimum": 0
+          }
+        }
+      },
+      "authentication": {
+        "type": "object",
+        "description": "Authentication settings for EPL estatements",
+        "required": ["clientId", "clientSecret", "institutionId"],
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "description": "Client ID for EPL estatements"
+          },
+          "clientSecret": {
+            "type": "string",
+            "description": "Client secret for EPL estatements",
+            "format": "password"
+          },
+          "institutionId": {
+            "type": "string",
+            "description": "Institution ID for EPL estatements"
+          },
+          "ssoSettings": {
+            "type": "object",
+            "description": "SSO configuration for EPL estatements",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether SSO is enabled",
+                "default": true
+              },
+              "tokenLifetime": {
+                "type": "integer",
+                "description": "SSO token lifetime in seconds",
+                "minimum": 0,
+                "default": 3600
+              },
+              "secretKey": {
+                "type": "string",
+                "description": "Secret key for SSO authentication",
+                "format": "password"
+              }
+            }
+          }
+        }
+      },
+      "endpoints": {
+        "type": "object",
+        "description": "Endpoint configurations for EPL estatements",
+        "required": ["apiUrl", "ssoUrl"],
+        "properties": {
+          "apiUrl": {
+            "type": "string",
+            "description": "Base URL for EPL API",
+            "format": "uri"
+          },
+          "ssoUrl": {
+            "type": "string",
+            "description": "URL for SSO integration",
+            "format": "uri"
+          },
+          "callbackUrl": {
+            "type": "string",
+            "description": "Callback URL for EPL notifications",
+            "format": "uri"
+          }
+        }
+      },
+      "documentSettings": {
+        "type": "object",
+        "description": "Document handling settings",
+        "properties": {
+          "formats": {
+            "type": "array",
+            "description": "Supported document formats",
+            "items": {
+              "type": "string",
+              "enum": ["pdf", "html", "xml"]
+            },
+            "default": ["pdf"]
+          },
+          "retention": {
+            "type": "object",
+            "description": "Document retention settings",
+            "properties": {
+              "period": {
+                "type": "integer",
+                "description": "Retention period in months",
+                "minimum": 1,
+                "default": 84
+              },
+              "archiveEnabled": {
+                "type": "boolean",
+                "description": "Whether to archive documents after retention period",
+                "default": true
+              }
+            }
+          }
+        }
+      },
+      "notifications": {
+        "type": "object",
+        "description": "Notification settings",
+        "properties": {
+          "email": {
+            "type": "object",
+            "description": "Email notification settings",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether to send email notifications",
+                "default": true
+              },
+              "templates": {
+                "type": "object",
+                "description": "Email template IDs",
+                "properties": {
+                  "newStatement": {
+                    "type": "string",
+                    "description": "Template ID for new statement notifications"
+                  },
+                  "reminder": {
+                    "type": "string",
+                    "description": "Template ID for reminder notifications"
+                  }
+                }
+              }
+            }
+          },
+          "sms": {
+            "type": "object",
+            "description": "SMS notification settings",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether to send SMS notifications",
+                "default": false
+              },
+              "templates": {
+                "type": "object",
+                "description": "SMS template IDs",
+                "properties": {
+                  "newStatement": {
+                    "type": "string",
+                    "description": "Template ID for new statement notifications"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

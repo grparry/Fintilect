@@ -1,0 +1,22 @@
+{
+  "CheckReorderSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/CheckReorderSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/CheckReorderFeatures"
+      },
+      "harland": {
+        "$ref": "./harland-settings.json#/HarlandSettings"
+      },
+      "mainStreet": {
+        "$ref": "./main-street-settings.json#/MainStreetSettings"
+      }
+    }
+  }
+}

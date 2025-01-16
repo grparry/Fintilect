@@ -1,0 +1,172 @@
+{
+  "RemoteDepositSettings": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "provider": {
+        "type": "string",
+        "enum": ["ProfitStars", "Vertifi", "Ensenta"]
+      },
+      "settings": {
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/ProfitStarsSettings"
+          },
+          {
+            "$ref": "#/VertifiSettings"
+          },
+          {
+            "$ref": "#/EnsentaSettings"
+          }
+        ]
+      },
+      "generalSettings": {
+        "$ref": "#/GeneralRemoteDepositSettings"
+      }
+    }
+  },
+  "GeneralRemoteDepositSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "limits": {
+        "type": "object",
+        "properties": {
+          "dailyLimit": {
+            "type": "number",
+            "format": "double"
+          },
+          "monthlyLimit": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItemAmount": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "checkHoldSettings": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "defaultHoldDays": {
+            "type": "integer"
+          },
+          "thresholds": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "amount": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "holdDays": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "ProfitStarsSettings": {
+    "type": "object",
+    "properties": {
+      "merchantId": {
+        "type": "string"
+      },
+      "apiEndpoint": {
+        "type": "string"
+      },
+      "imageQualitySettings": {
+        "type": "object",
+        "properties": {
+          "minimumDPI": {
+            "type": "integer"
+          },
+          "maximumFileSize": {
+            "type": "integer"
+          },
+          "allowedFileTypes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["JPEG", "PNG", "TIFF"]
+            }
+          }
+        }
+      },
+      "processingSettings": {
+        "type": "object",
+        "properties": {
+          "autoAcceptItems": {
+            "type": "boolean"
+          },
+          "requireDoubleVerification": {
+            "type": "boolean"
+          },
+          "allowBusinessChecks": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "VertifiSettings": {
+    "type": "object",
+    "properties": {
+      "institutionId": {
+        "type": "string"
+      },
+      "processingMode": {
+        "type": "string",
+        "enum": ["RealTime", "Batch"]
+      },
+      "imageSettings": {
+        "type": "object",
+        "properties": {
+          "compressionEnabled": {
+            "type": "boolean"
+          },
+          "targetFileSize": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  },
+  "EnsentaSettings": {
+    "type": "object",
+    "properties": {
+      "clientId": {
+        "type": "string"
+      },
+      "apiKey": {
+        "type": "string"
+      },
+      "processingRules": {
+        "type": "object",
+        "properties": {
+          "duplicateDetectionEnabled": {
+            "type": "boolean"
+          },
+          "fraudDetectionLevel": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          }
+        }
+      }
+    }
+  }
+}

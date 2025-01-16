@@ -1,0 +1,31 @@
+﻿@using Omega.Presentation.Mvc.Models.DocumentArchitect;
+@model DocumentArchitectViewModel
+
+@{
+    ViewBag.Title = "Document Architect";
+    ViewBag.ActiveMenu = "document-architect";
+}
+
+@if (!String.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <h4 style="color: red">@Model.ErrorMessage</h4>
+}
+else if (Model.UseIframe)
+{
+    <iframe src="@Model.Url" style="width: 100%; min-height: 640px;"></iframe>
+}
+else
+{
+    <h6>Document Architect will open in a new tab.</h6>    
+}
+
+<script>
+    OmegaDocumentArchitectModule = OmegaDocumentArchitectModule || {};
+
+    var OmegaDocumentArchitectModule = (function () {
+        if ('@Model.UseIframe'.toLowerCase() === 'false') {
+            // redirect
+            window.open('@Model.Url');
+        }
+    })();
+</script>

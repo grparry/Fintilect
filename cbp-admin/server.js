@@ -19,7 +19,24 @@ app.use((req, res, next) => {
 // Setup logging middleware
 setupLogging(app);
 
-const port = process.env.PORT || 4001;
-app.listen(port, () => {
-  console.log(`File Server is running on port ${port}`);
+const port = 3001; // Logging server port
+const server = app.listen(port, () => {
+  console.log(`Logging server is running on port ${port}`);
+});
+
+// Handle graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM signal received: closing HTTP server');
+  server.close(() => {
+    console.log('HTTP server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT signal received: closing HTTP server');
+  server.close(() => {
+    console.log('HTTP server closed');
+    process.exit(0);
+  });
 });

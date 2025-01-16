@@ -1,0 +1,30 @@
+﻿@model Omega.Presentation.Mvc.Models.QuickAccessManagement.QuickAccessManagementDisplayDevicesModel
+
+@if (!Model.Devices.Any())
+{
+    <div class="alert alert-info">
+        There are no devices with quick access enabled for this member.
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Device Nickname</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        @foreach (var device in Model.Devices)
+        {
+            <tbody>
+                <tr>
+                    <td>@device.DeviceNickname</td>
+                    <td>@device.Status</td>
+                    <td style="text-align:right;"><button class="btn btn-default" onclick="quickAccessTokenManagement.DeleteTokensForDevice('@device.Account', '@device.Uuid', '@device.DeviceGuid')">Delete Tokens</button></td>
+                </tr>
+            </tbody>
+        }
+    </table>
+}

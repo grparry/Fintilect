@@ -1,0 +1,406 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using PSI.Models.ClientConfigurationModels.Agatha
+@model Omega.Presentation.Mvc.Models.StringResources.StringResouceModel
+
+@{
+    ViewBag.Title = "String Resource";
+    ViewBag.Subtitle = "Customizing verbiage";
+    ViewBag.ActiveMenu = "string-resource";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BaseModel = Model;
+}
+
+@if (!SettingsManager.Settings.OmegaConfiguration.Features.StringResourcesEnabled)
+{
+    <div class="alert alert-info">
+        We are sorry to inform you that this feature is currently unavailable.
+    </div>
+}
+else
+{
+    <script>
+        var StringResource = {
+            LoadResourceSets: function () {
+
+                Util.ShowLoading();
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#resource-sets-body').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#stringResourceBody', status);
+                    }
+                };
+                $.get('./StringResource/GetResourceSets', callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")'; });
+            },
+            LoadResourceSetInProgress: false,
+            LoadResourceSet: function(sender) {
+                if (StringResource.LoadResourceSetInProgress) return;
+                StringResource.LoadResourceSetInProgress = true;
+                var $sender = $(sender);
+                var name = $sender.attr('resource-name');
+                StringResource.LoadResourceSetByName(name);
+            },
+            LoadResourceSetByName: function(name, sender) {
+                $('.resouce-set-button-selected').removeClass('resouce-set-button-selected');
+                Util.ShowLoadingInInnerHtml('#stringResourceBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    StringResource.LoadResourceSetInProgress = false;
+                    if (status === 'success') {
+                        $('#stringResourceBody').html(data);
+                        $('#resourceSetLabel').html(name);
+                        if (sender) sender.addClass('resouce-set-button-selected');
+                        StringResource.SearchResourcesRows = null;
+                    } else {
+                        Util.ShowErrorInInnerHtml('#stringResourceBody', status);
+                    }
+                };
+                $.get('./StringResource/GetResourceSet?name=' + escape(name), callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            LoadResourceKey: function(sender) {
+                var $sender = $(sender);
+                var key = $sender.attr('resource-key');
+                var set = $sender.attr('resource-set');
+                $('#manageResourceKey').modal();
+                Util.ShowLoadingInInnerHtml('#manageResourceKeyBody');
+
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        $('#manageResourceKeyBody').html(data);
+                    } else {
+                        Util.ShowErrorInInnerHtml('#manageResourceKeyBody', status);
+                    }
+                }
+
+                $.get('./StringResource/GetResourceKey?key=' + key + '&set=' + set, callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            GetResourceValue: function(sender) {
+                var $sender = $(sender);
+                var key = $sender.attr('resource-key');
+                var set = $sender.attr('resource-set');
+                var id = $sender.attr('resource-id');
+                Util.ShowLoading();
+                var callback = function(data) {
+                    Util.HideLoading();
+                    $('#resource-value-textbox').val(data);
+                }
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: './StringResource/GetResourceKeyValue?key=' + key + '&set=' + set + '&id=' + id,
+                    success: callback
+                }).fail(function () { window.location.href = '@Url.Action("index", "home")'; });
+
+                $('#resourceStartAt').val($sender.attr('resource-start'));
+                $('#resourceEndAt').val($sender.attr('resource-end'));
+            },
+            GetDefaultResourceValue: function(sender, input) {
+                var $sender = $(sender);
+                var key = $sender.attr('resource-key');
+                var set = $sender.attr('resource-set');
+                var id = $sender.attr('resource-id');
+
+                Util.ShowLoading();
+                var callback = function(data) {
+                    Util.HideLoading();
+                    $(input).val(data);
+                }
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: './StringResource/GetDefaultResourceKeyValue?key=' + key + '&set=' + set + '&id=' + id,
+                    success: callback
+                }).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            ShowHtmlInModal: function(sender, sourceId) {
+                var html = $('#' + sourceId).val();
+                $('#previewHtmlModal').modal();
+                $('#previewHtmlModalBody').html(html);
+            },
+            ManageResourceSetId: null,
+            ManageResoruceSet: function(obj) {
+                if (obj === null) {
+                    StringResource.ManageResourceSetId = 0;
+                } else {
+                    StringResource.ManageResourceSetId = $(obj).attr('resource-id');
+                    $('#resource-default-set-textbox').val($(obj).attr('resource-set'));
+                    $('#resource-default-key-textbox').val($(obj).attr('resource-key'));
+                    $('#resource-default-permission-select').val($(obj).attr('resource-permission'));
+                    StringResource.GetDefaultResourceValue(obj, '#resource-default-value-textbox');
+                };
+                $('#manageDefaultResourceModal').modal();
+            },
+            SaveDefaultResource: function(sender) {
+                var id = StringResource.ManageResourceSetId;
+                var set = $('#resource-default-set-textbox').val();
+                var key = $('#resource-default-key-textbox').val();
+                var value = $('#resource-default-value-textbox').val();
+                var lvl = $('#resource-default-permission-select').val();
+
+                var errorMessage = '';
+                if (set.length <= 0) errorMessage += 'Set name is required\r';
+                if (key.length <= 0) errorMessage += 'Key is required\r';
+
+                if (errorMessage !== '') {
+                    alert('Please fix errors before saving...\r\n' + errorMessage);
+                    return;
+                }
+
+                Util.ShowLoading();
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        StringResource.LoadResourceSets();
+                        StringResource.LoadResourceSetByName(set);
+                        $('#manageDefaultResourceModal').modal('hide');
+
+                        $('#resource-default-set-textbox').val('');
+                        $('#resource-default-key-textbox').val('');
+                        $('#resource-default-value-textbox').val('');
+                        $('#resource-default-permission-select').val(0);
+                    } else {
+                        alert('Error saving resource set!');
+                    }
+                }
+
+                $.get('./StringResource/SaveDefaultResource?id=' +
+                    id +
+                    '&Key=' +
+                    key +
+                    '&ResourceSet=' +
+                    set +
+                    '&PermissionLevel=' +
+                    lvl +
+                    '&Value=' +
+                    value +
+                    '&Culture=EN',
+                    callback)
+                    .fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SaveResource: function(sender) {
+                var set = $('#resource-set-textbox').val();
+                var key = $('#resource-key-textbox').val();
+                var value = $('#resource-value-textbox').val();
+                var end = $('#resourceEndAt').val();
+                var start = $('#resourceStartAt').val();
+
+                var errorMessage = '';
+                if (set.length <= 0) errorMessage += 'Set name is required\r';
+                if (key.length <= 0) errorMessage += 'Key is required\r';
+
+                if (errorMessage !== '') {
+                    alert('Please fix errors before saving...\r\n' + errorMessage);
+                    return;
+                }
+
+                Util.ShowLoading();
+                var callback = function(data, status) {
+                    Util.HideLoading();
+                    if (status === 'success') {
+                        StringResource.LoadResourceSetByName(set);
+                        $('#manageResourceKey').modal('hide');
+                    } else {
+                        alert('Error saving resource key!');
+                    }
+                }
+
+                $.post('./StringResource/SaveResource',
+                    {
+                        Key: key,
+                        ResourceSet: set,
+                        Value: value,
+                        StartAt: start,
+                        EndAt: end,
+                        Culture: 'EN'
+                    },
+                    callback).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+            },
+            SearchResourcesRows: null,
+            SearchResources: function(sender) {
+                var x = sender.value.toLowerCase();
+                x = escape(x);
+                var rows = StringResource.SearchResourcesRows;
+                if (rows === null) {
+                    StringResource.SearchResourcesRows = $('[search-row-keys]');
+                    rows = StringResource.SearchResourcesRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('search-text').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            SearchResourcesSetRows: null,
+            SearchResourceSets: function(sender) {
+                var x = sender.value.toLowerCase();
+                var rows = StringResource.SearchResourcesSetRows;
+                if (rows === null) {
+                    StringResource.SearchResourcesSetRows = $('[search-row-sets]');
+                    rows = StringResource.SearchResourcesSetRows;
+                }
+                var rCount = rows.length;
+                for (var i = 0; i < rCount; i++) {
+                    var row = $(rows[i]);
+                    if (row.attr('resource-name').toLowerCase().indexOf(x) !== -1) {
+                        if (row.hasClass('hide')) row.removeClass('hide');
+                    } else {
+                        if (!row.hasClass('hide')) row.addClass('hide');
+                    }
+                }
+            },
+            ExpandAll: function() {
+                if ($('#resource-sets .collaspable:not(.in)')) {
+                    $('#resource-sets .collaspable:not(.in)').collapse('toggle');
+                }
+            },
+            CollapseAll: function() {
+                if ($('#resource-sets .collaspable.in')) {
+                    $('#resource-sets .collaspable.in').collapse('toggle');
+                }
+            }
+        };
+
+        $(function() {
+            AutoSizeTextAreas.Set();
+        });
+        </script>
+
+    <br/>
+
+    <div class="row string-resource">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading-psi">
+                    <strong>Resource Sets</strong> &nbsp;&nbsp;&nbsp;&nbsp;
+                    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+                    {
+                        <button type="button" class="btn btn-default btn-xs" onclick="StringResource.ManageResoruceSet(null);"><span class="glyphicon glyphicon-plus"></span> &nbsp; Add Resource Set</button>
+                    }
+                </div>
+                <div class="panel-body">
+                    <div>
+                    </div>
+                    <div >
+                        <button type="button" class="btn btn-xs btn-default" resource-name="ALL" onclick="StringResource.LoadResourceSet(this);">Show All</button>
+                        <button type="button" class="btn btn-xs btn-default" resource-name="ExpandAll" onclick="StringResource.ExpandAll();" title="Expand All Resource Sets"><span class="glyphicon glyphicon-folder-open"></span></button>
+                        <button type="button" class="btn btn-xs btn-default" resource-name="CollapseAll" onclick="StringResource.CollapseAll();" title="Collapse All Resource Sets"><span class="glyphicon glyphicon-folder-close"></span></button>
+                        <input type="text" class="form-control" id="searchResrouceKeys" placeholder="Search by Set" onkeyup="StringResource.SearchResourceSets(this);"/><br/>
+                        <div class="resouce-panel-body" id="resource-sets-body">
+                            @Html.Partial("GetResourceSets", Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-heading-psi">
+                    <strong>Resource Set:</strong> <span id="resourceSetLabel"></span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+                    {
+                        <button type="button" class="btn btn-default btn-xs"
+                                onclick="StringResource.ManageResoruceSet(null); $('#resource-default-set-textbox').val($('#resourceSetLabel').html());">
+                            <span class="glyphicon glyphicon-plus"></span> &nbsp; Add Resource
+                        </button>
+                    }
+                </div>
+                <div class="panel-body">
+                    <div id="stringResourceBody">
+                        <div class="alert alert-info">
+                            <p>Select a resource set to view, edit, and manage.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="reset-config-button"></button>
+
+    <div class="modal fade" role="dialog" id="manageResourceKey">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Manage Resource</h3>
+                </div>
+                <div class="modal-body" id="manageResourceKeyBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="previewHtmlModal">
+        <div class="modal-dialog large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Html Preview</h3>
+                </div>
+                <div class="modal-body" id="previewHtmlModalBody">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="manageDefaultResourceModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Manage Default Resource</h3>
+                </div>
+                <div class="modal-body" id="manageDefaultResourceBody">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Set Name</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="resource-default-set-textbox"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Key</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="resource key" id="resource-default-key-textbox"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Default Value</label>
+                            <div class="col-md-8">
+                                <textarea class="form-control" rows="4" placeholder="default value" id="resource-default-value-textbox"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Edit Permission</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="resource-default-permission-select">
+                                    <option selected="selected" value="0">ALL</option>
+                                    <option value="100">Vendor Only</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-8">
+                                <button type="button" class="btn btn-primary" onclick="StringResource.SaveDefaultResource(this);">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

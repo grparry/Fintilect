@@ -1,0 +1,178 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Admin Member Management API",
+    "description": "Comprehensive API documentation for the Admin Member Management system.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://{ServiceHost}",
+      "description": "Base URL for the API"
+    }
+  ],
+  "paths": {
+    "/api/admin-member-management/v1/search": {
+      "post": {
+        "summary": "Search for a member by an identifier.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberSearchResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MemberSearchRequest": {
+        "type": "object",
+        "properties": {
+          "Identifier": {
+            "type": "integer",
+            "description": "The identifier of the member."
+          },
+          "IdentifierType": {
+            "type": "string",
+            "enum": [
+              "AccountNumber",
+              "PersonNumber",
+              "OrgNumber",
+              "MemberNumber",
+              "CoreUserId",
+              "Username",
+              "TaxId",
+              "Uuid"
+            ],
+            "description": "The type of identifier."
+          },
+          "TellerId": {
+            "type": "integer",
+            "description": "The teller's unique ID."
+          }
+        },
+        "required": [
+          "Identifier",
+          "TellerId"
+        ]
+      },
+      "MemberSearchResponse": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "accountNumber": {
+                  "type": "string"
+                },
+                "personNumber": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "uuid": {
+                  "type": "string"
+                },
+                "accountCategory": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "demographics": {
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string"
+              },
+              "middleInitial": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "address": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string"
+                  },
+                  "addressLine1": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "abbreviation": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "zipCode": {
+                    "type": "object",
+                    "properties": {
+                      "five": {
+                        "type": "string"
+                      },
+                      "plusFour": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "dateOfBirth": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ]
+}

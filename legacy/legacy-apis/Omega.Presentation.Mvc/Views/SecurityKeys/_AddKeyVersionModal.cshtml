@@ -1,0 +1,102 @@
+﻿@model Psi.Data.Models.Domain.Keys.KeyModel
+
+<div class="modal fade">
+    <!-- Modal Layout -->
+    <div class="modal-dialog modal-lg">
+        <div id="partial-view-modal-content" class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+	            <h4 class="modal-title">
+		            Add Version for Key "@Model.KeyName"
+	            </h4>
+            </div>
+
+	        @using (Ajax.BeginForm("AddKeyVersion", new AjaxOptions
+			{
+				HttpMethod = "POST",
+				OnBegin = "submitKeyVersion",
+				OnFailure = "addKeyVersionFailed",
+				OnSuccess = "addKeyVersionDone"
+			}))
+			{
+				<div class="modal-body">
+					<div class="keyversion-options">
+						<p>
+							Keys and IVs should be entered in Hexadecimal form. Any characters except 0-9 or A-F will be ignored.
+						</p>
+
+						<div class="form-group Key-form-group">
+							@Html.Label("Key", new { @for ="key-hex"})
+							@Html.TextBox("KeyHex", "", new { id="key-hex", @class = "form-control", placeholder = "(Hexadecimal Key)", pattern = "[0-9a-fA-F]+" })
+						</div>
+
+                        <div class="form-group IV-form-group">
+                            @Html.Label("IV", new { @for = "iv-hex" })
+                            @Html.TextBox("IVHex", "", new { id="iv-hex", @class = "form-control", placeholder = "(optional)", pattern = "[0-9a-fA-F]+" })
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-inline">
+                                @Html.CheckBox("MakeCurrent", true, new { id = "make-current" })
+                                Make this key version the current version
+                            </label>
+                        </div>
+
+                        @Html.HiddenFor(x => x.KeyId)
+					</div>
+			
+			
+					<div class="keyversion-results" style="display: none;">
+						<div class="alert alert-success" style="color: #3c763d;">
+							<div>
+								<b id="key-status">Key Version Added Successfully</b>
+							</div>
+
+						</div>
+					</div>
+				</div><!-- End modal-body -->
+
+
+		        <div class="modal-footer">
+			        <button type="button" class="btn btn-default keyversion-cancel" data-dismiss="modal">Cancel</button>
+			        <button type="button" class="btn btn-primary keyversion-button" onclick="submitKeyVersion()">
+				        <span class='keyversion-submitting' style="display: none;">
+					        <i class='fa fa-spin fa-spinner'></i>
+					        Adding Key Version
+				        </span>
+				        <span class="keyversion-not-submitting">
+					        Add Key Version
+				        </span>
+			        </button>
+		        </div>
+	        }
+			
+	        <script>
+                function submitKeyVersion() {
+                    $(".keyversion-submitting").show();
+                    $(".keyversion-not-submitting").hide();
+
+                    var keyId = "@Model.KeyId";
+                    var keyHex = $('#key-hex').val();
+                    var ivHex = $('#iv-hex').val();
+                    var makeCurrent = $('#make-current').prop('checked');
+                    var callback = function (data, status) {
+                        if (status === 'success') {
+                            $('#key-status').text('Key Added Successfully');
+                            $('.keyversion-button').hide();
+                            $('.keyversion-cancel').text('Close');
+                        } else {
+                            Util.ShowErrorInInnerHtml('#key-status', status);
+                        }
+                        $('.keyversion-results').show();
+                    };
+
+                    $.post('@Url.Action("AddKeyVersion")', { keyId, keyHex, ivHex, makeCurrent }, callback).fail(function () { window.location.href = '@Url.Action("index", "home")';});
+                }
+            </script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

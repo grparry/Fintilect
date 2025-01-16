@@ -1,0 +1,19 @@
+{
+  "MultipleAddressesSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "maxAddresses": {
+        "type": "integer"
+      },
+      "addressTypes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "BokuSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/BokuSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/BokuFeatures"
+      }
+    }
+  }
+}

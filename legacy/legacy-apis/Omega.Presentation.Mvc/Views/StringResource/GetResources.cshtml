@@ -1,0 +1,45 @@
+﻿@using Omega.Presentation.Mvc.Business
+@model Omega.Presentation.Mvc.Models.StringResources.GetResourceSetModel
+
+<div class="form-horizontal resouce-panel-body">
+    <div class="form-group">
+        <label class="col-sm-3 control-label" for="searchResrouceKeys">Search</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="searchResrouceKeys" placeholder="Search by Key or Current Value" onkeyup="StringResource.SearchResources(this);" />
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Resource Key</th>
+                <th>Current Value</th>
+            </tr>
+        </thead>
+        @foreach (var resource in Model.Resources.OrderBy(x => x.Key))
+        {
+            <tr search-row-keys search-text="@resource.Key.UrlEscape() @resource.Value.First(200).UrlEscape()">
+                <td>
+                    @if (resource.PermissionLevel == (int)PermissionLevel.Owner)
+                    {
+                        <span style="font-size: larger;" class="text-danger" title="Only vendor may edit this resource"><span class="glyphicon glyphicon-lock"></span></span>
+                    }
+                </td>
+                <td>
+                    <span style="font-size: larger; cursor: pointer;" class="text-primary" title="Manage resource overrides" onclick="StringResource.LoadResourceKey(this);" resource-key="@resource.Key" resource-set="@resource.ResourceSet"><span class="glyphicon glyphicon-edit"></span></span>
+                </td>
+                <td>
+                    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Dev))
+                    {
+                        <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit default resource" onclick="StringResource.ManageResoruceSet(this);" resource-key="@resource.Key" resource-set="@resource.ResourceSet" resource-id="@resource.DefaultId" resource-permission="@resource.PermissionLevel"><span class="glyphicon glyphicon-cog"></span></span>
+                    }
+                </td>
+
+                <td>@resource.Key<br /><span class="lightGray">[@resource.ResourceSet]</span></td>
+                <td>@resource.Value.First(200)</td>
+            </tr>
+        }
+    </table>
+</div>

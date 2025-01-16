@@ -1,0 +1,16 @@
+{
+  "GoodFundsSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/GoodFundsSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/GoodFundsFeatures"
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "RecurringBillPaySettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "frequencies": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["Weekly", "BiWeekly", "Monthly", "Quarterly", "Annually"]
+        }
+      },
+      "maxRecurringPayments": {
+        "type": "integer"
+      },
+      "maxFuturePayments": {
+        "type": "integer"
+      }
+    }
+  }
+}

@@ -86,7 +86,7 @@ export const mockDashboardMetrics: DashboardMetrics = {
     transactionVolume: mockChartData(TimeRange.DAY, 'hour'),
     userGrowth: mockChartData(TimeRange.MONTH, 'month'),
     activityBreakdown: {
-      labels: ['Active', 'Inactive', 'New'] as const,
+      labels: ['Active', 'Inactive', 'New'],
       datasets: [{
         label: 'User Activity',
         data: [850, 350, 125],

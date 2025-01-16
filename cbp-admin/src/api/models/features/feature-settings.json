@@ -1,0 +1,13 @@
+{
+  "FeatureSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "stopPayment": {
+        "$ref": "../services/stop-payment.json#/StopPaymentSettings"
+      }
+    }
+  }
+}

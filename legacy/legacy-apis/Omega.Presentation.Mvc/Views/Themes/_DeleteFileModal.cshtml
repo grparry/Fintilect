@@ -1,0 +1,58 @@
+﻿@model Omega.Presentation.Mvc.Views.Themes.ThemeFileViewModel
+
+<div class="modal fade destroy-when-closed">
+    <!-- Modal Layout -->
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                <h4 class="modal-title">
+                    Are you Sure?
+                </h4>
+            </div>
+
+            @using (Ajax.BeginForm("DeleteThemeFile", new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnBegin = "PsiModal.BeginFormSubmit",
+                OnFailure = "PsiModal.FormSubmitFailed",
+                OnSuccess = "deleteThemeModalFileSubmitted"
+            }))
+            {
+                <div class="modal-body">
+
+                    About to @($"{Model.DeleteFileVerb().ToLower()}: {Model.FileName}")
+                    <br/>
+                    <br/>
+                    @if (Model.ThemeBeingEdited == Model.ThemePublicId)
+                    {
+                        <div class="extra-info">This cannot be undone!</div><!--TODO: Add a way to undo deletes. On the back end we should perform a soft delete.-->
+                    }
+
+                    @Html.HiddenFor(x => x.FileName)
+					@Html.HiddenFor(x => x.ThemePublicId)
+                    @Html.HiddenFor(x => x.ThemeBeingEdited)
+                    @Html.HiddenFor(x => x.PublicId)
+                    @Html.HiddenFor(x => x.ThemeFileParentAction)
+
+                </div><!-- End modal-body -->
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <input type="submit" class="btn btn-danger" value="@(Model.DeleteFileVerb())" />
+                </div>
+            }
+
+            <script>
+                function deleteThemeModalFileSubmitted(data) {
+                    // TODO: Update list via AJAX
+                    location.reload();
+                }
+            </script>
+
+        </div>
+    </div><!-- End modal-dialog -->
+</div>

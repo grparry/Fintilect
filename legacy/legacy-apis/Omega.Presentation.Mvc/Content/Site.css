@@ -1,0 +1,496 @@
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.resouce-set-button {
+    cursor: pointer;
+    padding: .25em;
+}
+.resouce-set-button:hover {
+    text-decoration: underline;
+    background-color: #888888;
+}
+.resouce-set-button-selected {
+    text-decoration: underline;
+    background-color: #aaaaaa;
+}
+.resouce-panel-body {
+    max-height: 600px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+.resouce-set-group {
+    white-space: nowrap;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.search-list-button {
+    cursor: pointer;
+    padding: .25em;
+}
+.search-list-button:hover {
+    text-decoration: underline;
+    background-color: #888888;
+}
+.search-list-button-selected {
+    text-decoration: underline;
+    background-color: #aaaaaa;
+}
+.config-panel-body {
+    max-height: 600px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+.search-list-group {
+    white-space: nowrap;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.modal .large {
+    width: 80%;
+}
+
+.app-config-body {
+    max-height: 650px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+#LoadingCloud {
+    position: fixed;
+    left: 0;right: 0;top: 0;bottom: 0;
+    background-color: #636363;
+    background-color: rgba(99, 99, 99, .8);
+    z-index: 100000;
+}
+
+div.btn-submit:hover {
+    text-decoration: underline;
+
+}
+
+
+
+@media (min-width: 0px) {
+
+    .jumbotron {
+        background-color:transparent;
+        color:#FFFFFF;
+    }
+}
+
+.omega-message-block {
+    /* Firefox v3.6+ */
+    background-image:-moz-linear-gradient(50% 0% -90deg,rgb(235,234,255) 0%,rgb(253,253,253) 32%,rgb(253,253,253) 100%); 
+    /* safari v4.0+ and by Chrome v3.0+ */
+    background-image:-webkit-gradient(linear,50% 0%,50% 100%,color-stop(0, rgb(235,234,255)),color-stop(0.32, rgb(253,253,253)),color-stop(1, rgb(253,253,253)));
+    /* Chrome v10.0+ and by safari nightly build*/
+    background-image:-webkit-linear-gradient(-90deg,rgb(235,234,255) 0%,rgb(253,253,253) 32%,rgb(253,253,253) 100%);
+    /* Opera v11.10+ */
+    background-image:-o-linear-gradient(-90deg,rgb(235,234,255) 0%,rgb(253,253,253) 32%,rgb(253,253,253) 100%);
+    /* IE v10+ */
+    background-image:-ms-linear-gradient(-90deg,rgb(235,234,255) 0%,rgb(253,253,253) 32%,rgb(253,253,253) 100%);
+    background-image:linear-gradient(180deg,rgb(235,234,255) 0%,rgb(253,253,253) 32%,rgb(253,253,253) 100%);
+    -ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffebeaff,endColorstr=#fffdfdfd,GradientType=0)";
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffebeaff,endColorstr=#fffdfdfd,GradientType=0);
+    border:1px solid #E7E7E7;
+    padding-top:10px;
+    padding-bottom:10px;
+    margin-bottom: 20px;
+    height:280px;
+    margin-right:2%;
+    width:23%;
+    overflow-y:auto;
+}
+
+.omega-message-block.info {
+    /* Firefox v3.6+ */
+    background-image:-moz-linear-gradient(50% 0% -90deg,rgb(228,245,255) 0%,rgb(255,255,255) 50%,rgb(255,255,255) 100%); 
+    /* safari v4.0+ and by Chrome v3.0+ */
+    background-image:-webkit-gradient(linear,50% 0%,50% 100%,color-stop(0, rgb(228,245,255)),color-stop(0.5, rgb(255,255,255)),color-stop(1, rgb(255,255,255)));
+    /* Chrome v10.0+ and by safari nightly build*/
+    background-image:-webkit-linear-gradient(-90deg,rgb(228,245,255) 0%,rgb(255,255,255) 50%,rgb(255,255,255) 100%);
+    /* Opera v11.10+ */
+    background-image:-o-linear-gradient(-90deg,rgb(228,245,255) 0%,rgb(255,255,255) 50%,rgb(255,255,255) 100%);
+    /* IE v10+ */
+    background-image:-ms-linear-gradient(-90deg,rgb(228,245,255) 0%,rgb(255,255,255) 50%,rgb(255,255,255) 100%);
+    background-image:linear-gradient(180deg,rgb(228,245,255) 0%,rgb(255,255,255) 50%,rgb(255,255,255) 100%);
+}
+
+@media (max-width: 990px) {
+    .omega-message-block {
+        width:100%;
+        height:auto;
+    }
+}
+
+.omega-message-header {
+    font-weight:bold; 
+    font-size:16px; 
+    margin-bottom:20px;
+}
+
+
+.add-string-resource {
+     float:left;
+     width: 90%;
+     height: 40px;
+     text-indent: 28px;  
+     line-height: 20px;
+     -webkit-transition: opacity 0.5s ease;
+     transition: opacity 0.5s ease;
+     background: url(../Images/icon_add_20px.png) no-repeat top left;
+     font-size:1.3rem;
+} 
+
+.add-string-resource:hover {
+    opacity:0.8;
+}
+
+.omega-message-block a.delete-string-resource {
+     display: inline-block;
+     width: 100%;
+     height: 26px;
+     text-indent: 500px; /* hides the link text */
+     -webkit-transition: opacity 0.5s ease;
+     transition: opacity 0.5s ease;
+     background: url(../Images/icon_delete_16px.png) no-repeat top right;
+}
+ 
+.omega-message-block a.delete-string-resource:hover {
+    opacity:0.7;
+}
+
+.no-transition {
+  -webkit-transition: height 0.01s;
+  -moz-transition: height 0.01s;
+  -ms-transition: height 0.01s;
+  -o-transition: height 0.01s;
+  transition: height 0.01s;
+}
+
+.extra-info {
+    font-size: 85%;
+    opacity: 0.85;
+}
+
+.panel-heading-psi {
+    padding: 3px 7px;
+}
+
+.chart-color {
+    display: inline;
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+}
+
+.transparent {
+    visibility: hidden;
+}
+
+/* Hide to start (avoid "flickering" on load) */
+.reset-config-button {
+    display: none;
+}
+
+textarea {
+    max-height: 400px;
+}
+
+.dimGray {
+    color: dimgray
+}
+
+.lightGray {
+    color: lightgrey
+}
+
+hr {
+    border-bottom:1px solid #E3E3E3;
+}
+
+
+/* Json error checking */
+
+.json-check {
+    margin-top: 5px;
+    text-align: right;
+}
+
+.check-looks-good {
+    color: darkgreen;
+    display: none;
+}
+
+.check-looks-good .fa {
+    color: green;
+}
+
+.check-error {
+    color: darkred;
+    display: none;
+}
+
+.check-error .fa {
+    color: red;
+}
+
+.json-check .fa {
+    font-size: 1.4em;
+}
+
+
+#toast-container > div {
+    box-shadow: 0 0 30px #fff !important;
+}
+
+.field-validation-error {
+	padding: 2px 10px;
+	background-color: orangered;
+	border-radius: 4px;
+	display: block;
+}
+
+.error-list {
+	padding: 5px 14px;
+	border-radius: 3px;
+	color: white;
+	background-color: orangered;
+	overflow: hidden;
+	margin: 6px auto;
+}
+
+.has-error label {
+	color: orangered;
+	font-weight: bold;
+}
+
+.has-error .form-control {
+	border-color: orangered;
+	border-width: 2px;
+}
+
+.CodeMirror-lint-tooltip {
+	z-index: 15000 !important;
+}
+
+.modal-footer:before, .modal-footer:after {
+	content: none;
+}
+
+#dropzoneArea {
+	height: 300px;
+}
+
+.theme-list .sub-theme .theme-title:before {
+    padding-left: 35px;
+    content: "\f068";
+    font-family: FontAwesome;
+    left: -5px;
+    opacity: 0.4;
+    font-size: .6em;
+    position: relative;
+    top: -1px;
+}
+
+.delete {
+    text-decoration: line-through;
+}
+
+.delete .extra-info {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.parent-file {
+    color: #888;
+}
+
+.parent-file a {
+    color: #888;
+}
+
+
+/* Full-screen modals */
+.modal.full-screen .modal-dialog {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.modal.full-screen .modal-content {
+	height: auto;
+	min-height: 100%;
+	border-radius: 0;
+}
+
+/*.modal.full-screen #editingArea .CodeMirror {*/
+/*	height: calc(100vh - 80px);*/
+/*}*/
+
+#mergeView .CodeMirror-lines {
+	background-color: #f8f8f8;
+}
+
+/* Make it clear that the preview you're looking at isn't current/valid. */
+.edit-file-modal.preview-bad .CodeMirror-merge-right .CodeMirror-lines {
+	background-color: #ffeeee !important;
+}
+.edit-file-modal.preview-bad .CodeMirror-merge-right .CodeMirror-merge-r-chunk {
+	background-color: #ffeeee !important;
+}
+
+.code-container {
+	border: 1px solid gray;
+}
+
+.code-container-top {
+	height: calc(65vh - 75px);
+}
+
+.code-container-bottom {
+	height: calc(35vh - 95px);
+}
+
+.code-container-full {
+	height: calc(100vh - 125px);
+}
+
+#jsonPreview, #existingFileContents {
+	width: calc(100vw/2);
+}
+
+/* Fill available container */
+#editingArea .CodeMirror {
+	height: 100% !important;
+}
+
+.code-description {
+	background-color: #999;
+	color: white;
+	padding: 2px;
+	font-size: 85%;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+/* We don't want to be able to edit content templates.  CodeMirror is still allowing to merge stuff even if set to readOnly. */
+.CodeMirror-merge-copy {
+	display: none;
+}
+
+.CodeMirror-merge, .CodeMirror-merge .CodeMirror {
+	height: calc(65vh - 70px) !important;
+}
+
+.code-container-full .CodeMirror {
+	height: calc(100vh - 125px) !important;
+}
+
+.merge-display-options {
+	display: flex;
+	align-items: baseline;
+}
+
+.merge-display-options label {
+	margin-left: 15px;
+}
+
+#previewResultGood {
+	color: green;
+	padding-top: 4px;
+	display: none;
+}
+
+#previewResultBad {
+	color: darkred;
+	font-weight: bold;
+	display: none;
+}
+
+
+.merge-between-bar {
+	display: flex;
+	justify-content: space-between;
+	padding: 4px 15px;
+	border-top: 1px solid #999;
+	margin-top: 2px;
+}
+
+.merge-between-bar i.fa {
+	font-size: 150%;
+}
+
+.edit-file-modal.preview-good #previewResultsPending {
+	display: none;
+}
+
+.edit-file-modal.preview-bad #previewResultsPending {
+	display: none;
+}
+
+.edit-file-modal.preview-good #previewResultGood {
+	display: inline;
+}
+
+.edit-file-modal.preview-bad #previewResultBad {
+	display: inline;
+}
+
+.edit-file-modal.preview-good .merge-between-bar {
+	background-color: #eeffee;
+}
+
+.edit-file-modal.preview-bad .merge-between-bar {
+	background-color: #ffeeee;
+}
+
+.view-file-modal .img-container {
+	padding: 20px;
+}
+
+.view-file-modal .img-responsive {
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid #999;
+}
+
+
+.run-test-button .running-content {
+	display: none;
+}
+
+.run-test-button .not-running-content {
+	display: block;
+}
+
+
+.run-test-button.running .running-content {
+	display: block;
+}
+
+.run-test-button.running .not-running-content {
+	display: none;
+}
+
+.results .fa-times-circle {
+	color: red;
+}
+
+.results .fa-check {
+	color: limegreen;
+}
+.deploy-display-actions {
+    font-size: 2em;
+}
+.deploy-child-row {
+    border-left: 10px solid white;
+}

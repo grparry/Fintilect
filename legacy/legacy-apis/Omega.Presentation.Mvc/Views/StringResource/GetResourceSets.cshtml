@@ -1,0 +1,24 @@
+﻿@model Omega.Presentation.Mvc.Models.StringResources.StringResouceModel
+<div id="resource-sets">
+    @{
+        var sets = Model.ResourceSets.OrderBy(xr => xr.Group).ThenBy(xr=>xr.Name).ToList();
+        var resSet = sets.First().Group;
+    var j = 1;
+    var setId = "set0";
+    @:<div><a href="#@setId" data-toggle="collapse" class="resouce-set-group"><span class="glyphicon glyphicon-folder-close"></span>&nbsp;Root Level</a></div>
+    @:<div id="@setId" class="collapse in collaspable">
+    foreach (var resource in sets)
+    {
+        if (resSet != resource.Group)
+        {
+            setId = "set" + j++;
+                resSet = resource.Group;
+            @:</div>
+            @:<div><a href="#@setId" data-toggle="collapse" class="resouce-set-group"><span class="glyphicon glyphicon-folder-close"></span>&nbsp;@resSet</a></div>
+            @:<div id="@setId" class="collapse in collaspable">
+        }
+        @:<div search-row-sets class="resouce-set-button" resource-name="@resource.FullName" onclick="StringResource.LoadResourceSet(this);">@resource.Name</div>
+        }
+    @:</div>
+}
+</div>    

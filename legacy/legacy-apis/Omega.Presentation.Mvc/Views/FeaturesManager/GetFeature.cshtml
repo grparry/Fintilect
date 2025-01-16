@@ -1,0 +1,71 @@
+﻿@using Omega.Presentation.Mvc.Business
+@model Omega.Presentation.Mvc.Models.FeaturesManager.AddUpdateFeatureModel
+
+@{
+    ViewBag.BaseModel = Model;
+}
+
+
+@if (Model.Feature != null)
+{
+    <div class="panel-heading-psi">
+        <strong><span id="featureLabel"></span></strong>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="pull-right">
+            @if (Model.User.PermissionLevel.CanView(PermissionLevel.Support) && Model.Licensed == null && Model.SelectedClientId == null)
+            {
+                <span style="font-size: larger; cursor: pointer;" class="text-white" title="Add Feature Group" onclick="FeaturesManager.EditFeatureGroup(this, '0', '@Model.Feature.Id');"><span class="glyphicon glyphicon-plus"></span></span>
+                <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit Feature" onclick="FeaturesManager.EditFeature(this, '@Model.Feature.Id')"><span class="glyphicon glyphicon-cog"></span></span>
+            }
+        </span>
+    </div>
+}
+else
+{
+    <div class="panel-heading-psi">
+        <strong><span id="featureLabel"></span></strong>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+}
+
+<div class="panel-body">
+    @if (Model.Feature != null)
+    {
+        <div class="panel panel-default" style="min-height: 600px; max-height: 600px; overflow-y: auto;">
+            <div class="panel-body">
+                @{
+                    @*var fee = Model.Feature.LicenseFee ?? decimal.Zero;
+                        var mnt = Model.Feature.MaintenanceFee ?? decimal.Zero;*@
+                }
+                <div>
+                    <p>@Model.Feature.Description</p>
+                    <p>Benefits: @Model.Feature.Benifits</p>
+                    <p>Dependencies: @Model.Feature.Dependancies</p>
+                    <p>Minimum Version: @Model.Feature.MinimumVersion</p>
+                    <p>Deprecated Version: @Model.Feature.DeprecatedVersion</p>
+                    @*<p>License Fee: @fee.ToString("C")</p>
+                        <p>Maintenance Fee: @mnt.ToString("C")</p>*@
+                    <p>Is Active: @Model.Feature.IsActive</p>
+                    @*<a class="btn btn-default" href="@Url.Action("ViewFeatureGroups", "FeaturesManager", new {featureId = Model.Feature.Id})">View @Model.Feature.Name&apos;s Groups</a>*@
+                </div>
+                @if (Model.Licensed != null && Model.SelectedClientId != null)
+                {
+                    if (Model.Licensed.Value)
+                    {
+                        <button class="btn btn-default" onclick="LicenseManager.EditLicense(this, '@Model.Feature.Id', '@Model.SelectedClientId', 'false', '@Model.Feature.Name')">Remove License</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-default" onclick="LicenseManager.EditLicense(this, '@Model.Feature.Id', '@Model.SelectedClientId', 'true', '@Model.Feature.Name')">License Feature</button>
+                    }
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center extra-info" style="min-height: 200px; padding-top: 60px;">
+            <p><i class="fa fa-arrow-left"></i> &nbsp; Select an option from the list to view, edit, and manage.</p>
+        </div>
+    }
+</div>

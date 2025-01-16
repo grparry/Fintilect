@@ -1,0 +1,107 @@
+﻿@using Omega.Presentation.Mvc.Business
+@using Omega.Presentation.Mvc.Models.CreditUnionContactInfo
+@model AddUpdateContactUsGroupModel
+
+@{
+    ViewBag.ActiveMenu = "";
+    ViewBag.BaseModel = Model;
+}
+
+<div class="panel-body">
+    @using (Html.BeginForm("UpdateContactUsGroup", "CreditUnionContactInfo", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "editGroupForm" }))
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.ContactUsGroup.Title, new { @class = "col-md-3 control-label" })
+            <div class="col-md-7">
+                @Html.TextBoxFor(m => m.ContactUsGroup.Title, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ContactUsGroup.Email, new { @class = "col-md-3 control-label" })
+            <div class="col-md-7">
+                @Html.TextBoxFor(m => m.ContactUsGroup.Email, new { @class = "form-control" })
+            </div>
+        </div>
+        @Html.HiddenFor(m => m.ContactUsGroup.Id)
+        @Html.HiddenFor(m => m.ContactUsGroup.ContactUsId)
+        if (Model.ContactUsGroup.Id > 0)
+        {
+
+            <div class="panel-heading-psi">
+                <strong class="control-label">Phone Numbers</strong>
+                <span class="pull-right">
+                    @if (Model.User.PermissionLevel.CanView(PermissionLevel.Owner))
+                    {
+                        <button type="button" class="btn btn-default btn-xs" onclick="CreditUnionContactInfo.AddPhoneNumber(this, '@Model.ContactUsGroup.Id');">
+                            New &nbsp;<span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    }
+                </span>
+	            <br />
+			
+            @foreach (var phoneNumber in Model.ContactUsGroup.ContactUsPhoneNumbers)
+			{
+                <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit Phone Number" onclick="CreditUnionContactInfo.EditPhoneNumber(this, '@phoneNumber.ContactUsGroupId', '@phoneNumber.Id', 'Edit @phoneNumber.Title')"><span class="glyphicon glyphicon-cog"></span></span>
+                <span>@phoneNumber.Title: @phoneNumber.PhoneNumber</span>
+                foreach (var phoneHour in phoneNumber.ContactUsPhoneHours){
+                    <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit Phone Hours" onclick="CreditUnionContactInfo.EditPhoneHour(this, '@phoneHour.ContactUsGroupId', '@phoneHour.ContactUsPhoneNumberId', '@phoneHour.Id', 'Edit Contact Hours')"><span class="glyphicon glyphicon-cog"></span></span>
+	                <span>@phoneHour.DayRange @phoneHour.TimeRange</span>
+					<br />
+                }
+                <br />
+	        }
+            </div>
+
+	        <br />
+
+	        if (Model.ContactUsGroup.ContactUsPhoneHours.Any() || !Model.ContactUsGroup.ContactUsPhoneNumbers.Any(x => x.ContactUsPhoneHours.Any()))
+            {
+                <div class="panel-heading-psi">
+                    <strong class="control-label">Phone Hours</strong>
+                    <span class="pull-right">
+                        @if (Model.User.PermissionLevel.CanView(PermissionLevel.Owner))
+                        {
+                            <button type="button" class="btn btn-default btn-xs" onclick="CreditUnionContactInfo.AddPhoneHour(this, '@Model.ContactUsGroup.Id', null);">
+                                New &nbsp;<span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        }
+                    </span>
+	                <br />
+
+	                @foreach (var phoneHour in Model.ContactUsGroup.ContactUsPhoneHours)
+	                {
+	                    <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit Contact Hours" onclick="CreditUnionContactInfo.EditPhoneHour(this, '@phoneHour.ContactUsGroupId', '@phoneHour.ContactUsPhoneNumberId', '@phoneHour.Id', 'Edit Contact Hours')"><span class="glyphicon glyphicon-cog"></span></span>
+	                    <span>@phoneHour.DayRange @phoneHour.TimeRange</span>
+	                    <br />
+	                }
+                </div>
+	        }
+                
+	        <br />
+
+	        <div class="panel-heading-psi">
+		        <strong class="control-label">Links</strong>
+		        <span class="pull-right">
+			        @if (Model.User.PermissionLevel.CanView(PermissionLevel.Owner))
+			        {
+				        <button type="button" class="btn btn-default btn-xs" onclick="CreditUnionContactInfo.AddLink(this, '@Model.ContactUsGroup.Id');">
+					        New &nbsp;<span class="glyphicon glyphicon-plus"></span>
+				        </button>
+			        }
+		        </span>
+	        <br />
+	        @foreach (var link in Model.ContactUsGroup.ContactUsLinks)
+	        {
+		        <span style="font-size: larger; cursor: pointer;" class="text-success" title="Edit Link" onclick="CreditUnionContactInfo.EditLink(this, '@link.ContactUsGroupId', '@link.Id', 'Edit @link.Label')"><span class="glyphicon glyphicon-cog"></span></span>
+		        <span>@link.Label: @link.Url</span>
+		        <br />
+		        
+		        }
+	        </div>
+	        <br /><br />
+            @Html.ActionLink("Delete Group", "DeleteContactUsGroup", new { groupId = Model.ContactUsGroup.Id }, new { @class = "btn btn-default pull-right" })
+            <span class="pull-right">&nbsp;&nbsp;</span>
+        }
+        <button class="btn btn-default pull-right" onclick="$('#editGroupForm').submit()">Save</button>
+    }
+</div>

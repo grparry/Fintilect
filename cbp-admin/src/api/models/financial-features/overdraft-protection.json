@@ -1,0 +1,51 @@
+{
+  "OverdraftProtectionSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "maxOverdraftAmount": {
+        "type": "number"
+      },
+      "overdraftFee": {
+        "type": "number"
+      },
+      "maxDailyFees": {
+        "type": "integer"
+      },
+      "protectionSources": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "accountType": {
+              "type": "string"
+            },
+            "priority": {
+              "type": "integer"
+            },
+            "transferIncrements": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "notifications": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["Email", "SMS", "Push"]
+            }
+          }
+        }
+      }
+    }
+  }
+}

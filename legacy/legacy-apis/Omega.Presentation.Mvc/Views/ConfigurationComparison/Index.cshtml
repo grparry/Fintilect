@@ -1,0 +1,377 @@
+﻿@using Omega.Presentation.Mvc.Models.ConfigurationComparison
+
+@{
+    ViewBag.Title = "Application Configuration Comparison";
+    ViewBag.Subtitle = "Compare application configuration settings";
+    ViewBag.ActiveMenu = "configuration-comparison";
+}
+
+@model ConfigurationComparisonModel
+
+@section LinkedStyleSheets {
+    <link href='@Url.Content("~/Content/configuration-comparison.css")' rel="stylesheet" />
+}
+
+<div class="main-content-container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="panel-content">
+                <header class="panel-heading-psi clearfix">
+                    <strong>@ViewBag.Title</strong>
+                </header>
+
+                <div id="divLoading" class="text-center" style="display:none;">
+                    <img src='@Url.Content("~/Images/ajax_loader.gif")' alt="loading" /> &nbsp;Loading...
+                </div>
+
+                <div id="divValidation" class="alert alert-danger" style="display:none;">
+                    <!-- dynamically filled -->
+                </div>
+
+                <div class="container-three">
+                    <div class="sub-div one-of-three">
+                        <div class="inline bold pad-right">
+                            Source
+                        </div>
+                        <div class="inline">
+                            @Html.DropDownList("SourceSelect", Model.Environments, "Select Source", new {@class = "form-control form-control-inline" })
+                        </div>
+                    </div>
+                    <div class="sub-div two-of-three">
+                        <div class="inline bold pad-right">
+                            Destination
+                        </div>
+                        <div class="inline">
+                            @Html.DropDownList("DestinationSelect", Model.Environments, "Select Destination", new { @class = "form-control form-control-inline" })
+                        </div>
+                    </div>
+                    <div class="sub-div three-of-three">
+                        <div class="inline bold pad-right">
+                            <input type="checkbox" name="includeEnvironmentSpecificSettingsCheckbox" id="includeEnvironmentSpecificSettingsCheckbox" />
+                        </div>
+                        <div class="inline">
+                            Include Environment Specific Settings
+                        </div>
+                        <div class="inline" style="float:right;">
+                            <input id="GetConfigurationSettingsButton" type="button" class="btn btn-primary btn-sm" value="Get Settings" />
+                        </div>
+                    </div>
+                </div>  <!-- END container-three -->
+
+                <hr />
+
+                <div id="ConfigurationComparisonDetailsDiv"><!--  content will be rendered here dyamically from _ConfigurationComparisonsView html partial view --></div>
+            </div>
+        </div><!-- end panel-body -->
+    </div><!-- end panel panel-default -->
+</div><!-- end main-content-container -->
+
+
+<div id="comparison-change-confirmation-modal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div id="partial-view-modal-content" class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Confirm Changes</h3>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom:14px; color:red;" class="bold">
+                    Please review your changes to confirm your choices. These are the settings you are copying:
+                </div>
+
+                <div id="ComparisonConfirmationListDiv" style="max-height:640px; overflow-y:auto;">
+                    <table class="table table-bordered table-condensed table-hover">
+                        <thead style="background-color:#999999;">
+                            <tr>
+                                <th>
+                                    Setting
+                                </th>
+                                <th>
+                                    Value
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="ComparisonConfirmationListTbody">
+                            <!-- content will be rendered here from showComparisonModalForConfirmation()  -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="button-row" style="vertical-align:top;">
+                    <input type="text" class="form-control" style="width:140px; display:inline-block; margin-right:6px; position:relative; top:2px;" id="ConfirmDestinationTextbox" placeholder="Enter Destination" />
+                    <input type="button" value="Confirm Changes" class="btn btn-primary" id="ConfirmCopySourceToDestinationButton" name="ConfirmCopySourceToDestinationButton" disabled />
+                    <input type="button" value="Cancel Changes" class="btn btn-default pull-right" data-dismiss="modal" />
+                </div>
+            </div>
+            
+        </div>
+    </div><!-- End modal-dialog -->
+</div><!-- End targeted-marketing-detail-modal -->
+
+<div id="setting-detail-modal" class="modal fade">
+    <div class="modal-dialog">
+        <div id="setting-detail-modal-content" class="modal-content">
+            <!-- content will be rendered here with a partialView from the AJAX call (_SettingModal.cshtml) -->
+        </div><!-- End partial-view-modal-content -->
+    </div><!-- End modal-dialog -->
+</div><!-- End setting-detail-modal -->
+
+
+@section scripts {
+    <script src='@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")'></script>
+
+    <script>
+        $(document).ready(function () {
+            // create namespace for this module:
+            //
+            //
+            //
+            //
+            var ConfigurationComparisonModule = ConfigurationComparisonModule || {};
+
+            ConfigurationComparisonModule = (function () {
+                // global vars to this module
+                var _checkboxesChecked = false;
+
+
+                // toggle checkboxes
+                var _toggleCheckboxes = function () {
+                    console.log("_checkboxesChecked: ", _checkboxesChecked);
+
+                    if (_checkboxesChecked === false) {
+                        $('.tbd').prop('checked', true);
+                        _checkboxesChecked = true;
+                        $("#SelectAllButton").prop('value', 'Un-select all');
+                    } else {
+                        $('.tbd').prop('checked', false);
+                        _checkboxesChecked = false;
+                        $("#SelectAllButton").prop('value', 'Select all');
+                    }
+                }
+            // event handlers:
+            // get configuration settings button click handler
+            $("#GetConfigurationSettingsButton").click(function (e) {
+                e.preventDefault();
+                ConfigurationComparisonModule.getConfigurationSettings();
+            });
+
+            // 'select all' button click handler (this button is created dynamically from a partial view, so we have to trap it from the document click event.)
+            $(document).on("click", "#SelectAllButton", function (e) {
+                e.preventDefault();
+                ConfigurationComparisonModule.toggleCheckboxes();
+            });
+
+            // key up handler for the ConfirmDestinationTextbox textbox to ensure they have entered in the correct destination
+            $("#ConfirmDestinationTextbox").keyup(function () {
+                ConfigurationComparisonModule.checkConfirmDestinationTextbox();
+            });
+
+            // 'copy source values' button click handler (this button is created dynamically from a partial view, so we have to trap it from the document click event.)
+            $(document).on("click", "#CopySourceToDestinationButton", function (e) {
+                e.preventDefault();
+                ConfigurationComparisonModule.showComparisonModalForConfirmation();
+            });
+
+            // 'ConfirmCopySourceToDestinationButton' button click handler - submit to ajax
+            $("#ConfirmCopySourceToDestinationButton").click(function (e) {
+                e.preventDefault();
+                ConfigurationComparisonModule.submitConfigurationSettings();
+            });
+
+            // success message close button
+            $(document).on("click",
+                "#SuccessCloseButton",
+                function(e) {
+                    e.preventDefault();
+                    ConfigurationComparisonModule.resetPage();
+                });
+
+            // handle the clicking of a 'Destination Value' link. this will get the setting and display it in a modal.
+            $(document).on("click",
+                ".setting-link",
+                function(e) {
+                    e.preventDefault();
+                    ConfigurationComparisonModule.getSettingForModal(e.currentTarget.name);
+                });
+
+                // reset page
+                var _resetPage = function () {
+                    self.location.href = self.location;
+                }
+
+
+                // get configuration settings ajax call
+                var _getConfigurationSettings = function () {
+                    // validate drop downs
+                    if ($("#SourceSelect").val() === $("#DestinationSelect").val()) {
+                        $("#divValidation").empty();
+                        $("#divValidation").text("Drop-downs cannot be the same value.");
+                        $("#divValidation").slideDown();
+                        $("#DestinationSelect").addClass("has-error");
+
+                        return;
+                    }
+
+                    var timer;
+                    timer = setTimeout(function () { $("#divLoading").slideDown(); }, 30);
+                    $("#GetConfigurationSettingsButton").prop("disabled", true);
+                    $("#divValidation").slideUp();
+                    $("#DestinationSelect").removeClass("has-error");
+
+                    var source = $("#SourceSelect").val();
+                    var destination = $("#DestinationSelect").val();
+                    var includeEnvironmentSpecificSettings = $("#includeEnvironmentSpecificSettingsCheckbox").is(":checked");
+
+                    $.ajax({
+                        url: '@Url.Action("GetSettings", "ConfigurationComparison")?includeEnvironmentSpecificSettings=' + includeEnvironmentSpecificSettings + "&source=" + source + "&destination=" + destination,  // "ActionName", "Controller"
+                        dataType: "text",
+                        type: "GET",
+
+                        success: function (data) {      // result from the controller method
+                            clearTimeout(timer);
+                            $("#divLoading").slideUp();
+                            $("#GetConfigurationSettingsButton").prop("disabled", false);
+
+                            $('#ConfigurationComparisonDetailsDiv').html(data);    // show the _ConfigurationComparisonsView partial view here.
+                        },
+
+                        error: function (xhr, err) {
+
+                            if(xhr.status === 401) window.location.href = '@Url.Action("index", "home")';
+
+                            var terseError = $.parseJSON(xhr.responseText);
+                            console.log("terseError: ", terseError);
+                            console.log("Request Failed: " + err);
+                            $("#divFailure").slideDown();
+                        }
+                    });
+                }
+
+
+                // show elected changes in modal for confirmation before submitting to ajax
+                var _showComparisonModalForConfirmation = function () {
+                    var form = $("#SettingsForm");
+
+                    if ($("#SettingsForm input:checkbox:checked").length == 0) {    // nothing's checked. don't show modal
+                        return;
+                    }
+
+                    $("#comparison-change-confirmation-modal").modal({ backdrop: 'static', keyboard: false });
+                    
+                    var collection = $('.tbd:checkbox:checked').toArray();
+                    var htmlString = "";
+
+                    for (var i = 0; i < collection.length; i++) {
+                        htmlString += "<tr><td>" + collection[i].nextElementSibling.nextElementSibling.nextElementSibling.value + "</td> "; 
+                        htmlString += "<td>" + collection[i].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value + "</td></tr>";
+                    }
+                    
+                    $("#ComparisonConfirmationListTbody").html(htmlString);
+                }
+
+
+                // check confirm destination checkbox to make sure it matches the DestinationSelect drop-down
+                var _checkConfirmDestinationTextbox = function () {
+                    if ($("#ConfirmDestinationTextbox").val().toLocaleLowerCase() === $("#DestinationSelect").find(":selected").text().toLocaleLowerCase()) {
+                        $("#ConfirmCopySourceToDestinationButton").prop("disabled", false);
+                    } else {
+                        $("#ConfirmCopySourceToDestinationButton").prop("disabled", true);
+                    }
+                }
+
+
+                // set configuration settings ajax call
+                var _submitConfigurationSettings = function () {
+                    var form = $("#SettingsForm");
+
+                    if ($("#SettingsForm input:checkbox:checked").length == 0) {    // nothing's checked. don't submit
+                        return;
+                    }
+
+                    $("#comparison-change-confirmation-modal").modal("hide");
+
+                    var timer;
+                    timer = setTimeout(function () { $("#divLoading").slideDown(); }, 30);
+                    $("#CopySourceToDestinationButton").prop("disabled", true);
+
+
+                    if ($("#includeEnvironmentSpecificSettingsCheckbox").is(":checked")) {
+                        includeSettings = "yes";
+                    };
+
+                    $.ajax({
+                        url: '@Url.Action("SetSettings", "ConfigurationComparison")',  // "ActionName", "Controller"
+                        dataType: "text",
+                        type: "POST",
+                        data: form.serialize(),
+
+                        success: function (data) {      // result from the controller method
+                            if (data === "success") {
+                                clearTimeout(timer);
+                                $("#divLoading").slideUp();
+                                $("#divSuccess").slideDown();
+                            } else {
+                                $("#divFailure").slideDown();
+                            }
+                        },
+
+                        error: function (xhr, err) {
+                            var terseError = $.parseJSON(xhr.responseText);
+                            console.log("terseError: ", terseError);
+                            console.log("Request Failed: " + err);
+                            $("#divFailure").slideDown();
+                        }
+                    });
+                }
+
+
+                // get a single configuration setting ajax call for Modal
+                var _getSettingForModal = function (key) {
+                    // console.log("key: ", key);
+
+                    var timer;
+                    timer = setTimeout(function () { $("#divLoading").slideDown(); }, 30);
+
+                    $.ajax({
+                        url: '@Url.Action("GetSettingForModal", "ConfigurationComparison")?key=' + key + "&destination=" + $("#DestinationSelect").val(),  // "ActionName", "Controller"
+                        dataType: "text",
+                        type: "GET",
+
+                        success: function (data) {      // result from the controller method
+                            // console.log("success: data: ", data);
+                            clearTimeout(timer);
+                            $("#divLoading").slideUp();
+                            $("#setting-detail-modal").modal({ backdrop: 'static', keyboard: false });
+                            $("#setting-detail-modal-content").html(data);    // show the _SettingModal partial view here.
+                        },
+
+                        error: function (xhr, err) {
+                            var terseError = $.parseJSON(xhr.responseText);
+                            console.log("terseError: ", terseError);
+                            console.log("Request Failed: " + err);
+                            $("#divFailure").slideDown();
+                            if(xhr.status === 401) window.location.href = '@Url.Action("index", "home")';
+                        }
+                    });
+                }
+
+
+
+
+
+                // public interface:
+                return {
+                    getConfigurationSettings: _getConfigurationSettings,
+                    showComparisonModalForConfirmation: _showComparisonModalForConfirmation,
+                    submitConfigurationSettings: _submitConfigurationSettings,
+                    getSettingForModal: _getSettingForModal,
+                    checkConfirmDestinationTextbox: _checkConfirmDestinationTextbox,
+                    toggleCheckboxes: _toggleCheckboxes,
+                    resetPage: _resetPage
+                }
+            })();
+        });
+        </script>
+    }
