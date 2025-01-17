@@ -1,15 +1,49 @@
 {
   "MoneyDesktopSettings": {
     "type": "object",
+    "description": "Money Desktop integration settings",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MoneyDesktop.MoneyDesktop",
     "properties": {
       "enabled": {
-        "type": "boolean"
+        "type": "boolean",
+        "description": "Whether Money Desktop is enabled",
+        "x-setting-key": "MoneyDesktop.AutoEnrollEnabled"
       },
-      "settings": {
-        "$ref": "./settings.json#/MoneyDesktopSettings"
+      "mobile": {
+        "type": "object",
+        "description": "Mobile-specific Money Desktop settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.MoneyDesktop",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether Money Desktop is enabled in mobile",
+            "x-setting-key": "Mobile.MoneyDesktop.Enabled"
+          },
+          "minVersion": {
+            "type": "string",
+            "description": "Minimum version required for Money Desktop",
+            "x-setting-key": "Mobile.MoneyDesktop.MinimumVersion"
+          },
+          "minAndroidVersion": {
+            "type": "string",
+            "description": "Minimum Android version required for Money Desktop",
+            "x-setting-key": "Mobile.MoneyDesktop.MinimumAndroidVersion"
+          },
+          "minIosVersion": {
+            "type": "string",
+            "description": "Minimum iOS version required for Money Desktop",
+            "x-setting-key": "Mobile.MoneyDesktop.MinimumIosVersion"
+          }
+        }
       },
-      "features": {
-        "$ref": "./features.json#/MoneyDesktopFeatures"
+      "dashboard": {
+        "$ref": "./money-desktop/dashboard.json#/DashboardSettings"
+      },
+      "summary": {
+        "$ref": "./money-desktop/summary.json#/SummarySettings"
+      },
+      "enrollment": {
+        "$ref": "./money-desktop/enrollment.json#/EnrollmentSettings"
       }
     }
   }

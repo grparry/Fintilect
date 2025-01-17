@@ -1,22 +1,13 @@
 {
   "ServiceSettings": {
     "type": "object",
+    "description": "Service integration settings",
     "properties": {
       "achFileService": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          }
-        }
+        "$ref": "./ach-file/ach-file-service-settings.json#/AchFileServiceSettings"
       },
       "atmLocator": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          }
-        }
+        "$ref": "./atm-locator/atm-locator-settings.json#/AtmLocatorSettings"
       },
       "auditLogging": {
         "type": "object",
@@ -27,20 +18,10 @@
         }
       },
       "checkImages": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          }
-        }
+        "$ref": "./check-images/check-images-settings.json#/CheckImagesSettings"
       },
       "discountTickets": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          }
-        }
+        "$ref": "./discount-tickets/discount-tickets-settings.json#/DiscountTicketsSettings"
       },
       "menuItems": {
         "type": "object",
@@ -51,52 +32,22 @@
         }
       },
       "ofxConfigurations": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          }
-        }
+        "$ref": "./ofx/ofx-configurations-settings.json#/OfxConfigurationsSettings"
       },
       "paydayLoan": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          }
-        }
+        "$ref": "./payday-loans/payday-loan-settings.json#/PaydayLoanSettings"
       },
       "publicApi": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          }
-        }
+        "$ref": "./public-api/public-api-settings.json#/PublicApiSettings"
       },
       "segMint": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          }
-        }
+        "$ref": "./segmint/segmint-settings.json#/SegmintSettings"
       },
       "targetedMarketing": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          }
-        }
+        "$ref": "./targeted-marketing/targeted-marketing-settings.json#/TargetedMarketingSettings"
       },
       "themeDeployment": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          }
-        }
+        "$ref": "./theme-deployment/theme-deployment-settings.json#/ThemeDeploymentSettings"
       },
       "tieredAccess": {
         "type": "object",
@@ -113,6 +64,9 @@
             "type": "boolean"
           }
         }
+      },
+      "windowsService": {
+        "$ref": "./windows-service/windows-service-settings.json#/WindowsServiceSettings"
       }
     }
   }

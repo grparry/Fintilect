@@ -1,0 +1,237 @@
+{
+  "WindowsServiceSettings": {
+    "type": "object",
+    "description": "Windows service settings",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.WindowsService",
+    "properties": {
+      "psiServices": {
+        "type": "object",
+        "description": "PSI services configuration",
+        "properties": {
+          "hostedServices": {
+            "type": "array",
+            "description": "Configuration for hosted services",
+            "x-setting-key": "PsiServices.HostedServices.Configuration",
+            "items": {
+              "type": "object",
+              "properties": {
+                "standardInterval": {
+                  "type": "object",
+                  "properties": {
+                    "interval": {
+                      "type": "string",
+                      "pattern": "^\\d{2}:\\d{2}:\\d{2}$"
+                    }
+                  }
+                },
+                "calendarInterval": {
+                  "type": ["object", "null"]
+                },
+                "hourlyInterval": {
+                  "type": ["object", "null"]
+                },
+                "cronInterval": {
+                  "type": ["object", "null"]
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "isScheduled": {
+                  "type": "boolean"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "dataFeedProcessing": {
+            "type": "object",
+            "description": "Data feed processing configuration",
+            "x-setting-key": "PsiServices.DataFeedProcessing.Configuration",
+            "properties": {
+              "inputPath": {
+                "type": "string"
+              },
+              "errorPath": {
+                "type": "string"
+              },
+              "completedPath": {
+                "type": "string"
+              },
+              "processedPath": {
+                "type": "string"
+              },
+              "inputFileExclusiveAccessTimeout": {
+                "type": "string",
+                "pattern": "^\\d{2}:\\d{2}:\\d{2}$"
+              }
+            }
+          },
+          "scheduledTransfers": {
+            "type": "object",
+            "description": "Scheduled transfers configuration",
+            "properties": {
+              "shouldCheckNextHourTransfersForInsufficientFunds": {
+                "type": "boolean",
+                "x-setting-key": "PsiServices.ScheduledTransferService.ShouldCheckNextHourTransfersForInsufficientFunds"
+              },
+              "maxDegreeOfParallelism": {
+                "type": "integer",
+                "x-setting-key": "PsiServices.ScheduledTransferService.MaxDegreeOfParallelism"
+              },
+              "batchSize": {
+                "type": "integer",
+                "x-setting-key": "PsiServices.ScheduledTransferService.BatchSize"
+              },
+              "validTransferDaysRange": {
+                "type": "integer",
+                "x-setting-key": "PsiServices.ScheduledTransferService.ValidTransferDaysRange"
+              }
+            }
+          }
+        }
+      },
+      "pscuLogFileTransform": {
+        "type": "object",
+        "description": "PSCU log file transform service configuration",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.WindowsService.PscuLogFileTransformServiceSettings",
+        "properties": {
+          "filters": {
+            "type": "array",
+            "description": "Filter configurations",
+            "x-setting-key": "PsiServices.PscuLogFileTransformService.Filters",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "valuesCausingInclusion": {
+                  "type": "string"
+                },
+                "valuesCausingExclusion": {
+                  "type": "string"
+                },
+                "requiresValue": {
+                  "type": "boolean"
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "inputFileFields": {
+            "type": "array",
+            "description": "Input file field configurations",
+            "x-setting-key": "PsiServices.PscuLogFileTransformService.InputFileFields",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "dataType": {
+                  "type": "string"
+                },
+                "emptyAllowed": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "outputFileFields": {
+            "type": "array",
+            "description": "Output file field configurations",
+            "x-setting-key": "PsiServices.PscuLogFileTransformService.OutputFileFields",
+            "items": {
+              "type": "object",
+              "properties": {
+                "position": {
+                  "type": "integer"
+                },
+                "whitespaceLength": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "customFormatter": {
+                  "type": ["string", "null"]
+                },
+                "truncateToLength": {
+                  "type": "integer"
+                },
+                "truncateFromPosition": {
+                  "type": "string"
+                },
+                "minimumOutputLength": {
+                  "type": "integer"
+                },
+                "minimumOutputPadFromPosition": {
+                  "type": "string"
+                },
+                "outputFormatString": {
+                  "type": "string"
+                },
+                "staticTextValue": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "pathConfiguration": {
+            "type": "object",
+            "description": "Path configuration",
+            "x-setting-key": "PsiServices.PscuLogFileTransformService.PathConfiguration",
+            "properties": {
+              "inputPath": {
+                "type": "string"
+              },
+              "inputFilenamePattern": {
+                "type": "string"
+              },
+              "outputPath": {
+                "type": "string"
+              },
+              "errorPath": {
+                "type": "string"
+              },
+              "processedPath": {
+                "type": "string"
+              },
+              "completedPath": {
+                "type": "string"
+              },
+              "outputFilePrefix": {
+                "type": "string"
+              },
+              "inputFileExclusiveAccessTimeout": {
+                "type": "string",
+                "pattern": "^\\d{2}:\\d{2}:\\d{2}$"
+              }
+            }
+          }
+        }
+      },
+      "verafinFileBatch": {
+        "type": "object",
+        "description": "Verafin file batch service configuration",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.WindowsService.VerafinFileBatchServiceSettings",
+        "properties": {
+          "startTimeInHours": {
+            "type": "integer",
+            "description": "How many hours in the past (UTC) the batch file service should start",
+            "x-setting-key": "PsiServices.VerafinFileBatchService.StartTimeInHours"
+          },
+          "endTimeInHours": {
+            "type": "integer",
+            "description": "How many hours in the past (UTC) the batch file service should end",
+            "x-setting-key": "PsiServices.VerafinFileBatchService.EndTimeInHours"
+          }
+        }
+      }
+    }
+  }
+}

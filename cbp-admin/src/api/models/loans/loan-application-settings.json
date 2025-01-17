@@ -1,21 +1,119 @@
 {
   "LoanApplicationSettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Loan.Applications.LoanApplication",
     "properties": {
+      "minimumVersion": {
+        "type": "string",
+        "description": "Minimum version required for loan applications",
+        "x-setting-key": "Mobile.Loan.ApplyForLoan.MinimumVersion"
+      },
+      "minimumAndroidVersion": {
+        "type": "string",
+        "description": "Minimum Android version required for loan applications",
+        "x-setting-key": "Mobile.Loan.ApplyForLoan.MinimumAndroidVersion"
+      },
+      "minimumIosVersion": {
+        "type": "string",
+        "description": "Minimum iOS version required for loan applications",
+        "x-setting-key": "Mobile.Loan.ApplyForLoan.MinimumIosVersion"
+      },
       "enabled": {
-        "type": "boolean"
+        "type": "boolean",
+        "description": "Whether loan applications are enabled",
+        "x-setting-key": "LoanApplication.Enabled"
       },
-      "qcash": {
-        "$ref": "./providers/qcash.json#/QCashSettings"
+      "url": {
+        "type": "string",
+        "description": "URL for loan applications",
+        "x-setting-key": "Mobile.Loan.ApplyForLoan.Url"
       },
-      "meridianLink": {
-        "$ref": "./providers/meridian-link.json#/MeridianLinkSettings"
+      "shouldGetMeridianLinkLegacySsoUrl": {
+        "type": "boolean",
+        "description": "Whether to use legacy SSO URL for MeridianLink",
+        "x-setting-key": "Mobile.Loan.ApplyForLoan.MeridianLink.ShouldGetLegacySsoUrl"
+      },
+      "mortgageLoanEnabled": {
+        "type": "boolean",
+        "description": "Whether mortgage loans are enabled",
+        "x-setting-key": "Mobile.Loan.LoanApplication.MortgageLoanEnabled"
+      },
+      "mortgageLoanUrl": {
+        "type": "string",
+        "description": "URL for mortgage loan applications",
+        "x-setting-key": "Mobile.Loan.LoanApplication.MortgageLoanUrl"
+      },
+      "qcashSso": {
+        "type": "object",
+        "description": "Qcash loan application SSO settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.QcashLoanApplication.QcashLoanApplicationSsoSettings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether Qcash SSO is enabled",
+            "x-setting-key": "QcashLoanApplication.Sso.Enabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "format": "double",
+            "description": "Minimum version required for Qcash SSO",
+            "x-setting-key": "QcashLoanApplication.Sso.MinVersion"
+          },
+          "minIosVersion": {
+            "type": "string",
+            "description": "Minimum iOS version required for Qcash SSO",
+            "x-setting-key": "QcashLoanApplication.Sso.MinIosVersion"
+          },
+          "minAndroidVersion": {
+            "type": "string",
+            "description": "Minimum Android version required for Qcash SSO",
+            "x-setting-key": "QcashLoanApplication.Sso.MinAndroidVersion"
+          },
+          "url": {
+            "type": "string",
+            "description": "Internet banking URL for Qcash SSO",
+            "x-setting-key": "QcashLoanApplication.Sso.InternetBankingUrl"
+          },
+          "mobileUrl": {
+            "type": "string",
+            "description": "Mobile URL for Qcash SSO",
+            "x-setting-key": "QcashLoanApplication.Sso.MobileUrl"
+          },
+          "applicationSsoKey": {
+            "type": "string",
+            "description": "Application SSO key for Qcash",
+            "x-setting-key": "QcashLoanApplication.Sso.ApplicationSSOKey"
+          },
+          "applicationId": {
+            "type": "string",
+            "description": "Application ID for Qcash",
+            "x-setting-key": "QcashLoanApplication.Sso.ApplicationId"
+          },
+          "sharedKey": {
+            "type": "string",
+            "description": "Shared key for Qcash SSO",
+            "x-setting-key": "QcashLoanApplication.Sso.SharedKey"
+          },
+          "internetBankingLocation": {
+            "type": "string",
+            "description": "Internet banking location for Qcash SSO",
+            "x-setting-key": "QcashLoanApplication.Sso.InternetBankingLocation"
+          },
+          "mobileLocation": {
+            "type": "string",
+            "description": "Mobile location for Qcash SSO",
+            "x-setting-key": "QcashLoanApplication.Sso.MobileLocation"
+          }
+        }
       },
       "paydayLoans": {
-        "$ref": "./providers/payday-loans.json#/PaydayLoanSettings"
+        "$ref": "./payday-loans.json#/PaydayLoanSettings"
       },
-      "loanOffers": {
-        "$ref": "./providers/loan-offers.json#/LoanOfferSettings"
+      "meridianLink": {
+        "$ref": "./sso/meridian-link.json#/MeridianLinkSsoSettings"
+      },
+      "qcash": {
+        "$ref": "./qcash.json#/QcashLoanApplicationSettings"
       }
     }
   }

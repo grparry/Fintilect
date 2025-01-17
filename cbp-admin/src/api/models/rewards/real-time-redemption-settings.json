@@ -2,22 +2,25 @@
   "RealTimeRedemptionSettings": {
     "type": "object",
     "description": "Configuration settings for real-time reward redemption functionality",
-    "required": ["enabled", "generalLedger"],
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.CheckingRewards.RealTimeRedemption",
+    "required": ["enabled", "version", "generalLedger"],
     "properties": {
       "enabled": {
         "type": "boolean",
         "description": "Whether real-time redemption is enabled",
-        "default": false
+        "default": false,
+        "x-setting-key": "CheckingRewards.Redemption.RealTime.Enabled"
       },
-      "versionRequirements": {
+      "version": {
         "type": "object",
         "description": "Version requirements for real-time redemption",
-        "required": ["minimumVersion"],
+        "required": ["minimum"],
         "properties": {
-          "minimumVersion": {
+          "minimum": {
             "type": "number",
             "description": "Minimum version required for real-time redemption",
-            "minimum": 0
+            "minimum": 0,
+            "x-setting-key": "CheckingRewards.Redemption.RealTime.MinVersion"
           }
         }
       },
@@ -29,12 +32,14 @@
           "accountNumber": {
             "type": "string",
             "description": "General ledger account number for redemption transactions",
-            "pattern": "^[0-9-]+$"
+            "pattern": "^[0-9-]+$",
+            "x-setting-key": "CheckingRewards.Redemption.RealTime.GeneralLedgerAccountNumber"
           },
           "transactionDescription": {
             "type": "string",
             "description": "Description template for redemption transactions",
-            "minLength": 1
+            "minLength": 1,
+            "x-setting-key": "CheckingRewards.Redemption.RealTime.GeneralLedgerTransactionDescription"
           },
           "transactionCode": {
             "type": "string",
@@ -69,6 +74,11 @@
             "description": "How to round redemption amounts",
             "enum": ["up", "down", "nearest"],
             "default": "nearest"
+          },
+          "pointValueInCents": {
+            "type": "integer",
+            "description": "Value of one point in cents",
+            "minimum": 1
           }
         }
       },

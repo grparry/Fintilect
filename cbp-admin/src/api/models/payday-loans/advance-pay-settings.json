@@ -1,0 +1,130 @@
+{
+  "AdvancePaySettings": {
+    "type": "object",
+    "description": "Settings for advance pay functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.PaydayLoans.AdvancePay",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether advance pay functionality is enabled",
+        "x-setting-key": "Mobile.AdvancePay.Enabled"
+      },
+      "database": {
+        "type": "object",
+        "description": "Database configuration for advance pay",
+        "properties": {
+          "connectionString": {
+            "type": "string",
+            "description": "Database connection string",
+            "format": "password",
+            "x-setting-key": "PaydayLoans.AdvancePay.DatabaseConnectionString"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Database operation timeout in seconds",
+            "minimum": 1,
+            "default": 30,
+            "x-setting-key": "PaydayLoans.AdvancePay.DatabaseTimeout"
+          }
+        },
+        "required": ["connectionString"]
+      },
+      "loans": {
+        "type": "object",
+        "description": "Loan configuration settings",
+        "properties": {
+          "categories": {
+            "type": "array",
+            "description": "List of advance pay loan categories",
+            "x-setting-key": "X.App.HomeBanking.AdvancePayLoanCategories",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "limits": {
+            "type": "object",
+            "description": "Loan limit settings",
+            "properties": {
+              "minimumAmount": {
+                "type": "number",
+                "description": "Minimum loan amount",
+                "minimum": 0,
+                "default": 100,
+                "x-setting-key": "X.App.HomeBanking.AdvancePayMinimumLoanAmount"
+              },
+              "maximumAmount": {
+                "type": "number",
+                "description": "Maximum loan amount",
+                "minimum": 0,
+                "default": 1000,
+                "x-setting-key": "X.App.HomeBanking.AdvancePayMaximumLoanAmount"
+              },
+              "maxActiveLoans": {
+                "type": "integer",
+                "description": "Maximum number of active loans allowed",
+                "minimum": 1,
+                "default": 1,
+                "x-setting-key": "X.App.HomeBanking.AdvancePayMaxActiveLoans"
+              }
+            },
+            "required": ["minimumAmount", "maximumAmount", "maxActiveLoans"]
+          }
+        },
+        "required": ["categories", "limits"]
+      },
+      "display": {
+        "type": "object",
+        "description": "Display settings for advance pay",
+        "properties": {
+          "showInMobileApp": {
+            "type": "boolean",
+            "description": "Whether to show advance pay in mobile app",
+            "default": true,
+            "x-setting-key": "Mobile.AdvancePay.ShowInMobileApp"
+          },
+          "showInHomeBanking": {
+            "type": "boolean",
+            "description": "Whether to show advance pay in home banking",
+            "default": true,
+            "x-setting-key": "X.App.HomeBanking.AdvancePay.ShowInHomeBanking"
+          },
+          "showAvailableAmount": {
+            "type": "boolean",
+            "description": "Whether to show available advance pay amount",
+            "default": true,
+            "x-setting-key": "X.App.HomeBanking.AdvancePay.ShowAvailableAmount"
+          }
+        }
+      },
+      "validation": {
+        "type": "object",
+        "description": "Validation settings",
+        "properties": {
+          "requireDirectDeposit": {
+            "type": "boolean",
+            "description": "Whether direct deposit is required for eligibility",
+            "default": true,
+            "x-setting-key": "X.App.HomeBanking.AdvancePayRequireDirectDeposit"
+          },
+          "minimumAccountAge": {
+            "type": "integer",
+            "description": "Minimum account age in days for eligibility",
+            "minimum": 0,
+            "default": 90,
+            "x-setting-key": "X.App.HomeBanking.AdvancePayMinimumAccountAge"
+          },
+          "minimumDirectDepositAmount": {
+            "type": "number",
+            "description": "Minimum direct deposit amount required",
+            "minimum": 0,
+            "default": 500,
+            "x-setting-key": "X.App.HomeBanking.AdvancePayMinimumDirectDepositAmount"
+          }
+        }
+      }
+    },
+    "required": ["enabled", "database", "loans"]
+  }
+}

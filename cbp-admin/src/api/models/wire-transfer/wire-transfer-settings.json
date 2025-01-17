@@ -1,12 +1,42 @@
 {
   "WireTransferSettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.WireTransfer",
     "properties": {
       "enabled": {
         "type": "boolean"
       },
       "settings": {
         "$ref": "./settings.json#/WireTransferSettings"
+      },
+      "routingNumberRegex": {
+        "type": "string",
+        "x-setting-key": "Transfers.Wire.RoutingNumberRegex",
+        "description": "Regular expression pattern for validating routing numbers",
+        "default": "^(\\d){9}$"
+      },
+      "addressRegex": {
+        "type": "string",
+        "x-setting-key": "Transfers.Wire.AddressRegex",
+        "description": "Regular expression pattern for validating addresses",
+        "default": "^([a-z0-9A-Z ]|\\.)+?$"
+      },
+      "recipientNameRegex": {
+        "type": "string",
+        "x-setting-key": "Transfers.Wire.RecipientNameRegex",
+        "description": "Regular expression pattern for validating recipient names",
+        "default": "^([a-z A-Z]|\\.)+?$"
+      },
+      "hideAvailableBalance": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.Wire.HideAvailableBalance",
+        "description": "Whether to hide the available balance in wire transfers"
+      },
+      "signatureRegex": {
+        "type": "string",
+        "x-setting-key": "Transfers.Wire.SignatureRegex",
+        "description": "Regular expression pattern for validating signatures",
+        "default": "^([a-z A-Z']|\\.)+?$"
       }
     }
   }

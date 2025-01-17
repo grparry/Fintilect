@@ -1,15 +1,23 @@
 {
   "HistoryDateSettings": {
     "type": "object",
+    "description": "Settings for history date functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.History.HistoryDate",
     "properties": {
-      "enabled": {
-        "type": "boolean"
+      "dateRangeDropDownSettingOptions": {
+        "type": "string",
+        "x-setting-key": "History.Date.DateRangeDropDownSettingOptions",
+        "description": "Options for the date range dropdown"
       },
-      "settings": {
-        "$ref": "./settings.json#/HistoryDateSettings"
+      "dateRangeDropDownSettingLabelValue": {
+        "type": "string",
+        "x-setting-key": "History.Date.DateRangeDropDownSettingLabelValue",
+        "description": "Label value for the date range dropdown"
       },
-      "features": {
-        "$ref": "./features.json#/HistoryDateFeatures"
+      "datePickerPositionOptions": {
+        "type": "string",
+        "x-setting-key": "History.Date.DatePickerPositionOptions",
+        "description": "Options for date picker positioning"
       }
     }
   }

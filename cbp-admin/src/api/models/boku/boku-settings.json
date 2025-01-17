@@ -1,15 +1,124 @@
 {
   "BokuSettings": {
     "type": "object",
+    "description": "Settings for Boku phone identification and verification services",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Boku.BokuSettings",
+    "required": ["enabled", "minVersion", "apiUrl", "merchantId", "clientAccessKey", "apiSecret"],
     "properties": {
       "enabled": {
-        "type": "boolean"
+        "type": "boolean",
+        "description": "Determines if the Boku Feature is Enabled, works in conjunction with the MinVersion Config",
+        "x-setting-key": "PhoneIdentification.Boku.Enabled"
       },
-      "settings": {
-        "$ref": "./settings.json#/BokuSettings"
+      "minVersion": {
+        "type": "number",
+        "description": "Determines what the minimum OLB version is required to use this feature",
+        "x-setting-key": "PhoneIdentification.Boku.MinVersion"
       },
-      "features": {
-        "$ref": "./features.json#/BokuFeatures"
+      "apiUrl": {
+        "type": "string",
+        "description": "URL to the API provided by Boku at the time of Onboarding, unique to each client",
+        "x-setting-key": "PhoneIdentification.Boku.ApiUrl"
+      },
+      "merchantId": {
+        "type": "string",
+        "description": "Unique string assigned by Danal to identify the merchant",
+        "maxLength": 30,
+        "x-setting-key": "PhoneIdentification.Boku.MerchantId"
+      },
+      "subMerchantId": {
+        "type": "string",
+        "description": "Optional unique ID assigned to a reseller's end merchant",
+        "maxLength": 30,
+        "x-setting-key": "PhoneIdentification.Boku.SubMerchantId"
+      },
+      "clientAccessKey": {
+        "type": "string",
+        "description": "Key that identifies valid merchant requests",
+        "maxLength": 256,
+        "x-setting-key": "PhoneIdentification.Boku.ClientAccessKey"
+      },
+      "apiSecret": {
+        "type": "string",
+        "description": "Merchant's Secret sent in request header",
+        "x-setting-key": "PhoneIdentification.Boku.ApiSecret"
+      },
+      "encryptionKey": {
+        "type": "string",
+        "description": "Key used to decrypt encrypted API responses",
+        "x-setting-key": "PhoneIdentification.Boku.EncryptionKey"
+      },
+      "phoneNumberEncryption": {
+        "type": "object",
+        "description": "Settings for phone number encryption",
+        "required": ["encryptionKey", "cipherKey"],
+        "properties": {
+          "encryptionKey": {
+            "type": "string",
+            "description": "Key used to encrypt/decrypt phone numbers",
+            "x-setting-key": "PhoneIdentification.Boku.PhoneNumber.EncryptionKey"
+          },
+          "cipherKey": {
+            "type": "string",
+            "description": "Cipher used with encryption key",
+            "x-setting-key": "PhoneIdentification.Boku.PhoneNumber.CipherKey"
+          }
+        }
+      },
+      "evurl": {
+        "type": "object",
+        "description": "EVURL settings",
+        "required": ["encryptionKey", "baseUrl"],
+        "properties": {
+          "encryptionKey": {
+            "type": "string",
+            "description": "Key used to encrypt EVURL payload",
+            "maxLength": 256,
+            "x-setting-key": "PhoneIdentification.Boku.EVURL.EncryptionKey"
+          },
+          "baseUrl": {
+            "type": "string",
+            "description": "Base URL for constructing EVURL",
+            "x-setting-key": "PhoneIdentification.Boku.EVURL.BaseUrl"
+          }
+        }
+      },
+      "phoneVerification": {
+        "type": "object",
+        "description": "Phone verification settings",
+        "required": ["enabled", "minVersion"],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether phone verification is enabled",
+            "x-setting-key": "PhoneVerification.Boku.Enabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "description": "Minimum version for phone verification",
+            "x-setting-key": "PhoneVerification.Boku.MinVersion"
+          },
+          "minVersionAndroid": {
+            "type": "string",
+            "description": "Minimum version for Android devices",
+            "x-setting-key": "PhoneVerification.Boku.MinVersionAndroid"
+          },
+          "minVersionIos": {
+            "type": "string",
+            "description": "Minimum version for iOS devices",
+            "x-setting-key": "PhoneVerification.Boku.MinVersionIos"
+          },
+          "daysBeforeRetry": {
+            "type": "integer",
+            "description": "Days to wait before retrying verification",
+            "x-setting-key": "PhoneVerification.Boku.DaysBeforeRetry"
+          },
+          "daysBeforeTokenExpires": {
+            "type": "integer",
+            "description": "Days before tokens expire",
+            "x-setting-key": "PhoneVerification.Boku.DaysBeforeTokenExpires"
+          }
+        }
       }
     }
   }

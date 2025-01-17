@@ -1,0 +1,100 @@
+{
+  "PfmSettings": {
+    "type": "object",
+    "description": "Personal Finance Manager settings",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.PersonalFinanceManager",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether PFM is enabled",
+        "x-setting-key": "Mobile.PFM.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "description": "Minimum version required for PFM",
+        "x-setting-key": "Mobile.PFM.MinVersion"
+      },
+      "minAndroidVersion": {
+        "type": "string",
+        "description": "Minimum Android version required for PFM",
+        "x-setting-key": "Mobile.PFM.MinAndroidVersion"
+      },
+      "minIosVersion": {
+        "type": "string",
+        "description": "Minimum iOS version required for PFM",
+        "x-setting-key": "Mobile.PFM.MinIosVersion"
+      },
+      "url": {
+        "type": "string",
+        "format": "uri",
+        "description": "Base URL for PFM service",
+        "x-setting-key": "Mobile.PFM.Url"
+      },
+      "shouldOpenInIframe": {
+        "type": "boolean",
+        "description": "Whether PFM should open in an iframe",
+        "x-setting-key": "Mobile.PFM.ShouldOpenInIframe"
+      },
+      "budgets": {
+        "type": "object",
+        "description": "Budget settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether budgets are enabled",
+            "x-setting-key": "Mobile.PFM.Budgets.Enabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "format": "double",
+            "description": "Minimum version required for budgets",
+            "x-setting-key": "Mobile.PFM.Budgets.MinVersion"
+          }
+        }
+      },
+      "goals": {
+        "type": "object",
+        "description": "Financial goals settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether goals are enabled",
+            "x-setting-key": "Mobile.PFM.Goals.Enabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "format": "double",
+            "description": "Minimum version required for goals",
+            "x-setting-key": "Mobile.PFM.Goals.MinVersion"
+          }
+        }
+      },
+      "spending": {
+        "type": "object",
+        "description": "Spending analysis settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether spending analysis is enabled",
+            "x-setting-key": "Mobile.PFM.Spending.Enabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "format": "double",
+            "description": "Minimum version required for spending analysis",
+            "x-setting-key": "Mobile.PFM.Spending.MinVersion"
+          },
+          "categories": {
+            "type": "array",
+            "description": "List of spending categories",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "Mobile.PFM.Spending.Categories"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,63 +1,21 @@
 {
   "CreditCardsSummarySettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Summary.CreditCards",
     "description": "Configuration settings for credit cards summary display",
-    "required": ["displaySettings"],
+    "required": ["isCreditLimitVisible", "shouldShowAvailableInsteadOfCreditLimit"],
     "properties": {
-      "displaySettings": {
-        "type": "object",
-        "description": "Settings for how credit card information is displayed in the summary",
-        "required": ["creditLimit", "availableCredit"],
-        "properties": {
-          "creditLimit": {
-            "type": "object",
-            "description": "Credit limit display settings",
-            "required": ["visible"],
-            "properties": {
-              "visible": {
-                "type": "boolean",
-                "description": "Whether to show credit limit information",
-                "default": true
-              }
-            }
-          },
-          "availableCredit": {
-            "type": "object",
-            "description": "Available credit display settings",
-            "required": ["showInsteadOfLimit"],
-            "properties": {
-              "showInsteadOfLimit": {
-                "type": "boolean",
-                "description": "Whether to show available credit instead of credit limit",
-                "default": false
-              },
-              "format": {
-                "type": "string",
-                "description": "Format for displaying available credit",
-                "enum": ["currency", "percentage"],
-                "default": "currency"
-              }
-            }
-          },
-          "order": {
-            "type": "object",
-            "description": "Order settings for credit card summary display",
-            "properties": {
-              "position": {
-                "type": "integer",
-                "description": "Position in the summary view (0-based index)",
-                "minimum": 0,
-                "default": 0
-              },
-              "sortBy": {
-                "type": "string",
-                "description": "Sort order for multiple credit cards",
-                "enum": ["lastUsed", "balance", "limit", "name"],
-                "default": "lastUsed"
-              }
-            }
-          }
-        }
+      "isCreditLimitVisible": {
+        "type": "boolean",
+        "description": "Whether to show credit limit information",
+        "x-setting-key": "Summary.CreditCards.IsCreditLimitVisible",
+        "default": true
+      },
+      "shouldShowAvailableInsteadOfCreditLimit": {
+        "type": "boolean",
+        "description": "Whether to show available credit instead of credit limit",
+        "x-setting-key": "Summary.CreditCards.ShouldShowAvailableInsteadOfCreditLimit",
+        "default": false
       }
     }
   }

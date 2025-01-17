@@ -1,0 +1,46 @@
+{
+  "TransferTimeouts": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.TransferTimeouts",
+    "properties": {
+      "sendSecureMessageEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.Timeouts.SendSecureMessage.Enabled",
+        "description": "Whether to send secure messages for transfer timeouts"
+      },
+      "secureMessageCategory": {
+        "type": "string",
+        "x-setting-key": "Transfers.Timeouts.SecureMessageCategory",
+        "description": "Category for secure messages sent for transfer timeouts"
+      },
+      "sendEmailEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.Timeouts.SendEmail.Enabled",
+        "description": "Whether to send emails for transfer timeouts"
+      },
+      "recipientEmail": {
+        "type": "string",
+        "format": "email",
+        "x-setting-key": "Transfers.Timeouts.RecipientEmail",
+        "description": "Email address to receive transfer timeout notifications"
+      },
+      "senderEmail": {
+        "type": "string",
+        "format": "email",
+        "x-setting-key": "Transfers.Timeouts.SenderEmail",
+        "description": "Email address to send transfer timeout notifications from"
+      },
+      "secureMessageSenderMembershipUserId": {
+        "type": "integer",
+        "format": "int64",
+        "x-setting-key": "Transfers.Timeouts.SecureMessageSenderMembershipUserId",
+        "description": "Membership user ID for the sender of secure messages"
+      },
+      "emailSenderName": {
+        "type": "string",
+        "x-setting-key": "Transfers.Timeouts.EmailSenderName",
+        "description": "Display name for the sender of timeout notification emails"
+      }
+    }
+  }
+}

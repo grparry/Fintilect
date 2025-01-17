@@ -1,58 +1,164 @@
 {
   "LoanSettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Loans.LoanSettings",
     "properties": {
-      "enabled": {
-        "type": "boolean"
+      "harlandLoanEngine": {
+        "type": "object",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.LoanSSO.HarlandLoanEngine",
+        "properties": {
+          "ssoEnabled": {
+            "type": "boolean",
+            "x-setting-key": "Loans.HarlandLoanEngineSsoEnabled"
+          },
+          "ssoRequestUrl": {
+            "type": "string",
+            "x-setting-key": "Loans.HarlandLoanEngineSsoRequestUrl"
+          },
+          "widgetIdentifier": {
+            "type": "string",
+            "x-setting-key": "Loans.HarlandLoanEngineWidgetIdentifier"
+          },
+          "responsiveWidgetIdentifier": {
+            "type": "string",
+            "x-setting-key": "Loans.HarlandLoanEngineResponsiveWidgetIdentifier"
+          },
+          "financialInstitutionIdentifier": {
+            "type": "string",
+            "x-setting-key": "Loans.HarlandLoanEngineFinancialInstitutionIdentifier"
+          },
+          "shouldShowMenuItems": {
+            "type": "boolean",
+            "description": "If true, show menu items on iFramed page",
+            "x-setting-key": "Loans.HarlandLoanEngineShouldShowMenuItems"
+          },
+          "shouldShowLoanButtonOnSummaryEvenWithPreviousLoans": {
+            "type": "boolean",
+            "description": "If true, show the loan button on the Summary/Welcome page even if there are already other loans being displayed",
+            "x-setting-key": "Loans.HarlandLoanEngineShouldShowLoanButtonOnSummaryEvenWithPreviousLoans"
+          }
+        }
       },
-      "loanTypes": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "enabled": {
-              "type": "boolean"
-            },
-            "minAmount": {
-              "type": "number"
-            },
-            "maxAmount": {
-              "type": "number"
-            },
-            "terms": {
-              "type": "array",
-              "items": {
-                "type": "integer"
+      "cuDirectLoanSso": {
+        "type": "object",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.LoanSSO.CUDirectLoanSso",
+        "properties": {
+          "organizationCode": {
+            "type": "string",
+            "x-setting-key": "LoanSso.CUDirectLoanSso.OrganizationCode"
+          }
+        }
+      },
+      "showApplyForLoanOrCardButton": {
+        "type": "object",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.LoanSSO.ShowApplyForLoanOrCardButton",
+        "properties": {
+          "showOnSummary": {
+            "type": "boolean",
+            "x-setting-key": "loanSso.ShowApplyForLoanOrCardButtonOnSummary"
+          },
+          "minVersion": {
+            "type": "number",
+            "format": "double",
+            "x-setting-key": "loanSso.MinVersion"
+          }
+        }
+      },
+      "loanOffers": {
+        "type": "object",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.LoanOffers.LoanOfferSettings",
+        "properties": {
+          "cuNexusLoanOfferSso": {
+            "type": "object",
+            "x-legacy-model": "Psi.Models.ClientConfigurationModels.LoanOffersSso.CuNexusLoanOfferSso",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "feature enabled",
+                "x-setting-key": "LoanOffers.CuNexusLoanOfferSso.Enabled"
+              },
+              "shouldUseMemberNumber": {
+                "type": "boolean",
+                "x-setting-key": "LoanOffers.CuNexusLoanOfferSso.ShouldUseMemberNumber"
+              },
+              "shouldShowWidgetOnDashboard": {
+                "type": "boolean",
+                "description": "if true, show the CuNexus widget on the dashboard",
+                "x-setting-key": "LoanOffers.CuNexusLoanOfferSso.ShouldShowWidgetOnDashboard"
+              },
+              "shouldShowLoanButtonInOlb": {
+                "type": "boolean",
+                "x-setting-key": "LoanOffers.CuNexusOfferSso.ShouldShowLoanButtonInOlb"
+              },
+              "requestUrl": {
+                "type": "string",
+                "x-setting-key": "LoanOffers.CuNexusLoanOfferSso.RequestUrl"
+              },
+              "responsiveWidgetIdentifier": {
+                "type": "string",
+                "x-setting-key": "LoanOffers.CuNexusLoanOffer.ResponsiveWidgetIdentifier"
+              },
+              "iframeHeightDashboardWidget": {
+                "type": "string",
+                "x-setting-key": "LoanOffers.CuNexusLoanOffer.IframeHeightDashboardWidget"
+              },
+              "iframeHeightOlbView": {
+                "type": "string",
+                "x-setting-key": "LoanOffers.CuNexusLoanOffer.iFrameHeightOlbView"
+              },
+              "shouldUseCorelationPersonNumber": {
+                "type": "boolean",
+                "x-setting-key": "LoanOffers.CuNexusLoanOfferSso.ShouldUseCorelationPersonNumber"
+              }
+            }
+          },
+          "mobileSettings": {
+            "type": "object",
+            "x-legacy-model": "Psi.Models.ClientConfigurationModels.MobileConfigurations.LoanOffers.LoanOffers",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether loan offers are enabled for mobile",
+                "x-setting-key": "Mobile.LoanOffers.Enabled"
               }
             }
           }
         }
       },
-      "offers": {
-        "$ref": "./offers/loan-offers.json#/LoanOfferSettings"
+      "showPayoffAmountForTheseCollateralCodes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "Loans.Payoff.ShowPayoffAmountForTheseCollateralCodes"
       },
-      "sso": {
-        "type": "object",
-        "properties": {
-          "cuDirect": {
-            "$ref": "./sso/cu-direct.json#/CUDirectLoanSsoSettings"
-          },
-          "harlandLoanEngine": {
-            "$ref": "./sso/harland-loan-engine.json#/HarlandLoanEngineSettings"
-          },
-          "showApplyButton": {
-            "$ref": "./sso/show-apply-button.json#/ShowApplyForLoanOrCardButtonSettings"
-          }
-        }
+      "displayLateCharges": {
+        "type": "boolean",
+        "x-setting-key": "Loans.Payments.DisplayLateCharges"
       },
-      "miniOao": {
-        "$ref": "./mini-oao/mini-oao.json#/MiniOaoSettings"
+      "displayTotalAmountBilled": {
+        "type": "boolean",
+        "x-setting-key": "Loans.Payments.DisplayTotalAmountBilled"
+      },
+      "totalAmountBilledCategory": {
+        "type": "string",
+        "x-setting-key": "Loans.Payments.Loans.Payments.TotalAmountBilledCategory"
+      },
+      "displayPaymentRemaining": {
+        "type": "boolean",
+        "x-setting-key": "Loans.Payments.DisplayPaymentRemaining"
+      },
+      "displayRequiredToPayLateCharges": {
+        "type": "boolean",
+        "x-setting-key": "Loans.Payments.DisplayRequiredToPayLateCharges"
+      },
+      "highlightPastDueLoanRowInfo": {
+        "type": "boolean",
+        "x-setting-key": "Loans.Payments.HighlightPastDueLoanRowInfo"
+      },
+      "abilityToOverrideCreditCardTransferDescriptionEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Loans.CreditCards.AbilityToOverrideCreditCardTransferDescriptionEnabled"
       }
     }
   }

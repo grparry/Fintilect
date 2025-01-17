@@ -1,6 +1,7 @@
 {
   "ChangeAddressSettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Address.ChangeAddress",
     "properties": {
       "enabled": {
         "type": "boolean"
@@ -10,6 +11,52 @@
       },
       "features": {
         "$ref": "./features.json#/ChangeAddressFeatures"
+      },
+      "sendEmailOnUpdate": {
+        "type": "boolean",
+        "x-setting-key": "ChangeAddress.SendEmailOnUpdate",
+        "description": "Whether to send an email notification when an address is updated"
+      },
+      "primaryMemberCanUpdateJointOwnersAddress": {
+        "type": "boolean",
+        "x-setting-key": "ChangeAddress.PrimaryMemberCanUpdateJointOwnersAddress",
+        "description": "Whether the primary member can update the address of joint owners"
+      },
+      "foreignAddressCountryCodeAndSubdivisionsEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ChangeAddress.ForeignAddressCountryCodeAndSubdivisionsEnabled",
+        "description": "When enabled, users will be given a list of possible country codes and subdivision (state/province etc.) codes when changing their address if it is a foreign address"
+      },
+      "maximumAddressLineLength": {
+        "type": "integer",
+        "x-setting-key": "ChangeAddress.MaximumAddressLineLength",
+        "description": "Controls the length of the address line input fields on the change address page",
+        "default": 26
+      },
+      "updateBitAddressForPrimaryStatementAccountNumbers": {
+        "type": "boolean",
+        "x-setting-key": "ChangeEmail.UpdateBitAddressForPrimaryStatementAccountNumbers",
+        "description": "Whether to update bit address for primary statement account numbers"
+      },
+      "cityRegex": {
+        "type": "string",
+        "x-setting-key": "ChangeAddress.CityRegex",
+        "description": "Regular expression pattern for validating city names"
+      },
+      "shouldUpdateAddressOnCoreWhenNoChanges": {
+        "type": "boolean",
+        "x-setting-key": "ChangeAddress.ShouldUpdateCoreWhenNoChanges",
+        "description": "Whether to update the address in the core system even when there are no changes"
+      },
+      "shouldRedirectAfterUpdate": {
+        "type": "boolean",
+        "x-setting-key": "ChangeAddress.ShouldRedirectAfterUpdate",
+        "description": "Whether to redirect the user after updating their address"
+      },
+      "verifyAddressEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ChangeAddress.VerifyAddressEnabled",
+        "description": "Whether address verification is enabled"
       }
     }
   }

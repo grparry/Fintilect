@@ -1,17 +1,28 @@
 {
   "ComplianceSettings": {
     "type": "object",
+    "description": "Settings for compliance features",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.ADACompliance.ADAComplianceSettings",
     "properties": {
       "ada": {
         "type": "object",
+        "description": "ADA compliance settings",
         "properties": {
-          "enabled": {
-            "type": "boolean"
+          "minVersion": {
+            "type": "number",
+            "description": "Minimum version for ADA compliance",
+            "x-setting-key": "ADAComplianceSettings.MinVersion"
+          },
+          "enableADACompliancePageForHomeBanking": {
+            "type": "boolean",
+            "description": "Whether to enable ADA compliance page for home banking",
+            "x-setting-key": "ADAComplianceSettings.EnableADACompliancePageForHomeBanking"
           },
           "docCenter": {
             "$ref": "./ada/doc-center.json#/DocCenterSettings"
           }
-        }
+        },
+        "required": ["minVersion", "enableADACompliancePageForHomeBanking"]
       },
       "beneficiary": {
         "$ref": "./beneficiary/beneficiary-settings.json#/BeneficiarySettings"

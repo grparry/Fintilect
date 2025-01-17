@@ -1,0 +1,58 @@
+{
+  "IntegratedEnrollmentSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.IntegratedEnrollment.IntegratedEnrollmentSettings",
+    "description": "Settings for integrated enrollment features",
+    "properties": {
+      "ach": {
+        "type": "object",
+        "description": "Settings for ACH integration during OAO Integrated Enrollment",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "IntegratedEnrollment.Ach.Enabled",
+            "description": "If true will make a call to OAO to get ACH accounts during OAO Integrated Enrollment",
+            "default": true
+          }
+        }
+      },
+      "sso": {
+        "type": "object",
+        "description": "SSO settings for integrated enrollment",
+        "properties": {
+          "shouldStoreUserIdAndPassword": {
+            "type": "boolean",
+            "x-setting-key": "IntegratedEnrollment.SSO.ShouldStoreUserIdAndPassword",
+            "description": "Whether to store user ID and password during SSO"
+          },
+          "skippedEnrollmentSteps": {
+            "type": "array",
+            "x-setting-key": "IntegratedEnrollment.SSO.SkippedEnrollmentSteps",
+            "description": "List of enrollment steps to skip during SSO",
+            "items": {
+              "type": "string",
+              "enum": ["AccountVerification", "PasswordSetup", "SecurityQuestions", "MfaSetup", "EmailVerification", "PhoneVerification", "TermsAndConditions", "PrivacyPolicy"]
+            }
+          }
+        }
+      },
+      "thirdPartyOao": {
+        "type": "object",
+        "description": "Settings for third-party OAO integration",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "IntegratedEnrollment.ThirdPartyOao.Enabled",
+            "description": "Whether third-party OAO integration is enabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "format": "double",
+            "x-setting-key": "IntegratedEnrollment.ThirdPartyOao.MinVersion",
+            "description": "Minimum version required for third-party OAO integration"
+          }
+        }
+      }
+    }
+  }
+}

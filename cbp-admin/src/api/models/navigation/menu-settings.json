@@ -1,6 +1,8 @@
 {
   "MenuSettings": {
     "type": "object",
+    "description": "Configuration settings for menu items",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Menu.MenuItems",
     "properties": {
       "enabled": {
         "type": "boolean"
@@ -10,6 +12,23 @@
       },
       "pageDisplay": {
         "$ref": "./page-display.json#/PageDisplaySettings"
+      },
+      "menuItems": {
+        "type": "string",
+        "description": "XML configuration for menu items",
+        "x-setting-key": "Menu.XmlMenuItems"
+      },
+      "mobile": {
+        "type": "object",
+        "description": "Mobile menu settings",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.MobileConfigurations.MobileMenu",
+        "properties": {
+          "layout": {
+            "type": "string",
+            "description": "Mobile menu layout configuration",
+            "x-setting-key": "Mobile.Menu.Layout"
+          }
+        }
       }
     }
   }

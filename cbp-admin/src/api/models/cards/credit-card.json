@@ -1,0 +1,270 @@
+{
+  "CreditCardSettings": {
+    "type": "object",
+    "description": "Settings for credit card functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.CreditCards.CreditCardSettings",
+    "properties": {
+      "omahaSso": {
+        "type": "object",
+        "description": "Omaha SSO settings for credit cards",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.CreditCards.OmahaSso",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether Omaha SSO is enabled",
+            "x-setting-key": "CreditCards.OmahaSSO.Enabled"
+          },
+          "minimumVersion": {
+            "type": "number",
+            "description": "Minimum version required for Omaha SSO",
+            "x-setting-key": "CreditCards.OmahaSSO.MinimumVersion"
+          },
+          "url": {
+            "type": "string",
+            "description": "Base URL for Omaha SSO",
+            "x-setting-key": "CreditCards.OmahaSSO.Url"
+          },
+          "certification": {
+            "type": "object",
+            "description": "Certification settings for Omaha SSO",
+            "properties": {
+              "store": {
+                "type": "string",
+                "description": "Certificate store location",
+                "x-setting-key": "CreditCards.OmahaSSO.Certification.Store"
+              },
+              "emerge": {
+                "type": "object",
+                "properties": {
+                  "privateThumbPrint": {
+                    "type": "string",
+                    "description": "Private thumbprint for Emerge certification",
+                    "x-setting-key": "CreditCards.OmahaSSO.Certification.Emerge.PrivateThumbPrint"
+                  }
+                }
+              },
+              "vendor": {
+                "type": "object",
+                "properties": {
+                  "publicThumbPrint": {
+                    "type": "string",
+                    "description": "Public thumbprint for vendor certification",
+                    "x-setting-key": "CreditCards.OmahaSSO.Certification.Vendor.PublicThumbPrint"
+                  }
+                }
+              }
+            }
+          },
+          "minimumVersions": {
+            "type": "object",
+            "description": "Minimum version requirements for different platforms",
+            "properties": {
+              "android": {
+                "type": "string",
+                "description": "Minimum Android version required",
+                "x-setting-key": "CreditCards.OmahaSSO.MinimumAndroidVersion"
+              },
+              "ios": {
+                "type": "string",
+                "description": "Minimum iOS version required",
+                "x-setting-key": "CreditCards.OmahaSSO.MinimumIosVersion"
+              }
+            }
+          },
+          "responseIssuer": {
+            "type": "string",
+            "description": "Response issuer for Omaha SSO",
+            "x-setting-key": "CreditCards.OmahaSSO.ResponseIssuer"
+          },
+          "startUrl": {
+            "type": "string",
+            "description": "Start URL for Omaha SSO",
+            "x-setting-key": "CreditCards.OmahaSso.StartUrl"
+          },
+          "returnUrl": {
+            "type": "string",
+            "description": "Return URL for Omaha SSO",
+            "x-setting-key": "CreditCards.OmahaSso.ReturnUrl"
+          },
+          "logoutUrl": {
+            "type": "string",
+            "description": "Logout URL for Omaha SSO",
+            "x-setting-key": "CreditCards.OmahaSso.LogoutUrl"
+          },
+          "appId": {
+            "type": "string",
+            "description": "Application ID for Omaha SSO",
+            "x-setting-key": "CreditCards.OmahaSso.AppId"
+          },
+          "clientId": {
+            "type": "string",
+            "description": "Client ID for Omaha SSO",
+            "x-setting-key": "CreditCards.OmahaSso.ClientId"
+          },
+          "assertionLogEnabled": {
+            "type": "boolean",
+            "description": "Whether assertion logging is enabled",
+            "x-setting-key": "CreditCards.OmahaSso.AssertionLogEnabled"
+          },
+          "issuer": {
+            "type": "string",
+            "description": "Issuer for Omaha SSO",
+            "x-setting-key": "CreditCards.OmahaSso.Issuer"
+          }
+        }
+      },
+      "pscuSso": {
+        "type": "object",
+        "description": "PSCU SSO settings for credit cards",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.CreditCards.PscuSso",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether PSCU SSO is enabled",
+            "x-setting-key": "CreditCards.PscuSso.Enabled"
+          },
+          "minimumVersion": {
+            "type": "number",
+            "description": "Minimum version required for PSCU SSO",
+            "x-setting-key": "CreditCards.PscuSso.MinimumVersion"
+          },
+          "url": {
+            "type": "string",
+            "description": "Base URL for PSCU SSO",
+            "x-setting-key": "CreditCards.PscuSso.Url"
+          },
+          "certification": {
+            "type": "object",
+            "description": "Certification settings for PSCU SSO",
+            "properties": {
+              "store": {
+                "type": "string",
+                "description": "Certificate store location",
+                "x-setting-key": "CreditCards.PscuSso.Certification.Store"
+              },
+              "emerge": {
+                "type": "object",
+                "properties": {
+                  "privateThumbPrint": {
+                    "type": "string",
+                    "description": "Private thumbprint for Emerge certification",
+                    "x-setting-key": "CreditCards.PscuSso.Certification.Emerge.PrivateThumbPrint"
+                  }
+                }
+              },
+              "vendor": {
+                "type": "object",
+                "properties": {
+                  "publicThumbPrint": {
+                    "type": "string",
+                    "description": "Public thumbprint for vendor certification",
+                    "x-setting-key": "CreditCards.PscuSso.Certification.Vendor.PublicThumbPrint"
+                  }
+                }
+              }
+            }
+          },
+          "issuer": {
+            "type": "string",
+            "description": "Issuer for PSCU SSO",
+            "x-setting-key": "CreditCards.PscuSso.Issuer"
+          },
+          "responseIssuer": {
+            "type": "string",
+            "description": "Response issuer for PSCU SSO",
+            "x-setting-key": "CreditCards.PscuSso.ResponseIssuer"
+          },
+          "appId": {
+            "type": "string",
+            "description": "Application ID for PSCU SSO",
+            "x-setting-key": "CreditCards.PscuSso.AppId"
+          },
+          "clientId": {
+            "type": "string",
+            "description": "Client ID for PSCU SSO",
+            "x-setting-key": "CreditCards.PscuSso.ClientId"
+          },
+          "keepAliveUrl": {
+            "type": "string",
+            "description": "Keep alive URL for PSCU SSO",
+            "x-setting-key": "CreditCards.PscuSso.KeepAliveUrl"
+          },
+          "assertionLogEnabled": {
+            "type": "boolean",
+            "description": "Whether assertion logging is enabled",
+            "x-setting-key": "CreditCards.PscuSso.AssertionLogEnabled"
+          }
+        }
+      },
+      "cardControl": {
+        "type": "object",
+        "description": "Card control settings for credit cards",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.CreditCardSettings",
+        "properties": {
+          "alertPreferencesEnabled": {
+            "type": "boolean",
+            "description": "Whether alert preferences are enabled in Card Control",
+            "x-setting-key": "Mobile.CardControl.CreditCard.AlertPreferencesEnabled"
+          },
+          "userDeviceSetupEnabled": {
+            "type": "boolean",
+            "description": "Whether user device setup is enabled in Card Control",
+            "x-setting-key": "Mobile.CardControl.CreditCard.UserDeviceSetupEnabled"
+          },
+          "managePermissionsEnabled": {
+            "type": "boolean",
+            "description": "Whether manage permissions is enabled in Card Control",
+            "x-setting-key": "Mobile.CardControl.CreditCard.ManagePermissionsEnabled"
+          },
+          "useDynamicTransactionTypes": {
+            "type": "boolean",
+            "description": "Whether to use dynamic transaction types",
+            "x-setting-key": "Mobile.CardControl.CreditCard.ShouldUseDynamicTransactionTypes"
+          },
+          "merchantTypesEnabled": {
+            "type": "boolean",
+            "description": "Whether merchant types are enabled",
+            "x-setting-key": "Mobile.CardControl.CreditCard.MerchantTypesEnabled"
+          },
+          "spendingLimitsEnabled": {
+            "type": "boolean",
+            "description": "Whether spending limits are enabled",
+            "x-setting-key": "Mobile.CardControl.CreditCard.SpendingLimitsEnabled"
+          },
+          "transactionTypesEnabled": {
+            "type": "boolean",
+            "description": "Whether transaction types are enabled",
+            "x-setting-key": "Mobile.CardControl.CreditCard.TransactionTypesEnabled"
+          }
+        }
+      },
+      "locations": {
+        "type": "object",
+        "description": "Location settings for credit cards",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.Locations.CreditCardLocationSettings",
+        "properties": {
+          "maxNumberOfRegions": {
+            "type": "integer",
+            "description": "Maximum number of regions allowed",
+            "x-setting-key": "Mobile.CardControl.Locations.CreditCard.MaxNumberOfRegions"
+          },
+          "usOnlyEnabled": {
+            "type": "boolean",
+            "description": "Whether US-only locations are enabled",
+            "x-setting-key": "Mobile.CardControl.Locations.CreditCard.UsOnlyEnabled"
+          },
+          "regionsEnabled": {
+            "type": "boolean",
+            "description": "Whether regions are enabled",
+            "x-setting-key": "Mobile.CardControl.Locations.CreditCard.RegionsEnabled"
+          },
+          "currentLocationEnabled": {
+            "type": "boolean",
+            "description": "Whether current location is enabled",
+            "x-setting-key": "Mobile.CardControl.Locations.CreditCard.CurrentLocationEnabled"
+          }
+        }
+      }
+    }
+  }
+}

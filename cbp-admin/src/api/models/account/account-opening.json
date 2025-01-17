@@ -1,0 +1,29 @@
+{
+  "AccountOpening": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.AccountOpening",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "Accounts.AccountOpening.Enabled",
+        "description": "If enabled, then credit union can access Views/AccountOpening.cshtml and the features that accompany it"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "Accounts.AccountOpening.MinVersion",
+        "description": "Minimum version for this feature to run"
+      },
+      "onlySendEmailOnNewAccountCreation": {
+        "type": "boolean",
+        "x-setting-key": "Accounts.AccountOpening.OnlySendEmailOnNewAccountCreation",
+        "description": "Whether to only send email notifications for new account creation"
+      },
+      "hideContactInfoDuringSubAccountOpening": {
+        "type": "boolean",
+        "x-setting-key": "Accounts.AccountOpening.HideContactInfoDuringSubAccountOpening",
+        "description": "If true, enable the hiding of the 'contact info' area on the new sub account opening page in HomeBanking"
+      }
+    }
+  }
+}

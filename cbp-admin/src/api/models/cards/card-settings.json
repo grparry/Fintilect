@@ -1,12 +1,88 @@
 {
   "CardSettings": {
     "type": "object",
+    "description": "Card settings configuration",
     "properties": {
+      "myCardInfo": {
+        "type": "object",
+        "description": "My Card Info settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.MyCardInfo",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether My Card Info is enabled",
+            "x-setting-key": "Mobile.MyCardInfo.Enabled"
+          },
+          "minimumVersion": {
+            "type": "string",
+            "description": "Minimum version required",
+            "x-setting-key": "Mobile.MyCardInfo.MinimumVersion"
+          },
+          "minimumAndroidVersion": {
+            "type": "string",
+            "description": "Minimum Android version required",
+            "x-setting-key": "Mobile.MyCardInfo.MinimumAndroidVersion"
+          },
+          "minimumIosVersion": {
+            "type": "string",
+            "description": "Minimum iOS version required",
+            "x-setting-key": "Mobile.MyCardInfo.MinimumIosVersion"
+          }
+        }
+      },
       "cardManagement": {
         "$ref": "./management/card-management.json#/CardManagementSettings"
       },
       "offlineCard": {
         "$ref": "./offline/offline-card.json#/OfflineCardSettings"
+      },
+      "cardControl": {
+        "$ref": "./control/card-control-settings.json#/CardControlSettings"
+      },
+      "cardActivation": {
+        "$ref": "./activation/card-activation-settings.json#/CardActivationSettings"
+      },
+      "cardLimits": {
+        "$ref": "./limits/card-limits-settings.json#/CardLimitsSettings"
+      },
+      "cardAlerts": {
+        "$ref": "./alerts/card-alerts-settings.json#/CardAlertsSettings"
+      },
+      "cardSecurity": {
+        "$ref": "./security/card-security-settings.json#/CardSecuritySettings"
+      },
+      "cardTravel": {
+        "$ref": "./travel/card-travel-settings.json#/CardTravelSettings"
+      },
+      "cardStatus": {
+        "$ref": "./status/card-status-settings.json#/CardStatusSettings"
+      },
+      "cardReplacement": {
+        "$ref": "./replacement/card-replacement-settings.json#/CardReplacementSettings"
+      },
+      "cardPin": {
+        "$ref": "./pin/card-pin-settings.json#/CardPinSettings"
+      },
+      "cardDesign": {
+        "$ref": "./design/card-design-settings.json#/CardDesignSettings"
+      },
+      "cardHistory": {
+        "$ref": "./history/card-history-settings.json#/CardHistorySettings"
+      },
+      "cardPreferences": {
+        "$ref": "./preferences/card-preferences-settings.json#/CardPreferencesSettings"
+      },
+      "cardIntegration": {
+        "$ref": "./integration/card-integration-settings.json#/CardIntegrationSettings"
+      },
+      "goToMyCard": {
+        "$ref": "./gotomycard/go-to-my-card-settings.json#/GoToMyCardSettings"
+      },
+      "omahaSso": {
+        "$ref": "./sso/omaha-sso-settings.json#/OmahaSsoSettings"
+      },
+      "pscuSso": {
+        "$ref": "./sso/pscu-sso-settings.json#/PscuSsoSettings"
       }
     }
   }

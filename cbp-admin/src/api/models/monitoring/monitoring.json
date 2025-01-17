@@ -1,0 +1,53 @@
+{
+  "MonitoringSettings": {
+    "type": "object",
+    "description": "Settings for system monitoring and health checks",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Monitoring.MonitoringSettings",
+    "properties": {
+      "middlewareHealthThreshold": {
+        "type": "object",
+        "description": "Middleware health monitoring thresholds",
+        "x-setting-key": "Monitoring.MiddlewareHealthThreshold",
+        "properties": {
+          "warningThreshold": {
+            "type": "integer",
+            "description": "Warning threshold in milliseconds",
+            "minimum": 0
+          },
+          "criticalThreshold": {
+            "type": "integer",
+            "description": "Critical threshold in milliseconds",
+            "minimum": 0
+          }
+        },
+        "required": ["warningThreshold", "criticalThreshold"]
+      },
+      "middlewareHealthEnabled": {
+        "type": "boolean",
+        "description": "Whether middleware health monitoring is enabled",
+        "x-setting-key": "Monitoring.MiddlewareHealthEnabled"
+      },
+      "middlewareHealthCheckInterval": {
+        "type": "integer",
+        "description": "Interval between health checks in seconds",
+        "minimum": 1,
+        "x-setting-key": "Monitoring.MiddlewareHealthCheckInterval"
+      },
+      "alertingEnabled": {
+        "type": "boolean",
+        "description": "Whether alerting is enabled",
+        "x-setting-key": "Monitoring.AlertingEnabled"
+      },
+      "alertingRecipients": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "format": "email"
+        },
+        "description": "List of email addresses to receive alerts",
+        "x-setting-key": "Monitoring.AlertingRecipients"
+      }
+    },
+    "required": ["middlewareHealthThreshold", "middlewareHealthEnabled", "middlewareHealthCheckInterval", "alertingEnabled", "alertingRecipients"]
+  }
+}

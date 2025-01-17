@@ -1,73 +1,142 @@
 {
   "LocationSearchSettings": {
     "type": "object",
+    "description": "Settings for location search functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.LocationSearch",
     "properties": {
       "id": {
         "type": "string",
         "format": "uuid"
       },
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether location search is enabled",
+        "x-setting-key": "Mobile.LocationSearch.Enabled"
+      },
+      "minimumVersions": {
+        "type": "object",
+        "description": "Minimum version requirements for different platforms",
+        "properties": {
+          "general": {
+            "type": "string",
+            "description": "General minimum version requirement",
+            "x-setting-key": "Mobile.LocationSearch.MinimumVersion"
+          },
+          "android": {
+            "type": "string",
+            "description": "Minimum Android version required",
+            "x-setting-key": "Mobile.LocationSearch.MinimumAndroidVersion"
+          },
+          "ios": {
+            "type": "string",
+            "description": "Minimum iOS version required",
+            "x-setting-key": "Mobile.LocationSearch.MinimumIosVersion"
+          }
+        }
+      },
       "provider": {
         "type": "string",
-        "enum": ["Google", "MapQuest", "Here", "Custom"]
+        "description": "Location search provider",
+        "enum": ["Google", "MapQuest", "Here", "Custom"],
+        "x-setting-key": "Mobile.LocationSearch.Provider"
       },
       "apiConfiguration": {
         "type": "object",
+        "description": "API configuration for the location search provider",
         "properties": {
           "apiKey": {
             "type": "string",
-            "format": "password"
+            "description": "API key for the provider",
+            "format": "password",
+            "x-setting-key": "Mobile.LocationSearch.SearchKey"
           },
           "clientId": {
-            "type": "string"
+            "type": "string",
+            "description": "Client ID for the provider"
           },
           "endpoint": {
             "type": "string",
+            "description": "Provider endpoint URL",
             "format": "uri"
           },
           "version": {
-            "type": "string"
+            "type": "string",
+            "description": "Provider API version"
+          }
+        }
+      },
+      "features": {
+        "type": "object",
+        "description": "Feature flags for location search",
+        "properties": {
+          "streetLocations": {
+            "type": "boolean",
+            "description": "Whether street locations are supported",
+            "x-setting-key": "Mobile.LocationSearch.SupportsStreetLocations"
+          },
+          "customSearchKeys": {
+            "type": "boolean",
+            "description": "Whether custom search keys are supported",
+            "x-setting-key": "Mobile.LocationSearch.SupportsCustomSearchKeys"
+          },
+          "customSearchKeysMinimumVersion": {
+            "type": "string",
+            "description": "Minimum version required for custom search keys",
+            "x-setting-key": "Mobile.LocationSearch.CustomSearchKeysMinimumVersion"
           }
         }
       },
       "searchTypes": {
         "type": "object",
+        "description": "Types of locations that can be searched",
         "properties": {
           "branches": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether branch locations can be searched"
           },
           "atms": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether ATM locations can be searched"
           },
           "sharedBranches": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether shared branch locations can be searched"
           },
           "partnerAtms": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether partner ATM locations can be searched"
           }
         }
       },
       "filters": {
         "type": "object",
+        "description": "Search filter settings",
         "properties": {
           "radius": {
             "type": "object",
+            "description": "Search radius settings",
             "properties": {
               "defaultRadius": {
                 "type": "number",
-                "format": "float"
+                "description": "Default search radius",
+                "format": "float",
+                "x-setting-key": "Mobile.LocationSearch.Distance"
               },
               "maxRadius": {
                 "type": "number",
+                "description": "Maximum allowed search radius",
                 "format": "float"
               },
               "unit": {
                 "type": "string",
+                "description": "Unit of measurement for radius",
                 "enum": ["Miles", "Kilometers"]
               }
             }
           },
           "services": {
             "type": "array",
+            "description": "Available branch services to filter by",
             "items": {
               "type": "string",
               "enum": [
@@ -83,6 +152,7 @@
           },
           "atmFeatures": {
             "type": "array",
+            "description": "Available ATM features to filter by",
             "items": {
               "type": "string",
               "enum": [
@@ -99,65 +169,83 @@
       },
       "locationDetails": {
         "type": "object",
+        "description": "Settings for location details display",
         "properties": {
           "includeHours": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether to include business hours"
           },
           "includeServices": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether to include available services"
           },
           "includePhotos": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether to include location photos"
           },
           "includeDirections": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether to include directions"
           },
           "includeWaitTimes": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether to include estimated wait times"
           }
         }
       },
       "caching": {
         "type": "object",
+        "description": "Cache settings for location data",
         "properties": {
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether caching is enabled"
           },
           "ttlMinutes": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Cache time-to-live in minutes"
           },
           "maxCacheSize": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Maximum cache size in bytes"
           }
         }
       },
       "customization": {
         "type": "object",
+        "description": "UI customization settings",
         "properties": {
           "mapStyle": {
             "type": "object",
+            "description": "Map display settings",
             "properties": {
               "theme": {
                 "type": "string",
+                "description": "Map theme",
                 "enum": ["Default", "Light", "Dark", "Custom"]
               },
               "markerIcons": {
                 "type": "object",
+                "description": "Custom marker icons for different location types",
                 "properties": {
                   "branch": {
                     "type": "string",
+                    "description": "Branch location marker icon",
                     "format": "uri"
                   },
                   "atm": {
                     "type": "string",
+                    "description": "ATM location marker icon",
                     "format": "uri"
                   },
                   "sharedBranch": {
                     "type": "string",
+                    "description": "Shared branch marker icon",
                     "format": "uri"
                   },
                   "partnerAtm": {
                     "type": "string",
+                    "description": "Partner ATM marker icon",
                     "format": "uri"
                   }
                 }
@@ -166,13 +254,16 @@
           },
           "listView": {
             "type": "object",
+            "description": "List view display settings",
             "properties": {
               "defaultView": {
                 "type": "string",
+                "description": "Default view mode",
                 "enum": ["Map", "List", "Split"]
               },
               "sortOptions": {
                 "type": "array",
+                "description": "Available sort options",
                 "items": {
                   "type": "string",
                   "enum": ["Distance", "Name", "Services", "Hours"]
@@ -182,6 +273,7 @@
           }
         }
       }
-    }
+    },
+    "required": ["enabled", "minimumVersions", "provider", "apiConfiguration", "features"]
   }
 }

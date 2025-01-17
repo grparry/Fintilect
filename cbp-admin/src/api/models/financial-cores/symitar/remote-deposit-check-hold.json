@@ -1,6 +1,8 @@
 {
   "SymitarRemoteDepositCheckHoldSettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.FinancialCores.SymitarSettings.RemoteDepositCheckHoldSettings",
+    "x-setting-key": "FinancialCore.Symitar.RemoteDepositCheckHold",
     "properties": {
       "enabled": {
         "type": "boolean"

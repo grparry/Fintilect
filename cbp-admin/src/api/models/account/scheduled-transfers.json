@@ -1,0 +1,221 @@
+{
+  "ScheduledTransfers": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.ScheduledTransfers",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.Enabled",
+        "description": "Whether scheduled transfers are enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "ScheduledTransfers.MinVersion",
+        "description": "Minimum version required for scheduled transfers"
+      },
+      "monthsToCalculate": {
+        "type": "integer",
+        "x-setting-key": "ScheduledTransfers.MonthsToCalculate",
+        "description": "Number of months to calculate for scheduled transfers"
+      },
+      "adjustForWeekendsAndHolidays": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.AdjustForWeekendsAndHolidays",
+        "description": "Whether to adjust transfers for weekends and holidays (currently hardcoded to false)",
+        "readOnly": true,
+        "default": false
+      },
+      "addDayForWeekendOrHoliday": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.AddDayForWeekendOrHoliday",
+        "description": "Whether to add a day when the transfer falls on a weekend or holiday"
+      },
+      "maxTransferAttempts": {
+        "type": "integer",
+        "x-setting-key": "ScheduledTransfers.MaxTransferAttempts",
+        "description": "Maximum number of attempts for a transfer"
+      },
+      "homeBankingBillPayAccounts": {
+        "type": "string",
+        "x-setting-key": "X.App.HomeBanking.BillPayAccounts",
+        "description": "Bill pay accounts for home banking"
+      },
+      "transferAtLeastMinPaymentForLoans": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.TransferAtLeastMinPaymentForLoans",
+        "description": "Whether to transfer at least the minimum payment for loans"
+      },
+      "transferAtLeastMinPaymentForCreditCards": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.TransferAtLeastMinPaymentForCreditCards",
+        "description": "Whether to transfer at least the minimum payment for credit cards"
+      },
+      "continueIfMinPaymentCheckFails": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.ContinueIfMinPaymentCheckFails",
+        "description": "Whether to continue if minimum payment check fails"
+      },
+      "defaultSuffixMask": {
+        "type": "string",
+        "x-setting-key": "X.App.HomeBanking.DefaultSuffixMask",
+        "description": "Default suffix mask for home banking"
+      },
+      "useAmountDueInsteadOfPaymentForMinimumHelocPayment": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.UseAmountDueInsteadOfPaymentForMinimumHelocPayment",
+        "description": "Whether to use amount due instead of payment for minimum HELOC payment"
+      },
+      "startDateTimePickerHourOffset": {
+        "type": "integer",
+        "x-setting-key": "ScheduledTransfers.StartDateTimePickerHourOffset",
+        "description": "Hour offset for the start date time picker"
+      },
+      "lastDayOfMonthSchedulingEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.LastDayOfMonthSchedulingEnabled",
+        "description": "Whether scheduling on the last day of the month is enabled"
+      },
+      "coreErrorCodeToTransferResultMappings": {
+        "type": "object",
+        "x-setting-key": "ScheduledTransfers.CoreErrorCodeToTransferResultMappings",
+        "description": "Mappings from core error codes to transfer results",
+        "additionalProperties": {
+          "type": "string",
+          "enum": ["Success", "Failed", "ManualReviewRequired", "Skipped"]
+        }
+      },
+      "coreErrorCodeToTransferResultMappingEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.CoreErrorCodeToTransferResultMappingEnabled",
+        "description": "Whether core error code to transfer result mapping is enabled"
+      },
+      "useScheduledRunTimeAsEffectiveDateEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.UseScheduledRunTimeAsEffectiveDate.Enabled",
+        "description": "Whether to use scheduled run time as effective date"
+      },
+      "checkCoreForDuplicateTransactionsEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.CheckCoreForDuplicateTransactions.Enabled",
+        "description": "Whether to check core for duplicate transactions (deprecated - not currently used)",
+        "deprecated": true,
+        "default": false,
+        "readOnly": true
+      },
+      "shouldSendSecureMessageWhenDuplicateIsDetected": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.CheckCoreForDuplicateTransactions.ShouldSendSecureMessageWhenDuplicateIsDetected",
+        "description": "Whether to send secure message when duplicate is detected (deprecated - not currently used)",
+        "deprecated": true,
+        "default": false,
+        "readOnly": true
+      },
+      "readOnlyEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.ReadOnly.Enabled",
+        "description": "Whether read-only mode is enabled"
+      },
+      "validateProcessingIndicatorsEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.ValidateProcessingIndicatorsEnabled",
+        "description": "Whether validation of processing indicators is enabled"
+      },
+      "shouldSendSecureMessageWhenManualReviewIsRequired": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.ShouldSendSecureMessageWhenManualReviewIsRequired",
+        "description": "Whether to send secure message when manual review is required"
+      },
+      "manualReviewRequiredSecureMessageCategory": {
+        "type": "string",
+        "x-setting-key": "ScheduledTransfers.ManualReviewRequiredSecureMessageCategory",
+        "description": "Category for secure messages when manual review is required"
+      },
+      "manualReviewRequiredSecureMessageSenderMembershipUserId": {
+        "type": "integer",
+        "x-setting-key": "ScheduledTransfers.ManualReviewRequiredSecureMessageSenderMembershipUserId",
+        "description": "Membership user ID for the sender of manual review required secure messages"
+      },
+      "shouldStoreIdentifierForCreditCards": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.ShouldStoreIdentifierForCreditCards",
+        "description": "Whether to store identifier for credit cards"
+      },
+      "internalTransfersRecurrenceTypes": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["OneTime", "Daily", "Weekly", "BiWeekly", "Monthly", "BiMonthly", "Quarterly", "SemiAnnually", "Annually"]
+        },
+        "x-setting-key": "ScheduledTransfers.InternalTransfers.RecurrenceTypes",
+        "description": "Allowed recurrence types for internal transfers"
+      },
+      "externalTransfersRecurrenceTypes": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["OneTime", "Daily", "Weekly", "BiWeekly", "Monthly", "BiMonthly", "Quarterly", "SemiAnnually", "Annually"]
+        },
+        "x-setting-key": "ScheduledTransfers.ExternalTransfers.RecurrenceTypes",
+        "description": "Allowed recurrence types for external transfers"
+      },
+      "creditCardTransfersRecurrenceTypes": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["OneTime", "Daily", "Weekly", "BiWeekly", "Monthly", "BiMonthly", "Quarterly", "SemiAnnually", "Annually"]
+        },
+        "x-setting-key": "ScheduledTransfers.CreditCardTransfers.RecurrenceTypes",
+        "description": "Allowed recurrence types for credit card transfers"
+      },
+      "endOptions": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["NoEndDate", "EndAfterNumberOfOccurrences", "EndByDate"]
+        },
+        "x-setting-key": "ScheduledTransfers.EndOptions",
+        "description": "Available end options for scheduled transfers"
+      },
+      "onHostEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.OnHost.Enabled",
+        "description": "Whether on-host scheduled transfers are enabled"
+      },
+      "onHostMinVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "ScheduledTransfers.OnHost.MinVersion",
+        "description": "Minimum version required for on-host scheduled transfers"
+      },
+      "automaticLoanPaymentsEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.AutomaticLoanPayments.Enabled",
+        "description": "Whether automatic loan payments are enabled"
+      },
+      "automaticLoanPaymentsLoanCategories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "ScheduledTransfers.AutomaticLoanPayments.LoanCategories",
+        "description": "Loan categories eligible for automatic payments"
+      },
+      "shouldUseNewUserInterface": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.ShouldUseNewUserInterface",
+        "description": "Whether to use the new user interface"
+      },
+      "canSkipTransferOccurrence": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.CanSkipTransferOccurrence",
+        "description": "Whether transfer occurrences can be skipped"
+      },
+      "canEditTransferAmount": {
+        "type": "boolean",
+        "x-setting-key": "ScheduledTransfers.CanEditTransferAmount",
+        "description": "Whether transfer amounts can be edited"
+      }
+    }
+  }
+}

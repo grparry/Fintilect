@@ -1,33 +1,56 @@
 {
   "RestrictedWordsSettings": {
     "type": "object",
+    "description": "Settings for restricted words validation",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.RestrictedWords.RestrictedWordSettings",
     "properties": {
       "enabled": {
-        "type": "boolean"
+        "type": "boolean",
+        "description": "Whether restricted words validation is enabled",
+        "x-setting-key": "RestrictedWords.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "description": "Minimum version for restricted words validation",
+        "x-setting-key": "RestrictedWords.MinVersion"
+      },
+      "controlAreas": {
+        "type": "array",
+        "description": "Areas where restricted words validation is applied",
+        "items": {
+          "type": "string",
+          "enum": ["Username", "Password", "Comment", "CustomField"]
+        },
+        "x-setting-key": "RestrictedWords.ControlAreas"
       },
       "wordLists": {
         "type": "object",
+        "description": "Lists of restricted words by category",
         "properties": {
           "usernames": {
             "type": "array",
+            "description": "Restricted words for usernames",
             "items": {
               "type": "string"
             }
           },
           "passwords": {
             "type": "array",
+            "description": "Restricted words for passwords",
             "items": {
               "type": "string"
             }
           },
           "comments": {
             "type": "array",
+            "description": "Restricted words for comments",
             "items": {
               "type": "string"
             }
           },
           "customFields": {
             "type": "array",
+            "description": "Restricted words for custom fields",
             "items": {
               "type": "string"
             }
@@ -60,6 +83,7 @@
           }
         }
       }
-    }
+    },
+    "required": ["enabled", "minVersion", "controlAreas"]
   }
 }

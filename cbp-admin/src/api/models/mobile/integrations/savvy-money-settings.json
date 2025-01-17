@@ -1,0 +1,96 @@
+{
+  "SavvyMoneySettings": {
+    "type": "object",
+    "description": "SavvyMoney integration settings",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.SavvyMoney",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether SavvyMoney integration is enabled",
+        "x-setting-key": "Mobile.SavvyMoney.Enabled"
+      },
+      "minVersion": {
+        "type": "string",
+        "description": "Minimum version required for SavvyMoney",
+        "x-setting-key": "Mobile.SavvyMoney.MinimumVersion"
+      },
+      "minAndroidVersion": {
+        "type": "string",
+        "description": "Minimum Android version required for SavvyMoney",
+        "x-setting-key": "Mobile.SavvyMoney.MinimumAndroidVersion"
+      },
+      "minIosVersion": {
+        "type": "string",
+        "description": "Minimum iOS version required for SavvyMoney",
+        "x-setting-key": "Mobile.SavvyMoney.MinimumIosVersion"
+      },
+      "authentication": {
+        "type": "object",
+        "description": "Authentication settings for SavvyMoney",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Authentication",
+        "properties": {
+          "featureId": {
+            "type": "string",
+            "description": "Feature ID for authentication, matches Meta.LayeredSecurityFeature table",
+            "default": "23B4EDAA-E6A8-4F70-98E5-3344947E2BA8"
+          }
+        }
+      },
+      "serviceSettings": {
+        "type": "object",
+        "description": "Service settings for SavvyMoney mobile integration",
+        "x-setting-key": "Mobile.SavvyMoney.ServiceSettings",
+        "x-legacy-model": "Psi.Data.Models.Domain.Integrations.SavvyMoney.ServiceSettingsModel"
+      },
+      "creditScore": {
+        "type": "object",
+        "description": "Credit score display settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether credit score display is enabled",
+            "x-setting-key": "Mobile.SavvyMoney.CreditScore.Enabled"
+          }
+        }
+      },
+      "scoreChange": {
+        "type": "object",
+        "description": "Score change notification settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether score change notifications are enabled",
+            "x-setting-key": "Mobile.SavvyMoney.ScoreChange.Enabled"
+          }
+        }
+      },
+      "alertBadge": {
+        "type": "object",
+        "description": "Alert badge settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether alert badges are enabled",
+            "x-setting-key": "Mobile.SavvyMoney.AlertBadge.Enabled"
+          }
+        }
+      },
+      "banner": {
+        "type": "object",
+        "description": "Banner settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether banners are enabled",
+            "x-setting-key": "Mobile.SavvyMoney.Banner.Enabled"
+          },
+          "dismissalDays": {
+            "type": "integer",
+            "description": "Number of days before a dismissed banner can reappear",
+            "x-setting-key": "Mobile.SavvyMoney.Banner.DismissalDays"
+          }
+        }
+      }
+    }
+  }
+}

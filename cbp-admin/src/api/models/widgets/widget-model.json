@@ -2,6 +2,10 @@
   "WidgetModel": {
     "type": "object",
     "description": "Configuration model for dashboard widgets",
+    "x-legacy-models": [
+      "Psi.Models.ClientConfigurationModels.Widgets.WidgetSettings",
+      "Psi.Models.ClientConfigurationModels.Cardlytics.CardlyticsWidget"
+    ],
     "required": ["widgetConfiguration", "dashboardLayout"],
     "properties": {
       "widgetConfiguration": {
@@ -19,31 +23,43 @@
                 "properties": {
                   "enabled": {
                     "type": "boolean",
-                    "default": true
+                    "description": "Whether the account summary widget is enabled",
+                    "default": true,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableAccountSummaryWidget"
+                  },
+                  "useNewVersion": {
+                    "type": "boolean",
+                    "description": "Whether to use the new account summary widget",
+                    "x-setting-key": "ConnectNative.Dashboard.EnableNewAccountSummaryWidget"
                   },
                   "expandedHeight": {
                     "type": "string",
                     "description": "Height in rem when expanded",
-                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$"
+                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$",
+                    "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetExpandedHeight"
                   },
                   "headerLinks": {
                     "type": "object",
                     "properties": {
                       "newAccount": {
                         "type": "string",
-                        "format": "uri"
+                        "format": "uri",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.NewAccount"
                       },
                       "creditCardApply": {
                         "type": "string",
-                        "format": "uri"
+                        "format": "uri",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.CreditCardApply"
                       },
                       "loanApply": {
                         "type": "string",
-                        "format": "uri"
+                        "format": "uri",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.LoanApply"
                       },
                       "linkAccount": {
                         "type": "string",
-                        "format": "uri"
+                        "format": "uri",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.LinkAccount"
                       }
                     }
                   }
@@ -55,7 +71,9 @@
                 "properties": {
                   "enabled": {
                     "type": "boolean",
-                    "default": true
+                    "description": "Whether the scheduled transfers widget is enabled",
+                    "default": true,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableScheduledTransfersWidget"
                   },
                   "expandedHeight": {
                     "type": "string",
@@ -69,7 +87,9 @@
                 "properties": {
                   "enabled": {
                     "type": "boolean",
-                    "default": true
+                    "description": "Whether the saved transfers widget is enabled",
+                    "default": true,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableSavedTransfersWidget"
                   }
                 }
               },
@@ -79,7 +99,9 @@
                 "properties": {
                   "enabled": {
                     "type": "boolean",
-                    "default": false
+                    "description": "Whether the cardlytics widget is enabled",
+                    "default": false,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableCardlyticsWidget"
                   },
                   "expandedHeight": {
                     "type": "string",
@@ -87,7 +109,9 @@
                   },
                   "showOnWelcomeSummary": {
                     "type": "boolean",
-                    "default": false
+                    "description": "Whether to show the widget on welcome summary pages",
+                    "default": false,
+                    "x-setting-key": "Cardlytics.ShowWidgetOnWelcomeSummaryPages"
                   }
                 }
               },
@@ -97,7 +121,9 @@
                 "properties": {
                   "enabled": {
                     "type": "boolean",
-                    "default": false
+                    "description": "Whether the savvy money widget is enabled",
+                    "default": false,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableSavvyMoneyWidget"
                   }
                 }
               },
@@ -107,7 +133,9 @@
                 "properties": {
                   "enabled": {
                     "type": "boolean",
-                    "default": false
+                    "description": "Whether the money desktop widget is enabled",
+                    "default": false,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableMoneyDesktopWidget"
                   }
                 }
               },
@@ -117,7 +145,9 @@
                 "properties": {
                   "enabled": {
                     "type": "boolean",
-                    "default": false
+                    "description": "Whether the cunexus widget is enabled",
+                    "default": false,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableCunexusWidget"
                   }
                 }
               },
@@ -127,7 +157,9 @@
                 "properties": {
                   "enabled": {
                     "type": "boolean",
-                    "default": false
+                    "description": "Whether the bill pay widget is enabled",
+                    "default": false,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableBillPayWidget"
                   }
                 }
               }
@@ -148,7 +180,8 @@
                 "cunexus",
                 "bill-pay"
               ]
-            }
+            },
+            "x-setting-key": "ConnectNative.Dashboard.NonHideableWidgets"
           }
         }
       },
@@ -163,7 +196,13 @@
             "additionalProperties": {
               "type": "integer",
               "minimum": 0
-            }
+            },
+            "x-setting-key": "Widgets.DashboardInitialSortOrder"
+          },
+          "defaultWidgets": {
+            "type": "string",
+            "description": "Default widgets configuration for Connect Native dashboard",
+            "x-setting-key": "ConnectNative.Dashboard.Widgets.Default"
           },
           "layoutRules": {
             "type": "object",

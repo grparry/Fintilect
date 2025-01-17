@@ -1,7 +1,41 @@
 {
   "FinancialCoreSettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.FinancialCores.FinancialCore",
     "properties": {
+      "coreType": {
+        "type": "string",
+        "x-setting-key": "FinancialCore.CoreType",
+        "enum": ["Symitar", "DNA", "EPL", "Mercury", "Summit", "PsiCore", "Corelation"]
+      },
+      "useClassicCore": {
+        "type": "boolean",
+        "x-setting-key": "FinancialCore.UseClassicCore"
+      },
+      "shouldBypassICoreForAccountInquiry": {
+        "type": "boolean",
+        "x-setting-key": "FinancialCore.ShouldBypassICoreForAccountInquiry"
+      },
+      "shouldBypassICoreForScheduledTransfers": {
+        "type": "boolean",
+        "x-setting-key": "FinancialCore.ShouldBypassICoreForScheduledTransfers"
+      },
+      "shouldMapPasswordDuringAccountInquiry": {
+        "type": "boolean",
+        "x-setting-key": "FinancialCore.ClassicCores.ShouldMapPasswordDuringAccountInquiry"
+      },
+      "coreConnectionString": {
+        "type": "string",
+        "x-setting-key": "FinancialCore.CoreConnectionString"
+      },
+      "cacheAccountInquiry": {
+        "type": "boolean",
+        "x-setting-key": "FinacialCore.Caching.CacheAccountInquiry"
+      },
+      "cacheAccountInquiryForClassicCores": {
+        "type": "boolean",
+        "x-setting-key": "FinancialCore.Caching.CacheAccountInquiryForClassicCores"
+      },
       "dna": {
         "$ref": "./dna/dna-settings.json#/DnaSettings"
       },
@@ -73,6 +107,12 @@
       },
       "loanOrigination": {
         "$ref": "./loan-origination/loan-origination-settings.json#/LoanOriginationSettings"
+      },
+      "transactionSettings": {
+        "$ref": "./transaction-settings.json#/TransactionSettings"
+      },
+      "transferSettings": {
+        "$ref": "./transfer-settings.json#/TransferSettings"
       }
     }
   }

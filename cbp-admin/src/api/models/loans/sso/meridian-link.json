@@ -1,0 +1,31 @@
+{
+  "MeridianLinkSsoSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.MeridianLinkSso.MeridianLinkSsoSettings",
+    "properties": {
+      "shouldUseMemberNumber": {
+        "type": "boolean",
+        "description": "Whether to use member number for SSO",
+        "x-setting-key": "MeridianLinkSso.ShouldUseMemberNumber"
+      },
+      "shouldSendMemberInfo": {
+        "type": "boolean",
+        "description": "Whether to send member information during SSO",
+        "x-setting-key": "MeridianLinkSso.SendMemberInfoEnabled"
+      },
+      "shouldUseVersion3": {
+        "type": "boolean",
+        "description": "Whether to use version 3 of MeridianLink SSO",
+        "x-setting-key": "MeridianLinkSso.Version3.Enabled"
+      },
+      "memberInfo": {
+        "type": "object",
+        "description": "Configuration for which member fields to send during SSO",
+        "x-setting-key": "MeridianLinkSso.SendMemberInfo.FieldsToSend",
+        "additionalProperties": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

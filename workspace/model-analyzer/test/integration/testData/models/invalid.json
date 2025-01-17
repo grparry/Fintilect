@@ -1,0 +1,9 @@
+{
+    "type": "object",
+    "properties": {
+        "missingData": {
+            "type": "string",
+            "x-legacy-model": null
+        }
+    }
+}

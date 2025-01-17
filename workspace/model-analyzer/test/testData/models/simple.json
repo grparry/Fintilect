@@ -1,0 +1,9 @@
+{
+    "type": "object",
+    "properties": {
+        "field1": {
+            "type": "string",
+            "x-legacy-model": "SimpleModel"
+        }
+    }
+}

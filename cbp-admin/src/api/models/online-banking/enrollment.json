@@ -1,0 +1,72 @@
+{
+  "OnlineBankingEnrollmentSettings": {
+    "type": "object",
+    "description": "Settings for online banking enrollment functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Application.OnlineBankingConfiguration",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether online banking enrollment is enabled"
+      },
+      "ignoreCanRun": {
+        "type": "boolean",
+        "description": "Whether to ignore the can run check",
+        "x-setting-key": "Application.OnlineBanking.IgnoreCanRun"
+      },
+      "version": {
+        "type": "number",
+        "format": "double",
+        "description": "Online banking version",
+        "x-setting-key": "Application.OnlineBanking.Version"
+      },
+      "isPersonCentricModeEnabled": {
+        "type": "boolean",
+        "description": "If true, this setting will change Corelation core integration to be person centric rather than account (member account) centric. For example, if this setting is true, notes (also known as permissions or flags), will be set on the person level rather than the account (member account) level.",
+        "x-setting-key": "Application.OnlineBanking.IsPersonCentricModeEnabled"
+      },
+      "keepAliveInterval": {
+        "type": "integer",
+        "description": "Keep alive interval in seconds",
+        "x-setting-key": "X.App.HomeBanking.KeepAliveInterval"
+      },
+      "timeoutWarningMessage": {
+        "type": "string",
+        "description": "Message to display when session is about to timeout",
+        "x-setting-key": "X.App.HomeBanking.TimeoutWarningMessage"
+      },
+      "forceLoginByAccountAlias": {
+        "type": "boolean",
+        "description": "Whether to force login by account alias",
+        "x-setting-key": "X.App.HomeBanking.ForceLoginByAccountAlias"
+      },
+      "accountIdRegex": {
+        "type": "string",
+        "description": "Regular expression for validating account IDs",
+        "x-setting-key": "X.App.HomeBanking.AccountIDRegEx"
+      },
+      "feeAccounts": {
+        "type": "object",
+        "description": "Fee account settings",
+        "properties": {
+          "shareCategories": {
+            "type": "array",
+            "description": "List of share categories for fee accounts",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "Transfers.FeeAccounts.ShareCategories"
+          },
+          "loanCategories": {
+            "type": "array",
+            "description": "List of loan categories for fee accounts",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "Transfers.FeeAccounts.LoanCategories"
+          }
+        }
+      }
+    },
+    "required": ["enabled", "version"]
+  }
+}

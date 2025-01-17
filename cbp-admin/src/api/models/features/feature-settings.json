@@ -1,9 +1,14 @@
 {
   "FeatureSettings": {
     "type": "object",
+    "description": "Configuration settings for features",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Features.FeaturesSettings",
+    "required": ["enabled"],
     "properties": {
       "enabled": {
-        "type": "boolean"
+        "type": "boolean",
+        "description": "Whether new features are enabled",
+        "x-setting-key": "FeaturesSettings.EnableNewFeatures"
       },
       "stopPayment": {
         "$ref": "../services/stop-payment.json#/StopPaymentSettings"

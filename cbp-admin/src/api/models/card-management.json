@@ -1,206 +1,50 @@
 {
   "CardManagementSettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.CardManagement.CardManagementSettings",
     "properties": {
-      "id": {
-        "type": "string",
-        "format": "uuid"
+      "isPinChangeEnabled": {
+        "type": "boolean",
+        "x-setting-key": "CardManagement.IsPinChangeEnabled"
       },
-      "cardTypes": {
+      "minVersion": {
+        "type": "number",
+        "x-setting-key": "CardManagement.MinVersion"
+      },
+      "cotsSettings": {
+        "type": "object",
+        "x-setting-key": "CardManagement.COTS"
+      },
+      "supportedCardTypes": {
         "type": "array",
         "items": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": ["Debit", "Credit", "ATM", "Virtual"]
-            },
-            "enabled": {
-              "type": "boolean"
-            },
-            "provider": {
-              "type": "string"
-            },
-            "features": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "Contactless",
-                  "EMV",
-                  "CardControls",
-                  "DigitalWallet",
-                  "RewardsEligible",
-                  "InternationalEnabled"
-                ]
-              }
-            },
-            "limits": {
-              "type": "object",
-              "properties": {
-                "dailyPurchaseLimit": {
-                  "type": "number",
-                  "format": "float"
-                },
-                "dailyWithdrawalLimit": {
-                  "type": "number",
-                  "format": "float"
-                },
-                "internationalPurchaseLimit": {
-                  "type": "number",
-                  "format": "float"
-                }
-              }
-            }
-          }
-        }
+          "type": "string",
+          "enum": ["Debit", "Credit", "ATM", "Virtual"]
+        },
+        "x-setting-key": "CardManagement.PinChange.SupportedCardTypes"
       },
-      "cardControls": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          },
-          "provider": {
-            "type": "string"
-          },
-          "features": {
-            "type": "object",
-            "properties": {
-              "locationBasedControls": {
-                "type": "boolean"
-              },
-              "merchantCategoryControls": {
-                "type": "boolean"
-              },
-              "transactionTypeControls": {
-                "type": "boolean"
-              },
-              "spendingLimitControls": {
-                "type": "boolean"
-              }
-            }
-          },
-          "alerts": {
-            "type": "object",
-            "properties": {
-              "transactionAlerts": {
-                "type": "boolean"
-              },
-              "declineAlerts": {
-                "type": "boolean"
-              },
-              "fraudAlerts": {
-                "type": "boolean"
-              },
-              "internationalUseAlerts": {
-                "type": "boolean"
-              }
-            }
-          }
-        }
+      "removeCvvValidationForTheseCardTypes": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["Debit", "Credit", "ATM", "Virtual"]
+        },
+        "x-setting-key": "CardManagement.PinChange.RemoveCvvValidationForTheseCardTypes"
       },
-      "digitalWallet": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          },
-          "supportedWallets": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["ApplePay", "GooglePay", "SamsungPay"]
-            }
-          },
-          "tokenization": {
-            "type": "object",
-            "properties": {
-              "provider": {
-                "type": "string"
-              },
-              "maxTokensPerCard": {
-                "type": "integer"
-              },
-              "tokenLifetimeDays": {
-                "type": "integer"
-              }
-            }
-          }
-        }
+      "unacceptablePins": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "CardManagement.PinChange.UnacceptablePins"
       },
-      "cardDesign": {
-        "type": "object",
-        "properties": {
-          "defaultDesign": {
-            "type": "string"
-          },
-          "customDesignEnabled": {
-            "type": "boolean"
-          },
-          "availableDesigns": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "imageUrl": {
-                  "type": "string",
-                  "format": "uri"
-                },
-                "eligibleCardTypes": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "enum": ["Debit", "Credit", "ATM"]
-                  }
-                }
-              }
-            }
-          }
-        }
+      "dnaShouldCallCoreForCardNumbers": {
+        "type": "boolean",
+        "x-setting-key": "CardManagement.Dna.ShouldCallCoreForCardNumbers"
       },
-      "cardFulfillment": {
-        "type": "object",
-        "properties": {
-          "provider": {
-            "type": "string"
-          },
-          "instantIssue": {
-            "type": "object",
-            "properties": {
-              "enabled": {
-                "type": "boolean"
-              },
-              "supportedLocations": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "shipping": {
-            "type": "object",
-            "properties": {
-              "defaultMethod": {
-                "type": "string",
-                "enum": ["Standard", "Express", "Overnight"]
-              },
-              "internationalShippingEnabled": {
-                "type": "boolean"
-              },
-              "trackingEnabled": {
-                "type": "boolean"
-              }
-            }
-          }
-        }
+      "transactionDisputeEnabled": {
+        "type": "boolean",
+        "x-setting-key": "CardManagement.TransactionDispute.Enabled"
       }
     }
   }

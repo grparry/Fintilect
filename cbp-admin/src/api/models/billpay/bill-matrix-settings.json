@@ -1,9 +1,55 @@
 {
   "BillMatrixSettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.BillPay.BillMatrix",
     "properties": {
       "enabled": {
-        "type": "boolean"
+        "type": "boolean",
+        "x-setting-key": "BillPay.BillMatrix.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "x-setting-key": "BillPay.BillMatrix.MinVersion"
+      },
+      "url": {
+        "type": "string",
+        "x-setting-key": "BillPay.BillMatrix.Url"
+      },
+      "certificateFilename": {
+        "type": "string",
+        "x-setting-key": "BillPay.BillMatrix.CertificateFilename"
+      },
+      "certificatePassword": {
+        "type": "string",
+        "x-setting-key": "BillPay.BillMatrix.CertificatePassword"
+      },
+      "vendorPublicCertificateStore": {
+        "type": "string",
+        "x-setting-key": "BillPay.BillMatrix.CertificateStore.Vendor.Public"
+      },
+      "emergePrivateCertificateStore": {
+        "type": "string",
+        "x-setting-key": "BillPay.BillMatrix.CertificateStore.Emerge.Private"
+      },
+      "vendorPublicCertificateThumbPrint": {
+        "type": "string",
+        "x-setting-key": "BillPay.BillMatrix.CertificateThumbPrint.Vendor.Public"
+      },
+      "emergePrivateCertificateThumbPrint": {
+        "type": "string",
+        "x-setting-key": "BillPay.BillMatrix.CertificateThumbPrint.Emerge.Private"
+      },
+      "openInNewTab": {
+        "type": "boolean",
+        "x-setting-key": "BillPay.BillMatrix.OpenInNewTab"
+      },
+      "shouldSendAddressInSsoRequest": {
+        "type": "boolean",
+        "x-setting-key": "BillPay.BillMatrix.ShouldSendAddressInSsoRequest"
+      },
+      "issuer": {
+        "type": "string",
+        "x-setting-key": "BillPay.BillMatrix.Issuer"
       },
       "settings": {
         "$ref": "./settings.json#/BillMatrixSettings"

@@ -1,0 +1,15 @@
+{
+    "type": "object",
+    "x-legacy-model": "SimpleModel",
+    "properties": {
+        "field1": {
+            "type": "string",
+            "x-setting-key": "simple.field1"
+        },
+        "field2": {
+            "type": "number",
+            "x-setting-key": "simple.field2",
+            "x-legacy-model": "OverrideModel"
+        }
+    }
+}

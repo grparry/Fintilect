@@ -1,50 +1,32 @@
 {
   "OverdraftProtectionSettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.OverdraftProtection.OverdraftProtectionSettings",
     "properties": {
       "enabled": {
-        "type": "boolean"
+        "type": "boolean",
+        "x-setting-key": "OverdraftProtection.Enabled"
       },
-      "maxOverdraftAmount": {
-        "type": "number"
+      "minVersion": {
+        "type": "number",
+        "x-setting-key": "OverdraftProtection.MinVersion"
       },
-      "overdraftFee": {
-        "type": "number"
+      "shouldUseSerialTypesForCourtesyPay": {
+        "type": "boolean",
+        "x-setting-key": "OverdraftProtection.UseSerialTypesForCourtesyPay",
+        "description": "if true, use serial types (Corelation) for courtesy pay"
       },
-      "maxDailyFees": {
-        "type": "integer"
-      },
-      "protectionSources": {
+      "serialTypesForCourtesyPay": {
         "type": "array",
         "items": {
-          "type": "object",
-          "properties": {
-            "accountType": {
-              "type": "string"
-            },
-            "priority": {
-              "type": "integer"
-            },
-            "transferIncrements": {
-              "type": "number"
-            }
-          }
-        }
+          "type": "string"
+        },
+        "x-setting-key": "OverdraftProtection.SerialTypesForCourtesyPay",
+        "description": "comma-delimited string of courtesy pay eligible serial types returned as a list of strings"
       },
-      "notifications": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          },
-          "methods": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["Email", "SMS", "Push"]
-            }
-          }
-        }
+      "courtesyPayEnabled": {
+        "type": "boolean",
+        "x-setting-key": "OverdraftProtection.CourtesyPay.Enabled"
       }
     }
   }

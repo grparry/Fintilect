@@ -2,6 +2,7 @@
   "WidgetSettings": {
     "type": "object",
     "description": "Configuration settings for dashboard widgets and their behavior",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Widgets.WidgetSettings",
     "required": ["dashboard", "widgets"],
     "properties": {
       "dashboard": {
@@ -12,6 +13,7 @@
           "initialSortOrder": {
             "type": "object",
             "description": "Initial sort order for dashboard widgets",
+            "x-setting-key": "Widgets.DashboardInitialSortOrder",
             "patternProperties": {
               "^[a-zA-Z0-9-_]+$": {
                 "type": "integer",
@@ -23,6 +25,7 @@
           "nonHideableWidgets": {
             "type": "array",
             "description": "List of widget IDs that cannot be hidden by users",
+            "x-setting-key": "ConnectNative.Dashboard.NonHideableWidgets",
             "items": {
               "type": "string",
               "pattern": "^[a-zA-Z0-9-_]+$"
@@ -31,6 +34,7 @@
           "defaultLayout": {
             "type": "string",
             "description": "Default layout configuration for dashboard widgets in JSON format",
+            "x-setting-key": "ConnectNative.Dashboard.Widgets.Default",
             "default": "{}"
           }
         }
@@ -47,47 +51,44 @@
               "enabled": {
                 "type": "boolean",
                 "description": "Whether the account summary widget is enabled",
+                "x-setting-key": "ConnectNative.Dashboard.EnableNewAccountSummaryWidget",
                 "default": true
               },
               "display": {
                 "type": "object",
                 "description": "Display settings for the account summary widget",
+                "required": ["expandedHeight", "headerLinks"],
                 "properties": {
                   "expandedHeight": {
                     "type": "string",
-                    "description": "Height of widget when expanded (in rem)",
-                    "pattern": "^\\d+(\\.\\d+)?rem$"
+                    "description": "Height of the widget when expanded (in rem)",
+                    "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetExpandedHeight"
                   },
-                  "defaultState": {
-                    "type": "string",
-                    "enum": ["expanded", "collapsed"],
-                    "default": "expanded"
-                  }
-                }
-              },
-              "actions": {
-                "type": "object",
-                "description": "Action links configuration",
-                "properties": {
-                  "newAccount": {
-                    "type": "string",
-                    "description": "Link for new account action",
-                    "format": "uri-reference"
-                  },
-                  "creditCardApply": {
-                    "type": "string",
-                    "description": "Link for credit card application",
-                    "format": "uri-reference"
-                  },
-                  "loanApply": {
-                    "type": "string",
-                    "description": "Link for loan application",
-                    "format": "uri-reference"
-                  },
-                  "linkAccount": {
-                    "type": "string",
-                    "description": "Link for account linking",
-                    "format": "uri-reference"
+                  "headerLinks": {
+                    "type": "object",
+                    "description": "Configuration for header action links",
+                    "properties": {
+                      "newAccount": {
+                        "type": "string",
+                        "description": "Link for new account action",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.NewAccount"
+                      },
+                      "creditCardApply": {
+                        "type": "string",
+                        "description": "Link for credit card application",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.CreditCardApply"
+                      },
+                      "loanApply": {
+                        "type": "string",
+                        "description": "Link for loan application",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.LoanApply"
+                      },
+                      "linkAccount": {
+                        "type": "string",
+                        "description": "Link for account linking",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.LinkAccount"
+                      }
+                    }
                   }
                 }
               }
@@ -130,11 +131,12 @@
               "display": {
                 "type": "object",
                 "description": "Display settings for the Cardlytics widget",
+                "required": ["expandedHeight"],
                 "properties": {
                   "expandedHeight": {
                     "type": "string",
-                    "description": "Height of widget when expanded (in rem)",
-                    "pattern": "^\\d+(\\.\\d+)?rem$"
+                    "description": "Height of the widget when expanded (in rem)",
+                    "x-setting-key": "ConnectNative.Dashboard.CardlyticsWidgetExpandedHeight"
                   }
                 }
               }

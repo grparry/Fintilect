@@ -1,39 +1,177 @@
 {
   "AdminSettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Admin.AdminSettings",
+    "description": "Admin settings including device management",
     "properties": {
+      "doesAdminPasswordExpire": {
+        "type": "boolean",
+        "x-setting-key": "X.App.HomeBanking.AdminPasswordExpires",
+        "description": "Whether admin passwords expire"
+      },
       "account": {
-        "$ref": "./account-settings.json#/AdminAccountSettings"
+        "$ref": "./account-settings.json#/AdminAccountSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Admin.AdminAccountSettings"
       },
       "accountNumberReassignment": {
         "$ref": "./account-number-reassignment.json#/AccountNumberReassignmentSettings"
       },
       "auditLogs": {
-        "$ref": "./audit-logs.json#/AuditLogsSettings"
+        "$ref": "./audit-logs.json#/AuditLogsSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Admin.AuditLogs"
       },
       "device": {
-        "$ref": "./device-settings.json#/DeviceSettings"
+        "$ref": "./device-settings.json#/DeviceSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Admin.DeviceSettings"
       },
       "enrollment": {
-        "$ref": "./enrollment.json#/EnrollmentSettings"
+        "$ref": "./enrollment.json#/EnrollmentSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Admin.Enrollment"
       },
       "member": {
-        "$ref": "./member-settings.json#/MemberSettings"
+        "$ref": "./member-settings.json#/MemberSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Admin.MemberSettings"
       },
       "memberView": {
-        "$ref": "./member-view.json#/MemberViewSettings"
+        "$ref": "./member-view.json#/MemberViewSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Admin.MemberView"
       },
       "mfa": {
-        "$ref": "./mfa-settings.json#/MfaSettings"
+        "$ref": "./mfa-settings.json#/MfaSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Admin.MfaSettings"
       },
       "securityCodeVerification": {
         "$ref": "./security-code-verification.json#/SecurityCodeVerificationSettings"
       },
       "sms": {
-        "$ref": "./sms-settings.json#/SmsSettings"
+        "$ref": "./sms-settings.json#/SmsSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Admin.SmsSettings"
       },
       "transfer": {
-        "$ref": "./transfer-settings.json#/TransferSettings"
+        "$ref": "./transfer-settings.json#/TransferSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Admin.TransferSettings"
+      },
+      "integratedEnrollment": {
+        "$ref": "./integrated-enrollment-settings.json#/IntegratedEnrollmentSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.IntegratedEnrollment.IntegratedEnrollmentSettings"
+      },
+      "miniOao": {
+        "$ref": "./mini-oao-settings.json#/MiniOaoSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MiniOao.MiniOaoSettings"
+      },
+      "membership": {
+        "$ref": "./membership-settings.json#/MembershipSettings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Membership.MembershipFeature"
+      },
+      "deviceManagement": {
+        "type": "object",
+        "description": "Device management settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "Admin.Device.MfaDevicesEnabled",
+            "description": "Whether device management is enabled"
+          },
+          "showCreateDate": {
+            "type": "boolean",
+            "x-setting-key": "Admin.UserDevices.ShowCreateDate",
+            "description": "Whether to show device creation date"
+          },
+          "securityCode": {
+            "type": "object",
+            "description": "Security code settings for device authentication",
+            "properties": {
+              "enableStatic": {
+                "type": "boolean",
+                "x-setting-key": "Mobile.UserDevices.EnableStaticSecurityCode",
+                "description": "Whether static security codes are enabled"
+              },
+              "staticCodes": {
+                "type": "array",
+                "x-setting-key": "Mobile.UserDevices.StaticSecurityCodes",
+                "description": "List of static security codes",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "validCharacters": {
+                "type": "string",
+                "x-setting-key": "Mobile.UserDevices.ValidSecurityCodeCharacters",
+                "description": "Valid characters for security codes"
+              },
+              "appKeyLength": {
+                "type": "integer",
+                "x-setting-key": "X.App.HomeBanking.MobileAppKeyLength",
+                "description": "Length of mobile app key",
+                "minimum": 1
+              }
+            }
+          },
+          "implicitRegistration": {
+            "type": "object",
+            "description": "Implicit device registration settings",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "x-setting-key": "Mobile.UserDevices.ImplicitRegistrationEnabled",
+                "description": "Whether implicit registration is enabled"
+              },
+              "minimumIosVersion": {
+                "type": "string",
+                "x-setting-key": "Mobile.UserDevices.ImplicitRegistrationMinIosVersion",
+                "description": "Minimum iOS version for implicit registration"
+              },
+              "minimumAndroidVersion": {
+                "type": "string",
+                "x-setting-key": "Mobile.UserDevices.ImplicitRegistrationMinAndroidVersion",
+                "description": "Minimum Android version for implicit registration"
+              }
+            }
+          },
+          "deviceIdentification": {
+            "type": "object",
+            "description": "Device identification settings",
+            "properties": {
+              "methods": {
+                "type": "array",
+                "x-setting-key": "DeviceManagement.IdentificationMethods",
+                "description": "List of allowed device identification methods",
+                "items": {
+                  "type": "string",
+                  "enum": ["fingerprint", "faceid", "pin", "pattern", "password"]
+                }
+              },
+              "requireMultipleFactors": {
+                "type": "boolean",
+                "x-setting-key": "DeviceManagement.RequireMultipleFactors",
+                "description": "Whether multiple identification factors are required"
+              },
+              "maxDevicesPerUser": {
+                "type": "integer",
+                "x-setting-key": "DeviceManagement.MaxDevicesPerUser",
+                "description": "Maximum number of devices allowed per user",
+                "minimum": 1
+              },
+              "deviceLockoutThreshold": {
+                "type": "integer",
+                "x-setting-key": "DeviceManagement.LockoutThreshold",
+                "description": "Number of failed attempts before device lockout",
+                "minimum": 1
+              },
+              "deviceLockoutDuration": {
+                "type": "integer",
+                "x-setting-key": "DeviceManagement.LockoutDuration",
+                "description": "Duration of device lockout in minutes",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        "required": [
+          "enabled",
+          "securityCode",
+          "deviceIdentification"
+        ]
       }
     }
   }

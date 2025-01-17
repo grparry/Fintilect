@@ -1,24 +1,42 @@
 {
   "CorelationPersonTypeSettings": {
     "type": "object",
+    "description": "Settings for Corelation person types",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.FinancialCores.CorelationSettings.PersonTypeSettings",
     "properties": {
       "personTypes": {
         "type": "array",
+        "description": "List of available person types",
         "items": {
           "type": "object",
           "properties": {
             "id": {
-              "type": "string"
+              "type": "string",
+              "description": "Person type identifier"
             },
             "name": {
-              "type": "string"
+              "type": "string",
+              "description": "Display name for the person type"
             },
             "enabled": {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Whether this person type is enabled"
             }
-          }
+          },
+          "required": ["id", "name", "enabled"]
         }
+      },
+      "loginIdFormat": {
+        "type": "string",
+        "description": "Format for login IDs",
+        "x-setting-key": "FinancialCore.Corelation.PersonTypeSettings.LoginIdFormat"
+      },
+      "personCentricLoginIdFormat": {
+        "type": "string",
+        "description": "Format for person-centric login IDs",
+        "x-setting-key": "FinancialCore.Corelation.PersonTypeSettings.PersonCentricLoginIdFormat"
       }
-    }
+    },
+    "required": ["personTypes", "loginIdFormat", "personCentricLoginIdFormat"]
   }
 }

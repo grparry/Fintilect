@@ -1,0 +1,22 @@
+{
+  "name": "model-analyzer",
+  "version": "1.0.0",
+  "description": "Analyzes JSON schema model files to extract field information and legacy model mappings",
+  "main": "src/index.js",
+  "bin": {
+    "model-analyzer": "./src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "commander": "^11.1.0",
+    "fs-extra": "^11.2.0",
+    "glob": "^10.3.10",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

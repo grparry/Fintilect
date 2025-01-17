@@ -1,0 +1,119 @@
+{
+  "AuditLogs": {
+    "type": "object",
+    "description": "Audit logging and user activity tracking settings",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether audit logging is enabled"
+      },
+      "admin": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Admin.AuditLogs",
+        "description": "Admin-specific audit logging settings",
+        "properties": {
+          "showUsernameOnEventDetails": {
+            "type": "boolean",
+            "x-setting-key": "Admin.AuditLogs.ShowUsernameOnEventDetails",
+            "description": "Whether to show username on event details"
+          }
+        }
+      },
+      "logging": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.AuditLogging.AuditLoggingFeature",
+        "description": "Audit logging feature settings",
+        "properties": {
+          "login": {
+            "type": "object",
+            "description": "Login-related audit logging settings",
+            "properties": {
+              "showReasonFlagsOnFailure": {
+                "type": "boolean",
+                "x-setting-key": "AuditLogging.ShowReasonFlagsOnLoginFailure",
+                "description": "Whether to show reason flags on login failure"
+              },
+              "restrictedFlags": {
+                "type": "string",
+                "x-setting-key": "AuditLogging.RestrictedFlagsForAuditLoggingDuringLogin",
+                "description": "Restricted flags for audit logging during login"
+              }
+            }
+          }
+        }
+      },
+      "activity": {
+        "type": "object",
+        "description": "User activity tracking settings",
+        "properties": {
+          "tracking": {
+            "type": "object",
+            "description": "Activity tracking configuration",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether activity tracking is enabled"
+              },
+              "retentionDays": {
+                "type": "integer",
+                "description": "Number of days to retain activity logs"
+              }
+            }
+          },
+          "events": {
+            "type": "object",
+            "description": "Event logging configuration",
+            "properties": {
+              "login": {
+                "type": "object",
+                "description": "Login event settings",
+                "properties": {
+                  "trackFailedAttempts": {
+                    "type": "boolean",
+                    "description": "Whether to track failed login attempts"
+                  },
+                  "trackSuccessfulLogins": {
+                    "type": "boolean",
+                    "description": "Whether to track successful logins"
+                  }
+                }
+              },
+              "profile": {
+                "type": "object",
+                "description": "Profile event settings",
+                "properties": {
+                  "trackChanges": {
+                    "type": "boolean",
+                    "description": "Whether to track profile changes"
+                  },
+                  "trackViews": {
+                    "type": "boolean",
+                    "description": "Whether to track profile views"
+                  }
+                }
+              },
+              "security": {
+                "type": "object",
+                "description": "Security event settings",
+                "properties": {
+                  "trackPasswordChanges": {
+                    "type": "boolean",
+                    "description": "Whether to track password changes"
+                  },
+                  "trackPinChanges": {
+                    "type": "boolean",
+                    "description": "Whether to track PIN changes"
+                  },
+                  "trackSecurityQuestions": {
+                    "type": "boolean",
+                    "description": "Whether to track security question changes"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

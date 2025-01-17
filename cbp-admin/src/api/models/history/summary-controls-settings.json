@@ -1,15 +1,35 @@
 {
   "SummaryControlsSettings": {
     "type": "object",
+    "description": "Settings for summary controls functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Summary.Controls",
     "properties": {
-      "enabled": {
-        "type": "boolean"
+      "summarySidePanelEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Summary.SummarySidePanelEnabled",
+        "description": "Whether the summary side panel is enabled"
       },
-      "settings": {
-        "$ref": "./settings.json#/SummaryControlsSettings"
+      "panelOrderString": {
+        "type": "string",
+        "x-setting-key": "Summary.PanelOrder",
+        "description": "Comma-separated list of panel order (e.g., InsuredAccountSummary,AccountLimits,UninsuredInvestmentSummary,LoanSummary,CreditCardSummary,CardlyticsContainer,ChangeMember,UrgentAlertsModal)"
       },
-      "features": {
-        "$ref": "./features.json#/SummaryControlsFeatures"
+      "creditCards": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Summary.CreditCards",
+        "description": "Credit card specific settings",
+        "properties": {
+          "isCreditLimitVisible": {
+            "type": "boolean",
+            "x-setting-key": "Summary.CreditCards.IsCreditLimitVisible",
+            "description": "Whether credit limit is visible"
+          },
+          "shouldShowAvailableInsteadOfCreditLimit": {
+            "type": "boolean",
+            "x-setting-key": "Summary.CreditCards.ShouldShowAvailableInsteadOfCreditLimit",
+            "description": "Whether to show available credit instead of credit limit"
+          }
+        }
       }
     }
   }

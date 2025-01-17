@@ -1,0 +1,50 @@
+{
+  "NotificationsSettings": {
+    "type": "object",
+    "description": "Configuration settings for notifications",
+    "properties": {
+      "push": {
+        "type": "object",
+        "description": "Push notification settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.PushNotification",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether push notifications are enabled",
+            "x-setting-key": "Mobile.PushNotification.Enabled"
+          },
+          "minAndroidVersion": {
+            "type": "string",
+            "description": "Minimum Android version required for push notifications",
+            "x-setting-key": "Mobile.PushNotification.MinimumAndroidVersion"
+          },
+          "minIosVersion": {
+            "type": "string",
+            "description": "Minimum iOS version required for push notifications",
+            "x-setting-key": "Mobile.PushNotification.MinimumIosVersion"
+          },
+          "availableDeepLinks": {
+            "type": "object",
+            "description": "Dictionary of available deep links for push notifications",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "x-setting-key": "Mobile.PushNotification.AvailableDeepLinks"
+          }
+        }
+      },
+      "alerts": {
+        "type": "object",
+        "description": "Alert notification settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Alerts.Alert",
+        "properties": {
+          "pushMessageMaxLength": {
+            "type": "integer",
+            "description": "Maximum length for push notification messages",
+            "x-setting-key": "Alert.PushNotificationMessageMaxLength"
+          }
+        }
+      }
+    }
+  }
+}

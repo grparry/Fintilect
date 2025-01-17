@@ -1,18 +1,71 @@
 {
   "MarketingSettings": {
     "type": "object",
+    "description": "Marketing configuration settings",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Marketing.Marketing",
+    "required": ["provider"],
     "properties": {
-      "enabled": {
-        "type": "boolean"
+      "provider": {
+        "type": "string",
+        "description": "Marketing provider name",
+        "enum": ["TargetedMarketing", "SegMint"],
+        "default": "TargetedMarketing",
+        "x-setting-key": "MarketingProvider.ProviderName"
       },
       "targetedMarketing": {
         "$ref": "./providers/targeted-marketing.json#/TargetedMarketingSettings"
       },
-      "cardlytics": {
-        "$ref": "./providers/cardlytics.json#/CardlyticsSettings"
-      },
       "segMint": {
         "$ref": "./providers/segmint.json#/SegMintSettings"
+      },
+      "mobile": {
+        "type": "object",
+        "description": "Mobile marketing settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Marketing",
+        "properties": {
+          "targetedMarketing": {
+            "type": "object",
+            "description": "Mobile targeted marketing settings",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "URL for targeted marketing",
+                "format": "uri",
+                "x-setting-key": "Mobile.Marketing.TargetedMarketingUrl"
+              },
+              "rotationInterval": {
+                "type": "integer",
+                "description": "Interval for rotating targeted marketing content",
+                "x-setting-key": "Mobile.Marketing.TargetedMarketingRotationInterval"
+              }
+            }
+          }
+        }
+      },
+      "features": {
+        "type": "object",
+        "description": "Marketing feature flags",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether marketing features are enabled"
+          },
+          "cardlytics": {
+            "$ref": "./cardlytics-widget-settings.json#/CardlyticsWidgetSettings"
+          },
+          "skipPay": {
+            "$ref": "./skip-pay-settings.json#/SkipPaySettings"
+          },
+          "deepTarget": {
+            "$ref": "./deep-target-settings.json#/DeepTargetSettings"
+          },
+          "googleTags": {
+            "$ref": "./google-tags-settings.json#/GoogleTagsSettings"
+          }
+        }
+      },
+      "promotions": {
+        "$ref": "./promotions-settings.json#/PromotionsSettings"
       }
     }
   }

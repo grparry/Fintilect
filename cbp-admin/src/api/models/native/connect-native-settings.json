@@ -1,15 +1,224 @@
 {
   "ConnectNativeSettings": {
     "type": "object",
+    "description": "Settings for Connect Native functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.ConnectNative.ConnectNativeSettings",
     "properties": {
-      "enabled": {
-        "type": "boolean"
+      "contentContainerBackgroundColor": {
+        "type": "string",
+        "description": "Value for content container's background color in iFrame. Should be rgba eg: rgba(255, 255, 255, 0.5)",
+        "x-setting-key": "ConnectNative.Browser.ContentContainerBackgroundColor"
       },
-      "settings": {
-        "$ref": "./settings.json#/ConnectNativeSettings"
+      "panelMainBackgroundColor": {
+        "type": "string",
+        "description": "Value for panel-main's background color in iFrame. Should be rgba eg: rgba(255, 255, 255, 0.9)",
+        "x-setting-key": "ConnectNative.Browser.PanelMainBackgroundColor"
       },
-      "features": {
-        "$ref": "./features.json#/ConnectNativeFeatures"
+      "sideMenu": {
+        "type": "string",
+        "description": "Connect Native Json menu object for Side Menu",
+        "x-setting-key": "ConnectNative.Menus.SideMenu"
+      },
+      "topMenu": {
+        "type": "string",
+        "description": "Connect Native Json menu object for Top Menu",
+        "x-setting-key": "ConnectNative.Menus.TopMenu"
+      },
+      "mobileMenu": {
+        "type": "string",
+        "description": "Connect Native Json menu object for Mobile Menu",
+        "x-setting-key": "ConnectNative.Menus.MobileMenu"
+      },
+      "menuType": {
+        "type": "string",
+        "description": "Determines connect native menu to be used",
+        "x-setting-key": "ConnectNative.Menus.Type",
+        "enum": ["Top", "Side", "Mobile"]
+      },
+      "menuEnabled": {
+        "type": "boolean",
+        "description": "Whether Connect Native menus are enabled",
+        "x-setting-key": "ConnectNative.Menus.Enabled"
+      },
+      "targetedMarketingMaxWidth": {
+        "type": "integer",
+        "description": "Determines max width of the targeted marketing banner",
+        "x-setting-key": "ConnectNative.Marketing.TargetedMarketingBannerMaxWidth"
+      },
+      "logoAction": {
+        "type": "string",
+        "description": "Determines Logo Action",
+        "x-setting-key": "ConnectNative.Menus.LogoAction"
+      },
+      "showBackgroundImageOnlyOnLegacyLoginScreen": {
+        "type": "boolean",
+        "description": "Determines if a background image should only show on the login screen, and not on internal pages",
+        "x-setting-key": "ConnectNative.Browser.ShowBackgroundImageOnlyOnLegacyLoginScreen"
+      },
+      "roundedCornersEnabled": {
+        "type": "boolean",
+        "description": "Enables Rounded Corners feature on Connect Native browser",
+        "x-setting-key": "ConnectNative.Browser.RoundedCorners.Enabled"
+      },
+      "roundedCornersBorderRadiusSizesContainers": {
+        "type": "string",
+        "description": "Size options for the border radius of containers (e.g. widgets) using the Rounded Corners feature",
+        "x-setting-key": "ConnectNative.Browser.RoundedCorners.BorderRadiusSizes.Containers",
+        "enum": ["None", "Small", "Medium", "Large"]
+      },
+      "roundedCornersBorderRadiusSizesComponents": {
+        "type": "string",
+        "description": "Size options for the border radius of components (e.g. buttons) using the Rounded Corners feature",
+        "x-setting-key": "ConnectNative.Browser.RoundedCorners.BorderRadiusSizes.Components",
+        "enum": ["None", "Small", "Medium", "Large"]
+      },
+      "multipleDataFieldsPerLineEnabled": {
+        "type": "boolean",
+        "description": "Allows an alternate styling of transaction history line items",
+        "x-setting-key": "ConnectNative.MultipleDataFieldsPerLine.Enabled"
+      },
+      "exportTypes": {
+        "type": "string",
+        "description": "Determines What Type of Files Can Export History from Transaction History Screen",
+        "x-setting-key": "ConnectNative.exportTypes"
+      },
+      "transfers": {
+        "type": "object",
+        "description": "Settings for Connect Native transfers",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.ConnectNative.ConnectNativeTransfers",
+        "properties": {
+          "enableTransfersFromShares": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersFromShares"
+          },
+          "enableTransfersToShares": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersToShares"
+          },
+          "enableTransfersShareToShare": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersShareToShare"
+          },
+          "enableTransfersFromLoans": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersFromLoans"
+          },
+          "enableTransfersToLoans": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersToLoans"
+          },
+          "enableTransfersLoanToShare": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersLoanToShare"
+          },
+          "enableTransfersShareToLoan": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersShareToLoan"
+          },
+          "enableTransfersLoanToLoan": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersLoanToLoan"
+          },
+          "enableTransfersToLinkedAccounts": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersToLinkedAccounts"
+          },
+          "enableTransfersFromLinkedAccounts": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersFromLinkedAccounts"
+          },
+          "enableTransfersShareToLinkedAccount": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersShareToLinkedAccount"
+          },
+          "enableTransfersLoanToLinkedAccount": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersLoanToLinkedAccount"
+          },
+          "enableTransfersLinkedAccountToShare": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersLinkedAccountToShare"
+          },
+          "enableTransfersLinkedAccountToLoan": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersLinkedAccountToLoan"
+          },
+          "enableTransfersToCrossAccounts": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersToCrossAccounts"
+          },
+          "enableTransfersFromCrossAccounts": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersFromCrossAccounts"
+          },
+          "enableTransfersCrossAccountToShare": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersCrossAccountToShare"
+          },
+          "enableTransfersCrossAccountToLoan": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersCrossAccountToLoan"
+          },
+          "enableTransfersShareToCrossAccount": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersShareToCrossAccount"
+          },
+          "enableTransfersLoanToCrossAccount": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersLoanToCrossAccount"
+          },
+          "enableTransfersCrossAccountToCrossAccount": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableTransfersCrossAccountToCrossAccount"
+          },
+          "enablePrincipalOnlyOption": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnablePrincipalOnlyOption"
+          },
+          "enableExtraToPrincipalOption": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.EnableExtraToPrincipalOption"
+          },
+          "shouldDisplayPayoffAmount": {
+            "type": "boolean",
+            "x-setting-key": "ConnectNative.Transfers.ShouldDisplayPayoffAmount"
+          },
+          "allowExtraToPrincipalPaymentLoanCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "X.App.HomeBanking.obsMortgages"
+          },
+          "allowPrincipalOnlyPaymentLoanCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "X.App.HomeBanking.obsLoanAccounts"
+          },
+          "allowedAchTransferToAccountCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "X.App.Homebanking.obsACHTransferToAccounts"
+          }
+        }
+      },
+      "accountHistory": {
+        "type": "object",
+        "description": "Settings for Connect Native account history",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.ConnectNative.ConnectNativeAccountHistory",
+        "properties": {
+          "accountDetailsByAccountCategory": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "x-setting-key": "ConnectNative.AccountHistory.AccountDetailsByAccountCategory"
+          }
+        }
       }
     }
   }

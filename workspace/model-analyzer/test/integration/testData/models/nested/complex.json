@@ -1,0 +1,27 @@
+{
+    "type": "object",
+    "x-legacy-model": "ComplexModel",
+    "properties": {
+        "nested": {
+            "type": "object",
+            "properties": {
+                "subField": {
+                    "type": "string",
+                    "x-setting-key": "complex.nested.subField"
+                }
+            }
+        },
+        "arrayField": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "itemField": {
+                        "type": "string",
+                        "x-setting-key": "complex.arrayField.itemField"
+                    }
+                }
+            }
+        }
+    }
+}

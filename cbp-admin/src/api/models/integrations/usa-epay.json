@@ -1,0 +1,13 @@
+{
+  "UsaEpay": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.UsaEpay",
+    "properties": {
+      "reverseTransferOnFailure": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.Ach.UsaEpay.ReverseTransferOnFailure",
+        "description": "Whether to reverse the transfer if it fails through USA ePay"
+      }
+    }
+  }
+}

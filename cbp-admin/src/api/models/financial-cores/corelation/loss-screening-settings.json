@@ -1,26 +1,43 @@
 {
   "CorelationLossScreeningSettings": {
     "type": "object",
+    "description": "Settings for loss screening functionality in Corelation integration",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.FinancialCores.CorelationSettings.LossScreeningSettings",
     "properties": {
-      "enabled": {
-        "type": "boolean"
+      "loanPastDueHoursOffset": {
+        "type": "integer",
+        "description": "Hours offset for loan past due calculation",
+        "x-setting-key": "FinancialCore.Corelation.LossScreening.LoanPastDueHoursOffset"
       },
-      "screeningTypes": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
+      "shareAvailableAmountLessThenZeroPlusMiniumAmount": {
+        "type": "boolean",
+        "description": "Whether to check if share available amount is less than zero plus minimum amount",
+        "x-setting-key": "FinancialCore.Corelation.LossScreening.ShareAvailableAmountLessThenZeroPlusMiniumAmount"
       },
-      "thresholds": {
-        "type": "object",
-        "properties": {
-          "warning": {
-            "type": "number"
-          },
-          "block": {
-            "type": "number"
-          }
-        }
+      "shareAvailableAmountLessThenZero": {
+        "type": "boolean",
+        "description": "Whether to check if share available amount is less than zero",
+        "x-setting-key": "FinancialCore.Corelation.LossScreening.ShareAvailableAmountLessThenZero"
+      },
+      "loanPastDue": {
+        "type": "boolean",
+        "description": "Whether to check for past due loans",
+        "x-setting-key": "FinancialCore.Corelation.LossScreening.LoanPastDue"
+      },
+      "shareHasChargeOfSerial": {
+        "type": "boolean",
+        "description": "Whether to check for share charge-off serial",
+        "x-setting-key": "FinancialCore.Corelation.LossScreening.ShareHasChargeOfSerial"
+      },
+      "loanHasChargeOfSerial": {
+        "type": "boolean",
+        "description": "Whether to check for loan charge-off serial",
+        "x-setting-key": "FinancialCore.Corelation.LossScreening.LoanHasChargeOfSerial"
+      },
+      "blockAccountAlertTypeSerials": {
+        "type": "string",
+        "description": "Serial numbers for account alert types that should block access",
+        "x-setting-key": "FinancialCore.Corelation.LossScreening.BlockAccountAlertTypeSerials"
       }
     }
   }

@@ -304,29 +304,72 @@
   },
   "IdentificationSettings": {
     "type": "object",
+    "description": "Settings for identification during enrollment",
     "properties": {
       "requiredDocuments": {
         "type": "array",
+        "description": "List of required documents for verification",
         "items": {
           "type": "string"
         }
       },
       "verificationMethod": {
         "type": "string",
+        "description": "Method used for verifying identification",
         "enum": ["Manual", "Automated", "Hybrid"]
       }
     }
   },
   "EnrollmentSettings": {
     "type": "object",
+    "description": "Settings for financial core enrollment",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.FinancialCores.CorelationSettings.Enrollment",
     "properties": {
-      "autoEnroll": {
-        "type": "boolean"
+      "allowEnrollmentWithMailingAddress": {
+        "type": "boolean",
+        "description": "Whether to allow enrollment with mailing address",
+        "x-setting-key": "FinancialCore.Corelation.Enrollment.AllowEnrollmentWithMailingAddress"
+      },
+      "onlyAllowSsnForEnrollmentTin": {
+        "type": "boolean",
+        "description": "If true, only TINs that are SSN type, rather than EIN, or some other TIN type, will be considered during enrollment",
+        "x-setting-key": "FinancialCore.Corelation.OnlyAllowSsnForEnrollmentTin"
+      },
+      "autoEnrollment": {
+        "type": "object",
+        "description": "Auto enrollment settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether auto enrollment is enabled",
+            "x-setting-key": "MoneyDesktop.AutoEnrollEnabled"
+          },
+          "hideConfirmationPage": {
+            "type": "boolean",
+            "description": "Whether to hide the confirmation page during OAO auto enrollment",
+            "x-setting-key": "Enrollment.Oao.AutoEnrollment.HideConfirmationPage"
+          },
+          "sendUsernameAndPassword": {
+            "type": "boolean",
+            "description": "Whether to send username and password during OAO auto enrollment",
+            "x-setting-key": "Enrollment.Oao.AutoEnrollment.OaoSendUsernameAndPasswordEnabled"
+          }
+        }
       },
       "requiredServices": {
         "type": "array",
+        "description": "List of required services for enrollment",
         "items": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "OnlineBanking",
+            "BillPay",
+            "EStatements",
+            "EDocuments",
+            "MobileApp",
+            "CardControl",
+            "MoneyDesktop"
+          ]
         }
       }
     }

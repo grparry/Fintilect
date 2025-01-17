@@ -1,0 +1,28 @@
+{
+  "CardDesignSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.CardManagement.CardDesign",
+    "properties": {
+      "cardDesign": {
+        "type": "object",
+        "x-legacy-model": "CUFX.Card",
+        "properties": {
+          "cardDesignImageArtifactId": {
+            "type": "object",
+            "x-setting-key": "Card.cardDesignImageArtifactId",
+            "properties": {
+              "artifactId": {
+                "type": "string",
+                "description": "The unique identifier for the card design image artifact"
+              },
+              "artifactType": {
+                "type": "string",
+                "description": "The type of artifact (e.g., image/jpeg, image/png)"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+    "type": "object",
+    "x-legacy-model": "TestModel",
+    "properties": {
+        "testField": {
+            "type": "string",
+            "x-setting-key": "test.setting"
+        }
+    }
+}

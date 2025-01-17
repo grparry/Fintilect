@@ -1,157 +1,114 @@
 {
   "SecurityQuestions": {
     "type": "object",
-    "description": "Configuration for security questions used in authentication and account recovery",
-    "required": ["enabled", "questionSettings", "answerSettings", "challengeSettings"],
+    "description": "Security questions settings for MFA and account recovery",
     "properties": {
       "enabled": {
         "type": "boolean",
-        "description": "Whether security questions feature is enabled",
-        "default": true
+        "x-setting-key": "Admin.MFA.MfaTextQuestionsEnabled",
+        "description": "Whether security questions are enabled"
       },
-      "questionSettings": {
-        "type": "object",
-        "description": "Settings related to security questions configuration",
-        "required": ["minQuestions", "maxQuestions", "allowCustomQuestions"],
-        "properties": {
-          "minQuestions": {
-            "type": "integer",
-            "description": "Minimum number of security questions a user must set up",
-            "minimum": 1,
-            "maximum": 10,
-            "default": 3
-          },
-          "maxQuestions": {
-            "type": "integer",
-            "description": "Maximum number of security questions a user can set up",
-            "minimum": 1,
-            "maximum": 10,
-            "default": 5
-          },
-          "allowCustomQuestions": {
-            "type": "boolean",
-            "description": "Whether users can create their own custom security questions",
-            "default": false
-          },
-          "predefinedQuestions": {
-            "type": "array",
-            "description": "List of predefined security questions available for users",
-            "items": {
-              "type": "string"
-            },
-            "minItems": 1
-          }
-        }
+      "securityCodeEnabled": {
+        "type": "boolean",
+        "x-setting-key": "X.App.HomeBanking.MFASecurityCodeEnabled",
+        "description": "Whether security code verification is enabled"
       },
-      "answerSettings": {
-        "type": "object",
-        "description": "Settings related to security question answers",
-        "required": ["minLength", "maxLength", "caseSensitive", "allowPlainText"],
-        "properties": {
-          "minLength": {
-            "type": "integer",
-            "description": "Minimum length required for security question answers",
-            "minimum": 2,
-            "maximum": 100,
-            "default": 2
-          },
-          "maxLength": {
-            "type": "integer",
-            "description": "Maximum length allowed for security question answers",
-            "minimum": 2,
-            "maximum": 100,
-            "default": 50
-          },
-          "caseSensitive": {
-            "type": "boolean",
-            "description": "Whether answers are case-sensitive during verification",
-            "default": false
-          },
-          "allowPlainText": {
-            "type": "boolean",
-            "description": "Whether to allow plain text answers instead of selecting from predefined options",
-            "default": true
-          },
-          "encryptionSettings": {
-            "type": "object",
-            "description": "Settings for answer encryption",
-            "required": ["algorithm", "keyId"],
-            "properties": {
-              "algorithm": {
-                "type": "string",
-                "description": "Encryption algorithm to use for storing answers",
-                "enum": ["AES256", "AES128", "RSA2048"],
-                "default": "AES256"
-              },
-              "keyId": {
-                "type": "string",
-                "description": "ID of the encryption key to use",
-                "format": "uuid"
-              }
-            }
-          }
-        }
+      "challengeOptSecurityCodes": {
+        "type": "boolean",
+        "x-setting-key": "X.App.HomeBanking.MFAChallengeOptSecurityCodes",
+        "description": "Whether to challenge optional security codes"
       },
-      "challengeSettings": {
-        "type": "object",
-        "description": "Settings for security question challenges during authentication or recovery",
-        "required": ["questionsPerChallenge", "maxAttempts", "lockoutDuration"],
-        "properties": {
-          "questionsPerChallenge": {
-            "type": "integer",
-            "description": "Number of questions to present during a challenge",
-            "minimum": 1,
-            "maximum": 5,
-            "default": 2
-          },
-          "maxAttempts": {
-            "type": "integer",
-            "description": "Maximum number of failed attempts before lockout",
-            "minimum": 1,
-            "maximum": 10,
-            "default": 3
-          },
-          "lockoutDuration": {
-            "type": "integer",
-            "description": "Duration of lockout in minutes after max attempts reached",
-            "minimum": 1,
-            "maximum": 1440,
-            "default": 30
-          },
-          "randomizeQuestions": {
-            "type": "boolean",
-            "description": "Whether to randomize the order of questions during challenges",
-            "default": true
-          }
-        }
+      "setFocusOnFirst": {
+        "type": "boolean",
+        "x-setting-key": "MFAQuestions.SetFocusOnFirst",
+        "description": "Whether to set focus on first question"
       },
-      "recoverySettings": {
+      "retryCount": {
+        "type": "integer",
+        "x-setting-key": "MFAQuestions.SecurityCodeRetryCount",
+        "description": "Number of retry attempts allowed",
+        "minimum": 1
+      },
+      "caseSensitiveAnswers": {
+        "type": "boolean",
+        "x-setting-key": "MFAQuestions.SecurityCodeShouldUseCaseSensitiveCompare",
+        "description": "Whether answers are case sensitive"
+      },
+      "securityCodeQuestionId": {
+        "type": "integer",
+        "x-setting-key": "MFAQuestions.SecurityCodeQuestionID",
+        "description": "ID of the security code question",
+        "minimum": 0
+      },
+      "freeformAnswers": {
         "type": "object",
-        "description": "Settings for account recovery using security questions",
-        "required": ["enabled", "requireAdditionalVerification"],
+        "description": "Settings for freeform (user-defined) answers",
         "properties": {
           "enabled": {
             "type": "boolean",
-            "description": "Whether security questions can be used for account recovery",
-            "default": true
+            "x-setting-key": "MFAQuestions.FreeformMFA.Enable",
+            "description": "Whether freeform answers are enabled"
           },
-          "requireAdditionalVerification": {
+          "minVersion": {
+            "type": "number",
+            "x-setting-key": "MFAQuestions.FreeformMFA.MinVersion",
+            "description": "Minimum version required for freeform answers"
+          },
+          "encryptionKey": {
+            "type": "string",
+            "x-setting-key": "MFAQuestions.FreeformMFA.EncryptionKey",
+            "description": "Encryption key for freeform answers"
+          },
+          "plainTextAnswers": {
+            "type": "integer",
+            "x-setting-key": "MFAQuestions.EnablePlainTextAnswers",
+            "description": "Whether plain text answers are enabled",
+            "minimum": 0
+          }
+        }
+      },
+      "challenge": {
+        "type": "object",
+        "description": "Settings for security question challenges",
+        "properties": {
+          "questionCount": {
+            "type": "string",
+            "x-setting-key": "MFAQuestions.FreeformMFA.ChallengeViewQuestionCount",
+            "description": "Number of questions to show during challenge"
+          },
+          "ipWhitelist": {
             "type": "boolean",
-            "description": "Whether additional verification (e.g., email, SMS) is required along with security questions",
-            "default": true
+            "x-setting-key": "MFAQuestions.IPWhitelist.Enabled",
+            "description": "Whether IP whitelisting is enabled for challenges"
+          }
+        }
+      },
+      "mobile": {
+        "type": "object",
+        "description": "Mobile-specific security question settings",
+        "properties": {
+          "minimumVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.SecurityQuestions.MinimumVersion",
+            "description": "Minimum version required for security questions"
           },
-          "additionalVerificationMethods": {
-            "type": "array",
-            "description": "List of additional verification methods required during recovery",
-            "items": {
-              "type": "string",
-              "enum": ["email", "sms", "phone"]
-            },
-            "minItems": 1,
-            "default": ["email"]
+          "minimumAndroidVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.SecurityQuestions.MinimumAndroidVersion",
+            "description": "Minimum Android version required for security questions"
+          },
+          "minimumIosVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.SecurityQuestions.MinimumIosVersion",
+            "description": "Minimum iOS version required for security questions"
           }
         }
       }
-    }
+    },
+    "required": [
+      "enabled",
+      "retryCount",
+      "caseSensitiveAnswers"
+    ]
   }
 }

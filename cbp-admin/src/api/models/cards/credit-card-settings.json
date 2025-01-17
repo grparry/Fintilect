@@ -1,173 +1,117 @@
 {
   "CreditCardSettings": {
     "type": "object",
-    "description": "Configuration settings for credit card features and controls",
-    "required": ["displaySettings", "cardControl", "mobileSettings"],
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.CreditCards.CreditCardSettings",
     "properties": {
-      "displaySettings": {
+      "omahaSso": {
         "type": "object",
-        "description": "Settings for how credit card information is displayed",
-        "required": ["creditLimitVisible", "showAvailableInsteadOfLimit"],
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.CreditCards.OmahaSso",
         "properties": {
-          "creditLimitVisible": {
+          "enabled": {
             "type": "boolean",
-            "description": "Whether to show credit limit information",
-            "default": true
+            "x-setting-key": "CreditCards.OmahaSSO.Enabled"
           },
-          "showAvailableInsteadOfLimit": {
-            "type": "boolean",
-            "description": "Whether to show available credit instead of credit limit",
-            "default": false
+          "minVersion": {
+            "type": "number",
+            "x-setting-key": "CreditCards.OmahaSSO.MinimumVersion"
+          },
+          "url": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.Url"
+          },
+          "certificationStore": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.Certification.Store"
+          },
+          "certificationEmergePrivateThumbPrint": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.Certification.Emerge.PrivateThumbPrint"
+          },
+          "certificationVendorPublicThumbPrint": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.Certification.Vendor.PublicThumbPrint"
+          },
+          "minimumAndroidVersion": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.MinimumAndroidVersion"
+          },
+          "minimumIosVersion": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.MinimumIosVersion"
+          },
+          "responseIssuer": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.ResponseIssuer"
+          },
+          "startUrl": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSso.StartUrl"
+          },
+          "returnUrl": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSso.ReturnUrl"
+          },
+          "logoutUrl": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSso.LogoutUrl"
+          },
+          "appId": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSso.AppId"
           }
         }
       },
-      "cardControl": {
+      "pscuSso": {
         "type": "object",
-        "description": "Settings for card control features",
-        "required": ["alerts", "permissions", "locations", "transactions"],
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.CreditCards.PscuSso",
         "properties": {
-          "alerts": {
-            "type": "object",
-            "description": "Alert preference settings",
-            "required": ["enabled"],
-            "properties": {
-              "enabled": {
-                "type": "boolean",
-                "description": "Whether alert preferences are enabled",
-                "default": true
-              },
-              "types": {
-                "type": "array",
-                "description": "Types of alerts available",
-                "items": {
-                  "type": "string",
-                  "enum": ["transaction", "balance", "payment", "security", "location"]
-                }
-              }
-            }
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "CreditCards.PscuSso.Enabled"
           },
-          "permissions": {
-            "type": "object",
-            "description": "Card permission settings",
-            "required": ["enabled"],
-            "properties": {
-              "enabled": {
-                "type": "boolean",
-                "description": "Whether permission management is enabled",
-                "default": true
-              },
-              "features": {
-                "type": "array",
-                "description": "Available permission features",
-                "items": {
-                  "type": "string",
-                  "enum": ["freeze", "international", "online", "contactless"]
-                }
-              }
-            }
+          "minVersion": {
+            "type": "number",
+            "x-setting-key": "CreditCards.PscuSso.MinimumVersion"
           },
-          "locations": {
-            "type": "object",
-            "description": "Location control settings",
-            "required": ["enabled"],
-            "properties": {
-              "enabled": {
-                "type": "boolean",
-                "description": "Whether location controls are enabled",
-                "default": true
-              },
-              "maxRegions": {
-                "type": "integer",
-                "description": "Maximum number of regions that can be configured",
-                "minimum": 1,
-                "maximum": 20,
-                "default": 5
-              },
-              "usOnlyEnabled": {
-                "type": "boolean",
-                "description": "Whether US-only restriction is available",
-                "default": true
-              },
-              "currentLocationEnabled": {
-                "type": "boolean",
-                "description": "Whether current location restriction is available",
-                "default": true
-              }
-            }
+          "url": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.Url"
           },
-          "transactions": {
-            "type": "object",
-            "description": "Transaction control settings",
-            "required": ["merchantTypes"],
-            "properties": {
-              "merchantTypes": {
-                "type": "object",
-                "description": "Merchant type control settings",
-                "required": ["enabled"],
-                "properties": {
-                  "enabled": {
-                    "type": "boolean",
-                    "description": "Whether merchant type controls are enabled",
-                    "default": true
-                  },
-                  "useDynamicTypes": {
-                    "type": "boolean",
-                    "description": "Whether to use dynamic transaction types",
-                    "default": false
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "mobileSettings": {
-        "type": "object",
-        "description": "Mobile app specific settings",
-        "required": ["application", "digitalWallet"],
-        "properties": {
-          "application": {
-            "type": "object",
-            "description": "Credit card application settings",
-            "required": ["enabled"],
-            "properties": {
-              "enabled": {
-                "type": "boolean",
-                "description": "Whether credit card application is enabled",
-                "default": true
-              },
-              "url": {
-                "type": "string",
-                "description": "URL for credit card application",
-                "format": "uri"
-              },
-              "urlTarget": {
-                "type": "string",
-                "description": "Target for opening application URL",
-                "enum": ["_self", "_blank", "_system"],
-                "default": "_blank"
-              }
-            }
+          "certificationStore": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.Certification.Store"
           },
-          "digitalWallet": {
-            "type": "object",
-            "description": "Digital wallet integration settings",
-            "required": ["enabled"],
-            "properties": {
-              "enabled": {
-                "type": "boolean",
-                "description": "Whether digital wallet integration is enabled",
-                "default": true
-              },
-              "supportedWallets": {
-                "type": "array",
-                "description": "List of supported digital wallets",
-                "items": {
-                  "type": "string",
-                  "enum": ["ApplePay", "GooglePay", "SamsungPay"]
-                }
-              }
-            }
+          "certificationEmergePrivateThumbPrint": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.Certification.Emerge.PrivateThumbPrint"
+          },
+          "certificationVendorPublicThumbPrint": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.Certification.Vendor.PublicThumbPrint"
+          },
+          "issuer": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.Issuer"
+          },
+          "responseIssuer": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.ResponseIssuer"
+          },
+          "appId": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.AppId"
+          },
+          "clientId": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.ClientId"
+          },
+          "keepAliveUrl": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.KeepAliveUrl"
+          },
+          "assertionLogEnabled": {
+            "type": "boolean",
+            "x-setting-key": "CreditCards.PscuSso.AssertionLogEnabled"
           }
         }
       }

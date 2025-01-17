@@ -1,0 +1,26 @@
+{
+  "OnlineBankingApi": {
+    "type": "object",
+    "description": "Settings for Online Banking API",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Authentication.OnlineBankingApi",
+    "properties": {
+      "credentialsExpirationTime": {
+        "type": "integer",
+        "description": "Time in minutes before credentials expire",
+        "x-setting-key": "OnlineBankingApi.CredentialsExpirationTime"
+      },
+      "security": {
+        "type": "object",
+        "description": "Security settings for Online Banking API",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Authentication.Security",
+        "properties": {
+          "tokenTimeout": {
+            "type": "number",
+            "description": "Timeout duration for security tokens",
+            "x-setting-key": "OnlineBankingApi.Security.TokenTimeout"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 {
   "IntegrationSettings": {
     "type": "object",
+    "description": "Integration settings",
     "properties": {
       "cardlytics": {
         "type": "object",
@@ -14,43 +15,19 @@
         }
       },
       "connectNative": {
-        "type": "object",
-        "properties": {
-          "accountHistory": {
-            "$ref": "./connect-native/account-history.json#/ConnectNativeAccountHistorySettings"
-          },
-          "transfers": {
-            "$ref": "./connect-native/transfers.json#/ConnectNativeTransfersSettings"
-          }
-        }
+        "$ref": "./connect-native/connect-native-settings.json#/ConnectNativeSettings"
       },
       "meridianLinkSso": {
         "$ref": "./meridian-link/sso-settings.json#/MeridianLinkSsoSettings"
       },
       "moneyDesktop": {
-        "type": "object",
-        "properties": {
-          "dashboard": {
-            "$ref": "./money-desktop/dashboard.json#/DashboardSettings"
-          },
-          "enrollment": {
-            "$ref": "./money-desktop/enrollment.json#/EnrollmentSettings"
-          },
-          "summary": {
-            "$ref": "./money-desktop/summary.json#/SummarySettings"
-          }
-        }
+        "$ref": "./money-desktop-settings.json#/MoneyDesktopSettings"
       },
       "personPayments": {
-        "type": "object",
-        "properties": {
-          "payzur": {
-            "$ref": "./person-payments/payzur.json#/PayzurSettings"
-          },
-          "zelle": {
-            "$ref": "./person-payments/zelle.json#/ZelleSettings"
-          }
-        }
+        "$ref": "./person-payments/person-payments-settings.json#/PersonPaymentsSettings"
+      },
+      "segMint": {
+        "$ref": "./segmint/segmint.json#/SegmintSettings"
       }
     }
   }

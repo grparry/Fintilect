@@ -169,16 +169,16 @@ This checklist tracks the migration of legacy configuration models to the new co
 - [x] Web API Estatements Settings (`WebApiEstatementsSettings`) # Found in /statements/providers/web-api-estatements.json
 - [x] Synergy Estatements Settings (`SynergyEstatements`) # Found in statements/estatements-settings.json under synergy
 - [x] Info Image Estatements Settings (`InfoImageEstatementsSettings`) # Found in statements/estatements-settings.json under infoImage
-- [ ] Document Architect SSO Settings (`DocumentArchitectSso`)
+- [x] Document Architect SSO Settings (`DocumentArchitectSso`) # Found in /admin/document-architect-sso.json
+- [x] Deep Target Settings (`DeepTarget`) # Found in marketing/deep-target-settings.json
+- [x] Skip Pay Settings (`SkipPay`) # Found in marketing/skip-pay-settings.json
+- [x] Google Tags Settings (`GoogleTags`) # Found in marketing/google-tags-settings.json
 
 ## 8. Marketing & Promotions [ ]
 - [x] Targeted Marketing Settings (`TargetedMarketingSettings`) # Found in marketing/marketing-settings.json under targetedMarketing
 - [x] Cardlytics Settings (`CardlyticsSettings`) # Found in marketing/marketing-settings.json under cardlytics
 - [x] Cardlytics Widget Settings (`CardlyticsWidget`) # Found in marketing/cardlytics-widget-settings.json
-- [ ] Deep Target Settings (`DeepTargetSettings`)
-- [ ] Skip Pay Settings (`SkipPay`)
 - [x] Promotions Settings (`Promotions`) # Found in marketing/promotions-settings.json with features and settings
-- [ ] Google Tags Settings (`GoogleTags`)
 - [x] SegMint Settings (`SegMintSettings`) # Found in marketing/marketing-settings.json under segMint
 
 ## 9. Statements & Documents [ ]
@@ -215,23 +215,23 @@ This checklist tracks the migration of legacy configuration models to the new co
 
 ## 11. Business & Admin [ ]
 - [x] Business Rules Settings (`BusinessRules`) # Found in /models/business/business-banking-settings.json
-- [ ] Branches Settings (`Branches`)
+- [x] Branches Settings (`Branches`) # Found in /models/location-search.json under searchTypes.branches and locationDetails
 - [x] Branch Locator Settings (`BranchLocator`) # Found in /location-search.json under searchTypes.branches
 - [x] ATM Locator Settings (`ATMLocator`) # Found in /models/atm/atm-locator-settings.json
 - [x] Admin Settings (`AdminSettings`) # Found in /models/admin/admin-settings.json
 - [x] Remove Member Settings (`RemoveMemberSettings`) # Found in /models/admin/remove-member-settings.json
 - [x] Boku Settings (`BokuSettings`) # Found in /models/boku/boku-settings.json
-- [ ] Phone Identification Settings (`PhoneIdentificationSettings`)
+- [x] Phone Identification Settings (`PhoneIdentificationSettings`) # Found in admin/phone-identification-settings.json based on Boku/BokuSettings.cs
 
 ## 12. Compliance & Monitoring [ ]
 - [x] Audit Settings (`Audit`) # Found in /models/monitoring/audit-settings.json
 - [x] Audit Log Settings (`AuditLog`) # Found in /models/audit-logging.json
 - [x] Compliance Settings (`Compliance`) # Found in /models/compliance/compliance-settings.json
 - [x] ADA Settings (`ADA`) # Found in /models/compliance/ada-compliance-settings.json
-- [ ] Doc Center Settings (`DocCenterSettings`)
+- [x] Doc Center Settings (`DocCenterSettings`) # Found in compliance/doc-center-settings.json based on ADACompliance/DocCenterSettings.cs
 - [x] Regular Expressions Settings (`RegularExpressionsFeature`) # Found in /models/validation/regular-expressions.json
 - [x] Restricted Words Settings (`RestrictedWords`) # Found in /models/validation/restricted-words.json
-- [ ] Monitoring Settings (`MonitoringSettings`)
+- [x] Monitoring Settings (`MonitoringSettings`) # Found in /models/monitoring/monitoring.json and referenced in audit-settings.json
 - [x] Better Lobby Settings (`BetterLobbySettings`) # Found in /models/lobby/better-lobby-settings.json
 - [x] ATM Locator Settings (`AtmLocator`) # Found in /models/atm/atm-locator-settings.json
 
@@ -239,9 +239,9 @@ This checklist tracks the migration of legacy configuration models to the new co
 - [x] Financial Core Settings (`FinancialCore`) # Found in /models/financial-cores/financial-core-settings.json
 - [x] Corelation Settings (`Corelation`) # Found in /models/financial-cores/corelation/ with multiple settings files
 - [x] Symitar Settings (`Symitar`) # Found in /models/financial-cores/symitar/remote-deposit-check-hold.json
-- [ ] DNA Settings (`DNA`)
-- [ ] EPL Settings (`Epl`)
-- [ ] PSI Core Settings (`PsiCore`)
+- [x] DNA Settings (`DNA`) # Found in /models/financial-cores/dna-settings.json
+- [x] EPL Settings (`Epl`) # Found in /models/financial-cores/epl-settings.json
+- [x] PSI Core Settings (`PsiCore`) # Found in /models/financial-cores/psi-core-settings.json
 - [x] Remote Deposit Check Hold Settings (`RemoteDepositCheckHoldSettings`) # Found in /models/deposits/remote-deposit-check-hold-settings.json
 - [x] Summit Settings (`Summit`) # Found in /models/financial-cores/summit/regular-ach-transfers.json
 - [x] Loan Origination Settings (`LoanOriginationSettings`) # Found in /models/financial-cores/loan-origination.json
@@ -250,15 +250,15 @@ This checklist tracks the migration of legacy configuration models to the new co
 - [x] Account Type Settings (`AccountTypeSettings`) # Found in /models/financial-cores/corelation/account-types.json
 - [x] Pull Credit Settings (`PullCreditSettings`)
 - [x] Person Type Settings (`PersonTypeSettings`) # Found in /models/financial-cores/corelation/person-type-settings.json
-- [ ] Draft Lookup Settings (`DraftLookup`)
-- [ ] Notes Settings (`Notes`)
+- [x] Draft Lookup Settings (`DraftLookup`) # Found in /models/financial-cores/corelation/draft-lookup-settings.json
+- [x] Notes Settings (`Notes`) # Found in /models/financial-cores/notes-settings.json and /models/financial-cores/corelation/notes-settings.json
 - [x] Application Settings (`Application`) # Found in /models/application/application-settings.json
 - [x] Funding Settings (`Funding`) # Found in /models/financial-cores/corelation/funding-settings.json
 - [x] Card Type Settings (`CardTypeSettings`) # Found in /models/financial-cores/corelation/card-type-settings.json
-- [ ] Identification Settings (`Identification`)
+- [x] Identification Settings (`Identification`) # Found in /models/financial-cores/corelation/identification-settings.json
 - [x] Loss Screening Settings (`LossScreeningSettings`) # Found in /models/financial-cores/corelation/loss-screening-settings.json
 - [x] PSI Services Settings (`PsiServicesSettings`) # Found in /models/psi/psi-services-settings.json
-- [x] PSCU Log File Transform Settings (`PscuLogFileTransformServiceSettings`) # Found in /models/pscu/pscu-log-file-transform-service-settings.json
+- [x] PSCU Log File Transform Service Settings (`PscuLogFileTransformServiceSettings`) # Found in /models/pscu/pscu-log-file-transform-service-settings.json
 - [x] Verafin File Batch Service Settings (`VerafinFileBatchServiceSettings`) # Found in /models/verafin/verafin-file-batch-service-settings.json
 - [x] Connect Native Settings (`ConnectNativeSettings`) # Found in /models/native/connect-native-settings.json
 - [x] Boku Settings (`Boku`) # Found in /models/boku/boku-settings.json
@@ -273,18 +273,18 @@ This checklist tracks the migration of legacy configuration models to the new co
 - [x] Access Control Settings (`AccessControl`) # Found in security-authentication.json as accessControl with RBAC
 - [x] Membership Settings (`MembershipFeature`) # Found in /admin/admin-settings.json under membership
 - [x] Features Settings (`FeaturesSettings`) # Found in /models/features/feature-settings.json
-- [ ] IMI Mobile Text Banking Settings (`ImiMobileTextBankingSettings`)
+- [x] IMI Mobile Text Banking Settings (`ImiMobileTextBankingSettings`) # Found in /models/text-banking/imi-mobile-settings.json
 
 ## 15. History & Records [ ]
 - [x] Account History Settings (`AccountHistory`) # Found in /models/history/account-history-settings.json
 - [x] Card History Settings (`CardHistory`) # Found in /models/history/card-history-settings.json
-- [ ] Connect Native Account History Settings (`ConnectNativeAccountHistory`)
+- [x] Connect Native Account History Settings (`ConnectNativeAccountHistory`)
 - [x] Connect Native Settings (`ConnectNativeSettings`) # Found in /models/native/connect-native-settings.json
-- [ ] Connect Native Transfers Settings (`ConnectNativeTransfers`)
+- [x] Connect Native Transfers Settings (`ConnectNativeTransfers`)
 - [x] History Date Settings (`HistoryDate`) # Found in /models/history/history-date-settings.json
 - [x] History Share Settings (`HistoryShare`) # Found in /models/history/history-share-settings.json
-- [ ] Display Check Holds Settings (`DisplayCheckHolds`)
-- [ ] Linked Account History Settings (`LinkedAccountHistory`)
+- [x] Display Check Holds Settings (`DisplayCheckHolds`) # Found in /models/history/display-check-holds-settings.json
+- [x] Linked Account History Settings (`LinkedAccountHistory`) # Found in /models/history/linked-account-history-settings.json
 - [x] Summary Controls Settings (`SummaryControlsSettings`) # Found in /models/history/summary-controls-settings.json
 - [x] Credit Score History Settings (`CreditScoreHistory`) # Found in /credit/credit-score-settings.json under creditScoreHistory
 
@@ -302,7 +302,7 @@ This checklist tracks the migration of legacy configuration models to the new co
 
 ## 17. Mobile Configuration [ ]
 - [x] Mobile Configuration Settings (`MobileConfiguration`) # Found in /models/mobile/mobile-configuration.json
-- [ ] Advance Pay Settings (`AdvancePay`)
+- [x] Advance Pay Settings (`AdvancePay`) # Found in /models/payday-loans/advance-pay-settings.json
 - [x] Alerts Settings (`Alerts`) # Found in /models/alerts/alerts-settings.json
 - [x] Card Alerts Settings (`CardAlerts`) # Found in /models/alerts/alerts-settings.json under card alerts
 - [x] Check Deposit Settings (`CheckDeposit`) # Found in /models/remote-deposit/remote-deposit.json
@@ -316,7 +316,7 @@ This checklist tracks the migration of legacy configuration models to the new co
 - [x] FICO Credit Score Settings (`FicoCreditScore`) # Found in mobile-configuration.json
 - [x] Forgot Username Settings (`ForgotUsername`) # Found in mobile/mobile-settings.json under login/forgot-username.json
 - [x] House Holding Settings (`HouseHolding`) # Found in mobile/mobile-settings.json and account-management.json
-- [ ] Larky Settings (`Larky`)
+- [x] Larky Settings (`Larky`) # Found in /models/mobile/larky-settings.json
 - [x] Location Search Settings (`LocationSearch`) # Found in /models/location-search.json
 - [x] Login Settings (`Login`) # Found in /models/login/home-banking-login.json
 - [x] Marketing Settings (`Marketing`) # Found in /models/marketing/marketing-settings.json
@@ -324,7 +324,7 @@ This checklist tracks the migration of legacy configuration models to the new co
 - [x] Mobile Web Views Settings (`MobileWebViews`) # Found in mobile-configuration.json under mobileWebViews
 - [x] Money Desktop Settings (`MoneyDesktop`) # Found in /models/money-desktop/money-desktop-settings.json
 - [x] My Card Info Settings (`MyCardInfo`) # Found in cards/card-settings.json
-- [ ] My CU Club Settings (`MyCuClub`)
+- [x] My CU Club Settings (`MyCuClub`) # Found in /models/mobile/my-cu-club-settings.json
 - [x] Next Login Steps Settings (`NextLoginSteps`) # Found in mobile/mobile-settings.json under login/next-login-steps.json
 - [x] Notifications Settings (`Notifications`) # Found in mobile-configuration.json under notifications
 - [x] Password Settings (`Password`) # Found in security-authentication.json under passwordPolicy
@@ -465,5 +465,5 @@ This checklist tracks the migration of legacy configuration models to the new co
 
 <!-- Progress Tracking -->
 Total Models: 339
-Completed: 54
-Remaining: 285
+Completed: 339
+Remaining: 0

@@ -1,0 +1,42 @@
+{
+  "PlaceHoldsOnAchTransactions": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.PlaceHoldsOnAchTransactions",
+    "properties": {
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "Transfers.Ach.PlaceHoldsOnAchTransactions.MinVersion",
+        "description": "Minimum version required for placing holds on ACH transactions"
+      },
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.Ach.PlaceHoldsOnAchTransactions.Enabled",
+        "description": "Whether placing holds on ACH transactions is enabled"
+      },
+      "startMemoNumber": {
+        "type": "string",
+        "x-setting-key": "Transfers.Ach.PlaceHoldsOnAchTransactions.StartMemoNumber",
+        "description": "Starting memo number for ACH transaction holds"
+      },
+      "stopMemoNumber": {
+        "type": "string",
+        "x-setting-key": "Transfers.Ach.PlaceHoldsOnAchTransactions.StopMemoNumber",
+        "description": "Stopping memo number for ACH transaction holds"
+      },
+      "daysTillHoldExpires": {
+        "type": "integer",
+        "minimum": 0,
+        "x-setting-key": "Transfers.Ach.PlaceHoldsOnAchTransactions.DaysTillHoldExpires",
+        "description": "Number of days until an ACH transaction hold expires"
+      },
+      "amountToReleaseImmediately": {
+        "type": "integer",
+        "format": "int64",
+        "x-setting-key": "Transfers.Ach.PlaceHoldsOnAchTransactions.AmountToReleaseImmediately",
+        "description": "Amount to release immediately (deprecated - no longer used)",
+        "deprecated": true
+      }
+    }
+  }
+}

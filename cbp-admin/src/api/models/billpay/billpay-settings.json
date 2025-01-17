@@ -1,7 +1,76 @@
 {
   "BillPaySettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.BillPay.BillPaySettings",
+    "x-setting-key": "BillPaySettings",
     "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "BillPay.BillPayEnabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "x-setting-key": "Billpay.BillPaySettings.MinVersion"
+      },
+      "enableMultiFundingAccount": {
+        "type": "boolean",
+        "x-setting-key": "billpay.EnableMultiFundingAccount"
+      },
+      "defaultLeadDays": {
+        "type": "integer",
+        "x-setting-key": "Billpay.DefaultLeadDays"
+      },
+      "deliverByDatesToCalculate": {
+        "type": "integer",
+        "x-setting-key": "Billpay.DeliverByDatesToCalculate"
+      },
+      "canChangeBillPayAmount": {
+        "type": "boolean",
+        "x-setting-key": "BillPay.CanChangeBillPayAmount"
+      },
+      "canChangeBillPayDeliverByDate": {
+        "type": "boolean",
+        "x-setting-key": "BillPay.CanChangeBillPayDeliverByDate"
+      },
+      "getPaymentOptions": {
+        "type": "boolean",
+        "x-setting-key": "BillPay.GetPaymentOptions"
+      },
+      "ipayCanUpdateSubscriberAddress": {
+        "type": "boolean",
+        "x-setting-key": "BillPay.IpayCanUpdateSubscriberAddress"
+      },
+      "shouldSetIpayLoginIdAsGuid": {
+        "type": "boolean",
+        "x-setting-key": "BillPay.ShouldSetIpayLoginIdAsGuid"
+      },
+      "ipayBusinessBillPayUrl": {
+        "type": "string",
+        "x-setting-key": "BillPay.Ipay.BusinessBillPayUrl"
+      },
+      "ipayMaxReceivedMessageSize": {
+        "type": "integer",
+        "x-setting-key": "BillPay.Ipay.IpayMaxReceivedMessageSize"
+      },
+      "ipayMaxBufferSize": {
+        "type": "integer",
+        "x-setting-key": "BillPay.Ipay.IpayMaxBufferSize"
+      },
+      "shouldShowAccountSelector": {
+        "type": "boolean",
+        "x-setting-key": "BillPay.BusinessBillPay.ShouldShowAccountSelector"
+      },
+      "billPayFlagNumber": {
+        "type": "string",
+        "x-setting-key": "X.App.HBBOL.BillPayFlagNumber"
+      },
+      "billPayAccounts": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.HBBOL.BillPayAccounts"
+      },
       "billMatrix": {
         "$ref": "./providers/bill-matrix.json#/BillMatrixSettings"
       },

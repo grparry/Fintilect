@@ -1,16 +1,153 @@
 {
   "LinkedAccountSettings": {
     "type": "object",
+    "description": "Settings for linked accounts functionality",
+    "x-legacy-models": [
+      "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Accounts.LinkedAccounts",
+      "Psi.Data.Models.ClientConfigurationModels.Account.LinkedAccount",
+      "Psi.Data.Models.ClientConfigurationModels.History.LinkedAccountHistory"
+    ],
     "properties": {
       "enabled": {
-        "type": "boolean"
+        "type": "boolean",
+        "description": "Whether linked accounts functionality is enabled",
+        "x-setting-key": "LinkedAccounts.Enabled"
       },
-      "settings": {
-        "$ref": "./settings.json#/LinkedAccountSettings"
+      "minimumVersions": {
+        "type": "object",
+        "description": "Minimum version requirements for different platforms",
+        "properties": {
+          "general": {
+            "type": "number",
+            "description": "General minimum version requirement",
+            "x-setting-key": "LinkedAccounts.MinVersion"
+          },
+          "android": {
+            "type": "string",
+            "description": "Minimum Android version required",
+            "x-setting-key": "Mobile.LinkedAccounts.MinimumAndroidVersion"
+          },
+          "ios": {
+            "type": "string",
+            "description": "Minimum iOS version required",
+            "x-setting-key": "Mobile.LinkedAccounts.MinimumIosVersion"
+          }
+        }
       },
       "features": {
-        "$ref": "./features.json#/LinkedAccountFeatures"
+        "type": "object",
+        "description": "Feature flags for linked accounts",
+        "properties": {
+          "verifyAccount": {
+            "type": "boolean",
+            "description": "Whether account verification is enabled",
+            "x-setting-key": "Mobile.LinkedAccounts.VerifyAccountEnabled"
+          },
+          "deleteAccount": {
+            "type": "boolean",
+            "description": "Whether account deletion is enabled",
+            "x-setting-key": "LinkedAccounts.DeleteAccountEnabled"
+          },
+          "showDeletedAccounts": {
+            "type": "boolean",
+            "description": "Whether to show deleted accounts",
+            "x-setting-key": "LinkedAccounts.ShowDeletedAccounts.Enabled"
+          },
+          "intraBank": {
+            "type": "boolean",
+            "description": "Whether intra-bank linking is enabled",
+            "x-setting-key": "LinkedAccounts.IntraBankEnabled"
+          },
+          "crossBank": {
+            "type": "boolean",
+            "description": "Whether cross-bank linking is enabled",
+            "x-setting-key": "LinkedAccounts.CrossBankEnabled"
+          },
+          "showCfsAccounts": {
+            "type": "boolean",
+            "description": "Whether to show CFS accounts",
+            "x-setting-key": "X.App.HomeBanking.ShowLinkedAccounts"
+          },
+          "showAchAccounts": {
+            "type": "boolean",
+            "description": "Whether to show ACH accounts",
+            "x-setting-key": "X.App.HomeBanking.ShowLinkedAchAccounts"
+          },
+          "showAddNewAccountOnHistory": {
+            "type": "boolean",
+            "description": "Whether to show Add New Account modal on history page",
+            "x-setting-key": "LinkedAccount.ShouldShowAddNewAccountOnHistoryPage"
+          },
+          "disableOnNoticeOfChange": {
+            "type": "boolean",
+            "description": "Whether to disable linked account when notice of change is received",
+            "x-setting-key": "Admin.LinkedAccount.ShouldDisableLinkedAccountWhenNoticeOfChangeReceivedEnabled"
+          },
+          "searchByUuid": {
+            "type": "boolean",
+            "description": "Whether to search by UUID instead of account number",
+            "x-setting-key": "LinkedAccount.SearchByUuidEnabled"
+          }
+        }
+      },
+      "history": {
+        "type": "object",
+        "description": "History settings for linked accounts",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether linked account history is enabled",
+            "x-setting-key": "AccountHistory.LinkedAccounts.Enabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "description": "Minimum version required for history",
+            "x-setting-key": "AccountHistory.LinkedAccounts.MinVersion"
+          },
+          "maxRecords": {
+            "type": "integer",
+            "description": "Maximum number of history records to return",
+            "default": 20,
+            "x-setting-key": "AccountHistory.LinkedAccounts.MaximumRecordsToReturn"
+          }
+        }
+      },
+      "security": {
+        "type": "object",
+        "description": "Security settings for linked accounts",
+        "properties": {
+          "encryptionKey": {
+            "type": "string",
+            "description": "Encryption key for linked accounts",
+            "format": "password",
+            "x-setting-key": "X.App.HBBOL.LinkedAccountEncryptionKey"
+          },
+          "nameRegex": {
+            "type": "string",
+            "description": "Regex pattern for linked account names",
+            "x-setting-key": "X.App.HomeBanking.AlphaNumSpace"
+          },
+          "maskingCharacter": {
+            "type": "string",
+            "description": "Character used for masking account numbers",
+            "maxLength": 1,
+            "default": "X",
+            "x-setting-key": "LinkedAccounts.AccountMaskingCharacter"
+          }
+        }
+      },
+      "accounting": {
+        "type": "object",
+        "description": "Accounting settings for linked accounts",
+        "properties": {
+          "achGlAccount": {
+            "type": "string",
+            "description": "ACH GL account number",
+            "x-setting-key": "X.App.HBBOL.ACHGLAccount"
+          }
+        }
       }
-    }
+    },
+    "required": ["enabled", "minimumVersions", "features", "history", "security"]
   }
 }

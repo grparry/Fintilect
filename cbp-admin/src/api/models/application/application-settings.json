@@ -1,21 +1,83 @@
 {
   "ApplicationSettings": {
     "type": "object",
+    "description": "Settings for application functionality in Corelation integration",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.FinancialCores.CorelationSettings.ApplicationSettings",
     "properties": {
-      "appInfo": {
-        "$ref": "./app-info.json#/AppInfoSettings"
+      "typeSerial": {
+        "type": "string",
+        "description": "Application type serial",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.TypeSerial"
       },
-      "configuration": {
-        "$ref": "./configuration.json#/ApplicationConfiguration"
+      "saveClientsIp": {
+        "type": "boolean",
+        "description": "Whether to save client IP addresses",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.SaveClientsIp"
       },
-      "flexUi": {
-        "$ref": "./flex-ui.json#/FlexUiConfiguration"
+      "channelSerial": {
+        "type": "string",
+        "description": "Channel serial",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.ChannelSerial"
       },
-      "sparkUi": {
-        "$ref": "./spark-ui.json#/SparkUiConfiguration"
+      "workFlowSerial": {
+        "type": "string",
+        "description": "Workflow serial",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.WorkFlowSerial"
       },
-      "onlineBanking": {
-        "$ref": "./online-banking.json#/OnlineBankingConfiguration"
+      "workQueueOpenSerial": {
+        "type": "string",
+        "description": "Work queue open serial",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.WorkQueueOpenSerial"
+      },
+      "workQueueNewSerial": {
+        "type": "string",
+        "description": "Work queue new serial",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.WorkQueueNewSerial"
+      },
+      "workQueueApproveSerial": {
+        "type": "string",
+        "description": "Work queue approve serial",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.WorkQueueApproveSerial"
+      },
+      "workQueueRescreenSerial": {
+        "type": "string",
+        "description": "Work queue rescreen serial",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.WorkQueueRescreenSerial"
+      },
+      "manualApprovalsBypassWorkQueueLogic": {
+        "type": "boolean",
+        "description": "Whether manual approvals bypass work queue logic",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.ManualApprovalsBypassWorkQueueLogic"
+      },
+      "workQueueReviewSerial": {
+        "type": "string",
+        "description": "Work queue review serial",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.WorkQueueReviewSerial"
+      },
+      "workQueueDeclineSerial": {
+        "type": "string",
+        "description": "Work queue decline serial",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.WorkQueueDeclineSerial"
+      },
+      "creditTypeSerialChexSystems": {
+        "type": "string",
+        "description": "Credit type serial for ChexSystems",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.CreditTypeSerialChexSystems"
+      },
+      "creditTypeSerialEquifax": {
+        "type": "string",
+        "description": "Credit type serial for Equifax",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.CreditTypeSerialEquifax"
+      },
+      "creditTypeSerialTransUnion": {
+        "type": "string",
+        "description": "Credit type serial for TransUnion",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.CreditTypeSerialTransUnion"
+      },
+      "creditPullMaxDaysOld": {
+        "type": "string",
+        "description": "Maximum age of credit pull in days",
+        "x-setting-key": "FinacialCore.Corelation.ApplicationSettings.CreditPullMaxDaysOld"
       }
     }
   }

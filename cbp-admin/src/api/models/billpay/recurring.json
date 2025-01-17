@@ -1,9 +1,15 @@
 {
   "RecurringBillPaySettings": {
     "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.BillPay.RecurringBillPay",
     "properties": {
       "enabled": {
-        "type": "boolean"
+        "type": "boolean",
+        "x-setting-key": "BillPay.RecurringBillPay.Enabled"
+      },
+      "minimumVersion": {
+        "type": "number",
+        "x-setting-key": "BillPay.RecurringBillPay.MinimumVersion"
       },
       "frequencies": {
         "type": "array",

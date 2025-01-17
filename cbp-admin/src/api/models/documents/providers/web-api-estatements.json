@@ -1,0 +1,33 @@
+{
+  "WebApiEstatements": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Estatements.WebApiEstatementsSettings",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether Web API Estatements is enabled",
+        "x-setting-key": "Estatements.WebApiEstatements.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "description": "Minimum version required",
+        "x-setting-key": "Estatements.WebApiEstatements.MinVersion"
+      },
+      "minAndroidVersion": {
+        "type": "string",
+        "description": "Minimum Android version required",
+        "x-setting-key": "Estatements.WebApiEstatements.MinAndroidVersion"
+      },
+      "minIosVersion": {
+        "type": "string",
+        "description": "Minimum iOS version required",
+        "x-setting-key": "Estatements.WebApiEstatements.MinIosVersion"
+      },
+      "disclosureEnabled": {
+        "type": "boolean",
+        "description": "Whether disclosure is enabled",
+        "x-setting-key": "Estatements.WebApiEstatements.DisclosureEnabled"
+      }
+    }
+  }
+}
