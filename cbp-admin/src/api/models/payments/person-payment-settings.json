@@ -1,0 +1,198 @@
+{
+  "PersonPaymentsSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.PersonPaymentSecuritySettings",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "PersonPayment.Security.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "x-setting-key": "PersonPayment.Security.MinVersion"
+      },
+      "daysAfterSensitiveInfoChangeAccessRestriction": {
+        "type": "number",
+        "x-setting-key": "PersonPayment.Security.DaysAfterSensitiveInfoChangeAccessRestriction"
+      },
+      "spectrumMemoNumber": {
+        "type": "string",
+        "x-setting-key": "PersonPayment.Security.SpectrumMemoNumber"
+      },
+      "restrictAccessFlagNumber": {
+        "type": "string",
+        "x-setting-key": "PersonPayment.Security.RestrictAccessFlagNumber"
+      },
+      "symitarRestrictAccessFlagNumber": {
+        "type": "integer",
+        "x-setting-key": "PersonPayment.Security.SymitarRestrictAccessFlagNumber"
+      },
+      "dnaRestrictAccessFlagNumber": {
+        "type": "string",
+        "x-setting-key": "PersonPayment.Security.DnaRestrictAccessFlagNumber"
+      },
+      "coreRestrictAccessFlagNumber": {
+        "type": "string",
+        "x-setting-key": "PersonPayment.Security.CoreRestrictAccessFlagNumber"
+      },
+      "shouldRestrictAccessAfterAddressChange": {
+        "type": "boolean",
+        "x-setting-key": "PersonPayment.Security.ShouldRestrictAccessAfterAddressChange"
+      },
+      "shouldRestrictAccessAfterEmailChange": {
+        "type": "boolean",
+        "x-setting-key": "PersonPayment.Security.ShouldRestrictAccessAfterEmailChange"
+      },
+      "shouldRestrictAccessAfterForgotPassword": {
+        "type": "boolean",
+        "x-setting-key": "PersonPayment.Security.ShouldRestrictAccessAfterForgotPassword"
+      },
+      "shouldRestrictAccessAfterMobileDeviceRegistration": {
+        "type": "boolean",
+        "x-setting-key": "PersonPayment.Security.ShouldRestrictAccessAfterMobileDeviceRegistration"
+      },
+      "payzur": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.PersonPayments.Payzur",
+        "properties": {
+          "syncCardsEnabled": {
+            "type": "boolean",
+            "x-setting-key": "PersonPayments.Payzur.SyncCardsEnabled"
+          },
+          "syncCardsMinVersion": {
+            "type": "number",
+            "x-setting-key": "PersonPayments.Payzur.SyncCardsMinVersion"
+          },
+          "publicKey": {
+            "type": "string",
+            "x-setting-key": "PersonPayments.Payzur.PublicKey"
+          },
+          "accountTypes": {
+            "type": "string",
+            "x-setting-key": "PersonPayments.Payzur.AccountTypes"
+          },
+          "shouldOpenInIframe": {
+            "type": "boolean",
+            "x-setting-key": "PersonPayments.Payzur.OpenInIframe"
+          },
+          "syncDuplicateCardsEnabled": {
+            "type": "boolean",
+            "x-setting-key": "PersonPayments.Payzur.SyncDuplicateCardsEnabled"
+          },
+          "useOAEP": {
+            "type": "boolean",
+            "x-setting-key": "PersonPayments.Payzur.UseOAEP"
+          },
+          "syncAddedCardsEnabled": {
+            "type": "boolean",
+            "x-setting-key": "PersonPayments.Payzur.SyncAddedCardsEnabled"
+          },
+          "shouldSkipCardSyncWhenCoreIsDown": {
+            "type": "boolean",
+            "x-setting-key": "PersonPayments.Payzur.ShouldSkipCardSyncWhenCoreIsDown"
+          }
+        }
+      },
+      "zelle": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.PersonPayments.ZelleSettings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether Zelle is enabled",
+            "x-setting-key": "PersonPayment.Zelle.Enabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "format": "double",
+            "description": "Minimum version required",
+            "x-setting-key": "PersonPayment.Zelle.MinVersion"
+          },
+          "baseUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Base URL for Zelle service",
+            "x-setting-key": "PersonPayment.Zelle.BaseUrl"
+          },
+          "minAndroidVersion": {
+            "type": "string",
+            "description": "Minimum Android version required",
+            "x-setting-key": "PersonPayment.Zelle.MinAndroidVersion"
+          },
+          "minIosVersion": {
+            "type": "string",
+            "description": "Minimum iOS version required",
+            "x-setting-key": "PersonPayment.Zelle.MinIosVersion"
+          },
+          "bId": {
+            "type": "string",
+            "description": "Business ID",
+            "x-setting-key": "PersonPayment.Zelle.BId"
+          },
+          "routeTransit": {
+            "type": "string",
+            "description": "Route transit number",
+            "x-setting-key": "PersonPayment.Zelle.RouteTransit"
+          },
+          "partnerUid": {
+            "type": "string",
+            "description": "Partner UID",
+            "x-setting-key": "PersonPayment.Zelle.PartnerUid"
+          },
+          "applId": {
+            "type": "string",
+            "description": "Application ID",
+            "x-setting-key": "PersonPayment.Zelle.ApplId"
+          },
+          "enrollWithJointOwnerEnabled": {
+            "type": "boolean",
+            "description": "Whether enrollment with joint owner is enabled",
+            "x-setting-key": "PersonPayment.Zelle.EnrollWithJointOwnerEnabled"
+          },
+          "serviceId": {
+            "type": "string",
+            "description": "Service ID",
+            "x-setting-key": "PersonPayment.Zelle.ServiceId"
+          },
+          "transactionAmountLimit": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Maximum amount per transaction",
+            "x-setting-key": "PersonPayment.Zelle.TransactionAmountLimit"
+          },
+          "dailyAmountLimit": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Maximum amount per day",
+            "x-setting-key": "PersonPayment.Zelle.DailyAmountLimit"
+          },
+          "certificateName": {
+            "type": "string",
+            "description": "Certificate name",
+            "x-setting-key": "PersonPayment.Zelle.CertificateName"
+          },
+          "checkNumber": {
+            "type": "integer",
+            "description": "Check number",
+            "x-setting-key": "PersonPayment.Zelle.CheckNumber"
+          },
+          "useMemberAccountNumberWithSuffix": {
+            "type": "boolean",
+            "description": "Whether to use member account number with suffix",
+            "x-setting-key": "PersonPayment.Zelle.UseMemberAccountNumberWithSuffix"
+          },
+          "accountNumberFormat": {
+            "type": "string",
+            "description": "Format for account numbers",
+            "x-setting-key": "PersonPayment.Zelle.AccountNumberFormat"
+          },
+          "allowCrossAccount": {
+            "type": "boolean",
+            "description": "Whether cross-account transactions are allowed",
+            "x-setting-key": "PersonPayment.Zelle.AllowCrossAccount"
+          }
+        }
+      }
+    }
+  }
+}

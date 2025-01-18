@@ -97,44 +97,6 @@
         "type": "boolean",
         "x-setting-key": "X.App.HBBOL.DeleteSubAccountNoHouseholding",
         "description": "Whether to delete sub-account with no householding"
-      },
-      "mobile": {
-        "type": "object",
-        "description": "Mobile-specific House Holding settings",
-        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.HouseHolding",
-        "properties": {
-          "enabled": {
-            "type": "boolean",
-            "description": "Whether House Holding is enabled in mobile",
-            "x-setting-key": "Mobile.HouseHolding.Enabled"
-          },
-          "minimumVersions": {
-            "type": "object",
-            "description": "Minimum version requirements for different platforms",
-            "properties": {
-              "general": {
-                "type": "string",
-                "description": "General minimum version requirement",
-                "x-setting-key": "Mobile.HouseHolding.MinimumVersion"
-              },
-              "android": {
-                "type": "string",
-                "description": "Minimum Android version required",
-                "x-setting-key": "Mobile.HouseHolding.MinimumAndroidVersion"
-              },
-              "ios": {
-                "type": "string",
-                "description": "Minimum iOS version required",
-                "x-setting-key": "Mobile.HouseHolding.MinimumIosVersion"
-              }
-            }
-          },
-          "permissionsUrl": {
-            "type": "string",
-            "description": "URL for permissions management",
-            "x-setting-key": "Mobile.HouseHolding.PermissionsUrl"
-          }
-        }
       }
     }
   }

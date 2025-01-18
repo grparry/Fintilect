@@ -3,38 +3,26 @@
     "type": "object",
     "description": "Configuration settings for checking rewards",
     "x-legacy-model": "Psi.Models.ClientConfigurationModels.MobileConfigurations.Deals.CheckingRewards.CheckingRewards",
-    "required": ["enabled", "urls", "versionRequirements"],
+    "required": ["enabled", "url", "versionRequirements"],
     "properties": {
       "enabled": {
         "type": "boolean",
         "description": "Whether checking rewards are enabled",
         "x-setting-key": "Mobile.Deals.CheckingRewards.Enabled"
       },
-      "urls": {
-        "type": "object",
-        "description": "URL configurations",
-        "required": ["main", "resolving"],
-        "properties": {
-          "main": {
-            "type": "string",
-            "description": "Main URL for checking rewards service",
-            "x-setting-key": "Mobile.Deals.CheckingRewards.Url"
-          },
-          "resolving": {
-            "type": "string",
-            "description": "Resolving URL for checking rewards",
-            "x-setting-key": "Mobile.Deals.CheckingRewards.ReslovingUrl"
-          }
-        }
+      "url": {
+        "type": "string",
+        "description": "URL for checking rewards service",
+        "x-setting-key": "Mobile.Deals.CheckingRewards.Url"
       },
       "versionRequirements": {
         "type": "object",
         "description": "Version requirements for different platforms",
-        "required": ["general", "android", "ios"],
+        "required": ["minimum", "android", "ios"],
         "properties": {
-          "general": {
+          "minimum": {
             "type": "string",
-            "description": "General minimum version required",
+            "description": "Minimum version required",
             "x-setting-key": "Mobile.Deals.CheckingRewards.MinimumVersion"
           },
           "android": {
@@ -53,17 +41,24 @@
         "type": "object",
         "description": "Real-time redemption settings",
         "x-legacy-model": "Psi.Models.ClientConfigurationModels.CheckingRewards.RealTimeRedemption",
-        "required": ["enabled", "minVersion", "generalLedger"],
+        "required": ["enabled", "version", "generalLedger"],
         "properties": {
           "enabled": {
             "type": "boolean",
             "description": "Whether real-time redemption is enabled",
             "x-setting-key": "CheckingRewards.Redemption.RealTime.Enabled"
           },
-          "minVersion": {
-            "type": "number",
-            "description": "Minimum version required for real-time redemption",
-            "x-setting-key": "CheckingRewards.Redemption.RealTime.MinVersion"
+          "version": {
+            "type": "object",
+            "description": "Version requirements",
+            "required": ["minimum"],
+            "properties": {
+              "minimum": {
+                "type": "number",
+                "description": "Minimum version required",
+                "x-setting-key": "CheckingRewards.Redemption.RealTime.MinVersion"
+              }
+            }
           },
           "generalLedger": {
             "type": "object",
@@ -84,29 +79,8 @@
           }
         }
       },
-      "attributes": {
-        "type": "object",
-        "description": "Account attribute settings",
-        "x-legacy-model": "Psi.Models.ClientConfigurationModels.Account.AccountAttributesSettings",
-        "required": ["shareDescriptions", "shareCategories"],
-        "properties": {
-          "shareDescriptions": {
-            "type": "array",
-            "description": "List of share descriptions for checking rewards",
-            "items": {
-              "type": "string"
-            },
-            "x-setting-key": "Account.Attributes.CheckingRewardsShareDescriptions"
-          },
-          "shareCategories": {
-            "type": "array",
-            "description": "List of share categories for checking rewards",
-            "items": {
-              "type": "string"
-            },
-            "x-setting-key": "Account.Attributes.CheckingRewardsShareCategories"
-          }
-        }
+      "realTimeRedemption": {
+        "$ref": "./real-time-redemption.json#/RealTimeRedemptionSettings"
       }
     }
   }

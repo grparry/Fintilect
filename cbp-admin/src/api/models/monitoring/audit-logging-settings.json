@@ -1,0 +1,43 @@
+{
+  "AuditSettings": {
+    "type": "object",
+    "description": "Audit logging settings",
+    "x-legacy-model": ["Psi.Data.Models.ClientConfigurationModels.Admin.AuditLogs", "Psi.Data.Models.ClientConfigurationModels.AuditLogging.AuditLoggingFeature"],
+    "properties": {
+      "events": {
+        "type": "object",
+        "description": "Event-specific audit settings",
+        "properties": {
+          "loginFailure": {
+            "type": "object",
+            "description": "Login failure audit settings",
+            "properties": {
+              "showReasonFlags": {
+                "type": "boolean",
+                "x-setting-key": "AuditLogging.ShowReasonFlagsOnLoginFailure",
+                "description": "Whether to show reason flags on login failure"
+              },
+              "restrictedFlags": {
+                "type": "string",
+                "x-setting-key": "AuditLogging.RestrictedFlagsForAuditLoggingDuringLogin",
+                "description": "Restricted flags for audit logging during login"
+              }
+            }
+          },
+          "eventDetails": {
+            "type": "object",
+            "description": "Event details settings",
+            "properties": {
+              "showUsername": {
+                "type": "boolean",
+                "x-setting-key": "Admin.AuditLogs.ShowUsernameOnEventDetails",
+                "description": "Whether to show username on event details"
+              }
+            }
+          }
+        }
+      }
+    },
+    "required": ["events"]
+  }
+}

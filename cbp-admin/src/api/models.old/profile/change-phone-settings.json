@@ -44,26 +44,6 @@
             "description": "Whether foreign phone numbers feature is enabled"
           }
         }
-      },
-      "moneyDesktop": {
-        "type": "object",
-        "properties": {
-          "shouldUseDefaultPhoneNumber": {
-            "type": "boolean",
-            "x-setting-key": "MoneyDesktop.Enrollment.ShouldUseDefaultPhoneNumber",
-            "description": "Whether to use default phone number for Money Desktop enrollment"
-          }
-        }
-      },
-      "businessBanking": {
-        "type": "object",
-        "properties": {
-          "addSubUserAddressAndPhoneNumberRequired": {
-            "type": "boolean",
-            "x-setting-key": "BusinessBanking.AddSubUser.AddressAndPhoneNumberRequired",
-            "description": "Whether address and phone number are required when adding a sub-user in business banking"
-          }
-        }
       }
     }
   }

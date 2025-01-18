@@ -301,10 +301,10 @@
       "$ref": "./paths/account-management.json#/~1account-management~1{id}"
     },
     "/security-authentication": {
-      "$ref": "./paths/security-authentication.json#/~1security-authentication"
+      "$ref": "./paths/security/authentication-security.json#/~1security-authentication"
     },
     "/security-authentication/{id}": {
-      "$ref": "./paths/security-authentication.json#/~1security-authentication~1{id}"
+      "$ref": "./paths/security/authentication-security.json#/~1security-authentication~1{id}"
     },
     "/marketing-promotions": {
       "$ref": "./paths/marketing-promotions.json#/~1marketing-promotions"
@@ -430,7 +430,7 @@
         "$ref": "./models/mobile.json#/BrandingSettings"
       },
       "SecuritySettings": {
-        "$ref": "./models/security/security-settings.json#/SecuritySettings"
+        "$ref": "./models/account/account-security-settings.json#/SecuritySettings"
       },
       "FeatureSettings": {
         "$ref": "./models/mobile.json#/FeatureSettings"
@@ -493,7 +493,7 @@
         "$ref": "./models/account-management.json#/AccountManagementSettings"
       },
       "SecurityAuthenticationSettings": {
-        "$ref": "./models/security-authentication.json#/SecurityAuthenticationSettings"
+        "$ref": "./models/security/authentication-security-settings.json#/SecurityAuthentication"
       },
       "MarketingPromotionsSettings": {
         "$ref": "./models/marketing-promotions.json#/MarketingPromotionsSettings"
@@ -532,7 +532,7 @@
         "$ref": "./models/billpay/providers.json#/CheckFreeAdminSettings"
       },
       "OutOfBandSettings": {
-        "$ref": "./models/billpay/providers.json#/OutOfBandSettings"
+        "$ref": "./models/security/authentication-security-settings.json#/SecurityAuthentication/properties/security/properties/outOfBand"
       },
       "VertifiSettings": {
         "$ref": "./models/remote-deposit/providers.json#/VertifiSettings"
@@ -631,7 +631,7 @@
         "$ref": "./models/application/application-settings.json#/ApplicationSettings"
       },
       "CardSettings": {
-        "$ref": "./models/cards/card-settings.json#/CardSettings"
+        "$ref": "./models/cards/card-management-settings.json#/CardSettings"
       },
       "CheckSettings": {
         "$ref": "./models/checks/check-settings.json#/CheckSettings"
@@ -655,7 +655,7 @@
         "$ref": "./models/compliance/ada-compliance-settings.json#/ADAComplianceSettings"
       },
       "ACHServiceSettings": {
-        "$ref": "./models/ach/ach-service-settings.json#/ACHServiceSettings"
+        "$ref": "./models/transfers/ach-settings.json#/ACHServiceSettings"
       },
       "AlexaSettings": {
         "$ref": "./models/alexa/alexa-settings.json#/AlexaSettings"
@@ -730,7 +730,7 @@
         "$ref": "./models/native/connect-native-settings.json#/ConnectNativeSettings"
       },
       "OfflineCardSettings": {
-        "$ref": "./models/cards/offline-card-settings.json#/OfflineCardSettings"
+        "$ref": "./models/cards/card-management-settings.json#/OfflineCardSettings"
       },
       "OFXConfigurationSettings": {
         "$ref": "./models/ofx/ofx-configuration-settings.json#/OFXConfigurationSettings"
@@ -763,7 +763,7 @@
         "$ref": "./models/payments/zelle-settings.json#/ZelleSettings"
       },
       "VirusScanningSettings": {
-        "$ref": "./models/security/virus-scanning-settings.json#/VirusScanningSettings"
+        "$ref": "./models/documents/document-security-settings.json#/VirusScanningSettings"
       },
       "GoodFundsSettings": {
         "$ref": "./models/payments/good-funds-settings.json#/GoodFundsSettings"
@@ -772,7 +772,7 @@
         "$ref": "./models/billpay/bill-matrix-settings.json#/BillMatrixSettings"
       },
       "OutOfBandSettings": {
-        "$ref": "./models/security/out-of-band-settings.json#/OutOfBandSettings"
+        "$ref": "./models/security/authentication-security-settings.json#/SecurityAuthentication/properties/security/properties/outOfBand"
       },
       "RemoteDepositCheckHoldSettings": {
         "$ref": "./models/deposits/remote-deposit-check-hold-settings.json#/RemoteDepositCheckHoldSettings"
@@ -817,10 +817,10 @@
         "$ref": "./models/profile/multiple-email-settings.json#/MultipleEmailSettings"
       },
       "ReCaptchaSettings": {
-        "$ref": "./models/security/recaptcha-settings.json#/ReCaptchaSettings"
+        "$ref": "./models/security/authentication-security-settings.json#/SecurityAuthentication/properties/security/properties/recaptcha"
       },
       "AchFileServiceSettings": {
-        "$ref": "./models/ach/ach-file-service-settings.json#/AchFileServiceSettings"
+        "$ref": "./models/transfers/ach-settings.json#/AchFileServiceSettings"
       },
       "LinkedAccountSettings": {
         "$ref": "./models/account/linked-account-settings.json#/LinkedAccountSettings"

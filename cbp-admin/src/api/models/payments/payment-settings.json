@@ -1,0 +1,10 @@
+{
+  "PaymentsSettings": {
+    "type": "object",
+    "properties": {
+      "personPaymentSecurity": {
+        "$ref": "./person-payment-security-settings.json#/PersonPaymentSecuritySettings"
+      }
+    }
+  }
+}
