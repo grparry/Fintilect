@@ -188,28 +188,9 @@
       "accessControl": {
         "type": "object",
         "properties": {
-          "rbacEnabled": {
-            "type": "boolean"
-          },
-          "defaultRole": {
-            "type": "string"
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "permissions": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
+          "sessionTimeout": {
+            "type": "integer",
+            "description": "Session timeout in minutes"
           }
         }
       },

@@ -110,52 +110,6 @@
             "type": "object",
             "description": "Password policy and settings",
             "properties": {
-              "settings": {
-                "type": "object",
-                "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.HomeBankingLogin.PasswordSettings",
-                "properties": {
-                  "minVersion": {
-                    "type": "number",
-                    "format": "double",
-                    "x-setting-key": "Features.Login.Password.MinVersion",
-                    "description": "Minimum version required for password features"
-                  },
-                  "canViewPasswordAsPlainTextAtLoginEnabled": {
-                    "type": "boolean",
-                    "x-setting-key": "PasswordSettings.CanViewPasswordAsPlainTextAtLoginEnabled",
-                    "description": "Whether password can be viewed as plain text at login"
-                  },
-                  "showForgotUserIdButtonOnInvalidLoginControlEnabled": {
-                    "type": "boolean",
-                    "x-setting-key": "PasswordSettings.ShowForgotUserIdButtonOnInvalidLoginControlEnabled",
-                    "description": "Whether to show forgot user ID button on invalid login"
-                  },
-                  "shouldUsePlainTextForShowHidePasswordToggle": {
-                    "type": "boolean",
-                    "x-setting-key": "PasswordSettings.UsePlainTextForShowHidePasswordToggle",
-                    "description": "Whether to use 'Show' or 'Hide' text instead of eye-ball icon"
-                  }
-                }
-              },
-              "verification": {
-                "type": "object",
-                "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.PasswordVerification.PasswordVerificationSettings",
-                "properties": {
-                  "passwordResetCannotContainSSNumber": {
-                    "type": "boolean",
-                    "x-setting-key": "PasswordVerification.PasswordResetCannotContainSSNumber",
-                    "description": "Whether password reset cannot contain social security number"
-                  }
-                }
-              },
-              "reset": {
-                "$ref": "./reset-password.json#/ResetPasswordSettings",
-                "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Settings.ChangeUserInformation.ResetPassword"
-              },
-              "encryption": {
-                "$ref": "./password-encryption.json#/PasswordEncryptionSettings",
-                "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.PasswordEncryption"
-              },
               "expiration": {
                 "type": "object",
                 "description": "Password expiration settings",
@@ -163,46 +117,13 @@
                   "expirationDays": {
                     "type": "integer",
                     "x-setting-key": "PasswordPolicy.ExpirationDays",
-                    "description": "Number of days after which passwords expire",
-                    "minimum": 0
-                  },
-                  "warningDays": {
-                    "type": "integer",
-                    "x-setting-key": "PasswordPolicy.WarningDays",
-                    "description": "Number of days before expiration to show warning",
-                    "minimum": 0
-                  },
-                  "graceLogins": {
-                    "type": "integer",
-                    "x-setting-key": "PasswordPolicy.GraceLogins",
-                    "description": "Number of grace logins allowed after password expiration",
+                    "description": "Number of days before password expires",
                     "minimum": 0
                   },
                   "enforceExpiration": {
                     "type": "boolean",
                     "x-setting-key": "PasswordPolicy.EnforceExpiration",
                     "description": "Whether to enforce password expiration"
-                  },
-                  "mobile": {
-                    "type": "object",
-                    "description": "Mobile-specific password expiration settings",
-                    "properties": {
-                      "minimumVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordExpiration.MinimumVersion",
-                        "description": "Minimum version required for password expiration"
-                      },
-                      "minimumAndroidVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordExpiration.MinimumAndroidVersion",
-                        "description": "Minimum Android version required for password expiration"
-                      },
-                      "minimumIosVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordExpiration.MinimumIosVersion",
-                        "description": "Minimum iOS version required for password expiration"
-                      }
-                    }
                   }
                 },
                 "required": [
@@ -235,27 +156,6 @@
                     "x-setting-key": "PasswordPolicy.ReuseDays",
                     "description": "Number of days before a password can be reused",
                     "minimum": 0
-                  },
-                  "mobile": {
-                    "type": "object",
-                    "description": "Mobile-specific password history settings",
-                    "properties": {
-                      "minimumVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordHistory.MinimumVersion",
-                        "description": "Minimum version required for password history"
-                      },
-                      "minimumAndroidVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordHistory.MinimumAndroidVersion",
-                        "description": "Minimum Android version required for password history"
-                      },
-                      "minimumIosVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordHistory.MinimumIosVersion",
-                        "description": "Minimum iOS version required for password history"
-                      }
-                    }
                   }
                 },
                 "required": [
@@ -319,27 +219,6 @@
                     "type": "boolean",
                     "x-setting-key": "PasswordVerification.PasswordResetCannotContainSSNumber",
                     "description": "Whether to prevent social security number from being part of password"
-                  },
-                  "mobile": {
-                    "type": "object",
-                    "description": "Mobile-specific password complexity settings",
-                    "properties": {
-                      "minimumVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordComplexity.MinimumVersion",
-                        "description": "Minimum version required for password complexity"
-                      },
-                      "minimumAndroidVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordComplexity.MinimumAndroidVersion",
-                        "description": "Minimum Android version required for password complexity"
-                      },
-                      "minimumIosVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordComplexity.MinimumIosVersion",
-                        "description": "Minimum iOS version required for password complexity"
-                      }
-                    }
                   }
                 },
                 "required": [
@@ -377,49 +256,8 @@
                     "x-setting-key": "PasswordPolicy.LockoutResetCounter",
                     "description": "Minutes after which the failed attempt counter resets",
                     "minimum": 1
-                  },
-                  "notifyUser": {
-                    "type": "boolean",
-                    "x-setting-key": "PasswordPolicy.LockoutNotifyUser",
-                    "description": "Whether to notify user of lockout"
-                  },
-                  "notifyAdmin": {
-                    "type": "boolean",
-                    "x-setting-key": "PasswordPolicy.LockoutNotifyAdmin",
-                    "description": "Whether to notify admin of lockout"
-                  },
-                  "requireAdminUnlock": {
-                    "type": "boolean",
-                    "x-setting-key": "PasswordPolicy.LockoutRequireAdminUnlock",
-                    "description": "Whether admin unlock is required after lockout"
-                  },
-                  "mobile": {
-                    "type": "object",
-                    "description": "Mobile-specific password lockout settings",
-                    "properties": {
-                      "minimumVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordLockout.MinimumVersion",
-                        "description": "Minimum version required for password lockout"
-                      },
-                      "minimumAndroidVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordLockout.MinimumAndroidVersion",
-                        "description": "Minimum Android version required for password lockout"
-                      },
-                      "minimumIosVersion": {
-                        "type": "string",
-                        "x-setting-key": "Mobile.PasswordLockout.MinimumIosVersion",
-                        "description": "Minimum iOS version required for password lockout"
-                      }
-                    }
                   }
-                },
-                "required": [
-                  "enabled",
-                  "threshold",
-                  "duration"
-                ]
+                }
               }
             }
           },
@@ -503,32 +341,6 @@
             "type": "object",
             "description": "Access control settings including RBAC and tiered access",
             "properties": {
-              "rbac": {
-                "type": "object",
-                "description": "Role-based access control settings",
-                "properties": {
-                  "enabled": {
-                    "type": "boolean",
-                    "x-setting-key": "AccessControl.RBAC.Enabled",
-                    "description": "Whether role-based access control is enabled"
-                  },
-                  "defaultRole": {
-                    "type": "string",
-                    "x-setting-key": "AccessControl.RBAC.DefaultRole",
-                    "description": "Default role for new users"
-                  },
-                  "roleHierarchy": {
-                    "type": "boolean",
-                    "x-setting-key": "AccessControl.RBAC.RoleHierarchy",
-                    "description": "Whether role hierarchy is enabled"
-                  },
-                  "permissionInheritance": {
-                    "type": "boolean",
-                    "x-setting-key": "AccessControl.RBAC.PermissionInheritance",
-                    "description": "Whether permission inheritance is enabled"
-                  }
-                }
-              },
               "tieredAccess": {
                 "type": "object",
                 "description": "Tiered access control settings",
@@ -623,7 +435,6 @@
               }
             },
             "required": [
-              "rbac",
               "tieredAccess",
               "multiAccountAccess"
             ]

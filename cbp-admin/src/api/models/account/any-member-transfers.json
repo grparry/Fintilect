@@ -75,14 +75,6 @@
         "x-setting-key": "Transfers.AnyMember.AccountTypeMappings",
         "description": "Mappings between display account types and system account types"
       },
-      "accountSuffixMappings": {
-        "type": "object",
-        "additionalProperties": {
-          "type": "string"
-        },
-        "x-setting-key": "Transfers.AnyMember.AccountSuffixMappings",
-        "description": "Mappings between display suffixes and system suffixes"
-      },
       "accessTypeFlagNumber": {
         "type": "integer",
         "x-setting-key": "Transfers.AnyMember.FlagNumber",

@@ -18,11 +18,6 @@
         "description": "Minimum iOS version required for loan applications",
         "x-setting-key": "Mobile.Loan.ApplyForLoan.MinimumIosVersion"
       },
-      "enabled": {
-        "type": "boolean",
-        "description": "Whether loan applications are enabled",
-        "x-setting-key": "LoanApplication.Enabled"
-      },
       "url": {
         "type": "string",
         "description": "URL for loan applications",

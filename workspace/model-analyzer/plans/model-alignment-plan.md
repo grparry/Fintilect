@@ -2,52 +2,9 @@
 
 ## Goals
 1. Align models in `cbp-admin/src/api/models` with legacy code in `legacy/legacy-apis/Psi.Models.ClientConfigurationModels`
-2. Eliminate from models directory:
-   - Duplication
-   - AI-hallucinated settings not in legacy code
-3. Determine optimal JSON file structure for models directory
+2. Implement optimal JSON file structure for models directory
 
-## Analysis Steps
-
-### 1. Initial Data Gathering and Preparation
-- [ ] Examine `legacy_field_data.md` for legacy C# model structure
-- [ ] Compare with current `model_field_data.csv`
-- [ ] Create structured comparison between datasets
-- [ ] Document initial findings
-
-### 2. Duplication Analysis
-- [x] Identify settings appearing in multiple JSON files
-- [x] Create mapping of duplicate settings and relationships
-- [x] Analyze consistency of duplicates (values/types)
-- [x] Determine "consolidation target" for each setting
-- [x] Document duplication patterns and recommendations
-
-### 3. Validation Against Legacy Code
-- [ ] Cross-reference each setting against legacy code
-- [ ] Flag potential hallucinated settings
-- [ ] Flag potential missing settings
-- [ ] Verify data type/structure compatibility
-- [ ] Document validation findings
-
-### 4. Structure Analysis
-- [ ] Analyze current JSON file organization
-- [ ] Map legacy C# model organization
-- [ ] Identify logical setting groupings based on:
-  - [ ] Feature areas
-  - [ ] Setting dependencies
-  - [ ] Access patterns
-- [ ] Document structural findings
-
-### 5. Recommendations Development
-- [x] Propose new file structure that:
-  - [x] Minimizes duplication
-  - [x] Maintains logical grouping
-  - [x] Preserves legacy compatibility
-  - [x] Facilitates maintenance
-- [x] Create migration plan
-- [x] Document final recommendations
-
-## Duplicate Settings Analysis
+## Settings Consolidation
 
 ### 1. ADA Compliance Settings
 - **Duplicates Found**: 
@@ -178,7 +135,7 @@
 - **Legacy Settings Key**: `Mobile.CardControl.OndotDx.*`
 
 ### 16. Checking Rewards Settings
-- **Duplicates Found**:
+- **Duplicates Found**: 
   - `rewards/checking-rewards-settings.json`
   - `financial-features/checking-rewards.json`
 - **Consolidation Target**: `rewards/checking-rewards-settings.json`

@@ -99,13 +99,6 @@
         "type": "boolean",
         "x-setting-key": "AccountHistory.ShouldOpenMoreDetailsInExternalWebBrowser"
       },
-      "pendingTransactionTypeDisplayNames": {
-        "type": "object",
-        "additionalProperties": {
-          "type": "string"
-        },
-        "x-setting-key": "AccountHistory.PendingTransactionTypeDisplayNames"
-      },
       "shouldShowAvailableBalanceInBoldFont": {
         "type": "boolean",
         "x-setting-key": "AccountHistoryDisplaySettings.ShowAvailableBalanceInBoldFont"

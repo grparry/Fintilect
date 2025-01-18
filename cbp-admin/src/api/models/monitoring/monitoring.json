@@ -33,11 +33,6 @@
         "minimum": 1,
         "x-setting-key": "Monitoring.MiddlewareHealthCheckInterval"
       },
-      "alertingEnabled": {
-        "type": "boolean",
-        "description": "Whether alerting is enabled",
-        "x-setting-key": "Monitoring.AlertingEnabled"
-      },
       "alertingRecipients": {
         "type": "array",
         "items": {
@@ -48,6 +43,6 @@
         "x-setting-key": "Monitoring.AlertingRecipients"
       }
     },
-    "required": ["middlewareHealthThreshold", "middlewareHealthEnabled", "middlewareHealthCheckInterval", "alertingEnabled", "alertingRecipients"]
+    "required": ["middlewareHealthThreshold", "middlewareHealthEnabled", "middlewareHealthCheckInterval", "alertingRecipients"]
   }
 }

@@ -49,22 +49,6 @@
             "type": "string",
             "description": "Default zone ID",
             "x-setting-key": "Marketing.SegMint.ZoneId"
-          },
-          "zoneIdMappings": {
-            "type": "object",
-            "description": "Mapping from targeted marketing slot names to SegMint zone IDs",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "x-setting-key": "Marketing.SegMint.ZoneIdMappings"
-          },
-          "slotIdMappings": {
-            "type": "object",
-            "description": "Mapping from SegMint slot IDs to targeted marketing slot IDs",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "x-setting-key": "Marketing.SegMint.SlotIdMappings"
           }
         }
       },

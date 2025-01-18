@@ -76,14 +76,6 @@
                 "type": "boolean",
                 "description": "Whether to store user ID and password",
                 "x-setting-key": "IntegratedEnrollment.SSO.ShouldStoreUserIdAndPassword"
-              },
-              "skippedSteps": {
-                "type": "object",
-                "description": "Dictionary of enrollment steps that can be skipped",
-                "additionalProperties": {
-                  "type": "boolean"
-                },
-                "x-setting-key": "IntegratedEnrollment.SSO.SkippedEnrollmentSteps"
               }
             }
           },

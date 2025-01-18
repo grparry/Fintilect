@@ -188,17 +188,8 @@
       "dashboardLayout": {
         "type": "object",
         "description": "Dashboard layout configuration",
-        "required": ["initialSortOrder", "layoutRules"],
+        "required": ["layoutRules"],
         "properties": {
-          "initialSortOrder": {
-            "type": "object",
-            "description": "Initial sort order for dashboard widgets",
-            "additionalProperties": {
-              "type": "integer",
-              "minimum": 0
-            },
-            "x-setting-key": "Widgets.DashboardInitialSortOrder"
-          },
           "defaultWidgets": {
             "type": "string",
             "description": "Default widgets configuration for Connect Native dashboard",

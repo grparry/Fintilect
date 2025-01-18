@@ -82,27 +82,6 @@
             "description": "Whether IP whitelisting is enabled for challenges"
           }
         }
-      },
-      "mobile": {
-        "type": "object",
-        "description": "Mobile-specific security question settings",
-        "properties": {
-          "minimumVersion": {
-            "type": "string",
-            "x-setting-key": "Mobile.SecurityQuestions.MinimumVersion",
-            "description": "Minimum version required for security questions"
-          },
-          "minimumAndroidVersion": {
-            "type": "string",
-            "x-setting-key": "Mobile.SecurityQuestions.MinimumAndroidVersion",
-            "description": "Minimum Android version required for security questions"
-          },
-          "minimumIosVersion": {
-            "type": "string",
-            "x-setting-key": "Mobile.SecurityQuestions.MinimumIosVersion",
-            "description": "Minimum iOS version required for security questions"
-          }
-        }
       }
     },
     "required": [

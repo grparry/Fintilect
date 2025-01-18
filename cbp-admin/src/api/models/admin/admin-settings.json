@@ -127,50 +127,11 @@
                 "description": "Minimum Android version for implicit registration"
               }
             }
-          },
-          "deviceIdentification": {
-            "type": "object",
-            "description": "Device identification settings",
-            "properties": {
-              "methods": {
-                "type": "array",
-                "x-setting-key": "DeviceManagement.IdentificationMethods",
-                "description": "List of allowed device identification methods",
-                "items": {
-                  "type": "string",
-                  "enum": ["fingerprint", "faceid", "pin", "pattern", "password"]
-                }
-              },
-              "requireMultipleFactors": {
-                "type": "boolean",
-                "x-setting-key": "DeviceManagement.RequireMultipleFactors",
-                "description": "Whether multiple identification factors are required"
-              },
-              "maxDevicesPerUser": {
-                "type": "integer",
-                "x-setting-key": "DeviceManagement.MaxDevicesPerUser",
-                "description": "Maximum number of devices allowed per user",
-                "minimum": 1
-              },
-              "deviceLockoutThreshold": {
-                "type": "integer",
-                "x-setting-key": "DeviceManagement.LockoutThreshold",
-                "description": "Number of failed attempts before device lockout",
-                "minimum": 1
-              },
-              "deviceLockoutDuration": {
-                "type": "integer",
-                "x-setting-key": "DeviceManagement.LockoutDuration",
-                "description": "Duration of device lockout in minutes",
-                "minimum": 1
-              }
-            }
           }
         },
         "required": [
           "enabled",
-          "securityCode",
-          "deviceIdentification"
+          "securityCode"
         ]
       }
     }

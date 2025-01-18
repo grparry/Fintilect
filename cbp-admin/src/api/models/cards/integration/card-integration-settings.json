@@ -75,10 +75,6 @@
               "useSsoUrl": {
                 "type": "boolean",
                 "x-setting-key": "History.Card.UsePscuSsoUrl"
-              },
-              "enabled": {
-                "type": "boolean",
-                "x-setting-key": "History.Card.PscuSsoEnabled"
               }
             }
           }

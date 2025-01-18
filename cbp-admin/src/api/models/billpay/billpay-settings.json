@@ -60,17 +60,6 @@
         "type": "boolean",
         "x-setting-key": "BillPay.BusinessBillPay.ShouldShowAccountSelector"
       },
-      "billPayFlagNumber": {
-        "type": "string",
-        "x-setting-key": "X.App.HBBOL.BillPayFlagNumber"
-      },
-      "billPayAccounts": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        },
-        "x-setting-key": "X.App.HBBOL.BillPayAccounts"
-      },
       "billMatrix": {
         "$ref": "./providers/bill-matrix.json#/BillMatrixSettings"
       },

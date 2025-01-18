@@ -76,15 +76,6 @@
         "x-setting-key": "ScheduledTransfers.LastDayOfMonthSchedulingEnabled",
         "description": "Whether scheduling on the last day of the month is enabled"
       },
-      "coreErrorCodeToTransferResultMappings": {
-        "type": "object",
-        "x-setting-key": "ScheduledTransfers.CoreErrorCodeToTransferResultMappings",
-        "description": "Mappings from core error codes to transfer results",
-        "additionalProperties": {
-          "type": "string",
-          "enum": ["Success", "Failed", "ManualReviewRequired", "Skipped"]
-        }
-      },
       "coreErrorCodeToTransferResultMappingEnabled": {
         "type": "boolean",
         "x-setting-key": "ScheduledTransfers.CoreErrorCodeToTransferResultMappingEnabled",

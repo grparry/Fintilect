@@ -24,15 +24,6 @@
             "type": "boolean",
             "x-setting-key": "IntegratedEnrollment.SSO.ShouldStoreUserIdAndPassword",
             "description": "Whether to store user ID and password during SSO"
-          },
-          "skippedEnrollmentSteps": {
-            "type": "array",
-            "x-setting-key": "IntegratedEnrollment.SSO.SkippedEnrollmentSteps",
-            "description": "List of enrollment steps to skip during SSO",
-            "items": {
-              "type": "string",
-              "enum": ["AccountVerification", "PasswordSetup", "SecurityQuestions", "MfaSetup", "EmailVerification", "PhoneVerification", "TermsAndConditions", "PrivacyPolicy"]
-            }
           }
         }
       },

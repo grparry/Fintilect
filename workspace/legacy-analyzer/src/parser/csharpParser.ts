@@ -199,54 +199,13 @@ export class CSharpParser {
           }
           break;
         }
-        case 'Required': {
-          // Check if there are any arguments
-          const argList = this.findNodes(attribute, 'attribute_argument_list')[0];
-          if (argList) {
-            // Look for ErrorMessage argument
-            const namedArgs = this.findNodes(argList, 'attribute_argument');
-            for (const arg of namedArgs) {
-              const nameIdentifier = arg.childForFieldName('name');
-              if (nameIdentifier?.text === 'ErrorMessage') {
-                const value = arg.childForFieldName('value');
-                if (value) {
-                  field.validationRules.push(`Required(${value.text})`);
-                  break;
-                }
-              }
-            }
-          } else {
-            field.validationRules.push('Required');
-          }
-          logger.debug('Added Required validation');
-          break;
-        }
-        case 'Range': {
-          const argList = this.findNodes(attribute, 'attribute_argument_list')[0];
-          if (argList) {
-            const args = this.findNodes(argList, 'attribute_argument');
-            const min = args[0]?.text;
-            const max = args[1]?.text;
-            if (min && max) {
-              field.validationRules.push(`Range(${min}, ${max})`);
-            }
-          }
-          logger.debug('Added Range validation');
-          break;
-        }
         case 'RequiredValidation': {
           field.validationRules.push('RequiredValidation');
-          logger.debug('Added RequiredValidation');
+          logger.debug('Added validation rule: RequiredValidation');
           break;
         }
         default: {
-          // Check if the attribute name ends with "Validation"
-          if (name.endsWith('Validation')) {
-            field.validationRules.push(name);
-            logger.debug(`Added validation rule: ${name}`);
-          } else {
-            logger.debug('Ignoring unknown attribute:', name);
-          }
+          logger.debug('Ignoring unknown attribute:', name);
         }
       }
     }

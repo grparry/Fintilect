@@ -8,20 +8,8 @@
       "dashboard": {
         "type": "object",
         "description": "Dashboard-wide settings for widget management",
-        "required": ["initialSortOrder", "nonHideableWidgets"],
+        "required": ["nonHideableWidgets"],
         "properties": {
-          "initialSortOrder": {
-            "type": "object",
-            "description": "Initial sort order for dashboard widgets",
-            "x-setting-key": "Widgets.DashboardInitialSortOrder",
-            "patternProperties": {
-              "^[a-zA-Z0-9-_]+$": {
-                "type": "integer",
-                "description": "Position index for the widget",
-                "minimum": 0
-              }
-            }
-          },
           "nonHideableWidgets": {
             "type": "array",
             "description": "List of widget IDs that cannot be hidden by users",

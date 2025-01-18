@@ -17,14 +17,6 @@
         "type": "boolean",
         "description": "Whether to use version 3 of MeridianLink SSO",
         "x-setting-key": "MeridianLinkSso.Version3.Enabled"
-      },
-      "memberInfo": {
-        "type": "object",
-        "description": "Configuration for which member fields to send during SSO",
-        "x-setting-key": "MeridianLinkSso.SendMemberInfo.FieldsToSend",
-        "additionalProperties": {
-          "type": "boolean"
-        }
       }
     }
   }
