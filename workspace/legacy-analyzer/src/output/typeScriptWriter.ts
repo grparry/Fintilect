@@ -12,6 +12,12 @@ export class TypeScriptWriter {
     constructor(private readonly fileService: FileService, private currentFile: string, private currentNamespace: string) {}
 
     /**
+     * Core Type System
+     * ---------------
+     * Methods for managing and converting types between C# and TypeScript
+     */
+
+    /**
      * Get the output path for a TypeScript type file
      */
     private getTypeOutputPath(parsedClass: ParsedClass, importingClass?: ParsedClass): string {
@@ -285,6 +291,12 @@ export class TypeScriptWriter {
     }
 
     /**
+     * JSON Generation
+     * --------------
+     * Methods for generating TypeScript interfaces and helper classes from JSON
+     */
+
+    /**
      * Write TypeScript enum definition to a separate file
      */
     public async writeEnumDefinition(enumDef: ParsedClass | ParsedEnum, sourceFilePath: string): Promise<void> {
@@ -452,6 +464,101 @@ export class TypeScriptWriter {
     }
 
     /**
+     * Settings Generation
+     * -----------------
+     * Methods for generating TypeScript settings classes and interfaces
+     */
+
+    private generateJsonHelperClass(field: ParsedField): string {
+        if (!field.documentation) {
+            logger2.warn('No documentation with JSON example found for property:', field.name);
+            return '';
+        }
+
+        // Extract JSON example from documentation
+        const jsonMatch = field.documentation.match(/```json\s*([\s\S]*?)\s*```/);
+        if (!jsonMatch) {
+            logger2.warn('No JSON example found in documentation for property:', field.name);
+            return '';
+        }
+
+        const jsonExample = jsonMatch[1];
+        logger2.info('Found JSON example for property:', {
+            propertyName: field.name,
+            example: jsonExample
+        });
+
+        try {
+            // Generate the interface for the JSON structure
+            const interfaceName = `${field.name}Config`;
+            const interfaceDefinition = this.generateTypeFromValue(JSON.parse(jsonExample), '', interfaceName);
+
+            // Generate the helper class
+            let classDefinition = '';
+            classDefinition += `export class ${field.name}Setting extends JsonSetting<${interfaceName}> {\n`;
+            classDefinition += `    protected readonly settingKey = '${field.settingKey || field.name}';\n`;
+            classDefinition += `    protected readonly defaultValue: ${interfaceName} = ${jsonExample};\n`;
+            classDefinition += `}\n`;
+            
+            return interfaceDefinition + '\n' + classDefinition;
+        } catch (error) {
+            logger2.error('Failed to generate JSON helper class:', {
+                propertyName: field.name,
+                error
+            });
+            return '';
+        }
+    }
+
+    private generateJsonInterface(jsonExample: string): string {
+        try {
+            const jsonData = JSON.parse(jsonExample);
+            return this.generateTypeFromValue(jsonData, '', 'Root');
+        } catch (error) {
+            logger2.error('Failed to parse JSON example:', error);
+            return 'export interface Root { [key: string]: any }';
+        }
+    }
+
+    private generateSettingsGroup(classInfo: ParsedClass): string {
+        let code = '';
+        
+        // Add documentation if present
+        if (classInfo.documentation) {
+            code += '/**\n';
+            code += classInfo.documentation.split('\n')
+                .map(line => ` * ${line}`)
+                .join('\n');
+            code += '\n */\n';
+        }
+
+        // Generate the class
+        code += `export class ${classInfo.name} {\n`;
+        
+        // Add fields
+        if (classInfo.fields) {
+            for (const field of classInfo.fields) {
+                if (this.isJsonField(field)) {
+                    const jsonHelperClass = this.generateJsonHelperClass(field);
+                    if (jsonHelperClass) {
+                        code = jsonHelperClass + '\n' + code;
+                    }
+                }
+                code += this.generateSettingField(field);
+            }
+        }
+        
+        code += '}\n';
+        return code;
+    }
+
+    /**
+     * Utility Methods
+     * -------------
+     * Helper methods for string manipulation, formatting, etc.
+     */
+
+    /**
      * Extract subdirectory from namespace
      */
     private getSubdirectoryFromNamespace(namespace: string): string {
@@ -479,14 +586,6 @@ export class TypeScriptWriter {
         this.currentNamespace = namespace;
     }
 
-    /**
-     * Generate import statement for a type
-     * @param sourceClassName The name of the class being imported
-     * @param sourceDirectory The directory of the class being imported
-     * @param sourceFile The TypeScript file of the class being imported
-     * @param targetClassName The name of the class we're adding the import to
-     * @param currentDir The current directory relative to root models
-     */
     private generateImport(sourceClassName: string, sourceDirectory: string, sourceFile: string, targetClassName: string, currentDir: string = ''): string {
         logger2.info('Generating import:', {
             sourceClassName,
@@ -585,5 +684,135 @@ export class TypeScriptWriter {
         });
 
         return sourceClassName ? `import { ${sourceClassName} } from '${relativePath}';` : '';
+    }
+
+    private getTypeForValue(value: any): string {
+        if (value === null) {
+            return 'null';
+        }
+
+        if (Array.isArray(value)) {
+            if (value.length === 0) {
+                return 'any[]';
+            }
+            
+            // Check if array contains mixed types
+            const valueTypes = value.map(item => {
+                if (item === null) return 'null';
+                return typeof item;
+            });
+            const uniqueTypes = [...new Set(valueTypes)];
+            
+            if (uniqueTypes.length > 1) {
+                // For mixed arrays, default to any[] unless it's a specific case we want to handle
+                if (uniqueTypes.every(t => ['string', 'number', 'null'].includes(t))) {
+                    return '(string | number | null)[]';
+                }
+                return 'any[]';
+            }
+
+            // Handle arrays of objects
+            if (value[0] && typeof value[0] === 'object') {
+                // Check if it's a simple object (only has a key property)
+                if (Object.keys(value[0]).length === 1 && Object.keys(value[0])[0] === 'key') {
+                    return 'object[]';
+                }
+                const interfaceContent = this.generateObjectInterface(value[0]);
+                return `{${interfaceContent}}[]`;
+            }
+
+            const elementType = this.getTypeForValue(value[0]);
+            return elementType === 'null' ? 'any[]' : `${elementType}[]`;
+        }
+
+        if (typeof value === 'object') {
+            if (Object.keys(value).length === 0 || 
+                (Object.keys(value).length === 1 && Object.keys(value)[0] === 'key')) {
+                return 'object';
+            }
+            const interfaceContent = this.generateObjectInterface(value);
+            return `{${interfaceContent}}`;
+        }
+
+        return typeof value;
+    }
+
+    private generateObjectInterface(obj: any): string {
+        if (!obj || Object.keys(obj).length === 0 || 
+            (Object.keys(obj).length === 1 && Object.keys(obj)[0] === 'key')) {
+            return '[key: string]: any;';
+        }
+
+        const properties = Object.entries(obj).map(([key, value]) => {
+            const type = this.getTypeForValue(value);
+            const propertyName = this.formatPropertyName(key);
+            const isNullable = value === null;
+            return `${propertyName}: ${isNullable ? `null | ${type}` : type};`;
+        });
+
+        return properties.join('\n');
+    }
+
+    private formatPropertyName(propertyName: string): string {
+        return propertyName.charAt(0).toLowerCase() + propertyName.slice(1);
+    }
+
+    private generateTypeFromValue(value: any, indent: string = '', name?: string): string {
+        if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+            const type = this.getTypeForValue(value);
+            return name ? `export type ${name} = ${type};\n` : type;
+        }
+
+        const interfaceContent = `{\n${Object.entries(value).map(([key, val]) => {
+            const type = this.getTypeForValue(val);
+            const propName = this.formatPropertyName(key);
+            const isNullable = val === null;
+            return `${indent}    ${propName}: ${isNullable ? `null | ${type}` : type};`;
+        }).join('\n')}\n${indent}}`;
+
+        return name ? `export interface ${name} ${interfaceContent}\n` : interfaceContent;
+    }
+
+    private isJsonField(field: ParsedField): boolean {
+        return field.documentation?.includes('```json') || 
+               field.type.toLowerCase().includes('json');
+    }
+
+    private generateSettingField(field: ParsedField): string {
+        let code = '';
+        const fieldName = field.name.charAt(0).toLowerCase() + field.name.slice(1);
+        
+        // Add documentation
+        if (field.documentation) {
+            code += '    /**\n';
+            code += field.documentation.split('\n')
+                .map(line => `     * ${line}`)
+                .join('\n');
+            code += '\n     */\n';
+        }
+
+        // For JSON fields, create an instance of the helper class
+        if (this.isJsonField(field)) {
+            const className = `${field.name}Setting`;
+            code += `    private readonly _${fieldName} = new ${className}();\n\n`;
+            code += `    get ${fieldName}(): ${field.name}Config {\n`;
+            code += `        return this._${fieldName}.value;\n`;
+            code += '    }\n\n';
+            code += `    set ${fieldName}(value: ${field.name}Config) {\n`;
+            code += `        this._${fieldName}.value = value;\n`;
+            code += '    }\n\n';
+        } else {
+            // For simple types, use direct field storage
+            const tsType = this.mapCSharpTypeToTypeScript(field.type);
+            code += `    private _${fieldName}: ${tsType}${field.isNullable ? ' | null' : ''};\n\n`;
+            code += `    get ${fieldName}(): ${tsType}${field.isNullable ? ' | null' : ''} {\n`;
+            code += `        return this._${fieldName};\n`;
+            code += '    }\n\n';
+            code += `    set ${fieldName}(value: ${tsType}${field.isNullable ? ' | null' : ''}) {\n`;
+            code += `        this._${fieldName} = value;\n`;
+            code += '    }\n\n';
+        }
+
+        return code;
     }
 }
