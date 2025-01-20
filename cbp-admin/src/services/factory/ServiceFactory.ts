@@ -15,6 +15,7 @@ import { IPermissionService } from '../interfaces/IPermissionService';
 import { IDashboardService } from '../interfaces/IDashboardService';
 import { IAuditService } from '../interfaces/IAuditService';
 import { IMemberService } from '../interfaces/IMemberService';
+import { ISettingsService } from '../interfaces/ISettingsService';
 
 // Import real service implementations
 import { UserService } from '../implementations/real/UserService';
@@ -33,6 +34,7 @@ import { PermissionService } from '../implementations/real/PermissionService';
 import { DashboardService } from '../implementations/real/DashboardService';
 import { AuditService } from '../implementations/real/AuditService';
 import { MemberService } from '../implementations/real/MemberService';
+import { SettingsService } from '../implementations/real/SettingsService';
 
 // Import mock service implementations
 import { MockUserService } from '../implementations/mock/MockUserService';
@@ -51,6 +53,7 @@ import { MockPermissionService } from '../implementations/mock/MockPermissionSer
 import { MockDashboardService } from '../implementations/mock/MockDashboardService';
 import { MockAuditService } from '../implementations/mock/MockAuditService';
 import { MockMemberService } from '../implementations/mock/MockMemberService';
+import { MockSettingsService } from '../implementations/mock/MockSettingsService';
 
 import { getConfig } from '../../config/api.config';
 
@@ -61,7 +64,8 @@ export class ServiceFactory {
   private static instance: ServiceFactory;
   private services: Map<string, IUserService | IClientService | IBillPayService | IAuthService | ISecurityService | 
     INotificationService | IExceptionService | IPayeeService | IPaymentProcessorService | IPaymentService | 
-    IReportService | IHolidayService | IPermissionService | IDashboardService | IAuditService | IMemberService> = new Map();
+    IReportService | IHolidayService | IPermissionService | IDashboardService | IAuditService | IMemberService |
+    ISettingsService> = new Map();
 
   private constructor() {
     // Initialize services
@@ -94,6 +98,7 @@ export class ServiceFactory {
       this.services.set('dashboard', new MockDashboardService('/api/v1/dashboard'));
       this.services.set('audit', new MockAuditService('/api/v1/audit'));
       this.services.set('member', new MockMemberService('/api/v1/members'));
+      this.services.set('settings', new MockSettingsService('/api/v1/settings'));
     } else {
       // Initialize real services with ApiClient
       this.services.set('user', new UserService('/api/v1/users'));
@@ -112,6 +117,7 @@ export class ServiceFactory {
       this.services.set('dashboard', new DashboardService('/api/v1/dashboard'));
       this.services.set('audit', new AuditService('/api/v1/audit'));
       this.services.set('member', new MemberService('/api/v1/members'));
+      this.services.set('settings', new SettingsService('/api/v1/settings'));
     }
   }
 
@@ -242,6 +248,14 @@ export class ServiceFactory {
     }
     return service as IMemberService;
   }
+
+  getSettingsService(): ISettingsService {
+    const service = this.services.get('settings');
+    if (!service) {
+      throw new Error('SettingsService not initialized');
+    }
+    return service as ISettingsService;
+  }
 }
 
 // Export service instances
@@ -261,3 +275,4 @@ export const permissionService = ServiceFactory.getInstance().getPermissionServi
 export const dashboardService = ServiceFactory.getInstance().getDashboardService();
 export const auditService = ServiceFactory.getInstance().getAuditService();
 export const memberService = ServiceFactory.getInstance().getMemberService();
+export const settingsService = ServiceFactory.getInstance().getSettingsService();

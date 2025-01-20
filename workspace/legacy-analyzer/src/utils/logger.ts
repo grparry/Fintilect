@@ -1,39 +1,88 @@
-import winston from 'winston';
+import fs from 'fs';
+import path from 'path';
 
-// Configure logger
-export const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.metadata({
-      fillWith: ['filename', 'className', 'methodName']
-    }),
-    winston.format.json()
-  ),
-  transports: [
-    // Write all logs with level 'error' and below to 'error.log'
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    // Write all logs with level 'info' and below to 'combined.log'
-    new winston.transports.File({ filename: 'logs/combined.log' }),
-  ],
+class Logger {
+    private logDir: string;
+    private logFile: string;
+    private errorFile: string;
+
+    constructor() {
+        this.logDir = path.join(process.cwd(), 'logs');
+        this.logFile = path.join(this.logDir, 'combined.log');
+        this.errorFile = path.join(this.logDir, 'error.log');
+        
+        try {
+            // Create logs directory if it doesn't exist
+            if (!fs.existsSync(this.logDir)) {
+                fs.mkdirSync(this.logDir, { recursive: true });
+            }
+
+            // Clear existing log files
+            fs.writeFileSync(this.logFile, '');
+            fs.writeFileSync(this.errorFile, '');
+        } catch (err) {
+            console.error('Failed to initialize log files:', err);
+        }
+    }
+
+    private formatMessage(level: string, message: string, args: any[]): string {
+        const timestamp = new Date().toISOString();
+        const formattedArgs = args.length > 0 ? ' ' + args.map(arg => 
+            typeof arg === 'object' ? JSON.stringify(arg) : arg
+        ).join(' ') : '';
+        
+        return `[${timestamp}] ${level}: ${message}${formattedArgs}\n`;
+    }
+
+    private writeToFile(filePath: string, message: string) {
+        try {
+            fs.appendFileSync(filePath, message);
+        } catch (err) {
+            console.error(`Failed to write to ${filePath}:`, err);
+        }
+    }
+
+    info(message: string, ...args: any[]) {
+        const logMessage = this.formatMessage('INFO', message, args);
+        console.log(logMessage.trim());
+        this.writeToFile(this.logFile, logMessage);
+    }
+
+    error(message: string, ...args: any[]) {
+        const logMessage = this.formatMessage('ERROR', message, args);
+        console.error(logMessage.trim());
+        this.writeToFile(this.logFile, logMessage);
+        this.writeToFile(this.errorFile, logMessage);
+    }
+
+    warn(message: string, ...args: any[]) {
+        const logMessage = this.formatMessage('WARN', message, args);
+        console.warn(logMessage.trim());
+        this.writeToFile(this.logFile, logMessage);
+    }
+
+    debug(message: string, ...args: any[]) {
+        const logMessage = this.formatMessage('DEBUG', message, args);
+        console.debug(logMessage.trim());
+        this.writeToFile(this.logFile, logMessage);
+    }
+}
+
+const logger = new Logger();
+
+// Ensure streams are closed when the process exits
+process.on('exit', () => {
+    // No-op since we're using synchronous file operations
 });
 
-// If we're not in production, log to the console as well
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    ),
-  }));
-}
+process.on('SIGINT', () => {
+    // No-op since we're using synchronous file operations
+    process.exit();
+});
 
-// Helper function to create a logger with file context
-export function getLogger(filename: string, className?: string) {
-  return {
-    debug: (message: string, ...args: any[]) => logger.debug(message, { filename, className, ...args }),
-    info: (message: string, ...args: any[]) => logger.info(message, { filename, className, ...args }),
-    warn: (message: string, ...args: any[]) => logger.warn(message, { filename, className, ...args }),
-    error: (message: string, ...args: any[]) => logger.error(message, { filename, className, ...args })
-  };
-}
+process.on('SIGTERM', () => {
+    // No-op since we're using synchronous file operations
+    process.exit();
+});
+
+export default logger;

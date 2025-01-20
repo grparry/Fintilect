@@ -8,7 +8,8 @@
     "build": "tsc",
     "test": "jest",
     "watch": "tsc -w",
-    "dev": "ts-node-dev --respawn src/index.ts"
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "analyze": "npm run build && node dist/index.js --input /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels --output /Users/grantparry/Documents/Fintilect/Fintilect/workspace/legacy-analyzer/output"
   },
   "keywords": [
     "legacy",
