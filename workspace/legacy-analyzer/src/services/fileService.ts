@@ -68,8 +68,8 @@ export class FileService {
 
       // Copy settings types
       await this.copyTemplateFile(
-        'settings/types.ts.template',
-        'infrastructure/models/settings/types.ts'
+        'base/settings.types.ts.template',
+        'infrastructure/models/base/types.ts'
       );
 
       logger2.info('Successfully copied all base templates');

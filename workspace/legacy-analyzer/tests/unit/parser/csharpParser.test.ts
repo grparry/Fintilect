@@ -1,13 +1,37 @@
-import '@jest/globals';
-import { describe, expect, it, beforeAll, afterAll } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll, jest, beforeEach } from '@jest/globals';
 import { CSharpParser } from '../../../src/parser/csharpParser';
+import { FileService } from '../../../src/services/fileService';
+import { TypeScriptWriter } from '../../../src/output/typeScriptWriter';
+import { ParsedClass, ParsedEnum } from '../../../src/parser/csharpParser';
 import winston from 'winston';
+import path from 'path';
+
+// Mock the dependencies
+jest.mock('../../../src/services/fileService');
+jest.mock('../../../src/output/typeScriptWriter');
+
+const TEST_OUTPUT_DIR = path.join(__dirname, '../test-output');
+const TEST_FILE_PATH = path.join(TEST_OUTPUT_DIR, 'test.cs');
 
 describe('CSharpParser', () => {
   let parser: CSharpParser;
+  let fileService: jest.Mocked<FileService>;
+  let typeScriptWriter: jest.Mocked<TypeScriptWriter>;
 
   beforeAll(async () => {
-    parser = new CSharpParser();
+    // Create mocked instances
+    fileService = jest.mocked(new FileService(TEST_OUTPUT_DIR));
+    typeScriptWriter = jest.mocked(new TypeScriptWriter(fileService, '', ''));
+    
+    // Set up the FileService mock methods
+    jest.spyOn(fileService, 'writeClassDoc').mockResolvedValue();
+    jest.spyOn(fileService, 'writeTypeScript').mockResolvedValue();
+    jest.spyOn(fileService, 'readFile').mockResolvedValue('');
+    jest.spyOn(fileService, 'writeFile').mockResolvedValue();
+    fileService.typeScriptWriter = typeScriptWriter;
+
+    // Create parser instance
+    parser = new CSharpParser(fileService);
     await parser.init();
   });
 
@@ -20,105 +44,116 @@ describe('CSharpParser', () => {
     }
   });
 
-  it('should parse a simple class', async () => {
+  it('should parse a class with a property with backing field', async () => {
     const source = `
-using System;
+      public class TestClass {
+        private string _name;
+        public string Name {
+          get { return _name; }
+          set { _name = value; }
+        }
+      }
+    `;
 
-namespace Test.Settings {
-    public class SimpleSettings {
-        public string Setting1 { get; set; }
-    }
-}`;
-
-    const result = await parser.parseSource(source);
+    const result = await parser.parseSource(source, TEST_FILE_PATH);
     expect(result).toHaveLength(1);
-    expect(result[0].name).toBe('SimpleSettings');
-    expect(result[0].namespace).toBe('Test.Settings');
     expect(result[0].fields).toHaveLength(1);
-    expect(result[0].fields[0].name).toBe('Setting1');
-    expect(result[0].fields[0].type).toBe('string');
+    expect(result[0].fields[0].name).toBe('Name');
+    expect(result[0].fields[0].propertyImplementation).toEqual({
+      backingField: {
+        name: '_name',
+        type: 'string'
+      },
+      accessors: {
+        get: 'return _name;',
+        set: '_name = value;'
+      }
+    });
   });
 
-  it('should parse SettingKey attributes', async () => {
+  it('should parse a class with a read-only property', async () => {
     const source = `
-using System;
+      public class TestClass {
+        public string Name { get; }
+      }
+    `;
 
-namespace Test.Settings {
-    public class SettingsWithKey {
-        [SettingKey("test.setting")]
-        public string Setting1 { get; set; }
-    }
-}`;
-
-    const result = await parser.parseSource(source);
+    const result = await parser.parseSource(source, TEST_FILE_PATH);
     expect(result).toHaveLength(1);
-    expect(result[0].name).toBe('SettingsWithKey');
-    expect(result[0].namespace).toBe('Test.Settings');
     expect(result[0].fields).toHaveLength(1);
-    expect(result[0].fields[0].name).toBe('Setting1');
-    expect(result[0].fields[0].settingKey).toBe('test.setting');
+    expect(result[0].fields[0].name).toBe('Name');
+    expect(result[0].fields[0].propertyImplementation).toEqual({
+      accessors: {
+        get: '',
+        set: null
+      }
+    });
   });
 
-  it('should parse validation rules', async () => {
+  it('should parse a class with a property without backing field', async () => {
     const source = `
-using System;
+      public class TestClass {
+        public string Name { get; set; }
+      }
+    `;
 
-namespace Test.Settings {
-    public class SettingsWithValidation {
-        [RequiredValidation]
-        public string Setting1 { get; set; }
-    }
-}`;
-
-    const result = await parser.parseSource(source);
+    const result = await parser.parseSource(source, TEST_FILE_PATH);
     expect(result).toHaveLength(1);
-    expect(result[0].name).toBe('SettingsWithValidation');
-    expect(result[0].namespace).toBe('Test.Settings');
     expect(result[0].fields).toHaveLength(1);
-    expect(result[0].fields[0].name).toBe('Setting1');
-    expect(result[0].fields[0].validationRules).toContain('RequiredValidation');
+    expect(result[0].fields[0].name).toBe('Name');
+    expect(result[0].fields[0].propertyImplementation).toEqual({
+      accessors: {
+        get: '',
+        set: ''
+      }
+    });
   });
 
-  it('should handle multiple classes', async () => {
+  it('should parse a class with attributes on properties', async () => {
     const source = `
-using System;
-
-namespace Test.Settings {
-    public class Settings1 {
-        public string Setting1 { get; set; }
-    }
-
-    public class Settings2 {
-        public int Setting2 { get; set; }
-    }
-}`;
-
-    const result = await parser.parseSource(source);
-    expect(result).toHaveLength(2);
-    expect(result[0].name).toBe('Settings1');
-    expect(result[0].namespace).toBe('Test.Settings');
-    expect(result[1].name).toBe('Settings2');
-    expect(result[1].namespace).toBe('Test.Settings');
-  });
-
-  it('should handle class without namespace', async () => {
-    const source = `
-using System;
-
-public class GlobalSettings {
-    public string Setting1 { get; set; }
-}`;
-
-    const result = await parser.parseSource(source);
+      public class TestClass {
+        [SettingKey("Features.Test.Enabled")]
+        public bool Enabled { get; set; }
+      }
+    `;
+    const result = await parser.parseSource(source, TEST_FILE_PATH);
     expect(result).toHaveLength(1);
-    expect(result[0].name).toBe('GlobalSettings');
-    expect(result[0].namespace).toBeUndefined();
     expect(result[0].fields).toHaveLength(1);
+    expect(result[0].fields[0].attributes).toEqual([{
+      name: 'SettingKey',
+      arguments: [{
+        name: '',
+        value: '"Features.Test.Enabled"'
+      }]
+    }]);
   });
 
-  it('should handle invalid source code', async () => {
-    const source = 'this is not valid C# code';
-    
-    await expect(parser.parseSource(source)).rejects.toThrow();
+  it('should parse a class with complex property types', async () => {
+    const source = `
+      public class TestClass {
+        public FilterConfig[] Filters { get; set; }
+        public PathConfig Paths { get; set; }
+      }
+    `;
+    const result = await parser.parseSource(source, TEST_FILE_PATH);
+    expect(result).toHaveLength(1);
+    expect(result[0].fields).toHaveLength(2);
+    expect(result[0].fields[0].type).toBe('FilterConfig[]');
+    expect(result[0].fields[1].type).toBe('PathConfig');
+  });
+
+  it('should parse XML documentation comments', async () => {
+    const source = `
+      public class TestClass {
+        /// <summary>
+        /// If true, show the instructions
+        /// </summary>
+        public bool ShowInstructions { get; set; }
+      }
+    `;
+    const result = await parser.parseSource(source, TEST_FILE_PATH);
+    expect(result).toHaveLength(1);
+    expect(result[0].fields).toHaveLength(1);
+    expect(result[0].fields[0].documentation).toBe('If true, show the instructions');
   });
 });

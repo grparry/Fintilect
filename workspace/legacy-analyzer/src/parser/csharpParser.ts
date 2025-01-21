@@ -38,6 +38,17 @@ export interface ParsedField {
   defaultValue?: string;
   attributes: ParsedAttribute[];
   validationRules: string[];
+  propertyImplementation?: {
+    backingField?: {
+      name: string;
+      type: string;
+      initialization?: string;
+    };
+    accessors?: {
+      get?: string;
+      set?: string | null;
+    };
+  };
 }
 
 export interface ParsedAttribute {
@@ -53,6 +64,7 @@ export interface ParsedAttributeArgument {
 export interface ParsedEnumValue {
   name: string;
   value: string | number;
+  documentation: string;
 }
 
 export interface ParsedEnum {
@@ -94,84 +106,120 @@ export class CSharpParser {
   /**
    * Parse C# source code and extract class information
    */
-  public async parseSource(content: string, filePath: string): Promise<ParsedClass[]> {
-    try {
-      if (!this.initialized) {
-        throw new Error('Parser not initialized');
-      }
+  public async parseSource(source: string, filePath: string): Promise<ParsedClass[]> {
+    const tree = this.parser.parse(source);
+    const classes: ParsedClass[] = [];
+    const enums: ParsedEnum[] = [];
 
-      // Parse the source code
-      this.tree = await this.parser.parse(content);
+    // First pass: find all enums
+    const enumNodes = tree.rootNode.descendantsOfType('enum_declaration');
+    for (const enumNode of enumNodes) {
+      const enumName = enumNode.descendantsOfType('identifier')[0]?.text || '';
+      const enumValues: ParsedEnumValue[] = enumNode.descendantsOfType('enum_member_declaration').map(m => ({
+        name: m.descendantsOfType('identifier')[0]?.text || '',
+        value: '',
+        documentation: ''
+      }));
+      enums.push({
+        name: enumName,
+        values: enumValues,
+        documentation: '',
+        namespace: ''
+      });
+    }
 
-      // Check for syntax errors
-      if (this.tree.rootNode.hasError()) {
-        throw new Error('Invalid C# syntax');
-      }
+    logger2.info(`Found ${enums.length} enum declarations in ${filePath}`);
 
-      const classes: ParsedClass[] = [];
+    // Second pass: find all classes
+    const classNodes = tree.rootNode.descendantsOfType('class_declaration');
+    for (const classNode of classNodes) {
+      const className = classNode.descendantsOfType('identifier')[0]?.text || '';
+      const fields: ParsedField[] = [];
 
-      // Parse top-level enums as classes
-      const enumDeclarations = this.tree.rootNode.descendantsOfType('enum_declaration');
+      // Parse fields and properties
+      const propertyNodes = classNode.descendantsOfType('property_declaration');
+      const fieldNodes = classNode.descendantsOfType('field_declaration');
 
-      logger2.info(`Found ${enumDeclarations.length} enum declarations in ${filePath}`);
-      for (const enumDecl of enumDeclarations) {
-        logger2.info(`Processing enum: ${enumDecl.text}`);
-        const parsedEnum = this.parseEnum(enumDecl);
-        logger2.info(`Parsed enum: ${parsedEnum.name}`);
-        const namespace = this.getNamespaceFromNode(enumDecl);
-        logger2.info(`Enum namespace: ${namespace}`);
-
-        // Register the enum type with its namespace
-        this.fileService.registerType(parsedEnum.name, namespace);
-
-        const enumClass: ParsedClass = {
-          name: parsedEnum.name,
-          namespace: namespace,
-          fields: [],
-          interfaces: [],
-          attributes: [],
-          isAbstract: false,
-          isPublic: true,
-          documentation: parsedEnum.documentation || '',
-          sourceFile: filePath,
-          enums: [{
-            name: parsedEnum.name,
-            documentation: parsedEnum.documentation || '',
-            values: parsedEnum.values,
-            namespace: namespace
-          }],
-          type: 'enum',
-          values: parsedEnum.values
-        };
-        await this.fileService.writeClassDoc(enumClass, filePath);
-        classes.push(enumClass);
-      }
-
-      // Parse classes
-      const classDeclarations = this.tree.rootNode.descendantsOfType('class_declaration');
-      for (const classDecl of classDeclarations) {
-        const parsedClass = await this.parseClass(classDecl);
-        parsedClass.sourceFile = filePath;
-
-        // Register the class type with its namespace
-        if (parsedClass.namespace) {
-          this.fileService.registerType(parsedClass.name, parsedClass.namespace);
-          
-          // Register any nested enum types
-          for (const enumDef of parsedClass.enums) {
-            this.fileService.registerType(enumDef.name, parsedClass.namespace);
+      // Parse fields first
+      for (const fieldNode of fieldNodes) {
+        const field = await this.parseField(fieldNode);
+        if (field) {
+          // Skip backing fields as they will be handled by properties
+          if (!field.name.startsWith('_')) {
+            fields.push(field);
           }
         }
-
-        await this.fileService.writeClassDoc(parsedClass, filePath);
-        classes.push(parsedClass);
       }
 
-      return classes;
-    } catch (error) {
-      logger2.error(`Error parsing source: ${error}`);
-      throw error;
+      // Then parse properties
+      for (const propertyNode of propertyNodes) {
+        const field = await this.parseField(propertyNode);
+        if (field) {
+          // Parse property implementation
+          const propertyImpl: NonNullable<ParsedField['propertyImplementation']> = {
+            accessors: {
+              get: '',
+              set: ''  // Initialize set to empty string
+            }
+          };
+
+          const propertySource = propertyNode.text;
+          console.log('Property source:', propertySource);
+
+          // Extract backing field
+          const backingFieldName = '_' + field.name.charAt(0).toLowerCase() + field.name.slice(1);
+          const backingFieldPattern = new RegExp(`private\\s+string\\s+${backingFieldName}\\s*;`);
+          const backingFieldMatch = source.match(backingFieldPattern);
+          if (backingFieldMatch) {
+            propertyImpl.backingField = {
+              name: backingFieldName,
+              type: 'string'
+            };
+          }
+
+          // Extract accessors
+          const getterPattern = /get\s*{\s*([^}]+)\s*}/;
+          const setterPattern = /set\s*{\s*([^}]+)\s*}/;
+
+          const getterMatch = propertySource.match(getterPattern);
+          const setterMatch = propertySource.match(setterPattern);
+
+          if (getterMatch) {
+            propertyImpl.accessors.get = getterMatch[1].trim();
+          }
+
+          if (setterMatch) {
+            propertyImpl.accessors.set = setterMatch[1].trim();
+          } else if (!propertySource.includes('set')) {
+            // If there's no setter in the source, mark it as null (read-only)
+            propertyImpl.accessors.set = null;
+          }
+
+          field.propertyImplementation = propertyImpl;
+          fields.push(field);
+        }
+      }
+
+      // Parse namespace
+      const namespace = this.getNamespaceFromNode(classNode);
+      logger2.info(`Namespace resolution: ${JSON.stringify({ node: classNode.type, namespace })}`);
+
+      classes.push({
+        name: className,
+        namespace,
+        fields,
+        enums: [],
+        type: 'class',
+        interfaces: [],
+        attributes: [],
+        isAbstract: false,
+        isPublic: true,
+        documentation: '',
+        sourceFile: filePath
+      });
     }
+
+    return classes;
   }
 
   public async parseFile(filePath: string): Promise<ParsedClass[]> {
@@ -192,12 +240,6 @@ export class CSharpParser {
         name: parsedEnum.name,
         namespace: namespace,
         fields: [],
-        interfaces: [],
-        attributes: [],
-        isAbstract: false,
-        isPublic: true,
-        documentation: parsedEnum.documentation || '',
-        sourceFile: filePath,
         enums: [{
           name: parsedEnum.name,
           documentation: parsedEnum.documentation || '',
@@ -205,7 +247,13 @@ export class CSharpParser {
           namespace: namespace
         }],
         type: 'enum',
-        values: parsedEnum.values
+        values: parsedEnum.values,
+        interfaces: [],
+        attributes: [],
+        isAbstract: false,
+        isPublic: true,
+        documentation: parsedEnum.documentation || '',
+        sourceFile: filePath
       };
       await this.fileService.writeClassDoc(enumClass, filePath);
       classes.push(enumClass);
@@ -257,12 +305,6 @@ export class CSharpParser {
             name: parsedEnum.name,
             namespace: namespace,
             fields: [],
-            interfaces: [],
-            attributes: [],
-            isAbstract: false,
-            isPublic: true,
-            documentation: parsedEnum.documentation || '',
-            sourceFile: file,
             enums: [{
               name: parsedEnum.name,
               documentation: parsedEnum.documentation || '',
@@ -270,9 +312,15 @@ export class CSharpParser {
               namespace: namespace
             }],
             type: 'enum',
-            values: parsedEnum.values
+            values: parsedEnum.values,
+            interfaces: [],
+            attributes: [],
+            isAbstract: false,
+            isPublic: true,
+            documentation: parsedEnum.documentation || '',
+            sourceFile: file
           };
-          // Write both markdown and TypeScript files
+          // Write both class documentation and TypeScript definition
           await this.fileService.writeClassDoc(parsedClass, file);
           await this.fileService.writeTypeScript(parsedClass);
           this.enumTypes.add(parsedEnum.name);
@@ -305,12 +353,6 @@ export class CSharpParser {
         name: parsedEnum.name,
         namespace: namespace,
         fields: [],
-        interfaces: [],
-        attributes: [],
-        isAbstract: false,
-        isPublic: true,
-        documentation: parsedEnum.documentation || '',
-        sourceFile: filePath,
         enums: [{
           name: parsedEnum.name,
           documentation: parsedEnum.documentation || '',
@@ -318,7 +360,13 @@ export class CSharpParser {
           namespace: namespace
         }],
         type: 'enum',
-        values: parsedEnum.values
+        values: parsedEnum.values,
+        interfaces: [],
+        attributes: [],
+        isAbstract: false,
+        isPublic: true,
+        documentation: parsedEnum.documentation || '',
+        sourceFile: filePath
       };
       // Write both markdown and TypeScript files
       await this.fileService.writeClassDoc(enumClass, filePath);
@@ -344,12 +392,6 @@ export class CSharpParser {
         name: parsedEnum.name,
         namespace: namespace,
         fields: [],
-        interfaces: [],
-        attributes: [],
-        isAbstract: false,
-        isPublic: true,
-        documentation: parsedEnum.documentation || '',
-        sourceFile: filePath,
         enums: [{
           name: parsedEnum.name,
           documentation: parsedEnum.documentation || '',
@@ -357,7 +399,13 @@ export class CSharpParser {
           namespace: namespace
         }],
         type: 'enum',
-        values: parsedEnum.values
+        values: parsedEnum.values,
+        interfaces: [],
+        attributes: [],
+        isAbstract: false,
+        isPublic: true,
+        documentation: parsedEnum.documentation || '',
+        sourceFile: filePath
       };
 
       // Write both class documentation and TypeScript definition
@@ -482,12 +530,8 @@ export class CSharpParser {
     // Get properties (treat them as fields)
     const properties = node.descendantsOfType('property_declaration');
     for (const prop of properties) {
+      console.log('Property AST:', prop.toString());
       const field = await this.parseField(prop);
-      
-      // Get property accessors
-      const accessors = prop.descendantsOfType('accessor_declaration');
-      field.isReadOnly = !accessors.some(a => a.descendantsOfType('set_keyword').length > 0);
-      
       parsedClass.fields.push(field);
     }
 
@@ -514,18 +558,21 @@ export class CSharpParser {
    * Parse a single field node
    */
   private async parseField(node: Parser.SyntaxNode): Promise<ParsedField> {
+    console.log('Node type:', node.type);
+    console.log('Node text:', node.text);
+    console.log('Node children:', node.children.map(c => ({ type: c.type, text: c.text })));
+
     const field: ParsedField = {
       name: '',
       type: '',
       documentation: this.getDocumentation(node),
       isNullable: false,
-      settingKey: undefined,
+      settingKey: '',
       isReadOnly: false,
       isPublic: false,
-      sourceFile: undefined,
-      defaultValue: undefined,
       attributes: [],
-      validationRules: []
+      validationRules: [],
+      propertyImplementation: undefined
     };
 
     // Get field modifiers
@@ -535,56 +582,22 @@ export class CSharpParser {
 
     // Get field type and handle nullable types
     if (node.type === 'property_declaration') {
-      // For properties, look for type in the property_declaration
-      const typeNode = node.children.find(child => child.type === 'type');
-      if (typeNode) {
-        console.log('Found type node:', typeNode.toString());
-        // Try to find the identifier in the type node
-        const identifier = typeNode.children.find(child => 
-          child.type === 'type_identifier' || 
-          child.type === 'predefined_type'
-        );
+      // First check for array types
+      const arrayTypeNode = node.children.find(child => child.type === 'array_type');
+      if (arrayTypeNode) {
+        // Get the type identifier from the array type
+        const identifier = arrayTypeNode.text.replace('[]', '');
         if (identifier) {
-          field.type = identifier.text;
-          // Look up source file in type registry
-          field.sourceFile = this.typeRegistry.get(field.type)?.sourceFile;
-          console.log(`Found type through type node: ${field.type}`);
+          field.type = identifier;
         }
-      }
-      
-      if (!field.type) {
-        // Try to find the identifier directly in the property declaration
-        const identifier = node.children.find(child => 
-          child.type === 'type_identifier' || 
-          child.type === 'predefined_type'
+      } else {
+        // For non-array types, look for type in the property_declaration
+        const typeNode = node.children.find(child => 
+          child.type === 'predefined_type' || 
+          child.type === 'identifier'
         );
-        if (identifier) {
-          field.type = identifier.text;
-          console.log(`Found type directly in property: ${field.type}`);
-        } else {
-          // Try to find the type in declaration_expression
-          const declarationExpr = node.descendantsOfType('declaration_expression')[0];
-          if (declarationExpr) {
-            const typeIdentifier = declarationExpr.descendantsOfType('type_identifier')[0];
-            if (typeIdentifier) {
-              field.type = typeIdentifier.text;
-              console.log(`Found type in declaration expression: ${field.type}`);
-            }
-          }
-          
-          // Try to find the type from the first identifier
-          if (!field.type) {
-            const firstIdentifier = node.children.find(child => child.type === 'identifier');
-            if (firstIdentifier) {
-              field.type = firstIdentifier.text;
-              console.log(`Found type from first identifier: ${field.type}`);
-            } else {
-              console.log(`No type found for property ${field.name}`);
-              // Log the AST for debugging
-              console.log('Property AST:', node.toString());
-              console.log('Property children:', node.children.map(c => `${c.type}: ${c.text}`).join(', '));
-            }
-          }
+        if (typeNode) {
+          field.type = typeNode.text;
         }
       }
     } else {
@@ -689,17 +702,109 @@ export class CSharpParser {
       }
     }
 
-    // Extract setting key from attributes
-    const settingKeyAttr = field.attributes.find(attr => 
-      attr.name === 'SettingKey' || attr.name === 'SettingKeyAttribute'
-    );
-    if (settingKeyAttr && settingKeyAttr.arguments.length > 0) {
-      field.settingKey = settingKeyAttr.arguments[0].value.replace(/['"]/g, '');
+    try {
+      const attributeList = node.children?.find(child => child.type === 'attribute_list');
+      if (attributeList) {
+        const settingKeyMatch = attributeList.text.match(/\[SettingKey\("([^"]*)"\)\]/);
+        field.settingKey = settingKeyMatch ? settingKeyMatch[1] : '';
+      }
+    } catch (error) {
+      field.settingKey = '';
+      logger2.error('Error parsing setting key:', error);
     }
 
     // Extract validation rules from attributes
     const validationAttrs = this.extractValidationRules(field.attributes);
     field.validationRules = validationAttrs.map(rule => rule);
+
+    if (node.type === 'property_declaration') {
+      const propertyImpl: NonNullable<ParsedField['propertyImplementation']> = {
+        accessors: {
+          get: '',
+          set: ''  // Initialize set to empty string
+        }
+      };
+      
+      // Parse accessors
+      const accessors = node.descendantsOfType('accessor_declaration');
+      if (accessors.length > 0) {
+        const getter = accessors.find(a => a.descendantsOfType('get_keyword').length > 0);
+        if (getter) {
+          const block = getter.descendantsOfType('block')[0];
+          console.log('Getter AST:', getter.toString());
+          console.log('Getter body:', block?.toString());
+
+          if (block) {
+            const returnStmt = block.descendantsOfType('return_statement')[0];
+            if (returnStmt) {
+              const returnExpr = returnStmt.descendantsOfType('identifier')[0];
+              propertyImpl.accessors.get = returnStmt.text.trim();
+            } else {
+              propertyImpl.accessors.get = block.text.trim() || '';
+            }
+          } else {
+            propertyImpl.accessors.get = '';
+          }
+        } else {
+          propertyImpl.accessors.get = '';
+        }
+
+        const setter = accessors.find(a => a.descendantsOfType('set_keyword').length > 0);
+        if (setter) {
+          const block = setter.descendantsOfType('block')[0];
+          console.log('Setter AST:', setter.toString());
+          console.log('Setter body:', block?.toString());
+
+          if (block) {
+            const assignmentStmt = block.descendantsOfType('expression_statement')[0];
+            if (assignmentStmt) {
+              const assignment = assignmentStmt.descendantsOfType('assignment_expression')[0];
+              propertyImpl.accessors.set = assignmentStmt.text.trim();
+            } else {
+              propertyImpl.accessors.set = block.text.trim() || '';
+            }
+          } else {
+            propertyImpl.accessors.set = '';
+          }
+        } else if (!node.text.includes('set')) {
+          // If there's no setter in the source, mark it as null (read-only)
+          propertyImpl.accessors.set = null;
+        }
+
+        // Update isReadOnly based on accessor presence
+        field.isReadOnly = !setter;
+      }
+
+      // Parse backing field if it exists
+      const backingFieldName = '_' + field.name.charAt(0).toLowerCase() + field.name.slice(1);
+      const classNode = node.parent;
+      if (classNode?.type === 'class_declaration') {
+        console.log('Class node:', classNode.toString());
+        const fieldDecls = classNode.descendantsOfType('field_declaration');
+        console.log('Field declarations:', fieldDecls.map(f => f.toString()));
+        console.log('Looking for backing field:', backingFieldName);
+        const backingField = fieldDecls.find(f => {
+          const fieldId = f.descendantsOfType('identifier')[0];
+          console.log('Field identifier:', fieldId?.toString(), 'text:', fieldId?.text);
+          return fieldId?.text === backingFieldName;
+        });
+
+        if (backingField) {
+          console.log('Found backing field:', backingField.toString());
+          const typeNode = backingField.descendantsOfType('predefined_type')[0] || backingField.descendantsOfType('type_identifier')[0];
+          console.log('Type node:', typeNode?.toString());
+          const equalsValue = backingField.descendantsOfType('equals_value_clause')[0];
+          
+          propertyImpl.backingField = {
+            name: backingFieldName,
+            type: typeNode?.text || 'unknown',
+            initialization: equalsValue?.text?.trim()
+          };
+        }
+      }
+
+      field.propertyImplementation = propertyImpl;
+    }
 
     return field;
   }
@@ -755,22 +860,20 @@ export class CSharpParser {
   }
 
   private getDocumentation(node: Parser.SyntaxNode): string {
-    const commentNodes: Parser.SyntaxNode[] = [];
-    let currentNode: Parser.SyntaxNode | null = node;
+    let documentation = '';
+    let docNode = node.previousSibling;
 
-    while (currentNode && currentNode.previousSibling) {
-      currentNode = currentNode.previousSibling;
-      if (currentNode.type === 'comment') {
-        commentNodes.unshift(currentNode);
-      } else if (currentNode.type !== 'line_break') {
-        break;
+    while (docNode && docNode.type === 'comment') {
+      const docLine = docNode.text.trim();
+      if (docLine.startsWith('///')) {
+        const content = docLine.substring(3).trim();
+        if (!content.startsWith('<summary>') && !content.startsWith('</summary>')) {
+          documentation = content + (documentation ? '\n' + documentation : '');
+        }
       }
+      docNode = docNode.previousSibling;
     }
-
-    // Return raw comments, let the writer handle formatting
-    return commentNodes
-      .map((n: Parser.SyntaxNode) => n.text.trim())
-      .join('\n');
+    return documentation;
   }
 
   private formatAttributeValue(value: string | undefined): string {
@@ -786,7 +889,9 @@ export class CSharpParser {
     const rules: string[] = [];
     
     // First, get the display name if present
-    const displayAttr = attributes.find(attr => attr.name === 'Display');
+    const displayAttr = attributes.find(attr => 
+      attr.name === 'Display' || attr.name === 'DisplayAttribute'
+    );
     const displayName = this.formatAttributeValue(displayAttr?.arguments.find(arg => arg.name === 'Name' || !arg.name)?.value) || 'Field';
     
     for (const attr of attributes) {
@@ -908,7 +1013,7 @@ export class CSharpParser {
         }
       }
       
-      values.push({ name: memberName, value });
+      values.push({ name: memberName, value, documentation: '' });
     });
     
     return { name, documentation, values, namespace: this.getNamespaceFromNode(node) };

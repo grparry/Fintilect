@@ -4,10 +4,13 @@ import logger from '../utils/logger';
 import { ParsedClass } from '../parser/csharpParser';
 import { ClassDocWriter } from './classDocWriter';
 import { FileService } from '../services/fileService';
+import { TypeScriptWriter } from './typeScriptWriter';
+import { PathResolver } from './pathSystem/pathResolver';
 
 export interface OutputOptions {
   outputDir: string;
   errorFile?: string;
+  isTest?: boolean;
 }
 
 export class OutputWriter {
@@ -16,13 +19,17 @@ export class OutputWriter {
   private readonly lockFile: string;
   private classDocWriter: ClassDocWriter;
   private fileService: FileService;
+  private readonly isTest: boolean;
+  private pathResolver: PathResolver;
 
   constructor(options: OutputOptions) {
     this.outputDir = options.outputDir;
     this.errorFile = options.errorFile || 'legacy_file_errors.md';
     this.lockFile = path.join(this.outputDir, '.lock');
+    this.isTest = options.isTest || false;
     this.fileService = new FileService(this.outputDir);
     this.classDocWriter = new ClassDocWriter(this.fileService);
+    this.pathResolver = new PathResolver({ isTest: this.isTest });
   }
 
   /**
@@ -50,52 +57,35 @@ export class OutputWriter {
    */
   public async writeClassData(parsedClass: ParsedClass, filePath: string): Promise<void> {
     try {
-      await this.acquireLock();
-
-      // Generate class-specific markdown documentation
-      await this.classDocWriter.writeClassDoc(parsedClass, filePath);
-
+      const writer = new TypeScriptWriter(this.fileService, filePath, parsedClass.namespace || '', this.pathResolver);
+      await writer.writeTypeDefinition(parsedClass, filePath);
+      
+      // Also write documentation
+      const docPath = this.pathResolver.getTypeOutputPath(parsedClass).replace('.ts', '.md');
+      await this.classDocWriter.writeClassDoc(parsedClass, docPath);
+      
       logger.info(`Class data written for ${parsedClass.name}`);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       logger.error(`Failed to write class data: ${errorMessage}`);
       throw error;
-    } finally {
-      await this.releaseLock();
     }
   }
 
   /**
-   * Write error information to error file
+   * Write error information to the error file
    */
   public async writeError(filePath: string, error: Error): Promise<void> {
     try {
-      await this.acquireLock();
-
       const errorPath = path.join(this.outputDir, this.errorFile);
-      const content = this.formatError(filePath, error);
-
-      await this.fileService.appendFile(errorPath, content);
-      logger.info(`Error written to ${errorPath}`);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorContent = `\n## ${path.basename(filePath)}\nError: ${error.message}\n`;
+      
+      await fs.appendFile(errorPath, errorContent);
+    } catch (appendError) {
+      const errorMessage = appendError instanceof Error ? appendError.message : 'Unknown error';
       logger.error(`Failed to write error: ${errorMessage}`);
-      throw error;
-    } finally {
-      await this.releaseLock();
+      throw appendError;
     }
-  }
-
-  /**
-   * Format error information as markdown
-   */
-  private formatError(filePath: string, error: Error): string {
-    const timestamp = new Date().toISOString();
-    const filename = path.basename(filePath);
-    return `\n## Error in ${filename} (${timestamp})\n\n` +
-           `**File:** ${filePath}\n` +
-           `**Error:** ${error.message}\n\n` +
-           `**Stack Trace:**\n\`\`\`\n${error.stack || 'No stack trace available'}\n\`\`\`\n\n`;
   }
 
   /**
@@ -125,5 +115,17 @@ export class OutputWriter {
     } catch (error) {
       logger.warn(`Failed to release lock: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
+
+  /**
+   * Format error information as markdown
+   */
+  private formatError(filePath: string, error: Error): string {
+    const timestamp = new Date().toISOString();
+    const filename = path.basename(filePath);
+    return `\n## Error in ${filename} (${timestamp})\n\n` +
+           `**File:** ${filePath}\n` +
+           `**Error:** ${error.message}\n\n` +
+           `**Stack Trace:**\n\`\`\`\n${error.stack || 'No stack trace available'}\n\`\`\`\n\n`;
   }
 }
