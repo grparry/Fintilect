@@ -16,38 +16,10 @@ public class AuthenticationRule
 
 ## Properties
 
-### List
+### AuthenticationMethods: `List<AuthenticationMethod>`
 
-```typescript
-type: AuthenticationMethods
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
+### NumberOfRequiredMethods: `int`
 
-### NumberOfRequiredMethods
+### Priority: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
-
-### Priority
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
-
-### IsFallback
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
+### IsFallback: `bool`

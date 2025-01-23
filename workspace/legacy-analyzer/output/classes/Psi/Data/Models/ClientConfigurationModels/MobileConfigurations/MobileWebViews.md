@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class MobileWebViews
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MobileWebViews
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### List
-
-```typescript
-type: WhitelistedPages
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/MobileWebViews.cs
-visibility: public
-modifier: readonly
-```
+### WhitelistedPages: `List<string>`
 
 **Attributes:**
 ```csharp

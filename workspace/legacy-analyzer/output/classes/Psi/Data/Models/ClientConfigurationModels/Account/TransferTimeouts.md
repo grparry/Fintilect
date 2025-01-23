@@ -7,107 +7,60 @@
 ## Class Summary
 
 public class TransferTimeouts
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class TransferTimeouts
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SendSecureMessageEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/TransferTimeouts.cs
-visibility: public
-modifier: readonly
-```
+### SendSecureMessageEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Timeouts.SendSecureMessage.Enabled")]
 ```
 
-### SecureMessageCategory
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/TransferTimeouts.cs
-visibility: public
-modifier: readonly
-```
+### SecureMessageCategory: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Timeouts.SecureMessageCategory")]
 ```
 
-### SendEmailEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/TransferTimeouts.cs
-visibility: public
-modifier: readonly
-```
+### SendEmailEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Timeouts.SendEmail.Enabled")]
 ```
 
-### RecipientEmail
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/TransferTimeouts.cs
-visibility: public
-modifier: readonly
-```
+### RecipientEmail: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Timeouts.RecipientEmail")]
 ```
 
-### SenderEmail
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/TransferTimeouts.cs
-visibility: public
-modifier: readonly
-```
+### SenderEmail: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Timeouts.SenderEmail")]
 ```
 
-### SecureMessageSenderMembershipUserId
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/TransferTimeouts.cs
-visibility: public
-modifier: readonly
-```
+### SecureMessageSenderMembershipUserId: `long`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Timeouts.SecureMessageSenderMembershipUserId")]
 ```
 
-### EmailSenderName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/TransferTimeouts.cs
-visibility: public
-modifier: readonly
-```
+### EmailSenderName: `string`
 
 **Attributes:**
 ```csharp

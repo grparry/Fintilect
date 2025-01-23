@@ -7,93 +7,53 @@
 ## Class Summary
 
 public class CheckFreeAdmin
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CheckFreeAdmin
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### BankAccountListCallEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFreeAdmin.cs
-visibility: public
-modifier: readonly
-```
+### BankAccountListCallEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPay.Admin.BankAccountListCallEnabled")]
 ```
 
-### BankAccountInactivateCallEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFreeAdmin.cs
-visibility: public
-modifier: readonly
-```
+### BankAccountInactivateCallEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPay.Admin.BankAccountInactivateCallEnabled")]
 ```
 
-### SubscriberModifyCallEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFreeAdmin.cs
-visibility: public
-modifier: readonly
-```
+### SubscriberModifyCallEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPay.Admin.SubscriberModifyCallEnabled")]
 ```
 
-### SubscriberInactivateCallEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFreeAdmin.cs
-visibility: public
-modifier: readonly
-```
+### SubscriberInactivateCallEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPay.Admin.SubscriberInactivateCallEnabled")]
 ```
 
-### BankAccountModifyCallEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFreeAdmin.cs
-visibility: public
-modifier: readonly
-```
+### BankAccountModifyCallEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPay.Admin.BankAccountModifyCallEnabled")]
 ```
 
-### SubscriberReactivateCallEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFreeAdmin.cs
-visibility: public
-modifier: readonly
-```
+### SubscriberReactivateCallEnabled: `bool`
 
 **Attributes:**
 ```csharp

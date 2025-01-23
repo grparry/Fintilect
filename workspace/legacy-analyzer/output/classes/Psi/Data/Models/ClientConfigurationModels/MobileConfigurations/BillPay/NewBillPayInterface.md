@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class NewBillPayInterface
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class NewBillPayInterface
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/NewBillPayInterface.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.NewBillPayInterface.Enabled")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/NewBillPayInterface.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.NewBillPayInterface.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/NewBillPayInterface.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp

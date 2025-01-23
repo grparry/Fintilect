@@ -7,106 +7,38 @@
 ## Class Summary
 
 public class Settings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Settings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### IsLogoutButtonEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### IsLogoutButtonEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Settings.IsLogoutButtonEnabled")]
 ```
 
-### ResetPassword
+### ResetPassword: `ResetPassword`
 
-```typescript
-type: ResetPassword
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### Notifications: `Notifications.Notifications`
 
-### Notifications
+### AtmLocator: `AtmLocator.AtmLocator`
 
-```typescript
-type: Notifications
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### BokuPhoneVerification: `Boku.BokuSettings`
 
-### AtmLocator
+### ChangeAddress: `ChangeAddress`
 
-```typescript
-type: AtmLocator
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### ChangeEmail: `ChangeEmail`
 
-### Boku
+### TieredAccessAdmin: `TieredAccessAdmin`
 
-```typescript
-type: BokuPhoneVerification
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### ChangePhoneNumbers: `ChangePhoneNumbers`
 
-### ChangeAddress
-
-```typescript
-type: ChangeAddress
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
-
-### ChangeEmail
-
-```typescript
-type: ChangeEmail
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
-
-### TieredAccessAdmin
-
-```typescript
-type: TieredAccessAdmin
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
-
-### ChangePhoneNumbers
-
-```typescript
-type: ChangePhoneNumbers
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
-
-### Authentication
-
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### Authentication: `Authentication.Authentication`

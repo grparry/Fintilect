@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class jQuerySettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class jQuerySettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MigratePluginEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PageDisplay/jQuerySettings.cs
-visibility: public
-modifier: readonly
-```
+### MigratePluginEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("HomeBanking.jQuery.MigratePluginEnabled")]
 ```
 
-### Version
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PageDisplay/jQuerySettings.cs
-visibility: public
-modifier: readonly
-```
+### Version: `string`
 
 **Attributes:**
 ```csharp

@@ -7,46 +7,27 @@
 ## Class Summary
 
 public class PersonTypeSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PersonTypeSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SubUserPersonTypeSerial
+### SubUserPersonTypeSerial: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/PersonTypeSettings.cs
-visibility: public
-modifier: readonly
-```
-
-### LoginIdFormat
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/PersonTypeSettings.cs
-visibility: public
-modifier: readonly
-```
+### LoginIdFormat: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.PersonTypeSettings.LoginIdFormat")]
 ```
 
-### PersonCentricLoginIdFormat
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/PersonTypeSettings.cs
-visibility: public
-modifier: readonly
-```
+### PersonCentricLoginIdFormat: `string`
 
 **Attributes:**
 ```csharp

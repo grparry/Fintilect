@@ -17,6 +17,10 @@ export const encodeId = (id: string | number): string => {
 };
 
 export const isValidEncodedId = (encoded: string): boolean => {
+  if (!encoded || typeof encoded !== 'string') {
+    return false;
+  }
+
   // Check if the string matches our URL-safe base64 pattern
   if (!ID_PATTERN.test(encoded)) {
     return false;
@@ -25,13 +29,17 @@ export const isValidEncodedId = (encoded: string): boolean => {
   try {
     // Try to decode and validate the format
     const decoded = decodeId(encoded);
-    return decoded !== null;
+    return decoded !== null && decoded !== undefined && decoded !== '';
   } catch {
     return false;
   }
 };
 
 export const decodeId = (encoded: string): string => {
+  if (!encoded || typeof encoded !== 'string') {
+    throw new Error('Invalid input: ID must be a non-empty string');
+  }
+
   try {
     // Validate input format
     if (!ID_PATTERN.test(encoded)) {
@@ -43,7 +51,12 @@ export const decodeId = (encoded: string): string => {
     
     // Replace URL-safe characters and decode
     const base64 = padded.replace(/-/g, '+').replace(/_/g, '/');
-    const decoded = atob(base64);
+    let decoded;
+    try {
+      decoded = atob(base64);
+    } catch (e) {
+      throw new Error('Invalid ID format: not a valid base64 string');
+    }
     
     // Extract the original ID using our known prefix
     if (!decoded.startsWith(ID_PREFIX)) {
@@ -55,12 +68,14 @@ export const decodeId = (encoded: string): string => {
       throw new Error('Invalid ID format: malformed structure');
     }
     
-    return parts[0];
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error('Error decoding ID:', error.message);
-      throw error;
+    const id = parts[0];
+    if (!id) {
+      throw new Error('Invalid ID format: empty ID');
     }
-    throw new Error('Failed to decode ID');
+    
+    return id;
+  } catch (error) {
+    console.error('Error decoding ID:', error instanceof Error ? error.message : 'Unknown error');
+    throw error;
   }
 };

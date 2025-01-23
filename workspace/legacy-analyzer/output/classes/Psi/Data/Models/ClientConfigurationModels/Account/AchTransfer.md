@@ -7,150 +7,75 @@
 ## Class Summary
 
 public class AchTransfer
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AchTransfer
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SameDayCutoffInLocalTime
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AchTransfer.cs
-visibility: public
-modifier: readonly
-```
+### SameDayCutoffInLocalTime: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Ach.SameDayCutoffInLocalTime")]
 ```
 
-### NextDayCutoffInLocalTime
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AchTransfer.cs
-visibility: public
-modifier: readonly
-```
+### NextDayCutoffInLocalTime: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Ach.NextDayCutoffInLocalTime")]
 ```
 
-### ShowCurrentAvailable
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AchTransfer.cs
-visibility: public
-modifier: readonly
-```
+### ShowCurrentAvailable: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Messages.ShowCurrentAvailable")]
 ```
 
-### ShowCurrentBalance
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AchTransfer.cs
-visibility: public
-modifier: readonly
-```
+### ShowCurrentBalance: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Messages.ShowCurrentBalance")]
 ```
 
-### Guid
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AchTransfer.cs
-visibility: public
-modifier: readonly
-```
+### ServiceIdentifier: `Guid`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Ach.TransactionServiceIdentifier")]
 ```
 
-### CheckDepositPermissionEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AchTransfer.cs
-visibility: public
-modifier: readonly
-```
+### CheckDepositPermissionEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Ach.CheckDepositPermission.Enabled")]
 ```
 
-### CheckDepositPermissionDisableTransfersWithoutPermission
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AchTransfer.cs
-visibility: public
-modifier: readonly
-```
+### CheckDepositPermissionDisableTransfersWithoutPermission: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Ach.CheckDepositPermission.DisableTransfersWithoutPermission")]
 ```
 
-### AdminReadTransfersToProcessFromDatabase
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AchTransfer.cs
-visibility: public
-modifier: readonly
-```
+### AdminReadTransfersToProcessFromDatabase: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Ach.Admin.ReadTransfersToProcessFromDatabase")]
 ```
 
-### UsaEpay
+### UsaEpay: `UsaEpay`
 
-```typescript
-type: UsaEpay
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AchTransfer.cs
-visibility: public
-modifier: readonly
-```
+### PlaceHoldsOnAchTransactions: `PlaceHoldsOnAchTransactions`
 
-### PlaceHoldsOnAchTransactions
-
-```typescript
-type: PlaceHoldsOnAchTransactions
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AchTransfer.cs
-visibility: public
-modifier: readonly
-```
-
-### UseInformationalNoteInsteadOfTransferForAchTransactions
-
-```typescript
-type: UseInformationalNoteInsteadOfTransferForAchTransactions
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AchTransfer.cs
-visibility: public
-modifier: readonly
-```
+### UseInformationalNoteInsteadOfTransferForAchTransactions: `UseInformationalNoteInsteadOfTransferForAchTransactions`

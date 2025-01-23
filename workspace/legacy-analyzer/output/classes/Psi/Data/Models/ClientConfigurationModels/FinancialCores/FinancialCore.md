@@ -7,228 +7,136 @@
 ## Class Summary
 
 public class FinancialCore
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class FinancialCore
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### FinancialCoreTypes
-
-```typescript
-type: FinancialCoreTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+### CoreType: `FinancialCoreTypes`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.CoreType")]
 ```
 
-### UseClassicCore
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+### UseClassicCore: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.UseClassicCore")]
 ```
 
-### ShouldBypassICoreForAccountInquiry
+### ShouldBypassICoreForAccountInquiry: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.ShouldBypassICoreForAccountInquiry")]
 ```
 
-### ShouldBypassICoreForScheduledTransfers
+### ShouldBypassICoreForScheduledTransfers: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.ShouldBypassICoreForScheduledTransfers")]
 ```
 
-### ShouldMapPasswordDuringAccountInquiry
+### ShouldMapPasswordDuringAccountInquiry: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.ClassicCores.ShouldMapPasswordDuringAccountInquiry")]
 ```
 
-### CoreConnectionString
+### CoreConnectionString: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.CoreConnectionString")]
 ```
 
-### CacheAccountInquiry
+### CacheAccountInquiry: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Caching.CacheAccountInquiry")]
 ```
 
-### CacheAccountInquiryForClassicCores
+### CacheAccountInquiryForClassicCores: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Caching.CacheAccountInquiryForClassicCores")]
 ```
 
-### CacheAccountInquiryWaitForSeconds
+### CacheAccountInquiryWaitForSeconds: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Caching.CacheAccountInquiryWaitForSeconds")]
 ```
 
-### CacheExpireInMinutes
+### CacheExpireInMinutes: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Caching.CacheExpireInMinutes")]
 ```
 
-### ThrottleAccoutInquiry
+### ThrottleAccoutInquiry: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Throttle.AccountInquiry")]
 ```
 
-### Corelation
+### Corelation: `Corelation`
 
-```typescript
-type: Corelation
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
 
-### Epl
 
-```typescript
-type: Epl
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+### Epl: `Epl`
 
-### DNA
 
-```typescript
-type: DNA
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
 
-### PsiCore
+### DNA: `DNA`
 
-```typescript
-type: PsiCore
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
 
-### Symitar
 
-```typescript
-type: Symitar
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+### PsiCore: `PsiCore`
 
-### Summit
 
-```typescript
-type: Summit
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
 
-### Notes
+### Symitar: `Symitar`
 
-```typescript
-type: Notes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/FinancialCore.cs
-visibility: public
-modifier: readonly
-```
+
+
+### Summit: `Summit`
+
+
+
+### Notes: `Notes`
+
+

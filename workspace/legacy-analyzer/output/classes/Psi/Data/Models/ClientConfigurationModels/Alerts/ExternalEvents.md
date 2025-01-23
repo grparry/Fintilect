@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class ExternalEvents
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ExternalEvents
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### DigitalInsightsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/ExternalEvents.cs
-visibility: public
-modifier: readonly
-```
+### DigitalInsightsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.ExternalEvents.DigitalInsights.Enabled")]
 ```
 
-### DigitalInsightsMinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/ExternalEvents.cs
-visibility: public
-modifier: readonly
-```
+### DigitalInsightsMinVersion: `double`
 
 **Attributes:**
 ```csharp

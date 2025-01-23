@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class RegularExpressionsFeature
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class RegularExpressionsFeature
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### WordWithCommonSpecialCharacters
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RegularExpressions/RegularExpressionsFeature.cs
-visibility: public
-modifier: readonly
-```
+### WordWithCommonSpecialCharacters: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("RegularExpressions.Javascript.WordWithCommonSpecialCharacters")]
 ```
 
-### SsnType
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RegularExpressions/RegularExpressionsFeature.cs
-visibility: public
-modifier: readonly
-```
+### SsnType: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.SsnType")]
 ```
 
-### PhoneType
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RegularExpressions/RegularExpressionsFeature.cs
-visibility: public
-modifier: readonly
-```
+### PhoneType: `string`
 
 **Attributes:**
 ```csharp

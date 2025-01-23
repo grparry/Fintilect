@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { Box, CircularProgress } from '@mui/material';
 import { ProtectedRouteProps } from '../../types/auth.types';
 import { UserRole } from '../../types/index';
@@ -10,10 +10,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requiredRoles = [],
   redirectPath = '/login',
 }) => {
-  const { state } = useAuth();
+  const { loading, isAuthenticated, user } = useAuth();
   const location = useLocation();
 
-  if (state.loading) {
+  if (loading) {
     return (
       <Box
         sx={{
@@ -28,19 +28,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  if (!state.isAuthenticated || !state.user) {
-    console.log('ProtectedRoute: User not authenticated, redirecting to:', redirectPath);
+  if (!isAuthenticated || !user) {
     return <Navigate to={redirectPath} state={{ from: location }} replace />;
   }
 
-  if (requiredRoles.length > 0) {
-    const hasRequiredRole = requiredRoles.includes(state.user.role);
-    console.log('ProtectedRoute: Checking roles:', { required: requiredRoles, userRole: state.user.role, hasAccess: hasRequiredRole });
-    
-    if (!hasRequiredRole) {
-      console.log('ProtectedRoute: User lacks required role, redirecting to unauthorized');
-      return <Navigate to="/unauthorized" replace />;
-    }
+  if (requiredRoles.length > 0 && !requiredRoles.includes(user.role as UserRole)) {
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return <>{children}</>;

@@ -7,90 +7,50 @@
 ## Class Summary
 
 public class LoanPayment
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LoanPayment
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Loan/Payments/LoanPayment.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Loan.MakePayment.MinimumVersion")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Loan/Payments/LoanPayment.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Loan.MakePayment.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Loan/Payments/LoanPayment.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Loan.MakePayment.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Loan/Payments/LoanPayment.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Loan.MakePayment.Enabled")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Loan/Payments/LoanPayment.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Loan.MakePayment.Url")]
 ```
 
-### Authentication
-
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Loan/Payments/LoanPayment.cs
-visibility: public
-modifier: readonly
-```
+### Authentication: `Authentication.Authentication`

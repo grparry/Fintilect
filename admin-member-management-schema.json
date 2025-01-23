@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Admin Member Management API Schema",
+  "description": "JSON Schema for Admin Member Management API endpoints",
+  "definitions": {
+    "address": {
+      "type": "object",
+      "properties": {
+        "street": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "zipCode": { "type": "string" }
+      }
+    },
+    "memberDemographics": {
+      "type": "object",
+      "properties": {
+        "firstName": { "type": "string" },
+        "middleInitial": { "type": "string" },
+        "lastName": { "type": "string" },
+        "address": { "$ref": "#/definitions/address" }
+      }
+    },
+    "memberSearchResponse": {
+      "type": "object",
+      "properties": {
+        "members": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "accountNumber": { "type": "string" },
+              "personNumber": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "usernamePasswordRequest": {
+      "type": "object",
+      "properties": {
+        "Uuid": { "type": "integer", "format": "int64" },
+        "RequestId": { "type": "string", "format": "uuid" },
+        "AccountIdentifier": { "type": "string" },
+        "Username": { "type": "string" }
+      }
+    },
+    "skipCaptchaRequest": {
+      "type": "object",
+      "properties": {
+        "uuid": { "type": "integer", "format": "int64" },
+        "canSkipCaptcha": { "type": "boolean" }
+      },
+      "required": ["uuid", "canSkipCaptcha"]
+    },
+    "lockDeviceRequest": {
+      "type": "object",
+      "properties": {
+        "uuid": { "type": "integer", "format": "int64" },
+        "deviceGuid": { "type": "string", "format": "uuid" }
+      },
+      "required": ["uuid", "deviceGuid"]
+    },
+    "updateDeliveryAddressRequest": {
+      "type": "object",
+      "properties": {
+        "uuid": { "type": "integer", "format": "int64" },
+        "address": { "$ref": "#/definitions/address" }
+      },
+      "required": ["uuid", "address"]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "getMemberDemographics": {
+      "$ref": "#/definitions/memberDemographics"
+    },
+    "memberSearch": {
+      "$ref": "#/definitions/memberSearchResponse"
+    },
+    "sendUsernamePassword": {
+      "$ref": "#/definitions/usernamePasswordRequest"
+    },
+    "skipCaptcha": {
+      "$ref": "#/definitions/skipCaptchaRequest"
+    },
+    "lockDevice": {
+      "$ref": "#/definitions/lockDeviceRequest"
+    },
+    "updateDeliveryAddress": {
+      "$ref": "#/definitions/updateDeliveryAddressRequest"
+    }
+  }
+}

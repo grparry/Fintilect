@@ -31,10 +31,15 @@ export const API_CONFIG = {
       exception: process.env.REACT_APP_MOCK_EXCEPTION_SERVICE === 'true',
       payee: process.env.REACT_APP_MOCK_PAYEE_SERVICE === 'true',
       paymentProcessor: process.env.REACT_APP_MOCK_PAYMENT_PROCESSOR_SERVICE === 'true',
+      payment: process.env.REACT_APP_MOCK_PAYMENT_SERVICE === 'true',
       report: process.env.REACT_APP_MOCK_REPORT_SERVICE === 'true',
       holiday: process.env.REACT_APP_MOCK_HOLIDAY_SERVICE === 'true',
       permission: process.env.REACT_APP_MOCK_PERMISSION_SERVICE === 'true',
-      dashboard: process.env.REACT_APP_MOCK_DASHBOARD_SERVICE === 'true'
+      dashboard: process.env.REACT_APP_MOCK_DASHBOARD_SERVICE === 'true',
+      audit: process.env.REACT_APP_MOCK_AUDIT_SERVICE === 'true',
+      member: process.env.REACT_APP_MOCK_MEMBER_SERVICE === 'true',
+      settings: process.env.REACT_APP_MOCK_SETTINGS_SERVICE === 'true',
+      moneyDesktop: process.env.REACT_APP_MOCK_MONEYDESKTOP_SERVICE === 'true' || process.env.NODE_ENV === 'development'
     },
 
     // Cache configuration

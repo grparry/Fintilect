@@ -12,6 +12,7 @@ import {
 import { PaginatedResponse } from '../../../types/common.types';
 import { BaseMockService } from './BaseMockService';
 import { mockMembers } from './data/members/mockMemberData';
+import { mockMemberActivity } from './data/members/mockActivityData';
 
 export class MockMemberService extends BaseMockService implements IMemberService {
   private members: Member[] = [...mockMembers];
@@ -60,7 +61,11 @@ export class MockMemberService extends BaseMockService implements IMemberService
   }
 
   async getMemberActivity(memberId: string): Promise<MemberActivity[]> {
-    return this.activities[memberId] || [];
+    const activities = mockMemberActivity[memberId];
+    if (!activities) {
+      return [];
+    }
+    return activities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }
 
   async getMemberAlerts(memberId: string): Promise<Alert[]> {
@@ -97,10 +102,27 @@ export class MockMemberService extends BaseMockService implements IMemberService
   }
 
   async removeDevice(memberId: string, deviceId: string): Promise<void> {
-    const memberDevices = this.devices.get(memberId);
-    if (memberDevices) {
-      this.devices.set(memberId, memberDevices.filter(d => d.id !== deviceId));
+    const member = this._getMemberById(memberId);
+    if (!member) {
+      throw new Error('Member not found');
     }
+
+    if (!member.devices) {
+      throw new Error('No devices found for member');
+    }
+
+    member.devices = member.devices.filter(d => d.id !== deviceId);
+    this._updateMember(member);
+  }
+
+  async updateDevices(memberId: string, devices: Device[]): Promise<void> {
+    const member = this._getMemberById(memberId);
+    if (!member) {
+      throw new Error('Member not found');
+    }
+
+    member.devices = devices;
+    this._updateMember(member);
   }
 
   async createMember(member: Omit<Member, 'id'>): Promise<Member> {
@@ -173,5 +195,16 @@ export class MockMemberService extends BaseMockService implements IMemberService
 
   _setDevices(memberId: string, devices: Device[]): void {
     this.devices.set(memberId, devices);
+  }
+
+  private _getMemberById(memberId: string): Member | undefined {
+    return this.members.find(m => m.id === memberId);
+  }
+
+  private _updateMember(member: Member): void {
+    const index = this.members.findIndex(m => m.id === member.id);
+    if (index !== -1) {
+      this.members[index] = member;
+    }
   }
 }

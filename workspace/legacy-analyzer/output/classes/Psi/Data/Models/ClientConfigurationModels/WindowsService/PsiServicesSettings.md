@@ -7,93 +7,65 @@
 ## Class Summary
 
 public class PsiServicesSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PsiServicesSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### HostedServices
+### HostedServices: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/PsiServicesSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PsiServices.HostedServices.Configuration")]
 ```
 
-### DataFeedProcessing
+### DataFeedProcessing: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/PsiServicesSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PsiServices.DataFeedProcessing.Configuration")]
 ```
 
-### ScheduledTransfersShouldCheckNextHourTransfersForInsufficientFunds
+### ScheduledTransfersShouldCheckNextHourTransfersForInsufficientFunds: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/PsiServicesSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PsiServices.ScheduledTransferService.ShouldCheckNextHourTransfersForInsufficientFunds")]
 ```
 
-### ScheduledTransfersMaxDegreeOfParallelism
+### ScheduledTransfersMaxDegreeOfParallelism: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/PsiServicesSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PsiServices.ScheduledTransferService.MaxDegreeOfParallelism")]
 ```
 
-### ScheduledTransfersBatchSize
+### ScheduledTransfersBatchSize: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/PsiServicesSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PsiServices.ScheduledTransferService.BatchSize")]
 ```
 
-### ScheduledTransfersValidTransferDaysRange
+### ScheduledTransfersValidTransferDaysRange: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/PsiServicesSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -17,6 +17,7 @@ const emergeAdminRoutes: RouteConfig[] = [
     title: 'Emerge Admin',
     element: EmergeAdminHeader,
     icon: 'Apps',
+    sectionId: 'emerge',
     children: [
       {
         id: 'member-center',
@@ -24,6 +25,7 @@ const emergeAdminRoutes: RouteConfig[] = [
         title: 'Member Center',
         element: MemberDashboard,
         icon: 'People',
+        sectionId: 'emerge'
       },
       {
         id: 'money-desktop',
@@ -31,6 +33,7 @@ const emergeAdminRoutes: RouteConfig[] = [
         title: 'Money Desktop',
         element: MoneyDesktop,
         icon: 'AccountBalance',
+        sectionId: 'emerge'
       }
     ]
   }

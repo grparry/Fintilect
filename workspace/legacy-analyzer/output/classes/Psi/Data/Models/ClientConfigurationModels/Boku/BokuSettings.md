@@ -7,261 +7,173 @@
 ## Class Summary
 
 public class BokuSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class BokuSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.Enabled")]
 ```
 
-### MinVersion
+### MinVersion: `double`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.MinVersion")]
 ```
 
-### ApiUrl
+### ApiUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.ApiUrl")]
 ```
 
-### MerchantId
+### MerchantId: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.MerchantId")]
 ```
 
-### SubMerchantId
+### SubMerchantId: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.SubMerchantId")]
 ```
 
-### ClientAccessKey
+### ClientAccessKey: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.ClientAccessKey")]
 ```
 
-### ApiSecret
+### ApiSecret: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.ApiSecret")]
 ```
 
-### EncryptionKey
+### EncryptionKey: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.EncryptionKey")]
 ```
 
-### PhoneNumberEncryptionKey
+### PhoneNumberEncryptionKey: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.PhoneNumber.EncryptionKey")]
 ```
 
-### PhoneNumberCipherKey
+### PhoneNumberCipherKey: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.PhoneNumber.CipherKey")]
 ```
 
-### EvurlEncryptionKey
+### EvurlEncryptionKey: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.EVURL.EncryptionKey")]
 ```
 
-### EvurlBaseUrl
+### EvurlBaseUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneIdentification.Boku.EVURL.BaseUrl")]
 ```
 
-### PhoneVerificationEnabled
+### PhoneVerificationEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneVerification.Boku.Enabled")]
 ```
 
-### PhoneVerificationMinVersion
+### PhoneVerificationMinVersion: `double`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneVerification.Boku.MinVersion")]
 ```
 
-### PhoneVerificationMinVersionAndroid
+### PhoneVerificationMinVersionAndroid: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneVerification.Boku.MinVersionAndroid")]
 ```
 
-### PhoneVerificationMinVersionIos
+### PhoneVerificationMinVersionIos: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneVerification.Boku.MinVersionIos")]
 ```
 
-### PhoneVerificationDaysBeforeRetry
+### PhoneVerificationDaysBeforeRetry: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PhoneVerification.Boku.DaysBeforeRetry")]
 ```
 
-### PhoneVerificationDaysBeforeTokenExpires
+### PhoneVerificationDaysBeforeTokenExpires: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Boku/BokuSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

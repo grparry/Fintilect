@@ -1,18 +1,18 @@
 // Extend RequestInit with our custom properties
-export interface ApiRequestOptions extends Omit<RequestInit, 'headers'> {
+export interface ApiHeaders {
+  [key: string]: string;
+}
+
+export interface ApiRequestOptions {
   retry?: boolean;
   retryCount?: number;
   retryDelay?: number;
-  headers?: Record<string, string>;
+  headers?: ApiHeaders;
+  params?: Record<string, string>;
+  data?: any;
+  timeout?: number;
+  signal?: AbortSignal;
   responseType?: 'blob' | 'json';
-  params?: Record<string, any>;
-}
-
-export interface ApiHeaders {
-  'Content-Type'?: string;
-  Authorization?: string;
-  'X-Request-ID'?: string;
-  Accept?: string;
 }
 
 export interface Pagination {
@@ -27,6 +27,16 @@ export interface PaginatedResponse<T> {
   pagination: Pagination;
 }
 
+export interface ApiErrorResponse {
+  success: false;
+  status: number;
+  error: {
+    code: string;
+    message: string;
+    timestamp: string;
+  };
+}
+
 export interface ApiSuccessResponse<T> {
   success: true;
   data: T;
@@ -37,21 +47,16 @@ export interface ApiSuccessResponse<T> {
   };
 }
 
-export interface ApiErrorResponse {
-  success: false;
-  status: number;
-  error: {
-    code: string;
-    message: string;
-    details?: Record<string, any>;
-    timestamp: string;
-  };
-}
-
 export interface ApiPaginatedResponse<T> extends ApiSuccessResponse<PaginatedResponse<T>> {
   meta: {
     timestamp: string;
     requestId: string;
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      hasMore: boolean;
+    };
   };
 }
 

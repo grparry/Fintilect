@@ -16,47 +16,12 @@ public class AuthenticationMethod
 
 ## Properties
 
-### Id
+### Id: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
+### PublicId: `Guid`
 
-### Guid
+### Name: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
+### MethodType: `AuthenticationMethodType`
 
-### Name
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
-
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
-
-### MinimumApplicationVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
+### MinimumApplicationVersion: `string`

@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class Identification
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Identification
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MothersMaidenNameCategoryOption
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Identification.cs
-visibility: public
-modifier: readonly
-```
+### MothersMaidenNameCategoryOption: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.Identification.MothersMaidenNameCategoryOption")]
 ```
 
-### DriverLicenseCategoryOption
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Identification.cs
-visibility: public
-modifier: readonly
-```
+### DriverLicenseCategoryOption: `string`
 
 **Attributes:**
 ```csharp

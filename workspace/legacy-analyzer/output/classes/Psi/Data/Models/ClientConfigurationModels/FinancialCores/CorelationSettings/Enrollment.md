@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class Enrollment
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Enrollment
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AllowEnrollmentWithMailingAddress
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Enrollment.cs
-visibility: public
-modifier: readonly
-```
+### AllowEnrollmentWithMailingAddress: `bool`
 
 **Attributes:**
 ```csharp

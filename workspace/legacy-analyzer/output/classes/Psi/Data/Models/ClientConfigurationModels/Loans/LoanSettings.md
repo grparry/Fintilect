@@ -7,130 +7,87 @@
 ## Class Summary
 
 public class LoanSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LoanSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### HarlandLoanEngine
+### HarlandLoanEngine: `HarlandLoanEngine`
 
-```typescript
-type: HarlandLoanEngine
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Loans/LoanSettings.cs
-visibility: public
-modifier: readonly
-```
 
-### List
 
-```typescript
-type: ShowPayoffAmountForTheseCollateralCodes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Loans/LoanSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowPayoffAmountForTheseCollateralCodes: `List<string>`
+
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.Payoff.ShowPayoffAmountForTheseCollateralCodes")]
 ```
 
-### DisplayLateCharges
+### DisplayLateCharges: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Loans/LoanSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.Payments.DisplayLateCharges")]
 ```
 
-### DisplayTotalAmountBilled
+### DisplayTotalAmountBilled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Loans/LoanSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.Payments.DisplayTotalAmountBilled")]
 ```
 
-### TotalAmountBilledCategory
+### TotalAmountBilledCategory: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Loans/LoanSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.Payments.Loans.Payments.TotalAmountBilledCategory")]
 ```
 
-### DisplayPaymentRemaining
+### DisplayPaymentRemaining: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Loans/LoanSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.Payments.DisplayPaymentRemaining")]
 ```
 
-### DisplayRequiredToPayLateCharges
+### DisplayRequiredToPayLateCharges: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Loans/LoanSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.Payments.DisplayRequiredToPayLateCharges")]
 ```
 
-### HighlightPastDueLoanRowInfo
+### HighlightPastDueLoanRowInfo: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Loans/LoanSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.Payments.HighlightPastDueLoanRowInfo")]
 ```
 
-### AbilityToOverrideCreditCardTransferDescriptionEnabled
+### AbilityToOverrideCreditCardTransferDescriptionEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Loans/LoanSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

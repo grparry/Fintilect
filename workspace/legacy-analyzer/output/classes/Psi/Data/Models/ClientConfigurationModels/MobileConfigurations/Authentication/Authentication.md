@@ -16,11 +16,4 @@ public class Authentication
 
 ## Properties
 
-### List
-
-```typescript
-type: FeatureActions
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
+### FeatureActions: `List<FeatureAction>`

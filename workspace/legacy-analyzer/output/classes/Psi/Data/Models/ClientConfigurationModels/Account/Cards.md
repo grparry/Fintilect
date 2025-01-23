@@ -7,149 +7,99 @@
 ## Class Summary
 
 public class Cards
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Cards
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### PscuRightTimeEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Cards.cs
-visibility: public
-modifier: readonly
-```
+### PscuRightTimeEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Cards.PscuRightTime.Enabled")]
 ```
 
-### ShouldShowPaymentDueDateForCreditCards
+### ShouldShowPaymentDueDateForCreditCards: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Cards.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cards.ShouldShowPaymentDueDateForCreditCards")]
 ```
 
-### PscuRightTimeMerchantNumber
+### PscuRightTimeMerchantNumber: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Cards.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cards.PscuRightTime.MerchantNumber")]
 ```
 
-### EncryptionKey
+### EncryptionKey: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Cards.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cards.EncryptionKey")]
 ```
 
-### CreditCardSsoProvider
+### CreditCardSsoProvider: `CreditCardSsoProvider`
 
-```typescript
-type: CreditCardSsoProvider
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Cards.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CreditCardSSOType")]
 ```
 
-### CreditCardSsoExternalLink
+### CreditCardSsoExternalLink: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Cards.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CreditCardExternalLink")]
 ```
 
-### HouseholdingCreditCardSsoEnabled
+### HouseholdingCreditCardSsoEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Cards.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.HouseholdingCreditCardSSO")]
 ```
 
-### CreditCardSsoShouldOpenInNewWindow
+### CreditCardSsoShouldOpenInNewWindow: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Cards.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CreditCardSsoDisplayType")]
 ```
 
-### CreditCardsShouldLoadSsoDirectly
+### CreditCardsShouldLoadSsoDirectly: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Cards.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.CreditCards.ShouldLoadSsoDirectly")]
 ```
 
-### ShowCreditCardBalances
+### ShowCreditCardBalances: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Cards.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

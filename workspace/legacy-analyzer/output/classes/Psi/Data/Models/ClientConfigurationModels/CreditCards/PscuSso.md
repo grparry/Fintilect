@@ -7,177 +7,95 @@
 ## Class Summary
 
 public class PscuSso
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PscuSso
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.PscuSso.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.PscuSso.MinimumVersion")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.PscuSso.Url")]
 ```
 
-### CertificationStore
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### CertificationStore: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.PscuSso.Certification.Store")]
 ```
 
-### CertificationEmergePrivateThumbPrint
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### CertificationEmergePrivateThumbPrint: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.PscuSso.Certification.Emerge.PrivateThumbPrint")]
 ```
 
-### CertificationVendorPublicThumbPrint
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### CertificationVendorPublicThumbPrint: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.PscuSso.Certification.Vendor.PublicThumbPrint")]
 ```
 
-### Issuer
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### Issuer: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.PscuSso.Issuer")]
 ```
 
-### ResponseIssuer
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### ResponseIssuer: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.PscuSso.ResponseIssuer")]
 ```
 
-### AppId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### AppId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.PscuSso.AppId")]
 ```
 
-### ClientId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### ClientId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.PscuSso.ClientId")]
 ```
 
-### KeepAliveUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### KeepAliveUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.PscuSso.KeepAliveUrl")]
 ```
 
-### AssertionLogEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/PscuSso.cs
-visibility: public
-modifier: readonly
-```
+### AssertionLogEnabled: `bool`
 
 **Attributes:**
 ```csharp

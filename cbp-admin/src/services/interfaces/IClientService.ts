@@ -203,9 +203,9 @@ export interface IClientService extends IBaseService {
      * Get client audit logs
      * @param clientId Client identifier
      * @param request Search parameters
-     * @returns List of audit logs
+     * @returns Paginated list of audit logs
      */
-    getClientAuditLogs(clientId: string, request: AuditSearchRequest): Promise<AuditLog[]>;
+    getClientAuditLogs(clientId: string, request: AuditSearchRequest): Promise<{ logs: AuditLog[]; total: number }>;
 
     /**
      * Get client address

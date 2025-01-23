@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class AdHocAlerts
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AdHocAlerts
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/AdHocAlerts.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.AdHocAlerts.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/AdHocAlerts.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp

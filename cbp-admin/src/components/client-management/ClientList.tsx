@@ -101,10 +101,15 @@ const ClientList: React.FC = () => {
   };
 
   const handleEditClick = useCallback((clientId: string) => {
-    const encodedId = encodeId(clientId);
-    logger.info('Navigating to edit client');
-    navigate(`/clients/${encodedId}/edit`);
-  }, [navigate]);
+    try {
+      const encodedId = encodeId(clientId);
+      logger.info(`Navigating to edit client - ID: ${clientId}, Encoded: ${encodedId}`);
+      navigate(`/admin/client-management/${encodedId}/contact`);
+    } catch (error) {
+      logger.error(`Error encoding client ID: ${error instanceof Error ? error.message : String(error)}`);
+      enqueueSnackbar('Error navigating to client details', { variant: 'error' });
+    }
+  }, [navigate, enqueueSnackbar]);
 
   if (loading && clients.length === 0) {
     return (

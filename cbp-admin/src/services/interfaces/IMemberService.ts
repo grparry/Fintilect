@@ -78,4 +78,11 @@ export interface IMemberService extends IBaseService {
      * @param deviceId Device identifier
      */
     removeDevice(memberId: string, deviceId: string): Promise<void>;
+
+    /**
+     * Update member devices
+     * @param memberId Member identifier
+     * @param devices Updated list of devices
+     */
+    updateDevices(memberId: string, devices: Device[]): Promise<void>;
 }

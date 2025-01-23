@@ -7,76 +7,43 @@
 ## Class Summary
 
 public class MultipleAddressesSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MultipleAddressesSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/MultipleAddressesSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultipleAddresses.Enabled")]
 ```
 
-### List
-
-```typescript
-type: AddressTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/MultipleAddressesSettings.cs
-visibility: public
-modifier: readonly
-```
+### AddressTypes: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultipleAddresses.AddressTypes")]
 ```
 
-### AddressTypesToBeValidated
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/MultipleAddressesSettings.cs
-visibility: public
-modifier: readonly
-```
+### AddressTypesToBeValidated: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultipleAddresses.AddressTypesToBeValidated")]
 ```
 
-### DefaultAddressType
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/MultipleAddressesSettings.cs
-visibility: public
-modifier: readonly
-```
+### DefaultAddressType: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultipleAddresses.DefaultAddressType")]
 ```
 
-### MultipleAddressesPage
-
-```typescript
-type: MultipleAddressesPage
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/MultipleAddressesSettings.cs
-visibility: public
-modifier: readonly
-```
+### MvcPage: `MultipleAddressesPage`

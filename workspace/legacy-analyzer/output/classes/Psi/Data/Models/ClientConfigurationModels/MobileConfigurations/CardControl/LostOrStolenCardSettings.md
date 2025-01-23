@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class LostOrStolenCardSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LostOrStolenCardSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/LostOrStolenCardSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.LostOrStolen.Enabled")]
 ```
 
-### SendSecureMessageEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/LostOrStolenCardSettings.cs
-visibility: public
-modifier: readonly
-```
+### SendSecureMessageEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.LostOrStolen.SendSecureMessageEnabled")]
 ```
 
-### List
-
-```typescript
-type: EligibleCardTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/LostOrStolenCardSettings.cs
-visibility: public
-modifier: readonly
-```
+### EligibleCardTypes: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.LostOrStolen.EligibleCardTypes")]
 ```
 
-### List
-
-```typescript
-type: Locations
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/LostOrStolenCardSettings.cs
-visibility: public
-modifier: readonly
-```
+### Locations: `List<string>`
 
 **Attributes:**
 ```csharp

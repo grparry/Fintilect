@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class MenuItems
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MenuItems
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MenuItemsXml
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Menu/MenuItems.cs
-visibility: public
-modifier: readonly
-```
+### MenuItemsXml: `string`
 
 **Attributes:**
 ```csharp

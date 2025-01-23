@@ -7,93 +7,65 @@
 ## Class Summary
 
 public class EplEstatements
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class EplEstatements
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/EplEstatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.EplEstatements.Enabled")]
 ```
 
-### EndpointAddress
+### EndpointAddress: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/EplEstatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.EplEstatements.EndpointAddress")]
 ```
 
-### GroupName
+### GroupName: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/EplEstatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.EplEstatements.GroupName")]
 ```
 
-### Identifier
+### Identifier: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/EplEstatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.EplEstatements.Identifier")]
 ```
 
-### PrivateKey
+### PrivateKey: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/EplEstatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.EplEstatements.PrivateKey")]
 ```
 
-### EncryptionInitializationVector
+### EncryptionInitializationVector: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/EplEstatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

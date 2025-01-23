@@ -7,107 +7,60 @@
 ## Class Summary
 
 public class LossScreeningSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LossScreeningSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### LoanPastDueHoursOffset
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/LossScreeningSettings.cs
-visibility: public
-modifier: readonly
-```
+### LoanPastDueHoursOffset: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.LossScreening.LoanPastDueHoursOffset")]
 ```
 
-### ShareAvailableAmountLessThenZeroPlusMiniumAmount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/LossScreeningSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShareAvailableAmountLessThenZeroPlusMiniumAmount: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.LossScreening.ShareAvailableAmountLessThenZeroPlusMiniumAmount")]
 ```
 
-### ShareAvailableAmountLessThenZero
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/LossScreeningSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShareAvailableAmountLessThenZero: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.LossScreening.ShareAvailableAmountLessThenZero")]
 ```
 
-### LoanPastDue
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/LossScreeningSettings.cs
-visibility: public
-modifier: readonly
-```
+### LoanPastDue: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.LossScreening.LoanPastDue")]
 ```
 
-### ShareHasChargeOfSerial
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/LossScreeningSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShareHasChargeOfSerial: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.LossScreening.ShareHasChargeOfSerial")]
 ```
 
-### LoanHasChargeOfSerial
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/LossScreeningSettings.cs
-visibility: public
-modifier: readonly
-```
+### LoanHasChargeOfSerial: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.LossScreening.LoanHasChargeOfSerial")]
 ```
 
-### BlockAccountAlertTypeSerials
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/LossScreeningSettings.cs
-visibility: public
-modifier: readonly
-```
+### BlockAccountAlertTypeSerials: `string`
 
 **Attributes:**
 ```csharp

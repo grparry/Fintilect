@@ -7,485 +7,249 @@
 ## Class Summary
 
 public class Flags
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Flags
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### HBFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### HBFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBol.HBFlagNumber")]
 ```
 
-### BillPayFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### BillPayFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.BillPayFlagNumber")]
 ```
 
-### BusinessAccountFlag
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### BusinessAccountFlag: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.BusinessAccountFlag")]
 ```
 
-### EStatementFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### EStatementFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.EStatementFlagNumber")]
 ```
 
-### List
-
-```typescript
-type: ShareRestrictedCheckWithdraw
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### ShareRestrictedCheckWithdraw: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShareRestrictedCheckWithdraw")]
 ```
 
-### EDocumentsFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### EDocumentsFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.EDocumentsFlagNumber")]
 ```
 
-### EscheatDateFlag
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### EscheatDateFlag: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Escheat.UpdateEscheatDate.FlagNumber")]
 ```
 
-### FreeCheckReorderFlag
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### FreeCheckReorderFlag: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.FreeCheckReorderFlag")]
 ```
 
-### HasCCFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### HasCCFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.HasCCFlagNumber")]
 ```
 
-### IsDebitCardFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### IsDebitCardFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.IsDebitCardFlagNumber")]
 ```
 
-### IsEmployeeFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### IsEmployeeFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.IsEmployeeFlagNumber")]
 ```
 
-### List
-
-```typescript
-type: LoanClosedFlags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### LoanClosedFlags: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.LoanClosedFlags")]
 ```
 
-### List
-
-```typescript
-type: LoanRestrictedAlerts
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### LoanRestrictedAlerts: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.LoanRestrictedAlerts")]
 ```
 
-### List
-
-```typescript
-type: LoanRestrictedInquire
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### LoanRestrictedInquire: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.LoanRestrictedInquire")]
 ```
 
-### MidwestLoansFlag
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### MidwestLoansFlag: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.MidwestLoansFlag")]
 ```
 
-### MobileDepositAllowedFlag
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### MobileDepositAllowedFlag: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.MobileDepositAllowedFlag")]
 ```
 
-### MobileDepositRestrictedFlag
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### MobileDepositRestrictedFlag: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.MobileDepositRestrictedFlag")]
 ```
 
-### MobileDepositDisclosureFlag
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### MobileDepositDisclosureFlag: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.MobileDepositDisclosureFlag")]
 ```
 
-### List
-
-```typescript
-type: obsMemberRestrictedAllTrans
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### obsMemberRestrictedAllTrans: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.obsMemberRestrictedAllTrans")]
 ```
 
-### List
-
-```typescript
-type: obsMemberRestrictedDeposit
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### obsMemberRestrictedDeposit: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsMemberRestrictedDeposit")]
 ```
 
-### List
-
-```typescript
-type: obsMemberRestrictedInquire
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### obsMemberRestrictedInquire: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsMemberRestrictedInquire")]
 ```
 
-### List
-
-```typescript
-type: obsShareRestrictedDeposit
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### obsShareRestrictedDeposit: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.obsShareRestrictedDeposit")]
 ```
 
-### List
-
-```typescript
-type: LoanRestrictedDepositFlags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### LoanRestrictedDepositFlags: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsLoanRestrictedDeposit")]
 ```
 
-### List
-
-```typescript
-type: obsShareRestrictedInquire
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### obsShareRestrictedInquire: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.obsShareRestrictedInquire")]
 ```
 
-### List
-
-```typescript
-type: obsShareRestrictedWithdraw
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### obsShareRestrictedWithdraw: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsShareRestrictedWithdraw")]
 ```
 
-### RestrictViewingCardFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### RestrictViewingCardFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.RestrictViewingCardFlagNumber")]
 ```
 
-### List
-
-```typescript
-type: ShareClosedFlags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### ShareClosedFlags: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShareClosedFlags")]
 ```
 
-### List
-
-```typescript
-type: ShareRestrictedAlerts
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### ShareRestrictedAlerts: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShareRestrictedAlerts")]
 ```
 
-### SkipPayQualifyFlag
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### SkipPayQualifyFlag: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.SkipPayQualifyFlag")]
 ```
 
-### ValidAddressFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### ValidAddressFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.ValidAddressFlagNumber")]
 ```
 
-### ValidEmailFlag
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### ValidEmailFlag: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.ValidEmailFlag")]
 ```
 
-### NsfFlags
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### NsfFlags: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.NSFFlags")]
 ```
 
-### ShouldUpdateOnlineBankingRegisteredFlag
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### ShouldUpdateOnlineBankingRegisteredFlag: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MemberShip.ShouldUpdateOnlineBankingRegisteredFlag")]
 ```
 
-### OnlineBankingRegisteredFlag
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/Flags.cs
-visibility: public
-modifier: readonly
-```
+### OnlineBankingRegisteredFlag: `string`
 
 **Attributes:**
 ```csharp

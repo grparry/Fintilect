@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class Validation
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Validation
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### NoResultImage
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckImages/Validation.cs
-visibility: public
-modifier: readonly
-```
+### NoResultImage: `string`
 
 **Attributes:**
 ```csharp

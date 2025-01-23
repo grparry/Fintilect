@@ -24,8 +24,8 @@ import {
     BillPayOTPMethod
 } from '../../../types/security.types';
 import { PaginatedResponse, QueryOptions } from '../../../types/index';
-import { ApiResponse } from '../../../utils/api';
-import { ApiClient } from '../../../utils/api';
+import { ApiResponse } from '../../../types/api.types';
+import api from '../../api';
 import { BaseService } from './BaseService';
 import logger from '../../../utils/logger';
 

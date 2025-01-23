@@ -12,10 +12,10 @@ import {
 import { Client, Environment, ClientStatus, ClientType } from '../../types/client.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import ContactInformation from './ContactInformation';
-import Groups from './Groups';
+import GroupsWrapper from './wrappers/GroupsWrapper';
 import UsersWrapper from './wrappers/UsersWrapper';
-import MemberSecuritySettings from './security/MemberSecuritySettings';
-import AuditSearch from './security/AuditSearch';
+import MemberSecuritySettingsWrapper from './wrappers/MemberSecuritySettingsWrapper';
+import AuditSearchWrapper from './wrappers/AuditSearchWrapper';
 import { encodeId } from '../../utils/idEncoder';
 import logger from '../../utils/logger';
 
@@ -122,10 +122,11 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
   };
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    const basePath = `/clients/${encodeId(clientId)}`;
+    const encodedId = encodeId(clientId);
+    const basePath = `/admin/client-management/${encodedId}`;
     switch (newValue) {
       case 0:
-        navigate(basePath);
+        navigate(`${basePath}/contact`);
         break;
       case 1:
         navigate(`${basePath}/users`);
@@ -199,21 +200,23 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
         />
       </Box>
 
-      <Tabs value={getCurrentTab()} onChange={handleTabChange} aria-label="client management tabs">
-        <Tab label="Contact Information" id="client-tab-0" />
-        <Tab label="Users" id="client-tab-1" />
-        <Tab label="Groups" id="client-tab-2" />
-        <Tab label="Security Settings" id="client-tab-3" />
-        <Tab label="Audit Log" id="client-tab-4" />
+      <Tabs value={getCurrentTab()} onChange={handleTabChange}>
+        <Tab label="Contact Information" />
+        <Tab label="Users" />
+        <Tab label="Groups" />
+        <Tab label="Security Settings" />
+        <Tab label="Audit Log" />
       </Tabs>
 
-      <Routes>
-        <Route path="/" element={<ContactInformation clientId={clientId} />} />
-        <Route path="/users/*" element={<UsersWrapper />} />
-        <Route path="/groups/*" element={<Groups clientId={clientId} />} />
-        <Route path="/security" element={<MemberSecuritySettings clientId={clientId} />} />
-        <Route path="/audit-log" element={<AuditSearch clientId={clientId} />} />
-      </Routes>
+      <Box mt={3}>
+        <Routes>
+          <Route path="contact" element={<ContactInformation clientId={clientId} />} />
+          <Route path="users/*" element={<UsersWrapper />} />
+          <Route path="groups/*" element={<GroupsWrapper />} />
+          <Route path="security" element={<MemberSecuritySettingsWrapper />} />
+          <Route path="audit-log" element={<AuditSearchWrapper />} />
+        </Routes>
+      </Box>
     </Box>
   );
 };

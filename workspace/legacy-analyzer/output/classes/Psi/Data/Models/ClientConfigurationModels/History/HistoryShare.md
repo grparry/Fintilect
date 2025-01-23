@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class HistoryShare
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class HistoryShare
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShowRates
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/HistoryShare.cs
-visibility: public
-modifier: readonly
-```
+### ShowRates: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Share.ShowRates")]
 ```
 
-### DescriptionOverlayEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/HistoryShare.cs
-visibility: public
-modifier: readonly
-```
+### DescriptionOverlayEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Share.DescriptionOverlayEnabled")]
 ```
 
-### List
-
-```typescript
-type: DescriptionOverlays
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/HistoryShare.cs
-visibility: public
-modifier: readonly
-```
+### DescriptionOverlays: `List<HistoryOverLayConfig>`
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Share.DescriptionOverlayConfigurationJson")]
 ```
 
-### IfAdditionalDescriptionIsNotSetSetWithDescription2
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/HistoryShare.cs
-visibility: public
-modifier: readonly
-```
+### IfAdditionalDescriptionIsNotSetSetWithDescription2: `bool`
 
 **Attributes:**
 ```csharp

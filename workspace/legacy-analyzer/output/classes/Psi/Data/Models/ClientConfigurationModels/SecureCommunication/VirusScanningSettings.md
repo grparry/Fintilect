@@ -7,51 +7,38 @@
 ## Class Summary
 
 public class VirusScanningSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class VirusScanningSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### IsEnabled
+### IsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/VirusScanningSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.VirusScanning.IsEnabled")]
 ```
 
-### Address
+### Address: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/VirusScanningSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.VirusScanning.Address")]
 ```
 
-### Port
+### Port: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/VirusScanningSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

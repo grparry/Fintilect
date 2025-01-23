@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class CreditCardLocationSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CreditCardLocationSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MaxNumberOfRegions
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/CreditCardLocationSettings.cs
-visibility: public
-modifier: readonly
-```
+### MaxNumberOfRegions: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Locations.CreditCard.MaxNumberOfRegions")]
 ```
 
-### UsOnlyEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/CreditCardLocationSettings.cs
-visibility: public
-modifier: readonly
-```
+### UsOnlyEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Locations.CreditCard.UsOnlyEnabled")]
 ```
 
-### RegionsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/CreditCardLocationSettings.cs
-visibility: public
-modifier: readonly
-```
+### RegionsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Locations.CreditCard.RegionsEnabled")]
 ```
 
-### CurrentLocationEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/CreditCardLocationSettings.cs
-visibility: public
-modifier: readonly
-```
+### CurrentLocationEnabled: `bool`
 
 **Attributes:**
 ```csharp

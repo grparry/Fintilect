@@ -21,8 +21,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
-import { IAuditService, AuditEvent, AuditLogFilters } from '../../../services/interfaces/IAuditService';
-import { PaginatedResponse } from '../../../types/common.types';
+import { AuditLog } from '../../../types/security.types';
+import { AuditSearchRequest } from '../../../types/client.types';
+import { shouldUseMockService } from '../../../config/api.config';
 
 interface AuditSearchProps {
   clientId: string;
@@ -31,7 +32,7 @@ interface AuditSearchProps {
 interface AuditSearchState {
   loading: boolean;
   error: string | null;
-  auditLogs: AuditEvent[];
+  auditLogs: AuditLog[];
   startDate: Dayjs | null;
   endDate: Dayjs | null;
   searchTerm: string;
@@ -43,7 +44,11 @@ const ITEMS_PER_PAGE = 10;
 
 const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
   // Services
-  const auditService = ServiceFactory.getInstance().getAuditService();
+  const clientService = ServiceFactory.getInstance().getClientService();
+
+  // Debug logs
+  console.log('AuditSearch component mounted with clientId:', clientId);
+  console.log('Mock services enabled:', shouldUseMockService('client'));
 
   // State
   const [state, setState] = useState<AuditSearchState>({
@@ -58,32 +63,39 @@ const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
   });
 
   const formatDateForAPI = (date: Dayjs | null): string | undefined => {
-    return date ? date.format('YYYY-MM-DD') : undefined;
+    if (!date) return undefined;
+    // Format with time component to match the mock data timestamps
+    return date.format('YYYY-MM-DDTHH:mm:ss.SSSZ');
   };
 
   const searchAuditLogs = useCallback(async () => {
+    console.log('Searching audit logs for client:', clientId);
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      const filters: AuditLogFilters = {
+      const request: AuditSearchRequest = {
         startDate: formatDateForAPI(state.startDate),
         endDate: formatDateForAPI(state.endDate),
-        searchTerm: state.searchTerm || undefined,
+        userId: undefined,
+        action: undefined,
+        resourceType: undefined,
+        resourceId: undefined,
         page: state.page,
-        pageSize: ITEMS_PER_PAGE,
-        resourceType: 'client',
-        status: undefined
+        limit: ITEMS_PER_PAGE,
       };
+      console.log('Request:', request);
 
-      const response = await auditService.searchLogs(filters);
+      const response = await clientService.getClientAuditLogs(clientId, request);
+      console.log('Response:', response);
 
       setState(prev => ({
         ...prev,
-        auditLogs: response.items,
+        auditLogs: response.logs,
         totalPages: Math.ceil(response.total / ITEMS_PER_PAGE),
         loading: false
       }));
     } catch (err) {
+      console.error('Error fetching audit logs:', err);
       const message = err instanceof Error ? err.message : 'Failed to fetch audit logs';
       setState(prev => ({
         ...prev,
@@ -91,7 +103,7 @@ const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
         loading: false
       }));
     }
-  }, [state.startDate, state.endDate, state.searchTerm, state.page, clientId]);
+  }, [state.startDate, state.endDate, state.page, clientId, clientService]);
 
   useEffect(() => {
     searchAuditLogs();
@@ -104,6 +116,8 @@ const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
 
   const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setState(prev => ({ ...prev, page: value }));
+    // Trigger search with new page
+    searchAuditLogs();
   };
 
   const handleDateChange = (field: 'startDate' | 'endDate') => (date: Dayjs | null) => {
@@ -114,18 +128,12 @@ const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
     setState(prev => ({ ...prev, searchTerm: event.target.value }));
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: 'success' | 'failure') => {
     switch (status) {
-      case 'COMPLETED':
+      case 'success':
         return 'success';
-      case 'ERROR':
+      case 'failure':
         return 'error';
-      case 'INITIATED':
-        return 'warning';
-      case 'RECEIVED':
-        return 'info';
-      case 'PROCESSED':
-        return 'primary';
       default:
         return 'default';
     }
@@ -202,7 +210,7 @@ const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
                     <TableCell>
                       <Chip
                         label={log.status}
-                        color={getStatusColor(log.status)}
+                        color={getStatusColor(log.status as 'success' | 'failure')}
                         size="small"
                       />
                     </TableCell>
@@ -212,14 +220,16 @@ const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
             </Table>
           </TableContainer>
 
-          <Box display="flex" justifyContent="center" mt={2}>
-            <Pagination
-              count={state.totalPages}
-              page={state.page}
-              onChange={handlePageChange}
-              color="primary"
-            />
-          </Box>
+          {state.totalPages > 1 && (
+            <Box display="flex" justifyContent="center" mt={2}>
+              <Pagination
+                count={state.totalPages}
+                page={state.page}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Box>
+          )}
         </>
       )}
     </Box>

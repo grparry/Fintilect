@@ -7,79 +7,46 @@
 ## Class Summary
 
 public class ImiMobileTextBankingSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ImiMobileTextBankingSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ImiMobileTextBanking/ImiMobileTextBankingSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("TextBanking.ImiMobile.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ImiMobileTextBanking/ImiMobileTextBankingSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("TextBanking.ImiMobile.MinVersion")]
 ```
 
-### MaxRecordsToReturn
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ImiMobileTextBanking/ImiMobileTextBankingSettings.cs
-visibility: public
-modifier: readonly
-```
+### MaxRecordsToReturn: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("TextBanking.ImiMobile.MaxRecordsToReturn")]
 ```
 
-### HistoryDays
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ImiMobileTextBanking/ImiMobileTextBankingSettings.cs
-visibility: public
-modifier: readonly
-```
+### HistoryDays: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("TextBanking.ImiMobile.HistoryDays")]
 ```
 
-### MaxSendSize
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ImiMobileTextBanking/ImiMobileTextBankingSettings.cs
-visibility: public
-modifier: readonly
-```
+### MaxSendSize: `int`
 
 **Attributes:**
 ```csharp

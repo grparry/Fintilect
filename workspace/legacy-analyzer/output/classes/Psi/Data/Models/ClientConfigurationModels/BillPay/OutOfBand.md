@@ -7,121 +7,67 @@
 ## Class Summary
 
 public class OutOfBand
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class OutOfBand
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/OutOfBand.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.OutOfBand.Enabled")]
 ```
 
-### MinimumVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/OutOfBand.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.OutOfBand.MinimumVersion")]
 ```
 
-### RequireWhenAddingPayee
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/OutOfBand.cs
-visibility: public
-modifier: readonly
-```
+### RequireWhenAddingPayee: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.OutOfBand.RequireWhenAddingPayee")]
 ```
 
-### RequireWhenUpdatingPayee
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/OutOfBand.cs
-visibility: public
-modifier: readonly
-```
+### RequireWhenUpdatingPayee: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.OutOfBand.RequireWhenUpdatingPayee")]
 ```
 
-### RequireWhenMakingLargePayment
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/OutOfBand.cs
-visibility: public
-modifier: readonly
-```
+### RequireWhenMakingLargePayment: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.OutOfBand.RequireWhenMakingLargePayment")]
 ```
 
-### LargePaymentThreshold
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/OutOfBand.cs
-visibility: public
-modifier: readonly
-```
+### LargePaymentThreshold: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.OutOfBand.LargePaymentThreshold")]
 ```
 
-### RequireWhenAddingFundingAccount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/OutOfBand.cs
-visibility: public
-modifier: readonly
-```
+### RequireWhenAddingFundingAccount: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.OutOfBand.RequireWhenAddingFundingAccount")]
 ```
 
-### RequireWhenUpdatingFundingAccount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/OutOfBand.cs
-visibility: public
-modifier: readonly
-```
+### RequireWhenUpdatingFundingAccount: `bool`
 
 **Attributes:**
 ```csharp

@@ -7,23 +7,20 @@
 ## Class Summary
 
 public class TransferSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class TransferSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AllowWeekendTransfers
+### AllowWeekendTransfers: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/TransferSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

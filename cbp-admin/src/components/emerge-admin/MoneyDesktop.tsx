@@ -32,6 +32,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SyncIcon from '@mui/icons-material/Sync';
+import InfoIcon from '@mui/icons-material/Info';
 import dayjs, { Dayjs } from 'dayjs';
 import {
   Account,
@@ -181,15 +182,14 @@ const MoneyDesktop: React.FC = () => {
   };
 
   const filteredConnections = state.connections.filter(connection => {
-    const matchesSearch = connection.clientName.toLowerCase().includes(state.filters.searchTerm.toLowerCase()) ||
-                         connection.institutionName.toLowerCase().includes(state.filters.searchTerm.toLowerCase());
+    const matchesSearch = connection.institutionName.toLowerCase().includes(state.filters.searchTerm.toLowerCase());
     const matchesStatus = state.filters.selectedStatus === 'all' || connection.status === state.filters.selectedStatus;
     return matchesSearch && matchesStatus;
   });
 
   const filteredAccounts = state.accounts.filter(account => {
-    const matchesSearch = account.accountName.toLowerCase().includes(state.filters.searchTerm.toLowerCase()) ||
-                         account.accountNumber.toLowerCase().includes(state.filters.searchTerm.toLowerCase());
+    const matchesSearch = account.institutionName.toLowerCase().includes(state.filters.searchTerm.toLowerCase()) ||
+                         account.accountName.toLowerCase().includes(state.filters.searchTerm.toLowerCase());
     const matchesStatus = state.filters.selectedStatus === 'all' || account.status === state.filters.selectedStatus;
     return matchesSearch && matchesStatus;
   });
@@ -334,18 +334,17 @@ const MoneyDesktop: React.FC = () => {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Client Name</TableCell>
                         <TableCell>Institution</TableCell>
                         <TableCell>Status</TableCell>
                         <TableCell>Last Sync</TableCell>
                         <TableCell>Accounts</TableCell>
+                        <TableCell>Total Balance</TableCell>
                         <TableCell>Actions</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {filteredConnections.map((connection) => (
                         <TableRow key={connection.id}>
-                          <TableCell>{connection.clientName}</TableCell>
                           <TableCell>{connection.institutionName}</TableCell>
                           <TableCell>
                             <Chip
@@ -354,15 +353,18 @@ const MoneyDesktop: React.FC = () => {
                               size="small"
                             />
                           </TableCell>
-                          <TableCell>{connection.lastSync}</TableCell>
-                          <TableCell>{connection.accounts}</TableCell>
+                          <TableCell>
+                            {connection.lastSync ? new Date(connection.lastSync).toLocaleString() : 'Never'}
+                          </TableCell>
+                          <TableCell>{connection.accountCount}</TableCell>
+                          <TableCell>${connection.totalBalance.toLocaleString()}</TableCell>
                           <TableCell>
                             <Tooltip title="View Details">
                               <IconButton size="small" onClick={() => handleOpenDetailsDialog(connection, 'connection')}>
-                                <VisibilityIcon />
+                                <InfoIcon />
                               </IconButton>
                             </Tooltip>
-                            <Tooltip title="Sync Now">
+                            <Tooltip title="Sync">
                               <IconButton size="small" onClick={() => handleOpenSyncDialog(connection)}>
                                 <SyncIcon />
                               </IconButton>
@@ -378,25 +380,23 @@ const MoneyDesktop: React.FC = () => {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Client Name</TableCell>
                         <TableCell>Institution</TableCell>
                         <TableCell>Account Name</TableCell>
                         <TableCell>Account Number</TableCell>
                         <TableCell>Type</TableCell>
-                        <TableCell>Balance</TableCell>
                         <TableCell>Status</TableCell>
+                        <TableCell>Balance</TableCell>
+                        <TableCell>Last Updated</TableCell>
                         <TableCell>Actions</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {filteredAccounts.map((account) => (
                         <TableRow key={account.id}>
-                          <TableCell>{account.clientName}</TableCell>
                           <TableCell>{account.institutionName}</TableCell>
                           <TableCell>{account.accountName}</TableCell>
                           <TableCell>{account.accountNumber}</TableCell>
                           <TableCell>{account.type}</TableCell>
-                          <TableCell>${account.balance.toLocaleString()}</TableCell>
                           <TableCell>
                             <Chip
                               label={account.status}
@@ -404,10 +404,14 @@ const MoneyDesktop: React.FC = () => {
                               size="small"
                             />
                           </TableCell>
+                          <TableCell>${account.balance.toLocaleString()}</TableCell>
+                          <TableCell>
+                            {account.lastUpdated ? new Date(account.lastUpdated).toLocaleString() : 'Never'}
+                          </TableCell>
                           <TableCell>
                             <Tooltip title="View Details">
                               <IconButton size="small" onClick={() => handleOpenDetailsDialog(account, 'account')}>
-                                <VisibilityIcon />
+                                <InfoIcon />
                               </IconButton>
                             </Tooltip>
                           </TableCell>

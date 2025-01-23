@@ -7,34 +7,26 @@
 ## Class Summary
 
 public class PageDisplaySettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PageDisplaySettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShowNcuaAsText
+### ShowNcuaAsText: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PageDisplay/PageDisplaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PageDisplay.Footer.ShowNcuaAsText")]
 ```
 
-### jQuerySettings
+### jQuerySettings: `jQuerySettings`
 
-```typescript
-type: jQuerySettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PageDisplay/PageDisplaySettings.cs
-visibility: public
-modifier: readonly
-```
+

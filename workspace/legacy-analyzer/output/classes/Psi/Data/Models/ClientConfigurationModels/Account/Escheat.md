@@ -7,51 +7,38 @@
 ## Class Summary
 
 public class Escheat
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Escheat
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### IsUpdateEscheatDateEnabled
+### IsUpdateEscheatDateEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Escheat.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Escheat.UpdateEscheatDate.Enabled")]
 ```
 
-### EscheatDateFlagNumber
+### EscheatDateFlagNumber: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Escheat.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Escheat.UpdateEscheatDate.FlagNumber")]
 ```
 
-### MinVersion
+### MinVersion: `double`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Escheat.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

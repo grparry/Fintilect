@@ -7,237 +7,150 @@
 ## Class Summary
 
 public class ConnectNativeSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ConnectNativeSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ConnectNativeTransfers
+### ConnectNativeTransfers: `ConnectNativeTransfers`
 
-```typescript
-type: ConnectNativeTransfers
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+### AccountHistory: `ConnectNativeAccountHistory`
 
-### ConnectNativeAccountHistory
+### ContentContainerBackgroundColor: `string`
 
-```typescript
-type: ConnectNativeAccountHistory
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
 
-### ContentContainerBackgroundColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Browser.ContentContainerBackgroundColor")]
 ```
 
-### PanelMainBackgroundColor
+### PanelMainBackgroundColor: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Browser.PanelMainBackgroundColor")]
 ```
 
-### SideMenu
+### SideMenu: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Menus.SideMenu")]
 ```
 
-### TopMenu
+### TopMenu: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Menus.TopMenu")]
 ```
 
-### MobileMenu
+### MobileMenu: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Menus.MobileMenu")]
 ```
 
-### ConnectNativeMenuType
+### MenuType: `ConnectNativeMenuType`
 
-```typescript
-type: ConnectNativeMenuType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Menus.Type")]
 ```
 
-### MenuEnabled
+### MenuEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Menus.Enabled")]
 ```
 
-### TargetedMarketingMaxWidth
+### TargetedMarketingMaxWidth: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Marketing.TargetedMarketingBannerMaxWidth")]
 ```
 
-### LogoAction
+### LogoAction: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Menus.LogoAction")]
 ```
 
-### ShowBackgroundImageOnlyOnLegacyLoginScreen
+### ShowBackgroundImageOnlyOnLegacyLoginScreen: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Browser.ShowBackgroundImageOnlyOnLegacyLoginScreen")]
 ```
 
-### RoundedCornersEnabled
+### RoundedCornersEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Browser.RoundedCorners.Enabled")]
 ```
 
-### RoundedCornersOptions
+### RoundedCornersBorderRadiusSizesContainers: `RoundedCornersOptions`
 
-```typescript
-type: RoundedCornersOptions
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Browser.RoundedCorners.BorderRadiusSizes.Containers")]
 ```
 
-### RoundedCornersOptions
+### RoundedCornersBorderRadiusSizesComponents: `RoundedCornersOptions`
 
-```typescript
-type: RoundedCornersOptions
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Browser.RoundedCorners.BorderRadiusSizes.Components")]
 ```
 
-### MultipleDataFieldsPerLineEnabled
+### MultipleDataFieldsPerLineEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.MultipleDataFieldsPerLine.Enabled")]
 ```
 
-### exportTypes
+### exportTypes: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

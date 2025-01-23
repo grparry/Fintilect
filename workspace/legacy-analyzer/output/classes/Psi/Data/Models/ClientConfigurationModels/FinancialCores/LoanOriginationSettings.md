@@ -7,289 +7,151 @@
 ## Class Summary
 
 public class LoanOriginationSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LoanOriginationSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ApplicationTypeSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### ApplicationTypeSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.ApplicationTypeSerial")]
 ```
 
-### ApplicationChannel
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### ApplicationChannel: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.ApplicationChannel")]
 ```
 
-### ApplicationBranch
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### ApplicationBranch: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.ApplicationBranch")]
 ```
 
-### DefaultCreditLimit
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### DefaultCreditLimit: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.DefaultCreditLimit")]
 ```
 
-### DefaultPaymentAmount
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### DefaultPaymentAmount: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.DefaultPaymentAmount")]
 ```
 
-### WorkFlowSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkFlowSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.WorkFlowSerial")]
 ```
 
-### WorkQueueApproveSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkQueueApproveSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.WorkQueueApproveSerial")]
 ```
 
-### WorkQueueRescreenSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkQueueRescreenSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.WorkQueueRescreenSerial")]
 ```
 
-### WorkQueueReviewSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkQueueReviewSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.WorkQueueReviewSerial")]
 ```
 
-### WorkQueueDeclineSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkQueueDeclineSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.WorkQueueDeclineSerial")]
 ```
 
-### WorkQueueIlaDefaultSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkQueueIlaDefaultSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.WorkQueueIlaDefaultSerial")]
 ```
 
-### OnlineApplicationNoteTypeSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### OnlineApplicationNoteTypeSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.OnlineApplicationNoteTypeSerial")]
 ```
 
-### CommentsNoteTypeSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### CommentsNoteTypeSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.CommentsNoteTypeSerial")]
 ```
 
-### AccountDisclosureNoteTypeSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### AccountDisclosureNoteTypeSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.AccountDisclosureNoteTypeSerial")]
 ```
 
-### EnoticesDisclosureNoteTypeSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnoticesDisclosureNoteTypeSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.EnoticesDisclosureNoteTypeSerial")]
 ```
 
-### PrivacyNoticeDisclosureNoteTypeSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### PrivacyNoticeDisclosureNoteTypeSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.PrivacyNoticeDisclosureNoteTypeSerial")]
 ```
 
-### DecisionTypeSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### DecisionTypeSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.DecisionTypeSerial")]
 ```
 
-### CreditTypeSerialChexSystems
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditTypeSerialChexSystems: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.CreditTypeSerialChexSystems")]
 ```
 
-### CreditTypeSerialEquifax
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditTypeSerialEquifax: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.LoanOrigination.CreditTypeSerialEquifax")]
 ```
 
-### CreditTypeSerialTransUnion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/LoanOriginationSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditTypeSerialTransUnion: `string`
 
 **Attributes:**
 ```csharp

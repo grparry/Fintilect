@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class ModuleSecureCamera
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ModuleSecureCamera
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppWhiteList/ModuleSecureCamera.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp

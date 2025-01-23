@@ -7,37 +7,27 @@
 ## Class Summary
 
 public class FaceUnlock
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class FaceUnlock
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Biometrics/FaceUnlock.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Biometrics.FaceUnlock.MinimumAndroidVersion")]
 ```
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Biometrics/FaceUnlock.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

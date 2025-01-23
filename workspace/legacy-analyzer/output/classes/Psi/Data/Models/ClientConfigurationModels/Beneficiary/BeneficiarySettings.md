@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class BeneficiarySettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class BeneficiarySettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldRequireBirthday
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Beneficiary/BeneficiarySettings.cs
-visibility: public
-modifier: readonly
-```
+### ShouldRequireBirthday: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Beneficiary.ShouldRequireBirthday")]
 ```
 
-### ShouldValidateBirthdayFields
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Beneficiary/BeneficiarySettings.cs
-visibility: public
-modifier: readonly
-```
+### ShouldValidateBirthdayFields: `bool`
 
 **Attributes:**
 ```csharp

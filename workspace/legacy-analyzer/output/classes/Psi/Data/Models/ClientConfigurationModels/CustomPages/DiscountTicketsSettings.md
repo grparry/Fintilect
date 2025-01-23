@@ -7,79 +7,46 @@
 ## Class Summary
 
 public class DiscountTicketsSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DiscountTicketsSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CustomPages/DiscountTicketsSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CustomPages.DiscountTickets.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CustomPages/DiscountTicketsSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("CustomPages.DiscountTickets.MinVersion")]
 ```
 
-### MinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CustomPages/DiscountTicketsSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CustomPages.DiscountTickets.MinIosVersion")]
 ```
 
-### MinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CustomPages/DiscountTicketsSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CustomPages.DiscountTickets.MinAndroidVersion")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CustomPages/DiscountTicketsSettings.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp

@@ -7,452 +7,276 @@
 ## Class Summary
 
 public class SecureMessageSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class SecureMessageSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### VirusScanningSettings
+### VirusScanningSettings: `VirusScanningSettings`
 
-```typescript
-type: VirusScanningSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
-
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.MinVersion")]
 ```
 
-### SecureCommunicationSettings
-
-```typescript
-type: SecureCommunicationSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+### ServiceSettings: `SecureCommunicationSettings`
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.ServiceSettings")]
 ```
 
-### FileUploadsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+### FileUploadsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.FileUploadsEnabled")]
 ```
 
-### FileUploadExtenstionTypes
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+### FileUploadExtenstionTypes: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.FileUploadExtenstionTypes")]
 ```
 
-### SecureMessageMessageRegex
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+### SecureMessageMessageRegex: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.SecureMessageMessageRegex")]
 ```
 
-### PropagateIncidentStatus
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+### PropagateIncidentStatus: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.PropagateIncidentStatus")]
 ```
 
-### PropagateCategoryChange
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+### PropagateCategoryChange: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.PropagateCategoryChange")]
 ```
 
-### NewSecureMessageMaxLength
+### NewSecureMessageMaxLength: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.NewSecureMessageMaxLength")]
 ```
 
-### NewSecureMessageNotificationSubject
+### NewSecureMessageNotificationSubject: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.NewSecureMessageNotificationSubject")]
 ```
 
-### NewSecureMessageNotificationMessage
+### NewSecureMessageNotificationMessage: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.NewSecureMessageNotificationMessage")]
 ```
 
-### EmailUsersWhenNewSecureMessageIsSentIsEnabled
+### EmailUsersWhenNewSecureMessageIsSentIsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.EmailUsersWhenNewSecureMessageIsSentIsEnabled")]
 ```
 
-### FormattedSecureMessagingCategories
+### FormattedSecureMessagingCategories: `FormattedSecureMessagingCategories`
 
-```typescript
-type: FormattedSecureMessagingCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.FormattedSecureMessagingCategories")]
 ```
 
-### ShouldShowMemberNameInAdminToolWhenSendingNewMessage
+### ShouldShowMemberNameInAdminToolWhenSendingNewMessage: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.ShowMemberNameInAdminToolWhenSendingNewMessage")]
 ```
 
-### List
+### PreferredAccountColumnDataFormat: `List<string>`
 
-```typescript
-type: PreferredAccountColumnDataFormat
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.PreferredAccountColumnDataFormat")]
 ```
 
-### ShouldShowNonUrgentMessagesAtLogin
+### ShouldShowNonUrgentMessagesAtLogin: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.ShowNonUrgentMessagesAtLogin")]
 ```
 
-### AcknowledgeIndividualMessagesAtLogin
+### AcknowledgeIndividualMessagesAtLogin: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.AcknowledgeIndividualMessagesAtLogin")]
 ```
 
-### HideCategorySelection
+### HideCategorySelection: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.HideCategorySelection")]
 ```
 
-### DefaultCategory
+### DefaultCategory: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.DefaultCategory")]
 ```
 
-### CategoryThatTriggersAnEmail
+### CategoryThatTriggersAnEmail: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.CategoryThatTriggersAnEmail")]
 ```
 
-### EmailAddress
+### EmailAddress: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.EmailAddress")]
 ```
 
-### SendMessageByUsernameEnabled
+### SendMessageByUsernameEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.SendMessageByUsername.Enabled")]
 ```
 
-### EmailMessage
+### EmailMessage: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.EmailMessage")]
 ```
 
-### FromEmailAddress
+### FromEmailAddress: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.gsEmailFrom")]
 ```
 
-### ShouldSendEmailForSpecifiedCategory
+### ShouldSendEmailForSpecifiedCategory: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.ShouldSendEmailForSpecifiedCategory")]
 ```
 
-### ShouldSendMemberNumberInEmails
+### ShouldSendMemberNumberInEmails: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.ShouldSendMemberNumberInEmails")]
 ```
 
-### FormSecureMessageSubject
+### FormSecureMessageSubject: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.FormSecureMessageSubject")]
 ```
 
-### FormSecureMessageCategory
+### FormSecureMessageCategory: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.FormSecureMessageCategory")]
 ```
 
-### ShouldShowMemberDisplayNameInMessageResultsView
+### ShouldShowMemberDisplayNameInMessageResultsView: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.ShouldShowMemberDisplayNameInMessageResultsView")]
 ```
 
-### AdminSendAttachmentsEnabled
+### AdminSendAttachmentsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureCommunication.Admin.SendAttachmentsEnabled")]
 ```
 
-### AdminShowMessageThreadWhenReplyingEnabled
+### AdminShowMessageThreadWhenReplyingEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureCommunication/SecureMessageSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -7,192 +7,96 @@
 ## Class Summary
 
 public class AppShield
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AppShield
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.Enabled")]
 ```
 
-### AndroidDevLicenseKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### AndroidDevLicenseKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.AndroidDevLicenseKey")]
 ```
 
-### AndroidQualityAssessmentLicenseKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### AndroidQualityAssessmentLicenseKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.AndroidQualityAssessmentLicenseKey")]
 ```
 
-### AndroidTestLicenseKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### AndroidTestLicenseKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.AndroidTestLicenseKey")]
 ```
 
-### AndroidProdTestLicenseKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### AndroidProdTestLicenseKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.AndroidProdTestLicenseKey")]
 ```
 
-### AndroidStageLicenseKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### AndroidStageLicenseKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.AndroidStageLicenseKey")]
 ```
 
-### AndroidReleaseLicenseKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### AndroidReleaseLicenseKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.AndroidReleaseLicenseKey")]
 ```
 
-### IosDevLicenseKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### IosDevLicenseKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.IosDevLicenseKey")]
 ```
 
-### IosTestLicenseKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### IosTestLicenseKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.IosTestLicenseKey")]
 ```
 
-### IosProdTestLicenseKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### IosProdTestLicenseKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.IosProdTestLicenseKey")]
 ```
 
-### IosReleaseLicenseKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### IosReleaseLicenseKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.IosReleaseLicenseKey")]
 ```
 
-### AppWhiteList
+### ModulePortAuthority: `AppWhiteList.ModulePortAuthority`
 
-```typescript
-type: ModulePortAuthority
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### ModuleSecureCamera: `AppWhiteList.ModuleSecureCamera`
 
-### AppWhiteList
-
-```typescript
-type: ModuleSecureCamera
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
-
-### AppWhiteList
-
-```typescript
-type: ModuleSecureKeyboard
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppShield.cs
-visibility: public
-modifier: readonly
-```
+### ModuleSecureKeyboard: `AppWhiteList.ModuleSecureKeyboard`

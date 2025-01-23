@@ -7,155 +7,86 @@
 ## Class Summary
 
 public class ConnectNative
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ConnectNative
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Themes.ConnectNative.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Themes.ConnectNative.MinVersion")]
 ```
 
-### List
-
-```typescript
-type: DeployedThemes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### DeployedThemes: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Themes.ConnectNative.DeployedThemes")]
 ```
 
-### UseVersionBundles
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### UseVersionBundles: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Themes.ConnectNative.UseVersionBundles")]
 ```
 
-### List
-
-```typescript
-type: BrowserThemes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### BrowserThemes: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Themes.ConnectNative.BrowserThemes")]
 ```
 
-### UseRelativeSitePathForThemesFiles
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### UseRelativeSitePathForThemesFiles: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Themes.ConnectNative.UseRelativeSitePathForThemesFiles")]
 ```
 
-### ThemesFilesPath
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### ThemesFilesPath: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Themes.ConnectNative.ThemesFilesPath")]
 ```
 
-### BaseThemeSubThemesFilesPath
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### BaseThemeSubThemesFilesPath: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Themes.ConnectNative.BaseThemeSubThemesFilesPath")]
 ```
 
-### CoreAttributeThemeMemoNumber
+### CoreAttributeThemeMemoNumber: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Themes.ConnectNative.CoreAttributeTheme.MemoNumber")]
 ```
 
-### DeployedThemesWithTitles
+### DeployedThemesWithTitles: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
 
-### BrowserThemesWithTitles
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### BrowserThemesWithTitles: `string`
+
+

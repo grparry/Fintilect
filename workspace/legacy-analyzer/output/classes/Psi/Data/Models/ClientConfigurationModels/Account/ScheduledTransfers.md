@@ -7,261 +7,137 @@
 ## Class Summary
 
 public class ScheduledTransfers
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ScheduledTransfers
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.MinVersion")]
 ```
 
-### MonthsToCalculate
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### MonthsToCalculate: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.MonthsToCalculate")]
 ```
 
-### AdjustForWeekendsAndHolidays
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### AdjustForWeekendsAndHolidays: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.AdjustForWeekendsAndHolidays")]
 ```
 
-### AddDayForWeekendOrHoliday
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### AddDayForWeekendOrHoliday: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.AddDayForWeekendOrHoliday")]
 ```
 
-### MaxTransferAttempts
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### MaxTransferAttempts: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.MaxTransferAttempts")]
 ```
 
-### HomeBankingBillPayAccounts
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### HomeBankingBillPayAccounts: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.BillPayAccounts")]
 ```
 
-### TransferAtLeastMinPaymentForLoans
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### TransferAtLeastMinPaymentForLoans: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.TransferAtLeastMinPaymentForLoans")]
 ```
 
-### TransferAtLeastMinPaymentForCreditCards
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### TransferAtLeastMinPaymentForCreditCards: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.TransferAtLeastMinPaymentForCreditCards")]
 ```
 
-### ContinueIfMinPaymentCheckFails
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ContinueIfMinPaymentCheckFails: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.ContinueIfMinPaymentCheckFails")]
 ```
 
-### DefaultSuffixMask
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### DefaultSuffixMask: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.DefaultSuffixMask")]
 ```
 
-### ShouldUseAmountDueInsteadOfPaymentForMinimumHelocPayment
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ShouldUseAmountDueInsteadOfPaymentForMinimumHelocPayment: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.UseAmountDueInsteadOfPaymentForMinimumHelocPayment")]
 ```
 
-### StartDateTimePickerHourOffset
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### StartDateTimePickerHourOffset: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.StartDateTimePickerHourOffset")]
 ```
 
-### LastDayOfMonthSchedulingEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### LastDayOfMonthSchedulingEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.LastDayOfMonthSchedulingEnabled")]
 ```
 
-### Dictionary
-
-```typescript
-type: CoreErrorCodeToTransferResultMappings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### CoreErrorCodeToTransferResultMappings: `Dictionary<string, ScheduledTransferResult>`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.CoreErrorCodeToTransferResultMappings")]
 ```
 
-### CoreErrorCodeToTransferResultMappingEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### CoreErrorCodeToTransferResultMappingEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.CoreErrorCodeToTransferResultMappingEnabled")]
 ```
 
-### UseScheduledRunTimeAsEffectiveDateEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### UseScheduledRunTimeAsEffectiveDateEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.UseScheduledRunTimeAsEffectiveDate.Enabled")]
 ```
 
-### CheckCoreForDuplicateTransactionsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### CheckCoreForDuplicateTransactionsEnabled: `bool`
 
 **Attributes:**
 ```csharp
@@ -269,14 +145,7 @@ modifier: readonly
 [SettingKey("ScheduledTransfers.CheckCoreForDuplicateTransactions.Enabled")]
 ```
 
-### ShouldSendSecureMessageWhenDuplicateIsDetected
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ShouldSendSecureMessageWhenDuplicateIsDetected: `bool`
 
 **Attributes:**
 ```csharp
@@ -284,238 +153,119 @@ modifier: readonly
 [SettingKey("ScheduledTransfers.CheckCoreForDuplicateTransactions.ShouldSendSecureMessageWhenDuplicateIsDetected")]
 ```
 
-### ReadOnlyEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ReadOnlyEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.ReadOnly.Enabled")]
 ```
 
-### ValidateProcessingIndicatorsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ValidateProcessingIndicatorsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.ValidateProcessingIndicatorsEnabled")]
 ```
 
-### ShouldSendSecureMessageWhenManualReviewIsRequired
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ShouldSendSecureMessageWhenManualReviewIsRequired: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.ShouldSendSecureMessageWhenManualReviewIsRequired")]
 ```
 
-### ManualReviewRequiredSecureMessageCategory
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ManualReviewRequiredSecureMessageCategory: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.ManualReviewRequiredSecureMessageCategory")]
 ```
 
-### ManualReviewRequiredSecureMessageSenderMembershipUserId
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ManualReviewRequiredSecureMessageSenderMembershipUserId: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.ManualReviewRequiredSecureMessageSenderMembershipUserId")]
 ```
 
-### ShouldStoreIdentifierForCreditCards
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ShouldStoreIdentifierForCreditCards: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.ShouldStoreIdentifierForCreditCards")]
 ```
 
-### List
-
-```typescript
-type: InternalTransfersRecurrenceTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### InternalTransfersRecurrenceTypes: `List<RecurrenceType>`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.InternalTransfers.RecurrenceTypes")]
 ```
 
-### List
-
-```typescript
-type: ExternalTransfersRecurrenceTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ExternalTransfersRecurrenceTypes: `List<RecurrenceType>`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.ExternalTransfers.RecurrenceTypes")]
 ```
 
-### List
-
-```typescript
-type: CreditCardTransfersRecurrenceTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### CreditCardTransfersRecurrenceTypes: `List<RecurrenceType>`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.CreditCardTransfers.RecurrenceTypes")]
 ```
 
-### List
-
-```typescript
-type: EndOptions
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EndOptions: `List<ScheduledTransferEndOption>`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.EndOptions")]
 ```
 
-### OnHostEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### OnHostEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.OnHost.Enabled")]
 ```
 
-### OnHostMinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### OnHostMinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.OnHost.MinVersion")]
 ```
 
-### AutomaticLoanPaymentsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### AutomaticLoanPaymentsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.AutomaticLoanPayments.Enabled")]
 ```
 
-### List
-
-```typescript
-type: AutomaticLoanPaymentsLoanCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### AutomaticLoanPaymentsLoanCategories: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.AutomaticLoanPayments.LoanCategories")]
 ```
 
-### ShouldUseNewUserInterface
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ShouldUseNewUserInterface: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.ShouldUseNewUserInterface")]
 ```
 
-### CanSkipTransferOccurrence
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### CanSkipTransferOccurrence: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ScheduledTransfers.CanSkipTransferOccurrence")]
 ```
 
-### CanEditTransferAmount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/ScheduledTransfers.cs
-visibility: public
-modifier: readonly
-```
+### CanEditTransferAmount: `bool`
 
 **Attributes:**
 ```csharp

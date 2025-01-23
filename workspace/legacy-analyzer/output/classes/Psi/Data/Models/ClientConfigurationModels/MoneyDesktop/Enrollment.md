@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class Enrollment
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Enrollment
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldUseDefaultPhoneNumber
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MoneyDesktop/Enrollment.cs
-visibility: public
-modifier: readonly
-```
+### ShouldUseDefaultPhoneNumber: `bool`
 
 **Attributes:**
 ```csharp

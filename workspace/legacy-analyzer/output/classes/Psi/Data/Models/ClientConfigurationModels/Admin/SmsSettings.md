@@ -7,46 +7,31 @@
 ## Class Summary
 
 public class SmsSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class SmsSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SecurityCodeVerificationSettings
+### SecurityCodeVerification: `SecurityCodeVerificationSettings`
 
-```typescript
-type: SecurityCodeVerificationSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/SmsSettings.cs
-visibility: public
-modifier: readonly
-```
+### SmsCodeOneTimeEnabled: `bool`
 
-### SmsCodeOneTimeEnabled
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/SmsSettings.cs
-visibility: public
-modifier: readonly
-```
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.SMS.SmsCodeOneTimeEnabled")]
 ```
 
-### ShowSMSPrior
+### ShowSMSPrior: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/SmsSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -7,93 +7,53 @@
 ## Class Summary
 
 public class DisplayCheckHolds
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DisplayCheckHolds
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/DisplayCheckHolds.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.DisplayCheckHolds.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/DisplayCheckHolds.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.DisplayCheckHolds.MinVersion")]
 ```
 
-### CheckHoldMemoRange
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/DisplayCheckHolds.cs
-visibility: public
-modifier: readonly
-```
+### CheckHoldMemoRange: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.DisplayCheckHolds.CheckHoldMemoRange")]
 ```
 
-### GuaranteedFundsMemoRange
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/DisplayCheckHolds.cs
-visibility: public
-modifier: readonly
-```
+### GuaranteedFundsMemoRange: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.DisplayCheckHolds.GuaranteedFundsMemoRange")]
 ```
 
-### ShouldShowAsNegativeTransactions
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/DisplayCheckHolds.cs
-visibility: public
-modifier: readonly
-```
+### ShouldShowAsNegativeTransactions: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.DisplayCheckHolds.ShouldShowAsNegativeTransactions")]
 ```
 
-### DisplayCheckHoldsOutsideDateRange
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/DisplayCheckHolds.cs
-visibility: public
-modifier: readonly
-```
+### DisplayCheckHoldsOutsideDateRange: `bool`
 
 **Attributes:**
 ```csharp

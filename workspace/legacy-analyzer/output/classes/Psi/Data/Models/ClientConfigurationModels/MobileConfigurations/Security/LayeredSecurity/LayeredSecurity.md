@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class LayeredSecurity
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LayeredSecurity
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### DeleteOnlyInvalidTokens
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/LayeredSecurity/LayeredSecurity.cs
-visibility: public
-modifier: readonly
-```
+### DeleteOnlyInvalidTokens: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.LayeredSecurity.DeleteOnlyInvalidTokens")]
 ```
 
-### DisableQuickAccessOnFailedPasswordLogin
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/LayeredSecurity/LayeredSecurity.cs
-visibility: public
-modifier: readonly
-```
+### DisableQuickAccessOnFailedPasswordLogin: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.LayeredSecurity.DisableQuickAccessOnFailedPasswordLogin")]
 ```
 
-### MemberCanSkipToFallbackMethod
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/LayeredSecurity/LayeredSecurity.cs
-visibility: public
-modifier: readonly
-```
+### MemberCanSkipToFallbackMethod: `bool`
 
 **Attributes:**
 ```csharp

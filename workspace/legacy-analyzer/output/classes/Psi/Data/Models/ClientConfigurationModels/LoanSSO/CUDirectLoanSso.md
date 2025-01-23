@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class CUDirectLoanSso
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CUDirectLoanSso
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### CUDirectLoanOrganizationCode
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanSSO/CUDirectLoanSso.cs
-visibility: public
-modifier: readonly
-```
+### CUDirectLoanOrganizationCode: `string`
 
 **Attributes:**
 ```csharp

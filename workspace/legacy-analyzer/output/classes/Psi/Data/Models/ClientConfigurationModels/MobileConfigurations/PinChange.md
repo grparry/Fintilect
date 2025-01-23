@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class PinChange
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PinChange
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/PinChange.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.PinChange.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/PinChange.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.PinChange.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/PinChange.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.PinChange.Enabled")]
 ```
 
-### ShouldLoadWhenCardListLoads
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/PinChange.cs
-visibility: public
-modifier: readonly
-```
+### ShouldLoadWhenCardListLoads: `bool`
 
 **Attributes:**
 ```csharp

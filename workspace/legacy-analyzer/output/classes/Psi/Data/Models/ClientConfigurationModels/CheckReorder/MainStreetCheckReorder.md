@@ -7,107 +7,60 @@
 ## Class Summary
 
 public class MainStreetCheckReorder
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MainStreetCheckReorder
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckReorder/MainStreetCheckReorder.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckReorder.MainStreetCheckReorder.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckReorder/MainStreetCheckReorder.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckReorder.MainStreetCheckReorder.MinVersion")]
 ```
 
-### SsoUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckReorder/MainStreetCheckReorder.cs
-visibility: public
-modifier: readonly
-```
+### SsoUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckReorder.MainStreetCheckReorder.SsoUrl")]
 ```
 
-### BankId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckReorder/MainStreetCheckReorder.cs
-visibility: public
-modifier: readonly
-```
+### BankId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckReorder.MainStreetCheckReorder.BankId")]
 ```
 
-### BranchNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckReorder/MainStreetCheckReorder.cs
-visibility: public
-modifier: readonly
-```
+### BranchNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckReorder.MainStreetCheckReorder.BranchNumber")]
 ```
 
-### UserId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckReorder/MainStreetCheckReorder.cs
-visibility: public
-modifier: readonly
-```
+### UserId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckReorder.MainStreetCheckReorder.UserId")]
 ```
 
-### Key
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckReorder/MainStreetCheckReorder.cs
-visibility: public
-modifier: readonly
-```
+### Key: `string`
 
 **Attributes:**
 ```csharp

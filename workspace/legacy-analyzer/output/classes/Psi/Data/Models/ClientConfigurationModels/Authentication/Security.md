@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class Security
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Security
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### TokenTimeout
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Authentication/OnlineBankingApi.cs
-visibility: public
-modifier: readonly
-```
+### TokenTimeout: `double`
 
 **Attributes:**
 ```csharp

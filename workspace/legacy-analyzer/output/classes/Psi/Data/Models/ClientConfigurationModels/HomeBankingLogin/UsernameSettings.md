@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class UsernameSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class UsernameSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### DailyAllowedChangeAttempts
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/UsernameSettings.cs
-visibility: public
-modifier: readonly
-```
+### DailyAllowedChangeAttempts: `int`
 
 **Attributes:**
 ```csharp

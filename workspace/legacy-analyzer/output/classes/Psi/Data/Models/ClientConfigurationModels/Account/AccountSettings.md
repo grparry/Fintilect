@@ -7,347 +7,208 @@
 ## Class Summary
 
 public class AccountSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AccountSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### GetDebitCardsDuringAccountInquiry
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+### GetDebitCardsDuringAccountInquiry: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Accounts.GetDebitCardsDuringAccountInquiry")]
 ```
 
-### ShowClosedAccountsOnDashboard
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowClosedAccountsOnDashboard: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Accounts.ShowClosedAccountsOnDashboard")]
 ```
 
-### HideLoanSummaryControlWhenMemberHasNoLoans
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+### HideLoanSummaryControlWhenMemberHasNoLoans: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Accounts.HideLoanSummaryControlWhenMemberHasNoLoans")]
 ```
 
-### ShouldShowRateForSharesOnDashboardAndSummary
+### ShouldShowRateForSharesOnDashboardAndSummary: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Accounts.ShowRateForSharesOnDashboardAndSummary")]
 ```
 
-### List
+### CertificateCategoriesForRates: `List<string>`
 
-```typescript
-type: CertificateCategoriesForRates
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Accounts.CertificateCategoriesForRates")]
 ```
 
-### UseCoreSuffixNicknamesOnly
+### UseCoreSuffixNicknamesOnly: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.UseCoreSuffixNicknamesOnly")]
 ```
 
-### List
+### AccountCategoriesWithChecks: `List<string>`
 
-```typescript
-type: AccountCategoriesWithChecks
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.AccountHasChecks")]
 ```
 
-### List
+### CheckingAccountCategories: `List<string>`
 
-```typescript
-type: CheckingAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.obsCheckingAccounts")]
 ```
 
-### List
+### ShareAccountCategories: `List<string>`
 
-```typescript
-type: ShareAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsShareAccounts")]
 ```
 
-### List
+### SavingsAccountCategories: `List<string>`
 
-```typescript
-type: SavingsAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.SavingsAccounts")]
 ```
 
-### ShouldShowMmaChecks
+### ShouldShowMmaChecks: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowMMAChecks")]
 ```
 
-### List
+### HomeEquityCheckingAccountCategories: `List<string>`
 
-```typescript
-type: HomeEquityCheckingAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.HECheckCategory")]
 ```
 
-### Transfers
+### Transfers: `Transfers`
 
-```typescript
-type: Transfers
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
 
-### ScheduledTransfers
 
-```typescript
-type: ScheduledTransfers
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+### ScheduledTransfers: `ScheduledTransfers`
 
-### AccountOpening
 
-```typescript
-type: AccountOpening
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
 
-### CrossAccountSettings
+### AccountOpening: `AccountOpening`
 
-```typescript
-type: CrossAccountSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
 
-### DebitCards
 
-```typescript
-type: DebitCards
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+### CrossAccount: `CrossAccountSettings`
 
-### JointOwners
 
-```typescript
-type: JointOwners
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
 
-### Cards
+### DebitCards: `DebitCards`
 
-```typescript
-type: Cards
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
 
-### Escheat
 
-```typescript
-type: Escheat
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+### JointOwners: `JointOwners`
 
-### List
 
-```typescript
-type: LineOfCreditCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
+### Cards: `Cards`
+
+
+
+### Escheat: `Escheat`
+
+
+
+### LineOfCreditCategories: `List<string>`
+
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.obsLineOfCredit")]
 ```
 
-### Dictionary
+### CoreCategoryToDisplayCategoryMappings: `Dictionary<string, string>`
 
-```typescript
-type: CoreCategoryToDisplayCategoryMappings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.CoreCategoryToDisplayCategoryMappings")]
 ```
 
-### UsePreviousMicrNumber
+### UsePreviousMicrNumber: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.UsePreviousMicrNumber")]
 ```
 
-### List
+### RemoteDepositAccounts: `List<string>`
 
-```typescript
-type: RemoteDepositAccounts
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.RemoteDepositAccounts")]
 ```
 
-### AliasType1
+### AliasType1: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.AliasType1")]
 ```
 
-### NicknameValidationRegex
+### NicknameValidationRegex: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.NicknameValidationRegex")]
 ```
 
-### ShowAccountLimitsOnDirectDepositPage
+### ShowAccountLimitsOnDirectDepositPage: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

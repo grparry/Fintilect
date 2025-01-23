@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class Marketing
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Marketing
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### TargetedMarketingUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Marketing.cs
-visibility: public
-modifier: readonly
-```
+### TargetedMarketingUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Marketing.TargetedMarketingUrl")]
 ```
 
-### RotationInterval
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Marketing.cs
-visibility: public
-modifier: readonly
-```
+### RotationInterval: `int`
 
 **Attributes:**
 ```csharp

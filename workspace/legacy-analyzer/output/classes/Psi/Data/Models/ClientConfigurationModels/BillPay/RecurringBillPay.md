@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class RecurringBillPay
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class RecurringBillPay
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/RecurringBillPay.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.RecurringBillPay.Enabled")]
 ```
 
-### MinimumVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/RecurringBillPay.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `double`
 
 **Attributes:**
 ```csharp

@@ -9,7 +9,8 @@ import {
   UserStatus,
   Permission,
   UserGroup,
-  SecurityRole
+  SecurityRole,
+  AuditLog
 } from '../../../../../types/client.types';
 
 // Default Settings
@@ -201,8 +202,8 @@ export const mockGroups: UserGroup[] = [
     id: "group-1",
     name: "Administrators",
     description: "Admin group with full access",
-    clientId: "client-1",
-    roles: [mockRoles[0]], // Administrator role
+    clientId: "1", 
+    roles: [mockRoles[0]], 
     permissions: [
       {
         id: 'view_users',
@@ -226,7 +227,7 @@ export const mockGroups: UserGroup[] = [
         actions: ['read']
       }
     ],
-    members: ["user-1", "user-2"],
+    members: ["1", "2"], 
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
@@ -234,8 +235,8 @@ export const mockGroups: UserGroup[] = [
     id: "group-2",
     name: "Users",
     description: "Regular users group",
-    clientId: "client-1",
-    roles: [mockRoles[1]], // Regular user role
+    clientId: "1", 
+    roles: [mockRoles[1]], 
     permissions: [
       {
         id: 'view_users',
@@ -245,7 +246,7 @@ export const mockGroups: UserGroup[] = [
         actions: ['read']
       }
     ],
-    members: ["user-3", "user-4"],
+    members: ["3", "4"], 
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   }
@@ -273,5 +274,236 @@ export const mockPermissions: Permission[] = [
     description: 'Can view reports',
     category: 'reports',
     actions: ['read']
+  }
+];
+
+// Mock Audit Logs
+export const mockAuditLogs: AuditLog[] = [
+  {
+    id: '1',
+    timestamp: '2025-01-22T11:30:00-07:00',
+    eventType: 'user_login',
+    userId: '1',
+    userEmail: 'admin@example.com',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    ipAddress: '192.168.1.100',
+    resourceType: 'user',
+    resourceId: '1',
+    action: 'login',
+    status: 'success',
+    details: {
+      method: 'password',
+      mfaUsed: true
+    },
+    riskLevel: 'low'
+  },
+  {
+    id: '2',
+    timestamp: '2025-01-22T11:35:00-07:00',
+    eventType: 'security_settings_changed',
+    userId: '1',
+    userEmail: 'admin@example.com',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    ipAddress: '192.168.1.100',
+    resourceType: 'security_settings',
+    resourceId: '1',
+    action: 'update',
+    status: 'success',
+    details: {
+      changes: {
+        'passwordPolicy.minLength': { from: 8, to: 12 },
+        'passwordPolicy.requireSpecialChars': { from: false, to: true }
+      }
+    },
+    riskLevel: 'high'
+  },
+  {
+    id: '3',
+    timestamp: '2025-01-22T11:40:00-07:00',
+    eventType: 'user_created',
+    userId: '1',
+    userEmail: 'admin@example.com',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    ipAddress: '192.168.1.100',
+    resourceType: 'user',
+    resourceId: '5',
+    action: 'create',
+    status: 'success',
+    details: {
+      newUser: {
+        email: 'newuser@example.com',
+        role: 'user'
+      }
+    },
+    riskLevel: 'medium'
+  },
+  {
+    id: '4',
+    timestamp: '2025-01-22T11:45:00-07:00',
+    eventType: 'failed_login_attempt',
+    userId: '2',
+    userEmail: 'john.smith@example.com',
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+    ipAddress: '192.168.1.200',
+    resourceType: 'user',
+    resourceId: '2',
+    action: 'login',
+    status: 'failure',
+    details: {
+      reason: 'invalid_password',
+      attemptNumber: 2
+    },
+    riskLevel: 'medium'
+  },
+  {
+    id: '5',
+    timestamp: '2025-01-22T11:50:00-07:00',
+    eventType: 'group_modified',
+    userId: '1',
+    userEmail: 'admin@example.com',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    ipAddress: '192.168.1.100',
+    resourceType: 'group',
+    resourceId: 'group-1',
+    action: 'update',
+    status: 'success',
+    details: {
+      changes: {
+        addedMembers: ['3'],
+        removedMembers: ['2'],
+        permissions: ['added:view_reports', 'removed:manage_users']
+      }
+    },
+    riskLevel: 'medium'
+  },
+  {
+    id: '6',
+    timestamp: '2025-01-22T11:55:00-07:00',
+    eventType: 'permission_changed',
+    userId: '1',
+    userEmail: 'admin@example.com',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    ipAddress: '192.168.1.100',
+    resourceType: 'user',
+    resourceId: '3',
+    action: 'update',
+    status: 'success',
+    details: {
+      changes: {
+        addedPermissions: ['manage_reports'],
+        removedPermissions: []
+      }
+    },
+    riskLevel: 'medium'
+  },
+  {
+    id: '7',
+    timestamp: '2025-01-22T12:00:00-07:00',
+    eventType: 'user_locked',
+    userId: '2',
+    userEmail: 'john.smith@example.com',
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+    ipAddress: '192.168.1.200',
+    resourceType: 'user',
+    resourceId: '2',
+    action: 'lock',
+    status: 'success',
+    details: {
+      reason: 'exceeded_login_attempts',
+      lockDuration: '30m'
+    },
+    riskLevel: 'high'
+  },
+  {
+    id: '8',
+    timestamp: '2025-01-22T12:05:00-07:00',
+    eventType: 'mfa_enabled',
+    userId: '3',
+    userEmail: 'jane.doe@example.com',
+    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)',
+    ipAddress: '192.168.1.300',
+    resourceType: 'user',
+    resourceId: '3',
+    action: 'update',
+    status: 'success',
+    details: {
+      method: 'authenticator_app'
+    },
+    riskLevel: 'low'
+  },
+  {
+    id: '9',
+    timestamp: '2025-01-22T12:10:00-07:00',
+    eventType: 'api_key_created',
+    userId: '1',
+    userEmail: 'admin@example.com',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    ipAddress: '192.168.1.100',
+    resourceType: 'api_key',
+    resourceId: 'key-1',
+    action: 'create',
+    status: 'success',
+    details: {
+      keyName: 'Production API Key',
+      expiresAt: '2026-01-22T12:10:00-07:00'
+    },
+    riskLevel: 'high'
+  },
+  {
+    id: '10',
+    timestamp: '2025-01-22T12:15:00-07:00',
+    eventType: 'backup_completed',
+    userId: '1',
+    userEmail: 'admin@example.com',
+    userAgent: 'System',
+    ipAddress: '192.168.1.100',
+    resourceType: 'system',
+    resourceId: 'backup-1',
+    action: 'create',
+    status: 'success',
+    details: {
+      backupSize: '2.5GB',
+      duration: '180s'
+    },
+    riskLevel: 'low'
+  },
+  {
+    id: '11',
+    timestamp: '2025-01-22T12:17:00-07:00',
+    eventType: 'system_settings_changed',
+    userId: '1',
+    userEmail: 'admin@example.com',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    ipAddress: '192.168.1.100',
+    resourceType: 'system_settings',
+    resourceId: 'settings-1',
+    action: 'update',
+    status: 'success',
+    details: {
+      changes: {
+        'emailNotifications': { from: false, to: true },
+        'auditRetentionDays': { from: 30, to: 90 }
+      }
+    },
+    riskLevel: 'medium'
+  },
+  {
+    id: '12',
+    timestamp: '2025-01-22T12:18:00-07:00',
+    eventType: 'user_role_changed',
+    userId: '1',
+    userEmail: 'admin@example.com',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+    ipAddress: '192.168.1.100',
+    resourceType: 'user',
+    resourceId: '4',
+    action: 'update',
+    status: 'success',
+    details: {
+      changes: {
+        role: { from: 'user', to: 'admin' }
+      }
+    },
+    riskLevel: 'high'
   }
 ];

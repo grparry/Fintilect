@@ -7,135 +7,86 @@
 ## Class Summary
 
 public class ChangeEmail
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ChangeEmail
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### PrimaryMemberCanUpdateJointOwnersEmail
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/ChangeEmail.cs
-visibility: public
-modifier: readonly
-```
+### PrimaryMemberCanUpdateJointOwnersEmail: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeEmail.PrimaryMemberCanUpdateJointOwnersEmail")]
 ```
 
-### SendSecurityCodeToNewEmailOnlyOnEmailChange
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/ChangeEmail.cs
-visibility: public
-modifier: readonly
-```
+### SendSecurityCodeToNewEmailOnlyOnEmailChange: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeEmail.SendSecurityCodeToNewEmailOnlyOnEmailChange")]
 ```
 
-### UpdateBitEmailForPrimaryStatementAccountNumbers
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/ChangeEmail.cs
-visibility: public
-modifier: readonly
-```
+### UpdateBitEmailForPrimaryStatementAccountNumbers: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeEmail.UpdateBitEmailForPrimaryStatementAccountNumbers")]
 ```
 
-### EmailDomainRegistrationCheckEnabled
+### EmailDomainRegistrationCheckEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/ChangeEmail.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeEmail.EmailDomainRegistrationCheckEnabled")]
 ```
 
-### List
+### RestrictedEmailDomainRegistrationList: `List<string>`
 
-```typescript
-type: RestrictedEmailDomainRegistrationList
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/ChangeEmail.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeEmail.RestrictedEmailDomainRegistrationList")]
 ```
 
-### ShouldUpdateCoreWhenNoChanges
+### ShouldUpdateCoreWhenNoChanges: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/ChangeEmail.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeEmail.ShouldUpdateCoreWhenNoChanges")]
 ```
 
-### ShouldReturnSuccessWithNoChanges
+### ShouldReturnSuccessWithNoChanges: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/ChangeEmail.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeEmail.ShouldReturnSuccessWithNoChanges")]
 ```
 
-### VerifyEmailEnabled
+### VerifyEmailEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/ChangeEmail.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeEmail.VerifyEmailEnabled")]
 ```
 
-### ZelleUpdateEmailEnabled
+### ZelleUpdateEmailEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/ChangeEmail.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

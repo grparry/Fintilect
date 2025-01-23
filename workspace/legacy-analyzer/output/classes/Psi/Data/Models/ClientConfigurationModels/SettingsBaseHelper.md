@@ -16,11 +16,4 @@ abstract public class SettingsBaseHelper
 
 ## Properties
 
-### EnvironmentName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SettingsBaseHelper.cs
-visibility: private
-modifier: readonly
-```
+### EnvironmentName: `string`

@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class FeaturesSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class FeaturesSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### EnableNewFeatures
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Features/FeaturesSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableNewFeatures: `bool`
 
 **Attributes:**
 ```csharp

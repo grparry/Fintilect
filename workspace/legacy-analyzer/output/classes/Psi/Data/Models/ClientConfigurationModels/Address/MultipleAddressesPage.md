@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class MultipleAddressesPage
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MultipleAddressesPage
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/MultipleAddressesPage.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultipleAddresses.MvcPage.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/MultipleAddressesPage.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultipleAddresses.MvcPage.MinVersion")]
 ```
 
-### DeleteAddressEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/MultipleAddressesPage.cs
-visibility: public
-modifier: readonly
-```
+### DeleteAddressEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultipleAddresses.MvcPage.DeleteAddressEnabled")]
 ```
 
-### List
-
-```typescript
-type: AddressTypesThatCanBeDeleted
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/MultipleAddressesPage.cs
-visibility: public
-modifier: readonly
-```
+### AddressTypesThatCanBeDeleted: `List<string>`
 
 **Attributes:**
 ```csharp

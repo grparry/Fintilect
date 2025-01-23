@@ -7,93 +7,55 @@
 ## Class Summary
 
 public class AccountMaskingSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AccountMaskingSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MaskingLengthToShow
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountMaskingSettings.cs
-visibility: public
-modifier: readonly
-```
+### MaskingLengthToShow: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.Masking.LengthToShow")]
 ```
 
-### HideWelcomeBarDetail
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountMaskingSettings.cs
-visibility: public
-modifier: readonly
-```
+### HideWelcomeBarDetail: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.Masking.HideWelcomeBarDetail")]
 ```
 
-### AccountHistoryMaskingEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountMaskingSettings.cs
-visibility: public
-modifier: readonly
-```
+### AccountHistoryMaskingEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.Masking.AccountHistoryMaskingEnabled")]
 ```
 
-### AccountHistoryMaskingRegexMatchingPatterns
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountMaskingSettings.cs
-visibility: public
-modifier: readonly
-```
+### AccountHistoryMaskingRegexMatchingPatterns: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.Masking.AccountHistoryMaskingRegexMatchingPatterns")]
 ```
 
-### CheckCopyMaskingEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountMaskingSettings.cs
-visibility: public
-modifier: readonly
-```
+### CheckCopyMaskingEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.Masking.CheckCopyMaskingEnabled")]
 ```
 
-### ShowUnmaskedMemberNumberOnUserClick
+### ShowUnmaskedMemberNumberOnUserClick: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountMaskingSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

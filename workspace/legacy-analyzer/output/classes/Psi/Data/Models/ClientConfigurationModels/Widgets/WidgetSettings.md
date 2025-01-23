@@ -7,51 +7,38 @@
 ## Class Summary
 
 public class WidgetSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class WidgetSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Dictionary
+### DashboardInitialSortOrder: `Dictionary<string, int>`
 
-```typescript
-type: DashboardInitialSortOrder
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Widgets.DashboardInitialSortOrder")]
 ```
 
-### ConnectNativeDashboardWidgetsDefault
+### ConnectNativeDashboardWidgetsDefault: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Dashboard.Widgets.Default")]
 ```
 
-### EnableAccountSummaryWidget
+### EnableAccountSummaryWidget: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
@@ -59,14 +46,9 @@ modifier: readonly
 [SettingKey("ConnectNative.Dashboard.EnableAccountSummaryWidget")]
 ```
 
-### EnableScheduledTransfersWidget
+### EnableScheduledTransfersWidget: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
@@ -74,14 +56,9 @@ modifier: readonly
 [SettingKey("ConnectNative.Dashboard.EnableScheduledTransfersWidget")]
 ```
 
-### EnableSavedTransfersWidget
+### EnableSavedTransfersWidget: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
@@ -89,14 +66,9 @@ modifier: readonly
 [SettingKey("ConnectNative.Dashboard.EnableSavedTransfersWidget")]
 ```
 
-### EnableCardlyticsWidget
+### EnableCardlyticsWidget: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
@@ -104,14 +76,9 @@ modifier: readonly
 [SettingKey("ConnectNative.Dashboard.EnableCardlyticsWidget")]
 ```
 
-### EnableSavvyMoneyWidget
+### EnableSavvyMoneyWidget: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
@@ -119,14 +86,9 @@ modifier: readonly
 [SettingKey("ConnectNative.Dashboard.EnableSavvyMoneyWidget")]
 ```
 
-### EnableMoneyDesktopWidget
+### EnableMoneyDesktopWidget: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
@@ -134,14 +96,9 @@ modifier: readonly
 [SettingKey("ConnectNative.Dashboard.EnableMoneyDesktopWidget")]
 ```
 
-### EnableCunexusWidget
+### EnableCunexusWidget: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
@@ -149,14 +106,9 @@ modifier: readonly
 [SettingKey("ConnectNative.Dashboard.EnableCunexusWidget")]
 ```
 
-### EnableBillPayWidget
+### EnableBillPayWidget: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
@@ -164,112 +116,72 @@ modifier: readonly
 [SettingKey("ConnectNative.Dashboard.EnableBillPayWidget")]
 ```
 
-### List
+### NonHideableWidgets: `List<string>`
 
-```typescript
-type: NonHideableWidgets
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Dashboard.NonHideableWidgets")]
 ```
 
-### EnableNewAccountSummaryWidget
+### EnableNewAccountSummaryWidget: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Dashboard.EnableNewAccountSummaryWidget")]
 ```
 
-### AccountsWidgetExpandedHeight
+### AccountsWidgetExpandedHeight: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Dashboard.AccountsWidgetExpandedHeight")]
 ```
 
-### AccountsWidgetHeaderLinkNewAccount
+### AccountsWidgetHeaderLinkNewAccount: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Dashboard.AccountsWidgetHeaderLink.NewAccount")]
 ```
 
-### AccountsWidgetHeaderLinkCreditCardApply
+### AccountsWidgetHeaderLinkCreditCardApply: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Dashboard.AccountsWidgetHeaderLink.CreditCardApply")]
 ```
 
-### AccountsWidgetHeaderLinkLoanApply
+### AccountsWidgetHeaderLinkLoanApply: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Dashboard.AccountsWidgetHeaderLink.LoanApply")]
 ```
 
-### AccountsWidgetHeaderLinkLinkAccount
+### AccountsWidgetHeaderLinkLinkAccount: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Dashboard.AccountsWidgetHeaderLink.LinkAccount")]
 ```
 
-### CardlyticsWidgetExpandedHeight
+### CardlyticsWidgetExpandedHeight: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Widgets/WidgetSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

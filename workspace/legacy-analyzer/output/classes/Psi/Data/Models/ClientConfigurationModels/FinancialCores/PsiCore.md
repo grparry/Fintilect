@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class PsiCore
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PsiCore
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SetDateOfBirth
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/PsiCore.cs
-visibility: public
-modifier: readonly
-```
+### SetDateOfBirth: `bool`
 
 **Attributes:**
 ```csharp

@@ -7,401 +7,209 @@
 ## Class Summary
 
 public class AchFileService
+implements: IAchFileServiceConfig
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AchFileService
+implements: IAchFileServiceConfig
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### IsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### IsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.IsEnabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.MinVersion")]
 ```
 
-### IsLoggingEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### IsLoggingEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.IsLoggingEnabled")]
 ```
 
-### LoggingDirectory
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### LoggingDirectory: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.LoggingDirectory")]
 ```
 
-### LoggingFileName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### LoggingFileName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.LoggingFileName")]
 ```
 
-### DataSource
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### DataSource: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.DataSource")]
 ```
 
-### InitialCatalog
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### InitialCatalog: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.InitialCatalog")]
 ```
 
-### DatabaseUserId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### DatabaseUserId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.DatabaseUserId")]
 ```
 
-### DatabasePassword
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### DatabasePassword: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.DatabasePassword")]
 ```
 
-### RecordTerminator
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### RecordTerminator: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.RecordTerminator")]
 ```
 
-### RunOnDemand
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### RunOnDemand: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.RunOnDemand")]
 ```
 
-### ProcessWorkDays
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### ProcessWorkDays: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.ProcessWorkDays")]
 ```
 
-### CutoffTime
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### CutoffTime: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.CutoffTime")]
 ```
 
-### AchFileConfigId
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### AchFileConfigId: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.ACHFileConfigId")]
 ```
 
-### SkipGlAccountRecords
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### SkipGlAccountRecords: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.SkipGLAccountRecords")]
 ```
 
-### PadFileWithExtraLines
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### PadFileWithExtraLines: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.PadFileWithExtraLines")]
 ```
 
-### ServiceName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### ServiceName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.ServiceName")]
 ```
 
-### RunTime
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### RunTime: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.RunTime")]
 ```
 
-### MonitorJobStatus
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### MonitorJobStatus: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.MonitorJobStatus")]
 ```
 
-### DecryptKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### DecryptKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.DecryptKey")]
 ```
 
-### ValidCharsForName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### ValidCharsForName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.ValidCharsForName")]
 ```
 
-### UseCuCompanyIdForFileHeader
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### UseCuCompanyIdForFileHeader: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.UseCuCompanyIdForFileHeader")]
 ```
 
-### UseWEBcodeInsteadOfPPDcode
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### UseWEBcodeInsteadOfPPDcode: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.UseWEBcodeInsteadOfPPDcode")]
 ```
 
-### ExternalTransfersBypassSettlementAccountForLoansEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### ExternalTransfersBypassSettlementAccountForLoansEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.ExternalTransfers.BypassSettlementAccountForLoansEnabled")]
 ```
 
-### List
-
-```typescript
-type: ExternalTransfersBypassSettlementAccountLoanTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### ExternalTransfersBypassSettlementAccountLoanTypes: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.ExternalTransfers.BypassSettlementAccountLoanTypes")]
 ```
 
-### UseSeparateInboundSettlementAccountEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### UseSeparateInboundSettlementAccountEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.UseSeparateInboundSettlementAccountEnabled")]
 ```
 
-### InboundSettlementAccount
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### InboundSettlementAccount: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AchFileService.InboundSettlementAccount")]
 ```
 
-### InboundSettlementAccountSuffix
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AchService/AchFileService.cs
-visibility: public
-modifier: readonly
-```
+### InboundSettlementAccountSuffix: `string`
 
 **Attributes:**
 ```csharp

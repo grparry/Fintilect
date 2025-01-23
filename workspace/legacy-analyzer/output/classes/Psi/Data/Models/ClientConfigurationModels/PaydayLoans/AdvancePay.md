@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class AdvancePay
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AdvancePay
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### DatabaseConnectionString
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PaydayLoans/AdvancePay.cs
-visibility: public
-modifier: readonly
-```
+### DatabaseConnectionString: `string`
 
 **Attributes:**
 ```csharp

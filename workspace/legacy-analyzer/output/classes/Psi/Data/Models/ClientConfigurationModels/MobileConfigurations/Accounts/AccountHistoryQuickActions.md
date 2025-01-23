@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class AccountHistoryQuickActions
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AccountHistoryQuickActions
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### QuickActions
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/AccountHistoryQuickActions.cs
-visibility: public
-modifier: readonly
-```
+### QuickActions: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.AccountHistoryQuickActions")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/AccountHistoryQuickActions.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.AccountHistoryQuickActions.Enabled")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/AccountHistoryQuickActions.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.AccountHistoryQuickActions.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/AccountHistoryQuickActions.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp

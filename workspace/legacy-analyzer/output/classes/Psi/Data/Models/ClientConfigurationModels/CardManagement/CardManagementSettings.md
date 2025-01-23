@@ -7,121 +7,67 @@
 ## Class Summary
 
 public class CardManagementSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CardManagementSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### IsPinChangeEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CardManagement/CardManagementSettings.cs
-visibility: public
-modifier: readonly
-```
+### IsPinChangeEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CardManagement.IsPinChangeEnabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CardManagement/CardManagementSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("CardManagement.MinVersion")]
 ```
 
-### CotsSettings
-
-```typescript
-type: CotsSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CardManagement/CardManagementSettings.cs
-visibility: public
-modifier: readonly
-```
+### CotsSettings: `CotsSettings`
 
 **Attributes:**
 ```csharp
 [SettingKey("CardManagement.COTS")]
 ```
 
-### IEnumerable
-
-```typescript
-type: SupportedCardTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CardManagement/CardManagementSettings.cs
-visibility: public
-modifier: readonly
-```
+### SupportedCardTypes: `IEnumerable<CardType>`
 
 **Attributes:**
 ```csharp
 [SettingKey("CardManagement.PinChange.SupportedCardTypes")]
 ```
 
-### IEnumerable
-
-```typescript
-type: RemoveCvvValidationForTheseCardTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CardManagement/CardManagementSettings.cs
-visibility: public
-modifier: readonly
-```
+### RemoveCvvValidationForTheseCardTypes: `IEnumerable<CardType>`
 
 **Attributes:**
 ```csharp
 [SettingKey("CardManagement.PinChange.RemoveCvvValidationForTheseCardTypes")]
 ```
 
-### IEnumerable
-
-```typescript
-type: UnacceptablePins
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CardManagement/CardManagementSettings.cs
-visibility: public
-modifier: readonly
-```
+### UnacceptablePins: `IEnumerable<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("CardManagement.PinChange.UnacceptablePins")]
 ```
 
-### DnaShouldCallCoreForCardNumbers
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CardManagement/CardManagementSettings.cs
-visibility: public
-modifier: readonly
-```
+### DnaShouldCallCoreForCardNumbers: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CardManagement.Dna.ShouldCallCoreForCardNumbers")]
 ```
 
-### TransactionDisputeEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CardManagement/CardManagementSettings.cs
-visibility: public
-modifier: readonly
-```
+### TransactionDisputeEnabled: `bool`
 
 **Attributes:**
 ```csharp

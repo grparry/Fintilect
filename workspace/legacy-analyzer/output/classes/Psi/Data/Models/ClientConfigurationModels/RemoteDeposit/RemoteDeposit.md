@@ -7,217 +7,123 @@
 ## Class Summary
 
 public class RemoteDeposit
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class RemoteDeposit
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Ensenta
+### Ensenta: `Ensenta`
 
-```typescript
-type: Ensenta
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+### Vertifi: `Vertifi`
 
-### Vertifi
+### ProfitStars: `ProfitStars`
 
-```typescript
-type: Vertifi
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
-
-### ProfitStars
-
-```typescript
-type: ProfitStars
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
-
-### RemoteDepositServiceType
-
-```typescript
-type: [RemoteDepositServiceType](../../../RemoteDepositServiceType.md)
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+### ServiceType: `RemoteDepositServiceType`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ServiceName")]
 ```
 
-### ShouldDelayBeforeStatusUpdate
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+### ShouldDelayBeforeStatusUpdate: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.StatusUpdate.ShouldDelayBeforeStatusUpdate")]
 ```
 
-### ShouldCheckReservedCheckingAccountSuffix
+### ShouldCheckReservedCheckingAccountSuffix: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ShouldCheckReservedCheckingAccountSuffix")]
 ```
 
-### ReservedCheckingAccountSuffix
+### ReservedCheckingAccountSuffix: `long`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ReservedCheckingAccountSuffix")]
 ```
 
-### DepositIntoAccountTypes
+### DepositIntoAccountTypes: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.DepositIntoAccountTypes")]
 ```
 
-### RemoteDepositAccountFormat
+### RemoteDepositAccountFormat: `RemoteDepositAccountFormat`
 
-```typescript
-type: RemoteDepositAccountFormat
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.RemoteDepositAccountFormat")]
 ```
 
-### ShouldShowLinksInEmergeBrowser
+### ShouldShowLinksInEmergeBrowser: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ShouldShowLinksInEmergeBrowser")]
 ```
 
-### RelationshipCodeDepositLimitsEnabled
+### RelationshipCodeDepositLimitsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.RelationshipCodeDepositLimits.Enabled")]
 ```
 
-### List
+### RelationshipCodeDepositLimits: `List<RelationshipCodeDepositLimit>`
 
-```typescript
-type: RelationshipCodeDepositLimits
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.RelationshipCodeDepositLimits")]
 ```
 
-### RelationshipCodeSaveHoldInformationEnabled
+### RelationshipCodeSaveHoldInformationEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.RelationshipCode.SaveHoldInformationEnabled")]
 ```
 
-### RelationshipCodeDetermineReleaseDateByBusinessDays
+### RelationshipCodeDetermineReleaseDateByBusinessDays: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.RelationshipCode.DetermineReleaseDateByBusinessDays")]
 ```
 
-### AlternateCheckHoldsEnabled
+### AlternateCheckHoldsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/RemoteDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.AlternateCheckHolds.Enabled")]
-```
-
-## Enums
-
-### RemoteDepositServiceType
-
-```typescript
-    None = 0
-    Ensenta = 1
-    Vertifi = 2
-    ProfitStars = 3
 ```

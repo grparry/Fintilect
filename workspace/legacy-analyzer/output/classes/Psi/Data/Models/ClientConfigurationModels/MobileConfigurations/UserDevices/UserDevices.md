@@ -7,107 +7,60 @@
 ## Class Summary
 
 public class UserDevices
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class UserDevices
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### EnableStaticSecurityCode
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/UserDevices/UserDevices.cs
-visibility: public
-modifier: readonly
-```
+### EnableStaticSecurityCode: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.UserDevices.EnableStaticSecurityCode")]
 ```
 
-### StaticSecurityCodes
-
-```typescript
-type: StaticSecurityCodes[]
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/UserDevices/UserDevices.cs
-visibility: public
-modifier: readonly
-```
+### StaticSecurityCodes: `string[]`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.UserDevices.StaticSecurityCodes")]
 ```
 
-### ValidSecurityCodeCharacters
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/UserDevices/UserDevices.cs
-visibility: public
-modifier: readonly
-```
+### ValidSecurityCodeCharacters: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.UserDevices.ValidSecurityCodeCharacters")]
 ```
 
-### AppKeyLength
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/UserDevices/UserDevices.cs
-visibility: public
-modifier: readonly
-```
+### AppKeyLength: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.MobileAppKeyLength")]
 ```
 
-### ImplicitRegistrationEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/UserDevices/UserDevices.cs
-visibility: public
-modifier: readonly
-```
+### ImplicitRegistrationEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.UserDevices.ImplicitRegistrationEnabled")]
 ```
 
-### ImplicitRegistrationMinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/UserDevices/UserDevices.cs
-visibility: public
-modifier: readonly
-```
+### ImplicitRegistrationMinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.UserDevices.ImplicitRegistrationMinIosVersion")]
 ```
 
-### ImplicitRegistrationMinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/UserDevices/UserDevices.cs
-visibility: public
-modifier: readonly
-```
+### ImplicitRegistrationMinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp

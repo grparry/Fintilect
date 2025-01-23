@@ -7,93 +7,65 @@
 ## Class Summary
 
 public class Comm100
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Comm100
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Chat/Comm100.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Chat.Comm100.Enabled")]
 ```
 
-### AndroidMinimumVersion
+### AndroidMinimumVersion: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Chat/Comm100.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Chat.Comm100.AndroidMinimumVersion")]
 ```
 
-### IosMinimumVersion
+### IosMinimumVersion: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Chat/Comm100.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Chat.Comm100.IosMinimumVersion")]
 ```
 
-### Url
+### Url: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Chat/Comm100.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Chat.Comm100.Url")]
 ```
 
-### SiteId
+### SiteId: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Chat/Comm100.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Chat.Comm100.SiteId")]
 ```
 
-### PlanId
+### PlanId: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Chat/Comm100.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

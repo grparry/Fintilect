@@ -7,37 +7,29 @@
 ## Class Summary
 
 public class AccountNumberAssociation
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AccountNumberAssociation
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/AccountNumberAssociation.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.AccountNumberAssociationEnabled")]
 ```
 
-### DeactivateExternalScheduledTransfers
+### DeactivateExternalScheduledTransfers: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/AccountNumberAssociation.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

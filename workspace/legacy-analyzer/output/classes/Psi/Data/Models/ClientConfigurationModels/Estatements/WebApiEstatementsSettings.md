@@ -7,79 +7,46 @@
 ## Class Summary
 
 public class WebApiEstatementsSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class WebApiEstatementsSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/WebApiEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.WebApiEstatements.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/WebApiEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.WebApiEstatements.MinVersion")]
 ```
 
-### MinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/WebApiEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.WebApiEstatements.MinAndroidVersion")]
 ```
 
-### MinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/WebApiEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.WebApiEstatements.MinIosVersion")]
 ```
 
-### DisclosureEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/WebApiEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### DisclosureEnabled: `bool`
 
 **Attributes:**
 ```csharp

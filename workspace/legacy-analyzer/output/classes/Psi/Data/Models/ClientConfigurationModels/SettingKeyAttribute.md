@@ -7,20 +7,15 @@
 ## Class Summary
 
 public class SettingKeyAttribute
+extends: Attribute
 
 ## Class Metadata
 
 ```typescript
 public class SettingKeyAttribute
+extends: Attribute
 ```
 
 ## Properties
 
-### Key
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SettingsBaseHelper.cs
-visibility: public
-modifier: readonly
-```
+### Key: `string`

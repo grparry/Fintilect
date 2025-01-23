@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class AuditLoggingFeature
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AuditLoggingFeature
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldShowReasonFlagsOnLoginFailure
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AuditLogging/AuditLoggingFeature.cs
-visibility: public
-modifier: readonly
-```
+### ShouldShowReasonFlagsOnLoginFailure: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AuditLogging.ShowReasonFlagsOnLoginFailure")]
 ```
 
-### RestrictedFlagsForAuditLoggingDuringLogin
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AuditLogging/AuditLoggingFeature.cs
-visibility: public
-modifier: readonly
-```
+### RestrictedFlagsForAuditLoggingDuringLogin: `string`
 
 **Attributes:**
 ```csharp

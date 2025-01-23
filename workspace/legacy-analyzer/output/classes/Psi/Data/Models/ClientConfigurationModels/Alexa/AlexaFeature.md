@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class AlexaFeature
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AlexaFeature
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AlexaAppEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alexa/AlexaFeature.cs
-visibility: public
-modifier: readonly
-```
+### AlexaAppEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.Alexa.AlexaAppEnabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alexa/AlexaFeature.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.Alexa.MinVersion")]
 ```
 
-### ExpirePinAfterXMinutes
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alexa/AlexaFeature.cs
-visibility: public
-modifier: readonly
-```
+### ExpirePinAfterXMinutes: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.Alexa.ExpirePinAfterXMinutes")]
 ```
 
-### PinLength
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alexa/AlexaFeature.cs
-visibility: public
-modifier: readonly
-```
+### PinLength: `int`
 
 **Attributes:**
 ```csharp

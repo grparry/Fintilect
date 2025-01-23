@@ -7,490 +7,298 @@
 ## Class Summary
 
 public class Transfers
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Transfers
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AchTransfer
+### ACH: `AchTransfer`
 
-```typescript
-type: AchTransfer
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### Wire: `WireTransfer`
 
-### WireTransfer
+### TransferLimits: `TransferLimits`
 
-```typescript
-type: WireTransfer
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
-
-### TransferLimits
-
-```typescript
-type: TransferLimits
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
-
-### CustomTransferLimitMessagesEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### CustomTransferLimitMessagesEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.CustomTransferLimitMessagesEnabled")]
 ```
 
-### DisplayTransferLimitOnError
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### DisplayTransferLimitOnError: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.DisplayTransferLimitOnError")]
 ```
 
-### ShowShareLoanIds
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### ShowShareLoanIds: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.ShowShareLoanIds")]
 ```
 
-### LimtInExcessTransferToCards
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### LimtInExcessTransferToCards: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.LimtInExcessTransferToCards")]
 ```
 
-### ScheduledTransferIsOpenEndDateDisabledForDaily
+### ScheduledTransferIsOpenEndDateDisabledForDaily: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.ScheduledTransferIsOpenEndDateDisabledForDaily")]
 ```
 
-### AllowLoanToLoanTransfers
+### AllowLoanToLoanTransfers: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.AllowLoanToLoanTransfers")]
 ```
 
-### List
+### MortgageLoanCategories: `List<string>`
 
-```typescript
-type: MortgageLoanCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.MortgageLoanCategories")]
 ```
 
-### HideEndDateOption
+### HideEndDateOption: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.ScheduledTransfers.HideEndDateOption")]
 ```
 
-### AllowPaymentsGreaterThanPayoffAmount
+### AllowPaymentsGreaterThanPayoffAmount: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.AllowPaymentsGreaterThanPayoffAmount")]
 ```
 
-### ShouldHidePreviousBalanceAndPreviousAvailable
+### ShouldHidePreviousBalanceAndPreviousAvailable: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.HidePreviousBalanceAndPreviousAvailable")]
 ```
 
-### GroupAdditionalTransferOptions
+### GroupAdditionalTransferOptions: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.GroupAdditionalTransferOptions")]
 ```
 
-### AllowBalanceTransferBetweenCreditCards
+### AllowBalanceTransferBetweenCreditCards: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.AllowBalanceTransferBetweenCreditCards")]
 ```
 
-### CreditCardBalanceTransfersSendAsSecureMessage
+### CreditCardBalanceTransfersSendAsSecureMessage: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.CreditCardBalanceTransfersSendAsSecureMessage")]
 ```
 
-### CreditCardBalanceTransfersRecipientEmailAddress
+### CreditCardBalanceTransfersRecipientEmailAddress: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.CreditCardBalanceTransfersRecipientEmailAddress")]
 ```
 
-### AllowEBalconTransfersBetweenCreditCards
+### AllowEBalconTransfersBetweenCreditCards: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.AllowEBalconTransfersBetweenCreditCards")]
 ```
 
-### AllowAdjustedToBalanceOnMortgageTransfersEnabled
+### AllowAdjustedToBalanceOnMortgageTransfersEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.AllowAdjustedToBalanceForMortgageTransfersEnabled")]
 ```
 
-### List
+### MortgageTransfersCategoriesForAdjustedToBalance: `List<string>`
 
-```typescript
-type: MortgageTransfersCategoriesForAdjustedToBalance
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.AdjustedToBalanceForMortgageTransfersCategories")]
 ```
 
-### SuffixLabelEnabled
+### SuffixLabelEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.SuffixLabelEnabled")]
 ```
 
-### PostTransferNavigationOptionsEnabled
+### PostTransferNavigationOptionsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.PostTransferNavigationOptionsEnabled")]
 ```
 
-### List
+### TransLoanCollateralForBal: `List<string>`
 
-```typescript
-type: TransLoanCollateralForBal
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.TransLoanCollateralForBal")]
 ```
 
-### List
+### TransExternalLoan: `List<string>`
 
-```typescript
-type: TransExternalLoan
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.TransExternalLoan")]
 ```
 
-### List
+### MortgageCategories: `List<string>`
 
-```typescript
-type: MortgageCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsMortgages")]
 ```
 
-### ShowTodaysDateOnTransferReceipt
+### ShowTodaysDateOnTransferReceipt: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.ShowTodaysDateOnTransferReceipt")]
 ```
 
-### ShowTransferDescriptionOnTransferReceipt
+### ShowTransferDescriptionOnTransferReceipt: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.ShowTransferDescriptionOnTransferReceipt")]
 ```
 
-### GetHouseholdingAccountsEnabled
+### GetHouseholdingAccountsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.ScheduledTransfers.GetHouseholdingAccounts.Enabled")]
 ```
 
-### AllowCreditCardTransfer
+### AllowCreditCardTransfer: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.AllowCreditCardTransfer")]
 ```
 
-### List
+### AllowedTransferToAccountCategories: `List<string>`
 
-```typescript
-type: AllowedTransferToAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.Homebanking.obsTransferToAccounts")]
 ```
 
-### List
+### AllowedTransferFromAccountCategories: `List<string>`
 
-```typescript
-type: AllowedTransferFromAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsTransferFromAccounts")]
 ```
 
-### NonOlbMemberEnabled
+### NonOlbMemberEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.ScheduledTransfers.NonOlbMember.Enabled")]
 ```
 
-### QuickActionEnabled
+### QuickActionEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.QuickAction.Enabled")]
 ```
 
-### QuickActionToAndFromEnabled
+### QuickActionToAndFromEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.QuickAction.ToAndFromEnabled")]
 ```
 
-### AnyMemberTransfers
+### AnyMember: `AnyMemberTransfers`
 
-```typescript
-type: AnyMemberTransfers
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
 
-### TransferTimeouts
 
-```typescript
-type: TransferTimeouts
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### Timeouts: `TransferTimeouts`
+
+

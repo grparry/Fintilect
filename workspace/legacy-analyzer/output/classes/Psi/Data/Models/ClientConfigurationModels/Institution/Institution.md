@@ -7,317 +7,165 @@
 ## Class Summary
 
 public class Institution
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Institution
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### PrivacyPolicy
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### PrivacyPolicy: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.PrivacyPolicy")]
 ```
 
-### EnableContentSecurityPolicyHeaders
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### EnableContentSecurityPolicyHeaders: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.EnableContentSecurityPolicyHeaders")]
 ```
 
-### XFrameOptionsURLs
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### XFrameOptionsURLs: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.XFrameOptionsURLs")]
 ```
 
-### ContentSecurityPolicy
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### ContentSecurityPolicy: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.ContentSecurityPolicy")]
 ```
 
-### ServerUtcOffset
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### ServerUtcOffset: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.UtcOffset")]
 ```
 
-### EnableStrictTransportSecurityHeaders
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### EnableStrictTransportSecurityHeaders: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.EnableStrictTransportSecurityHeaders")]
 ```
 
-### StrictTransportSecurityMaxAge
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### StrictTransportSecurityMaxAge: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.StrictTransportSecurity.maxAge")]
 ```
 
-### StrictTransportSecurityIncludeSubdomains
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### StrictTransportSecurityIncludeSubdomains: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.StrictTransportSecurity.includeSubdomains")]
 ```
 
-### StrictTransportSecurityPreload
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### StrictTransportSecurityPreload: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.StrictTransportSecurity.Preload")]
 ```
 
-### InstitutionCultureID
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### InstitutionCultureID: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.InstitutionCultureID")]
 ```
 
-### TimeZone
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### TimeZone: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.TimeZone")]
 ```
 
-### EnableTimeZoneOffset
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### EnableTimeZoneOffset: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableTimeZoneOffset")]
 ```
 
-### TimeZoneOffset
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### TimeZoneOffset: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.TimeZoneOffset")]
 ```
 
-### RestrictDatePickerStartDateHours
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### RestrictDatePickerStartDateHours: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.Admin.ScheduledTransfers.RestrictDatePickerStartDateHours")]
 ```
 
-### DatePickerEarliestStartDateHour
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### DatePickerEarliestStartDateHour: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.Admin.ScheduledTransfers.DatePickerEarliestStartDateHour")]
 ```
 
-### AdminBaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### AdminBaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.Admin.BaseUrl")]
 ```
 
-### HomebankingBaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### HomebankingBaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.gsAppURL")]
 ```
 
-### List
-
-```typescript
-type: WebDomainWhitelist
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### WebDomainWhitelist: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Institution.WebDomainWhitelist")]
 ```
 
-### LogForwardedClientIp
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### LogForwardedClientIp: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.LogForwardedClientIP")]
 ```
 
-### ShouldUseForwardedAuthHeader
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### ShouldUseForwardedAuthHeader: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Institution.ShouldUseForwardedAuthHeader")]
 ```
 
-### RoutingNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### RoutingNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.IntraBankRoutingNumber")]
 ```
 
-### Name
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/Institution.cs
-visibility: public
-modifier: readonly
-```
+### Name: `string`
 
 **Attributes:**
 ```csharp

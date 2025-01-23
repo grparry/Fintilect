@@ -7,102 +7,55 @@
 ## Class Summary
 
 public class CheckingRewards
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CheckingRewards
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Deals/CheckingRewards/CheckingRewards.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Deals.CheckingRewards.MinimumVersion")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Deals/CheckingRewards/CheckingRewards.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Deals.CheckingRewards.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Deals/CheckingRewards/CheckingRewards.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Deals.CheckingRewards.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Deals/CheckingRewards/CheckingRewards.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Deals.CheckingRewards.Enabled")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Deals/CheckingRewards/CheckingRewards.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Deals.CheckingRewards.Url")]
 ```
 
-### Authentication
+### Authentication: `Authentication.Authentication`
 
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Deals/CheckingRewards/CheckingRewards.cs
-visibility: public
-modifier: readonly
-```
-
-### ReslovingUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Deals/CheckingRewards/CheckingRewards.cs
-visibility: public
-modifier: readonly
-```
+### ReslovingUrl: `string`
 
 **Attributes:**
 ```csharp

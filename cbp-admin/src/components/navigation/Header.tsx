@@ -10,7 +10,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { User } from '../../types/index';
 
 interface HeaderProps {
@@ -29,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({
   open,
 }) => {
   const theme = useTheme();
-  const { state } = useAuth();
+  const { user } = useAuth();
 
   return (
     <AppBar
@@ -59,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-          {state.user ? `Welcome, ${state.user.firstName}` : 'Welcome'}
+          {user ? `Welcome, ${user.firstName}` : 'Welcome'}
         </Typography>
         <Box>
           <IconButton 

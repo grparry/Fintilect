@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class BitEstatements
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class BitEstatements
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldUseFirstStatementAccountForEnrollment
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/BitEstatements.cs
-visibility: public
-modifier: readonly
-```
+### ShouldUseFirstStatementAccountForEnrollment: `bool`
 
 **Attributes:**
 ```csharp

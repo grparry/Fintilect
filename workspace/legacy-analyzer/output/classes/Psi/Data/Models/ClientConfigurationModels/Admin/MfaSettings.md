@@ -7,23 +7,20 @@
 ## Class Summary
 
 public class MfaSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MfaSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MfaTextQuestionsEnabled
+### MfaTextQuestionsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/MfaSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

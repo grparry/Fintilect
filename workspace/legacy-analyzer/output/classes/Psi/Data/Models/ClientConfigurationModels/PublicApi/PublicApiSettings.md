@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class PublicApiSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PublicApiSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### DefaultAccountHistoryDays
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PublicApi/PublicApiSettings.cs
-visibility: public
-modifier: readonly
-```
+### DefaultAccountHistoryDays: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("PublicApi.Account.DefaultHistoryDays")]
 ```
 
-### ConnectPublicApiUseCards
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PublicApi/PublicApiSettings.cs
-visibility: public
-modifier: readonly
-```
+### ConnectPublicApiUseCards: `bool`
 
 **Attributes:**
 ```csharp

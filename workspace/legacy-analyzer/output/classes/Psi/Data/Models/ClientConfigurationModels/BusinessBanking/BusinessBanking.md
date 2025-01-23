@@ -7,219 +7,144 @@
 ## Class Summary
 
 public class BusinessBanking
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class BusinessBanking
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AccountSelectorEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+### AccountSelectorEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.AccountSelector.Enabled")]
 ```
 
-### ShouldBlockLoginForMasterUsers
+### ShouldBlockLoginForMasterUsers: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.ShouldBlockLoginForMasterUsers")]
 ```
 
-### ShouldDisableUpdateUserInfoForMasterUsers
+### ShouldDisableUpdateUserInfoForMasterUsers: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.Admin.ShouldDisableUpdateUserInfoForMasterUsers")]
 ```
 
-### SubUsersCanEditContactInfo
+### SubUsersCanEditContactInfo: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.SubUsersCanEditContactInfo")]
 ```
 
-### DeleteSubUsersEnabled
+### DeleteSubUsersEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.DeleteSubUsers.Enabled")]
 ```
 
-### HideDisabledSubUsersEnabled
+### HideDisabledSubUsersEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.HideDisabledSubUsers.Enabled")]
 ```
 
-### ShouldDeleteSubUserDevicesAndAlertSubscriptionsWhenSubUserIsDeleted
+### ShouldDeleteSubUserDevicesAndAlertSubscriptionsWhenSubUserIsDeleted: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.ShouldDeleteSubUserDevicesAndAlertSubscriptionsWhenSubUserIsDisabled")]
 ```
 
-### AddSubUserAddressAndPhoneNumberRequired
+### AddSubUserAddressAndPhoneNumberRequired: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.AddSubUser.AddressAndPhoneNumberRequired")]
 ```
 
-### CreateSubUserOnCoreEnabled
+### CreateSubUserOnCoreEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.AddSubUser.CreateSubUserOnCore.Enabled")]
 ```
 
-### FilterAvailableFeaturesEnabled
+### FilterAvailableFeaturesEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.FilterAvailableFeatures.Enabled")]
 ```
 
-### Dictionary
+### SubUserAvailableFeatures: `Dictionary<TieredAccessFeature, bool>`
 
-```typescript
-type: SubUserAvailableFeatures
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.SubUser.AvailableFeatures")]
 ```
 
-### ShouldSetDisclosureAcceptanceOnCore
+### ShouldSetDisclosureAcceptanceOnCore: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.SubUser.ShouldSetDisclosureAcceptanceOnCore")]
 ```
 
-### ShouldAcceptDisclosureWhenCreated
+### ShouldAcceptDisclosureWhenCreated: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.SubUser.ShouldAcceptDisclosureWhenCreated")]
 ```
 
-### ShouldUseMasterAccountForMobileDeposit
+### ShouldUseMasterAccountForMobileDeposit: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BusinessBanking.SubUser.ShouldUseMasterAccountForMobileDeposit")]
 ```
 
-### EnableDailyLoginRestrictions
+### EnableDailyLoginRestrictions: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BusinessBanking/BusinessBanking.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

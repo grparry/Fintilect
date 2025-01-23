@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class Notes
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Notes
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ClearBadAddressFlagOnNoChange
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Notes.cs
-visibility: public
-modifier: readonly
-```
+### ClearBadAddressFlagOnNoChange: `bool`
 
 **Attributes:**
 ```csharp

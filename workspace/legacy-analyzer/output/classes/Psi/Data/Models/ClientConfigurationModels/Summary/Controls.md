@@ -7,48 +7,29 @@
 ## Class Summary
 
 public class Controls
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Controls
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SummarySidePanelEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Summary/Controls.cs
-visibility: public
-modifier: readonly
-```
+### SummarySidePanelEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Summary.SummarySidePanelEnabled")]
 ```
 
-### PanelOrderString
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Summary/Controls.cs
-visibility: public
-modifier: readonly
-```
+### PanelOrderString: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Summary.PanelOrder")]
 ```
 
-### CreditCards
-
-```typescript
-type: CreditCards
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Summary/Controls.cs
-visibility: public
-modifier: readonly
-```
+### CreditCards: `CreditCards`

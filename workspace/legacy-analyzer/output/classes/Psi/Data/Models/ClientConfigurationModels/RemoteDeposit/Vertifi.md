@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class Vertifi
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Vertifi
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ImmediateDepositUponSuccessfulCheckProcessing
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/Vertifi.cs
-visibility: public
-modifier: readonly
-```
+### ImmediateDepositUponSuccessfulCheckProcessing: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("VertifiDepositOnSuccess")]
 ```
 
-### VersionNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/Vertifi.cs
-visibility: public
-modifier: readonly
-```
+### VersionNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.Vertifi.VersionNumber")]
 ```
 
-### SharedSecretPassword
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/Vertifi.cs
-visibility: public
-modifier: readonly
-```
+### SharedSecretPassword: `string`
 
 **Attributes:**
 ```csharp

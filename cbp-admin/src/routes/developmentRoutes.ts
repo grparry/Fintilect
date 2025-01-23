@@ -13,7 +13,7 @@ const developmentRoutes: RouteConfig[] = [
     title: 'Development',
     element: DevelopmentHeader,
     icon: 'Code',
-    hideFromSidebar: true,
+    hideFromSidebar: false,
     sectionId: 'development',
   },
   {

@@ -7,51 +7,38 @@
 ## Class Summary
 
 public class SecurityCodeVerificationSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class SecurityCodeVerificationSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/SecurityCodeVerificationSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.SmsSecurityCodeVerification.Enabled")]
 ```
 
-### VoiceMessageEnabled
+### VoiceMessageEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/SecurityCodeVerificationSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.SmsSecurityCodeVerification.VoiceMessageEnabled")]
 ```
 
-### NonOlbMemberEnabled
+### NonOlbMemberEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/SecurityCodeVerificationSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

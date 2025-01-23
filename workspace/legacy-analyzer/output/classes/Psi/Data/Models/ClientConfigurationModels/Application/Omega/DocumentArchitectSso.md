@@ -7,121 +7,67 @@
 ## Class Summary
 
 public class DocumentArchitectSso
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DocumentArchitectSso
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/DocumentArchitectSso.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.DocumentArchitectSso.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/DocumentArchitectSso.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.DocumentArchitectSso.MinVersion")]
 ```
 
-### BaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/DocumentArchitectSso.cs
-visibility: public
-modifier: readonly
-```
+### BaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.DocumentArchitectSso.BaseUrl")]
 ```
 
-### ShouldOpenInNewWindow
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/DocumentArchitectSso.cs
-visibility: public
-modifier: readonly
-```
+### ShouldOpenInNewWindow: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.DocumentArchitectSso.ShouldOpenInNewWindow")]
 ```
 
-### HashKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/DocumentArchitectSso.cs
-visibility: public
-modifier: readonly
-```
+### HashKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.DocumentArchitectSso.HashKey")]
 ```
 
-### AuthUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/DocumentArchitectSso.cs
-visibility: public
-modifier: readonly
-```
+### AuthUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.DocumentArchitectSso.AuthUrl")]
 ```
 
-### SsoUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/DocumentArchitectSso.cs
-visibility: public
-modifier: readonly
-```
+### SsoUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.DocumentArchitectSso.SsoUrl")]
 ```
 
-### ClientId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/DocumentArchitectSso.cs
-visibility: public
-modifier: readonly
-```
+### ClientId: `string`
 
 **Attributes:**
 ```csharp

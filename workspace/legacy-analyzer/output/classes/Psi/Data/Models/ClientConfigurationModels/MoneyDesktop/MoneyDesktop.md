@@ -7,52 +7,26 @@
 ## Class Summary
 
 public class MoneyDesktop
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MoneyDesktop
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AutoEnrollEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MoneyDesktop/MoneyDesktop.cs
-visibility: public
-modifier: readonly
-```
+### AutoEnrollEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MoneyDesktop.AutoEnrollEnabled")]
 ```
 
-### Dashboard
+### DashboardConfiguration: `Dashboard`
 
-```typescript
-type: Dashboard
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MoneyDesktop/MoneyDesktop.cs
-visibility: public
-modifier: readonly
-```
+### SummaryConfiguration: `Summary`
 
-### Summary
-
-```typescript
-type: Summary
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MoneyDesktop/MoneyDesktop.cs
-visibility: public
-modifier: readonly
-```
-
-### Enrollment
-
-```typescript
-type: Enrollment
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MoneyDesktop/MoneyDesktop.cs
-visibility: public
-modifier: readonly
-```
+### Enrollment: `Enrollment`

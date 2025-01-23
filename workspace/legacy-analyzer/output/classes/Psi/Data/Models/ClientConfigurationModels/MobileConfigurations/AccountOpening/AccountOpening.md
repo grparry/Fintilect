@@ -7,29 +7,17 @@
 ## Class Summary
 
 public class AccountOpening
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AccountOpening
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### JoinCreditUnion
+### JoinCreditUnion: `JoinCreditUnion.JoinCreditUnion`
 
-```typescript
-type: JoinCreditUnion
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/AccountOpening/AccountOpening.cs
-visibility: public
-modifier: readonly
-```
-
-### MiniOao
-
-```typescript
-type: MiniOao
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/AccountOpening/AccountOpening.cs
-visibility: public
-modifier: readonly
-```
+### MiniOao: `MiniOao.MiniOao`

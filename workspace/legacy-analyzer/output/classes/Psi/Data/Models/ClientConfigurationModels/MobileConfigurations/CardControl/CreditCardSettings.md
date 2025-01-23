@@ -7,107 +7,74 @@
 ## Class Summary
 
 public class CreditCardSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CreditCardSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AlertPreferencesEnabled
+### AlertPreferencesEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CreditCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.CreditCard.AlertPreferencesEnabled")]
 ```
 
-### UserDeviceSetupEnabled
+### UserDeviceSetupEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CreditCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.CreditCard.UserDeviceSetupEnabled")]
 ```
 
-### ManagePermissionsEnabled
+### ManagePermissionsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CreditCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.CreditCard.ManagePermissionsEnabled")]
 ```
 
-### ShouldUseDynamicTransactionTypes
+### ShouldUseDynamicTransactionTypes: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CreditCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.CreditCard.ShouldUseDynamicTransactionTypes")]
 ```
 
-### MerchantTypesEnabled
+### MerchantTypesEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CreditCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.CreditCard.MerchantTypesEnabled")]
 ```
 
-### SpendingLimitsEnabled
+### SpendingLimitsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CreditCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.CreditCard.SpendingLimitsEnabled")]
 ```
 
-### TransactionTypesEnabled
+### TransactionTypesEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CreditCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

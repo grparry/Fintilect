@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class CardlyticsWidget
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CardlyticsWidget
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShowWidgetOnWelcomeSummaryPages
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsWidget.cs
-visibility: public
-modifier: readonly
-```
+### ShowWidgetOnWelcomeSummaryPages: `bool`
 
 **Attributes:**
 ```csharp

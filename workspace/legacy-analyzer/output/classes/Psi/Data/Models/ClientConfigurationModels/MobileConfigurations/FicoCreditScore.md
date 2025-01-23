@@ -7,62 +7,36 @@
 ## Class Summary
 
 public class FicoCreditScore
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class FicoCreditScore
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/FicoCreditScore.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.FicoCreditScore.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/FicoCreditScore.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.FicoCreditScore.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/FicoCreditScore.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.FicoCreditScore.Enabled")]
 ```
 
-### Authentication
-
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/FicoCreditScore.cs
-visibility: public
-modifier: readonly
-```
+### Authentication: `Authentication.Authentication`

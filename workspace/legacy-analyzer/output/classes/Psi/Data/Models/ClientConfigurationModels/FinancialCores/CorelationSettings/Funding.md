@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class Funding
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Funding
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### FundingIsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Funding.cs
-visibility: public
-modifier: readonly
-```
+### FundingIsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.Funding.Enabled")]
 ```
 
-### FromMemberAccountNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Funding.cs
-visibility: public
-modifier: readonly
-```
+### FromMemberAccountNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.Funding.FromMemberAccountNumber")]
 ```
 
-### FromAccountNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Funding.cs
-visibility: public
-modifier: readonly
-```
+### FromAccountNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.Funding.FromAccountNumber")]
 ```
 
-### Description
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Funding.cs
-visibility: public
-modifier: readonly
-```
+### Description: `string`
 
 **Attributes:**
 ```csharp

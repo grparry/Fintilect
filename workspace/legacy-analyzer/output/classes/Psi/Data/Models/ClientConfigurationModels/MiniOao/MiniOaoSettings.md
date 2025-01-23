@@ -7,261 +7,169 @@
 ## Class Summary
 
 public class MiniOaoSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MiniOaoSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.MinimumVersion")]
 ```
 
-### ShouldShowJointOwners
+### ShouldShowJointOwners: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.ShouldShowJointOwners")]
 ```
 
-### AddNewJointOwnerEnabled
+### AddNewJointOwnerEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.AddNewJointOwner.Enabled")]
 ```
 
-### ShouldSelectAllJointAccountsByDefaultOnNewAccountCreation
+### ShouldSelectAllJointAccountsByDefaultOnNewAccountCreation: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.ShouldSelectAllJointAccountsByDefaultOnNewAccountCreation")]
 ```
 
-### AllowCreateNewJointOwnerDuringAccountCreation
+### AllowCreateNewJointOwnerDuringAccountCreation: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.AllowCreateNewJointOwnerDuringAccountCreation")]
 ```
 
-### AllowNewAccountFunding
+### AllowNewAccountFunding: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.AllowNewAccountFunding")]
 ```
 
-### ShouldWarnUserIfNoDebitCardSelected
+### ShouldWarnUserIfNoDebitCardSelected: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.ShouldWarnUserIfNoDebitCardSelected")]
 ```
 
-### PromoCodesEnabled
+### PromoCodesEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.PromoCodesEnabled")]
 ```
 
-### ForceNewAccountOpeningDisclosure
+### ForceNewAccountOpeningDisclosure: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.ForceNewAccountOpeningDisclosure")]
 ```
 
-### ForceAddNewJointOwnerDisclosure
+### ForceAddNewJointOwnerDisclosure: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.ForceAddNewJointOwnerDisclosure")]
 ```
 
-### AdapiUrl
+### AdapiUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.AdapiUrl")]
 ```
 
-### ShouldUseMockData
+### ShouldUseMockData: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.ShouldUseMockData")]
 ```
 
-### CanFundFromCrossAccount
+### CanFundFromCrossAccount: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.CanFundFromCrossAccounts")]
 ```
 
-### DebitCardProductId
+### DebitCardProductId: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.DebitCardProductId")]
 ```
 
-### RequireIdInfoOnAddJointOwner
+### RequireIdInfoOnAddJointOwner: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.RequireIdInfoOnAddJointOwner")]
 ```
 
-### RequireEmployerInfoOnAddJointOwner
+### RequireEmployerInfoOnAddJointOwner: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MiniOao.ConnectAccountOpening.RequireEmployerInfoOnAddJointOwner")]
 ```
 
-### SecureMessageCategory
+### SecureMessageCategory: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MiniOao/MiniOaoSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

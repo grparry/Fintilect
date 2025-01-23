@@ -7,23 +7,20 @@
 ## Class Summary
 
 public class Enrollment
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Enrollment
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldRequirePasswordChange
+### ShouldRequirePasswordChange: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/Enrollment.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

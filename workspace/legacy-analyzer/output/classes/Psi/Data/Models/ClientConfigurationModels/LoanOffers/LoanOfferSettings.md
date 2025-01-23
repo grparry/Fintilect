@@ -7,20 +7,15 @@
 ## Class Summary
 
 public class LoanOfferSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LoanOfferSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### CuNexusLoanOfferSso
-
-```typescript
-type: CuNexusLoanOfferSso
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanOffers/LoanOfferSettings.cs
-visibility: public
-modifier: readonly
-```
+### CuNexusLoanOfferSso: `CuNexusLoanOfferSso`

@@ -7,83 +7,43 @@
 ## Class Summary
 
 public class CardControlLocations
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CardControlLocations
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### CreditCardLocationSettings
+### CreditCard: `CreditCardLocationSettings`
 
-```typescript
-type: CreditCardLocationSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/CardControlLocations.cs
-visibility: public
-modifier: readonly
-```
+### DebitCard: `DebitCardLocationSettings`
 
-### DebitCardLocationSettings
-
-```typescript
-type: DebitCardLocationSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/CardControlLocations.cs
-visibility: public
-modifier: readonly
-```
-
-### CurrentLocationEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/CardControlLocations.cs
-visibility: public
-modifier: readonly
-```
+### CurrentLocationEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Locations.CurrentLocationEnabled")]
 ```
 
-### RegionsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/CardControlLocations.cs
-visibility: public
-modifier: readonly
-```
+### RegionsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Locations.RegionsEnabled")]
 ```
 
-### UsOnlyEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/CardControlLocations.cs
-visibility: public
-modifier: readonly
-```
+### UsOnlyEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Locations.UsOnlyEnabled")]
 ```
 
-### MaxNumberOfRegions
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/CardControlLocations.cs
-visibility: public
-modifier: readonly
-```
+### MaxNumberOfRegions: `int`
 
 **Attributes:**
 ```csharp

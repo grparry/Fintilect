@@ -7,20 +7,15 @@
 ## Class Summary
 
 public class PaydayLoan
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PaydayLoan
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AdvancePay
-
-```typescript
-type: AdvancePay
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PaydayLoans/PaydayLoan.cs
-visibility: public
-modifier: readonly
-```
+### AdvancePay: `AdvancePay`

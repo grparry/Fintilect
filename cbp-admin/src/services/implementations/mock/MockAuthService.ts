@@ -22,44 +22,41 @@ export class MockAuthService extends BaseMockService implements IAuthService {
     }
 
     async login(credentials: LoginCredentials): Promise<AuthenticationResponse> {
-        try {
-            await this.delay();
-            
-            const user = this.users.find(u => u.username === credentials.username);
-            if (!user) {
-                return this.createError('Invalid credentials', 401);
-            }
+        await this.delay();
+        
+        const user = this.users.find(u => 
+            u.username === credentials.username && 
+            u.password === credentials.password
+        );
 
-            const tokens = await this.generateTokens();
-            this.currentUser = {
-                ...user,
-                clientId: 'default-client',
-                department: 'default-department'
-            };
-            
-            this.currentSession = {
-                id: 'mock-session-' + Date.now(),
-                user: this.currentUser,
-                startedAt: Date.now(),
-                expiresAt: Date.now() + 3600000,
-                lastActivity: Date.now()
-            };
-
-            const response: AuthenticationResponse = {
-                sessionId: 'mock-session-id',
-                expiresAt: Date.now() + 3600000, // 1 hour from now
-                user: {
-                    ...this.currentUser,
-                    clientId: 'default-client'  // Ensure clientId is always set
-                },
-                tokens
-            };
-
-            return this.createResponse(response);
-        } catch (error) {
-            logger.error(`Mock login failed for user ${credentials.username}: ${error}`);
-            throw this.createError('Login failed', 401);
+        if (!user) {
+            this.createError('Invalid username or password');
         }
+
+        // Don't include password in the tokens or session
+        const { password, ...userWithoutPassword } = user;
+
+        const tokens = await this.generateTokens();
+        this.currentUser = {
+            ...userWithoutPassword,
+            clientId: 'default-client',
+            department: 'default-department'
+        };
+        
+        this.currentSession = {
+            id: 'mock-session-' + Date.now(),
+            user: this.currentUser,
+            startedAt: Date.now(),
+            expiresAt: Date.now() + 3600000,
+            lastActivity: Date.now()
+        };
+
+        return this.createResponse({
+            sessionId: 'mock-session-id',
+            expiresAt: Date.now() + 3600000, // 1 hour from now
+            user: this.currentUser,
+            tokens
+        });
     }
 
     async logout(): Promise<void> {
@@ -67,16 +64,17 @@ export class MockAuthService extends BaseMockService implements IAuthService {
             await this.delay();
             
             if (!this.currentUser) {
-                return this.createError('No active session', 401);
+                this.createError('No active session');
+                return null as never;
             }
 
             this.currentUser = null;
             this.currentSession = null;
-
             return this.createResponse<void>(undefined);
         } catch (error) {
-            logger.error(`Mock logout failed: ${error}`);
-            throw this.createError('Logout failed', 500);
+            logger.error(`Mock logout failed: ${(error as Error).message}`);
+            this.createError('Logout failed');
+            return null as never;
         }
     }
 
@@ -85,54 +83,56 @@ export class MockAuthService extends BaseMockService implements IAuthService {
             await this.delay();
             
             if (!this.currentSession) {
-                return this.createError('No active session', 401);
+                this.createError('No active session');
+                return null as never;
             }
 
             const tokens = await this.generateTokens();
             return this.createResponse(tokens);
         } catch (error) {
-            logger.error(`Mock token refresh failed: ${error}`);
-            throw this.createError('Token refresh failed', 500);
+            logger.error(`Mock token refresh failed: ${(error as Error).message}`);
+            this.createError('Token refresh failed');
+            return null as never;
         }
     }
 
     async getCurrentSession(): Promise<SessionInfo | null> {
         try {
-            await this.delay();
             return this.createResponse(this.currentSession);
         } catch (error) {
-            logger.error(`Mock get current session failed: ${error}`);
-            return null;
+            logger.error(`Mock get current session failed: ${(error as Error).message}`);
+            this.createError('Failed to get current session');
+            return null as never;
         }
     }
 
     async isAuthenticated(): Promise<boolean> {
         try {
-            await this.delay();
             return this.createResponse(!!this.currentSession);
         } catch (error) {
-            logger.error(`Mock isAuthenticated check failed: ${error}`);
-            return false;
+            logger.error(`Mock isAuthenticated check failed: ${(error as Error).message}`);
+            this.createError('Failed to check authentication');
+            return null as never;
         }
     }
 
     async getActiveSessions(): Promise<UserSession[]> {
         try {
-            await this.delay();
             return this.createResponse(this.activeSessions);
         } catch (error) {
-            logger.error(`Mock getActiveSessions failed: ${error}`);
-            return [];
+            logger.error(`Mock getActiveSessions failed: ${(error as Error).message}`);
+            this.createError('Failed to get active sessions');
+            return null as never;
         }
     }
 
     async getAllSessions(): Promise<UserSession[]> {
         try {
-            await this.delay();
             return this.createResponse(this.activeSessions);
         } catch (error) {
-            logger.error(`Mock get all sessions failed: ${error}`);
-            throw this.createError('Failed to get sessions', 500);
+            logger.error(`Mock get all sessions failed: ${(error as Error).message}`);
+            this.createError('Failed to get all sessions');
+            return null as never;
         }
     }
 
@@ -142,14 +142,16 @@ export class MockAuthService extends BaseMockService implements IAuthService {
             
             const sessionIndex = this.activeSessions.findIndex(s => s.id === sessionId);
             if (sessionIndex === -1) {
-                return this.createError('Session not found', 404);
+                this.createError('Session not found');
+                return null as never;
             }
 
             this.activeSessions.splice(sessionIndex, 1);
             return this.createResponse<void>(undefined);
         } catch (error) {
-            logger.error(`Mock terminate session failed: ${error}`);
-            throw this.createError('Failed to terminate session', 500);
+            logger.error(`Mock terminate session failed: ${(error as Error).message}`);
+            this.createError('Failed to terminate session');
+            return null as never;
         }
     }
 
@@ -157,18 +159,20 @@ export class MockAuthService extends BaseMockService implements IAuthService {
         try {
             await this.delay();
             if (!this.currentSession) {
-                return this.createError('No active session', 401);
+                this.createError('No active session');
+                return null as never;
             }
             
             // Keep only the current session
             this.activeSessions = this.activeSessions.filter(
-                session => session.id === this.currentSession?.id
+                s => s.id === this.currentSession?.id
             );
-            
+
             return this.createResponse<void>(undefined);
         } catch (error) {
-            logger.error(`Mock terminateOtherSessions failed: ${error}`);
-            throw this.createError('Failed to terminate other sessions', 500);
+            logger.error(`Mock terminateOtherSessions failed: ${(error as Error).message}`);
+            this.createError('Failed to terminate other sessions');
+            return null as never;
         }
     }
 

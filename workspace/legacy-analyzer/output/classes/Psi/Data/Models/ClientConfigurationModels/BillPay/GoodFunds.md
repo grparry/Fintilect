@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class GoodFunds
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class GoodFunds
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MicrNumberStart
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/GoodFunds.cs
-visibility: public
-modifier: readonly
-```
+### MicrNumberStart: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Billpay.BillPaySettings.GoodFunds.MicrNumberStart")]
 ```
 
-### BillPayFundingType
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/GoodFunds.cs
-visibility: public
-modifier: readonly
-```
+### BillPayFundingType: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Billpay.BillPaySettings.GoodFunds.BillPayFundingType")]
 ```
 
-### AccountAndSuffixUseSuffixFromFile
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/GoodFunds.cs
-visibility: public
-modifier: readonly
-```
+### AccountAndSuffixUseSuffixFromFile: `bool`
 
 **Attributes:**
 ```csharp

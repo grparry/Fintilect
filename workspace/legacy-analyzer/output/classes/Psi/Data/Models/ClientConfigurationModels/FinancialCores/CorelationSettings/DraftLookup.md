@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class DraftLookup
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DraftLookup
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AccountNumberLength
-
-```typescript
-type: AccountNumberLength | null
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/DraftLookup.cs
-visibility: public
-modifier: readonly
-```
+### AccountNumberLength: `int?`
 
 **Attributes:**
 ```csharp

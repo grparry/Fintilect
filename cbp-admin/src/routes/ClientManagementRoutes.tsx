@@ -24,7 +24,7 @@ interface RouteParams {
 const clientManagementRoutes: RouteConfig[] = [
   {
     id: 'client-management',
-    path: '/',
+    path: '/admin/client-management',
     title: 'Client Management',
     element: ClientManagementHeader,
     icon: 'Business',
@@ -32,7 +32,7 @@ const clientManagementRoutes: RouteConfig[] = [
   },
   {
     id: 'client-list',
-    path: '/list',
+    path: '/admin/client-management/list',
     title: 'Clients',
     element: ClientList,
     icon: 'List',
@@ -40,7 +40,7 @@ const clientManagementRoutes: RouteConfig[] = [
   },
   {
     id: 'client-details',
-    path: '/:clientId/*',
+    path: '/admin/client-management/:clientId/*',
     title: 'Client Details',
     element: ClientManagementWrapper,
     hideFromSidebar: true,

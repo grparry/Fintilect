@@ -12,6 +12,7 @@ export const mockUsers: User[] = [
     department: 'IT',
     lastLogin: new Date().toISOString(),
     locked: false,
+    password: 'Admin@123!Secure', // For testing only
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     clientId: 'default-client'
@@ -27,6 +28,7 @@ export const mockUsers: User[] = [
     department: 'Sales',
     lastLogin: new Date().toISOString(),
     locked: false,
+    password: 'Admin@123!Secure', // For testing only
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     clientId: 'default-client'

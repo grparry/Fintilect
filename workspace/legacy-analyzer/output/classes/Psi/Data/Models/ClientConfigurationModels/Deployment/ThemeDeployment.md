@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class ThemeDeployment
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ThemeDeployment
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Version
-
-```typescript
-type: Version
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ThemeDeployment/ThemeDeployment.cs
-visibility: public
-modifier: readonly
-```
+### LatestIosVersion: `Version`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Deployment.LatestIosVersion")]
 ```
 
-### Version
-
-```typescript
-type: Version
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ThemeDeployment/ThemeDeployment.cs
-visibility: public
-modifier: readonly
-```
+### LatestAndroidVersion: `Version`
 
 **Attributes:**
 ```csharp

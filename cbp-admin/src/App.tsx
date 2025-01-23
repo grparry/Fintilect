@@ -6,6 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { NavigationProvider } from './context/NavigationContext';
+import { ServiceProvider } from './providers/ServiceProvider';
 import MainLayout from './components/layout/MainLayout';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import LoginPage from './components/auth/LoginPage';
@@ -21,8 +22,7 @@ interface ProtectedRouteProps {
 // Protected Route Component
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
-  const location = useLocation();
-  console.log('ProtectedRoute - Current location:', location.pathname);
+  console.log('ProtectedRoute - Checking auth');
 
   if (loading) {
     return <LoadingFallback />;
@@ -43,8 +43,7 @@ interface PublicRouteProps {
 // Public Route Component
 const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
   const { user } = useAuth();
-  const location = useLocation();
-  console.log('PublicRoute - Current location:', location.pathname);
+  console.log('PublicRoute - Checking auth');
 
   if (user) {
     return <Navigate to="/" replace />;
@@ -62,8 +61,7 @@ const LoadingFallback: React.FC = () => (
 
 const AppWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { isDarkMode, toggleTheme } = useTheme();
-  const location = useLocation();
-  console.log('AppWrapper - Current location:', location.pathname);
+  console.log('AppWrapper - Rendering with children');
   return <MainLayout toggleTheme={toggleTheme}>{children}</MainLayout>;
 };
 
@@ -171,27 +169,29 @@ const App: React.FC = () => {
 
   return (
     <ErrorBoundary>
-      <Router>
-        <ThemeProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <AuthProvider>
-              <NavigationProvider>
-                <Suspense fallback={<LoadingFallback />}>
-                  <Routes>
-                    <Route key="login" path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-                    <Route key="root" path="/" element={<Navigate to="/admin" replace />} />
-                    <Route key="old-clients" path="/admin/clients" element={<Navigate to="/admin/client-management" replace />} />
-                    <Route key="old-clients-list" path="/admin/clients/list" element={<Navigate to="/admin/client-management/list" replace />} />
-                    <Route key="old-client-details" path="/admin/clients/:clientId/*" element={<Navigate to="/admin/client-management/:clientId/*" replace />} />
-                    {renderRoutes(routes)}
-                    <Route key="not-found" path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
-                  </Routes>
-                </Suspense>
-              </NavigationProvider>
-            </AuthProvider>
-          </LocalizationProvider>
-        </ThemeProvider>
-      </Router>
+      <ThemeProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Router>
+            <ServiceProvider>
+              <AuthProvider>
+                <NavigationProvider>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <Routes>
+                      <Route key="login" path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+                      <Route key="root" path="/" element={<Navigate to="/admin" replace />} />
+                      <Route key="old-clients" path="/admin/clients" element={<Navigate to="/admin/client-management" replace />} />
+                      <Route key="old-clients-list" path="/admin/clients/list" element={<Navigate to="/admin/client-management/list" replace />} />
+                      <Route key="old-client-details" path="/admin/clients/:clientId/*" element={<Navigate to="/admin/client-management/:clientId/*" replace />} />
+                      {renderRoutes(routes)}
+                      <Route key="not-found" path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
+                    </Routes>
+                  </Suspense>
+                </NavigationProvider>
+              </AuthProvider>
+            </ServiceProvider>
+          </Router>
+        </LocalizationProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 };

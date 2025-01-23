@@ -7,106 +7,38 @@
 ## Class Summary
 
 public class AdminSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AdminSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### DoesAdminPasswordExpire
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AdminSettings.cs
-visibility: public
-modifier: readonly
-```
+### DoesAdminPasswordExpire: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.AdminPasswordExpires")]
 ```
 
-### AdminAccountSettings
+### Account: `AdminAccountSettings`
 
-```typescript
-type: AdminAccountSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AdminSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enrollment: `Enrollment`
 
-### Enrollment
+### Member: `MemberSettings`
 
-```typescript
-type: Enrollment
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AdminSettings.cs
-visibility: public
-modifier: readonly
-```
+### Device: `DeviceSettings`
 
-### MemberSettings
+### Mfa: `MfaSettings`
 
-```typescript
-type: MemberSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AdminSettings.cs
-visibility: public
-modifier: readonly
-```
+### AuditLogs: `AuditLogs`
 
-### DeviceSettings
+### SmsSettings: `SmsSettings`
 
-```typescript
-type: DeviceSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AdminSettings.cs
-visibility: public
-modifier: readonly
-```
+### MemberView: `MemberView`
 
-### MfaSettings
-
-```typescript
-type: MfaSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AdminSettings.cs
-visibility: public
-modifier: readonly
-```
-
-### AuditLogs
-
-```typescript
-type: AuditLogs
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AdminSettings.cs
-visibility: public
-modifier: readonly
-```
-
-### SmsSettings
-
-```typescript
-type: SmsSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AdminSettings.cs
-visibility: public
-modifier: readonly
-```
-
-### MemberView
-
-```typescript
-type: MemberView
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AdminSettings.cs
-visibility: public
-modifier: readonly
-```
-
-### TransferSettings
-
-```typescript
-type: TransferSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AdminSettings.cs
-visibility: public
-modifier: readonly
-```
+### Transfer: `TransferSettings`

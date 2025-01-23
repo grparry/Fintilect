@@ -7,261 +7,171 @@
 ## Class Summary
 
 public class CardHistory
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CardHistory
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShowPendingTransactionsFirst
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+### ShowPendingTransactionsFirst: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.ShowPendingTransactionsFirst")]
 ```
 
-### EnableCardHistoryDateRangeSearch
+### EnableCardHistoryDateRangeSearch: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.EnableCardHistoryDateRangeSearch")]
 ```
 
-### PSCUSSOConfigID
+### PSCUSSOConfigID: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.PSCUSSOConfigID")]
 ```
 
-### UsePscuSsoUrl
+### UsePscuSsoUrl: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.UsePscuSsoUrl")]
 ```
 
-### ShouldSetPendingTransactionAmountAsNeutral
+### ShouldSetPendingTransactionAmountAsNeutral: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.ShouldSetPendingTransactionAmountAsNeutral")]
 ```
 
-### FiservApiBaseUrl
+### FiservApiBaseUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Fiserv.ApiBaseUrl")]
 ```
 
-### FiservTokenCreateApiEndpoint
+### FiservTokenCreateApiEndpoint: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Fiserv.TokenCreateApiEndpoint")]
 ```
 
-### FiservUserId
+### FiservUserId: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Fiserv.UserId")]
 ```
 
-### FiservPassword
+### FiservPassword: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Fiserv.Password")]
 ```
 
-### Fiservx500Id
+### Fiservx500Id: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Fiserv.x500Id")]
 ```
 
-### System
+### FiservCertificateStore: `System.Security.Cryptography.X509Certificates.StoreName`
 
-```typescript
-type: FiservCertificateStore
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Fiserv.CertificateStore")]
 ```
 
-### FiservCertificateThumbPrint
+### FiservCertificateThumbPrint: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Fiserv.CertificateThumbPrint")]
 ```
 
-### FiservDebugModeEnabled
+### FiservDebugModeEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Fiserv.DebugModeEnabled")]
 ```
 
-### FiservStatementDetailsApiEndpoint
+### FiservStatementDetailsApiEndpoint: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Fiserv.StatementDetailsApiEndpoint")]
 ```
 
-### FiservCustomerInquiryApiEndpoint
+### FiservCustomerInquiryApiEndpoint: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Fiserv.CustomerInquiryApiEndpoint")]
 ```
 
-### PscuShouldShowDateForPendingTransactions
+### PscuShouldShowDateForPendingTransactions: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Pscu.ShouldShowDateForPendingTransactions")]
 ```
 
-### PscuSsoEnabled
+### PscuSsoEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Card.Pscu.SsoEnabled")]
 ```
 
-### FiservCardHistoryCycleTypes
+### FiservCycle: `FiservCardHistoryCycleTypes`
 
-```typescript
-type: FiservCardHistoryCycleTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/CardHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

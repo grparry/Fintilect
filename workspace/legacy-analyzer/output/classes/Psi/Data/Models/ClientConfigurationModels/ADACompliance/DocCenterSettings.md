@@ -7,107 +7,60 @@
 ## Class Summary
 
 public class DocCenterSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DocCenterSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SSOFromAdminEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ADACompliance/DocCenterSettings.cs
-visibility: public
-modifier: readonly
-```
+### SSOFromAdminEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("DocCenter.Admin.SSO.Enabled")]
 ```
 
-### SSOFromAdminDocCenterLanding
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ADACompliance/DocCenterSettings.cs
-visibility: public
-modifier: readonly
-```
+### SSOFromAdminDocCenterLanding: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("DocCenter.Admin.SSO.DocCenterSSOLandingUrl")]
 ```
 
-### MemberViewIsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ADACompliance/DocCenterSettings.cs
-visibility: public
-modifier: readonly
-```
+### MemberViewIsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("DocCenter.OnlineBanking.MemberView.IsEnabled")]
 ```
 
-### MemberViewUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ADACompliance/DocCenterSettings.cs
-visibility: public
-modifier: readonly
-```
+### MemberViewUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("DocCenter.OnlineBanking.MemberView.Url")]
 ```
 
-### OlbSsoId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ADACompliance/DocCenterSettings.cs
-visibility: public
-modifier: readonly
-```
+### OlbSsoId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("DocCenter.OnlineBanking.SsoId")]
 ```
 
-### OlbSsoPassword
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ADACompliance/DocCenterSettings.cs
-visibility: public
-modifier: readonly
-```
+### OlbSsoPassword: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("DocCenter.OnlineBanking.SsoPassword")]
 ```
 
-### ApiUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ADACompliance/DocCenterSettings.cs
-visibility: public
-modifier: readonly
-```
+### ApiUrl: `string`
 
 **Attributes:**
 ```csharp

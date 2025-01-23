@@ -7,135 +7,74 @@
 ## Class Summary
 
 public class SavvyMoneySettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class SavvyMoneySettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ServiceSettingsModel
-
-```typescript
-type: ServiceSettingsModel
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SavvyMoney/SavvyMoneySettings.cs
-visibility: public
-modifier: readonly
-```
+### ServiceSettings: `ServiceSettingsModel`
 
 **Attributes:**
 ```csharp
 [SettingKey("SavvyMoney.ServiceSettings")]
 ```
 
-### ServiceSettingsModel
-
-```typescript
-type: ServiceSettingsModel
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SavvyMoney/SavvyMoneySettings.cs
-visibility: public
-modifier: readonly
-```
+### ServiceSettingsIframe: `ServiceSettingsModel`
 
 **Attributes:**
 ```csharp
 [SettingKey("SavvyMoney.ServiceSettings.Iframe")]
 ```
 
-### HomeBankingEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SavvyMoney/SavvyMoneySettings.cs
-visibility: public
-modifier: readonly
-```
+### HomeBankingEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("HomeBanking.SavvyMoney.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SavvyMoney/SavvyMoneySettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("HomeBanking.SavvyMoney.MinVersion")]
 ```
 
-### ApiAuthId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SavvyMoney/SavvyMoneySettings.cs
-visibility: public
-modifier: readonly
-```
+### ApiAuthId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("SavvyMoney.Api.AuthId")]
 ```
 
-### ApiAuthKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SavvyMoney/SavvyMoneySettings.cs
-visibility: public
-modifier: readonly
-```
+### ApiAuthKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("SavvyMoney.Api.AuthKey")]
 ```
 
-### ApiDomain
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SavvyMoney/SavvyMoneySettings.cs
-visibility: public
-modifier: readonly
-```
+### ApiDomain: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("SavvyMoney.Api.Domain")]
 ```
 
-### ApiPartnerId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SavvyMoney/SavvyMoneySettings.cs
-visibility: public
-modifier: readonly
-```
+### ApiPartnerId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("SavvyMoney.Api.PartnerId")]
 ```
 
-### ApiBaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SavvyMoney/SavvyMoneySettings.cs
-visibility: public
-modifier: readonly
-```
+### ApiBaseUrl: `string`
 
 **Attributes:**
 ```csharp

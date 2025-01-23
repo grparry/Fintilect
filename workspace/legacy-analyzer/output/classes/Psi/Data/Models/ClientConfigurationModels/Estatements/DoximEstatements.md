@@ -7,65 +7,47 @@
 ## Class Summary
 
 public class DoximEstatements
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DoximEstatements
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/DoximEstatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.DoximEstatements.Enabled")]
 ```
 
-### EndpointAddress
+### EndpointAddress: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/DoximEstatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.DoximEstatements.EndpointAddress")]
 ```
 
-### Identifier
+### Identifier: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/DoximEstatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.DoximEstatements.Identifier")]
 ```
 
-### SecretKey
+### SecretKey: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/DoximEstatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -7,229 +7,112 @@
 ## Class Summary
 
 public class Accounts
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Accounts
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### DisplayBalanceAndAvailable
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### DisplayBalanceAndAvailable: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.DisplayBalanceAndAvailable")]
 ```
 
-### CanHideClosedAccounts
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### CanHideClosedAccounts: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.CanHideClosedAccounts")]
 ```
 
-### NewAccountsInterfaceEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### NewAccountsInterfaceEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.NewAccountsInterfaceEnabled")]
 ```
 
-### LoadCrossAccounts
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### LoadCrossAccounts: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.LoadCrossAccounts")]
 ```
 
-### AccountHistorySearchBarEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### AccountHistorySearchBarEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.AccountHistorySearchBarEnabled")]
 ```
 
-### ShouldShowCertificateDetails
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### ShouldShowCertificateDetails: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.ShouldShowCertificateDetails")]
 ```
 
-### ShouldShowApplyForCreditCard
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### ShouldShowApplyForCreditCard: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.ShouldShowApplyForCreditCard")]
 ```
 
-### ApplyForCreditCardUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### ApplyForCreditCardUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.ApplyForCreditCardUrl")]
 ```
 
-### ApplyForCreditCardUrlTarget
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### ApplyForCreditCardUrlTarget: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.ApplyForCreditCardUrlTarget")]
 ```
 
-### ShouldShowMicrNumber
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### ShouldShowMicrNumber: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.ShouldShowMicrNumber")]
 ```
 
-### UsePreviousMicrNumber
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### UsePreviousMicrNumber: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Accounts.UsePreviousMicrNumber")]
 ```
 
-### AccountInquiryExpirationTime
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### AccountInquiryExpirationTime: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.AccountInquiryExpirationTime")]
 ```
 
-### ShowMaskedAccountSuffixInAccountName
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### ShowMaskedAccountSuffixInAccountName: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Summary.ShowMaskedAccountSuffixInAccountName")]
 ```
 
-### Nicknames
+### Nicknames: `Nicknames`
 
-```typescript
-type: Nicknames
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### AccountHistoryQuickActions: `AccountHistoryQuickActions`
 
-### AccountHistoryQuickActions
+### Authentication: `Authentication.Authentication`
 
-```typescript
-type: AccountHistoryQuickActions
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
-
-### Authentication
-
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
-
-### Cards
-
-```typescript
-type: Cards
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/Accounts.cs
-visibility: public
-modifier: readonly
-```
+### Cards: `Cards`

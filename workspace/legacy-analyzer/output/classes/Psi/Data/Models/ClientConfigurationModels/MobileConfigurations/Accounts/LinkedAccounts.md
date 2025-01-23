@@ -7,90 +7,50 @@
 ## Class Summary
 
 public class LinkedAccounts
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LinkedAccounts
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/LinkedAccounts.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.LinkedAccounts.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/LinkedAccounts.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.LinkedAccounts.MinimumIosVersion")]
 ```
 
-### VerifyAccountEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/LinkedAccounts.cs
-visibility: public
-modifier: readonly
-```
+### VerifyAccountEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.LinkedAccounts.VerifyAccountEnabled")]
 ```
 
-### LinkedAccountNameRegex
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/LinkedAccounts.cs
-visibility: public
-modifier: readonly
-```
+### LinkedAccountNameRegex: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.AlphaNumSpace")]
 ```
 
-### ShowDeletedAccountsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/LinkedAccounts.cs
-visibility: public
-modifier: readonly
-```
+### ShowDeletedAccountsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("LinkedAccounts.ShowDeletedAccounts.Enabled")]
 ```
 
-### Authentication
-
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Accounts/LinkedAccounts.cs
-visibility: public
-modifier: readonly
-```
+### Authentication: `Authentication.Authentication`

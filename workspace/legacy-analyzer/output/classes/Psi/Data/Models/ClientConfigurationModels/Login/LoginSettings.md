@@ -7,135 +7,92 @@
 ## Class Summary
 
 public class LoginSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LoginSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### LoginFailuresBeforeLockingAccountMinusOne
+### LoginFailuresBeforeLockingAccountMinusOne: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Login/LoginSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.Login.LoginFailuresBeforeLockingAccount")]
 ```
 
-### ConnectNativeLandingPageUrl
+### ConnectNativeLandingPageUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Login/LoginSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.Login.ConnectNativeLandingPageUrl")]
 ```
 
-### ConnectNativeLoginRedirectChoiceType
+### ConnectNativeLoginRedirectChoiceType: `ConnectNativeLoginRedirectChoiceType`
 
-```typescript
-type: ConnectNativeLoginRedirectChoiceType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Login/LoginSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.Login.ConnectNativeLoginRedirectChoiceType")]
 ```
 
-### UsePlainTextPassword
+### UsePlainTextPassword: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Login/LoginSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.UsePlainTextPwd")]
 ```
 
-### EnableLoginStatusEncryption
+### EnableLoginStatusEncryption: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Login/LoginSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.Login.EnableLoginStatusReasonEncryption")]
 ```
 
-### CredentialStorageMethod
+### CredentialStorageMethod: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Login/LoginSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.CredentialsStorageMethod")]
 ```
 
-### AccountNumberAliasRequired
+### AccountNumberAliasRequired: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Login/LoginSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.AccountNumberAliasRequired")]
 ```
 
-### DisableLoginWithAccountNumber
+### DisableLoginWithAccountNumber: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Login/LoginSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.DisableLoginWithAccountNumber")]
 ```
 
-### AllowSSNInsteadOfCall24
+### AllowSSNInsteadOfCall24: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Login/LoginSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

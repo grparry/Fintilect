@@ -7,51 +7,36 @@
 ## Class Summary
 
 public class BillPaySettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class BillPaySettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Billpay.BillPaySettings.MinVersion")]
 ```
 
-### ShouldIgnoreLeadingZerosOnMicr
+### ShouldIgnoreLeadingZerosOnMicr: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Billpay.BillPaySettings.ShouldIgnoreLeadingZerosOnMicr")]
 ```
 
-### DisplayNewMockUp
+### DisplayNewMockUp: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
@@ -59,349 +44,209 @@ modifier: readonly
 [SettingKey("Billpay.BillPaySettings.HomeBanking.DisplayNewMockUp")]
 ```
 
-### UseMicrAsDraftAccountNumber
+### UseMicrAsDraftAccountNumber: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Billpay.BillPaySettings.UseMicrAsDraftAccountNumber")]
 ```
 
-### EnableMultiFundingAccount
+### EnableMultiFundingAccount: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("billpay.EnableMultiFundingAccount")]
 ```
 
-### DefaultLeadDays
+### DefaultLeadDays: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Billpay.DefaultLeadDays")]
 ```
 
-### DeliverByDatesToCalculate
+### DeliverByDatesToCalculate: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Billpay.DeliverByDatesToCalculate")]
 ```
 
-### CalculateBillPayPaymentDatesMinVersion
+### CalculateBillPayPaymentDatesMinVersion: `double`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Billpay.CalculateBillPayPaymentDates.MinVersion")]
 ```
 
-### CalculateBillPayPaymentDatesEnabled
+### CalculateBillPayPaymentDatesEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.CalculateBillPayPaymentDates.Enabled")]
 ```
 
-### GetPaymentOptions
+### GetPaymentOptions: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.GetPaymentOptions")]
 ```
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillPayEnabled")]
 ```
 
-### CanChangeBillPayAmount
+### CanChangeBillPayAmount: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.CanChangeBillPayAmount")]
 ```
 
-### CanChangeBillPayDeliverByDate
+### CanChangeBillPayDeliverByDate: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.CanChangeBillPayDeliverByDate")]
 ```
 
-### ShowHelpTab
+### ShowHelpTab: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Billpay.ShowHelpTab")]
 ```
 
-### IpayCanUpdateSubscriberAddress
+### IpayCanUpdateSubscriberAddress: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.IpayCanUpdateSubscriberAddress")]
 ```
 
-### ShouldSetIpayLoginIdAsGuid
+### ShouldSetIpayLoginIdAsGuid: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.ShouldSetIpayLoginIdAsGuid")]
 ```
 
-### X_AppBolBillPayFlagNumber
+### X_AppBolBillPayFlagNumber: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.BillPayFlagNumber")]
 ```
 
-### List
+### BillPayAccounts: `List<string>`
 
-```typescript
-type: BillPayAccounts
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.BillPayAccounts")]
 ```
 
-### ShouldShowAccountSelector
+### ShouldShowAccountSelector: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BusinessBillPay.ShouldShowAccountSelector")]
 ```
 
-### IpayBusinessBillPayUrl
+### IpayBusinessBillPayUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Ipay.BusinessBillPayUrl")]
 ```
 
-### IpayMaxReceivedMessageSize
+### IpayMaxReceivedMessageSize: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Ipay.IpayMaxReceivedMessageSize")]
 ```
 
-### IpayMaxBufferSize
+### IpayMaxBufferSize: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Ipay.IpayMaxBufferSize")]
 ```
 
-### RecurringBillPay
+### RecurringBillPay: `RecurringBillPay`
 
-```typescript
-type: RecurringBillPay
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
 
-### OutOfBand
 
-```typescript
-type: OutOfBand
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+### OutOfBand: `OutOfBand`
 
-### GoodFunds
 
-```typescript
-type: GoodFunds
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
 
-### BillPay2
+### GoodFunds: `GoodFunds`
 
-```typescript
-type: BillPay2
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
 
-### CheckFree
 
-```typescript
-type: CheckFree
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+### BillPay2: `BillPay2`
 
-### Help
 
-```typescript
-type: Help
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
 
-### Metavante
+### CheckFree: `CheckFree`
 
-```typescript
-type: Metavante
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
 
-### BillMatrix
 
-```typescript
-type: BillMatrix
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+### Help: `Help`
 
-### SymmetryBillPay
 
-```typescript
-type: SymmetryBillPay
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPaySettings.cs
-visibility: public
-modifier: readonly
-```
+
+### Metavante: `Metavante`
+
+
+
+### BillMatrix: `BillMatrix`
+
+
+
+### Symmetry: `SymmetryBillPay`
+
+

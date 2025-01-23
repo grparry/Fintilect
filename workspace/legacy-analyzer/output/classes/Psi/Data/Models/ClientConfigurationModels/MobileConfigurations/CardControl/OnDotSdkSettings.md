@@ -7,177 +7,95 @@
 ## Class Summary
 
 public class OnDotSdkSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class OnDotSdkSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OnDotSdk.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OnDotSdk.MinVersion")]
 ```
 
-### MinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OnDotSdk.MinAndroidVersion")]
 ```
 
-### MinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OnDotSdk.MinIosVersion")]
 ```
 
-### AndroidPublicKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### AndroidPublicKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OnDotSdk.AndroidPublicKey")]
 ```
 
-### IosPublicKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### IosPublicKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OnDotSdk.IosPublicKey")]
 ```
 
-### MultiUserModeEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### MultiUserModeEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OnDotSdk.MultiUserModeEnabled ")]
 ```
 
-### AppToken
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### AppToken: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OnDotSdk.AppToken")]
 ```
 
-### FiToken
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### FiToken: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OnDotSdk.FiToken")]
 ```
 
-### DeploymentToken
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### DeploymentToken: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OnDotSdk.DeploymentToken")]
 ```
 
-### EndpointUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### EndpointUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OnDotSdk.EndpointUrl")]
 ```
 
-### ConnectionSettings
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OnDotSdkSettings.cs
-visibility: public
-modifier: readonly
-```
+### ConnectionSettings: `string`
 
 **Attributes:**
 ```csharp

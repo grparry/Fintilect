@@ -46,7 +46,7 @@ export class BaseMockService implements IBaseService {
         timestamp: new Date().toISOString()
       }
     };
-    throw new Error(error.error.message);
+    throw error;
   }
 
   /**

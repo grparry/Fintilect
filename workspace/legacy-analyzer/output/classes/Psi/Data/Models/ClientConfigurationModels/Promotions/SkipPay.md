@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class SkipPay
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class SkipPay
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldGetQualifiedLoansFromPermissions
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/SkipPay.cs
-visibility: public
-modifier: readonly
-```
+### ShouldGetQualifiedLoansFromPermissions: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Promotions.SkipPay.ShouldGetQualifiedLoansFromPermissions")]
 ```
 
-### ShouldClearSkipPayQualifyPermissionAfterSuccess
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/SkipPay.cs
-visibility: public
-modifier: readonly
-```
+### ShouldClearSkipPayQualifyPermissionAfterSuccess: `bool`
 
 **Attributes:**
 ```csharp

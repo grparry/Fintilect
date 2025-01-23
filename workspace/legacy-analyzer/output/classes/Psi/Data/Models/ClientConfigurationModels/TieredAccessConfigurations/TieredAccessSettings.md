@@ -7,65 +7,43 @@
 ## Class Summary
 
 public class TieredAccessSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class TieredAccessSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### RestrictAccessbyAccountEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TieredAccessConfigurations/TieredAccess.cs
-visibility: public
-modifier: readonly
-```
+### RestrictAccessbyAccountEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("TieredAccess.RestrictAccessbyAccountEnabled")]
 ```
 
-### QuickAccessForSubUsersEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TieredAccessConfigurations/TieredAccess.cs
-visibility: public
-modifier: readonly
-```
+### QuickAccessForSubUsersEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("TieredAccess.QuickAccessEnabledForSubUsers")]
 ```
 
-### CrossAccountsAreIncludedInSubAccountPermissions
+### CrossAccountsAreIncludedInSubAccountPermissions: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TieredAccessConfigurations/TieredAccess.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("TieredAccess.CrossAccountsAreIncludedInSubAccountPermissions")]
 ```
 
-### SubUsersCanUseCrossAccounts
+### SubUsersCanUseCrossAccounts: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TieredAccessConfigurations/TieredAccess.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

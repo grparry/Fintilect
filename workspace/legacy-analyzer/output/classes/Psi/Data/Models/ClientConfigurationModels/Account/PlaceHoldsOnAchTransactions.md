@@ -7,93 +7,53 @@
 ## Class Summary
 
 public class PlaceHoldsOnAchTransactions
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PlaceHoldsOnAchTransactions
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/PlaceHoldsOnAchTransactions.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Ach.PlaceHoldsOnAchTransactions.MinVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/PlaceHoldsOnAchTransactions.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Ach.PlaceHoldsOnAchTransactions.Enabled")]
 ```
 
-### StartMemoNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/PlaceHoldsOnAchTransactions.cs
-visibility: public
-modifier: readonly
-```
+### StartMemoNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Ach.PlaceHoldsOnAchTransactions.StartMemoNumber")]
 ```
 
-### StopMemoNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/PlaceHoldsOnAchTransactions.cs
-visibility: public
-modifier: readonly
-```
+### StopMemoNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Ach.PlaceHoldsOnAchTransactions.StopMemoNumber")]
 ```
 
-### DaysTillHoldExpires
-
-```typescript
-type: uint
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/PlaceHoldsOnAchTransactions.cs
-visibility: public
-modifier: readonly
-```
+### DaysTillHoldExpires: `uint`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Ach.PlaceHoldsOnAchTransactions.DaysTillHoldExpires")]
 ```
 
-### AmountToReleaseImmediately
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/PlaceHoldsOnAchTransactions.cs
-visibility: public
-modifier: readonly
-```
+### AmountToReleaseImmediately: `long`
 
 **Attributes:**
 ```csharp

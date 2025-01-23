@@ -7,163 +7,88 @@
 ## Class Summary
 
 public class ProfitStars
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ProfitStars
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### StoreId
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/ProfitStars.cs
-visibility: public
-modifier: readonly
-```
+### StoreId: `long`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ProfitStars.StoreId")]
 ```
 
-### EntityId
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/ProfitStars.cs
-visibility: public
-modifier: readonly
-```
+### EntityId: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ProfitStars.EntityId")]
 ```
 
-### StoreKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/ProfitStars.cs
-visibility: public
-modifier: readonly
-```
+### StoreKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ProfitStars.StoreKey")]
 ```
 
-### SharedSecret
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/ProfitStars.cs
-visibility: public
-modifier: readonly
-```
+### SharedSecret: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ProfitStars.SharedSecret")]
 ```
 
-### FiIdentifier
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/ProfitStars.cs
-visibility: public
-modifier: readonly
-```
+### FiIdentifier: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ProfitStars.FiIdentifier")]
 ```
 
-### AdminServiceUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/ProfitStars.cs
-visibility: public
-modifier: readonly
-```
+### AdminServiceUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ProfitStars.AdminServiceUrl")]
 ```
 
-### ServiceUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/ProfitStars.cs
-visibility: public
-modifier: readonly
-```
+### ServiceUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ProfitStars.ServiceUrl")]
 ```
 
-### VendorName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/ProfitStars.cs
-visibility: public
-modifier: readonly
-```
+### VendorName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ProfitStars.VendorName")]
 ```
 
-### AndroidAppBundleId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/ProfitStars.cs
-visibility: public
-modifier: readonly
-```
+### AndroidAppBundleId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ProfitStars.AndroidAppBundleId")]
 ```
 
-### IosAppBundleId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/ProfitStars.cs
-visibility: public
-modifier: readonly
-```
+### IosAppBundleId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.ProfitStars.IosAppBundleId")]
 ```
 
-### SyncAccountsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/ProfitStars.cs
-visibility: public
-modifier: readonly
-```
+### SyncAccountsEnabled: `bool`
 
 **Attributes:**
 ```csharp

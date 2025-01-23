@@ -26,23 +26,38 @@ export class PathResolver {
             isTest: this.isTest
         });
         
-        // For test files, maintain the original structure
-        if (this.isTest) {
-            const parts = ['classes'];
-            if (parsedClass.namespace) {
-                parts.push(...parsedClass.namespace.split('.'));
+        const parts = this.isTest ? ['classes'] : ['infrastructure', 'models'];
+        
+        if (parsedClass.namespace) {
+            const namespaceParts = parsedClass.namespace.split('.');
+            
+            if (!this.isTest) {
+                if (this.isInRootNamespace(namespaceParts) && !this.isInSubNamespace(namespaceParts)) {
+                    // Base namespace classes go directly in models directory
+                    // No additional parts needed
+                } else if (this.isInRootNamespace(namespaceParts)) {
+                    // For production with sub-namespaces, use specific subdirectory structure
+                    const subDir = this.getSubdirectoryFromNamespace(parsedClass.namespace);
+                    if (subDir) {
+                        parts.push(subDir);
+                    }
+                } else {
+                    // For non-root namespaces, use namespace hierarchy
+                    parts.push(...namespaceParts);
+                }
+            } else {
+                // For tests, always use namespace hierarchy
+                parts.push(...namespaceParts);
             }
-            const fileName = `${parsedClass.name}.ts`;
-            const fullPath = path.join(...parts, fileName);
-            logger.info('Generated TypeScript file path:', { fullPath });
-            return fullPath;
         }
-
-        // For production files, flatten the structure
-        const parts = ['infrastructure', 'models'];
+        
+        // Add the class name
         const fileName = `${parsedClass.name}.ts`;
+        
+        // Join all parts to create the final path
         const fullPath = path.join(...parts, fileName);
         logger.info('Generated TypeScript file path:', { fullPath });
+        
         return fullPath;
     }
 
@@ -108,53 +123,6 @@ export class PathResolver {
         }
         // Add more special cases as needed
         return null;
-    }
-
-    /**
-     * Get the relative import path for a type
-     */
-    public getRelativeImportPath(parsedClass: ParsedClass | ParsedEnum, importType: string): string {
-        // For test files, maintain the original structure
-        if (this.isTest) {
-            const parts = importType.split('.');
-            const typeName = parts.pop() || ''; // Remove type name
-            if (parts.length === 0) return `./${typeName}`;
-            return `../${parts.join('/')}/${typeName}`;
-        }
-
-        // For production files, all types are in the same directory
-        const typeName = importType.split('.').pop() || importType;
-        return `./${typeName}`;
-    }
-
-    /**
-     * Get the relative import path from one class to another (Legacy)
-     * @deprecated Use getRelativeImportPath instead
-     */
-    private getRelativeImportPathLegacy(fromClass: ParsedClass, toTypeName: string): string | null {
-        const registeredType = this.typeRegistry.get(toTypeName);
-        if (!registeredType) {
-            return null;
-        }
-
-        const fromPath = this.getTypeOutputPath(fromClass);
-        const toPath = this.getTypeOutputPath({
-            name: toTypeName,
-            namespace: registeredType.namespace,
-            fields: []
-        });
-
-        const fromDir = path.dirname(fromPath);
-        const toDir = path.dirname(toPath);
-
-        const relativePath = path.relative(fromDir, toDir);
-        const fileName = path.basename(toPath, '.ts');
-
-        if (relativePath === '') {
-            return `./${fileName}`;
-        }
-
-        return `${relativePath}/${fileName}`;
     }
 
     /**

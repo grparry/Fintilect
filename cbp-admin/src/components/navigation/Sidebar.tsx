@@ -25,7 +25,7 @@ import { getNavigationConfig } from '../../routes';
 import { NavigationItem, NavigationSection } from '../../types/navigation.types';
 import { useNavigation } from '../../context/NavigationContext';
 import { permissionService } from '../../services/factory/ServiceFactory';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 interface SidebarProps {
   open: boolean;
@@ -38,27 +38,74 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state, toggleSection } = useNavigation();
-  const { state: authState } = useAuth();
+  const { user } = useAuth();
   const [filteredConfig, setFilteredConfig] = useState<NavigationSection[]>([]);
   
   useEffect(() => {
     const filterNavigation = async () => {
       const allConfig = getNavigationConfig();
-      if (!authState.user) {
+      if (!user) {
         setFilteredConfig([]);
         return;
       }
 
+      const permissions = await permissionService.getPermissions();
+      console.log('Loaded permissions:', permissions.map(p => ({ 
+        category: p.category, 
+        actions: p.actions 
+      })));
+
+      // Check if a section has permission
+      const hasSectionPermission = (sectionId: string): boolean => {
+        const categoryMap: { [key: string]: string } = {
+          'clientManagement': 'ClientManagement',
+          'billPay': 'BillPay',
+          'emerge': 'Emerge',
+          'development': 'Development'
+        };
+        
+        const category = categoryMap[sectionId] || sectionId;
+        return permissions.some(p => 
+          p.category.toLowerCase() === category.toLowerCase() && 
+          p.actions.includes('view')
+        );
+      };
+
       // Filter navigation items based on user permissions
-      const filterItems = async (items: NavigationItem[]): Promise<NavigationItem[]> => {
+      const filterItems = async (items: NavigationItem[], sectionId: string): Promise<NavigationItem[]> => {
         const filteredItems = [];
+        
         for (const item of items) {
-          const permissions = await permissionService.getPermissions('System');
-          const hasPermission = permissions.some(p => p.name === `view:${item.id}`);
+          // Map route ID to permission category
+          const categoryMap: { [key: string]: string } = {
+            'client-management': 'ClientManagement',
+            'client-list': 'ClientManagement',
+            'api-testing': 'Development',
+            'bill-pay': 'BillPay',
+            'emerge-admin': 'Emerge',
+            'member-center': 'Emerge',
+            'money-desktop': 'Emerge',
+            'payments': 'BillPay',
+            'exceptions': 'BillPay',
+            'settings': 'BillPay'
+          };
           
-          if (hasPermission) {
+          const category = categoryMap[item.id] || sectionId;
+          const hasPermission = permissions.some(p => 
+            p.category.toLowerCase() === category.toLowerCase() && 
+            p.actions.includes('view')
+          );
+          
+          console.log('Permission check result:', {
+            itemId: item.id,
+            sectionId: sectionId,
+            category: category,
+            hasPermission: hasPermission
+          });
+          
+          if (hasPermission || item.id === 'dashboard') { // Always show dashboard
             if (item.children) {
-              const filteredChildren = await filterItems(item.children);
+              const filteredChildren = await filterItems(item.children, sectionId);
               if (filteredChildren.length > 0) {
                 filteredItems.push({ ...item, children: filteredChildren });
               }
@@ -70,20 +117,38 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
         return filteredItems;
       };
 
-      // Filter sections and their items
       const filteredSections = [];
       for (const section of allConfig) {
-        const filteredItems = await filterItems(section.items);
-        if (filteredItems.length > 0) {
-          filteredSections.push({ ...section, items: filteredItems });
+        console.log('Processing section:', {
+          id: section.id,
+          title: section.title,
+          itemCount: section.items.length,
+          items: section.items.map(i => i.id)
+        });
+        
+        // Check section-level permission first
+        if (hasSectionPermission(section.id)) {
+          const filteredItems = await filterItems(section.items, section.id);
+          if (filteredItems.length > 0) {
+            filteredSections.push({ ...section, items: filteredItems });
+          }
+        } else {
+          console.log('Skipping section - no permission:', section.id);
         }
       }
-      
+
+      console.log('Filtered navigation config:', 
+        filteredSections.map(s => ({
+          id: s.id,
+          title: s.title,
+          items: s.items.map(i => i.id)
+        }))
+      );
       setFilteredConfig(filteredSections);
     };
 
     filterNavigation();
-  }, [authState.user]);
+  }, [user]);
 
   const handleNavigate = (path: string) => {
     navigate(path);

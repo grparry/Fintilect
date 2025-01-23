@@ -16,29 +16,8 @@ public class OutOfBandActionSetting
 
 ## Properties
 
-### ClientConfigurationRepository
+### ActionType: `ClientConfigurationRepository.FeatureActionTypeEnum`
 
-```typescript
-type: ActionType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Authentication/OutOfBandActionSetting.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Authentication/OutOfBandActionSetting.cs
-visibility: public
-modifier: readonly
-```
-
-### Money
-
-```typescript
-type: Money
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Authentication/OutOfBandActionSetting.cs
-visibility: public
-modifier: readonly
-```
+### TransferLimit: `Money`

@@ -7,163 +7,88 @@
 ## Class Summary
 
 public class NextMarketing
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class NextMarketing
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Dictionary
-
-```typescript
-type: SlotIdMappings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/NextMarketing.cs
-visibility: public
-modifier: readonly
-```
+### SlotIdMappings: `Dictionary<string, int>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.Next.SlotIdMappings")]
 ```
 
-### MaxOffersToReturn
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/NextMarketing.cs
-visibility: public
-modifier: readonly
-```
+### MaxOffersToReturn: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.Next.MaxOffersToReturn")]
 ```
 
-### BaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/NextMarketing.cs
-visibility: public
-modifier: readonly
-```
+### BaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.Next.BaseUrl")]
 ```
 
-### ConnectorKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/NextMarketing.cs
-visibility: public
-modifier: readonly
-```
+### ConnectorKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.Next.ConnectorKey")]
 ```
 
-### InstanceId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/NextMarketing.cs
-visibility: public
-modifier: readonly
-```
+### InstanceId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.Next.InstanceId")]
 ```
 
-### UserName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/NextMarketing.cs
-visibility: public
-modifier: readonly
-```
+### UserName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.Next.UserName")]
 ```
 
-### Password
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/NextMarketing.cs
-visibility: public
-modifier: readonly
-```
+### Password: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.Next.Password")]
 ```
 
-### InstitutionCode
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/NextMarketing.cs
-visibility: public
-modifier: readonly
-```
+### InstitutionCode: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.Next.InstitutionCode")]
 ```
 
-### VendorId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/NextMarketing.cs
-visibility: public
-modifier: readonly
-```
+### VendorId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.Next.VendorId")]
 ```
 
-### List
-
-```typescript
-type: OffersRequestSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/NextMarketing.cs
-visibility: public
-modifier: readonly
-```
+### OffersRequestSettings: `List<OffersRequestSetting>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.Next.OffersRequestSettings")]
 ```
 
-### ImageBaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/NextMarketing.cs
-visibility: public
-modifier: readonly
-```
+### ImageBaseUrl: `string`
 
 **Attributes:**
 ```csharp

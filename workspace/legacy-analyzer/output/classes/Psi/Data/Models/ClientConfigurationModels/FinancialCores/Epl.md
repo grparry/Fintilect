@@ -7,65 +7,47 @@
 ## Class Summary
 
 public class Epl
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Epl
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldAddAccountInquiryRepliesForCrossAccounts
+### ShouldAddAccountInquiryRepliesForCrossAccounts: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Epl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Epl.ShouldAddAccountInquiryRepliesForCrossAccounts")]
 ```
 
-### CreditCardDepositPermitted
+### CreditCardDepositPermitted: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Epl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Epl.CreditCardDepositPermitted")]
 ```
 
-### CreditCardInquiryPermitted
+### CreditCardInquiryPermitted: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Epl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Epl.CreditCardInquiryPermitted")]
 ```
 
-### CreditCardWithdrawalPermitted
+### CreditCardWithdrawalPermitted: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Epl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

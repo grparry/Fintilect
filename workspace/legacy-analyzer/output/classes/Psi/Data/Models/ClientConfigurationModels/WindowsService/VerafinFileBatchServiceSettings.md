@@ -7,37 +7,29 @@
 ## Class Summary
 
 public class VerafinFileBatchServiceSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class VerafinFileBatchServiceSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### StartTimeInHours
+### StartTimeInHours: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/VerafinFileBatchServiceSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PsiServices.VerafinFileBatchService.StartTimeInHours")]
 ```
 
-### EndTimeInHours
+### EndTimeInHours: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/VerafinFileBatchServiceSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

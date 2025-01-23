@@ -16,6 +16,7 @@ import { IDashboardService } from '../interfaces/IDashboardService';
 import { IAuditService } from '../interfaces/IAuditService';
 import { IMemberService } from '../interfaces/IMemberService';
 import { ISettingsService } from '../interfaces/ISettingsService';
+import { IMoneyDesktopService } from '../interfaces/IMoneyDesktopService';
 
 // Import real service implementations
 import { UserService } from '../implementations/real/UserService';
@@ -35,6 +36,7 @@ import { DashboardService } from '../implementations/real/DashboardService';
 import { AuditService } from '../implementations/real/AuditService';
 import { MemberService } from '../implementations/real/MemberService';
 import { SettingsService } from '../implementations/real/SettingsService';
+import { MoneyDesktopService } from '../implementations/real/MoneyDesktopService';
 
 // Import mock service implementations
 import { MockUserService } from '../implementations/mock/MockUserService';
@@ -54,8 +56,9 @@ import { MockDashboardService } from '../implementations/mock/MockDashboardServi
 import { MockAuditService } from '../implementations/mock/MockAuditService';
 import { MockMemberService } from '../implementations/mock/MockMemberService';
 import { MockSettingsService } from '../implementations/mock/MockSettingsService';
+import { MockMoneyDesktopService } from '../implementations/mock/MockMoneyDesktopService';
 
-import { getConfig } from '../../config/api.config';
+import { getConfig, shouldUseMockService } from '../../config/api.config';
 
 /**
  * Service factory for managing service instantiation
@@ -65,7 +68,7 @@ export class ServiceFactory {
   private services: Map<string, IUserService | IClientService | IBillPayService | IAuthService | ISecurityService | 
     INotificationService | IExceptionService | IPayeeService | IPaymentProcessorService | IPaymentService | 
     IReportService | IHolidayService | IPermissionService | IDashboardService | IAuditService | IMemberService |
-    ISettingsService> = new Map();
+    ISettingsService | IMoneyDesktopService> = new Map();
 
   private constructor() {
     // Initialize services
@@ -80,43 +83,111 @@ export class ServiceFactory {
   }
 
   private initializeServices(): void {
-    if (process.env.USE_MOCK_SERVICES === 'true') {
-      // Initialize mock services
+    if (shouldUseMockService('user')) {
       this.services.set('user', new MockUserService('/api/v1/users'));
+    } else {
+      this.services.set('user', new UserService('/api/v1/users'));
+    }
+
+    if (shouldUseMockService('client')) {
       this.services.set('client', new MockClientService('/api/v1/clients'));
+    } else {
+      this.services.set('client', new ClientService('/api/v1/clients'));
+    }
+
+    if (shouldUseMockService('billPay')) {
       this.services.set('billPay', new MockBillPayService('/api/v1/bill-pay'));
+    } else {
+      this.services.set('billPay', new BillPayService('/api/v1/bill-pay'));
+    }
+
+    if (shouldUseMockService('auth')) {
       this.services.set('auth', new MockAuthService('/api/v1/auth'));
+    } else {
+      this.services.set('auth', new AuthService('/api/v1/auth'));
+    }
+
+    if (shouldUseMockService('security')) {
       this.services.set('security', new MockSecurityService('/api/v1/security'));
+    } else {
+      this.services.set('security', new SecurityService('/api/v1/security'));
+    }
+
+    if (shouldUseMockService('notification')) {
       this.services.set('notification', new MockNotificationService('/api/v1/notifications'));
+    } else {
+      this.services.set('notification', new NotificationService('/api/v1/notifications'));
+    }
+
+    if (shouldUseMockService('exception')) {
       this.services.set('exception', new MockExceptionService('/api/v1/exceptions'));
+    } else {
+      this.services.set('exception', new ExceptionService('/api/v1/exceptions'));
+    }
+
+    if (shouldUseMockService('payee')) {
       this.services.set('payee', new MockPayeeService('/api/v1/payees'));
+    } else {
+      this.services.set('payee', new PayeeService('/api/v1/payees'));
+    }
+
+    if (shouldUseMockService('paymentProcessor')) {
       this.services.set('paymentProcessor', new MockPaymentProcessorService('/api/v1/payment-processor'));
+    } else {
+      this.services.set('paymentProcessor', new PaymentProcessorService('/api/v1/payment-processor'));
+    }
+
+    if (shouldUseMockService('payment')) {
       this.services.set('payment', new MockPaymentService('/api/v1/payments'));
+    } else {
+      this.services.set('payment', new PaymentService('/api/v1/payments'));
+    }
+
+    if (shouldUseMockService('report')) {
       this.services.set('report', new MockReportService('/api/v1/reports'));
+    } else {
+      this.services.set('report', new ReportService('/api/v1/reports'));
+    }
+
+    if (shouldUseMockService('holiday')) {
       this.services.set('holiday', new MockHolidayService('/api/v1/holidays'));
+    } else {
+      this.services.set('holiday', new HolidayService('/api/v1/holidays'));
+    }
+
+    if (shouldUseMockService('permission')) {
       this.services.set('permission', new MockPermissionService('/api/v1/permissions'));
+    } else {
+      this.services.set('permission', new PermissionService('/api/v1/permissions'));
+    }
+
+    if (shouldUseMockService('dashboard')) {
       this.services.set('dashboard', new MockDashboardService('/api/v1/dashboard'));
+    } else {
+      this.services.set('dashboard', new DashboardService('/api/v1/dashboard'));
+    }
+
+    if (shouldUseMockService('audit')) {
       this.services.set('audit', new MockAuditService('/api/v1/audit'));
+    } else {
+      this.services.set('audit', new AuditService('/api/v1/audit'));
+    }
+
+    if (shouldUseMockService('member')) {
       this.services.set('member', new MockMemberService('/api/v1/members'));
+    } else {
+      this.services.set('member', new MemberService('/api/v1/members'));
+    }
+
+    if (shouldUseMockService('moneyDesktop')) {
+      this.services.set('moneyDesktop', new MockMoneyDesktopService('/api/money-desktop'));
+    } else {
+      this.services.set('moneyDesktop', new MoneyDesktopService('/api/money-desktop'));
+    }
+
+    if (shouldUseMockService('settings')) {
       this.services.set('settings', new MockSettingsService('/api/v1/settings'));
     } else {
-      // Initialize real services with ApiClient
-      this.services.set('user', new UserService('/api/v1/users'));
-      this.services.set('client', new ClientService('/api/v1/clients'));
-      this.services.set('billPay', new BillPayService('/api/v1/bill-pay'));
-      this.services.set('auth', new AuthService('/api/v1/auth'));
-      this.services.set('security', new SecurityService('/api/v1/security'));
-      this.services.set('notification', new NotificationService('/api/v1/notifications'));
-      this.services.set('exception', new ExceptionService('/api/v1/exceptions'));
-      this.services.set('payee', new PayeeService('/api/v1/payees'));
-      this.services.set('paymentProcessor', new PaymentProcessorService('/api/v1/payment-processor'));
-      this.services.set('payment', new PaymentService('/api/v1/payments'));
-      this.services.set('report', new ReportService('/api/v1/reports'));
-      this.services.set('holiday', new HolidayService('/api/v1/holidays'));
-      this.services.set('permission', new PermissionService('/api/v1/permissions'));
-      this.services.set('dashboard', new DashboardService('/api/v1/dashboard'));
-      this.services.set('audit', new AuditService('/api/v1/audit'));
-      this.services.set('member', new MemberService('/api/v1/members'));
       this.services.set('settings', new SettingsService('/api/v1/settings'));
     }
   }
@@ -249,6 +320,14 @@ export class ServiceFactory {
     return service as IMemberService;
   }
 
+  getMoneyDesktopService(): IMoneyDesktopService {
+    const service = this.services.get('moneyDesktop');
+    if (!service) {
+      throw new Error('MoneyDesktopService not initialized');
+    }
+    return service as IMoneyDesktopService;
+  }
+
   getSettingsService(): ISettingsService {
     const service = this.services.get('settings');
     if (!service) {
@@ -275,4 +354,5 @@ export const permissionService = ServiceFactory.getInstance().getPermissionServi
 export const dashboardService = ServiceFactory.getInstance().getDashboardService();
 export const auditService = ServiceFactory.getInstance().getAuditService();
 export const memberService = ServiceFactory.getInstance().getMemberService();
+export const moneyDesktopService = ServiceFactory.getInstance().getMoneyDesktopService();
 export const settingsService = ServiceFactory.getInstance().getSettingsService();

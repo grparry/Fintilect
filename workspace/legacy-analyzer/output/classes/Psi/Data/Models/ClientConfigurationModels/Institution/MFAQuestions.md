@@ -7,205 +7,117 @@
 ## Class Summary
 
 public class MFAQuestions
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MFAQuestions
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MFASecurityCodeEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+### MFASecurityCodeEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.MFASecurityCodeEnabled")]
 ```
 
-### MFAChallengeOptSecurityCodes
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+### MFAChallengeOptSecurityCodes: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.MFAChallengeOptSecurityCodes")]
 ```
 
-### SetFocusOnFirst
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+### SetFocusOnFirst: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MFAQuestions.SetFocusOnFirst")]
 ```
 
-### SecurityCodeRetryCount
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+### SecurityCodeRetryCount: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("MFAQuestions.SecurityCodeRetryCount")]
 ```
 
-### SecurityCodeShouldUseCaseSensitiveCompare
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+### SecurityCodeShouldUseCaseSensitiveCompare: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MFAQuestions.SecurityCodeShouldUseCaseSensitiveCompare")]
 ```
 
-### SecurityCodeQuestionID
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+### SecurityCodeQuestionID: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("MFAQuestions.SecurityCodeQuestionID")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("MFAQuestions.FreeformMFA.MinVersion")]
 ```
 
-### EnablePlainTextAnswers
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+### EnablePlainTextAnswers: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("MFAQuestions.EnablePlainTextAnswers")]
 ```
 
-### FreeformMFAEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+### FreeformMFAEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MFAQuestions.FreeformMFA.Enable")]
 ```
 
-### FreeformMFAEncryptionKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+### FreeformMFAEncryptionKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("MFAQuestions.FreeformMFA.EncryptionKey")]
 ```
 
-### ChallengeViewQuestionCount
+### ChallengeViewQuestionCount: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MFAQuestions.FreeformMFA.ChallengeViewQuestionCount")]
 ```
 
-### IPWhitelistEnabled
+### IPWhitelistEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MFAQuestions.IPWhitelist.Enabled")]
 ```
 
-### IPWhitelist
+### IPWhitelist: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MFAQuestions.IPWhitelist")]
 ```
 
-### EnrollmentDisableSetup
+### EnrollmentDisableSetup: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Institution/MFAQuestions.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -7,247 +7,148 @@
 ## Class Summary
 
 public class Estatements
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Estatements
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.EstatementsEnabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.MinVersion")]
 ```
 
-### RedirectStatementsAndNoticesToEstatementsPageAndReturn
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+### RedirectStatementsAndNoticesToEstatementsPageAndReturn: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.RedirectStatementsAndNoticesToEstatementsPageAndReturn")]
 ```
 
-### OpenInNewWindow
+### OpenInNewWindow: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.OpenInNewWindow")]
 ```
 
-### WillOpenInNewWindowOnMobileDevices
+### WillOpenInNewWindowOnMobileDevices: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.WillOpenInNewWindowOnMobileDevices")]
 ```
 
-### WillOpenInIFrameInMobileApp
+### WillOpenInIFrameInMobileApp: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.WillOpenInIFrameInMobileApp")]
 ```
 
-### DisclosureUrl
+### DisclosureUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.DisclosureUrl")]
 ```
 
-### ShouldShowAllStatementAccountsOrgs
+### ShouldShowAllStatementAccountsOrgs: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.ShouldShowAllStatementAccountsOrgs")]
 ```
 
-### IgnoreDisclosure
+### IgnoreDisclosure: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.IgnoreDisclosure")]
 ```
 
-### DefaultSearchRange
+### DefaultSearchRange: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.DefaultSearchRange")]
 ```
 
-### ShouldShowEstatementsWhenMemberHasInquireRightsOnAllShares
+### ShouldShowEstatementsWhenMemberHasInquireRightsOnAllShares: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.ShowEstatementsWhenMemberHasInquireRightsOnAllShares")]
 ```
 
-### UseBITFormPostOnIFrame
+### UseBITFormPostOnIFrame: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.UseBITFormPostOnIFrame")]
 ```
 
-### CheckCoreAccountAccessEnabled
+### CheckCoreAccountAccessEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.CheckCoreAccountAccess.Enabled")]
 ```
 
-### EplEstatements
+### EplEstatements: `EplEstatements`
 
-```typescript
-type: EplEstatements
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
 
-### DoximEstatements
 
-```typescript
-type: DoximEstatements
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+### DoximEstatements: `DoximEstatements`
 
-### BitEstatements
 
-```typescript
-type: BitEstatements
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
 
-### NcpEstatements
+### BitEstatements: `BitEstatements`
 
-```typescript
-type: NcpEstatements
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
 
-### InfoImageEstatementsSettings
 
-```typescript
-type: InfoImageEstatementsSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+### NcpEstatements: `NcpEstatements`
 
-### WebApiEstatementsSettings
 
-```typescript
-type: WebApiEstatementsSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/Estatements.cs
-visibility: public
-modifier: readonly
-```
+
+### InfoImageEstatements: `InfoImageEstatementsSettings`
+
+
+
+### WebApiEstatements: `WebApiEstatementsSettings`
+
+

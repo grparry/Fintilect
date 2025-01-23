@@ -7,55 +7,29 @@
 ## Class Summary
 
 public class CheckReorder
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CheckReorder
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### HarlandCheckReorder
+### HarlandCheckReorder: `HarlandCheckReorder`
 
-```typescript
-type: HarlandCheckReorder
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckReorder/CheckReorder.cs
-visibility: public
-modifier: readonly
-```
+### MainStreetCheckReorder: `MainStreetCheckReorder`
 
-### MainStreetCheckReorder
-
-```typescript
-type: MainStreetCheckReorder
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckReorder/CheckReorder.cs
-visibility: public
-modifier: readonly
-```
-
-### AccountInfoCacheExpirationTimeInHours
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckReorder/CheckReorder.cs
-visibility: public
-modifier: readonly
-```
+### AccountInfoCacheExpirationTimeInHours: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckReorder.AccountInfoCacheExpirationTimeInHours")]
 ```
 
-### JointOwnerOnChecksIsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckReorder/CheckReorder.cs
-visibility: public
-modifier: readonly
-```
+### JointOwnerOnChecksIsEnabled: `bool`
 
 **Attributes:**
 ```csharp

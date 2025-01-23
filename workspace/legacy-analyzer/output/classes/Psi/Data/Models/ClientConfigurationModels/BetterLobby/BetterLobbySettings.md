@@ -7,104 +7,57 @@
 ## Class Summary
 
 public class BetterLobbySettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class BetterLobbySettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BetterLobby/BetterLobbySettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BetterLobby.Enabled")]
 ```
 
-### Uri
-
-```typescript
-type: Uri
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BetterLobby/BetterLobbySettings.cs
-visibility: public
-modifier: readonly
-```
+### SsoBaseUrl: `Uri`
 
 **Attributes:**
 ```csharp
 [SettingKey("BetterLobby.SsoBaseUrl")]
 ```
 
-### ClientId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BetterLobby/BetterLobbySettings.cs
-visibility: public
-modifier: readonly
-```
+### ClientId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BetterLobby.ClientId")]
 ```
 
-### SecretKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BetterLobby/BetterLobbySettings.cs
-visibility: public
-modifier: readonly
-```
+### SecretKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BetterLobby.SecretKey")]
 ```
 
-### KeySize
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BetterLobby/BetterLobbySettings.cs
-visibility: public
-modifier: readonly
-```
+### KeySize: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("BetterLobby.KeySize")]
 ```
 
-### DerivationIterations
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BetterLobby/BetterLobbySettings.cs
-visibility: public
-modifier: readonly
-```
+### DerivationIterations: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("BetterLobby.DerivationIterations")]
 ```
 
-### MobileConfigurations
-
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BetterLobby/BetterLobbySettings.cs
-visibility: public
-modifier: readonly
-```
+### Authentication: `MobileConfigurations.Authentication.Authentication`

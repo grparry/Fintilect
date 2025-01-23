@@ -7,79 +7,46 @@
 ## Class Summary
 
 public class LiveChatSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LiveChatSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### LiveChatEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/LiveChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### LiveChatEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("LiveChat.LiveChatEnabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/LiveChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("LiveChat.MinVersion")]
 ```
 
-### LiveChatUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/LiveChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### LiveChatUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("LiveChat.LiveChatUrl")]
 ```
 
-### StartLiveChatUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/LiveChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### StartLiveChatUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("LiveChat.StartLiveChatUrl")]
 ```
 
-### LiveChatServiceId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/LiveChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### LiveChatServiceId: `string`
 
 **Attributes:**
 ```csharp

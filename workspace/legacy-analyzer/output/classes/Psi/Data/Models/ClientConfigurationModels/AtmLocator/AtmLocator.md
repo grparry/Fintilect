@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class AtmLocator
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AtmLocator
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AtmLocator/AtmLocatorSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AtmLocator.Enabled")]
 ```
 
-### MinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AtmLocator/AtmLocatorSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AtmLocator.MinAndroidVersion")]
 ```
 
-### MinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AtmLocator/AtmLocatorSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AtmLocator.MinIosVersion")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AtmLocator/AtmLocatorSettings.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp

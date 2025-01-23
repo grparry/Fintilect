@@ -7,93 +7,53 @@
 ## Class Summary
 
 public class ConnectNative
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ConnectNative
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShowThemeSelectorOverFlowMenu
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### ShowThemeSelectorOverFlowMenu: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.ConnectNative.ShowThemeSelectorOverFlowMenu")]
 ```
 
-### DefaultTheme
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### DefaultTheme: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.ConnectNative.DefaultTheme")]
 ```
 
-### ThemeSelectorEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### ThemeSelectorEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.ConnectNative.ThemeSelectorEnabled")]
 ```
 
-### ConnectNativeMenuConfiguration
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### ConnectNativeMenuConfiguration: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.ConnectNative.MenuConfiguration")]
 ```
 
-### FooterContent
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### FooterContent: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.ConnectNative.FooterContent")]
 ```
 
-### FooterEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### FooterEnabled: `bool`
 
 **Attributes:**
 ```csharp

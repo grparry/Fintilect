@@ -7,65 +7,41 @@
 ## Class Summary
 
 public class JointOwners
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class JointOwners
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/JointOwners.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("JointOwners.JointOwnersEnabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/JointOwners.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("JointOwners.MinVersion")]
 ```
 
-### ShouldShowJointOwners
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/JointOwners.cs
-visibility: public
-modifier: readonly
-```
+### ShouldShowJointOwners: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("JointOwners.ShowJointOwners")]
 ```
 
-### AssociationCodesToShow
+### AssociationCodesToShow: `string[]`
 
-```typescript
-type: AssociationCodesToShow[]
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/JointOwners.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

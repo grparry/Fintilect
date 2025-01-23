@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class DocumentCenter
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DocumentCenter
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DocumentCenter.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp

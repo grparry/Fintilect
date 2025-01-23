@@ -7,205 +7,137 @@
 ## Class Summary
 
 public class LinkedAccount
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LinkedAccount
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldShowAddNewAccountOnHistoryPage
+### ShouldShowAddNewAccountOnHistoryPage: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LinkedAccount.ShouldShowAddNewAccountOnHistoryPage")]
 ```
 
-### ShouldDisableLinkedAccountWhenNoticeOfChangeReceivedEnabled
+### ShouldDisableLinkedAccountWhenNoticeOfChangeReceivedEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.LinkedAccount.ShouldDisableLinkedAccountWhenNoticeOfChangeReceivedEnabled")]
 ```
 
-### LinkedAccountEncryptionKey
+### LinkedAccountEncryptionKey: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.LinkedAccountEncryptionKey")]
 ```
 
-### SearchByUuidEnabled
+### SearchByUuidEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LinkedAccount.SearchByUuidEnabled")]
 ```
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LinkedAccounts.Enabled")]
 ```
 
-### MinVersion
+### MinVersion: `double`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LinkedAccounts.MinVersion")]
 ```
 
-### DeleteAccountEnabled
+### DeleteAccountEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LinkedAccounts.DeleteAccountEnabled")]
 ```
 
-### IntraBankEnabled
+### IntraBankEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LinkedAccounts.IntraBankEnabled")]
 ```
 
-### CrossBankEnabled
+### CrossBankEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LinkedAccounts.CrossBankEnabled")]
 ```
 
-### ShowDeletedAccountsEnabled
+### ShowDeletedAccountsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LinkedAccounts.ShowDeletedAccounts.Enabled")]
 ```
 
-### ShowCfsAccounts
+### ShowCfsAccounts: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowLinkedAccounts")]
 ```
 
-### ShowAchAccounts
+### ShowAchAccounts: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowLinkedAchAccounts")]
 ```
 
-### AccountMaskingCharacter
+### AccountMaskingCharacter: `char`
 
-```typescript
-type: char
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LinkedAccounts.AccountMaskingCharacter")]
 ```
 
-### AchGlAccount
+### AchGlAccount: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/LinkedAccount.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

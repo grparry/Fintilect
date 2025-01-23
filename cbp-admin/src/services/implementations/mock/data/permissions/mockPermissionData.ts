@@ -1,19 +1,21 @@
 import { Permission, PermissionGroup, PermissionCategoryType, PermissionAction } from '../../../../../types/permission.types';
 
 export const mockPermissions: Permission[] = [
+    // System Permissions
     {
         id: '1',
-        name: 'View Security Settings',
-        description: 'Can view security settings',
-        category: 'Security' as PermissionCategoryType,
+        name: 'View System Settings',
+        description: 'Can view system settings',
+        category: 'System' as PermissionCategoryType,
         actions: ['view' as PermissionAction],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
     },
+    // Bill Pay Permissions
     {
         id: '2',
-        name: 'View Payments',
-        description: 'Can view payment details',
+        name: 'View Bill Pay',
+        description: 'Can view bill pay section',
         category: 'BillPay' as PermissionCategoryType,
         actions: ['view' as PermissionAction],
         createdAt: new Date().toISOString(),
@@ -21,10 +23,40 @@ export const mockPermissions: Permission[] = [
     },
     {
         id: '3',
-        name: 'Manage Payments',
-        description: 'Can create and modify payments',
+        name: 'Manage Bill Pay',
+        description: 'Can manage bill pay',
         category: 'BillPay' as PermissionCategoryType,
         actions: ['edit' as PermissionAction],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    },
+    // Client Management Permissions
+    {
+        id: '4',
+        name: 'View Client Management',
+        description: 'Can view client management section',
+        category: 'ClientManagement' as PermissionCategoryType,
+        actions: ['view' as PermissionAction],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    },
+    // Emerge Permissions
+    {
+        id: '5',
+        name: 'View Emerge',
+        description: 'Can view emerge section',
+        category: 'Emerge' as PermissionCategoryType,
+        actions: ['view' as PermissionAction],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    },
+    // Development Permissions
+    {
+        id: '6',
+        name: 'View Development',
+        description: 'Can view development section',
+        category: 'Development' as PermissionCategoryType,
+        actions: ['view' as PermissionAction],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
     }
@@ -36,9 +68,11 @@ export const mockPermissionGroups: PermissionGroup[] = [
         name: 'Admin Group',
         description: 'Administrative permissions',
         permissions: {
-            payments: ['view', 'edit'],
-            users: ['view', 'edit'],
-            reports: ['view']
+            system: ['view', 'edit'],
+            billpay: ['view', 'edit'],
+            clientmanagement: ['view', 'edit'],
+            emerge: ['view', 'edit'],
+            development: ['view', 'edit']
         },
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
@@ -48,9 +82,10 @@ export const mockPermissionGroups: PermissionGroup[] = [
         name: 'Read Only Group',
         description: 'View only permissions',
         permissions: {
-            payments: ['view'],
-            users: ['view'],
-            reports: ['view']
+            billpay: ['view'],
+            clientmanagement: ['view'],
+            emerge: ['view'],
+            development: ['view']
         },
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()

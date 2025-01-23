@@ -7,93 +7,53 @@
 ## Class Summary
 
 public class TargetedMarketingSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class TargetedMarketingSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ImageDeliveryServiceClassName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TargetedMarketing/TargetedMarketingSettings.cs
-visibility: public
-modifier: readonly
-```
+### ImageDeliveryServiceClassName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("TargetedMarketing.TargetedMarketingSettings.ImageDeliveryServiceClassName")]
 ```
 
-### PSITargetedMarketingWebAPIAddress
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TargetedMarketing/TargetedMarketingSettings.cs
-visibility: public
-modifier: readonly
-```
+### PSITargetedMarketingWebAPIAddress: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("TargetedMarketing.TargetedMarketingSettings.PSITargetedMarketingWebAPIAddress")]
 ```
 
-### EnableTargetedMarketing
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TargetedMarketing/TargetedMarketingSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableTargetedMarketing: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("TargetedMarketingSettings.EnableTargetedMarketing")]
 ```
 
-### GetImageUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TargetedMarketing/TargetedMarketingSettings.cs
-visibility: public
-modifier: readonly
-```
+### GetImageUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("TargetedMarketingSettings.GetImageUrl")]
 ```
 
-### CanMapMemberNumberToEAgreementNumber
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TargetedMarketing/TargetedMarketingSettings.cs
-visibility: public
-modifier: readonly
-```
+### CanMapMemberNumberToEAgreementNumber: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("TargetedMarketingSettings.CanMapMemberNumberToEAgreementNumber")]
 ```
 
-### CorsAllowedOrigin
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TargetedMarketing/TargetedMarketingSettings.cs
-visibility: public
-modifier: readonly
-```
+### CorsAllowedOrigin: `string`
 
 **Attributes:**
 ```csharp

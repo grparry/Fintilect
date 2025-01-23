@@ -7,51 +7,38 @@
 ## Class Summary
 
 public class AccountNumberReassignmentSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AccountNumberReassignmentSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ChangeUuidWhenAccountNumberMatches
+### ChangeUuidWhenAccountNumberMatches: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AccountNumberReassignmentSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.Account.AccountNumberReassignment.ChangeUuidWhenAccountNumberMatches")]
 ```
 
-### RemoveMfaQuestion
+### RemoveMfaQuestion: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AccountNumberReassignmentSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.Account.AccountNumberReassignment.RemoveMfaQuestion")]
 ```
 
-### DisableScheduledTransfersUsingAccount
+### DisableScheduledTransfersUsingAccount: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AccountNumberReassignmentSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

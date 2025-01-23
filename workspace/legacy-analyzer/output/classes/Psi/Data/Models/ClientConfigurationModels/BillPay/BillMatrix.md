@@ -7,177 +7,95 @@
 ## Class Summary
 
 public class BillMatrix
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class BillMatrix
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillMatrix.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillMatrix.MinVersion")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillMatrix.Url")]
 ```
 
-### CertificateFilename
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### CertificateFilename: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillMatrix.CertificateFilename")]
 ```
 
-### CertificatePassword
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### CertificatePassword: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillMatrix.CertificatePassword")]
 ```
 
-### VendorPublicCertificateStore
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### VendorPublicCertificateStore: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillMatrix.CertificateStore.Vendor.Public")]
 ```
 
-### EmergePrivateCertificateStore
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### EmergePrivateCertificateStore: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillMatrix.CertificateStore.Emerge.Private")]
 ```
 
-### VendorPublicCertificateThumbPrint
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### VendorPublicCertificateThumbPrint: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillMatrix.CertificateThumbPrint.Vendor.Public")]
 ```
 
-### EmergePrivateCertificateThumbPrint
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### EmergePrivateCertificateThumbPrint: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillMatrix.CertificateThumbPrint.Emerge.Private")]
 ```
 
-### OpenInNewTab
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### OpenInNewTab: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillMatrix.OpenInNewTab")]
 ```
 
-### ShouldSendAddressInSsoRequest
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### ShouldSendAddressInSsoRequest: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillMatrix.ShouldSendAddressInSsoRequest")]
 ```
 
-### Issuer
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillMatrix.cs
-visibility: public
-modifier: readonly
-```
+### Issuer: `string`
 
 **Attributes:**
 ```csharp

@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class PullCreditSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PullCreditSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ProductValue
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/PullCreditSettings.cs
-visibility: public
-modifier: readonly
-```
+### ProductValue: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.PullCreditSettings.ProductValue")]
 ```
 
-### BureauValue
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/PullCreditSettings.cs
-visibility: public
-modifier: readonly
-```
+### BureauValue: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.PullCreditSettings.BureauValue")]
 ```
 
-### TypeSerialValue
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/PullCreditSettings.cs
-visibility: public
-modifier: readonly
-```
+### TypeSerialValue: `string`
 
 **Attributes:**
 ```csharp

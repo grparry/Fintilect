@@ -7,135 +7,84 @@
 ## Class Summary
 
 public class Payzur
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Payzur
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SyncCardsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/Payzur.cs
-visibility: public
-modifier: readonly
-```
+### SyncCardsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayments.Payzur.SyncCardsEnabled")]
 ```
 
-### SyncCardsMinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/Payzur.cs
-visibility: public
-modifier: readonly
-```
+### SyncCardsMinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayments.Payzur.SyncCardsMinVersion")]
 ```
 
-### PublicKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/Payzur.cs
-visibility: public
-modifier: readonly
-```
+### PublicKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayments.Payzur.PublicKey")]
 ```
 
-### AccountTypes
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/Payzur.cs
-visibility: public
-modifier: readonly
-```
+### AccountTypes: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayments.Payzur.AccountTypes")]
 ```
 
-### ShouldOpenInIframe
+### ShouldOpenInIframe: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/Payzur.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayments.Payzur.OpenInIframe")]
 ```
 
-### SyncDuplicateCardsEnabled
+### SyncDuplicateCardsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/Payzur.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayments.Payzur.SyncDuplicateCardsEnabled")]
 ```
 
-### UseOAEP
+### UseOAEP: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/Payzur.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayments.Payzur.UseOAEP")]
 ```
 
-### SyncAddedCardsEnabled
+### SyncAddedCardsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/Payzur.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayments.Payzur.SyncAddedCardsEnabled")]
 ```
 
-### ShouldSkipCardSyncWhenCoreIsDown
+### ShouldSkipCardSyncWhenCoreIsDown: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/Payzur.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

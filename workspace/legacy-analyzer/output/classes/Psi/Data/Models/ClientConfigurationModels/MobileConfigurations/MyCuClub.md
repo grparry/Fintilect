@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class MyCuClub
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MyCuClub
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SummaryNoteName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/MyCuClub.cs
-visibility: public
-modifier: readonly
-```
+### SummaryNoteName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.MyCuClub.SummaryNoteName")]
 ```
 
-### IsUrl
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/MyCuClub.cs
-visibility: public
-modifier: readonly
-```
+### IsUrl: `bool`
 
 **Attributes:**
 ```csharp

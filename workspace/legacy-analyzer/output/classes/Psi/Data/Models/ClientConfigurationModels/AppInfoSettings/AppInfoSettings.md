@@ -7,1227 +7,620 @@
 ## Class Summary
 
 public class AppInfoSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AppInfoSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Alerts2Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### Alerts2Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.Alerts2Enabled")]
 ```
 
-### AllowJoint2JointTransfer
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### AllowJoint2JointTransfer: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.AllowJoint2JointTransfer")]
 ```
 
-### AllowJoint2JointScheduledTrans
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### AllowJoint2JointScheduledTrans: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.AllowJoint2JointScheduledTrans")]
 ```
 
-### BusinessBankingEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### BusinessBankingEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.BusinessBankingEnabled")]
 ```
 
-### CashAdvanceFromCreditCardsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### CashAdvanceFromCreditCardsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CashAdvanceFromCreditCardsEnabled")]
 ```
 
-### CDRolloverEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### CDRolloverEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CDRolloverEnabled")]
 ```
 
-### CreditKarmaEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditKarmaEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CreditKarmaEnabled")]
 ```
 
-### DashboardEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### DashboardEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.DashboardEnabled")]
 ```
 
-### DebitCardOverDraftEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### DebitCardOverDraftEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.DebitCardOverDraftEnabled")]
 ```
 
-### DisableCheckWithdraw
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### DisableCheckWithdraw: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.DisableCheckWithdraw")]
 ```
 
-### DisableStopPayments
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### DisableStopPayments: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.DisableStopPayments")]
 ```
 
-### EAlertsMenuItemEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EAlertsMenuItemEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EAlertsMenuItemEnabled")]
 ```
 
-### EnableCancelBillPaySM
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableCancelBillPaySM: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableCancelBillPaySM")]
 ```
 
-### EnableCDDistributionScreen
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableCDDistributionScreen: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableCDDistributionScreen")]
 ```
 
-### EnableCDPurchaseScreen
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableCDPurchaseScreen: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableCDPurchaseScreen")]
 ```
 
-### EnableCheckCopy
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableCheckCopy: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableCheckCopy")]
 ```
 
-### EnableCheckReorder
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableCheckReorder: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableCheckReorder")]
 ```
 
-### EnableCreditCardMenuOption
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableCreditCardMenuOption: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableCreditCardMenuOption")]
 ```
 
-### EnableCrossAccountScreen
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableCrossAccountScreen: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableCrossAccountScreen")]
 ```
 
-### EnableInfoLinkIFrame
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableInfoLinkIFrame: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableInfoLinkIFrame")]
 ```
 
-### EnableNewSubaccountScreen
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableNewSubaccountScreen: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableNewSubaccountScreen")]
 ```
 
-### EnableODProtectionScreen
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableODProtectionScreen: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableODProtectionScreen")]
 ```
 
-### EnableUserTransferDescription
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableUserTransferDescription: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableUserTransferDescription")]
 ```
 
-### EnableTravelNotification
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableTravelNotification: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableTravelNotification")]
 ```
 
-### EnableWireTransferScreen
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableWireTransferScreen: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.EnableWireTransferScreen")]
 ```
 
-### ForceLoginByAccountAlias
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ForceLoginByAccountAlias: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ForceLoginByAccountAlias")]
 ```
 
-### gbCheckImages
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### gbCheckImages: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.gbCheckImages")]
 ```
 
-### gbScheduledTransfers
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### gbScheduledTransfers: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.gbScheduledTransfers")]
 ```
 
-### HideAddressLineThreeOnChangeAddressControl
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### HideAddressLineThreeOnChangeAddressControl: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.HideAddressLineThreeOnChangeAddressControl")]
 ```
 
-### HouseholdingCreditCardSSO
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### HouseholdingCreditCardSSO: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.HouseholdingCreditCardSSO")]
 ```
 
-### HouseholdingEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### HouseholdingEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.HouseholdingEnabled")]
 ```
 
-### IsBalanceTransferSecMsgEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### IsBalanceTransferSecMsgEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.IsBalanceTransferSecMsgEnabled")]
 ```
 
-### LoansUseExternalLink
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### LoansUseExternalLink: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.LoansUseExternalLink")]
 ```
 
-### MoneyDeskTopEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### MoneyDeskTopEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.MoneyDeskTopEnabled")]
 ```
 
-### SchedTransAchShowFeeDropDown
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### SchedTransAchShowFeeDropDown: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.SchedTransAchShowFeeDropDown")]
 ```
 
-### ShowLostStolenCC
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowLostStolenCC: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowLostStolenCC")]
 ```
 
-### TransferMonthlyPattern
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### TransferMonthlyPattern: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.TransferMonthlyPattern")]
 ```
 
-### PopEstatementsNewWindowiPad
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### PopEstatementsNewWindowiPad: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.PopEstatementsNewWindowiPad")]
 ```
 
-### PSCUInfoLinkOnMain
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### PSCUInfoLinkOnMain: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.PSCUInfoLinkOnMain")]
 ```
 
-### RemoteCapture
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### RemoteCapture: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.RemoteCapture")]
 ```
 
-### RewardsNowEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### RewardsNowEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.RewardsNowEnabled")]
 ```
 
-### ShowAddJointOwner
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowAddJointOwner: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowAddJointOwner")]
 ```
 
-### DisclosureAcceptanceFromDB
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### DisclosureAcceptanceFromDB: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.DisclosureAcceptanceFromDB")]
 ```
 
-### ShowChangePin
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowChangePin: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowChangePin")]
 ```
 
-### ShowDYOC
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowDYOC: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowDYOC")]
 ```
 
-### ShowEstatementCopyMenuItem
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowEstatementCopyMenuItem: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowEstatementCopyMenuItem")]
 ```
 
-### ShowInvestOnline
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowInvestOnline: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowInvestOnline")]
 ```
 
-### ShowIRADistributions
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowIRADistributions: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowIRADistributions")]
 ```
 
-### ShowLinkedAccounts
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowLinkedAccounts: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowLinkedAccounts")]
 ```
 
-### ShowLinkedAchAccounts
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowLinkedAchAccounts: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowLinkedAchAccounts")]
 ```
 
-### ShowMemberDiscounts
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowMemberDiscounts: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowMemberDiscounts")]
 ```
 
-### ShowPrepaidVisa
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowPrepaidVisa: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowPrepaidVisa")]
 ```
 
-### ShowVisaGiftCard
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowVisaGiftCard: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ShowVisaGiftCard")]
 ```
 
-### UserNSFDisclosure
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### UserNSFDisclosure: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.UserNSFDisclosure")]
 ```
 
-### UsePreviousMicrNumber
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### UsePreviousMicrNumber: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.UsePreviousMicrNumber")]
 ```
 
-### BusinessCheckReorderURL
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### BusinessCheckReorderURL: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.BusinessCheckReorderURL")]
 ```
 
-### CashAdvanceFromCreditCardsAdvanceFeePercentage
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### CashAdvanceFromCreditCardsAdvanceFeePercentage: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CashAdvanceFromCreditCardsAdvanceFeePercentage")]
 ```
 
-### CashAdvanceFromCreditCardsMinimumTransactionCost
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### CashAdvanceFromCreditCardsMinimumTransactionCost: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CashAdvanceFromCreditCardsMinimumTransactionCost")]
 ```
 
-### CreditCardExternalLink
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditCardExternalLink: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CreditCardExternalLink")]
 ```
 
-### CreditKarmaJointOwner
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditKarmaJointOwner: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CreditKarmaJointOwner")]
 ```
 
-### gbBillPayType
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### gbBillPayType: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.gbBillPayType")]
 ```
 
-### gsEstatmentType
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### gsEstatmentType: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.gsEstatmentType")]
 ```
 
-### giTransMaxDaily
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### giTransMaxDaily: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.giTransMaxDaily")]
 ```
 
-### giTransMaxMonthly
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### giTransMaxMonthly: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.giTransMaxMonthly")]
 ```
 
-### giTransMaxWeekly
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### giTransMaxWeekly: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.giTransMaxWeekly")]
 ```
 
-### giTransMaxYearly
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### giTransMaxYearly: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.giTransMaxYearly")]
 ```
 
-### giMaxHistoryCount
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### giMaxHistoryCount: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.giMaxHistoryCount")]
 ```
 
-### IntraBankRoutingNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### IntraBankRoutingNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.IntraBankRoutingNumber")]
 ```
 
-### LinkedACHMethod
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### LinkedACHMethod: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.LinkedACHMethod")]
 ```
 
-### TermsLinkURL
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### TermsLinkURL: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.TermsLinkURL")]
 ```
 
-### PWDEncryptionKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### PWDEncryptionKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.PWDEncryptionKey")]
 ```
 
-### BillPayAccounts
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### BillPayAccounts: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.BillPayAccounts")]
 ```
 
-### MICRNumberFirstFourDigits
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### MICRNumberFirstFourDigits: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.MICRNumberFirstFourDigits")]
 ```
 
-### MobileBillPayProvider
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### MobileBillPayProvider: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.MobileBillPayProvider")]
 ```
 
-### obsShareRestrictedInquire
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### obsShareRestrictedInquire: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsShareRestrictedInquire")]
 ```
 
-### obsCheckingAccounts
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### obsCheckingAccounts: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsCheckingAccounts")]
 ```
 
-### CreditCardHistoryProvider
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditCardHistoryProvider: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CreditCardHistoryProvider")]
 ```
 
-### InstitutionDisplayName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### InstitutionDisplayName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.InstitutionDisplayName")]
 ```
 
-### ScheduledTransfersStartTime
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ScheduledTransfersStartTime: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ScheduledTransfersStartTime")]
 ```
 
-### ScheduledTransfersStartSpan
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ScheduledTransfersStartSpan: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ScheduledTransfersStartSpan")]
 ```
 
-### SchedTransDefaultStartTime
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### SchedTransDefaultStartTime: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.SchedTransDefaultStartTime")]
 ```
 
-### SchedTransLinkedAchStartTime
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### SchedTransLinkedAchStartTime: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.SchedTransLinkedAchStartTime")]
 ```
 
-### MICRNumberLength
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### MICRNumberLength: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.MICRNumberLength")]
 ```
 
-### CreditCardSsoProvider
-
-```typescript
-type: CreditCardSsoProvider
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditCardSSOType: `CreditCardSsoProvider`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CreditCardSSOType")]
 ```
 
-### HouseholdingPermissionSource
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### HouseholdingPermissionSource: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.HouseholdingPermissionSource")]
 ```
 
-### CreditCardSsoDisplayType
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditCardSsoDisplayType: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CreditCardSsoDisplayType")]
 ```
 
-### FISScoreCardDisplayType
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/AppInfoSettings/AppInfoSettings.cs
-visibility: public
-modifier: readonly
-```
+### FISScoreCardDisplayType: `string`
 
 **Attributes:**
 ```csharp

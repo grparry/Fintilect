@@ -7,65 +7,41 @@
 ## Class Summary
 
 public class PasswordSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PasswordSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/PasswordSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.Login.Password.MinVersion")]
 ```
 
-### CanViewPasswordAsPlainTextAtLoginEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/PasswordSettings.cs
-visibility: public
-modifier: readonly
-```
+### CanViewPasswordAsPlainTextAtLoginEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("PasswordSettings.CanViewPasswordAsPlainTextAtLoginEnabled")]
 ```
 
-### ShowForgotUserIdButtonOnInvalidLoginControlEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/PasswordSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShowForgotUserIdButtonOnInvalidLoginControlEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("PasswordSettings.ShowForgotUserIdButtonOnInvalidLoginControlEnabled")]
 ```
 
-### ShouldUsePlainTextForShowHidePasswordToggle
+### ShouldUsePlainTextForShowHidePasswordToggle: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/PasswordSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class DebitCards
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DebitCards
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldChangeExpirationDateToEndOfPreviousMonth
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/DebitCards.cs
-visibility: public
-modifier: readonly
-```
+### ShouldChangeExpirationDateToEndOfPreviousMonth: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Accounts.DebitCards.ShouldChangeExpirationDateToEndOfPreviousMonth")]
 ```
 
-### ExpiresAtStartOfMonth
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/DebitCards.cs
-visibility: public
-modifier: readonly
-```
+### ExpiresAtStartOfMonth: `bool`
 
 **Attributes:**
 ```csharp

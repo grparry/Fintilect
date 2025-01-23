@@ -7,130 +7,71 @@
 ## Class Summary
 
 public class TalkativeChatSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class TalkativeChatSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MobileConfigurations
+### Authentication: `MobileConfigurations.Authentication.Authentication`
 
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/TalkativeChatSettings.cs
-visibility: public
-modifier: readonly
-```
-
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/TalkativeChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Chat.Talkative.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/TalkativeChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Chat.Talkative.MinVersion")]
 ```
 
-### MinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/TalkativeChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Chat.Talkative.MinIosVersion")]
 ```
 
-### MinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/TalkativeChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Chat.Talkative.MinAndroidVersion")]
 ```
 
-### MenuItemEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/TalkativeChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### MenuItemEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Chat.Talkative.MenuItemEnabled")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/TalkativeChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Chat.Talkative.Url")]
 ```
 
-### HelpOptionEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/TalkativeChatSettings.cs
-visibility: public
-modifier: readonly
-```
+### HelpOptionEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Chat.Talkative.HelpOptionEnabled")]
 ```
 
-### Javascript
+### Javascript: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/TalkativeChatSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -7,233 +7,155 @@
 ## Class Summary
 
 public class OfxConfigurations
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class OfxConfigurations
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### OfxDirectIsAscending
+### OfxDirectIsAscending: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OFXConfigurations.OfxDirectIsAscending")]
 ```
 
-### TransactionMessageEZIV
+### TransactionMessageEZIV: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.TransactionMessageEZIV")]
 ```
 
-### TransactionPostingCreditMessage
+### TransactionPostingCreditMessage: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.TransactionPostingCreditMessage")]
 ```
 
-### TransactionPostingDebitMessage
+### TransactionPostingDebitMessage: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.TransactionPostingDebitMessage")]
 ```
 
-### LogLoginIsEnabled
+### LogLoginIsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.LogLoginIsEnabled")]
 ```
 
-### OfxTranTypeShouldUseExtraFields
+### OfxTranTypeShouldUseExtraFields: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.OfxTranTypeShouldUseExtraFields")]
 ```
 
-### HideZeroValueTransactions
+### HideZeroValueTransactions: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.HideZeroValueTransactions")]
 ```
 
-### GenerateNamesIfNeeded
+### GenerateNamesIfNeeded: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.GenerateNamesIfNeeded")]
 ```
 
-### PositiveTransactionName
+### PositiveTransactionName: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.PositiveTransactionName")]
 ```
 
-### NegativeTransactionName
+### NegativeTransactionName: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.NegativeTransactionName")]
 ```
 
-### ShouldIncludeCrossAccounts
+### ShouldIncludeCrossAccounts: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.ShouldIncludeCrossAccounts")]
 ```
 
-### ShouldDeleteClosingTags
+### ShouldDeleteClosingTags: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.ShouldDeleteClosingTags")]
 ```
 
-### List
+### AllowedShareRestrictedFlags: `List<string>`
 
-```typescript
-type: AllowedShareRestrictedFlags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.AllowedShareRestrictedFlags")]
 ```
 
-### List
+### AllowedLoanRestrictedFlags: `List<string>`
 
-```typescript
-type: AllowedLoanRestrictedFlags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.AllowedLoanRestrictedFlags")]
 ```
 
-### List
+### AppIdsWithRestrictedFlagsExceptions: `List<string>`
 
-```typescript
-type: AppIdsWithRestrictedFlagsExceptions
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("OfxConfigurations.AppIdsWithRestrictedFlagsExceptions")]
 ```
 
-### UseSymmetryMethodOfCreatingFitid
+### UseSymmetryMethodOfCreatingFitid: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/OfxConfigurations/OfxConfigurations.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

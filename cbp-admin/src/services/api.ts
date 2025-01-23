@@ -1,153 +1,126 @@
-import { ApiRequestOptions, ApiHeaders, ApiErrorResponse, ApiSuccessResponse, ApiPaginatedResponse } from '../types/api.types';
+import { API_BASE_URL } from '../config/api.config';
+import { ApiRequestOptions, ApiSuccessResponse, ApiErrorResponse } from '../types/api.types';
+import logger from '../utils/logger';
 
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+const DEFAULT_TIMEOUT = 30000;
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 
-class Api {
-  private async handleResponse<T>(response: Response): Promise<T> {
+class ApiClient {
+  private static instance: ApiClient;
+  private baseUrl: string;
+
+  private constructor() {
+    this.baseUrl = API_BASE_URL;
+  }
+
+  static getInstance(): ApiClient {
+    if (!ApiClient.instance) {
+      ApiClient.instance = new ApiClient();
+    }
+    return ApiClient.instance;
+  }
+
+  private async handleResponse<T>(response: Response): Promise<ApiSuccessResponse<T>> {
     const contentType = response.headers.get('content-type');
-    if (contentType?.includes('application/json')) {
-      const data = await response.json();
-      if (!response.ok) {
-        const error = data as ApiErrorResponse;
-        if (error.status === 401) {
-          await this.handleAuthError();
+    const isJson = contentType && contentType.includes('application/json');
+    const data = isJson ? await response.json() : await response.text();
+
+    if (!response.ok) {
+      const error: ApiErrorResponse = {
+        success: false,
+        status: response.status,
+        error: {
+          code: response.status.toString(),
+          message: data.message || response.statusText,
+          timestamp: new Date().toISOString()
         }
-        throw error;
-      }
-      return data;
-    } else if (response.headers.get('content-type')?.includes('application/octet-stream')) {
-      return response.blob() as Promise<T>;
-    }
-    throw new Error(`Unsupported content type: ${contentType}`);
-  }
-
-  private async handleAuthError(): Promise<void> {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (refreshToken) {
-      try {
-        const response = await this.post<{ accessToken: string }>('/v1/auth/refresh', { refreshToken });
-        localStorage.setItem('token', response.data.accessToken);
-        return;
-      } catch (error) {
-        // If refresh fails, logout
-        this.logout();
-      }
-    }
-    this.logout();
-  }
-
-  private logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    window.location.href = '/login';
-  }
-
-  private async request<T>(endpoint: string, config: ApiRequestOptions = {}): Promise<T> {
-    const { retry = true, retryCount = 0, retryDelay = RETRY_DELAY, ...restConfig } = config;
-    
-    const token = localStorage.getItem('token');
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...config.headers,
-    };
-
-    try {
-      const response = await fetch(`${BASE_URL}${endpoint}`, {
-        ...restConfig,
-        headers,
-      });
-
-      return this.handleResponse<T>(response);
-    } catch (error) {
-      if (retry && retryCount < MAX_RETRIES && this.shouldRetry(error)) {
-        await new Promise(resolve => setTimeout(resolve, retryDelay));
-        return this.request<T>(endpoint, {
-          ...config,
-          retryCount: retryCount + 1,
-          retryDelay: retryDelay * 2,
-        });
-      }
+      };
       throw error;
     }
+
+    return {
+      success: true,
+      data: isJson ? data : { content: data },
+      meta: {
+        timestamp: new Date().toISOString(),
+        requestId: response.headers.get('x-request-id') || Math.random().toString(36).substring(7)
+      }
+    };
   }
 
-  private shouldRetry(error: any): boolean {
-    return error?.status >= 500 || error?.message?.includes('network error');
+  private createUrl(path: string, params?: Record<string, any>): string {
+    const url = new URL(path, this.baseUrl);
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(key, value.toString());
+        }
+      });
+    }
+    return url.toString();
   }
 
-  async get<T>(
-    endpoint: string,
-    config: Omit<ApiRequestOptions, 'method'> = {}
-  ): Promise<ApiSuccessResponse<T>> {
-    const { params, ...restConfig } = config;
-    const queryParams = params ? `?${new URLSearchParams(params as Record<string, string>)}` : '';
-    return this.request<ApiSuccessResponse<T>>(`${endpoint}${queryParams}`, {
-      method: 'GET',
-      ...restConfig,
-    });
+  private async request<T>(method: string, path: string, options: ApiRequestOptions = {}): Promise<ApiSuccessResponse<T>> {
+    const { headers = {}, params, data, timeout = DEFAULT_TIMEOUT, signal } = options;
+    const url = this.createUrl(path, params);
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...headers
+        },
+        body: data ? JSON.stringify(data) : undefined,
+        signal: signal || controller.signal
+      });
+
+      return await this.handleResponse<T>(response);
+    } catch (error) {
+      if ((error as ApiErrorResponse).success === false) {
+        throw error;
+      }
+
+      // Convert other errors to ApiErrorResponse
+      const apiError: ApiErrorResponse = {
+        success: false,
+        status: error instanceof Error && error.name === 'AbortError' ? 408 : 500,
+        error: {
+          code: error instanceof Error && error.name === 'AbortError' ? 'TIMEOUT' : 'UNKNOWN',
+          message: error instanceof Error ? error.message : 'An unknown error occurred',
+          timestamp: new Date().toISOString()
+        }
+      };
+      throw apiError;
+    } finally {
+      clearTimeout(timeoutId);
+    }
   }
 
-  async getPaginated<T>(
-    endpoint: string,
-    config: Omit<ApiRequestOptions, 'method'> = {}
-  ): Promise<ApiPaginatedResponse<T[]>> {
-    const response = await this.request<ApiPaginatedResponse<T[]>>(endpoint, {
-      method: 'GET',
-      ...config,
-    });
-    return response;
+  async get<T>(path: string, options?: ApiRequestOptions): Promise<ApiSuccessResponse<T>> {
+    return this.request<T>('GET', path, options);
   }
 
-  async post<T>(
-    endpoint: string,
-    data?: any,
-    config: Omit<ApiRequestOptions, 'method' | 'body'> = {}
-  ): Promise<ApiSuccessResponse<T>> {
-    return this.request<ApiSuccessResponse<T>>(endpoint, {
-      method: 'POST',
-      body: data instanceof FormData ? data : JSON.stringify(data),
-      ...config,
-    });
+  async post<T>(path: string, data?: any, options?: ApiRequestOptions): Promise<ApiSuccessResponse<T>> {
+    return this.request<T>('POST', path, { ...options, data });
   }
 
-  async put<T>(
-    endpoint: string,
-    data: any,
-    config: Omit<ApiRequestOptions, 'method' | 'body'> = {}
-  ): Promise<ApiSuccessResponse<T>> {
-    return this.request<ApiSuccessResponse<T>>(endpoint, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-      ...config,
-    });
+  async put<T>(path: string, data?: any, options?: ApiRequestOptions): Promise<ApiSuccessResponse<T>> {
+    return this.request<T>('PUT', path, { ...options, data });
   }
 
-  async patch<T>(
-    endpoint: string,
-    data: any,
-    config: Omit<ApiRequestOptions, 'method' | 'body'> = {}
-  ): Promise<ApiSuccessResponse<T>> {
-    return this.request<ApiSuccessResponse<T>>(endpoint, {
-      method: 'PATCH',
-      body: JSON.stringify(data),
-      ...config,
-    });
+  async delete<T>(path: string, options?: ApiRequestOptions): Promise<ApiSuccessResponse<T>> {
+    return this.request<T>('DELETE', path, options);
   }
 
-  async delete<T>(
-    endpoint: string,
-    config: Omit<ApiRequestOptions, 'method'> = {}
-  ): Promise<ApiSuccessResponse<T>> {
-    return this.request<ApiSuccessResponse<T>>(endpoint, {
-      method: 'DELETE',
-      ...config,
-    });
+  async patch<T>(path: string, data?: any, options?: ApiRequestOptions): Promise<ApiSuccessResponse<T>> {
+    return this.request<T>('PATCH', path, { ...options, data });
   }
 }
 
-const api = new Api();
+const api = ApiClient.getInstance();
 export default api;

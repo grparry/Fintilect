@@ -302,15 +302,17 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
         return this.payees.filter(p => p.clientId === clientId);
     }
 
-    async getStats(timeframe: 'day' | 'week' | 'month'): Promise<BillPayStats> {
-        return mockDashboardStats();
+    async getStats(timeframe: 'day' | 'week' | 'month' | 'quarter' | 'year'): Promise<BillPayStats> {
+        return mockDashboardStats(timeframe);
     }
 
-    async getTransactionTrends(timeframe: 'day' | 'week' | 'month'): Promise<TransactionTrend[]> {
+    async getTransactionTrends(timeframe: 'day' | 'week' | 'month' | 'quarter' | 'year'): Promise<TransactionTrend[]> {
         const daysMap = {
             day: 1,
             week: 7,
-            month: 30
+            month: 30,
+            quarter: 90,
+            year: 365
         };
         return generateMockTrends(daysMap[timeframe]);
     }

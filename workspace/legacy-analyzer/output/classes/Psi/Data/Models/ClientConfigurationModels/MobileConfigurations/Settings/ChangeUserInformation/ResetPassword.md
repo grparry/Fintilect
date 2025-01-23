@@ -7,79 +7,46 @@
 ## Class Summary
 
 public class ResetPassword
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ResetPassword
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/ChangeUserInformation/ResetPassword.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Settings.ResetPassword.MinimumVersion")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/ChangeUserInformation/ResetPassword.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Settings.ResetPassword.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/ChangeUserInformation/ResetPassword.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Settings.ResetPassword.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/ChangeUserInformation/ResetPassword.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Settings.ResetPassword.Enabled")]
 ```
 
-### IsUsernameRequired
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/ChangeUserInformation/ResetPassword.cs
-visibility: public
-modifier: readonly
-```
+### IsUsernameRequired: `bool`
 
 **Attributes:**
 ```csharp

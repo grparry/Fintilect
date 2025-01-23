@@ -7,79 +7,46 @@
 ## Class Summary
 
 public class SMTPSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class SMTPSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ServerAddress
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SMTP/SMTPSettings.cs
-visibility: public
-modifier: readonly
-```
+### ServerAddress: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("SMTP.ServerAddress")]
 ```
 
-### ServerPort
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SMTP/SMTPSettings.cs
-visibility: public
-modifier: readonly
-```
+### ServerPort: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("SMTP.ServerPort")]
 ```
 
-### LoginName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SMTP/SMTPSettings.cs
-visibility: public
-modifier: readonly
-```
+### LoginName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("SMTP.LoginName")]
 ```
 
-### SSLEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SMTP/SMTPSettings.cs
-visibility: public
-modifier: readonly
-```
+### SSLEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("SMTP.SSLEnabled")]
 ```
 
-### Password
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SMTP/SMTPSettings.cs
-visibility: public
-modifier: readonly
-```
+### Password: `string`
 
 **Attributes:**
 ```csharp

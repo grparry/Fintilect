@@ -76,9 +76,9 @@ interface FilterState {
   startDate: Dayjs | null;
   endDate: Dayjs | null;
   searchTerm: string;
-  status?: PaymentStatus;
-  method?: PaymentMethod;
-  priority?: Priority;
+  status?: PaymentStatus[];
+  method?: PaymentMethod[];
+  priority?: Priority[];
   page?: number;
   limit?: number;
   sortBy?: string;
@@ -132,12 +132,12 @@ const PendingPayments: React.FC = () => {
     action: null,
   });
   const [filters, setFilters] = useState<FilterState>({
-    startDate: null,
-    endDate: null,
+    startDate: dayjs().subtract(30, 'days'),
+    endDate: dayjs(),
     priority: undefined,
     searchTerm: '',
     method: undefined,
-    status: PaymentStatus.PENDING,
+    status: [PaymentStatus.PENDING],
     page: 1,
     limit: 10,
     sortBy: 'createdAt',
@@ -148,6 +148,11 @@ const PendingPayments: React.FC = () => {
   const [processing, setProcessing] = useState<Record<string, boolean>>({});
   const [confirmation, setConfirmation] = useState<ConfirmationState>(initialConfirmationState);
   const [rejectReason, setRejectReason] = useState('');
+  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({
+    status: false,
+    method: false,
+    priority: false
+  });
 
   const handleError = (err: unknown, message?: string) => {
     console.error(message || 'An error occurred', err);
@@ -299,24 +304,24 @@ const PendingPayments: React.FC = () => {
     handleFilterChange(field, date);
   };
 
-  const handleStatusChange = (event: SelectChangeEvent<PaymentStatus>) => {
+  const handleStatusChange = (event: SelectChangeEvent<PaymentStatus[]>) => {
     setFilters(prev => ({
       ...prev,
-      status: event.target.value as PaymentStatus
+      status: event.target.value as PaymentStatus[]
     }));
   };
 
-  const handlePriorityChange = (event: SelectChangeEvent<Priority>) => {
+  const handlePriorityChange = (event: SelectChangeEvent<Priority[]>) => {
     setFilters(prev => ({
       ...prev,
-      priority: event.target.value as Priority
+      priority: event.target.value as Priority[]
     }));
   };
 
-  const handleMethodChange = (event: SelectChangeEvent<PaymentMethod>) => {
+  const handleMethodChange = (event: SelectChangeEvent<PaymentMethod[]>) => {
     setFilters(prev => ({
       ...prev,
-      method: event.target.value as PaymentMethod
+      method: event.target.value as PaymentMethod[]
     }));
   };
 
@@ -457,14 +462,6 @@ const PendingPayments: React.FC = () => {
     }));
   };
 
-  const handleConfirmationCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmation(prev => ({
-      ...prev,
-      code: event.target.value,
-      error: null
-    }));
-  };
-
   const handleConfirmPayment = async (confirmationData: PaymentConfirmationRequest) => {
     try {
       setLoading(true);
@@ -525,7 +522,7 @@ const PendingPayments: React.FC = () => {
         ...prev,
         processing: true,
         error: null,
-        method: ConfirmationMethod.OTP // Ensure method is set with enum
+        method: ConfirmationMethod.OTP
       }));
 
       const request: any = {
@@ -533,7 +530,7 @@ const PendingPayments: React.FC = () => {
         method: PaymentMethod.ACH,
         confirmationMethod: ConfirmationMethod.OTP,
         code: confirmation.code,
-        userId: user?.id?.toString() // Convert number to string
+        userId: user?.id?.toString()
       };
 
       const response: PaymentConfirmationResponse = await paymentService.confirmPayment(paymentId, request);
@@ -546,18 +543,64 @@ const PendingPayments: React.FC = () => {
         processing: false,
         confirmationStatus: response.confirmationStatus
       }));
+      
       if (response.success) {
-        fetchPayments();
+        // Update the current dialog to show the confirmation status
+        setDialogState(prev => ({
+          ...prev,
+          action: 'view'
+        }));
+        await fetchPayments();
       }
     } catch (error) {
       console.error('Error confirming payment:', error);
       setConfirmation(prev => ({
         ...prev,
-        error: 'Failed to confirm payment',
-        processing: false,
-        method: ConfirmationMethod.OTP // Maintain enum value in error state
+        error: 'An error occurred during confirmation',
+        processing: false
       }));
     }
+  };
+
+  const handleClearFilter = (field: keyof Pick<FilterState, 'status' | 'method' | 'priority'>) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: undefined
+    }));
+  };
+
+  const handleDeleteFilterValue = (
+    event: React.MouseEvent<HTMLElement>,
+    field: keyof Pick<FilterState, 'status' | 'method' | 'priority'>,
+    valueToDelete: PaymentStatus | PaymentMethod | Priority
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setFilters(prev => {
+      const currentValue = prev[field] || [];
+      let newValue: (PaymentStatus | PaymentMethod | Priority)[] = [];
+      
+      if (field === 'status') {
+        newValue = (currentValue as PaymentStatus[]).filter(
+          value => value !== valueToDelete
+        );
+      } else if (field === 'method') {
+        newValue = (currentValue as PaymentMethod[]).filter(
+          value => value !== valueToDelete
+        );
+      } else if (field === 'priority') {
+        newValue = (currentValue as Priority[]).filter(
+          value => value !== valueToDelete
+        );
+      }
+
+      return {
+        ...prev,
+        [field]: newValue
+      };
+    });
+    // Close the dropdown after deletion
+    setOpenDropdowns(prev => ({ ...prev, [field]: false }));
   };
 
   // Render functions
@@ -585,13 +628,71 @@ const PendingPayments: React.FC = () => {
               />
             </LocalizationProvider>
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <FormControl fullWidth size="small">
+          <Grid item xs={12} sm={6} md={4}>
+            <FormControl fullWidth>
               <InputLabel>Status</InputLabel>
               <Select
-                value={filters.status}
+                multiple
+                value={filters.status || []}
                 onChange={handleStatusChange}
-                label="Status"
+                open={openDropdowns.status}
+                onOpen={() => setOpenDropdowns(prev => ({ ...prev, status: true }))}
+                onClose={() => setOpenDropdowns(prev => ({ ...prev, status: false }))}
+                input={<OutlinedInput label="Status" />}
+                onClick={(e) => {
+                  // Only open dropdown if click wasn't on a chip or delete icon
+                  if ((e.target as HTMLElement).closest('.MuiChip-root')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                }}
+                sx={{
+                  '& .MuiSelect-select': {
+                    position: 'relative',
+                    zIndex: 1400
+                  }
+                }}
+                MenuProps={{
+                  sx: {
+                    zIndex: 1300
+                  }
+                }}
+                renderValue={(selected) => (
+                  <Box 
+                    sx={{ 
+                      display: 'flex', 
+                      flexWrap: 'wrap', 
+                      gap: 0.5,
+                      position: 'relative',
+                      zIndex: 1500
+                    }}
+                  >
+                    {selected.map((value) => (
+                      <Chip
+                        key={value}
+                        label={value}
+                        onDelete={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          handleDeleteFilterValue(event, 'status', value as PaymentStatus);
+                        }}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                        }}
+                        size="small"
+                        sx={{
+                          position: 'relative',
+                          zIndex: 1600,
+                          '& .MuiChip-deleteIcon': {
+                            zIndex: 1700,
+                            position: 'relative'
+                          }
+                        }}
+                      />
+                    ))}
+                  </Box>
+                )}
               >
                 {Object.values(PaymentStatus).map((status) => (
                   <MenuItem key={status} value={status}>
@@ -601,35 +702,103 @@ const PendingPayments: React.FC = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <FormControl fullWidth size="small">
-              <InputLabel>Priority</InputLabel>
+          <Grid item xs={12} sm={6} md={4}>
+            <FormControl fullWidth>
+              <InputLabel>Method</InputLabel>
               <Select
-                value={filters.priority}
-                onChange={handlePriorityChange}
-                label="Priority"
+                multiple
+                value={filters.method || []}
+                onChange={handleMethodChange}
+                open={openDropdowns.method}
+                onOpen={() => setOpenDropdowns(prev => ({ ...prev, method: true }))}
+                onClose={() => setOpenDropdowns(prev => ({ ...prev, method: false }))}
+                input={<OutlinedInput label="Method" />}
+                renderValue={(selected) => (
+                  <Box 
+                    sx={{ 
+                      display: 'flex', 
+                      flexWrap: 'wrap', 
+                      gap: 0.5,
+                      position: 'relative',
+                      zIndex: 1
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {selected.map((value) => (
+                      <Chip
+                        key={value}
+                        label={value}
+                        onDelete={(event) => {
+                          event.stopPropagation();
+                          handleDeleteFilterValue(event, 'method', value as PaymentMethod);
+                        }}
+                        size="small"
+                        sx={{
+                          position: 'relative',
+                          zIndex: 2,
+                          '& .MuiChip-deleteIcon': {
+                            zIndex: 3
+                          }
+                        }}
+                      />
+                    ))}
+                  </Box>
+                )}
               >
-                {Object.values(Priority).map((priority) => (
-                  <MenuItem key={priority} value={priority}>
-                    {priority}
+                {Object.values(PaymentMethod).map((method) => (
+                  <MenuItem key={method} value={method}>
+                    {method}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid item xs={12} sm={6} md={4}>
             <FormControl fullWidth>
-              <InputLabel>Method</InputLabel>
+              <InputLabel>Priority</InputLabel>
               <Select
-                name="method"
-                value={filters.method || ''}
-                onChange={handleMethodChange}
-                label="Method"
+                multiple
+                value={filters.priority || []}
+                onChange={handlePriorityChange}
+                open={openDropdowns.priority}
+                onOpen={() => setOpenDropdowns(prev => ({ ...prev, priority: true }))}
+                onClose={() => setOpenDropdowns(prev => ({ ...prev, priority: false }))}
+                input={<OutlinedInput label="Priority" />}
+                renderValue={(selected) => (
+                  <Box 
+                    sx={{ 
+                      display: 'flex', 
+                      flexWrap: 'wrap', 
+                      gap: 0.5,
+                      position: 'relative',
+                      zIndex: 1
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {selected.map((value) => (
+                      <Chip
+                        key={value}
+                        label={value}
+                        onDelete={(event) => {
+                          event.stopPropagation();
+                          handleDeleteFilterValue(event, 'priority', value as Priority);
+                        }}
+                        size="small"
+                        sx={{
+                          position: 'relative',
+                          zIndex: 2,
+                          '& .MuiChip-deleteIcon': {
+                            zIndex: 3
+                          }
+                        }}
+                      />
+                    ))}
+                  </Box>
+                )}
               >
-                <MenuItem value="">All</MenuItem>
-                {[PaymentMethod.ACH, PaymentMethod.WIRE, PaymentMethod.CHECK, PaymentMethod.CARD].map((method) => (
-                  <MenuItem key={method} value={method}>
-                    {method}
+                {Object.values(Priority).map((priority) => (
+                  <MenuItem key={priority} value={priority}>
+                    {priority}
                   </MenuItem>
                 ))}
               </Select>
@@ -834,73 +1003,79 @@ const PendingPayments: React.FC = () => {
           : 'Payment History'}
       </DialogTitle>
       <DialogContent>
-        {dialogState.payment && dialogState.action === 'view' && (
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2">Payment ID</Typography>
-              <Typography>{dialogState.payment.id}</Typography>
+        {dialogState.payment && (
+          <Box sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Payment Details
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="subtitle2" color="textSecondary">
+                  Payment ID
+                </Typography>
+                <Typography>{dialogState.payment.id}</Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="subtitle2" color="textSecondary">
+                  Amount
+                </Typography>
+                <Typography>
+                  {new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: dialogState.payment.currency,
+                  }).format(dialogState.payment.amount)}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="subtitle2" color="textSecondary">
+                  Status
+                </Typography>
+                <Typography>{dialogState.payment.status}</Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="subtitle2" color="textSecondary">
+                  Method
+                </Typography>
+                <Typography>{dialogState.payment.method}</Typography>
+              </Grid>
+              {confirmation.code && (
+                <Grid item xs={12}>
+                  <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', borderRadius: 1, border: 1, borderColor: 'divider' }}>
+                    <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                      Confirmation Code
+                    </Typography>
+                    <Typography variant="h6" sx={{ fontFamily: 'monospace', letterSpacing: 1 }}>
+                      {confirmation.code}
+                    </Typography>
+                  </Box>
+                </Grid>
+              )}
+              {confirmation.confirmationStatus && (
+                <Grid item xs={12}>
+                  <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+                    <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                      Confirmation Status
+                    </Typography>
+                    <Typography variant="body1">
+                      {confirmation.confirmationStatus}
+                    </Typography>
+                    {confirmation.error && (
+                      <Typography color="error" sx={{ mt: 1 }}>
+                        {confirmation.error}
+                      </Typography>
+                    )}
+                    <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+                      Attempts: {confirmation.attempts} / {confirmation.maxAttempts}
+                    </Typography>
+                    {confirmation.expiresAt && (
+                      <Typography variant="caption" display="block">
+                        Expires at: {new Date(confirmation.expiresAt).toLocaleString()}
+                      </Typography>
+                    )}
+                  </Box>
+                </Grid>
+              )}
             </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2">Status</Typography>
-              <Chip
-                label={dialogState.payment.status}
-                size="small"
-                color={getStatusColor(dialogState.payment.status)}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2">Client</Typography>
-              <Typography>{dialogState.payment.clientName}</Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2">Payee</Typography>
-              <Typography>{dialogState.payment.payeeName}</Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2">Amount</Typography>
-              <Typography>
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: dialogState.payment.currency,
-                }).format(dialogState.payment.amount)}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2">Payment Type</Typography>
-              <Typography>{dialogState.payment.method}</Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2">Priority</Typography>
-              <Chip
-                label={dialogState.payment.priority}
-                size="small"
-                color={getPriorityColor(dialogState.payment.priority)}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2">Effective Date</Typography>
-              <Typography>
-                {dayjs(dialogState.payment.effectiveDate).format('MM/DD/YYYY')}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle2">Description</Typography>
-              <Typography>{dialogState.payment.description || 'N/A'}</Typography>
-            </Grid>
-          </Grid>
-        )}
-        {dialogState.action === 'reject' && (
-          <Box sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              label="Rejection Reason"
-              value={rejectReason}
-              onChange={(e) => setRejectReason(e.target.value)}
-              required
-              placeholder="Please provide a reason for rejecting this payment"
-            />
           </Box>
         )}
         {dialogState.action === 'history' && dialogState.history && (
@@ -910,6 +1085,7 @@ const PendingPayments: React.FC = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Action</TableCell>
+                    <TableCell>Details</TableCell>
                     <TableCell>Performed By</TableCell>
                     <TableCell>Timestamp</TableCell>
                   </TableRow>
@@ -920,6 +1096,35 @@ const PendingPayments: React.FC = () => {
                       <TableCell>
                         <Typography variant="body2">
                           {entry.action}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">
+                          {entry.details && typeof entry.details === 'object' ? (
+                            <>
+                              {entry.details.previousStatus && entry.details.newStatus && (
+                                `Status changed from ${entry.details.previousStatus} to ${entry.details.newStatus}`
+                              )}
+                              {entry.details.description && entry.details.description}
+                              {entry.details.notes && (
+                                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                  Note: {entry.details.notes}
+                                </Typography>
+                              )}
+                              {entry.details.confirmationCode && (
+                                <Box sx={{ mt: 1 }}>
+                                  <Typography variant="body2" color="text.secondary">
+                                    Confirmation Code:
+                                  </Typography>
+                                  <Typography variant="body2" sx={{ fontFamily: 'monospace', letterSpacing: 1 }}>
+                                    {entry.details.confirmationCode}
+                                  </Typography>
+                                </Box>
+                              )}
+                            </>
+                          ) : (
+                            String(entry.details || '')
+                          )}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -948,85 +1153,9 @@ const PendingPayments: React.FC = () => {
         >
           Close
         </Button>
-        {dialogState.action === 'reject' && (
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() =>
-              dialogState.payment &&
-              handlePaymentAction(dialogState.payment.id, 'reject')
-            }
-            disabled={processing[dialogState.payment?.id || '']}
-            startIcon={
-              processing[dialogState.payment?.id || ''] ? (
-                <CircularProgress size={20} />
-              ) : (
-                <CancelIcon />
-              )
-            }
-            aria-label="Reject payment"
-          >
-            Reject
-          </Button>
-        )}
       </DialogActions>
     </Dialog>
   );
-
-  const renderConfirmationDialog = () => {
-    if (!dialogState.payment) return null;
-
-    return (
-      <Dialog
-        open={dialogState.open}
-        onClose={() => setDialogState({ ...dialogState, open: false })}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Confirm Payment</DialogTitle>
-        <DialogContent>
-          <Box sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              label="Confirmation Code"
-              value={confirmation.code}
-              onChange={(e) => setConfirmation(prev => ({ ...prev, code: e.target.value }))}
-              error={!!confirmation.error}
-              helperText={confirmation.error}
-              disabled={confirmation.processing}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setDialogState({ ...dialogState, open: false })}
-            disabled={confirmation.processing}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              if (dialogState.payment) {
-                const confirmationData: PaymentConfirmationRequest = {
-                  paymentId: dialogState.payment.id,
-                  method: dialogState.payment.method,
-                  confirmationMethod: ConfirmationMethod.OTP,
-                  code: confirmation.code,
-                  userId: user?.id?.toString()
-                };
-                handleConfirmPayment(confirmationData);
-              }
-            }}
-            disabled={!confirmation.code || confirmation.processing}
-            variant="contained"
-            aria-label="Confirm payment"
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  };
 
   const renderRejectDialog = () => {
     if (!dialogState.payment || dialogState.action !== 'reject') return null;
@@ -1106,7 +1235,6 @@ const PendingPayments: React.FC = () => {
       </Grid>
       {renderTable()}
       {renderDialog()}
-      {renderConfirmationDialog()}
       {renderRejectDialog()}
     </Box>
   );

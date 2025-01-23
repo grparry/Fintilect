@@ -7,37 +7,29 @@
 ## Class Summary
 
 public class DeviceSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DeviceSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MfaDevicesEnabled
+### MfaDevicesEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/DeviceSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.Device.MfaDevicesEnabled")]
 ```
 
-### ShowCreateDate
+### ShowCreateDate: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/DeviceSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

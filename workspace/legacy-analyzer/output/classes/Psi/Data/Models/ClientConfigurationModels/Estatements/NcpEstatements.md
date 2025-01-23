@@ -7,121 +7,67 @@
 ## Class Summary
 
 public class NcpEstatements
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class NcpEstatements
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/NcpEstatements.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.NcpEstatements.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/NcpEstatements.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.NcpEstatements.MinVersion")]
 ```
 
-### UserId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/NcpEstatements.cs
-visibility: public
-modifier: readonly
-```
+### UserId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.NcpEstatements.UserId")]
 ```
 
-### Password
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/NcpEstatements.cs
-visibility: public
-modifier: readonly
-```
+### Password: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.NcpEstatements.Password")]
 ```
 
-### SharedSecret
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/NcpEstatements.cs
-visibility: public
-modifier: readonly
-```
+### SharedSecret: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.NcpEstatements.SharedSecret")]
 ```
 
-### PostUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/NcpEstatements.cs
-visibility: public
-modifier: readonly
-```
+### PostUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.NcpEstatements.PostUrl")]
 ```
 
-### SsoUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/NcpEstatements.cs
-visibility: public
-modifier: readonly
-```
+### SsoUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.NcpEstatements.SsoUrl")]
 ```
 
-### PadAccountNumberCount
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Estatements/NcpEstatements.cs
-visibility: public
-modifier: readonly
-```
+### PadAccountNumberCount: `int`
 
 **Attributes:**
 ```csharp

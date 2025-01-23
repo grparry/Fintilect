@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class ScheduledTransfersSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ScheduledTransfersSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Transfers/ScheduledTransfersSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.ScheduledTransfers.Enabled")]
 ```
 
-### IsTimeSelectionEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Transfers/ScheduledTransfersSettings.cs
-visibility: public
-modifier: readonly
-```
+### IsTimeSelectionEnabled: `bool`
 
 **Attributes:**
 ```csharp

@@ -213,9 +213,9 @@ export interface PendingPaymentFilters extends PaymentFilters {
 export interface PendingPaymentSearchRequest {
   clientId?: string;
   payeeId?: string;
-  method?: PaymentMethod;
-  status?: PaymentStatus;
-  priority?: Priority;
+  method?: PaymentMethod[];
+  status?: PaymentStatus[];
+  priority?: Priority[];
   startDate?: string;
   endDate?: string;
   minAmount?: number;

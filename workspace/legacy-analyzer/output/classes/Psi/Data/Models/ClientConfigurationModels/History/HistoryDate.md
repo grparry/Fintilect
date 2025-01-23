@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class HistoryDate
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class HistoryDate
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### DateRangeDropDownSettingOptions
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/HistoryDate.cs
-visibility: public
-modifier: readonly
-```
+### DateRangeDropDownSettingOptions: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Date.DateRangeDropDownSettingOptions")]
 ```
 
-### DateRangeDropDownSettingLabelValue
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/HistoryDate.cs
-visibility: public
-modifier: readonly
-```
+### DateRangeDropDownSettingLabelValue: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("History.Date.DateRangeDropDownSettingLabelValue")]
 ```
 
-### DatePickerPositionOptions
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/HistoryDate.cs
-visibility: public
-modifier: readonly
-```
+### DatePickerPositionOptions: `string`
 
 **Attributes:**
 ```csharp

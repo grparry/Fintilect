@@ -7,79 +7,46 @@
 ## Class Summary
 
 public class MultipleEmailSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MultipleEmailSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/MultipleEmailSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultipleEmailAddresses.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/MultipleEmailSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultipleEmailAddresses.MinVersion")]
 ```
 
-### List
-
-```typescript
-type: EmailTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/MultipleEmailSettings.cs
-visibility: public
-modifier: readonly
-```
+### EmailTypes: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultipleEmailAddresses.EmailTypes")]
 ```
 
-### List
-
-```typescript
-type: EmailTypesThatCanBeDeleted
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/MultipleEmailSettings.cs
-visibility: public
-modifier: readonly
-```
+### EmailTypesThatCanBeDeleted: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultipleEmailAddresses.EmailTypesThatCanBeDeleted")]
 ```
 
-### DefaultEmailType
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Email/MultipleEmailSettings.cs
-visibility: public
-modifier: readonly
-```
+### DefaultEmailType: `string`
 
 **Attributes:**
 ```csharp

@@ -7,38 +7,19 @@
 ## Class Summary
 
 public class Deals
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Deals
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Cardlytics
+### Cardlytics: `Cardlytics.Cardlytics`
 
-```typescript
-type: Cardlytics
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Deals/Deals.cs
-visibility: public
-modifier: readonly
-```
+### RelevantSolutions: `RelevantSolutions.RelevantSolutions`
 
-### RelevantSolutions
-
-```typescript
-type: RelevantSolutions
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Deals/Deals.cs
-visibility: public
-modifier: readonly
-```
-
-### CheckingRewards
-
-```typescript
-type: CheckingRewards
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Deals/Deals.cs
-visibility: public
-modifier: readonly
-```
+### CheckingRewards: `CheckingRewards.CheckingRewards`

@@ -7,261 +7,137 @@
 ## Class Summary
 
 public class SmsSecurityCodeSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class SmsSecurityCodeSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.MinVersion")]
 ```
 
-### SecurityCodeLength
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### SecurityCodeLength: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.Length")]
 ```
 
-### MinutesUntilCodeExpires
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinutesUntilCodeExpires: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.MinutesUntilCodeExpires")]
 ```
 
-### ValidSecurityCodeCharacters
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### ValidSecurityCodeCharacters: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.ValidSecurityCodeCharacters")]
 ```
 
-### SkipEmail
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### SkipEmail: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.SkipEmail")]
 ```
 
-### VoiceDeliveryEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### VoiceDeliveryEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.VoiceDeliveryEnabled")]
 ```
 
-### VoiceMessageApiBaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### VoiceMessageApiBaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.VoiceMessageApiBaseUrl")]
 ```
 
-### VoiceServiceConfiguration
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### VoiceServiceConfiguration: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.VoiceServiceConfiguration")]
 ```
 
-### SmsProvider
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### SmsProvider: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("SmsProvider")]
 ```
 
-### VoiceMessageSendUsernameEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### VoiceMessageSendUsernameEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.VoiceMessageSendUsernameEnabled")]
 ```
 
-### VoiceMessageSendPasswordEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### VoiceMessageSendPasswordEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.VoiceMessageSendPasswordEnabled")]
 ```
 
-### EncryptionKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### EncryptionKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.EncryptionKey")]
 ```
 
-### MaxCodeResends
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### MaxCodeResends: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.MaxCodeResends")]
 ```
 
-### ResendCodeEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### ResendCodeEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.ResendCodeEnabled")]
 ```
 
-### VoiceMessageCodeDelimitingEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### VoiceMessageCodeDelimitingEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.VoiceMessageCodeDelimitingEnabled")]
 ```
 
-### VoiceMessageCodeDelimiter
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### VoiceMessageCodeDelimiter: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mfa.SmsSecurityCode.VoiceMessageCodeDelimiter")]
 ```
 
-### UseForEnrollmentEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SmsSecurityCode/SmsSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### UseForEnrollmentEnabled: `bool`
 
 **Attributes:**
 ```csharp

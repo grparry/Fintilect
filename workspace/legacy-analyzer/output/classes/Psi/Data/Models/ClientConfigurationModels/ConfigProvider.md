@@ -7,9 +7,13 @@
 ## Class Summary
 
 public class ConfigProvider
+implements: IApplicationConfigurationProvider
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ConfigProvider
+implements: IApplicationConfigurationProvider
+extends: SettingsBaseHelper
 ```

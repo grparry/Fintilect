@@ -1,4 +1,4 @@
-import { ApiResponse } from '../../utils/api';
+import { ApiResponse } from '../../types/api.types';
 import { PaginatedResponse } from '../../types/client.types';
 
 /**

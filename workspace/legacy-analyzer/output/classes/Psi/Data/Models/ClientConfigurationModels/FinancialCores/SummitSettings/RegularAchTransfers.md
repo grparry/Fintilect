@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class RegularAchTransfers
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class RegularAchTransfers
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### TransferCommandCode
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SummitSettings/RegularAchTransfers.cs
-visibility: public
-modifier: readonly
-```
+### TransferCommandCode: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Summit.RegularAchTransfers.TransferCommandCode")]
 ```
 
-### FTCode
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SummitSettings/RegularAchTransfers.cs
-visibility: public
-modifier: readonly
-```
+### FTCode: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Summit.RegularAchTransfers.FTCode")]
 ```
 
-### Description
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SummitSettings/RegularAchTransfers.cs
-visibility: public
-modifier: readonly
-```
+### Description: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Summit.RegularAchTransfers.Description")]
 ```
 
-### DescriptionInHistoryDisplay
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SummitSettings/RegularAchTransfers.cs
-visibility: public
-modifier: readonly
-```
+### DescriptionInHistoryDisplay: `string`
 
 **Attributes:**
 ```csharp

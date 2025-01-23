@@ -7,65 +7,45 @@
 ## Class Summary
 
 public class DNA
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DNA
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SuccessfulLoginCoreField
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/DNA.cs
-visibility: public
-modifier: readonly
-```
+### SuccessfulLoginCoreField: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.DNA.UserField.SuccessfulLoginCoreField")]
 ```
 
-### ExtraStatementAccountsCoreUserField
+### ExtraStatementAccountsCoreUserField: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/DNA.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.DNA.UserField.ExtraStatementAccounts")]
 ```
 
-### MapDormantAccounts
+### MapDormantAccounts: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/DNA.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.DNA.MapDormantAccounts")]
 ```
 
-### ValidDebitCardStatusCodes
+### ValidDebitCardStatusCodes: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/DNA.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

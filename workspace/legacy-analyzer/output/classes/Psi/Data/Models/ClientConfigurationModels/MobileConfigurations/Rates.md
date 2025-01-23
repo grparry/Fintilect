@@ -7,37 +7,29 @@
 ## Class Summary
 
 public class Rates
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Rates
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Rates.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Rates.Enabled")]
 ```
 
-### Url
+### Url: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Rates.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

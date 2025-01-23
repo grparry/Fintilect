@@ -7,65 +7,41 @@
 ## Class Summary
 
 public class AccountAttributesSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AccountAttributesSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AccountAttributesEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountAttributesSettings.cs
-visibility: public
-modifier: readonly
-```
+### AccountAttributesEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.Attributes.Enabled")]
 ```
 
-### List
-
-```typescript
-type: CheckingRewardsShareDescriptions
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountAttributesSettings.cs
-visibility: public
-modifier: readonly
-```
+### CheckingRewardsShareDescriptions: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.Attributes.CheckingRewardsShareDescriptions")]
 ```
 
-### List
-
-```typescript
-type: CheckingRewardsShareCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountAttributesSettings.cs
-visibility: public
-modifier: readonly
-```
+### CheckingRewardsShareCategories: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.Attributes.CheckingRewardsShareCategories")]
 ```
 
-### ShowZeroPrefixOfSuffix
+### ShowZeroPrefixOfSuffix: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountAttributesSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

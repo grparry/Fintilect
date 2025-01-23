@@ -7,83 +7,43 @@
 ## Class Summary
 
 public class MembershipFeature
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MembershipFeature
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MembershipEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MembershipFeature.cs
-visibility: public
-modifier: readonly
-```
+### MembershipEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Membership.MembershipEnabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MembershipFeature.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Membership.MinVersion")]
 ```
 
-### GetMyCUClubSettingsFromDatabase
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MembershipFeature.cs
-visibility: public
-modifier: readonly
-```
+### GetMyCUClubSettingsFromDatabase: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Membership.GetMyCUClubSettingsFromDatabase")]
 ```
 
-### MemberProfile
+### MemberProfile: `MemberProfile`
 
-```typescript
-type: MemberProfile
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MembershipFeature.cs
-visibility: public
-modifier: readonly
-```
+### Flags: `Flags`
 
-### Flags
-
-```typescript
-type: Flags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MembershipFeature.cs
-visibility: public
-modifier: readonly
-```
-
-### ShouldAllowForeignAddressUpdate
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MembershipFeature.cs
-visibility: public
-modifier: readonly
-```
+### ShouldAllowForeignAddressUpdate: `bool`
 
 **Attributes:**
 ```csharp

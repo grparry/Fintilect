@@ -7,457 +7,235 @@
 ## Class Summary
 
 public class Notes
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Notes
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### OnlineBankingAccessSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### OnlineBankingAccessSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.OnlineBankingAccess")]
 ```
 
-### BillPaySerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### BillPaySerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.BillPay")]
 ```
 
-### BusinessAccountSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### BusinessAccountSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.BusinessAccount")]
 ```
 
-### EstatementDisclosureSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### EstatementDisclosureSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.EstatementDisclosure")]
 ```
 
-### CheckWithdrawalRrestrictedSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### CheckWithdrawalRrestrictedSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.CheckWithdrawalRrestricted")]
 ```
 
-### EdocumentsDisclosureSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### EdocumentsDisclosureSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.EdocumentsDisclosure")]
 ```
 
-### FreeCheckReorderFlagSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### FreeCheckReorderFlagSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.FreeCheckReorderFlag")]
 ```
 
-### HasCreditCardSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### HasCreditCardSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.HasCreditCard")]
 ```
 
-### IsDebitCardFlagSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### IsDebitCardFlagSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.IsDebitCardFlag")]
 ```
 
-### IsEmployeeSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### IsEmployeeSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.IsEmployee")]
 ```
 
-### LoanClosedFlagSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### LoanClosedFlagSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.LoanClosedFlag")]
 ```
 
-### LoanRestrictedSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### LoanRestrictedSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.LoanRestricted")]
 ```
 
-### InquiryOnLoanRestrictedSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### InquiryOnLoanRestrictedSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.InquiryOnLoanRestricted")]
 ```
 
-### HasDebitCardsSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### HasDebitCardsSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.HasDebitCards")]
 ```
 
-### MidwestLoansSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### MidwestLoansSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.MidwestLoans")]
 ```
 
-### MobileDepositAllowedSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### MobileDepositAllowedSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.MobileDepositAllowed")]
 ```
 
-### MobileDepositRestrictedSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### MobileDepositRestrictedSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.MobileDepositRestricted")]
 ```
 
-### MobileDepositDisclosureSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### MobileDepositDisclosureSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.MobileDepositDisclosure")]
 ```
 
-### NsfFlagsSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### NsfFlagsSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.NsfFlags")]
 ```
 
-### MemberRestrictedFromTransfersSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### MemberRestrictedFromTransfersSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.MemberRestrictedFromTransfers")]
 ```
 
-### MemberRestrictedFromDepositSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### MemberRestrictedFromDepositSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.MemberRestrictedFromDeposit")]
 ```
 
-### MemberrestricedFromInquirySerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### MemberrestricedFromInquirySerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.MemberrestricedFromInquiry")]
 ```
 
-### ShareIsRestrictedFromDepositSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### ShareIsRestrictedFromDepositSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.ShareIsRestrictedFromDeposit")]
 ```
 
-### ShareRestrictedFromInquirySerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### ShareRestrictedFromInquirySerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.ShareRestrictedFromInquiry")]
 ```
 
-### ShareRestrictedFromTransfersSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### ShareRestrictedFromTransfersSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.ShareRestrictedFromTransfers")]
 ```
 
-### RestrictViewingCardFlagSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### RestrictViewingCardFlagSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.RestrictViewingCardFlag")]
 ```
 
-### ShareClosedFlagsSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### ShareClosedFlagsSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.ShareClosedFlags")]
 ```
 
-### ShareRestrictedAlertsSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### ShareRestrictedAlertsSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.ShareRestrictedAlerts")]
 ```
 
-### SkipPayQualifyingSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### SkipPayQualifyingSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.SkipPayQualifying")]
 ```
 
-### ValidAddressFlagSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### ValidAddressFlagSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.ValidAddressFlag")]
 ```
 
-### ValidEmailFlagSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### ValidEmailFlagSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.Notes.ValidEmailFlag")]
 ```
 
-### BusinessBankingDisclosureNoteSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/Notes.cs
-visibility: public
-modifier: readonly
-```
+### BusinessBankingDisclosureNoteSerial: `string`
 
 **Attributes:**
 ```csharp

@@ -7,247 +7,130 @@
 ## Class Summary
 
 public class PermissionLevel
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PermissionLevel
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### TransactionHistory: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.TransactionHistory")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### AccountSummary: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.AccountSummary")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### BillPay: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.BillPay")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### CardControl: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.CardControl")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### Cardlytics: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.Cardlytics")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### Estatements: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.EStatements")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### LoanApplication: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.LoanApplication")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### CheckDeposit: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.CheckDeposit")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### MoneyDesktop: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.MoneyDesktop")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### RelevantSolutions: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.RelevantSolutions")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### QuickAccess: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.QuickAccess")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### SendMoney: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.SendMoney")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### Settings: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.Settings")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### Transfer: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.Transfer")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### CheckingRewards: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.CheckingRewards")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### AutoLoanCalculator: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.PermissionLevel.AutoLoanCalculator")]
 ```
 
-### AuthenticationMethodType
-
-```typescript
-type: AuthenticationMethodType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/PermissionLevel/PermissionLevel.cs
-visibility: public
-modifier: readonly
-```
+### LoanPayment: `AuthenticationMethodType`
 
 **Attributes:**
 ```csharp

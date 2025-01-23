@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class PasswordVerificationSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PasswordVerificationSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### PasswordResetCannotContainSSNumber
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PasswordVerification/PasswordVerificationSettings.cs
-visibility: public
-modifier: readonly
-```
+### PasswordResetCannotContainSSNumber: `bool`
 
 **Attributes:**
 ```csharp

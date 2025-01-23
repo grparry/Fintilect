@@ -7,158 +7,89 @@
 ## Class Summary
 
 public class CreditScoreHistorySettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CreditScoreHistorySettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MobileConfigurations
+### Authentication: `MobileConfigurations.Authentication.Authentication`
 
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditScoreHistory/CreditScoreHistorySettings.cs
-visibility: public
-modifier: readonly
-```
-
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditScoreHistory/CreditScoreHistorySettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditScore.History.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditScoreHistory/CreditScoreHistorySettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditScore.History.MinVersion")]
 ```
 
-### MinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditScoreHistory/CreditScoreHistorySettings.cs
-visibility: public
-modifier: readonly
-```
+### MinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditScore.History.MinIosVersion")]
 ```
 
-### MinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditScoreHistory/CreditScoreHistorySettings.cs
-visibility: public
-modifier: readonly
-```
+### MinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditScore.History.MinAndroidVersion")]
 ```
 
-### TrackingRecordId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditScoreHistory/CreditScoreHistorySettings.cs
-visibility: public
-modifier: readonly
-```
+### TrackingRecordId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditScore.History.TrackingRecordId")]
 ```
 
-### SecureMessagingCategory
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditScoreHistory/CreditScoreHistorySettings.cs
-visibility: public
-modifier: readonly
-```
+### SecureMessagingCategory: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditScore.History.SecureMessagingCategory")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditScoreHistory/CreditScoreHistorySettings.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditScore.History.Url")]
 ```
 
-### RateReductionLinkUrl
+### RateReductionLinkUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditScoreHistory/CreditScoreHistorySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditScore.History.RateReductionLinkUrl")]
 ```
 
-### FaqLinkUrl
+### FaqLinkUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditScoreHistory/CreditScoreHistorySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditScore.History.FaqLinkUrl")]
 ```
 
-### List
+### Questions: `List<string>`
 
-```typescript
-type: Questions
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditScoreHistory/CreditScoreHistorySettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

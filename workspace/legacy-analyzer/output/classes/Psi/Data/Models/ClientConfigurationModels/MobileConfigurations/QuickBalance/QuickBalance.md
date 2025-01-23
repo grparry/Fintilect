@@ -7,104 +7,57 @@
 ## Class Summary
 
 public class QuickBalance
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class QuickBalance
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/QuickBalance/QuickBalance.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.QuickBalance.MinimumVersion")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/QuickBalance/QuickBalance.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.QuickBalance.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/QuickBalance/QuickBalance.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.QuickBalance.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/QuickBalance/QuickBalance.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.QuickBalance.Enabled")]
 ```
 
-### RefreshTime
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/QuickBalance/QuickBalance.cs
-visibility: public
-modifier: readonly
-```
+### RefreshTime: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.QuickBalance.RefreshTime")]
 ```
 
-### MaxNumberOfAccounts
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/QuickBalance/QuickBalance.cs
-visibility: public
-modifier: readonly
-```
+### MaxNumberOfAccounts: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.QuickBalance.MaxNumberOfAccounts")]
 ```
 
-### Preferences
-
-```typescript
-type: Preferences
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/QuickBalance/QuickBalance.cs
-visibility: public
-modifier: readonly
-```
+### Preferences: `Preferences`

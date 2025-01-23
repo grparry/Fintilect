@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class CreditCards
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CreditCards
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### IsCreditLimitVisible
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Summary/CreditCards.cs
-visibility: public
-modifier: readonly
-```
+### IsCreditLimitVisible: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Summary.CreditCards.IsCreditLimitVisible")]
 ```
 
-### ShouldShowAvailableInsteadOfCreditLimit
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Summary/CreditCards.cs
-visibility: public
-modifier: readonly
-```
+### ShouldShowAvailableInsteadOfCreditLimit: `bool`
 
 **Attributes:**
 ```csharp

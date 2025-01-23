@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class AccountTypeSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AccountTypeSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AccountTypeSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypeSettings.cs
-visibility: public
-modifier: readonly
-```
+### AccountTypeSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypeSettings.AccountTypeSerial")]
 ```
 
-### AccountRelationshipSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypeSettings.cs
-visibility: public
-modifier: readonly
-```
+### AccountRelationshipSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypeSettings.AccountRelationshipSerial")]
 ```
 
-### RestrictAccountOnCreate
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypeSettings.cs
-visibility: public
-modifier: readonly
-```
+### RestrictAccountOnCreate: `bool`
 
 **Attributes:**
 ```csharp

@@ -7,93 +7,53 @@
 ## Class Summary
 
 public class Enrollment
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Enrollment
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Enrollment.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Enrollment.MinimumVersion")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Enrollment.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Enrollment.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Enrollment.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Enrollment.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Enrollment.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Enrollment.Enabled")]
 ```
 
-### IsPinRequired
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Enrollment.cs
-visibility: public
-modifier: readonly
-```
+### IsPinRequired: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Enrollment.IsPinRequired")]
 ```
 
-### IsZipCodeRequired
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Enrollment.cs
-visibility: public
-modifier: readonly
-```
+### IsZipCodeRequired: `bool`
 
 **Attributes:**
 ```csharp

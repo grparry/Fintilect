@@ -7,272 +7,155 @@
 ## Class Summary
 
 public class CheckDeposit
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CheckDeposit
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.MinimumVersion")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.Enabled")]
 ```
 
-### CheckDepositVendor
-
-```typescript
-type: CheckDepositVendor
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### Vendor: `CheckDepositVendor`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.Vendor")]
 ```
 
-### CheckDepositCameraType
-
-```typescript
-type: CheckDepositCameraType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### CameraType: `CheckDepositCameraType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.CameraType")]
 ```
 
-### DisclosureRequired
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### DisclosureRequired: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.DisclosureRequired")]
 ```
 
-### CheckDepositAutoCaptureType
-
-```typescript
-type: CheckDepositAutoCaptureType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### AutoCaptureSetting: `CheckDepositAutoCaptureType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.AutoCaptureSetting")]
 ```
 
-### ContrastAdjustmentEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### ContrastAdjustmentEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.ContrastAdjustmentEnabled")]
 ```
 
-### AllowCrossAccountDeposit
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### AllowCrossAccountDeposit: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.AllowCrossAccountDeposit")]
 ```
 
-### ImageScalingMinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### ImageScalingMinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.ImageScalingMinimumAndroidVersion")]
 ```
 
-### ImageScalingMinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+### ImageScalingMinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.ImageScalingMinimumIosVersion")]
 ```
 
-### RememberAccountPreference
+### RememberAccountPreference: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.RememberAccountPreference")]
 ```
 
-### ShowEndorsementInstructions
+### ShowEndorsementInstructions: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.ShowEndorsementInstructions")]
 ```
 
-### RearEndorsementDefaultType
+### RearEndorsementDefault: `RearEndorsementDefaultType`
 
-```typescript
-type: RearEndorsementDefaultType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.Vertifi.RearEndorsementDefault")]
 ```
 
-### ShowMaskedAccountSuffixInAccountName
+### ShowMaskedAccountSuffixInAccountName: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.ShowMaskedAccountSuffixInAccountName")]
 ```
 
-### AccountNamePattern
+### AccountNamePattern: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.AccountNamePattern")]
 ```
 
-### EnableEndorsementUsabilityWarnings
+### EnableEndorsementUsabilityWarnings: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CheckDeposit.EnableEndorsementUsabilityWarnings")]
 ```
 
-### Authentication
+### Authentication: `Authentication.Authentication`
 
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CheckDeposit.cs
-visibility: public
-modifier: readonly
-```
+

@@ -7,99 +7,52 @@
 ## Class Summary
 
 public class Biometrics
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Biometrics
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Biometrics/Biometrics.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Biometrics.MinimumVersion")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Biometrics/Biometrics.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Biometrics.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Biometrics/Biometrics.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Biometrics.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Biometrics/Biometrics.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Biometrics.Enabled")]
 ```
 
-### ShouldAutoPrompt
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Biometrics/Biometrics.cs
-visibility: public
-modifier: readonly
-```
+### ShouldAutoPrompt: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Biometrics.ShouldAutoPrompt")]
 ```
 
-### EyeScan
+### EyeScan: `EyeScan`
 
-```typescript
-type: EyeScan
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Biometrics/Biometrics.cs
-visibility: public
-modifier: readonly
-```
-
-### FaceUnlock
-
-```typescript
-type: FaceUnlock
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Biometrics/Biometrics.cs
-visibility: public
-modifier: readonly
-```
+### FaceUnlock: `FaceUnlock`

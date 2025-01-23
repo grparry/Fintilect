@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class UsaEpay
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class UsaEpay
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ReverseTransferOnFailure
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/UsaEpay.cs
-visibility: public
-modifier: readonly
-```
+### ReverseTransferOnFailure: `bool`
 
 **Attributes:**
 ```csharp

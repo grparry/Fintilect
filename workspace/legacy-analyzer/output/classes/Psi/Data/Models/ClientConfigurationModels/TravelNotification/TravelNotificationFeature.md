@@ -7,163 +7,104 @@
 ## Class Summary
 
 public class TravelNotificationFeature
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class TravelNotificationFeature
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TravelNotification/TravelNotificationFeature.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.TravelNotification.TravelNotificationEnabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TravelNotification/TravelNotificationFeature.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.TravelNotification.MinVersion")]
 ```
 
-### ShowCellNumberOnTravelNotificationForm
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TravelNotification/TravelNotificationFeature.cs
-visibility: public
-modifier: readonly
-```
+### ShowCellNumberOnTravelNotificationForm: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.TravelNotification.ShowCellNumberOnTravelNotificationForm")]
 ```
 
-### ShouldShowFinalInstructionsOnTravelNotificationForm
+### ShouldShowFinalInstructionsOnTravelNotificationForm: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TravelNotification/TravelNotificationFeature.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.TravelNotification.ShowFinalInstructionsOnTravelNotificationForm")]
 ```
 
-### ShouldShowEmailOptionInPreferredMethodOfContact
+### ShouldShowEmailOptionInPreferredMethodOfContact: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TravelNotification/TravelNotificationFeature.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.TravelNotification.ShowEmailOptionInPreferredMethodOfContact")]
 ```
 
-### SubjectLine
+### SubjectLine: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TravelNotification/TravelNotificationFeature.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.TravelNotification.SubjectLine")]
 ```
 
-### IncludeEAgreementInSubject
+### IncludeEAgreementInSubject: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TravelNotification/TravelNotificationFeature.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.TravelNotification.IncludeEAgreementInSubject")]
 ```
 
-### MessageCategory
+### MessageCategory: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TravelNotification/TravelNotificationFeature.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.TravelNotification.MessageCategory")]
 ```
 
-### ShouldShowUseOutsideOfUsOption
+### ShouldShowUseOutsideOfUsOption: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TravelNotification/TravelNotificationFeature.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.TravelNotification.ShowUseOutsideOfUsOption")]
 ```
 
-### SendToPscuEnabled
+### SendToPscuEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TravelNotification/TravelNotificationFeature.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Features.TravelNotification.SendToPscuEnabled")]
 ```
 
-### PscuFraudSuspendStrategy
+### PscuFraudSuspendStrategy: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/TravelNotification/TravelNotificationFeature.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

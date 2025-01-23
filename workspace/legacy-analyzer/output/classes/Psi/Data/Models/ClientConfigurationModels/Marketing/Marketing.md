@@ -7,43 +7,30 @@
 ## Class Summary
 
 public class Marketing
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Marketing
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MarketingProvider
+### Provider: `MarketingProvider`
 
-```typescript
-type: MarketingProvider
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/Marketing.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("MarketingProvider.ProviderName")]
 ```
 
-### SegMintSettings
+### SegMintSettings: `SegMintSettings`
 
-```typescript
-type: SegMintSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/Marketing.cs
-visibility: public
-modifier: readonly
-```
 
-### NextMarketing
 
-```typescript
-type: NextMarketing
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Marketing/Marketing.cs
-visibility: public
-modifier: readonly
-```
+### NextMarketing: `NextMarketing`
+
+

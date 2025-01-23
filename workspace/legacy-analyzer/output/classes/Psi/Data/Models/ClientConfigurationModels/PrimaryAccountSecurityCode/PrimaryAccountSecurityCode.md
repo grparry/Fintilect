@@ -7,51 +7,34 @@
 ## Class Summary
 
 public class PrimaryAccountSecurityCode
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PrimaryAccountSecurityCode
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PrimaryAccountSecurityCode/PrimaryAccountSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("PrimaryAccountSecurityCode.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PrimaryAccountSecurityCode/PrimaryAccountSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("PrimaryAccountSecurityCode.MinVersion")]
 ```
 
-### ShouldShowReferenceNumberInEmailSubjectLine
+### ShouldShowReferenceNumberInEmailSubjectLine: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PrimaryAccountSecurityCode/PrimaryAccountSecurityCodeSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

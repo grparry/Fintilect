@@ -7,60 +7,40 @@
 ## Class Summary
 
 public class AdminAccountSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AdminAccountSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AccountNumberReassignmentSettings
+### AccountNumberReassignment: `AccountNumberReassignmentSettings`
 
-```typescript
-type: AccountNumberReassignmentSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+### AllowAccountNumberReassignmentEnabled: `bool`
 
-### AllowAccountNumberReassignmentEnabled
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.Account.AllowAccountNumberReassignment.Enabled")]
 ```
 
-### PromptDeactivateExternalScheduledTransfers
+### PromptDeactivateExternalScheduledTransfers: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.Account.AllowAccountNumberReassignment.PromptDeactivateExternalScheduledTransfers")]
 ```
 
-### ShouldConvertHouseholding
+### ShouldConvertHouseholding: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

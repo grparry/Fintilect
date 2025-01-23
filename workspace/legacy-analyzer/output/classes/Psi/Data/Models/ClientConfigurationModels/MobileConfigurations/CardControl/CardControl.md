@@ -7,786 +7,432 @@
 ## Class Summary
 
 public class CardControl
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CardControl
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### OndotDxSettings
+### OndotDxSettings: `OndotDxSettings`
 
-```typescript
-type: OndotDxSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### OnDotSdk: `OnDotSdkSettings`
 
-### OnDotSdkSettings
+### Locations: `CardControlLocations`
 
-```typescript
-type: OnDotSdkSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### CreditCard: `CreditCardSettings`
 
-### CardControlLocations
+### DebitCard: `DebitCardSettings`
 
-```typescript
-type: CardControlLocations
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### LostOrStolenCard: `LostOrStolenCardSettings`
 
-### CreditCardSettings
-
-```typescript
-type: CreditCardSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
-
-### DebitCardSettings
-
-```typescript
-type: DebitCardSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
-
-### LostOrStolenCardSettings
-
-```typescript
-type: LostOrStolenCardSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
-
-### MinimumVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.MinimumVersion")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Enabled")]
 ```
 
-### SpendingLimitsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### SpendingLimitsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.SpendingLimitsEnabled")]
 ```
 
-### TransactionTypesEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### TransactionTypesEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.TransactionTypesEnabled")]
 ```
 
-### ManagePermissionsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### ManagePermissionsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.ManagePermissionsEnabled")]
 ```
 
-### UserDeviceSetupEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### UserDeviceSetupEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.UserDeviceSetupEnabled")]
 ```
 
-### AlertPreferencesEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### AlertPreferencesEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.AlertPreferencesEnabled")]
 ```
 
-### MerchantTypesEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### MerchantTypesEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.MerchantTypesEnabled")]
 ```
 
-### CardOffFixedTimeEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### CardOffFixedTimeEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.CardOffFixedTimeEnabled")]
 ```
 
-### CardOffUserDefinedTimeEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### CardOffUserDefinedTimeEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.CardOffUserDefinedTimeEnabled")]
 ```
 
-### LargeTransactionControlEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### LargeTransactionControlEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.LargeTransactionControlEnabled")]
 ```
 
-### InternationalTransactionControlEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### InternationalTransactionControlEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.InternationalTransactionControlEnabled")]
 ```
 
-### MerchantStateListControlEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### MerchantStateListControlEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.MerchantStateListControlEnabled")]
 ```
 
-### InternetTransactionControlEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### InternetTransactionControlEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.InternetTransactionControlEnabled")]
 ```
 
-### TimeOfDayRangeControlEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### TimeOfDayRangeControlEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.TimeOfDayRangeControlEnabled")]
 ```
 
-### ActiveCardStateCommonCode
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### ActiveCardStateCommonCode: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.ActiveCardStateCommonCode")]
 ```
 
-### ClosedCardStateCommonCode
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### ClosedCardStateCommonCode: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.ClosedCardStateCommonCode")]
 ```
 
-### RestrictedCardStateCommonCode
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### RestrictedCardStateCommonCode: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.RestrictedCardStateCommonCode")]
 ```
 
-### List
-
-```typescript
-type: CardControlTypeIdentifierByCategory
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### CardControlTypeIdentifierByCategory: `List<CardControlTypeIdentifierByCategorySetting>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.CardControlTypeIdentifierByCategory")]
 ```
 
-### CardControlVendor
-
-```typescript
-type: CardControlVendor
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### Vendor: `CardControlVendor`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Vendor")]
 ```
 
-### CardControlVendor
-
-```typescript
-type: CardControlVendor
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### DebitCardVendor: `CardControlVendor`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.DebitCardVendor")]
 ```
 
-### CardControlVendor
-
-```typescript
-type: CardControlVendor
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### CreditCardVendor: `CardControlVendor`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.CreditCardVendor")]
 ```
 
-### DeleteClosedCards
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### DeleteClosedCards: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.DeleteClosedCards")]
 ```
 
-### AddPendingCards
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### AddPendingCards: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.AddPendingCards")]
 ```
 
-### HideCardNicknames
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### HideCardNicknames: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.HideCardNicknames")]
 ```
 
-### PscuClientID
+### PscuClientID: `long`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.PscuClientID")]
 ```
 
-### CorelationLockReasonSerial
+### CorelationLockReasonSerial: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.CorelationLockReasonSerial")]
 ```
 
-### Authentication
+### Authentication: `Authentication.Authentication`
 
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
 
-### IgnoreReferenceIds
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+### IgnoreReferenceIds: `bool`
+
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.IgnoreReferenceIds")]
 ```
 
-### HashKey
+### HashKey: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.HashKey")]
 ```
 
-### ShowRegisterCardOption
+### ShowRegisterCardOption: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.ShowRegisterCardOption")]
 ```
 
-### ConnectNativeEnabled
+### ConnectNativeEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.ConnectNative.Enabled")]
 ```
 
-### MemberControlOfAlertsEnabled
+### MemberControlOfAlertsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Alerts.MemberControlOfAlertsEnabled")]
 ```
 
-### AllAlertsOnOffEnabled
+### AllAlertsOnOffEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Alerts.AllAlertsOnOffEnabled")]
 ```
 
-### SpendingLimitAlertsEnabled
+### SpendingLimitAlertsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Alerts.SpendingLimitAlertsEnabled")]
 ```
 
-### TransactionAmountAlertEnabled
+### TransactionAmountAlertEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Alerts.TransactionAmountAlertEnabled")]
 ```
 
-### MonthlyTransactionAmountAlertEnabled
+### MonthlyTransactionAmountAlertEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Alerts.MonthlyTransactionAmountAlertEnabled")]
 ```
 
-### AlertsDeliveryTransactionAmountAlertEnabled
+### AlertsDeliveryTransactionAmountAlertEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.AlertsDelivery.TransactionAmountAlertEnabled")]
 ```
 
-### AlertsDeliveryAnyTransactionAlertEnabled
+### AlertsDeliveryAnyTransactionAlertEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.AlertsDelivery.AnyTransactionAlertEnabled")]
 ```
 
-### AlertsDeliveryShouldUseMessageText
+### AlertsDeliveryShouldUseMessageText: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.AlertsDelivery.ShouldUseMessageText")]
 ```
 
-### AlertsDeliveryMonthlySpendingAlertEnabled
+### AlertsDeliveryMonthlySpendingAlertEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.AlertsDelivery.MonthlySpendingAlertEnabled")]
 ```
 
-### ReplaceCardEnabled
+### ReplaceCardEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.ReplaceCardEnabled")]
 ```
 
-### SymitarDebitCardTypeIds
+### SymitarDebitCardTypeIds: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Symitar.DebitCardTypeIds")]
 ```
 
-### AtmCashWithdrawalLimitEnabled
+### AtmCashWithdrawalLimitEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.AtmCashWithdrawal.LimitEnabled")]
 ```
 
-### AtmCashWithdrawalMaximumAmount
+### AtmCashWithdrawalMaximumAmount: `long`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.AtmCashWithdrawal.MaximumAmount")]
 ```
 
-### AtmCashWithdrawalLimitFeeAmount
+### AtmCashWithdrawalLimitFeeAmount: `long`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.AtmCashWithdrawal.LimitFeeAmount")]
 ```
 
-### List
+### RequestTypesRequiringCredentials: `List<string>`
 
-```typescript
-type: RequestTypesRequiringCredentials
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.RequestTypesRequiringCredentials")]
 ```
 
-### SendAmountAsDollars
+### SendAmountAsDollars: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Moblie.CardControl.Ondot.SendAmountAsDollars")]
 ```
 
-### ShouldShowMemberNameFromCardRecord
+### ShouldShowMemberNameFromCardRecord: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.ShouldShowMemberNameFromCardRecord")]
 ```
 
-### UseCardNumberToDeriveSubscriptionAlerts
+### UseCardNumberToDeriveSubscriptionAlerts: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/CardControl.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

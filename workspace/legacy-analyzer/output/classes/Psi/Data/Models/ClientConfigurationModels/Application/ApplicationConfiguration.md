@@ -7,47 +7,21 @@
 ## Class Summary
 
 public class ApplicationConfiguration
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ApplicationConfiguration
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### OmegaConfiguration
+### Omega: `OmegaConfiguration`
 
-```typescript
-type: OmegaConfiguration
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/ApplicationConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### OnlineBanking: `OnlineBankingConfiguration`
 
-### OnlineBankingConfiguration
+### SparkUi: `SparkUiConfiguration`
 
-```typescript
-type: OnlineBankingConfiguration
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/ApplicationConfiguration.cs
-visibility: public
-modifier: readonly
-```
-
-### SparkUiConfiguration
-
-```typescript
-type: SparkUiConfiguration
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/ApplicationConfiguration.cs
-visibility: public
-modifier: readonly
-```
-
-### FlexUiConfiguration
-
-```typescript
-type: FlexUiConfiguration
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/ApplicationConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### FlexUi: `FlexUiConfiguration`

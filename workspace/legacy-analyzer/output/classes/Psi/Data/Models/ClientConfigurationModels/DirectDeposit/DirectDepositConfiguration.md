@@ -7,79 +7,50 @@
 ## Class Summary
 
 public class DirectDepositConfiguration
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DirectDepositConfiguration
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShowAccountNickname
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/DirectDeposit/DirectDepositConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### ShowAccountNickname: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("DirectDeposit.ShowAccountNickname")]
 ```
 
-### ShowMICRText
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/DirectDeposit/DirectDepositConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### ShowMICRText: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("DirectDeposit.ShowMICRText")]
 ```
 
-### ShouldUsePreviousMicr
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/DirectDeposit/DirectDepositConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### ShouldUsePreviousMicr: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("DirectDeposit.ShouldUsePreviousMicr")]
 ```
 
-### ShouldShowMemberName
+### ShouldShowMemberName: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/DirectDeposit/DirectDepositConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("DirectDeposit.ShowMemberName")]
 ```
 
-### List
+### InformationViewAccountCategories: `List<string>`
 
-```typescript
-type: InformationViewAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/DirectDeposit/DirectDepositConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

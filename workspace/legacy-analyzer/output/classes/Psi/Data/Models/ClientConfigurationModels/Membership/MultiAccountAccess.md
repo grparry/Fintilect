@@ -7,146 +7,76 @@
 ## Class Summary
 
 public class MultiAccountAccess
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MultiAccountAccess
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MultiAccountAccess.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultiAccountAccess.Enabled")]
-[UsedImplicitly]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MultiAccountAccess.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultiAccountAccess.MinVersion")]
-[UsedImplicitly]
 ```
 
-### MobileEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MultiAccountAccess.cs
-visibility: public
-modifier: readonly
-```
+### MobileEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultiAccountAccess.MobileEnabled")]
-[UsedImplicitly]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MultiAccountAccess.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultiAccountAccess.MinimumAndroidVersion")]
-[UsedImplicitly]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MultiAccountAccess.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultiAccountAccess.MinimumIosVersion")]
-[UsedImplicitly]
 ```
 
-### MultiAccountAccessPermissionSource
-
-```typescript
-type: MultiAccountAccessPermissionSource
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MultiAccountAccess.cs
-visibility: public
-modifier: readonly
-```
+### PermissionSource: `MultiAccountAccessPermissionSource`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultiAccountAccess.PermissionSource")]
-[UsedImplicitly]
 ```
 
-### LastNameMatchingNumberOfCharactersToMatch
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MultiAccountAccess.cs
-visibility: public
-modifier: readonly
-```
+### LastNameMatchingNumberOfCharactersToMatch: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultiAccountAccess.LastNameMatching.NumberOfCharactersToMatch")]
-[UsedImplicitly]
 ```
 
-### DisclosureShouldShowLink
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MultiAccountAccess.cs
-visibility: public
-modifier: readonly
-```
+### DisclosureShouldShowLink: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultiAccountAccess.Disclosure.ShouldShowLink")]
-[UsedImplicitly]
 ```
 
-### GlobalFeatureAccessEncrypted
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MultiAccountAccess.cs
-visibility: public
-modifier: readonly
-```
+### GlobalFeatureAccessEncrypted: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("MultiAccountAccess.GlobalFeatureAccess")]
-[UsedImplicitly]
 ```

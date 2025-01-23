@@ -7,135 +7,74 @@
 ## Class Summary
 
 public class ReCaptchaSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ReCaptchaSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ReCaptchaEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/ReCaptchaSettings.cs
-visibility: public
-modifier: readonly
-```
+### ReCaptchaEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ReCaptchaSettings.ReCaptchaEnabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/ReCaptchaSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("ReCaptchaSettings.MinVersion")]
 ```
 
-### SiteKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/ReCaptchaSettings.cs
-visibility: public
-modifier: readonly
-```
+### SiteKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("ReCaptchaSettings.SiteKey")]
 ```
 
-### SecretKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/ReCaptchaSettings.cs
-visibility: public
-modifier: readonly
-```
+### SecretKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("ReCaptchaSettings.SecretKey")]
 ```
 
-### ShouldUseInvisibleCheckbox
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/ReCaptchaSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShouldUseInvisibleCheckbox: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ReCaptchaSettings.UseInvisibleCheckbox")]
 ```
 
-### InvisibleSiteKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/ReCaptchaSettings.cs
-visibility: public
-modifier: readonly
-```
+### InvisibleSiteKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("ReCaptchaSettings.InvisibleSiteKey")]
 ```
 
-### InvisibleSecretKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/ReCaptchaSettings.cs
-visibility: public
-modifier: readonly
-```
+### InvisibleSecretKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("ReCaptchaSettings.InvisibleSecretKey")]
 ```
 
-### IpWhitelistEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/ReCaptchaSettings.cs
-visibility: public
-modifier: readonly
-```
+### IpWhitelistEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ReCaptchaSettings.IpWhitelistEnabled")]
 ```
 
-### List
-
-```typescript
-type: IpWhitelist
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/ReCaptchaSettings.cs
-visibility: public
-modifier: readonly
-```
+### IpWhitelist: `List<string>`
 
 **Attributes:**
 ```csharp

@@ -7,261 +7,137 @@
 ## Class Summary
 
 public class ZelleSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ZelleSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.MinVersion")]
 ```
 
-### BaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### BaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.BaseUrl")]
 ```
 
-### MinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.MinAndroidVersion")]
 ```
 
-### MinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.MinIosVersion")]
 ```
 
-### BId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### BId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.BId")]
 ```
 
-### RouteTransit
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### RouteTransit: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.RouteTransit")]
 ```
 
-### PartnerUid
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### PartnerUid: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.PartnerUid")]
 ```
 
-### ApplId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### ApplId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.ApplId")]
 ```
 
-### EnrollWithJointOwnerEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnrollWithJointOwnerEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.EnrollWithJointOwnerEnabled")]
 ```
 
-### ServiceId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### ServiceId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.ServiceId")]
 ```
 
-### TransactionAmountLimit
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### TransactionAmountLimit: `decimal`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.TransactionAmountLimit")]
 ```
 
-### DailyAmountLimit
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### DailyAmountLimit: `decimal`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.DailyAmountLimit")]
 ```
 
-### CertificateName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### CertificateName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.CertificateName")]
 ```
 
-### CheckNumber
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### CheckNumber: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.CheckNumber")]
 ```
 
-### UseMemberAccountNumberWithSuffix
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### UseMemberAccountNumberWithSuffix: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.UseMemberAccountNumberWithSuffix")]
 ```
 
-### AccountNumberFormat
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### AccountNumberFormat: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Zelle.AccountNumberFormat")]
 ```
 
-### AllowCrossAccount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPayments/ZelleSettings.cs
-visibility: public
-modifier: readonly
-```
+### AllowCrossAccount: `bool`
 
 **Attributes:**
 ```csharp

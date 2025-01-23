@@ -7,29 +7,17 @@
 ## Class Summary
 
 public class Promotions
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Promotions
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### DeepTargetSettings
+### DeepTarget: `DeepTargetSettings`
 
-```typescript
-type: DeepTargetSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/Promotions.cs
-visibility: public
-modifier: readonly
-```
-
-### SkipPay
-
-```typescript
-type: SkipPay
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/Promotions.cs
-visibility: public
-modifier: readonly
-```
+### SkipPay: `SkipPay`

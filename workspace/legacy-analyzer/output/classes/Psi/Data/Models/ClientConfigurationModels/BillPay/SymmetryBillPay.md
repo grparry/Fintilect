@@ -7,149 +7,81 @@
 ## Class Summary
 
 public class SymmetryBillPay
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class SymmetryBillPay
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/SymmetryBillPay.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Symmetry.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/SymmetryBillPay.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Symmetry.MinVersion")]
 ```
 
-### MinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/SymmetryBillPay.cs
-visibility: public
-modifier: readonly
-```
+### MinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Symmetry.MinIosVersion")]
 ```
 
-### MinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/SymmetryBillPay.cs
-visibility: public
-modifier: readonly
-```
+### MinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Symmetry.MinAndroidVersion")]
 ```
 
-### Guid
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/SymmetryBillPay.cs
-visibility: public
-modifier: readonly
-```
+### CustomerGuid: `Guid`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Symmetry.CustomerGuid")]
 ```
 
-### ServiceUserId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/SymmetryBillPay.cs
-visibility: public
-modifier: readonly
-```
+### ServiceUserId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Symmetry.ServiceUserId")]
 ```
 
-### ServicePassword
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/SymmetryBillPay.cs
-visibility: public
-modifier: readonly
-```
+### ServicePassword: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Symmetry.ServicePassword")]
 ```
 
-### StatusServiceUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/SymmetryBillPay.cs
-visibility: public
-modifier: readonly
-```
+### StatusServiceUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Symmetry.StatusServiceUrl")]
 ```
 
-### BreakoutInterfaceUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/SymmetryBillPay.cs
-visibility: public
-modifier: readonly
-```
+### BreakoutInterfaceUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Symmetry.BreakoutInterfaceUrl")]
 ```
 
-### LandingPageUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/SymmetryBillPay.cs
-visibility: public
-modifier: readonly
-```
+### LandingPageUrl: `string`
 
 **Attributes:**
 ```csharp

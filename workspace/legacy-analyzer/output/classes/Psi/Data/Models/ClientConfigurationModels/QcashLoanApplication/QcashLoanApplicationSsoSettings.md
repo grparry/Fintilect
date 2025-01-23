@@ -7,163 +7,88 @@
 ## Class Summary
 
 public class QcashLoanApplicationSsoSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class QcashLoanApplicationSsoSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/QcashLoanApplication/QcashLoanApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("QcashLoanApplication.Sso.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/QcashLoanApplication/QcashLoanApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("QcashLoanApplication.Sso.MinVersion")]
 ```
 
-### MinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/QcashLoanApplication/QcashLoanApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("QcashLoanApplication.Sso.MinIosVersion")]
 ```
 
-### MinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/QcashLoanApplication/QcashLoanApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("QcashLoanApplication.Sso.MinAndroidVersion")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/QcashLoanApplication/QcashLoanApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("QcashLoanApplication.Sso.InternetBankingUrl")]
 ```
 
-### MobileUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/QcashLoanApplication/QcashLoanApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### MobileUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("QcashLoanApplication.Sso.MobileUrl")]
 ```
 
-### ApplicationSsoKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/QcashLoanApplication/QcashLoanApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### ApplicationSsoKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("QcashLoanApplication.Sso.ApplicationSSOKey")]
 ```
 
-### ApplicationId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/QcashLoanApplication/QcashLoanApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### ApplicationId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("QcashLoanApplication.Sso.ApplicationId")]
 ```
 
-### SharedKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/QcashLoanApplication/QcashLoanApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### SharedKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("QcashLoanApplication.Sso.SharedKey")]
 ```
 
-### InternetBankingLocation
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/QcashLoanApplication/QcashLoanApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### InternetBankingLocation: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("QcashLoanApplication.Sso.InternetBankingLocation")]
 ```
 
-### MobileLocation
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/QcashLoanApplication/QcashLoanApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### MobileLocation: `string`
 
 **Attributes:**
 ```csharp

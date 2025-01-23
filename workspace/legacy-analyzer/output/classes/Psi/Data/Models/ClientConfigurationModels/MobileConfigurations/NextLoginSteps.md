@@ -7,163 +7,88 @@
 ## Class Summary
 
 public class NextLoginSteps
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class NextLoginSteps
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### LoginDisclosureCanSkipOnFailure
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/NextLoginSteps.cs
-visibility: public
-modifier: readonly
-```
+### LoginDisclosureCanSkipOnFailure: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.NextLoginSteps.LoginDisclosureCanSkipOnFailure")]
 ```
 
-### ChangePasswordCanSkipOnFailure
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/NextLoginSteps.cs
-visibility: public
-modifier: readonly
-```
+### ChangePasswordCanSkipOnFailure: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.NextLoginSteps.ChangePasswordCanSkipOnFailure")]
 ```
 
-### ChangePinCanSkipOnFailure
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/NextLoginSteps.cs
-visibility: public
-modifier: readonly
-```
+### ChangePinCanSkipOnFailure: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.NextLoginSteps.ChangePinCanSkipOnFailure")]
 ```
 
-### MfaQuestionsCanSkipOnFailure
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/NextLoginSteps.cs
-visibility: public
-modifier: readonly
-```
+### MfaQuestionsCanSkipOnFailure: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.NextLoginSteps.MFAQuestionsCanSkipOnFailure")]
 ```
 
-### LoginPromotionsCanSkipOnFailure
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/NextLoginSteps.cs
-visibility: public
-modifier: readonly
-```
+### LoginPromotionsCanSkipOnFailure: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.NextLoginSteps.LoginPromotionsCanSkipOnFailure")]
 ```
 
-### UrgentAlertsCanSkipOnFailure
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/NextLoginSteps.cs
-visibility: public
-modifier: readonly
-```
+### UrgentAlertsCanSkipOnFailure: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.NextLoginSteps.UrgentAlertsCanSkipOnFailure")]
 ```
 
-### ForceChangeEmailEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/NextLoginSteps.cs
-visibility: public
-modifier: readonly
-```
+### ForceChangeEmailEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.NextLoginSteps.ForceChangeEmail")]
 ```
 
-### ForceChangeAddressEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/NextLoginSteps.cs
-visibility: public
-modifier: readonly
-```
+### ForceChangeAddressEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.NextLoginSteps.ForceChangeAddress")]
 ```
 
-### ForceChangeEmailCanSkipOnFailure
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/NextLoginSteps.cs
-visibility: public
-modifier: readonly
-```
+### ForceChangeEmailCanSkipOnFailure: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.NextLoginSteps.ForceChangeEmailCanSkipOnFailure")]
 ```
 
-### ForceChangeAddressCanSkipOnFailure
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/NextLoginSteps.cs
-visibility: public
-modifier: readonly
-```
+### ForceChangeAddressCanSkipOnFailure: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.NextLoginSteps.ForceChangeAddressCanSkipOnFailure")]
 ```
 
-### SynergyEstatementsEnrollmentEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/NextLoginSteps.cs
-visibility: public
-modifier: readonly
-```
+### SynergyEstatementsEnrollmentEnabled: `bool`
 
 **Attributes:**
 ```csharp

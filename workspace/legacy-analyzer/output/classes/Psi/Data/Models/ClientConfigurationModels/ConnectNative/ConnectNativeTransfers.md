@@ -7,791 +7,381 @@
 ## Class Summary
 
 public class ConnectNativeTransfers
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ConnectNativeTransfers
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### EnableTransfersFromShares
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersFromShares: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersFromShares")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersToShares
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersToShares: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersToShares")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersShareToShare
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersShareToShare: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersShareToShare")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersFromLoans
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersFromLoans: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersFromLoans")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersToLoans
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersToLoans: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersToLoans")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersLoanToShare
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersLoanToShare: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersLoanToShare")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersShareToLoan
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersShareToLoan: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersShareToLoan")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersLoanToLoan
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersLoanToLoan: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersLoanToLoan")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersToLinkedAccounts
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersToLinkedAccounts: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersToLinkedAccounts")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersFromLinkedAccounts
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersFromLinkedAccounts: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersFromLinkedAccounts")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersShareToLinkedAccount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersShareToLinkedAccount: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersShareToLinkedAccount")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersLoanToLinkedAccount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersLoanToLinkedAccount: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersLoanToLinkedAccount")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersLinkedAccountToShare
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersLinkedAccountToShare: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersLinkedAccountToShare")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersLinkedAccountToLoan
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersLinkedAccountToLoan: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersLinkedAccountToLoan")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersToCrossAccounts
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersToCrossAccounts: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersToCrossAccounts")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersFromCrossAccounts
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersFromCrossAccounts: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersFromCrossAccounts")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersCrossAccountToShare
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersCrossAccountToShare: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersCrossAccountToShare")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersCrossAccountToLoan
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersCrossAccountToLoan: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersCrossAccountToLoan")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersShareToCrossAccount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersShareToCrossAccount: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersShareToCrossAccount")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersLoanToCrossAccount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersLoanToCrossAccount: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersLoanToCrossAccount")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersCrossAccountToCrossAccount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableTransfersCrossAccountToCrossAccount: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersCrossAccountToCrossAccount")]
-[UsedImplicitly]
 ```
 
-### EnablePrincipalOnlyOption
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnablePrincipalOnlyOption: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnablePrincipalOnlyOption")]
-[UsedImplicitly]
 ```
 
-### EnableExtraToPrincipalOption
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableExtraToPrincipalOption: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableExtraToPrincipalOption")]
-[UsedImplicitly]
 ```
 
-### ShouldDisplayPayoffAmount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ShouldDisplayPayoffAmount: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.ShouldDisplayPayoffAmount")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: AllowExtraToPrincipalPaymentLoanCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### AllowExtraToPrincipalPaymentLoanCategories: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsMortgages")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: AllowPrincipalOnlyPaymentLoanCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### AllowPrincipalOnlyPaymentLoanCategories: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsLoanAccounts")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: AllowedAchTransferToAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### AllowedAchTransferToAccountCategories: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.Homebanking.obsACHTransferToAccounts")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: AllowedAchTransferFromAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### AllowedAchTransferFromAccountCategories: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsACHTransferFromAccounts")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: AllowedTransferToAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### AllowedTransferToAccountCategories: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.Homebanking.obsTransferToAccounts")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: AllowedTransferFromAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### AllowedTransferFromAccountCategories: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsTransferFromAccounts")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: ShareRestrictedInquireFlags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ShareRestrictedInquireFlags: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.obsShareRestrictedInquire")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: ShareRestrictedWithdrawFlags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ShareRestrictedWithdrawFlags: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsShareRestrictedWithdraw")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: ShareRestrictedDepositFlags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ShareRestrictedDepositFlags: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.obsShareRestrictedDeposit")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: LoanRestrictedInquireFlags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### LoanRestrictedInquireFlags: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.obsLoanRestrictedInquire")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: LoanRestrictedWithdrawFlags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### LoanRestrictedWithdrawFlags: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsLoanRestrictedWithdraw")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: LoanRestrictedDepositFlags
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### LoanRestrictedDepositFlags: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.obsLoanRestrictedDeposit")]
-[UsedImplicitly]
 ```
 
-### ShouldDisplayAccountNicknames
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ShouldDisplayAccountNicknames: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.ShouldDisplayAccountNicknames")]
-[UsedImplicitly]
 ```
 
-### ShouldDisplayRemainingRegDCount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### ShouldDisplayRemainingRegDCount: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.ShouldDisplayRemainingRegDCount")]
-[UsedImplicitly]
 ```
 
-### MaxFreeInboundAchTransfersPerMonth
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### MaxFreeInboundAchTransfersPerMonth: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.LinkedACHInboundFreePerMonth")]
-[UsedImplicitly]
 ```
 
-### MaxFreeOutboundAchTransfersPerMonth
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### MaxFreeOutboundAchTransfersPerMonth: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.LinkedACHOutboundFreePerMonth")]
-[UsedImplicitly]
 ```
 
-### IntraBankTransfersOnlyAllowed
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### IntraBankTransfersOnlyAllowed: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.IntraBankTransfersOnlyAllowed")]
-[UsedImplicitly]
 ```
 
-### Money
-
-```typescript
-type: Money
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### LinkedAchInboundFee: `Money`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.LinkedACHInboundFee")]
-[UsedImplicitly]
 ```
 
-### Money
-
-```typescript
-type: Money
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### LinkedAchOutboundFee: `Money`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.LinkedACHOutboundFee")]
-[UsedImplicitly]
 ```
 
-### AchAllowedType
-
-```typescript
-type: [AchAllowedType](../../../AchAllowedType.md)
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### AchAllowedTypes: `AchAllowedType`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ACHAllowedTypes")]
-[UsedImplicitly]
 ```
 
-### PrefilledTransferAmountsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### PrefilledTransferAmountsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.PrefilledTransferAmountsEnabled")]
-[UsedImplicitly]
 ```
 
-### DefaultTransferAmounts
-
-```typescript
-type: DefaultTransferAmounts
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### PrefilledTransferAmountDefaults: `DefaultTransferAmounts`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.PrefilledTransferAmountDefaults")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: PrefilledTransferAmountsSortOrder
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### PrefilledTransferAmountsSortOrder: `List<TransferAmountType>`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.PrefilledTransferAmountsSortOrder")]
-[UsedImplicitly]
 ```
 
-### MaxNumberOfPrefilledTransferAmounts
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### MaxNumberOfPrefilledTransferAmounts: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.MaxNumberOfPrefilledTransferAmounts")]
-[UsedImplicitly]
 ```
 
-### List
-
-```typescript
-type: CashAdvanceWarningLoanCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### CashAdvanceWarningLoanCategories: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CashAdvanceWarningLoanCategories")]
-[UsedImplicitly]
 ```
 
-### CashAdvanceFromCreditCardsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+### CashAdvanceFromCreditCardsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CashAdvanceFromCreditCardsEnabled")]
-[UsedImplicitly]
 ```
 
-### MicrNumberFirstFourDigitsForBillPay
+### MicrNumberFirstFourDigitsForBillPay: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.MICRNumberFirstFourDigits")]
-[UsedImplicitly]
 ```
 
-### EnableTransfersToCreditCards
+### EnableTransfersToCreditCards: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeTransfers.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ConnectNative.Transfers.EnableTransfersToCreditCards")]
-[UsedImplicitly]
 ```

@@ -1,6 +1,6 @@
-import { BaseService } from './BaseService';
 import { ISettingsService } from '../../interfaces/ISettingsService';
-import { Setting, SettingGroup } from '@models/settings/types';
+import { Setting, SettingGroup } from '../../../types/settings.types';
+import { BaseService } from './BaseService';
 import { ApiSuccessResponse } from '../../../types/api.types';
 
 export class SettingsService extends BaseService implements ISettingsService {

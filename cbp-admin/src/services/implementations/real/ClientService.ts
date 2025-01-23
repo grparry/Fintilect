@@ -203,9 +203,15 @@ export class ClientService extends BaseService implements IClientService {
         return this.get<Permission[]>(`/${clientId}/permissions`);
     }
 
-    async getClientAuditLogs(clientId: string, request: AuditSearchRequest): Promise<AuditLog[]> {
+    async getClientAuditLogs(clientId: string, request: AuditSearchRequest): Promise<{ logs: AuditLog[]; total: number }> {
         this.validateRequired({ clientId }, ['clientId']);
-        return this.get<AuditLog[]>(`/${clientId}/audit-logs`, { params: request });
+        const response = await this.get<ApiResponse<{ logs: AuditLog[]; total: number }>>(`/${clientId}/audit-logs`, { params: request });
+        
+        if (!response.success) {
+            throw new Error(response.error.message);
+        }
+        
+        return response.data;
     }
 
     async getClientAddress(clientId: string): Promise<Address> {

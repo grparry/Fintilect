@@ -7,107 +7,60 @@
 ## Class Summary
 
 public class AddressVerificationSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AddressVerificationSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/AddressVerificationSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AddressVerification.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/AddressVerificationSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("AddressVerification.MinVersion")]
 ```
 
-### AuthId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/AddressVerificationSettings.cs
-visibility: public
-modifier: readonly
-```
+### AuthId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AddressVerification.AuthId")]
 ```
 
-### AuthToken
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/AddressVerificationSettings.cs
-visibility: public
-modifier: readonly
-```
+### AuthToken: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AddressVerification.AuthToken")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/AddressVerificationSettings.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("AddressVerification.Url")]
 ```
 
-### MaxCandidates
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/AddressVerificationSettings.cs
-visibility: public
-modifier: readonly
-```
+### MaxCandidates: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("AddressVerification.MaxCandidates")]
 ```
 
-### Vendor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/AddressVerificationSettings.cs
-visibility: public
-modifier: readonly
-```
+### Vendor: `string`
 
 **Attributes:**
 ```csharp

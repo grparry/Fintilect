@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class AuditLogs
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AuditLogs
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShowUsernameOnEventDetails
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/AuditLogs.cs
-visibility: public
-modifier: readonly
-```
+### ShowUsernameOnEventDetails: `bool`
 
 **Attributes:**
 ```csharp

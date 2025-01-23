@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class MemberProfile
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MemberProfile
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MemberProfile.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MemberProfile.Enabled")]
 ```
 
-### UsPhoneRegex
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MemberProfile.cs
-visibility: public
-modifier: readonly
-```
+### UsPhoneRegex: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("MemberProfile.UsPhoneRegex")]
 ```
 
-### ShouldGetBeneficiaryFields
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MemberProfile.cs
-visibility: public
-modifier: readonly
-```
+### ShouldGetBeneficiaryFields: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MemberProfile.GetBeneficiaryFields")]
 ```
 
-### ShouldHideAddressLineThree
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/MemberProfile.cs
-visibility: public
-modifier: readonly
-```
+### ShouldHideAddressLineThree: `bool`
 
 **Attributes:**
 ```csharp

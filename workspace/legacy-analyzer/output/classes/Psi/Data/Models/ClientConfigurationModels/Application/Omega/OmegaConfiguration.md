@@ -7,113 +7,59 @@
 ## Class Summary
 
 public class OmegaConfiguration
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class OmegaConfiguration
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### EnvironmentConnections
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/OmegaConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### EnvironmentConnections: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.ConfigurationComparison.EnvironmentConnections")]
 ```
 
-### HomeBankingResetConfigUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/OmegaConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### HomeBankingResetConfigUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Homebanking.ResetConfig")]
 ```
 
-### DaysUntilPasswordExpires
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/OmegaConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### DaysUntilPasswordExpires: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.User.DaysUntilPasswordExpires")]
 ```
 
-### MaxLoginRetryCount
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/OmegaConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### MaxLoginRetryCount: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.User.MaxLoginRetryCount")]
 ```
 
-### MonthsToRestrictPasswordReuse
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/OmegaConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### MonthsToRestrictPasswordReuse: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.User.MonthsToRestrictPasswordReuse")]
 ```
 
-### OmegaBaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/OmegaConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### OmegaBaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.User.OmegaBaseUrl")]
 ```
 
-### Feature
+### Features: `Feature`
 
-```typescript
-type: [Feature](../../../Feature.md)
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/OmegaConfiguration.cs
-visibility: public
-modifier: readonly
-```
-
-### DocumentArchitectSso
-
-```typescript
-type: DocumentArchitectSso
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/OmegaConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### DocumentArchitectSso: `DocumentArchitectSso`

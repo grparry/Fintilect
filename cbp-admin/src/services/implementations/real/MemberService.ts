@@ -127,6 +127,15 @@ export class MemberService extends BaseService implements IMemberService {
         }
     }
 
+    /**
+     * Update member devices
+     * @param memberId Member identifier
+     * @param devices Updated list of devices
+     */
+    async updateDevices(memberId: string, devices: Device[]): Promise<void> {
+        await this.put(`${memberId}/devices`, devices);
+    }
+
     private handleError(error: any, defaultMessage: string): Error {
         if (error instanceof Error) {
             return error;

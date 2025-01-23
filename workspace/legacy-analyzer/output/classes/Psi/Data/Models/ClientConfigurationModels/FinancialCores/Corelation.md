@@ -7,310 +7,168 @@
 ## Class Summary
 
 public class Corelation
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Corelation
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### PullCreditSettings
+### PullCreditSettings: `PullCreditSettings`
 
-```typescript
-type: PullCreditSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+### LossScreeningSettings: `LossScreeningSettings`
 
-### LossScreeningSettings
-
-```typescript
-type: LossScreeningSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
-
-### ServiceUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+### ServiceUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.ServiceUrl")]
 ```
 
-### MaxReturnSearchLimit
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+### MaxReturnSearchLimit: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.MaxReturnSearchLimit")]
 ```
 
-### UserName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+### UserName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.Authentication.UserName")]
 ```
 
-### Password
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+### Password: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.Authentication.Password")]
 ```
 
-### DeviceName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+### DeviceName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.Authentication.DeviceName")]
 ```
 
-### GetAllNotes
+### GetAllNotes: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.GetAllNotes")]
 ```
 
-### Identification
+### Identification: `Identification`
 
-```typescript
-type: Identification
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
 
-### CorelationSettings
 
-```typescript
-type: Notes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+### Notes: `CorelationSettings.Notes`
 
-### AccountTypes
 
-```typescript
-type: AccountTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
 
-### EmployeeAccountTypeSerial
+### AccountTypes: `AccountTypes`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+
+
+### EmployeeAccountTypeSerial: `string`
+
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.EmployeeAccountTypeSerial")]
 ```
 
-### PinVerifyChannelSerial
+### PinVerifyChannelSerial: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.PinVerifyChannelSerial")]
 ```
 
-### LoginChannelDescription
+### LoginChannelDescription: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.LoginChannelDescription")]
 ```
 
-### List
+### InquiryAllowedPersonLinkCategories: `List<string>`
 
-```typescript
-type: InquiryAllowedPersonLinkCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.InquiryAllowedPersonLinkCategories")]
 ```
 
-### ExistingAddressSearchResultsReturnLimit
+### ExistingAddressSearchResultsReturnLimit: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.AddressChange.ExistingAddressSearchResultsReturnLimit")]
 ```
 
-### DraftLookup
+### DraftLookup: `DraftLookup`
 
-```typescript
-type: DraftLookup
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
 
-### CorelationSettings
 
-```typescript
-type: Enrollment
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+### Enrollment: `CorelationSettings.Enrollment`
 
-### CorelationSettings
 
-```typescript
-type: Funding
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
 
-### ManualApprovalNoteJsonStringDictionary
+### Funding: `CorelationSettings.Funding`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+
+
+### ManualApprovalNoteJsonStringDictionary: `string`
+
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ManualApprovalNoteDictionary")]
 ```
 
-### ApplicationSettings
+### Application: `ApplicationSettings`
 
-```typescript
-type: ApplicationSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
 
-### AccountTypeSettings
 
-```typescript
-type: AccountTypeSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+### AccountType: `AccountTypeSettings`
 
-### CardTypeSettings
 
-```typescript
-type: CardTypeSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
 
-### PersonTypeSettings
+### CardType: `CardTypeSettings`
 
-```typescript
-type: PersonTypeSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
 
-### OnlyAllowSsnForEnrollmentTin
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+### PersonType: `PersonTypeSettings`
+
+
+
+### OnlyAllowSsnForEnrollmentTin: `bool`
+
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Corelation.OnlyAllowSsnForEnrollmentTin")]
 ```
 
-### LoanOriginationSettings
+### LoanOrigination: `LoanOriginationSettings`
 
-```typescript
-type: LoanOriginationSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Corelation.cs
-visibility: public
-modifier: readonly
-```
+

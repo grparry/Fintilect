@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class AdvancePay
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AdvancePay
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/AdvancePay.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.AdvancePay.Enabled")]
 ```
 
-### List
-
-```typescript
-type: AdvancePayLoanCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/AdvancePay.cs
-visibility: public
-modifier: readonly
-```
+### AdvancePayLoanCategories: `List<string>`
 
 **Attributes:**
 ```csharp

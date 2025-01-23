@@ -1,4 +1,21 @@
-// Generated imports
+import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
+export interface ClientConfigurationRepositoryConfig {
 
-export interface ClientConfigurationRepository {
+}
+
+export class ClientConfigurationRepository implements ISettingsGroup {
+    static readonly metadata: ISettingsMetadata = {
+        groupName: 'ClientConfigurationRepository'
+    };
+
+
+
+    constructor() {}
+
+
+        toSettings(): Setting[] {
+            return [
+            ];
+        }
+
 }

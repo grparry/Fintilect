@@ -7,65 +7,47 @@
 ## Class Summary
 
 public class AccountOpening
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AccountOpening
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountOpening.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Accounts.AccountOpening.Enabled")]
 ```
 
-### MinVersion
+### MinVersion: `double`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountOpening.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Accounts.AccountOpening.MinVersion")]
 ```
 
-### OnlySendEmailOnNewAccountCreation
+### OnlySendEmailOnNewAccountCreation: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountOpening.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Accounts.AccountOpening.OnlySendEmailOnNewAccountCreation")]
 ```
 
-### ShouldHideContactInfoDuringSubAccountOpening
+### ShouldHideContactInfoDuringSubAccountOpening: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/AccountOpening.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

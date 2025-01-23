@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class Alerts
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Alerts
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Alerts.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Alerts.Enabled")]
 ```
 
-### AlertInboxUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Alerts.cs
-visibility: public
-modifier: readonly
-```
+### AlertInboxUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Alerts.AlertInboxUrl")]
 ```
 
-### AlertManagementUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Alerts.cs
-visibility: public
-modifier: readonly
-```
+### AlertManagementUrl: `string`
 
 **Attributes:**
 ```csharp

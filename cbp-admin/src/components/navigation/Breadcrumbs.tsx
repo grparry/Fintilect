@@ -52,7 +52,7 @@ export default function Breadcrumbs() {
     }
 
     // Skip validation for known route segments
-    const knownSegments = ['admin', 'client-management', 'users', 'groups', 'contact', 'security', 'audit-log'];
+    const knownSegments = ['admin', 'client-management', 'list', 'users', 'groups', 'contact', 'security', 'audit-log'];
     if (knownSegments.includes(segment)) {
       return false;
     }
@@ -60,15 +60,21 @@ export default function Breadcrumbs() {
     // Check if this segment is in the position where we expect a client ID
     const segments = path.split('/');
     const clientManagementIndex = segments.indexOf('client-management');
+    
+    // If we're on the list page, don't treat any segments as IDs
+    if (segments.includes('list')) {
+      return false;
+    }
+
     if (clientManagementIndex !== -1 && segments[clientManagementIndex + 1] === segment) {
-      return true;
+      return isValidEncodedId(segment);
     }
 
     // For user IDs in the users section
     if (path.includes('/users/')) {
       const userIdIndex = segments.indexOf('users') + 1;
       if (segments[userIdIndex] === segment) {
-        return true;
+        return isValidEncodedId(segment);
       }
     }
 
@@ -86,6 +92,11 @@ export default function Breadcrumbs() {
       return urlSegmentTitles[segment] || segment;
     }
 
+    // Verify it's a valid encoded ID before trying to fetch the name
+    if (!isValidEncodedId(segment)) {
+      return isUser ? 'User' : 'Client';
+    }
+
     const cache = isUser ? cachedNames.users : cachedNames.clients;
     
     // If we haven't started loading this name yet
@@ -99,8 +110,17 @@ export default function Breadcrumbs() {
 
   const fetchClientName = async (encodedId: string) => {
     try {
+      // First check if this is a valid encoded ID
+      if (!isValidEncodedId(encodedId)) {
+        console.warn('Invalid encoded ID format:', encodedId);
+        return null;
+      }
+
       const clientId = decodeId(encodedId);
-      if (!clientId) return null;
+      if (!clientId) {
+        console.warn('Failed to decode client ID:', encodedId);
+        return null;
+      }
 
       const client = await clientService.getClient(clientId);
       if (client) {
@@ -111,17 +131,32 @@ export default function Breadcrumbs() {
         }));
         return name;
       }
+      
+      console.warn('Client not found:', clientId);
       return null;
     } catch (error) {
       console.error('Error fetching client name:', error);
+      setCachedNames(prev => ({
+        ...prev,
+        clients: { ...prev.clients, [encodedId]: null }
+      }));
       return null;
     }
   };
 
   const fetchUserName = async (encodedId: string, clientId: string) => {
     try {
+      // First check if this is a valid encoded ID
+      if (!isValidEncodedId(encodedId)) {
+        console.warn('Invalid encoded user ID format:', encodedId);
+        return null;
+      }
+
       const userId = decodeId(encodedId);
-      if (!userId) return null;
+      if (!userId) {
+        console.warn('Failed to decode user ID:', encodedId);
+        return null;
+      }
 
       const response = await clientService.getClientUsers(clientId, { 
         searchTerm: userId,
@@ -137,9 +172,15 @@ export default function Breadcrumbs() {
         }));
         return name;
       }
+      
+      console.warn('User not found:', userId);
       return null;
     } catch (error) {
       console.error('Error fetching user name:', error);
+      setCachedNames(prev => ({
+        ...prev,
+        users: { ...prev.users, [encodedId]: null }
+      }));
       return null;
     }
   };
@@ -157,6 +198,11 @@ export default function Breadcrumbs() {
         if (shouldBeEncodedId(potentialClientId)) {
           clientId = potentialClientId;
           if (!(clientId in cachedNames.clients)) {
+            // Set a loading state
+            setCachedNames(prev => ({
+              ...prev,
+              clients: { ...prev.clients, [clientId!]: 'Loading...' }
+            }));
             await fetchClientName(clientId);
           }
         }
@@ -168,6 +214,11 @@ export default function Breadcrumbs() {
         if (usersIndex !== -1 && segments[usersIndex + 1]) {
           const potentialUserId = segments[usersIndex + 1];
           if (shouldBeEncodedId(potentialUserId) && !(potentialUserId in cachedNames.users)) {
+            // Set a loading state
+            setCachedNames(prev => ({
+              ...prev,
+              users: { ...prev.users, [potentialUserId]: 'Loading...' }
+            }));
             await fetchUserName(potentialUserId, clientId);
           }
         }
@@ -175,7 +226,7 @@ export default function Breadcrumbs() {
     };
     
     loadNames();
-  }, [state.breadcrumbs]);
+  }, [state.breadcrumbs, cachedNames]);
 
   // Build breadcrumb items with proper paths and titles
   const filteredSegments = state.breadcrumbs

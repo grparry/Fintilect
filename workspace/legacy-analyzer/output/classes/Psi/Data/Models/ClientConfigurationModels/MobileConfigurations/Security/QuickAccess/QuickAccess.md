@@ -7,132 +7,71 @@
 ## Class Summary
 
 public class QuickAccess
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class QuickAccess
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/QuickAccess/QuickAccess.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.QuickAccess.MinimumVersion")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/QuickAccess/QuickAccess.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.QuickAccess.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/QuickAccess/QuickAccess.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.QuickAccess.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/QuickAccess/QuickAccess.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.QuickAccess.Enabled")]
 ```
 
-### ReturnPage
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/QuickAccess/QuickAccess.cs
-visibility: public
-modifier: readonly
-```
+### ReturnPage: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.QuickAccess.ReturnPage")]
 ```
 
-### DeleteTokensFromWebEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/QuickAccess/QuickAccess.cs
-visibility: public
-modifier: readonly
-```
+### DeleteTokensFromWebEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.QuickAccess.DeleteTokensFromWebEnabled")]
 ```
 
-### LoginScreenButtonEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/QuickAccess/QuickAccess.cs
-visibility: public
-modifier: readonly
-```
+### LoginScreenButtonEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.QuickAccess.LoginScreenButtonEnabled")]
 ```
 
-### EnrollOnLoginEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/QuickAccess/QuickAccess.cs
-visibility: public
-modifier: readonly
-```
+### EnrollOnLoginEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.QuickAccess.EnrollOnLoginEnabled")]
 ```
 
-### QuickAccessPin
-
-```typescript
-type: QuickAccessPin
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/QuickAccess/QuickAccess.cs
-visibility: public
-modifier: readonly
-```
+### Pin: `QuickAccessPin`

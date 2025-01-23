@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class VersionManagement
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class VersionManagement
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### EnableDeprecationMessages
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/VersionManagement.cs
-visibility: public
-modifier: readonly
-```
+### EnableDeprecationMessages: `bool`
 
 **Attributes:**
 ```csharp

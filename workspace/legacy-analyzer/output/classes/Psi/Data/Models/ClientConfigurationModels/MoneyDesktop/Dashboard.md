@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class Dashboard
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Dashboard
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShowIndividualPanels
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MoneyDesktop/Dashboard.cs
-visibility: public
-modifier: readonly
-```
+### ShowIndividualPanels: `bool`
 
 **Attributes:**
 ```csharp

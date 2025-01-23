@@ -7,20 +7,15 @@
 ## Class Summary
 
 public class Notifications
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Notifications
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Travel
-
-```typescript
-type: Travel
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Settings/Notifications/Notifications.cs
-visibility: public
-modifier: readonly
-```
+### Travel: `Travel`

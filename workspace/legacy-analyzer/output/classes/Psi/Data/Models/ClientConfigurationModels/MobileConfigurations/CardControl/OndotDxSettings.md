@@ -7,121 +7,67 @@
 ## Class Summary
 
 public class OndotDxSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class OndotDxSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ClientId
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OndotDxSettings.cs
-visibility: public
-modifier: readonly
-```
+### ClientId: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OndotDx.ClientId")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OndotDxSettings.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OndotDx.Url")]
 ```
 
-### IsMockDataEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OndotDxSettings.cs
-visibility: public
-modifier: readonly
-```
+### IsMockDataEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OndotDx.IsMockDataEnabled")]
 ```
 
-### MockGetPreferencesData
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OndotDxSettings.cs
-visibility: public
-modifier: readonly
-```
+### MockGetPreferencesData: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OndotDx.MockGetPreferencesData")]
 ```
 
-### EnableAllMerchantTypesOnRegistration
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OndotDxSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableAllMerchantTypesOnRegistration: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OndotDx.EnableAllMerchantTypesOnRegistration")]
 ```
 
-### EnableAllTransactionTypesOnRegistration
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OndotDxSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableAllTransactionTypesOnRegistration: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OndotDx.EnableAllTransactionTypesOnRegistration")]
 ```
 
-### AlertsDeliveryDeclinedTransactionEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OndotDxSettings.cs
-visibility: public
-modifier: readonly
-```
+### AlertsDeliveryDeclinedTransactionEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.OndotDx.AlertsDeliveryDeclinedTransactionEnabled")]
 ```
 
-### SendAmountAsDollars
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/OndotDxSettings.cs
-visibility: public
-modifier: readonly
-```
+### SendAmountAsDollars: `bool`
 
 **Attributes:**
 ```csharp

@@ -7,20 +7,15 @@
 ## Class Summary
 
 public class Themes
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Themes
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ConnectNative
-
-```typescript
-type: ConnectNative
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Themes/Themes.cs
-visibility: public
-modifier: readonly
-```
+### ConnectNative: `ConnectNative`

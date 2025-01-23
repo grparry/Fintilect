@@ -7,107 +7,60 @@
 ## Class Summary
 
 public class MemberView
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MemberView
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/MemberView.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.MemberView.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/MemberView.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.MemberView.MinVersion")]
 ```
 
-### LoginKeyExpiresInMinutes
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/MemberView.cs
-visibility: public
-modifier: readonly
-```
+### LoginKeyExpiresInMinutes: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.MemberView.LoginKeyExpiresInMinutes")]
 ```
 
-### SsoBaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/MemberView.cs
-visibility: public
-modifier: readonly
-```
+### SsoBaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.MemberView.SsoUrl")]
 ```
 
-### FullAccessEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/MemberView.cs
-visibility: public
-modifier: readonly
-```
+### FullAccessEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.MemberView.FullAccessEnabled")]
 ```
 
-### ExternalSsoEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/MemberView.cs
-visibility: public
-modifier: readonly
-```
+### ExternalSsoEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.MemberView.ExternalSsoEnabled")]
 ```
 
-### ExternalSsoIpWhitelist
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/MemberView.cs
-visibility: public
-modifier: readonly
-```
+### ExternalSsoIpWhitelist: `string`
 
 **Attributes:**
 ```csharp

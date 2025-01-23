@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class DebitCardLocationSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DebitCardLocationSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### InternationalTransactionControlEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/DebitCardLocationSettings.cs
-visibility: public
-modifier: readonly
-```
+### InternationalTransactionControlEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.Locations.DebitCard.InternationalTransactionControlEnabled")]
 ```
 
-### MerchantStateListControlEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/Locations/DebitCardLocationSettings.cs
-visibility: public
-modifier: readonly
-```
+### MerchantStateListControlEnabled: `bool`
 
 **Attributes:**
 ```csharp

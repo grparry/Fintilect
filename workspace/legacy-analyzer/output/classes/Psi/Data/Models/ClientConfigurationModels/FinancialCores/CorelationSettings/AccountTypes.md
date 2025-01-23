@@ -7,219 +7,126 @@
 ## Class Summary
 
 public class AccountTypes
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AccountTypes
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### List
-
-```typescript
-type: MoneyMarketShareCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+### MoneyMarketShareCategorySerial: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.MoneyMarketShareCategorySerial")]
 ```
 
-### List
-
-```typescript
-type: PrimarySavingsShareCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+### PrimarySavingsShareCategorySerial: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.PrimarySavingsShareCategorySerial")]
 ```
 
-### List
-
-```typescript
-type: CheckingShareCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+### CheckingShareCategorySerial: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.CheckingShareCategorySerial")]
 ```
 
-### List
-
-```typescript
-type: InvestmentShareCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+### InvestmentShareCategorySerial: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.InvestmentShareCategorySerial")]
 ```
 
-### List
-
-```typescript
-type: CertificateShareCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+### CertificateShareCategorySerial: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.CertificateShareCategorySerial")]
 ```
 
-### List
-
-```typescript
-type: LineOfCreditLoanCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+### LineOfCreditLoanCategorySerial: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.LineOfCreditLoanCategorySerial")]
 ```
 
-### List
-
-```typescript
-type: CreditCardLoanCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+### CreditCardLoanCategorySerial: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.CreditCardLoanCategorySerial")]
 ```
 
-### List
-
-```typescript
-type: AutoLoanCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+### AutoLoanCategorySerial: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.AutoLoanCategorySerial")]
 ```
 
-### List
-
-```typescript
-type: MortgageLoanCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+### MortgageLoanCategorySerial: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.MortgageLoanCategorySerial")]
 ```
 
-### List
-
-```typescript
-type: LoanCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+### LoanCategorySerial: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.LoanCategorySerial")]
 ```
 
-### List
+### BusinessSavingsShareCategorySerial: `List<string>`
 
-```typescript
-type: BusinessSavingsShareCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.BusinessSavingsShareCategorySerial")]
 ```
 
-### List
+### DepositShareCategorySerial: `List<string>`
 
-```typescript
-type: DepositShareCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.DepositShareCategorySerial")]
 ```
 
-### List
+### ExternalMortgageLoanCategorySerial: `List<string>`
 
-```typescript
-type: ExternalMortgageLoanCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.ExternalMortgageLoanCategorySerial")]
 ```
 
-### List
+### DebitCardCategorySerial: `List<string>`
 
-```typescript
-type: DebitCardCategorySerial
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.AccountTypes.DebitCardCategorySerial")]
 ```
 
-### List
+### BusinessSavingsShareCategorySerialForCategoryMapping: `List<string>`
 
-```typescript
-type: BusinessSavingsShareCategorySerialForCategoryMapping
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/AccountTypes.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

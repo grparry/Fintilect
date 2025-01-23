@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class SecureFormsDesignerSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class SecureFormsDesignerSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureFormsDesigner/SecureFormsDesignerSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureFormsDesigner.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureFormsDesigner/SecureFormsDesignerSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("SecureFormsDesigner.MinVersion")]
 ```
 
-### SecureFormsDesignerUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SecureFormsDesigner/SecureFormsDesignerSettings.cs
-visibility: public
-modifier: readonly
-```
+### SecureFormsDesignerUrl: `string`
 
 **Attributes:**
 ```csharp

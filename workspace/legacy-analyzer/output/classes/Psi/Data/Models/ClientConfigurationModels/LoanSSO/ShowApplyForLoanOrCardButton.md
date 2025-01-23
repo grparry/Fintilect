@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class ShowApplyForLoanOrCardButton
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ShowApplyForLoanOrCardButton
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShowApplyForLoanOrCardButtonOnSummary
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanSSO/ShowApplyForLoanOrCardButton.cs
-visibility: public
-modifier: readonly
-```
+### ShowApplyForLoanOrCardButtonOnSummary: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("loanSso.ShowApplyForLoanOrCardButtonOnSummary")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanSSO/ShowApplyForLoanOrCardButton.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp

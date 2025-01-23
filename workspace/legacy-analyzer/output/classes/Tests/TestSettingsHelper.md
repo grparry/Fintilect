@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class TestSettingsHelper
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class TestSettingsHelper
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### TestSettingsModel
-
-```typescript
-type: TestSettingsModel
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Tests/SettingsBaseHelperTests.cs
-visibility: public
-modifier: readonly
-```
+### CotsSettings: `TestSettingsModel`
 
 **Attributes:**
 ```csharp

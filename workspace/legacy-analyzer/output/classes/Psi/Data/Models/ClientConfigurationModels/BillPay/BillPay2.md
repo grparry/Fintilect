@@ -7,107 +7,68 @@
 ## Class Summary
 
 public class BillPay2
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class BillPay2
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPay2.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Billpay.BillPay2.Enabled")]
 ```
 
-### MinimumVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPay2.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillPay2.MinimumVersion")]
 ```
 
-### MaximumPaymentAmountInDollars
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPay2.cs
-visibility: public
-modifier: readonly
-```
+### MaximumPaymentAmountInDollars: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillPay2.MaximumPaymentAmountInDollars")]
 ```
 
-### BillPayeeNameRegex
+### BillPayeeNameRegex: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPay2.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillPay2.BillPayeeNameRegex")]
 ```
 
-### CustomHelpEnabled
+### CustomHelpEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPay2.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillPay2.CustomHelpEnabled")]
 ```
 
-### InactivePayeesEnabled
+### InactivePayeesEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPay2.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.BillPay2.InactivePayeesEnabled")]
 ```
 
-### ShouldShowPayeePaymentType
+### ShouldShowPayeePaymentType: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPay2.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

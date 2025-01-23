@@ -7,307 +7,181 @@
 ## Class Summary
 
 public class Symitar
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Symitar
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### RemoteDepositCheckHoldSettings
+### RemoteDepositCheckHold: `RemoteDepositCheckHoldSettings`
 
-```typescript
-type: RemoteDepositCheckHoldSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
-
-### IsTransferWithoutVirtualCardsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+### IsTransferWithoutVirtualCardsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.Transfers.IsTransferWithoutVirtualCardsEnabled")]
 ```
 
-### SuccessfulLoginOLBTrackingRecordType
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+### SuccessfulLoginOLBTrackingRecordType: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.UserField.SuccessfulLoginOLBTrackingRecordType")]
 ```
 
-### TrackingRecordFieldName
-
-```typescript
-type: [TrackingRecordFieldName](../../../TrackingRecordFieldName.md)
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+### SuccessfulLoginOLBTrackingRecordField: `TrackingRecordFieldName`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.UserField.SuccessfulLoginOLBTrackingRecordField")]
 ```
 
-### SuccessfulLoginMobileTrackingRecordType
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+### SuccessfulLoginMobileTrackingRecordType: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.UserField.SuccessfulLoginMobileTrackingRecordType")]
 ```
 
-### TrackingRecordFieldName
-
-```typescript
-type: [TrackingRecordFieldName](../../../TrackingRecordFieldName.md)
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+### SuccessfulLoginMobileTrackingRecordField: `TrackingRecordFieldName`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.UserField.SuccessfulLoginMobileTrackingRecordField")]
 ```
 
-### TrackingRecordFieldName
-
-```typescript
-type: [TrackingRecordFieldName](../../../TrackingRecordFieldName.md)
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+### ExternalLoanTrackingRecordInterestField: `TrackingRecordFieldName`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.ExternalLoans.ExternalLoanTrackingRecordInterestField")]
 ```
 
-### GetInterestRateFromExternalLoanTrackingRecordIsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+### GetInterestRateFromExternalLoanTrackingRecordIsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.ExternalLoans.GetInterestRateFromExternalLoanTrackingRecordIsEnabled")]
 ```
 
-### List
-
-```typescript
-type: DebitCardTypeCodes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+### DebitCardTypeCodes: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.DebitCardTypeCodes")]
 ```
 
-### ShouldReverseAddressLine1And2
+### ShouldReverseAddressLine1And2: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.ShouldReverseAddressLine1And2")]
 ```
 
-### SymitarExternalLoanRecordMortgageTypes
+### SymitarExternalLoanRecordMortgageTypes: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.SymitarExternalLoanRecordMortgageTypes")]
 ```
 
-### GetAlternateMicr
+### GetAlternateMicr: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.AccountInquiry.GetAlternateMicr")]
 ```
 
-### AccountInquiryIncludesRegD
+### AccountInquiryIncludesRegD: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
 
-### AccountInquiryPowerOnVersion
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+### AccountInquiryPowerOnVersion: `string`
+
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.AccountInquiry.ScriptVersion")]
 ```
 
-### AccountInquiryScriptName
+### AccountInquiryScriptName: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.AccountInquiry.ScriptName")]
 ```
 
-### WarningCodesBlockInquiryShare
+### WarningCodesBlockInquiryShare: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.AccountInquiry.WarningCodes.BlockInquiry.Share")]
 ```
 
-### WarningCodesBlockInquiryLoan
+### WarningCodesBlockInquiryLoan: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.AccountInquiry.WarningCodes.BlockInquiry.Loan")]
 ```
 
-### SkipPayQualifyingTrackingRecordType
+### SkipPayQualifyingTrackingRecordType: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.UserField.SkipPayQualifyingTrackingRecordType")]
 ```
 
-### SymitarAlternateAddressType
+### SymitarAlternateAddressType: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.AlternateAddressType")]
 ```
 
-### ShowPostDate
+### ShowPostDate: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.AccountHistory.CheckHoldsShowPostDate")]
 ```
 
-### ShouldLoadMortgageFromTrackingRecord
+### ShouldLoadMortgageFromTrackingRecord: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Symitar.ShouldLoadMortgageFromTrackingRecord")]
 ```
 
-### ShouldLoadCardsFromTrackingRecords
+### ShouldLoadCardsFromTrackingRecords: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/Symitar.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

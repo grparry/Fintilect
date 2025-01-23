@@ -7,62 +7,34 @@
 ## Class Summary
 
 public class Help
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Help
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MessageTypeEnum
-
-```typescript
-type: [MessageTypeEnum](../../../MessageTypeEnum.md)
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/Help.cs
-visibility: public
-modifier: readonly
-```
+### MessageType: `MessageTypeEnum`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Help.MessageType")]
 ```
 
-### EmailAddress
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/Help.cs
-visibility: public
-modifier: readonly
-```
+### EmailAddress: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Help.EmailAddress")]
 ```
 
-### SecureMessageCategoryName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/Help.cs
-visibility: public
-modifier: readonly
-```
+### SecureMessageCategoryName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("BillPay.Help.SecureMessageCategoryName")]
-```
-
-## Enums
-
-### MessageTypeEnum
-
-```typescript
-    Email = 0
-    SecureMessage = 1
 ```

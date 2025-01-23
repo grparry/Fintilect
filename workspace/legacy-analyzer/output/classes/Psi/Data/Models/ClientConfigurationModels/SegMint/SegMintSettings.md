@@ -7,149 +7,93 @@
 ## Class Summary
 
 public class SegMintSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class SegMintSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Secret
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SegMint/SegMintSettings.cs
-visibility: public
-modifier: readonly
-```
+### Secret: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.SegMint.Secret")]
 ```
 
-### ClientId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SegMint/SegMintSettings.cs
-visibility: public
-modifier: readonly
-```
+### ClientId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.SegMint.ClientId")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SegMint/SegMintSettings.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.SegMint.Url")]
 ```
 
-### ZoneId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SegMint/SegMintSettings.cs
-visibility: public
-modifier: readonly
-```
+### ZoneId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.SegMint.ZoneId")]
 ```
 
-### Dictionary
+### ZoneIdMappings: `Dictionary<string, string>`
 
-```typescript
-type: ZoneIdMappings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SegMint/SegMintSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.SegMint.ZoneIdMappings")]
 ```
 
-### Dictionary
+### SlotIdMappings: `Dictionary<string, string>`
 
-```typescript
-type: SlotIdMappings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SegMint/SegMintSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.SegMint.SlotIdMappings")]
 ```
 
-### ShouldUseMarketingId
+### ShouldUseMarketingId: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SegMint/SegMintSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.Segmint.ShouldUseMarketingId")]
 ```
 
-### PartnerId
+### PartnerId: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SegMint/SegMintSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.SegMint.PartnerId")]
 ```
 
-### MaxOffersToReturn
+### MaxOffersToReturn: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SegMint/SegMintSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Marketing.SegMint.MaxOffersToReturn")]
 ```
 
-### DataConfigId
+### DataConfigId: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/SegMint/SegMintSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

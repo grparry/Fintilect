@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class PasswordEncryption
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PasswordEncryption
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/PasswordEncryption.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.PasswordEncryption.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/PasswordEncryption.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.PasswordEncryption.MinimumIosVersion")]
 ```
 
-### MinimumServerVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/PasswordEncryption.cs
-visibility: public
-modifier: readonly
-```
+### MinimumServerVersion: `double`
 
 **Attributes:**
 ```csharp

@@ -22,7 +22,7 @@ import {
     UserStatus
 } from '../../../types/client.types';
 import { AuditLog, AuditSearchRequest, SecuritySettings, LoginPolicy } from '../../../types/security.types';
-import { mockClients, mockUsers, defaultSettings, mockPermissions } from './data/client/mockClientData';
+import { mockClients, mockUsers, defaultSettings, mockPermissions, mockGroups, mockAuditLogs } from './data/client/mockClientData';
 
 /**
  * Mock implementation of ClientService
@@ -49,8 +49,8 @@ export class MockClientService extends BaseMockService implements IClientService
             this.apiKeys.set(client.id, []);
             this.contacts.set(client.id, []);
             this.services.set(client.id, []);
-            this.userGroups.set(client.id, []);
-            this.auditLogs.set(client.id, []);
+            this.userGroups.set(client.id, mockGroups);
+            this.auditLogs.set(client.id, [...mockAuditLogs]); // Initialize with mock audit logs
             this.addresses.set(client.id, {
                 street1: '123 Main St',
                 street2: 'Suite 100',
@@ -59,7 +59,10 @@ export class MockClientService extends BaseMockService implements IClientService
                 zipCode: '80202',
                 country: 'USA'
             });
-            this.users.set(client.id, []);
+            this.users.set(client.id, mockUsers.filter(u => u.clientId === client.id));
+            
+            // Debug log
+            console.log(`Initialized audit logs for client ${client.id}:`, this.auditLogs.get(client.id));
         });
     }
 
@@ -426,15 +429,82 @@ export class MockClientService extends BaseMockService implements IClientService
         return mockPermissions;
     }
 
-    async getClientAuditLogs(clientId: string, request: AuditSearchRequest): Promise<AuditLog[]> {
+    async getClientAuditLogs(clientId: string, request: AuditSearchRequest): Promise<{ logs: AuditLog[], total: number }> {
+        console.log('MockClientService.getClientAuditLogs - clientId:', clientId);
+        console.log('MockClientService.getClientAuditLogs - request:', request);
+        
         this.validateRequired({ clientId }, ['clientId']);
         
-        const logs = this.auditLogs.get(clientId) || [];
-        // Convert security audit logs to client audit logs by adding userEmail
-        return logs.map(log => ({
-            ...log,
-            userEmail: `user-${log.userId}@example.com` // Add required userEmail field
-        }));
+        let logs = this.auditLogs.get(clientId) || [];
+        console.log('MockClientService.getClientAuditLogs - initial logs:', logs);
+        
+        // Apply filters
+        if (request) {
+            if (request.startDate && typeof request.startDate === 'string') {
+                const startDate = new Date(request.startDate);
+                startDate.setHours(0, 0, 0, 0); // Set to start of day
+                logs = logs.filter(log => {
+                    const logDate = new Date(log.timestamp);
+                    return logDate >= startDate;
+                });
+                console.log('After startDate filter:', logs);
+            }
+            if (request.endDate && typeof request.endDate === 'string') {
+                const endDate = new Date(request.endDate);
+                endDate.setHours(23, 59, 59, 999); // Set to end of day
+                logs = logs.filter(log => {
+                    const logDate = new Date(log.timestamp);
+                    return logDate <= endDate;
+                });
+                console.log('After endDate filter:', logs);
+            }
+            if (request.eventTypes?.length) {
+                logs = logs.filter(log => request.eventTypes!.includes(log.eventType));
+            }
+            if (request.userIds?.length) {
+                logs = logs.filter(log => request.userIds!.includes(log.userId));
+            }
+            if (request.resourceTypes?.length) {
+                logs = logs.filter(log => request.resourceTypes!.includes(log.resourceType));
+            }
+            if (request.actions?.length) {
+                logs = logs.filter(log => request.actions!.includes(log.action));
+            }
+            if (request.riskLevels?.length) {
+                logs = logs.filter(log => request.riskLevels!.includes(log.riskLevel));
+            }
+            if (request.status) {
+                logs = logs.filter(log => log.status === request.status);
+            }
+        }
+
+        // Store total before pagination
+        const total = logs.length;
+
+        // Apply sorting
+        if (request.sortBy) {
+            logs = [...logs].sort((a: any, b: any) => {
+                const aValue = a[request.sortBy!];
+                const bValue = b[request.sortBy!];
+                const order = request.sortOrder === 'desc' ? -1 : 1;
+                
+                if (aValue < bValue) return -1 * order;
+                if (aValue > bValue) return 1 * order;
+                return 0;
+            });
+        }
+
+        // Apply pagination
+        if (request.page !== undefined && request.limit !== undefined) {
+            const start = (request.page - 1) * request.limit;
+            const end = start + request.limit;
+            logs = logs.slice(start, end);
+            console.log('After pagination:', logs);
+        }
+
+        console.log('MockClientService.getClientAuditLogs - returning logs:', logs);
+        console.log('MockClientService.getClientAuditLogs - total logs:', total);
+        return { logs, total };
     }
 
     async getClientAddress(clientId: string): Promise<Address> {

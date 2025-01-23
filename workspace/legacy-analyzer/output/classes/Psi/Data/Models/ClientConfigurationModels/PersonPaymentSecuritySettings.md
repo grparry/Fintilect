@@ -7,177 +7,95 @@
 ## Class Summary
 
 public class PersonPaymentSecuritySettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PersonPaymentSecuritySettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Security.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Security.MinVersion")]
 ```
 
-### DaysAfterSensitiveInfoChangeAccessRestriction
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### DaysAfterSensitiveInfoChangeAccessRestriction: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Security.DaysAfterSensitiveInfoChangeAccessRestriction")]
 ```
 
-### SpectrumMemoNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### SpectrumMemoNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Security.SpectrumMemoNumber")]
 ```
 
-### RestrictAccessFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### RestrictAccessFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Security.RestrictAccessFlagNumber")]
 ```
 
-### SymitarRestrictAccessFlagNumber
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### SymitarRestrictAccessFlagNumber: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Security.SymitarRestrictAccessFlagNumber")]
 ```
 
-### DnaRestrictAccessFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### DnaRestrictAccessFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Security.DnaRestrictAccessFlagNumber")]
 ```
 
-### CoreRestrictAccessFlagNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### CoreRestrictAccessFlagNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Security.CoreRestrictAccessFlagNumber")]
 ```
 
-### ShouldRestrictAccessAfterAddressChange
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### ShouldRestrictAccessAfterAddressChange: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Security.ShouldRestrictAccessAfterAddressChange")]
 ```
 
-### ShouldRestrictAccessAfterEmailChange
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### ShouldRestrictAccessAfterEmailChange: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Security.ShouldRestrictAccessAfterEmailChange")]
 ```
 
-### ShouldRestrictAccessAfterForgotPassword
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### ShouldRestrictAccessAfterForgotPassword: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("PersonPayment.Security.ShouldRestrictAccessAfterForgotPassword")]
 ```
 
-### ShouldRestrictAccessAfterMobileDeviceRegistration
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PersonPaymentSecuritySettings.cs
-visibility: public
-modifier: readonly
-```
+### ShouldRestrictAccessAfterMobileDeviceRegistration: `bool`
 
 **Attributes:**
 ```csharp

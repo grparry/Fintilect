@@ -7,107 +7,64 @@
 ## Class Summary
 
 public class HarlandLoanEngine
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class HarlandLoanEngine
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### HarlandLoanEngineSsoEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanSSO/HarlandLoanEngine.cs
-visibility: public
-modifier: readonly
-```
+### HarlandLoanEngineSsoEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.HarlandLoanEngineSsoEnabled")]
 ```
 
-### HarlandLoanEngineSsoRequestUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanSSO/HarlandLoanEngine.cs
-visibility: public
-modifier: readonly
-```
+### HarlandLoanEngineSsoRequestUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.HarlandLoanEngineSsoRequestUrl")]
 ```
 
-### HarlandLoanEngineWidgetIdentifier
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanSSO/HarlandLoanEngine.cs
-visibility: public
-modifier: readonly
-```
+### HarlandLoanEngineWidgetIdentifier: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.HarlandLoanEngineWidgetIdentifier")]
 ```
 
-### HarlandLoanEngineResponsiveWidgetIdentifier
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanSSO/HarlandLoanEngine.cs
-visibility: public
-modifier: readonly
-```
+### HarlandLoanEngineResponsiveWidgetIdentifier: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.HarlandLoanEngineResponsiveWidgetIdentifier")]
 ```
 
-### HarlandLoanEngineFinancialInstitutionIdentifier
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanSSO/HarlandLoanEngine.cs
-visibility: public
-modifier: readonly
-```
+### HarlandLoanEngineFinancialInstitutionIdentifier: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.HarlandLoanEngineFinancialInstitutionIdentifier")]
 ```
 
-### HarlandLoanEngineShouldShowMenuItems
+### HarlandLoanEngineShouldShowMenuItems: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanSSO/HarlandLoanEngine.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Loans.HarlandLoanEngineShouldShowMenuItems")]
 ```
 
-### HarlandLoanEngineShouldShowLoanButtonOnSummaryEvenWithPreviousLoans
+### HarlandLoanEngineShouldShowLoanButtonOnSummaryEvenWithPreviousLoans: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanSSO/HarlandLoanEngine.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class MessagePumps
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MessagePumps
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### DigitalInsightsConfiguration
-
-```typescript
-type: DigitalInsightsConfiguration
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/MessagePumps.cs
-visibility: public
-modifier: readonly
-```
+### DigitalInsightsConfiguration: `DigitalInsightsConfiguration`
 
 **Attributes:**
 ```csharp

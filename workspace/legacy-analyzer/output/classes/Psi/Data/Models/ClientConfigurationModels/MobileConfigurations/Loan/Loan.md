@@ -7,38 +7,19 @@
 ## Class Summary
 
 public class Loan
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Loan
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### LoanApplication
+### Application: `LoanApplication`
 
-```typescript
-type: LoanApplication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Loan/Loan.cs
-visibility: public
-modifier: readonly
-```
+### Calculator: `LoanCalculator`
 
-### LoanCalculator
-
-```typescript
-type: LoanCalculator
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Loan/Loan.cs
-visibility: public
-modifier: readonly
-```
-
-### LoanPayment
-
-```typescript
-type: LoanPayment
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Loan/Loan.cs
-visibility: public
-modifier: readonly
-```
+### Payment: `LoanPayment`

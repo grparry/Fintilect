@@ -7,219 +7,116 @@
 ## Class Summary
 
 public class ApplicationSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ApplicationSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### TypeSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### TypeSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.TypeSerial")]
 ```
 
-### SaveClientsIp
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### SaveClientsIp: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.SaveClientsIp")]
 ```
 
-### ChannelSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### ChannelSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.ChannelSerial")]
 ```
 
-### WorkFlowSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkFlowSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.WorkFlowSerial")]
 ```
 
-### WorkQueueOpenSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkQueueOpenSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.WorkQueueOpenSerial")]
 ```
 
-### WorkQueueNewSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkQueueNewSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.WorkQueueNewSerial")]
 ```
 
-### WorkQueueApproveSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkQueueApproveSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.WorkQueueApproveSerial")]
 ```
 
-### WorkQueueRescreenSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkQueueRescreenSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.WorkQueueRescreenSerial")]
 ```
 
-### ManualApprovalsBypassWorkQueueLogic
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### ManualApprovalsBypassWorkQueueLogic: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.ManualApprovalsBypassWorkQueueLogic")]
 ```
 
-### WorkQueueReviewSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkQueueReviewSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.WorkQueueReviewSerial")]
 ```
 
-### WorkQueueDeclineSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### WorkQueueDeclineSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.WorkQueueDeclineSerial")]
 ```
 
-### CreditTypeSerialChexSystems
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditTypeSerialChexSystems: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.CreditTypeSerialChexSystems")]
 ```
 
-### CreditTypeSerialEquifax
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditTypeSerialEquifax: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.CreditTypeSerialEquifax")]
 ```
 
-### CreditTypeSerialTransUnion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditTypeSerialTransUnion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.ApplicationSettings.CreditTypeSerialTransUnion")]
 ```
 
-### CreditPullMaxDaysOld
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/ApplicationSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditPullMaxDaysOld: `string`
 
 **Attributes:**
 ```csharp

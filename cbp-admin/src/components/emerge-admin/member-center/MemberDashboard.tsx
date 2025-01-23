@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import {
   Box,
   Grid,
@@ -42,38 +43,37 @@ import {
   Info as InfoIcon,
   Lock as LockIcon,
   Security as SecurityIcon,
-  PhoneAndroid as DeviceIcon,
+  PhoneAndroid as PhoneAndroidIcon,
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
   Email as EmailIcon,
   Phone as PhoneIcon,
   Home as HomeIcon,
   Visibility as VisibilityIcon,
-  History as HistoryIcon,
-  Tablet as TabletIcon,
+  Close as CloseIcon,
+  Update as UpdateIcon,
   Computer as ComputerIcon,
+  History as HistoryIcon,
   Devices as DevicesIcon,
-  PhoneAndroid as PhoneAndroidIcon,
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 import {
   Member,
-  MemberDashboardStats,
-  MemberSearchResult,
   MemberSearchFilters,
-  Alert as MemberAlert,
-  SecurityQuestion,
-  DeviceType,
-  DeviceStatus,
-  Account,
+  MemberSearchResult,
   MemberActivity,
+  Alert as MemberAlert,
   MemberStatus,
+  SecuritySettings,
+  Device,
+  Account
 } from '../../../types/member-center.types';
-import type { ApiResponse } from '../../../utils/api';
-import { memberService } from '../../../services/factory/ServiceFactory';
+import type { ApiResponse } from '../../../types/api.types';
+import { IMemberService } from '../../../services/interfaces/IMemberService';
+import { useService } from '../../../hooks/useService';
 import MemberSearch from './components/search/MemberSearch';
 import SearchResults from './components/search/SearchResults';
 import MemberSecuritySettings from '../security/MemberSecuritySettings';
+import ManageDevicesDialog from './ManageDevicesDialog';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -89,6 +89,8 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
 
 const MemberDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const memberService = useService<IMemberService>('memberService');
+  
   const [searchResults, setSearchResults] = useState<MemberSearchResult | null>(null);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -99,42 +101,48 @@ const MemberDashboard: React.FC = () => {
   const [alertsExpanded, setAlertsExpanded] = useState<boolean>(false);
   const [devicesDialogOpen, setDevicesDialogOpen] = useState<boolean>(false);
   const [securitySettingsOpen, setSecuritySettingsOpen] = useState<boolean>(false);
+  const [manageDevicesOpen, setManageDevicesOpen] = useState(false);
   const [activities, setActivities] = useState<MemberActivity[]>([]);
   const [loadingActivities, setLoadingActivities] = useState<boolean>(false);
 
   const handleSearch = useCallback(async (filters: MemberSearchFilters) => {
     try {
-      setLoading(true);
+      setSearching(true);
       const response = await memberService.searchMembers(filters);
-      setSearchResults(response.items);
-      setSearching(false);
+      if (response.items.length > 0) {
+        setSearchResults(response.items[0]);
+      } else {
+        setSearchResults(null);
+      }
+      setError(null);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to search members');
+      setSearchResults(null);
     } finally {
-      setLoading(false);
+      setSearching(false);
     }
-  }, []);
+  }, [memberService]);
 
-  const handleMemberSelect = async (memberId: string) => {
+  const handleMemberSelect = async (member: Member) => {
     try {
       setLoading(true);
-      const member = await memberService.getMember(memberId);
-      setSelectedMember(member);
-      setActiveTab(0); // Reset to overview tab
+      const memberDetails = await memberService.getMember(member.id);
+      setSelectedMember(memberDetails);
+      setError(null);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to load member details');
+      setError(err instanceof Error ? err.message : 'Failed to fetch member details');
+      setSelectedMember(null);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpdateStatus = async (memberId: string, status: MemberStatus) => {
+  const handleUpdateStatus = async (member: Member, newStatus: MemberStatus) => {
     try {
       setLoading(true);
-      await memberService.updateMemberStatus(memberId, status);
-      // Refresh member details
-      const member = await memberService.getMember(memberId);
-      setSelectedMember(member);
+      await memberService.updateMemberStatus(member.id, newStatus);
+      await handleMemberSelect(member); // Refresh member details
+      setError(null);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to update member status');
     } finally {
@@ -148,14 +156,27 @@ const MemberDashboard: React.FC = () => {
     try {
       setLoading(true);
       await memberService.removeDevice(selectedMember.id, deviceId);
-      setSelectedMember({
-        ...selectedMember,
-        devices: selectedMember.devices?.filter(device => device.id !== deviceId) || []
-      });
+      const updatedMember = await memberService.getMember(selectedMember.id);
+      setSelectedMember(updatedMember);
+      setError(null);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to remove device');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadMemberActivities = async (memberId: string) => {
+    try {
+      setLoadingActivities(true);
+      const activities = await memberService.getMemberActivity(memberId);
+      setActivities(activities);
+      setError(null);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to load member activities');
+      setActivities([]);
+    } finally {
+      setLoadingActivities(false);
     }
   };
 
@@ -164,18 +185,6 @@ const MemberDashboard: React.FC = () => {
       style: 'currency',
       currency: 'USD',
     }).format(value);
-  };
-
-  const loadMemberActivities = async (memberId: string) => {
-    try {
-      setLoadingActivities(true);
-      const activities = await memberService.getMemberActivity(memberId);
-      setActivities(activities);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to load member activities');
-    } finally {
-      setLoadingActivities(false);
-    }
   };
 
   useEffect(() => {
@@ -375,39 +384,52 @@ const MemberDashboard: React.FC = () => {
                     Security Settings
                   </Typography>
                   <List>
+                    {selectedMember.securitySettings && (
+                      <>
+                        <ListItem>
+                          <ListItemIcon>
+                            <LockIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary="Two-Factor Authentication"
+                            secondary={`${selectedMember.securitySettings.twoFactorEnabled ? 'Enabled' : 'Disabled'} - ${selectedMember.securitySettings.preferredMethod || 'Not set'}`}
+                          />
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={() => setSecuritySettingsOpen(true)}
+                          >
+                            Manage
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <ListItemIcon>
+                            <DevicesIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary="Registered Devices"
+                            secondary={`${selectedMember.devices?.length || 0} devices`}
+                          />
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={() => setManageDevicesOpen(true)}
+                          >
+                            Manage
+                          </Button>
+                        </ListItem>
+                      </>
+                    )}
                     <ListItem>
                       <ListItemIcon>
-                        <LockIcon />
+                        <UpdateIcon />
                       </ListItemIcon>
                       <ListItemText
-                        primary="Two-Factor Authentication"
-                        secondary={
-                          selectedMember.securitySettings?.twoFactorEnabled ? 'Enabled' : 'Disabled'
-                        }
+                        primary="Last Security Update"
+                        secondary={selectedMember.securitySettings?.lastUpdated ? 
+                          new Date(selectedMember.securitySettings.lastUpdated).toLocaleString() :
+                          'Not available'}
                       />
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => setSecuritySettingsOpen(true)}
-                      >
-                        Manage
-                      </Button>
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon>
-                        <DeviceIcon />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary="Registered Devices"
-                        secondary={`${selectedMember.devices?.length || 0} devices`}
-                      />
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => setDevicesDialogOpen(true)}
-                      >
-                        Manage
-                      </Button>
                     </ListItem>
                   </List>
                 </CardContent>
@@ -430,7 +452,7 @@ const MemberDashboard: React.FC = () => {
                 </IconButton>
               </Typography>
               <List>
-                {selectedMember.alerts?.map((alert) => (
+                {selectedMember.alerts?.map((alert: MemberAlert) => (
                   <ListItem key={alert.id}>
                     <ListItemIcon>
                       {alert.severity === 'error' ? (
@@ -443,12 +465,24 @@ const MemberDashboard: React.FC = () => {
                     </ListItemIcon>
                     <ListItemText
                       primary={alert.message}
-                      secondary={`${alert.type} - ${new Date(
-                        alert.createdAt
-                      ).toLocaleDateString()}`}
+                      secondary={
+                        <Typography variant="body2" component="span">
+                          {`${alert.type} - ${new Date(alert.createdAt).toLocaleDateString()}`}
+                          {alert.expiresAt && ` (Expires: ${new Date(alert.expiresAt).toLocaleDateString()})`}
+                          {alert.acknowledged && ' - Acknowledged'}
+                        </Typography>
+                      }
                     />
                   </ListItem>
                 ))}
+                {(!selectedMember.alerts || selectedMember.alerts.length === 0) && (
+                  <ListItem>
+                    <ListItemText
+                      primary="No active alerts"
+                      secondary="This member has no alerts at this time"
+                    />
+                  </ListItem>
+                )}
               </List>
             </CardContent>
           </Card>
@@ -519,6 +553,23 @@ const MemberDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </TabPanel>
+        
+        {/* Add ManageDevicesDialog */}
+        {selectedMember && (
+          <ManageDevicesDialog
+            open={manageDevicesOpen}
+            onClose={() => setManageDevicesOpen(false)}
+            memberId={selectedMember.id}
+            devices={selectedMember.devices || []}
+            onDevicesUpdated={(updatedDevices) => {
+              if (!selectedMember) return;
+              setSelectedMember({
+                ...selectedMember,
+                devices: updatedDevices
+              });
+            }}
+          />
+        )}
       </Box>
     );
   };
@@ -528,24 +579,55 @@ const MemberDashboard: React.FC = () => {
 
     return (
       <List>
-        {selectedMember.devices.map((device) => (
+        {selectedMember.devices.map((device: Device) => (
           <ListItem key={device.id}>
             <ListItemIcon>
               {device.type === 'mobile' ? <PhoneAndroidIcon /> : <ComputerIcon />}
             </ListItemIcon>
             <ListItemText
               primary={device.name}
-              secondary={`Last used: ${new Date(device.lastUsed).toLocaleDateString()}`}
+              secondary={
+                <Typography variant="body2" component="div">
+                  {`Last used: ${new Date(device.lastUsed).toLocaleDateString()}`}
+                  {device.browser && <Box component="span">{` - ${device.browser}`}</Box>}
+                  {device.operatingSystem && <Box component="span">{` - ${device.operatingSystem}`}</Box>}
+                  {device.location && <Box component="span">{` - ${device.location}`}</Box>}
+                  <Box component="span" sx={{ display: 'block', mt: 0.5 }}>
+                    Status: <Chip 
+                      label={device.status} 
+                      size="small"
+                      color={device.status === 'Active' ? 'success' : 'error'}
+                    />
+                    {device.trusted && (
+                      <Chip 
+                        label="Trusted Device" 
+                        size="small" 
+                        color="primary" 
+                        sx={{ ml: 1 }}
+                      />
+                    )}
+                  </Box>
+                </Typography>
+              }
             />
             <IconButton
               onClick={() => handleRemoveDevice(device.id)}
               size="small"
               color="error"
+              disabled={device.status !== 'Active'}
             >
               <DeleteIcon />
             </IconButton>
           </ListItem>
         ))}
+        {selectedMember.devices.length === 0 && (
+          <ListItem>
+            <ListItemText
+              primary="No registered devices"
+              secondary="This member has no registered devices"
+            />
+          </ListItem>
+        )}
       </List>
     );
   };
@@ -559,44 +641,36 @@ const MemberDashboard: React.FC = () => {
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexGrow: 1,
-        flexDirection: 'column'
-      }}
-    >
+    <Box sx={{ display: 'flex', flexGrow: 1, flexDirection: 'column' }}>
       <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
         Member Dashboard
       </Typography>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
 
       {!selectedMember ? (
-        <>
-          <Card sx={{ mb: 3, width: '100%' }}>
-            <CardContent>
-              <MemberSearch onSearch={handleSearch} />
-              {searching ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
-                  <CircularProgress />
-                </Box>
-              ) : (
-                searchResults && (
-                  <SearchResults
-                    results={searchResults}
-                    onSelect={handleMemberSelect}
-                    onUpdateStatus={handleUpdateStatus}
-                  />
-                )
-              )}
-            </CardContent>
-          </Card>
-        </>
+        <Card sx={{ mb: 3, width: '100%' }}>
+          <CardContent>
+            <MemberSearch onSearch={handleSearch} />
+            {searching ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              searchResults && (
+                <SearchResults
+                  results={searchResults}
+                  onSelect={(member) => handleMemberSelect(member)}
+                  onUpdateStatus={(member, status) => handleUpdateStatus(member, status)}
+                />
+              )
+            )}
+          </CardContent>
+        </Card>
       ) : (
         renderMemberDetails()
       )}
@@ -608,23 +682,44 @@ const MemberDashboard: React.FC = () => {
         fullWidth
       >
         <DialogTitle>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <DevicesIcon />
-            <Typography variant="h6">Registered Devices</Typography>
-          </Box>
+          Manage Devices
+          <IconButton
+            onClick={() => setDevicesDialogOpen(false)}
+            sx={{ position: 'absolute', right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
         <DialogContent>
           {renderDevices()}
         </DialogContent>
       </Dialog>
 
-      {selectedMember && (
-        <MemberSecuritySettings
-          open={securitySettingsOpen}
-          onClose={() => setSecuritySettingsOpen(false)}
-          memberId={selectedMember.id}
-        />
-      )}
+      <Dialog
+        open={securitySettingsOpen}
+        onClose={() => setSecuritySettingsOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          Security Settings
+          <IconButton
+            onClick={() => setSecuritySettingsOpen(false)}
+            sx={{ position: 'absolute', right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          {selectedMember && (
+            <MemberSecuritySettings
+              open={securitySettingsOpen}
+              onClose={() => setSecuritySettingsOpen(false)}
+              memberId={selectedMember.id}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

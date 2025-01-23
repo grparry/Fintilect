@@ -7,121 +7,67 @@
 ## Class Summary
 
 public class DeepTargetSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DeepTargetSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/DeepTargetSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Promotions.DeepTarget.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/DeepTargetSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Promotions.DeepTarget.MinVersion")]
 ```
 
-### MinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/DeepTargetSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Promotions.DeepTarget.MinIosVersion")]
 ```
 
-### MinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/DeepTargetSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Promotions.DeepTarget.MinAndroidVersion")]
 ```
 
-### JsonConfig
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/DeepTargetSettings.cs
-visibility: public
-modifier: readonly
-```
+### JsonConfig: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Promotions.DeepTarget.JsonConfig")]
 ```
 
-### Javascript
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/DeepTargetSettings.cs
-visibility: public
-modifier: readonly
-```
+### Javascript: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Promotions.DeepTarget.Javascript")]
 ```
 
-### LoginUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/DeepTargetSettings.cs
-visibility: public
-modifier: readonly
-```
+### LoginUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Promotions.DeepTarget.LoginUrl")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Promotions/DeepTargetSettings.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp

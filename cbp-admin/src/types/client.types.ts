@@ -1,5 +1,5 @@
 import { Dayjs } from 'dayjs';
-import { ApiResponse } from '../utils/api';
+import type { ApiResponse } from './api.types';
 import { PaginationOptions } from './common.types';
 import { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';
 
@@ -318,7 +318,7 @@ export interface AuditSearchRequest {
 }
 
 // Re-export ApiResponse type for backwards compatibility
-export type { ApiResponse } from '../utils/api';
+export type { ApiResponse } from './api.types';
 
 // Re-export security types
 export type { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';

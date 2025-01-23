@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class BillPayAdminMemberMenu
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class BillPayAdminMemberMenu
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Show3rdPartyId
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/BillPayAdminMemberMenu.cs
-visibility: public
-modifier: readonly
-```
+### Show3rdPartyId: `bool`
 
 **Attributes:**
 ```csharp

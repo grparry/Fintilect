@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class MeridianLinkSsoSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MeridianLinkSsoSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldUseMemberNumber
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MeridianLinkSso/MeridianLinkSsoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShouldUseMemberNumber: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MeridianLinkSso.ShouldUseMemberNumber")]
 ```
 
-### ShouldSendMemberInfo
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MeridianLinkSso/MeridianLinkSsoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShouldSendMemberInfo: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MeridianLinkSso.SendMemberInfoEnabled")]
 ```
 
-### ShouldUseVersion3
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MeridianLinkSso/MeridianLinkSsoSettings.cs
-visibility: public
-modifier: readonly
-```
+### ShouldUseVersion3: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("MeridianLinkSso.Version3.Enabled")]
 ```
 
-### Dictionary
-
-```typescript
-type: MemberInfo
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MeridianLinkSso/MeridianLinkSsoSettings.cs
-visibility: public
-modifier: readonly
-```
+### MemberInfo: `Dictionary<MeridianLinkFields, bool>`
 
 **Attributes:**
 ```csharp

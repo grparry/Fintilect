@@ -7,149 +7,81 @@
 ## Class Summary
 
 public class Settings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Settings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AppShieldResponseType
-
-```typescript
-type: AppShieldResponseType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### AdbResponse: `AppShieldResponseType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Settings.AdbResponse")]
 ```
 
-### AppShieldResponseType
-
-```typescript
-type: AppShieldResponseType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### BluetoothControlResponse: `AppShieldResponseType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Settings.BluetoothControlResponse")]
 ```
 
-### AppShieldResponseType
-
-```typescript
-type: AppShieldResponseType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### BluetoothEnabledResponse: `AppShieldResponseType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Settings.BluetoothEnabledResponse")]
 ```
 
-### AppShieldResponseType
-
-```typescript
-type: AppShieldResponseType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### DeveloperResponse: `AppShieldResponseType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Settings.DeveloperResponse")]
 ```
 
-### AppShieldResponseType
-
-```typescript
-type: AppShieldResponseType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### GpsEnabledResponse: `AppShieldResponseType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Settings.GpsEnabledResponse")]
 ```
 
-### AppShieldResponseType
-
-```typescript
-type: AppShieldResponseType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### HardwareKeyboardResponse: `AppShieldResponseType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Settings.HardwareKeyboardResponse")]
 ```
 
-### AppShieldResponseType
-
-```typescript
-type: AppShieldResponseType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### NfcEnabledResponse: `AppShieldResponseType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Settings.NfcEnabledResponse")]
 ```
 
-### AppShieldResponseType
-
-```typescript
-type: AppShieldResponseType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### NonSystemKeyboardResponse: `AppShieldResponseType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Settings.NonSystemKeyboardResponse")]
 ```
 
-### AppShieldResponseType
-
-```typescript
-type: AppShieldResponseType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### RootedResponse: `AppShieldResponseType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.Settings.RootedResponse")]
 ```
 
-### AppShieldResponseType
-
-```typescript
-type: AppShieldResponseType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Settings/Settings.cs
-visibility: public
-modifier: readonly
-```
+### WiFiEnabledResponse: `AppShieldResponseType`
 
 **Attributes:**
 ```csharp

@@ -7,20 +7,15 @@
 ## Class Summary
 
 public class LoanCalculator
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class LoanCalculator
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AutoLoan
-
-```typescript
-type: AutoLoan
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Loan/Calculators/LoanCalculator.cs
-visibility: public
-modifier: readonly
-```
+### AutoLoan: `AutoLoan`

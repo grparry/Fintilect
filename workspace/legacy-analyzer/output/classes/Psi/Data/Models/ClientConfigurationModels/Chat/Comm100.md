@@ -7,51 +7,38 @@
 ## Class Summary
 
 public class Comm100
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Comm100
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/Comm100.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Chat.Comm100.Enabled")]
 ```
 
-### MinVersion
+### MinVersion: `double`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/Comm100.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Chat.Comm100.MinVersion")]
 ```
 
-### Javascript
+### Javascript: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Chat/Comm100.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -16,65 +16,16 @@ public class FeatureAction
 
 ## Properties
 
-### ActionId
+### ActionId: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
+### PublicId: `Guid`
 
-### Guid
+### Name: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
+### MinimumApplicationVersion: `string`
 
-### Name
+### ActionType: `ClientConfigurationRepository.FeatureActionTypeEnum`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
+### AuthenticationRules: `List<AuthenticationRule>`
 
-### MinimumApplicationVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
-
-### ClientConfigurationRepository
-
-```typescript
-type: ActionType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
-
-### List
-
-```typescript
-type: AuthenticationRules
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
-
-### IsLoginAction
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Authentication/Authentication.cs
-visibility: public
-modifier: readonly
-```
+### IsLoginAction: `bool`

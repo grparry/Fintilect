@@ -7,34 +7,22 @@
 ## Class Summary
 
 public class OnlineBankingApi
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class OnlineBankingApi
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### CredentialsExpirationTime
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Authentication/OnlineBankingApi.cs
-visibility: public
-modifier: readonly
-```
+### CredentialsExpirationTime: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("OnlineBankingApi.CredentialsExpirationTime")]
 ```
 
-### Security
-
-```typescript
-type: Security
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Authentication/OnlineBankingApi.cs
-visibility: public
-modifier: readonly
-```
+### Security: `Security`

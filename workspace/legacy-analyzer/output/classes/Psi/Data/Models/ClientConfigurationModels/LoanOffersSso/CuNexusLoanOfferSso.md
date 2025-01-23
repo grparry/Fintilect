@@ -7,135 +7,92 @@
 ## Class Summary
 
 public class CuNexusLoanOfferSso
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CuNexusLoanOfferSso
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
+### Enabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanOffersSso/CuNexusLoanOfferSso.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LoanOffers.CuNexusLoanOfferSso.Enabled")]
 ```
 
-### ShouldUseMemberNumber
+### ShouldUseMemberNumber: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanOffersSso/CuNexusLoanOfferSso.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LoanOffers.CuNexusLoanOfferSso.ShouldUseMemberNumber")]
 ```
 
-### ShouldShowWidgetOnDashboard
+### ShouldShowWidgetOnDashboard: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanOffersSso/CuNexusLoanOfferSso.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LoanOffers.CuNexusLoanOfferSso.ShouldShowWidgetOnDashboard")]
 ```
 
-### ShouldShowLoanButtonInOlb
+### ShouldShowLoanButtonInOlb: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanOffersSso/CuNexusLoanOfferSso.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LoanOffers.CuNexusOfferSso.ShouldShowLoanButtonInOlb")]
 ```
 
-### CuNexusLoanOfferSsoRequestUrl
+### CuNexusLoanOfferSsoRequestUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanOffersSso/CuNexusLoanOfferSso.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LoanOffers.CuNexusLoanOfferSso.RequestUrl")]
 ```
 
-### CuNexusLoanOfferResponsiveWidgetIdentifier
+### CuNexusLoanOfferResponsiveWidgetIdentifier: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanOffersSso/CuNexusLoanOfferSso.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LoanOffers.CuNexusLoanOffer.ResponsiveWidgetIdentifier")]
 ```
 
-### IframeHeightDashboardWidget
+### IframeHeightDashboardWidget: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanOffersSso/CuNexusLoanOfferSso.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LoanOffers.CuNexusLoanOffer.IframeHeightDashboardWidget")]
 ```
 
-### iFrameHeightOlbView
+### iFrameHeightOlbView: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanOffersSso/CuNexusLoanOfferSso.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("LoanOffers.CuNexusLoanOffer.iFrameHeightOlbView")]
 ```
 
-### ShouldUseCorelationPersonNumber
+### ShouldUseCorelationPersonNumber: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/LoanOffersSso/CuNexusLoanOfferSso.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

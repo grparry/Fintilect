@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class ChangePhone
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ChangePhone
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ZelleUpdatePhoneEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/PhoneNumber/ChangePhone.cs
-visibility: public
-modifier: readonly
-```
+### ZelleUpdatePhoneEnabled: `bool`
 
 **Attributes:**
 ```csharp

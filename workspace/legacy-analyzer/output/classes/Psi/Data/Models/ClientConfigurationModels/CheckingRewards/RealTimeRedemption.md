@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class RealTimeRedemption
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class RealTimeRedemption
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckingRewards/RealTimeRedemption.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckingRewards.Redemption.RealTime.MinVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckingRewards/RealTimeRedemption.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckingRewards.Redemption.RealTime.Enabled")]
 ```
 
-### GeneralLedgerAccountNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckingRewards/RealTimeRedemption.cs
-visibility: public
-modifier: readonly
-```
+### GeneralLedgerAccountNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckingRewards.Redemption.RealTime.GeneralLedgerAccountNumber")]
 ```
 
-### GeneralLedgerTransactionDescription
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckingRewards/RealTimeRedemption.cs
-visibility: public
-modifier: readonly
-```
+### GeneralLedgerTransactionDescription: `string`
 
 **Attributes:**
 ```csharp

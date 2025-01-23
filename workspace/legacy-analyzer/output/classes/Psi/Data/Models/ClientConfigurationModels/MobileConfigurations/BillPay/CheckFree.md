@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class CheckFree
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CheckFree
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.CheckFree.Enabled")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.CheckFree.Url")]
 ```
 
-### ShouldRedirectToSsoUrl
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### ShouldRedirectToSsoUrl: `bool`
 
 **Attributes:**
 ```csharp

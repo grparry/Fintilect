@@ -7,37 +7,27 @@
 ## Class Summary
 
 public class Ensenta
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Ensenta
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ServiceUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/Ensenta.cs
-visibility: public
-modifier: readonly
-```
+### ServiceUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("RemoteDeposit.Ensenta.ServiceUrl")]
 ```
 
-### DepositAccountIdentifierCacheExpireInMinutes
+### DepositAccountIdentifierCacheExpireInMinutes: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RemoteDeposit/Ensenta.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class ADAComplianceSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ADAComplianceSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ADACompliance/ADAComplianceSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("ADAComplianceSettings.MinVersion")]
 ```
 
-### EnableADACompliancePageForHomeBanking
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ADACompliance/ADAComplianceSettings.cs
-visibility: public
-modifier: readonly
-```
+### EnableADACompliancePageForHomeBanking: `bool`
 
 **Attributes:**
 ```csharp

@@ -7,233 +7,123 @@
 ## Class Summary
 
 public class OmahaSso
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class OmahaSso
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSSO.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSSO.MinimumVersion")]
 ```
 
-### Url
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### Url: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSSO.Url")]
 ```
 
-### CertificationStore
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### CertificationStore: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSSO.Certification.Store")]
 ```
 
-### CertificationEmergePrivateThumbPrint
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### CertificationEmergePrivateThumbPrint: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSSO.Certification.Emerge.PrivateThumbPrint")]
 ```
 
-### CertificationVendorPublicThumbPrint
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### CertificationVendorPublicThumbPrint: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSSO.Certification.Vendor.PublicThumbPrint")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSSO.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSSO.MinimumIosVersion")]
 ```
 
-### ResponseIssuer
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### ResponseIssuer: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSSO.ResponseIssuer")]
 ```
 
-### StartUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### StartUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSso.StartUrl")]
 ```
 
-### ReturnUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### ReturnUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSso.ReturnUrl")]
 ```
 
-### LogoutUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### LogoutUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSso.LogoutUrl")]
 ```
 
-### AppId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### AppId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSso.AppId")]
 ```
 
-### ClientId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### ClientId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSso.ClientId")]
 ```
 
-### AssertionLogEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### AssertionLogEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CreditCards.OmahaSso.AssertionLogEnabled")]
 ```
 
-### Issuer
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/OmahaSso.cs
-visibility: public
-modifier: readonly
-```
+### Issuer: `string`
 
 **Attributes:**
 ```csharp

@@ -7,79 +7,46 @@
 ## Class Summary
 
 public class WireTransfer
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class WireTransfer
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### RoutingNumberRegex
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/WireTransfer.cs
-visibility: public
-modifier: readonly
-```
+### RoutingNumberRegex: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Wire.RoutingNumberRegex")]
 ```
 
-### AddressRegex
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/WireTransfer.cs
-visibility: public
-modifier: readonly
-```
+### AddressRegex: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Wire.AddressRegex")]
 ```
 
-### RecipientNameRegex
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/WireTransfer.cs
-visibility: public
-modifier: readonly
-```
+### RecipientNameRegex: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Wire.RecipientNameRegex")]
 ```
 
-### HideAvailableBalance
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/WireTransfer.cs
-visibility: public
-modifier: readonly
-```
+### HideAvailableBalance: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.Wire.HideAvailableBalance")]
 ```
 
-### SignatureRegex
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/WireTransfer.cs
-visibility: public
-modifier: readonly
-```
+### SignatureRegex: `string`
 
 **Attributes:**
 ```csharp

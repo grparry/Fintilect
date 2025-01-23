@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class RemoveMemberFromOnlineBanking
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class RemoveMemberFromOnlineBanking
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldRemoveOnlineBankingFlag
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Membership/RemoveMemberFromOnlineBanking.cs
-visibility: public
-modifier: readonly
-```
+### ShouldRemoveOnlineBankingFlag: `bool`
 
 **Attributes:**
 ```csharp

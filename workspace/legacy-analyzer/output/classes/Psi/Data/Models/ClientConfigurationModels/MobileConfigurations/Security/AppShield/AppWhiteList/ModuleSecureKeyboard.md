@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class ModuleSecureKeyboard
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ModuleSecureKeyboard
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AndroidEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppWhiteList/ModuleSecureKeyboard.cs
-visibility: public
-modifier: readonly
-```
+### AndroidEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Security.AppShield.ModuleSecureKeyboard.AndroidEnabled")]
 ```
 
-### IosEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/AppShield/AppWhiteList/ModuleSecureKeyboard.cs
-visibility: public
-modifier: readonly
-```
+### IosEnabled: `bool`
 
 **Attributes:**
 ```csharp

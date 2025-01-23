@@ -7,121 +7,83 @@
 ## Class Summary
 
 public class HomeBankingLoginConfiguration
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class HomeBankingLoginConfiguration
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### UsersCanLogInWithAnyLast4TaxIdAssociatedWithMemberAccount
+### UsersCanLogInWithAnyLast4TaxIdAssociatedWithMemberAccount: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/HomeBankingLoginConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("HomeBankingLogin.UsersCanLogInWithAnyLast4TaxIdAssociatedWithMemberAccount")]
 ```
 
-### UsersCanEnrollWithAnyPersonalInformationAssociatedWithMemberAccount
+### UsersCanEnrollWithAnyPersonalInformationAssociatedWithMemberAccount: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/HomeBankingLoginConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("HomeBankingLogin.UsersCanEnrollWithAnyPersonalInformationAssociatedWithMemberAccount")]
 ```
 
-### MimeTypeRegex
+### MimeTypeRegex: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/HomeBankingLoginConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("HomeBankingLogin.MimeTypeRegex")]
 ```
 
-### ReorderCaptchaTabOrder
+### ReorderCaptchaTabOrder: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/HomeBankingLoginConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("HomeBankingLogin.ReorderCaptchaTabOrder")]
 ```
 
-### RemoveLeadingZerosFromUid
+### RemoveLeadingZerosFromUid: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/HomeBankingLoginConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("HomeBankingLogin.RemoveLeadingZerosFromUid")]
 ```
 
-### ShouldNewUserLinkNavigateToNewUserForm
+### ShouldNewUserLinkNavigateToNewUserForm: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/HomeBankingLoginConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("HomeBankingLogin.ShouldNewUserLinkNavigateToNewUserForm")]
 ```
 
-### IpWhitelistEnabled
+### IpWhitelistEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/HomeBankingLoginConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("HomeBankingLogin.Captcha.IpWhitelistEnabled")]
 ```
 
-### List
+### IpWhitelist: `List<string>`
 
-```typescript
-type: IpWhitelist
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/HomeBankingLogin/HomeBankingLoginConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

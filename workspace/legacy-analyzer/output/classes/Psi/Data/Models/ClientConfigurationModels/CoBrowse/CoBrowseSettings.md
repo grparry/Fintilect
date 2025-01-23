@@ -7,51 +7,38 @@
 ## Class Summary
 
 public class CoBrowseSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CoBrowseSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### CoBrowseEnabled
+### CoBrowseEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CoBrowse/CoBrowseSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("CoBrowse.CoBrowseEnabled")]
 ```
 
-### MinVersion
+### MinVersion: `double`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CoBrowse/CoBrowseSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("CoBrowse.MinVersion")]
 ```
 
-### JavascriptSourceUrl
+### JavascriptSourceUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CoBrowse/CoBrowseSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

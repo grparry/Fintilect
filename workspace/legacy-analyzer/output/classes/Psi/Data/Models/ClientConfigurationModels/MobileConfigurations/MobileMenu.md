@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class MobileMenu
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MobileMenu
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Layout
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/MobileMenu.cs
-visibility: public
-modifier: readonly
-```
+### Layout: `string`
 
 **Attributes:**
 ```csharp

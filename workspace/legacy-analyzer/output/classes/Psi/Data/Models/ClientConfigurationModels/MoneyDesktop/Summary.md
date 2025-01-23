@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class Summary
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Summary
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SidePanelsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MoneyDesktop/Summary.cs
-visibility: public
-modifier: readonly
-```
+### SidePanelsEnabled: `bool`
 
 **Attributes:**
 ```csharp

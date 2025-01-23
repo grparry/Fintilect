@@ -7,158 +7,83 @@
 ## Class Summary
 
 public class SavvyMoney
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class SavvyMoney
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/SavvyMoney.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.SavvyMoney.Enabled")]
 ```
 
-### Authentication
+### Authentication: `Authentication.Authentication`
 
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/SavvyMoney.cs
-visibility: public
-modifier: readonly
-```
-
-### MinimumVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/SavvyMoney.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.SavvyMoney.MinimumVersion")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/SavvyMoney.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.SavvyMoney.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/SavvyMoney.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.SavvyMoney.MinimumIosVersion")]
 ```
 
-### ServiceSettingsModel
-
-```typescript
-type: ServiceSettingsModel
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/SavvyMoney.cs
-visibility: public
-modifier: readonly
-```
+### MobileServiceSettings: `ServiceSettingsModel`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.SavvyMoney.ServiceSettings")]
 ```
 
-### CreditScoreEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/SavvyMoney.cs
-visibility: public
-modifier: readonly
-```
+### CreditScoreEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.SavvyMoney.CreditScore.Enabled")]
 ```
 
-### ScoreChangeEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/SavvyMoney.cs
-visibility: public
-modifier: readonly
-```
+### ScoreChangeEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.SavvyMoney.ScoreChange.Enabled")]
 ```
 
-### AlertBadgeEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/SavvyMoney.cs
-visibility: public
-modifier: readonly
-```
+### AlertBadgeEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.SavvyMoney.AlertBadge.Enabled")]
 ```
 
-### BannerEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/SavvyMoney.cs
-visibility: public
-modifier: readonly
-```
+### BannerEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.SavvyMoney.Banner.Enabled")]
 ```
 
-### BannerDismissalDays
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/SavvyMoney.cs
-visibility: public
-modifier: readonly
-```
+### BannerDismissalDays: `int`
 
 **Attributes:**
 ```csharp

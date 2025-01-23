@@ -7,74 +7,27 @@
 ## Class Summary
 
 public class Security
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Security
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### QuickAccess
+### QuickAccess: `QuickAccess.QuickAccess`
 
-```typescript
-type: QuickAccess
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Security.cs
-visibility: public
-modifier: readonly
-```
+### Biometrics: `Biometrics.Biometrics`
 
-### Biometrics
+### PermissionLevel: `PermissionLevel.PermissionLevel`
 
-```typescript
-type: Biometrics
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Security.cs
-visibility: public
-modifier: readonly
-```
+### Settings: `Settings.Settings`
 
-### PermissionLevel
+### AppShield: `AppShield.AppShield`
 
-```typescript
-type: PermissionLevel
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Security.cs
-visibility: public
-modifier: readonly
-```
+### LayeredSecurity: `LayeredSecurity.LayeredSecurity`
 
-### Settings
-
-```typescript
-type: Settings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Security.cs
-visibility: public
-modifier: readonly
-```
-
-### AppShield
-
-```typescript
-type: AppShield
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Security.cs
-visibility: public
-modifier: readonly
-```
-
-### LayeredSecurity
-
-```typescript
-type: LayeredSecurity
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Security.cs
-visibility: public
-modifier: readonly
-```
-
-### Mfa
-
-```typescript
-type: SmsSecurityCode
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Security/Security.cs
-visibility: public
-modifier: readonly
-```
+### SmsSecurityCode: `Mfa.SmsSecurityCode`

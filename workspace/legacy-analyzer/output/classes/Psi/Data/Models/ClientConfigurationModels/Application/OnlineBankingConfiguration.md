@@ -7,79 +7,48 @@
 ## Class Summary
 
 public class OnlineBankingConfiguration
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class OnlineBankingConfiguration
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### IgnoreCanRun
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/OnlineBankingConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### IgnoreCanRun: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Application.OnlineBanking.IgnoreCanRun")]
 ```
 
-### Version
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/OnlineBankingConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### Version: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Application.OnlineBanking.Version")]
 ```
 
-### List
-
-```typescript
-type: FeeAccountsShareCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/OnlineBankingConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### FeeAccountsShareCategories: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.FeeAccounts.ShareCategories")]
 ```
 
-### List
-
-```typescript
-type: FeeAccountsLoanCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/OnlineBankingConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### FeeAccountsLoanCategories: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.FeeAccounts.LoanCategories")]
 ```
 
-### IsPersonCentricModeEnabled
+### IsPersonCentricModeEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/OnlineBankingConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
@@ -87,56 +56,36 @@ modifier: readonly
 [SuppressMessage("ReSharper", "ExplicitCallerInfoArgument")]
 ```
 
-### KeepAliveInterval
+### KeepAliveInterval: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/OnlineBankingConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.KeepAliveInterval")]
 ```
 
-### TimeoutWarningMessage
+### TimeoutWarningMessage: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/OnlineBankingConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.TimeoutWarningMessage")]
 ```
 
-### ForceLoginByAccountAlias
+### ForceLoginByAccountAlias: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/OnlineBankingConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.ForceLoginByAccountAlias")]
 ```
 
-### AccountIDRegEx
+### AccountIDRegEx: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/OnlineBankingConfiguration.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

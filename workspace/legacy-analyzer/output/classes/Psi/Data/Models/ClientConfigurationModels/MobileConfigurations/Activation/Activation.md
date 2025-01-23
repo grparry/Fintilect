@@ -7,51 +7,32 @@
 ## Class Summary
 
 public class Activation
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Activation
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MaximumActivationAttempsAllowed
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Activation/Activation.cs
-visibility: public
-modifier: readonly
-```
+### MaximumActivationAttempsAllowed: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Activation.MaximumActivationAttempsAllowed")]
 ```
 
-### AndroidIosMinimumVersionsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Activation/Activation.cs
-visibility: public
-modifier: readonly
-```
+### AndroidIosMinimumVersionsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Activation.AndroidIosMinimumVersionsEnabled")]
 ```
 
-### OutOfWalletEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Activation/Activation.cs
-visibility: public
-modifier: readonly
-```
+### OutOfWalletEnabled: `bool`
 
 **Attributes:**
 ```csharp

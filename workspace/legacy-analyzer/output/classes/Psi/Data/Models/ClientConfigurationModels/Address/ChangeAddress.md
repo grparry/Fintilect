@@ -7,135 +7,88 @@
 ## Class Summary
 
 public class ChangeAddress
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ChangeAddress
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### SendEmailOnUpdate
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/ChangeAddress.cs
-visibility: public
-modifier: readonly
-```
+### SendEmailOnUpdate: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeAddress.SendEmailOnUpdate")]
 ```
 
-### PrimaryMemberCanUpdateJointOwnersAddress
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/ChangeAddress.cs
-visibility: public
-modifier: readonly
-```
+### PrimaryMemberCanUpdateJointOwnersAddress: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeAddress.PrimaryMemberCanUpdateJointOwnersAddress")]
 ```
 
-### ForeignAddressCountryCodeAndSubdivisionsEnabled
+### ForeignAddressCountryCodeAndSubdivisionsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/ChangeAddress.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeAddress.ForeignAddressCountryCodeAndSubdivisionsEnabled")]
 ```
 
-### MaximumAddressLineLength
+### MaximumAddressLineLength: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/ChangeAddress.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeAddress.MaximumAddressLineLength")]
 ```
 
-### UpdateBitAddressForPrimaryStatementAccountNumbers
+### UpdateBitAddressForPrimaryStatementAccountNumbers: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/ChangeAddress.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeEmail.UpdateBitAddressForPrimaryStatementAccountNumbers")]
 ```
 
-### CityRegex
+### CityRegex: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/ChangeAddress.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeAddress.CityRegex")]
 ```
 
-### ShouldUpdateAddressOnCoreWhenNoChanges
+### ShouldUpdateAddressOnCoreWhenNoChanges: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/ChangeAddress.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeAddress.ShouldUpdateCoreWhenNoChanges")]
 ```
 
-### ShouldRedirectAfterUpdate
+### ShouldRedirectAfterUpdate: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/ChangeAddress.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("ChangeAddress.ShouldRedirectAfterUpdate")]
 ```
 
-### VerifyAddressEnabled
+### VerifyAddressEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Address/ChangeAddress.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

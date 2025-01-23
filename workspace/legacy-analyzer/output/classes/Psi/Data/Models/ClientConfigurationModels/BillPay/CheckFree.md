@@ -7,424 +7,202 @@
 ## Class Summary
 
 public class CheckFree
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CheckFree
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.MinVersion")]
 ```
 
-### Dictionary
-
-```typescript
-type: CheckFreeAccountTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### CheckFreeAccountTypes: `Dictionary<string, string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.AccountTypeMap")]
 ```
 
-### BaseUrl
+### BaseUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### BuilderBaseUrl: `string`
 
-### BuilderBaseUrl
+### AuthSsoUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### SubscriberServiceUrl: `string`
 
-### AuthSsoUrl
+### SessionServiceUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### KeyManagementUrl: `string`
 
-### SubscriberServiceUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
-
-### SessionServiceUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
-
-### KeyManagementUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
-
-### CertificationBaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### CertificationBaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.CertificationBaseUrl")]
 ```
 
-### RegularBaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### RegularBaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.RegularBaseUrl")]
 ```
 
-### BuilderCertificationBaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### BuilderCertificationBaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.BuilderCertificationBaseUrl")]
 ```
 
-### BuilderRegularBaseUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### BuilderRegularBaseUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.BuilderRegularBaseUrl")]
 ```
 
-### ClientAppText
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### ClientAppText: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.ClientAppText")]
 ```
 
-### ClientAppVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### ClientAppVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.ClientAppVersion")]
 ```
 
-### ClientCertificateName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### ClientCertificateName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.ClientCertificateName")]
 ```
 
-### AuthSsoEndPoint
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### AuthSsoEndPoint: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.EndPoint.AuthSso")]
 ```
 
-### SubscriberServiceEndPoint
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### SubscriberServiceEndPoint: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.EndPoint.SubscriberService")]
 ```
 
-### SessionServiceEndPoint
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### SessionServiceEndPoint: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.EndPoint.SessionService")]
 ```
 
-### KeyManagementEndPoint
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### KeyManagementEndPoint: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.EndPoint.KeyManagement")]
 ```
 
-### IsCertification
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### IsCertification: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.IsCertification")]
 ```
 
-### IsSolicitationAllowed
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### IsSolicitationAllowed: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.IsSolicitationAllowed")]
 ```
 
-### Dictionary
-
-```typescript
-type: Products
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### Products: `Dictionary<string, string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.Products")]
 ```
 
-### SponsorId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### SponsorId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.SponsorId")]
 ```
 
-### SubscriberPwDefaultForAll
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### SubscriberPwDefaultForAll: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.SubscriberPwDefaultForAll")]
 ```
 
-### TimeZoneOffset
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### TimeZoneOffset: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.TimeZoneOffset")]
 ```
 
-### RoutingNumber
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### RoutingNumber: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.IntraBankRoutingNumber")]
 ```
 
-### GeneratedKeyLength
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### GeneratedKeyLength: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.GeneratedKeyLength")]
 ```
 
-### ServiceRunConfiguration
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### ServiceRunConfiguration: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.ServiceRunConfiguration")]
 ```
 
-### SubscriberInfoCallEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### SubscriberInfoCallEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.SubscriberInfoCallEnabled")]
 ```
 
-### SessionServiceVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### SessionServiceVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("CheckFreeBillPaySso.SessionServiceVersion")]
 ```
 
-### CheckFreeAdmin
-
-```typescript
-type: CheckFreeAdmin
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/BillPay/CheckFree.cs
-visibility: public
-modifier: readonly
-```
+### Admin: `CheckFreeAdmin`

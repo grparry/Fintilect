@@ -7,79 +7,56 @@
 ## Class Summary
 
 public class IntegratedEnrollmentSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class IntegratedEnrollmentSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AchEnabled
+### AchEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/IntegratedEnrollment/IntegratedEnrollmentSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("IntegratedEnrollment.Ach.Enabled")]
 ```
 
-### ShouldStoreUserIdAndPassword
+### ShouldStoreUserIdAndPassword: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/IntegratedEnrollment/IntegratedEnrollmentSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("IntegratedEnrollment.SSO.ShouldStoreUserIdAndPassword")]
 ```
 
-### ThirdPartyOaoEnabled
+### ThirdPartyOaoEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/IntegratedEnrollment/IntegratedEnrollmentSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("IntegratedEnrollment.ThirdPartyOao.Enabled")]
 ```
 
-### ThirdPartyOaoMinVersion
+### ThirdPartyOaoMinVersion: `double`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/IntegratedEnrollment/IntegratedEnrollmentSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("IntegratedEnrollment.ThirdPartyOao.MinVersion")]
 ```
 
-### Dictionary
+### SkippedEnrollmentSteps: `Dictionary<EnrollmentSteps, bool>`
 
-```typescript
-type: SkippedEnrollmentSteps
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/IntegratedEnrollment/IntegratedEnrollmentSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

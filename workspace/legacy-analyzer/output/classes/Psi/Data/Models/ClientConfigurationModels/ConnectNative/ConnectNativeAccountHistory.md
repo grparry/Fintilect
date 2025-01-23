@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class ConnectNativeAccountHistory
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ConnectNativeAccountHistory
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### List
-
-```typescript
-type: AccountDetailsByAccountCategory
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/ConnectNative/ConnectNativeAccountHistory.cs
-visibility: public
-modifier: readonly
-```
+### AccountDetailsByAccountCategory: `List<AccountDetailsByAccountCategorySetting>`
 
 **Attributes:**
 ```csharp

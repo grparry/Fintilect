@@ -16,38 +16,10 @@ public class SimnetConfiguration
 
 ## Properties
 
-### OrgAlias
+### OrgAlias: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckImages/SimnetConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### ValidationCode: `string`
 
-### ValidationCode
+### CheckImageSearchName: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckImages/SimnetConfiguration.cs
-visibility: public
-modifier: readonly
-```
-
-### CheckImageSearchName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckImages/SimnetConfiguration.cs
-visibility: public
-modifier: readonly
-```
-
-### ShouldSearchByAccountNumberInsteadOfMicr
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CheckImages/SimnetConfiguration.cs
-visibility: public
-modifier: readonly
-```
+### ShouldSearchByAccountNumberInsteadOfMicr: `bool`

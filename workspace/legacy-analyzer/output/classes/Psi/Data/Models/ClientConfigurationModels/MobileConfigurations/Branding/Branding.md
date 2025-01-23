@@ -7,244 +7,127 @@
 ## Class Summary
 
 public class Branding
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Branding
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### BackgroundColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### BackgroundColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.BackgroundColor")]
 ```
 
-### PrimaryColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### PrimaryColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.PrimaryColor")]
 ```
 
-### PrimaryDarkColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### PrimaryDarkColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.PrimaryDarkColor")]
 ```
 
-### SecondaryColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### SecondaryColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.SecondaryColor")]
 ```
 
-### MenuIconColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### MenuIconColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.MenuIconColor")]
 ```
 
-### InfoColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### InfoColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.InfoColor")]
 ```
 
-### SuccessColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### SuccessColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.SuccessColor")]
 ```
 
-### WarningColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### WarningColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.WarningColor")]
 ```
 
-### MutedColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### MutedColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.MutedColor")]
 ```
 
-### ListColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### ListColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.ListColor")]
 ```
 
-### ListDarkColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### ListDarkColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.ListDarkColor")]
 ```
 
-### NavigationBarColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### NavigationBarColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.NavigationBarColor")]
 ```
 
-### NavigationBarItemColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### NavigationBarItemColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.NavigationBarItemColor")]
 ```
 
-### SelectedListColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### SelectedListColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.SelectedListColor")]
 ```
 
-### StatusBarColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### StatusBarColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.StatusBarColor")]
 ```
 
-### LogoutButtonColor
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### LogoutButtonColor: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Branding.LogoutButtonColor")]
 ```
 
-### Font
-
-```typescript
-type: Font
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Branding/Branding.cs
-visibility: public
-modifier: readonly
-```
+### Font: `Font.Font`

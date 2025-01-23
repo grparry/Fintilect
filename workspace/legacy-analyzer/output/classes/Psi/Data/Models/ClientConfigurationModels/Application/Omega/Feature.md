@@ -7,454 +7,232 @@
 ## Class Summary
 
 public class Feature
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Feature
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### RemoveBillSubscribersEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### RemoveBillSubscribersEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.RemoveBillSubscribersEnabled")]
 ```
 
-### XAppConfigEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### XAppConfigEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.XAppConfigEnabled")]
 ```
 
-### StringResourcesEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### StringResourcesEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.StringResourcesEnabled")]
 ```
 
-### ApplicationConfigEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### ApplicationConfigEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.ApplicationConfigEnabled")]
 ```
 
-### AddNewUserEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### AddNewUserEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.AddNewUserEnabled")]
 ```
 
-### EditUserPermissionsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### EditUserPermissionsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.EditUserPermissionsEnabled")]
 ```
 
-### VersionManagementEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### VersionManagementEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.VersionManagementEnabled")]
 ```
 
-### QRCodeGeneratorEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### QRCodeGeneratorEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.QRCodeGeneratorEnabled")]
 ```
 
-### LayeredSecurityEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### LayeredSecurityEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.LayeredSecurityEnabled")]
 ```
 
-### FeaturesManagerEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### FeaturesManagerEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.FeaturesManagerEnabled")]
 ```
 
-### LicenseManagerEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### LicenseManagerEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.LicenseManagerEnabled")]
 ```
 
-### CreditUnionContactInfoEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### CreditUnionContactInfoEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.CreditUnionContactInfoEnabled")]
 ```
 
-### OnlineBankingApiEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### OnlineBankingApiEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.OnlineBankingApiEnabled")]
 ```
 
-### LayeredSecurityMaximumRequiredMethods
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### LayeredSecurityMaximumRequiredMethods: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.LayeredSecurity.MaximumRequiredMethods")]
 ```
 
-### LayeredSecurityExcludePasswordRule
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### LayeredSecurityExcludePasswordRule: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.LayeredSecurity.ExcludePasswordRule")]
 ```
 
-### EnableThirdPartySystemMessages
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### EnableThirdPartySystemMessages: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.ThirdPartySystemMessages.Enabled")]
 ```
 
-### QuickAccessManagementEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### QuickAccessManagementEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.QuickAccessManagementEnabled")]
 ```
 
-### NewMobileFeaturesEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### NewMobileFeaturesEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.NewMobileFeaturesEnabled")]
 ```
 
-### DeleteOnlineBankingUsersEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### DeleteOnlineBankingUsersEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.DeleteOnlineBankingUsersEnabled")]
 ```
 
-### DeleteOnlineBankingUsersMaskAccountNumbers
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### DeleteOnlineBankingUsersMaskAccountNumbers: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.DeleteOnlineBankingUsersMaskAccountNumbers")]
 ```
 
-### DeleteOnlineBankingUsersInitialDaysAgoToList
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### DeleteOnlineBankingUsersInitialDaysAgoToList: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.DeleteOnlineBankingUsersInitialDaysAgoToList")]
 ```
 
-### DeleteOnlineBankingUsersAllowCsvExportPriorToDeletingUsers
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### DeleteOnlineBankingUsersAllowCsvExportPriorToDeletingUsers: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.DeleteOnlineBankingUsersAllowCsvExportPriorToDeletingUsers")]
 ```
 
-### ConfigurationComparisonEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### ConfigurationComparisonEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.ConfigurationComparisonEnabled")]
 ```
 
-### AuditLogExportToolEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### AuditLogExportToolEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.AuditLogExportTool.Enabled")]
 ```
 
-### DeleteBillPayUsersEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### DeleteBillPayUsersEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.DeleteBillPayUsers.Enabled")]
 ```
 
-### RemoteLoggingVendorType
-
-```typescript
-type: RemoteLoggingVendorType
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### AuditLogExportRemoteLoggingVendor: `RemoteLoggingVendorType`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.AuditLogExportTool.RemoteLoggingVendor")]
 ```
 
-### PermissionGroupsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### PermissionGroupsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.PermissionGroups.Enabled")]
 ```
 
-### AtmBranchLocationsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### AtmBranchLocationsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Omega.Features.AtmBranchLocations.Enabled")]
 ```
 
-### VerafinAuditLogExportToolOutputDirectory
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### VerafinAuditLogExportToolOutputDirectory: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.VerafinLoggingDir")]
 ```
 
-### VerafinCustomerId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### VerafinCustomerId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.VerafinCustomerId")]
 ```
 
-### HostType
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### HostType: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.HostType")]
 ```
 
-### AccountNumberAssociation
-
-```typescript
-type: AccountNumberAssociation
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Application/Omega/Feature.cs
-visibility: public
-modifier: readonly
-```
+### AccountNumberAssociation: `AccountNumberAssociation`

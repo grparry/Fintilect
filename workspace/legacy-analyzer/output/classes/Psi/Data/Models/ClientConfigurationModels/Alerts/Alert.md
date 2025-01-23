@@ -7,386 +7,224 @@
 ## Class Summary
 
 public class Alert
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Alert
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### List
-
-```typescript
-type: InactiveAccountsThresholdDayValues
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+### InactiveAccountsThresholdDayValues: `List<int>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.InactiveAccountsThresholdDayValues")]
 ```
 
-### ScheduledAlertsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+### ScheduledAlertsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.ScheduledAlertsEnabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.ScheduledAlerts.MinVersion")]
 ```
 
-### CustomMessageAvailable
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+### CustomMessageAvailable: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.CustomMessageAvailable")]
 ```
 
-### MfaWhitelist
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+### MfaWhitelist: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.MfaWhitelist")]
 ```
 
-### List
-
-```typescript
-type: AvailableAccountCategoriesForAlerts
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+### AvailableAccountCategoriesForAlerts: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.AvailableAccountCategoriesForAlerts")]
 ```
 
-### MemberCanReplyToUrgentAlertAfterLogin
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+### MemberCanReplyToUrgentAlertAfterLogin: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.MemberCanReplyToUrgentAlertAfterLogin")]
 ```
 
-### SetCurrentEmailAddressAsDefaultAlways
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+### SetCurrentEmailAddressAsDefaultAlways: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.SetCurrentEmailAddressAsDefaultAlways")]
 ```
 
-### Alerts2Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+### Alerts2Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.Alerts2Enabled")]
 ```
 
-### AdHocAlerts
+### AdHocAlerts: `AdHocAlerts`
 
-```typescript
-type: AdHocAlerts
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+### ExternalEvents: `ExternalEvents`
 
-### ExternalEvents
+### MessagePumps: `MessagePumps`
 
-```typescript
-type: ExternalEvents
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+### ShouldShowAlertsInboxLinkInTopNavigation: `bool`
 
-### MessagePumps
 
-```typescript
-type: MessagePumps
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
-
-### ShouldShowAlertsInboxLinkInTopNavigation
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.ShowAlertsInboxLinkInTopNavigation")]
 ```
 
-### ShouldShowAllCurrentEmailAddressUserDevices
+### ShouldShowAllCurrentEmailAddressUserDevices: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.ShouldShowAllCurrentEmailAddressUserDevices")]
 ```
 
-### DaysUntilOldDefaultDevicesShouldNotGetAlerts
+### DaysUntilOldDefaultDevicesShouldNotGetAlerts: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.AlertsToOldHostAddressDays")]
 ```
 
-### SMSMessageMaxLength
+### SMSMessageMaxLength: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.SMSMessageMaxLength")]
 ```
 
-### EmailMessageMaxLength
+### EmailMessageMaxLength: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.EmailMessageMaxLength")]
 ```
 
-### OLBMessageMaxLength
+### OLBMessageMaxLength: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.OLBMessageMaxLength")]
 ```
 
-### PushNotificationMessageMaxLength
+### PushNotificationMessageMaxLength: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alert.PushNotificationMessageMaxLength")]
 ```
 
-### List
+### DefaultDeliveryChannels: `List<string>`
 
-```typescript
-type: DefaultDeliveryChannels
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alerts.DefaultDeliveryChannels")]
 ```
 
-### List
+### DatafeedAccountTypes: `List<DataFeedAccountType>`
 
-```typescript
-type: DatafeedAccountTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alerts.DataFeed.AccountTypes")]
 ```
 
-### DataFeedBulkInsertEnabled
+### DataFeedBulkInsertEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alerts.DataFeed.BulkInsertEnabled")]
 ```
 
-### DataFeedBatchSize
+### DataFeedBatchSize: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alerts.DataFeed.BatchSize")]
 ```
 
-### DataFeedStopStoringTransactionFeedsEnabled
+### DataFeedStopStoringTransactionFeedsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alerts.DataFeed.StopStoringTransactionFeedsEnabled")]
 ```
 
-### List
+### DataFeedMetadataIdsToSave: `List<int>`
 
-```typescript
-type: DataFeedMetadataIdsToSave
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alerts.DataFeed.MetadataIdsToSave")]
 ```
 
-### List
+### DataFeedMetadataIdsThatDoNotGenerateAlerts: `List<int>`
 
-```typescript
-type: DataFeedMetadataIdsThatDoNotGenerateAlerts
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alerts.DataFeed.MetadataIdsThatDoNotGenerateAlerts")]
 ```
 
-### DataFeedMaxDegreeOfParallelism
+### DataFeedMaxDegreeOfParallelism: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Alerts.DataFeed.MaxDegreeOfParallelism")]
 ```
 
-### AlertSmtpSettings
+### SmtpSettings: `AlertSmtpSettings`
 
-```typescript
-type: AlertSmtpSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/Alert.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

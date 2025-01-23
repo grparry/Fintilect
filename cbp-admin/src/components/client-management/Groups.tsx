@@ -97,20 +97,57 @@ export default function Groups({ clientId }: GroupsProps) {
     try {
       setLoading(true);
       setError(null);
+      console.log('Loading groups data for client:', clientId);
 
-      const [groupsResponse, usersResponse, permissionsResponse, rolesResponse] = await Promise.all([
-        clientService.getClientUserGroups(clientId),
-        userService.getUsers({ pagination: { page: 1, limit: 100 } }),
-        clientService.getClientPermissions(clientId),
-        clientService.getClientRoles(clientId)
-      ]);
+      // Load groups first
+      let groupsData: UserGroup[];
+      try {
+        groupsData = await clientService.getClientUserGroups(clientId);
+        console.log('Loaded groups:', groupsData);
+      } catch (err) {
+        console.error('Error loading groups:', err);
+        throw new Error('Failed to load groups');
+      }
 
-      setGroups(groupsResponse);
-      setUsers(usersResponse.items);
-      setPermissions(permissionsResponse);
-      setRoles(rolesResponse);
+      // Load users
+      let usersData: PaginatedResponse<User>;
+      try {
+        usersData = await userService.getUsers({ pagination: { page: 1, limit: 100 } });
+        console.log('Loaded users:', usersData);
+      } catch (err) {
+        console.error('Error loading users:', err);
+        throw new Error('Failed to load users');
+      }
+
+      // Load permissions
+      let permissionsData: Permission[];
+      try {
+        permissionsData = await clientService.getClientPermissions(clientId);
+        console.log('Loaded permissions:', permissionsData);
+      } catch (err) {
+        console.error('Error loading permissions:', err);
+        throw new Error('Failed to load permissions');
+      }
+
+      // Load roles
+      let rolesData: SecurityRole[];
+      try {
+        rolesData = await clientService.getClientRoles(clientId);
+        console.log('Loaded roles:', rolesData);
+      } catch (err) {
+        console.error('Error loading roles:', err);
+        throw new Error('Failed to load roles');
+      }
+
+      setGroups(groupsData);
+      setUsers(usersData.items);
+      setPermissions(permissionsData);
+      setRoles(rolesData);
+      
+      console.log('Successfully loaded all data');
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to load groups');
+      console.error('Error in loadData:', error);
+      setError(error instanceof Error ? error.message : 'Failed to load groups data');
     } finally {
       setLoading(false);
     }

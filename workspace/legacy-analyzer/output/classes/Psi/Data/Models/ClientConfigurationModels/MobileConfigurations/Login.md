@@ -7,149 +7,83 @@
 ## Class Summary
 
 public class Login
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Login
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### UseAuthenticationStatusReasonCodeMinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Login.cs
-visibility: public
-modifier: readonly
-```
+### UseAuthenticationStatusReasonCodeMinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Login.UseAuthenticationStatusReasonCodeMinimumAndroidVersion")]
 ```
 
-### UseAuthenticationStatusReasonCodeMinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Login.cs
-visibility: public
-modifier: readonly
-```
+### UseAuthenticationStatusReasonCodeMinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Login.UseAuthenticationStatusReasonCodeMinimumIosVersion")]
 ```
 
-### EncryptedAuthenticationStatusReasonMinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Login.cs
-visibility: public
-modifier: readonly
-```
+### EncryptedAuthenticationStatusReasonMinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Login.EncryptedAuthenticationStatusReasonMinimumAndroidVersion")]
 ```
 
-### EncryptedAuthenticationStatusReasonMinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Login.cs
-visibility: public
-modifier: readonly
-```
+### EncryptedAuthenticationStatusReasonMinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Login.EncryptedAuthenticationStatusReasonMinimumIosVersion")]
 ```
 
-### ShouldQuickAccessLogSuccessfulLogin
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Login.cs
-visibility: public
-modifier: readonly
-```
+### ShouldQuickAccessLogSuccessfulLogin: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Login.ShouldQuickAccessLogSuccessfulLogin")]
 ```
 
-### IsUsernameClearTextOnLogin
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Login.cs
-visibility: public
-modifier: readonly
-```
+### IsUsernameClearTextOnLogin: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Login.IsUsernameClearTextOnLogin")]
 ```
 
-### ShouldShowAccountNumber
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Login.cs
-visibility: public
-modifier: readonly
-```
+### ShouldShowAccountNumber: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Login.ShouldShowAccountNumber")]
 ```
 
-### ShouldShowSecurityTipsLink
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Login.cs
-visibility: public
-modifier: readonly
-```
+### ShouldShowSecurityTipsLink: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Login.ShouldShowSecurityTipsLink")]
 ```
 
-### SecurityTipsLinkUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Login.cs
-visibility: public
-modifier: readonly
-```
+### SecurityTipsLinkUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Login.SecurityTipsLinkUrl")]
 ```
 
-### ShouldUsePlainTextForShowHidePasswordToggle
+### ShouldUsePlainTextForShowHidePasswordToggle: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Login.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

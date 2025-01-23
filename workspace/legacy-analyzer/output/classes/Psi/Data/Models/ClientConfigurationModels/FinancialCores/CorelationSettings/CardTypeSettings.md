@@ -7,93 +7,53 @@
 ## Class Summary
 
 public class CardTypeSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CardTypeSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AtmSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/CardTypeSettings.cs
-visibility: public
-modifier: readonly
-```
+### AtmSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.CardTypeSettings.AtmSerial")]
 ```
 
-### AtmDescription
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/CardTypeSettings.cs
-visibility: public
-modifier: readonly
-```
+### AtmDescription: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.CardTypeSettings.AtmDescription")]
 ```
 
-### CreditSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/CardTypeSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.CardTypeSettings.CreditSerial")]
 ```
 
-### CreditDescription
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/CardTypeSettings.cs
-visibility: public
-modifier: readonly
-```
+### CreditDescription: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.CardTypeSettings.CreditDescription")]
 ```
 
-### DebitSerial
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/CardTypeSettings.cs
-visibility: public
-modifier: readonly
-```
+### DebitSerial: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinacialCore.Corelation.CardTypeSettings.DebitSerial")]
 ```
 
-### DebitDescription
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/CorelationSettings/CardTypeSettings.cs
-visibility: public
-modifier: readonly
-```
+### DebitDescription: `string`
 
 **Attributes:**
 ```csharp

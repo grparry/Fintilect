@@ -7,121 +7,67 @@
 ## Class Summary
 
 public class InfoImageEstatementsSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class InfoImageEstatementsSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/InfoImageEstatements/InfoImageEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.InfoImage.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/InfoImageEstatements/InfoImageEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.InfoImage.MinVersion")]
 ```
 
-### MinAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/InfoImageEstatements/InfoImageEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.InfoImage.MinAndroidVersion")]
 ```
 
-### MinIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/InfoImageEstatements/InfoImageEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### MinIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.InfoImage.MinIosVersion")]
 ```
 
-### SsoClientCodeId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/InfoImageEstatements/InfoImageEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### SsoClientCodeId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.InfoImage.Sso.ClientCodeId")]
 ```
 
-### SsoPassword
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/InfoImageEstatements/InfoImageEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### SsoPassword: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.InfoImage.Sso.Password")]
 ```
 
-### SsoUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/InfoImageEstatements/InfoImageEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### SsoUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Estatements.InfoImage.Sso.Url")]
 ```
 
-### SsoRedirectUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/InfoImageEstatements/InfoImageEstatementsSettings.cs
-visibility: public
-modifier: readonly
-```
+### SsoRedirectUrl: `string`
 
 **Attributes:**
 ```csharp

@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class ConnectNative
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class ConnectNative
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ScheduledAlertsEnabled
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Alerts/ConnectNative.cs
-visibility: public
-modifier: readonly
-```
+### ScheduledAlertsEnabled: `double`
 
 **Attributes:**
 ```csharp

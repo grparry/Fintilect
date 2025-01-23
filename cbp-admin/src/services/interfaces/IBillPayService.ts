@@ -118,14 +118,14 @@ export interface IBillPayService extends IBaseService {
      * @param timeframe Timeframe for stats
      * @returns Bill pay statistics
      */
-    getStats(timeframe: 'day' | 'week' | 'month'): Promise<BillPayStats>;
+    getStats(timeframe: 'day' | 'week' | 'month' | 'quarter' | 'year'): Promise<BillPayStats>;
 
     /**
      * Get transaction trends
      * @param timeframe Timeframe for trends
      * @returns Transaction trends
      */
-    getTransactionTrends(timeframe: 'day' | 'week' | 'month'): Promise<TransactionTrend[]>;
+    getTransactionTrends(timeframe: 'day' | 'week' | 'month' | 'quarter' | 'year'): Promise<TransactionTrend[]>;
 
     /**
      * Get holidays

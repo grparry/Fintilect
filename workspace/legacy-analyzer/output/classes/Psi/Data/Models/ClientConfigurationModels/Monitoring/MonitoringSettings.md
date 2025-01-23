@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class MonitoringSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MonitoringSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MiddlewareHealthThreshold
-
-```typescript
-type: MiddlewareHealthThreshold
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Monitoring/MonitoringSettings.cs
-visibility: public
-modifier: readonly
-```
+### MiddlewareHealthThreshold: `MiddlewareHealthThreshold`
 
 **Attributes:**
 ```csharp

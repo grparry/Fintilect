@@ -7,191 +7,122 @@
 ## Class Summary
 
 public class CardlyticsSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CardlyticsSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### CardlyticsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+### CardlyticsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CardlyticsEnabled")]
 ```
 
-### AdminCardlyticsEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+### AdminCardlyticsEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBAdminBOL.CardlyticsEnabled")]
 ```
 
-### List
-
-```typescript
-type: CardlyticsAccountTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+### CardlyticsAccountTypes: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.CardlyticsAccountTypes")]
 ```
 
-### ShouldShowSuffixUpdateRowInAdmin
+### ShouldShowSuffixUpdateRowInAdmin: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cardlytics.Admin.ShowSuffixUpdateRowInAdmin")]
 ```
 
-### JQueryVersion
+### JQueryVersion: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cardlytics.jQuery.Version")]
 ```
 
-### DomInjectionVersionEnabled
+### DomInjectionVersionEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cardlytics.DomInjectionVersion.Enabled")]
 ```
 
-### MainScriptName
+### MainScriptName: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cardlytics.DomInjectionVersion.MainScriptName")]
 ```
 
-### ConfigScriptName
+### ConfigScriptName: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cardlytics.DomInjectionVersion.ConfigScriptName")]
 ```
 
-### InitScriptName
+### InitScriptName: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cardlytics.DomInjectionVersion.InitScriptName")]
 ```
 
-### FiFolder
+### FiFolder: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cardlytics.DomInjectionVersion.FiFolder")]
 ```
 
-### OpsServerUrl
+### OpsServerUrl: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cardlytics.DomInjectionVersion.OpsServerUrl")]
 ```
 
-### DomInjectionVersionJQueryVersion
+### DomInjectionVersionJQueryVersion: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Cardlytics.DomInjectionVersion.JQueryVersion")]
 ```
 
-### VueVersion
+### VueVersion: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Cardlytics/CardlyticsSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

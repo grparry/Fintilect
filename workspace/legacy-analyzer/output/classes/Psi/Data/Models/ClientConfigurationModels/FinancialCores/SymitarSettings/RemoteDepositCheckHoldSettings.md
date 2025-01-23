@@ -7,23 +7,18 @@
 ## Class Summary
 
 public class RemoteDepositCheckHoldSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class RemoteDepositCheckHoldSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### RemoteDepositCheckHold
-
-```typescript
-type: RemoteDepositCheckHold
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/SymitarSettings/RemoteDepositCheckHoldSettings.cs
-visibility: public
-modifier: readonly
-```
+### RemoteDepositCheckHold: `RemoteDepositCheckHold`
 
 **Attributes:**
 ```csharp

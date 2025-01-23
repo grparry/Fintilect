@@ -7,317 +7,179 @@
 ## Class Summary
 
 public class DigitalWallet
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DigitalWallet
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.Enabled")]
 ```
 
-### EndpointAddress
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### EndpointAddress: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.EndpointAddress")]
 ```
 
-### userId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### userId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.userId")]
 ```
 
-### password
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### password: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.password")]
 ```
 
-### schemaVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### schemaVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.SchemaVersion")]
 ```
 
-### clientId
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### clientId: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.clientId")]
 ```
 
-### List
-
-```typescript
-type: system
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### system: `List<string>`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.system")]
 ```
 
-### clientApplicationName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### clientApplicationName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.clientApplicationName")]
 ```
 
-### clientVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### clientVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.clientVersion")]
 ```
 
-### clientVendorName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### clientVendorName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.clientVendorName")]
 ```
 
-### EncryptionSecurityKey
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### EncryptionSecurityKey: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.EncryptionSecurityKey")]
 ```
 
-### CertificateName
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### CertificateName: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.CertificateName")]
 ```
 
-### CertificatePassword
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### CertificatePassword: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.CertificatePassword")]
 ```
 
-### AndroidStoreUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### AndroidStoreUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.AndroidStoreUrl")]
 ```
 
-### IosStoreUrl
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+### IosStoreUrl: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.IosStoreUrl")]
 ```
 
-### PackageName
+### PackageName: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.PackageName")]
 ```
 
-### UrlScheme
+### UrlScheme: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.UrlScheme")]
 ```
 
-### PopupEnabled
+### PopupEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.PopupEnabled")]
 ```
 
-### TimeBeforeRepeatPopup
+### TimeBeforeRepeatPopup: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.TimeBeforeRepeatPopup")]
 ```
 
-### ShowEnrollmentPromptFlagNumber
+### ShowEnrollmentPromptFlagNumber: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.ShowEnrollmentPromptFlagNumber")]
 ```
 
-### DebitCardControlFlagNumber
+### DebitCardControlFlagNumber: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.DigitalWallet.DebitCardControlFlagNumber")]
 ```
 
-### CreditCardControlFlagNumber
+### CreditCardControlFlagNumber: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/DigitalWallet.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -7,65 +7,47 @@
 ## Class Summary
 
 public class PscuLogFileTransformServiceSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class PscuLogFileTransformServiceSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Filters
+### Filters: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/PscuLogFileTransformServiceSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PsiServices.PscuLogFileTransformService.Filters")]
 ```
 
-### InputFileFields
+### InputFileFields: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/PscuLogFileTransformServiceSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PsiServices.PscuLogFileTransformService.InputFileFields")]
 ```
 
-### OutputFileFields
+### OutputFileFields: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/PscuLogFileTransformServiceSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("PsiServices.PscuLogFileTransformService.OutputFileFields")]
 ```
 
-### PathConfiguration
+### PathConfiguration: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/WindowsService/PscuLogFileTransformServiceSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

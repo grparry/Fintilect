@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class RestrictedWordSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class RestrictedWordSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RestrictedWords/RestrictedWords.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("RestrictedWords.Enabled")]
 ```
 
-### MinVersion
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RestrictedWords/RestrictedWords.cs
-visibility: public
-modifier: readonly
-```
+### MinVersion: `double`
 
 **Attributes:**
 ```csharp
 [SettingKey("RestrictedWords.MinVersion")]
 ```
 
-### List
-
-```typescript
-type: ControlAreas
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RestrictedWords/RestrictedWords.cs
-visibility: public
-modifier: readonly
-```
+### ControlAreas: `List<RestrictedWordControlAreas>`
 
 **Attributes:**
 ```csharp
 [SettingKey("RestrictedWords.ControlAreas")]
 ```
 
-### RestrictedWordListEncrypted
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/RestrictedWords/RestrictedWords.cs
-visibility: public
-modifier: readonly
-```
+### RestrictedWordListEncrypted: `string`
 
 **Attributes:**
 ```csharp

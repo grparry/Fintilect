@@ -7,121 +7,67 @@
 ## Class Summary
 
 public class EnrollmentFeature
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class EnrollmentFeature
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### RequireTemporaryPasswordDuringEnrollment
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Enrollment/EnrollmentFeature.cs
-visibility: public
-modifier: readonly
-```
+### RequireTemporaryPasswordDuringEnrollment: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Enrollment.RequireTemporaryPasswordDuringEnrollment")]
 ```
 
-### FromEmailAddressForTemporaryPassword
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Enrollment/EnrollmentFeature.cs
-visibility: public
-modifier: readonly
-```
+### FromEmailAddressForTemporaryPassword: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Enrollment.FromEmailAddressForTemporaryPassword")]
 ```
 
-### ShouldHideLoginStepsControlDuringEnrollment
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Enrollment/EnrollmentFeature.cs
-visibility: public
-modifier: readonly
-```
+### ShouldHideLoginStepsControlDuringEnrollment: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Enrollment.HideLoginStepsControlDuringEnrollment")]
 ```
 
-### MinimumEnrollmentAgeIsRequired
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Enrollment/EnrollmentFeature.cs
-visibility: public
-modifier: readonly
-```
+### MinimumEnrollmentAgeIsRequired: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Enrollment.MinimumEnrollmentAgeIsRequired")]
 ```
 
-### MinimumEnrollmentAgeInYears
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Enrollment/EnrollmentFeature.cs
-visibility: public
-modifier: readonly
-```
+### MinimumEnrollmentAgeInYears: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("Enrollment.MinimumEnrollmentAgeInYears")]
 ```
 
-### LoginPageUrlForOao
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Enrollment/EnrollmentFeature.cs
-visibility: public
-modifier: readonly
-```
+### LoginPageUrlForOao: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Enrollment.LoginPageUrlForOAO")]
 ```
 
-### OaoAutoEnrollmentHideConfirmationPage
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Enrollment/EnrollmentFeature.cs
-visibility: public
-modifier: readonly
-```
+### OaoAutoEnrollmentHideConfirmationPage: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Enrollment.Oao.AutoEnrollment.HideConfirmationPage")]
 ```
 
-### OaoSendUsernameAndPasswordEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Enrollment/EnrollmentFeature.cs
-visibility: public
-modifier: readonly
-```
+### OaoSendUsernameAndPasswordEnabled: `bool`
 
 **Attributes:**
 ```csharp

@@ -7,29 +7,17 @@
 ## Class Summary
 
 public class CreditCardSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CreditCardSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### OmahaSso
+### OmahaSso: `OmahaSso`
 
-```typescript
-type: OmahaSso
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/CreditCardSettings.cs
-visibility: public
-modifier: readonly
-```
-
-### PscuSso
-
-```typescript
-type: PscuSso
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/CreditCards/CreditCardSettings.cs
-visibility: public
-modifier: readonly
-```
+### PscuSso: `PscuSso`

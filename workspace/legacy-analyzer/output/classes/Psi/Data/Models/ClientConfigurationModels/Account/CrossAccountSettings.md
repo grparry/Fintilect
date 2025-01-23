@@ -7,247 +7,164 @@
 ## Class Summary
 
 public class CrossAccountSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class CrossAccountSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldUseCrossAccountOwnerNameAsCrossAccountDescription
+### ShouldUseCrossAccountOwnerNameAsCrossAccountDescription: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.CrossAccount.ShouldUseCrossAccountOwnerNameAsCrossAccountDescription")]
 ```
 
-### HouseHoldingCreditCardHistoryEnabled
+### HouseHoldingCreditCardHistoryEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.CrossAccount.HouseHoldingCreditCardHistoryEnabled")]
 ```
 
-### DisclosureAcceptanceEnabled
+### DisclosureAcceptanceEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.CrossAccount.DisclosureAcceptanceEnabled")]
 ```
 
-### DisclosureAcceptanceFlag
+### DisclosureAcceptanceFlag: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.CrossAccount.DisclosureAcceptanceFlag")]
 ```
 
-### HideAbilityToRequestPermissionsForAnotherAccount
+### HideAbilityToRequestPermissionsForAnotherAccount: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.CrossAccount.HideAbilityToRequestPermissionsForAnotherAccount")]
 ```
 
-### ShouldShowSsoLinkForCrossAccountLoans
+### ShouldShowSsoLinkForCrossAccountLoans: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.CrossAccount.ShouldShowSsoLinkForCrossAccountLoans")]
 ```
 
-### DisallowWithdrawalsFromCreditCards
+### DisallowWithdrawalsFromCreditCards: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.CrossAccount.DisallowWithdrawalsFromCreditCards")]
 ```
 
-### DisableCreditCardMoreDetailButton
+### DisableCreditCardMoreDetailButton: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.CrossAccount.DisableCreditCardMoreDetailButton")]
 ```
 
-### GetHouseholdingPermissionsFromCrossAccountNode
+### GetHouseholdingPermissionsFromCrossAccountNode: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.CrossAccount.GetHouseholdingPermissionsFromCrossAccountNode")]
 ```
 
-### ReadCreditCardsFromCore
+### ReadCreditCardsFromCore: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Account.CrossAccount.ReadCreditCardsFromCore")]
 ```
 
-### IsCrossAccountInquiryByTin
+### IsCrossAccountInquiryByTin: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.IsCrossAccountInquiryByTin")]
 ```
 
-### GrantInquiryPermissionDelayTime
+### GrantInquiryPermissionDelayTime: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Householding.GrantInquiryPermissionDelayTime")]
 ```
 
-### GrantDepositPermissionDelayTime
+### GrantDepositPermissionDelayTime: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Householding.GrantDepositPermissionDelayTime")]
 ```
 
-### GrantWithdrawalPermissionDelayTime
+### GrantWithdrawalPermissionDelayTime: `int`
 
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Householding.GrantWithdrawalPermissionDelayTime")]
 ```
 
-### CheckHouseHoldingValuesFromDatabase
+### CheckHouseHoldingValuesFromDatabase: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Householding.CheckHouseHoldingValuesFromDatabase")]
 ```
 
-### HouseholdingPermissionSource
+### HouseholdingPermissionSource: `string`
 
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.HouseholdingPermissionSource")]
 ```
 
-### DeleteSubAccountNoHouseholding
+### DeleteSubAccountNoHouseholding: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/CrossAccountSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

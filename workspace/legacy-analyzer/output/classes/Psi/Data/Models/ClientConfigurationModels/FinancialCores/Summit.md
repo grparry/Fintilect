@@ -7,62 +7,36 @@
 ## Class Summary
 
 public class Summit
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Summit
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### TransferCommandCode
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Summit.cs
-visibility: public
-modifier: readonly
-```
+### TransferCommandCode: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Summit.TransferCommandCode")]
 ```
 
-### SegmintMarketingIdEnabled
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Summit.cs
-visibility: public
-modifier: readonly
-```
+### SegmintMarketingIdEnabled: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Summit.UserFields.SegmintMarketingIdEnabled")]
 ```
 
-### UseTwelveDigitTransactionAmount
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Summit.cs
-visibility: public
-modifier: readonly
-```
+### UseTwelveDigitTransactionAmount: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("FinancialCore.Summit.UseTwelveDigitTransactionAmount")]
 ```
 
-### RegularAchTransfers
-
-```typescript
-type: RegularAchTransfers
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/FinancialCores/Summit.cs
-visibility: public
-modifier: readonly
-```
+### RegularAchTransfers: `RegularAchTransfers`

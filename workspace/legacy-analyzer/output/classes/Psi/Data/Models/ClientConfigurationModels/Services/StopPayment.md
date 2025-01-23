@@ -7,65 +7,39 @@
 ## Class Summary
 
 public class StopPayment
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class StopPayment
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShowStopPaymentReason
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Services/StopPayment.cs
-visibility: public
-modifier: readonly
-```
+### ShowStopPaymentReason: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("StopPayment.ShowStopPaymentReason")]
 ```
 
-### ShowTimeOnConfirmationScreen
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Services/StopPayment.cs
-visibility: public
-modifier: readonly
-```
+### ShowTimeOnConfirmationScreen: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("StopPayment.ShowTimeOnConfirmationScreen")]
 ```
 
-### StopPayRequireAmountField
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Services/StopPayment.cs
-visibility: public
-modifier: readonly
-```
+### StopPayRequireAmountField: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.StopPayRequireAmountField")]
 ```
 
-### StopPayEnableAmountField
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Services/StopPayment.cs
-visibility: public
-modifier: readonly
-```
+### StopPayEnableAmountField: `bool`
 
 **Attributes:**
 ```csharp

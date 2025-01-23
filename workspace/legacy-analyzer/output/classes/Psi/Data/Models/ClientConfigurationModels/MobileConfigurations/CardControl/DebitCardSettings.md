@@ -7,121 +7,83 @@
 ## Class Summary
 
 public class DebitCardSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class DebitCardSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### AlertPreferencesEnabled
+### AlertPreferencesEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/DebitCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.DebitCard.AlertPreferencesEnabled")]
 ```
 
-### UserDeviceSetupEnabled
+### UserDeviceSetupEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/DebitCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.DebitCard.UserDeviceSetupEnabled")]
 ```
 
-### ManagePermissionsEnabled
+### ManagePermissionsEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/DebitCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.DebitCard.ManagePermissionsEnabled")]
 ```
 
-### ShouldUseDynamicTransactionTypes
+### ShouldUseDynamicTransactionTypes: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/DebitCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.DebitCard.ShouldUseDynamicTransactionTypes")]
 ```
 
-### InternetTransactionControlEnabled
+### InternetTransactionControlEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/DebitCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.DebitCard.InternetTransactionControlEnabled")]
 ```
 
-### LargeTransactionControlEnabled
+### LargeTransactionControlEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/DebitCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.DebitCard.LargeTransactionControlEnabled")]
 ```
 
-### TimeOfDayRangeControlEnabled
+### TimeOfDayRangeControlEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/DebitCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.CardControl.DebitCard.TimeOfDayRangeControlEnabled")]
 ```
 
-### CardOffUserDefinedTimeEnabled
+### CardOffUserDefinedTimeEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/CardControl/DebitCardSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

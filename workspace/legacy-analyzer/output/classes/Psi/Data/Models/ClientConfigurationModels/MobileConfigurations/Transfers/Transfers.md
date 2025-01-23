@@ -7,122 +7,61 @@
 ## Class Summary
 
 public class Transfers
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class Transfers
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### ShouldShowConfirmDialog
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Transfers/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### ShouldShowConfirmDialog: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Transfers.ShouldShowConfirmDialog")]
 ```
 
-### UserTransferDescriptionType
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Transfers/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### UserTransferDescriptionType: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.UserTransferDescriptionType")]
 ```
 
-### EnableUserTransferDescription
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Transfers/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### EnableUserTransferDescription: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HBBOL.EnableUserTransferDescription")]
 ```
 
-### PastDueNumberOfDaysUntilLate
-
-```typescript
-type: number
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Transfers/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### PastDueNumberOfDaysUntilLate: `int`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.PastDueNumberOfDaysUntilLate")]
 ```
 
-### HighlightPastDueLoans
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Transfers/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### HighlightPastDueLoans: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("X.App.HomeBanking.HighlightPastDueLoans")]
 ```
 
-### ShowMaskedAccountSuffixInAccountName
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Transfers/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### ShowMaskedAccountSuffixInAccountName: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.Transfer.ShowMaskedAccountSuffixInAccountName")]
 ```
 
-### SavedTransfers
+### SavedTransfers: `SavedTransfers`
 
-```typescript
-type: SavedTransfers
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Transfers/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### ScheduledTransfers: `ScheduledTransfersSettings`
 
-### ScheduledTransfersSettings
-
-```typescript
-type: ScheduledTransfersSettings
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Transfers/Transfers.cs
-visibility: public
-modifier: readonly
-```
-
-### Authentication
-
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/Transfers/Transfers.cs
-visibility: public
-modifier: readonly
-```
+### Authentication: `Authentication.Authentication`

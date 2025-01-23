@@ -7,260 +7,115 @@
 ## Class Summary
 
 public class BillPay
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class BillPay
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### MinimumVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### MinimumVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.MinimumVersion")]
 ```
 
-### MinimumAndroidVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### MinimumAndroidVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.MinimumAndroidVersion")]
 ```
 
-### MinimumIosVersion
-
-```typescript
-type: string
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### MinimumIosVersion: `string`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.MinimumIosVersion")]
 ```
 
-### Enabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### Enabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.Enabled")]
 ```
 
-### IsNextPaymentDayEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### IsNextPaymentDayEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.IsNextPaymentDayEnabled")]
 ```
 
-### ExcludeHolidaysFromCalendar
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### ExcludeHolidaysFromCalendar: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.ExcludeHolidaysFromCalendar")]
 ```
 
-### HidePayeePaymentType
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### HidePayeePaymentType: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.HidePayeePaymentType")]
 ```
 
-### BillPayMethod
-
-```typescript
-type: BillPayMethod
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### Method: `BillPayMethod`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.Method")]
 ```
 
-### IpayCanCalculatePaymentDates
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### IpayCanCalculatePaymentDates: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.IpayCanCalculatePaymentDates")]
 ```
 
-### DateTime
-
-```typescript
-type: SameDayPaymentCutOffTimeUtc | null
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### SameDayPaymentCutOffTimeUtc: `DateTime?`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.SameDayPaymentCutOffTimeUtc")]
 ```
 
-### GetPayeesBillPay2InterfaceEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### GetPayeesBillPay2InterfaceEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.GetPayeesBillPay2Interface.Enabled")]
 ```
 
-### MobileEnrollmentEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### MobileEnrollmentEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Mobile.BillPay.MobileEnrollmentEnabled")]
 ```
 
-### AddPayee
+### AddPayee: `AddPayee.AddPayee`
 
-```typescript
-type: AddPayee
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### PhotoBillPay: `PhotoBillPay.PhotoBillPay`
 
-### PhotoBillPay
+### RecurringBillPay: `RecurringBillPay`
 
-```typescript
-type: PhotoBillPay
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### MakePayment: `MakePayment`
 
-### RecurringBillPay
+### NewBillPayInterface: `NewBillPayInterface`
 
-```typescript
-type: RecurringBillPay
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### CheckFree: `CheckFree`
 
-### MakePayment
+### BillMatrix: `BillMatrix`
 
-```typescript
-type: MakePayment
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### Symmetry: `SymmetryBillPay`
 
-### NewBillPayInterface
-
-```typescript
-type: NewBillPayInterface
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
-
-### CheckFree
-
-```typescript
-type: CheckFree
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
-
-### BillMatrix
-
-```typescript
-type: BillMatrix
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
-
-### SymmetryBillPay
-
-```typescript
-type: SymmetryBillPay
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
-
-### Authentication
-
-```typescript
-type: Authentication
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/MobileConfigurations/BillPay/BillPay.cs
-visibility: public
-modifier: readonly
-```
+### Authentication: `Authentication.Authentication`

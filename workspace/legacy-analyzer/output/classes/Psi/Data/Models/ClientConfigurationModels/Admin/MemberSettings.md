@@ -7,51 +7,36 @@
 ## Class Summary
 
 public class MemberSettings
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class MemberSettings
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### IsAliasLookupEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/MemberSettings.cs
-visibility: public
-modifier: readonly
-```
+### IsAliasLookupEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.Member.AllowAliasLookup.Enabled")]
 ```
 
-### ShouldDisplayEscheatDateInfo
+### ShouldDisplayEscheatDateInfo: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/MemberSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("Admin.Member.DisplayEscheatDateInfo")]
 ```
 
-### ConvertCreatedDateToUtcEnabled
+### ConvertCreatedDateToUtcEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Admin/MemberSettings.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

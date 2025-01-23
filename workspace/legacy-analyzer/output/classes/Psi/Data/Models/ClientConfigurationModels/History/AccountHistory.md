@@ -7,377 +7,236 @@
 ## Class Summary
 
 public class AccountHistory
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class AccountHistory
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### DisplayCheckHolds
+### DisplayCheckHolds: `DisplayCheckHolds`
 
-```typescript
-type: DisplayCheckHolds
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+### LinkedAccounts: `LinkedAccountHistory`
 
-### LinkedAccountHistory
-
-```typescript
-type: LinkedAccountHistory
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
-
-### IsOrderedBySequenceNumber
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+### IsOrderedBySequenceNumber: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.IsOrderedBySequenceNumber")]
 ```
 
-### MortgagePaymentHistoryIncludesEscrowInfoEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+### MortgagePaymentHistoryIncludesEscrowInfoEnabled: `bool`
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.MortgagePaymentHistoryIncludesEscrowInfoEnabled")]
 ```
 
-### ShouldAddDaysToEndDate
+### ShouldAddDaysToEndDate: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("EscrowHistory.ShouldAddDaysToEndDate")]
 ```
 
-### DisplayMortgagePaymentEscrowDetails
+### DisplayMortgagePaymentEscrowDetails: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.DisplayMortgagePaymentEscrowDetails")]
 ```
 
-### ShowPendingPaymentPostDate
+### ShowPendingPaymentPostDate: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistory.DisplaySettings.ShowPendingPaymentPostDate")]
 ```
 
-### ShouldShowExtraInfoInRowInsteadOfPopover
+### ShouldShowExtraInfoInRowInsteadOfPopover: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.ShowExtraInfoInRowInsteadOfPopover")]
 ```
 
-### ShouldShowAvailableBalanceMessagePopover
+### ShouldShowAvailableBalanceMessagePopover: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.ShowAvailableBalanceMessagePopover")]
 ```
 
-### ShouldShowAvailableBalanceMessagePopoverOnlyForShares
+### ShouldShowAvailableBalanceMessagePopoverOnlyForShares: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.ShowAvailableBalanceMessagePopoverOnlyForShares")]
 ```
 
-### ShouldOpenMoreDetailsInExternalWebBrowser
+### ShouldOpenMoreDetailsInExternalWebBrowser: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistory.ShouldOpenMoreDetailsInExternalWebBrowser")]
 ```
 
-### Dictionary
+### PendingTransactionTypeDisplayNames: `Dictionary<string, string>`
 
-```typescript
-type: PendingTransactionTypeDisplayNames
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistory.PendingTransactionTypeDisplayNames")]
 ```
 
-### ShouldShowAvailableBalanceInBoldFont
+### ShouldShowAvailableBalanceInBoldFont: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.ShowAvailableBalanceInBoldFont")]
 ```
 
-### ShouldShowPointOfSaleOrAtmTransactionMessage
+### ShouldShowPointOfSaleOrAtmTransactionMessage: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.ShowPointOfSaleOrAtmTransactionMessage")]
 ```
 
-### List
+### PointOfSaleOrAtmTransactionAccountCategories: `List<string>`
 
-```typescript
-type: PointOfSaleOrAtmTransactionAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.PointOfSaleOrAtmTransactionAccountCategories")]
 ```
 
-### ShowPendingTransactionsTag
+### ShowPendingTransactionsTag: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.ShowPendingTransactionsTag")]
 ```
 
-### List
+### SymitarHoldTypes: `List<string>`
 
-```typescript
-type: SymitarHoldTypes
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.Symitar.HoldTypes")]
 ```
 
-### SymitarCheckHoldTypesEnabled
+### SymitarCheckHoldTypesEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistoryDisplaySettings.Symitar.CheckHoldTypesEnabled")]
 ```
 
-### ObscureSuffixInUrl
+### ObscureSuffixInUrl: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistory.ObscureSuffixInUrl")]
 ```
 
-### UseEffectiveDateInsteadOfPostDate
+### UseEffectiveDateInsteadOfPostDate: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistory.UseEffectiveDateInsteadOfPostDate")]
 ```
 
-### ShouldShowPayoffMessageForLoanEvenWhenNoDueDate
+### ShouldShowPayoffMessageForLoanEvenWhenNoDueDate: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistory.ShowPayoffMessageForLoanEvenWhenNoDueDate")]
 ```
 
-### AccountNumberHistoryEnabled
+### AccountNumberHistoryEnabled: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountNumberHistory.Enabled")]
 ```
 
-### ShouldShowPreviousAvailableBalance
+### ShouldShowPreviousAvailableBalance: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistory.ShouldShowPreviousAvailableBalance")]
 ```
 
-### SuppressPreviousAvailableBalanceForPendingTransactions
+### SuppressPreviousAvailableBalanceForPendingTransactions: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistory.SuppressPreviousAvailableBalanceForPendingTransactions")]
 ```
 
-### ShowPreviousAvailableMessagePopover
+### ShowPreviousAvailableMessagePopover: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistory.ShowPreviousAvailableMessagePopover")]
 ```
 
-### List
+### ShowPreviousAvailableBalanceAccountCategories: `List<string>`
 
-```typescript
-type: ShowPreviousAvailableBalanceAccountCategories
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp
 [SettingKey("AccountHistory.ShowPreviousAvailableBalanceAccountCategories")]
 ```
 
-### ShouldExcludePendingTransactionOnExport
+### ShouldExcludePendingTransactionOnExport: `bool`
 
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/History/AccountHistory.cs
-visibility: public
-modifier: readonly
-```
+
 
 **Attributes:**
 ```csharp

@@ -5,18 +5,19 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-import { Member, MemberSearchFilters, MemberStatus, IMemberService } from '../../../types/member-center.types';
-import type { ApiResponse } from '../../../utils/api';
-import { memberService } from '../../../services/factory/ServiceFactory';
+import { Member, MemberSearchFilters, MemberStatus, MemberSearchResult } from '../../../types/member-center.types';
+import { IMemberService } from '../../../services/interfaces/IMemberService';
+import { useService } from '../../../hooks/useService';
 import MemberSearchForm from './components/search/MemberSearch';
 import SearchResults from './components/search/SearchResults';
+import { PaginatedResponse } from '../../../types/common.types';
 
 interface MemberSearchProps {
   onViewMember?: (member: Member) => void;
 }
 
 interface MemberSearchState {
-  searchResults: { items: Member[], total: number } | null;
+  searchResult: MemberSearchResult | null;
   loading: boolean;
   error: string | null;
   success: string | null;
@@ -24,8 +25,9 @@ interface MemberSearchState {
 }
 
 const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
+  const memberService = useService<IMemberService>('memberService');
   const [state, setState] = useState<MemberSearchState>({
-    searchResults: null,
+    searchResult: null,
     loading: false,
     error: null,
     success: null,
@@ -36,15 +38,18 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
     setState(prev => ({ ...prev, loading }));
   };
 
-  const setSearchResults = (searchResults: { items: Member[], total: number }) => {
-    setState(prev => ({ ...prev, searchResults }));
+  const setSearchResults = (response: PaginatedResponse<MemberSearchResult>) => {
+    setState(prev => ({ 
+      ...prev, 
+      searchResult: response.items[0]
+    }));
   };
 
-  const setError = (error: string) => {
+  const setError = (error: string | null) => {
     setState(prev => ({ ...prev, error }));
   };
 
-  const setSuccess = (success: string) => {
+  const setSuccess = (success: string | null) => {
     setState(prev => ({ ...prev, success }));
   };
 
@@ -55,11 +60,30 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
   const handleSearch = async (filters: MemberSearchFilters) => {
     try {
       setLoading(true);
+      setError(null);
       const response = await memberService.searchMembers(filters);
       setSearchResults(response);
+      setSuccess('Search completed successfully');
       setCurrentFilters(filters);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to search members');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateStatus = async (member: Member, newStatus: MemberStatus) => {
+    try {
+      setLoading(true);
+      setError(null);
+      await memberService.updateMemberStatus(member.id, newStatus);
+      if (state.currentFilters) {
+        const response = await memberService.searchMembers(state.currentFilters);
+        setSearchResults(response);
+      }
+      setSuccess('Member status updated successfully');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to update member status');
     } finally {
       setLoading(false);
     }
@@ -71,51 +95,41 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
     }
   };
 
-  const handleUpdateStatus = async (memberId: string, status: MemberStatus) => {
-    try {
-      setLoading(true);
-      await memberService.updateMemberStatus(memberId, status);
-      // Refresh search results
-      const filters = state.currentFilters;
-      if (filters) {
-        const response = await memberService.searchMembers(filters);
-        setSearchResults(response);
-        setSuccess('Member status updated successfully');
-      }
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to update member status');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <Box>
       {state.error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+        <Alert 
+          severity="error" 
+          sx={{ mb: 2 }} 
+          onClose={() => setError(null)}
+        >
           {state.error}
         </Alert>
       )}
       {state.success && (
-        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess(null)}>
+        <Alert 
+          severity="success" 
+          sx={{ mb: 2 }} 
+          onClose={() => setSuccess(null)}
+        >
           {state.success}
         </Alert>
       )}
 
       <MemberSearchForm onSearch={handleSearch} />
-
-      {state.loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+      
+      {state.loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
           <CircularProgress />
         </Box>
-      ) : (
-        state.searchResults && (
-          <SearchResults
-            results={state.searchResults}
-            onSelect={handleSelect}
-            onUpdateStatus={handleUpdateStatus}
-          />
-        )
+      )}
+
+      {state.searchResult && (
+        <SearchResults
+          results={state.searchResult}
+          onSelect={handleSelect}
+          onUpdateStatus={handleUpdateStatus}
+        />
       )}
     </Box>
   );

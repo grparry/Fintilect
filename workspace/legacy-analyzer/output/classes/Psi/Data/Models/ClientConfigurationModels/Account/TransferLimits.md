@@ -7,37 +7,25 @@
 ## Class Summary
 
 public class TransferLimits
+extends: SettingsBaseHelper
 
 ## Class Metadata
 
 ```typescript
 public class TransferLimits
+extends: SettingsBaseHelper
 ```
 
 ## Properties
 
-### TransferLimitsSettings
-
-```typescript
-type: TransferLimitsSettings[]
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/TransferLimits.cs
-visibility: public
-modifier: readonly
-```
+### Limits: `TransferLimitsSettings`
 
 **Attributes:**
 ```csharp
 [SettingKey("Transfers.TransferLimits")]
 ```
 
-### CustomTransferLimitMessagesEnabled
-
-```typescript
-type: boolean
-sourceFile: /Users/grantparry/Documents/Fintilect/Fintilect/legacy/legacy-apis/Psi.Models.ClientConfigurationModels/Account/TransferLimits.cs
-visibility: public
-modifier: readonly
-```
+### CustomTransferLimitMessagesEnabled: `bool`
 
 **Attributes:**
 ```csharp

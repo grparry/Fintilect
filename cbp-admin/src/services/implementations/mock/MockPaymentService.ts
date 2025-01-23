@@ -12,6 +12,7 @@ import {
   ConfirmationStatus
 } from '../../../types/bill-pay.types';
 import { BaseMockService } from './BaseMockService';
+import { mockPayments, mockPendingPayments } from './data/billpay/payments';
 
 export class MockPaymentService extends BaseMockService implements IPaymentService {
   constructor(basePath: string = '/api/v1/payments') {
@@ -21,37 +22,15 @@ export class MockPaymentService extends BaseMockService implements IPaymentServi
   async getPendingPayments(request: PendingPaymentSearchRequest): Promise<PaginatedResponse<PendingPayment>> {
     await this.delay();
     
-    // Mock data for testing
-    const mockPayments: PendingPayment[] = [
-      {
-        id: '1',
-        clientId: 'client1',
-        clientName: 'Test Client 1',
-        payeeId: 'payee1',
-        payeeName: 'Test Payee 1',
-        amount: 1000,
-        currency: 'USD',
-        status: PaymentStatus.PENDING,
-        method: PaymentMethod.ACH,
-        priority: Priority.MEDIUM,
-        effectiveDate: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        recipient: {
-          name: 'John Doe',
-          accountNumber: '123456789',
-          routingNumber: '987654321',
-          bankName: 'Test Bank'
-        }
-      }
-    ];
-
     const startIndex = ((request.page || 1) - 1) * (request.limit || 10);
     const endIndex = startIndex + (request.limit || 10);
-    const filteredPayments = mockPayments.filter(payment => {
-      if (request.status && payment.status !== request.status) return false;
-      if (request.method && payment.method !== request.method) return false;
-      return true;
+    const filteredPayments = mockPendingPayments.filter(payment => {
+      const matchesStatus = !request.status?.length || request.status.includes(payment.status);
+      const matchesMethod = !request.method?.length || request.method.includes(payment.method);
+      const matchesPriority = !request.priority?.length || request.priority.includes(payment.priority);
+      const matchesStartDate = !request.startDate || new Date(payment.effectiveDate) >= new Date(request.startDate);
+      const matchesEndDate = !request.endDate || new Date(payment.effectiveDate) <= new Date(request.endDate);
+      return matchesStatus && matchesMethod && matchesPriority && matchesStartDate && matchesEndDate;
     });
 
     return {
@@ -65,41 +44,38 @@ export class MockPaymentService extends BaseMockService implements IPaymentServi
   async getPendingPaymentsSummary(request: PendingPaymentSearchRequest): Promise<PendingPaymentSummary> {
     await this.delay();
     
+    const filteredPayments = mockPendingPayments.filter(payment => {
+      const matchesStatus = !request.status?.length || request.status.includes(payment.status);
+      const matchesMethod = !request.method?.length || request.method.includes(payment.method);
+      const matchesPriority = !request.priority?.length || request.priority.includes(payment.priority);
+      const matchesStartDate = !request.startDate || new Date(payment.effectiveDate) >= new Date(request.startDate);
+      const matchesEndDate = !request.endDate || new Date(payment.effectiveDate) <= new Date(request.endDate);
+      return matchesStatus && matchesMethod && matchesPriority && matchesStartDate && matchesEndDate;
+    });
+
+    const byMethod = Object.values(PaymentMethod).reduce((acc, method) => {
+      const payments = filteredPayments.filter(p => p.method === method);
+      acc[method] = {
+        count: payments.length,
+        amount: payments.reduce((sum, p) => sum + p.amount, 0)
+      };
+      return acc;
+    }, {} as Record<PaymentMethod, { count: number; amount: number }>);
+
+    const byStatus = Object.values(PaymentStatus).reduce((acc, status) => {
+      acc[status] = filteredPayments.filter(p => p.status === status).length;
+      return acc;
+    }, {} as Record<PaymentStatus, number>);
+
+    const byPriority = Object.values(Priority).reduce((acc, priority) => {
+      acc[priority] = filteredPayments.filter(p => p.priority === priority).length;
+      return acc;
+    }, {} as Record<Priority, number>);
+
     return {
-      byMethod: {
-        [PaymentMethod.ACH]: { count: 1, amount: 1000 },
-        [PaymentMethod.WIRE]: { count: 0, amount: 0 },
-        [PaymentMethod.CHECK]: { count: 0, amount: 0 },
-        [PaymentMethod.CARD]: { count: 0, amount: 0 },
-        [PaymentMethod.RTP]: { count: 0, amount: 0 }
-      },
-      byStatus: {
-        [PaymentStatus.PENDING]: 1,
-        [PaymentStatus.PROCESSING]: 0,
-        [PaymentStatus.COMPLETED]: 0,
-        [PaymentStatus.FAILED]: 0,
-        [PaymentStatus.CANCELLED]: 0,
-        [PaymentStatus.EXPIRED]: 0,
-        [PaymentStatus.PENDING_APPROVAL]: 0,
-        [PaymentStatus.DRAFT]: 0,
-        [PaymentStatus.APPROVED]: 0,
-        [PaymentStatus.REJECTED]: 0,
-        [PaymentStatus.SUBMITTED]: 0,
-        [PaymentStatus.SCHEDULED]: 0,
-        [PaymentStatus.RETURNED]: 0,
-        [PaymentStatus.STOP_PAYMENT]: 0,
-        [PaymentStatus.VOID]: 0,
-        [PaymentStatus.HOLD]: 0,
-        [PaymentStatus.SUSPENDED]: 0,
-        [PaymentStatus.REFUNDED]: 0,
-        [PaymentStatus.PARTIALLY_REFUNDED]: 0,
-        [PaymentStatus.CHARGEBACK]: 0
-      },
-      byPriority: {
-        [Priority.HIGH]: 0,
-        [Priority.MEDIUM]: 1,
-        [Priority.LOW]: 0
-      }
+      byMethod,
+      byStatus,
+      byPriority
     };
   }
 

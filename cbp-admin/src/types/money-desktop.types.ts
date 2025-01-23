@@ -1,22 +1,23 @@
 import { ChipProps } from '@mui/material';
 
 export type ConnectionStatus = 'Connected' | 'Error' | 'Pending';
-export type AccountStatus = 'Active' | 'Inactive';
+export type AccountStatus = 'Active' | 'Inactive' | 'Error' | 'Pending';
 export type AccountType = 'Checking' | 'Savings' | 'Credit Card' | 'Investment' | 'Loan';
 
 export interface Connection {
   id: number;
-  clientName: string;
   institutionName: string;
   status: ConnectionStatus;
   lastSync: string;
-  accounts: number;
-  error: string | null;
+  accountCount: number;
+  totalBalance: number;
+  createdAt: string;
+  lastError: string | null;
 }
 
 export interface Account {
   id: number;
-  clientName: string;
+  connectionId: number;
   institutionName: string;
   accountName: string;
   accountNumber: string;
