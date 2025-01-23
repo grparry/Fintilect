@@ -1,9 +1,13 @@
-import { ParsedField } from '../../parser/csharpParser';
+import { ParsedField } from '../../parser/types';
 import { TypeMapper } from '../typeSystem/typeMapper';
 import logger from '../../utils/logger';
 
 export class JsonGenerator {
-    constructor(private typeMapper: TypeMapper) {}
+    constructor(private readonly typeMapper: TypeMapper) {}
+
+    private cleanTypeName(type: string): string {
+        return type.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+    }
 
     /**
      * Generate TypeScript interface for JSON or class fields
@@ -23,8 +27,29 @@ export class JsonGenerator {
         } else {
             const interfaceName = `${input.className}Config`;
             const properties = input.fields.map(field => {
-                const tsType = this.typeMapper.mapCSharpTypeToTypeScript(field.type);
-                return `    ${field.name}: ${tsType};`;
+                const cleanType = this.cleanTypeName(field.type);
+                let tsType = TypeMapper.mapCSharpTypeToTypeScript(cleanType);
+                
+                // Handle complex types and missing references
+                if (!tsType || tsType === cleanType) {
+                    // First try to find it in the registry
+                    const typeInfo = this.typeMapper.findTypeInfo(cleanType);
+                    if (typeInfo) {
+                        tsType = typeInfo.typeName;
+                    } else {
+                        // If it's a complex type (contains a dot), extract the type name
+                        if (cleanType.includes('.')) {
+                            const parts = cleanType.split('.');
+                            tsType = parts[parts.length - 1];
+                        } else {
+                            // If we still can't determine the type, use the cleaned type as is
+                            tsType = cleanType;
+                        }
+                    }
+                }
+                
+                const fieldName = field.name.charAt(0).toLowerCase() + field.name.slice(1);
+                return `    ${fieldName}: ${tsType};`;
             }).join('\n');
 
             return `export interface ${interfaceName} {\n${properties}\n}`;
@@ -62,8 +87,10 @@ export class JsonGenerator {
         try {
             const parsedJson = JSON.parse(jsonExample);
             const interfaceName = `${field.name}Config`;
-            const className = `${field.name}Setting`;
+            const className = `${field.name.charAt(0).toUpperCase() + field.name.slice(1)}Setting`;
             
+            const cleanType = field.type.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+            const tsType = TypeMapper.mapCSharpTypeToTypeScript(cleanType);
             return `export interface ${interfaceName} ${this.generateTypeFromValue(parsedJson)}
 
 export class ${className} extends JsonSetting<${interfaceName}> {

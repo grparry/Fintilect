@@ -1,4 +1,4 @@
-import { ParsedClass, ParsedField } from '../../parser/csharpParser';
+import { ParsedClass, ParsedField, ParsedAttribute } from '../../parser/types';
 import logger from '../../utils/logger';
 import { TypeMapper } from '../typeSystem/typeMapper'; 
 
@@ -9,6 +9,57 @@ export class SettingsGenerator {
         this.typeMapper = new TypeMapper();
     }
 
+    private cleanTypeName(type: string): string {
+        return type.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+    }
+
+    private formatLabel(label: string): string {
+        // Convert camelCase to Title Case with spaces
+        const withSpaces = label
+            .replace(/([A-Z])/g, ' $1')  // Add space before capital letters
+            .replace(/^./, str => str.toUpperCase())  // Capitalize first letter
+            .trim();  // Remove leading/trailing spaces
+
+        // Handle numbers at the end of the label
+        const parts = withSpaces.split(/(\d+)/).filter(Boolean);
+        return parts.map((part, i) => {
+            if (/^\d+$/.test(part)) {
+                return ` ${part}`;  // Add space before numbers
+            }
+            return i === 0 ? part : part.toLowerCase();
+        }).join('');
+    }
+
+    private sanitizeDescription(description: string): string {
+        return description.replace(/"/g, '\\"');
+    }
+
+    private formatDefaultValue(defaultValue: any, type: string): string {
+        if (type === 'string') {
+            return `'${defaultValue}'`;
+        } else if (type === 'number' || type === 'int' || type === 'long' || type === 'double' || type === 'float' || type === 'decimal') {
+            return defaultValue.toString();
+        } else if (type === 'boolean') {
+            return defaultValue.toString().toLowerCase();
+        } else if (type === 'DateTime' || type === 'DateTimeOffset') {
+            return `new Date('${defaultValue}')`;
+        } else if (type === 'TimeSpan') {
+            return `'${defaultValue}'`;
+        } else if (type === 'Guid') {
+            return `'${defaultValue}'`;
+        } else if (type === 'Uri') {
+            return `'${defaultValue}'`;
+        } else if (type === 'Array' || type === 'List' || type === 'Dictionary' || type === 'object' || type === 'dynamic') {
+            return 'null';
+        } else {
+            return 'null';
+        }
+    }
+
+    private generateValidationRules(validationRules: any[]): string {
+        return JSON.stringify(validationRules);
+    }
+
     /**
      * Generate settings group class
      */
@@ -16,33 +67,15 @@ export class SettingsGenerator {
         let result = `export class ${classInfo.name} implements ISettingsGroup {\n`;
         
         // Add metadata with settings property
-        result += '    static readonly metadata: ISettingsMetadata = {\n';
-        result += `        groupName: '${classInfo.name}',\n`;
-        result += '        settings: {\n';
-        
-        // Add settings metadata for each field
-        if (classInfo.fields) {
-            for (const field of classInfo.fields) {
-                if (field.settingKey) {
-                    const settingName = field.name.charAt(0).toLowerCase() + field.name.slice(1);
-                    result += `            ${settingName}: {\n`;
-                    result += `                key: '${field.settingKey}',\n`;
-                    result += `                type: '${this.mapTypeToSettingType(field.type)}',\n`;
-                    result += '                required: true\n';
-                    result += '            },\n';
-                }
-            }
-        }
-        
-        result += '        }\n';
-        result += '    };\n\n';
+        result += this.generateSettingsMetadata(classInfo);
+        result += '\n';
 
         // Add setting key constants
         if (classInfo.fields) {
             for (const field of classInfo.fields) {
                 if (field.settingKey) {
                     const settingName = field.name.charAt(0).toLowerCase() + field.name.slice(1);
-                    result += `    static readonly ${settingName}Key = '${field.settingKey}';\n`;
+                    result += `    static readonly ${settingName}Key = '${classInfo.name}.${field.name}';\n`;
                 }
             }
             result += '\n';
@@ -61,7 +94,8 @@ export class SettingsGenerator {
                 } else {
                     // Simple field
                     const settingName = field.name.charAt(0).toLowerCase() + field.name.slice(1);
-                    const tsType = this.typeMapper.mapCSharpTypeToTypeScript(field.type);
+                    const cleanType = this.cleanTypeName(field.type);
+                    const tsType = TypeMapper.mapCSharpTypeToTypeScript(cleanType);
                     result += `    private _${settingName}: ${tsType};\n`;
                     result += `    get ${settingName}(): ${tsType} {\n`;
                     result += `        return this._${settingName};\n`;
@@ -85,7 +119,7 @@ export class SettingsGenerator {
                     result += `            this._${settingName}.toSetting(),\n`;
                 } else if (field.settingKey) {
                     const dataType = field.type === 'string' ? 'string' : field.type === 'number' || field.type === 'int' ? 'number' : 'json';
-                    result += `            { key: '${field.settingKey}', value: JSON.stringify(this._${settingName}), dataType: '${dataType}' },\n`;
+                    result += `            { key: "${classInfo.name}.${field.name}", value: this._${field.name.charAt(0).toLowerCase() + field.name.slice(1)}, dataType: '${dataType}' },\n`;
                 }
             }
         }
@@ -103,11 +137,11 @@ export class SettingsGenerator {
             for (const field of classInfo.fields) {
                 const settingName = field.name.charAt(0).toLowerCase() + field.name.slice(1);
                 if (field.documentation?.includes('```json')) {
-                    result += `                case '${classInfo.name}.${field.settingKey}':\n`;
+                    result += `                case '${classInfo.name}.${field.name}':\n`;
                     result += `                    this._${settingName}.fromSetting(setting);\n`;
                     result += '                    break;\n';
                 } else {
-                    result += `                case '${classInfo.name}.${field.settingKey}':\n`;
+                    result += `                case '${classInfo.name}.${field.name}':\n`;
                     if (field.type === 'boolean') {
                         result += `                    this._${settingName} = Boolean(setting.value);\n`;
                     } else {
@@ -127,19 +161,47 @@ export class SettingsGenerator {
         return result;
     }
 
+    private generateSettingsMetadata(parsedClass: ParsedClass): string {
+        const settings = parsedClass.fields.map(field => {
+            const key = `${parsedClass.name}.${field.name}`;
+            return `{
+                        key: "${key}",
+                        type: "${TypeMapper.mapCSharpTypeToTypeScript(field.type)}",
+                        label: "${this.formatLabel(field.name)}",
+                        description: "${field.documentation || field.name}"
+                    }`;
+        });
+
+        return `static readonly metadata: ISettingsMetadata = {
+                groups: [{
+                    key: '${parsedClass.name}',
+                    label: '${this.formatLabel(parsedClass.name)}',
+                    settings: [
+                        ${settings.join(',\n                        ')}
+                    ]
+                }],
+                version: '1.0.0',
+                lastUpdated: new Date().toISOString()
+            };`;
+    }
+
     /**
      * Generate settings class
      */
     public generateSettingsClass(className: string, fields: ParsedField[]): string {
         const imports = new Set<string>();
+        imports.add('import { Setting } from \'@cbp/config-api-types\';');
+        imports.add('import { ISettingsGroup, ISettingsMetadata } from \'../../settings.types\';');
+
         const settingFields = fields.map(field => {
             const { name, type, settingKey } = field;
-            const tsType = this.typeMapper.mapCSharpTypeToTypeScript(type);
+            const cleanType = this.cleanTypeName(type);
+            const tsType = TypeMapper.mapCSharpTypeToTypeScript(cleanType);
             
             // Add imports for complex types
             if (tsType.includes('.')) {
-                const importPath = tsType.split('.')[0];
-                imports.add(`import { ${tsType} } from './${importPath}';`);
+                const [namespace, typeName] = tsType.split('.');
+                imports.add(`import { ${typeName} } from '../../infrastructure/models/${namespace}';`);
             }
             
             return {
@@ -162,41 +224,15 @@ export class SettingsGenerator {
 
     set ${field.fieldName}(value: ${field.settingType}) {
         this._${field.fieldName} = value;
-        this.onSettingChanged();
-    }`).join('\n');
+    }`
+        ).join('\n');
 
         return `${importStatements}
-import { Setting, ISettingsGroup, ISettingsMetadata } from './interfaces';
 
-export class ${className} implements ISettingsGroup {
-    static readonly metadata: ISettingsMetadata = {
-        groupName: '${className}',
-        description: 'Settings for ${className}',
-        category: 'UserSettings'
-    };
-
+export class ${className} {
 ${fieldDeclarations}
 
-    constructor() {
-        this.initializeDefaults();
-    }
-
-    private initializeDefaults(): void {
-        // Initialize default values if needed
-    }
-
-    private onSettingChanged(): void {
-        // Handle setting changes
-    }
 ${getterSetters}
-
-    toSettings(): Setting[] {
-        return [
-${settingFields.map(field => 
-            `            { key: '${field.settingKey}', value: this._${field.fieldName}, dataType: '${field.settingType === 'string' ? 'string' : field.settingType === 'number' ? 'number' : 'json'}' }`
-        ).join(',\n')}
-        ];
-    }
 }`;
     }
 
@@ -213,78 +249,139 @@ ${settingFields.map(field =>
             return null;
         }
 
+        const type = this.mapTypeToSettingType(field.type);
+        const defaultValue = field.defaultValue !== undefined ? 
+            this.formatDefaultValue(field.defaultValue, field.type) : 
+            this.getDefaultValueForType(field.type);
+
         return `{
             key: '${settingKey}',
-            value: this.${field.name},
-            type: '${this.getSettingType(field.type)}',
+            value: ${this.generateValueGetter(field)},
+            type: '${type}',
             validationRules: ${JSON.stringify(field.validationRules || [])}
         }`;
     }
 
-    private isSettingField(field: ParsedField): boolean {
-        return field.attributes?.some(attr => 
-            attr.name === 'SettingKey' || 
-            attr.name === 'Setting'
-        ) ?? false;
-    }
+    private generateValueGetter(field: ParsedField): string {
+        const fieldName = field.name.charAt(0).toLowerCase() + field.name.slice(1);
+        const type = this.mapTypeToSettingType(field.type);
 
-    private getSettingKey(field: ParsedField): string {
-        // The settingKey will be in the format: SettingKey("test.setting1")
-        // Extract just the value inside the quotes
-        const match = field.settingKey.match(/SettingKey\("([^"]+)"\)/);
-        return match ? match[1] : field.settingKey;
-    }
-
-    private getSettingType(type: string): string {
-        const typeMap: { [key: string]: string } = {
-            'string': 'string',
-            'bool': 'boolean',
-            'int': 'number',
-            'long': 'number',
-            'double': 'number',
-            'decimal': 'number',
-            'DateTime': 'date',
-            'Guid': 'string'
-        };
-
-        return typeMap[type] || 'string';
-    }
-
-    private mapTypeToSettingType(type: string): string {
-        const typeMap: { [key: string]: string } = {
-            'string': 'string',
-            'bool': 'boolean',
-            'int': 'number',
-            'long': 'number',
-            'double': 'number',
-            'decimal': 'number',
-            'DateTime': 'date',
-            'Guid': 'string'
-        };
-
-        return typeMap[type] || 'string';
+        if (type === 'object' || type === 'array') {
+            return `JSON.stringify(this._${fieldName})`;
+        } else if (type === 'date') {
+            return `this._${fieldName}.toISOString()`;
+        } else if (type === 'boolean') {
+            return `Boolean(this._${fieldName})`;
+        } else {
+            return `this._${fieldName}`;
+        }
     }
 
     private getDefaultValueForType(type: string): string {
-        switch (type) {
+        const settingType = this.mapTypeToSettingType(type);
+        switch (settingType) {
             case 'string':
                 return '\'\'';
             case 'number':
                 return '0';
             case 'boolean':
                 return 'false';
-            case 'Date':
+            case 'date':
                 return 'new Date()';
-            case 'any':
-                return 'null';
+            case 'array':
+                return '[]';
+            case 'object':
+                return '{}';
             default:
-                if (type.endsWith('[]')) {
-                    return '[]';
-                }
-                if (type.includes('|')) {
-                    return 'null';
-                }
                 return 'null';
         }
+    }
+
+    private isSettingField(field: ParsedField): boolean {
+        // Check for setting key attribute
+        if (field.attributes?.some(attr => 
+            attr.name === 'SettingKey' || 
+            attr.name === 'Setting' ||
+            attr.name === 'JsonSetting'
+        )) {
+            return true;
+        }
+
+        // Check for setting key property
+        if (field.settingKey) {
+            return true;
+        }
+
+        // Check for JSON documentation
+        if (field.documentation?.includes('```json')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private getSettingKey(field: ParsedField): string {
+        // First check for explicit setting key
+        if (field.settingKey) {
+            const match = field.settingKey.match(/SettingKey\("([^"]+)"\)/);
+            return match ? match[1] : field.settingKey;
+        }
+
+        // Check attributes
+        const settingAttr = field.attributes?.find(attr => 
+            attr.name === 'SettingKey' || 
+            attr.name === 'Setting' ||
+            attr.name === 'JsonSetting'
+        );
+
+        if (settingAttr?.arguments?.length > 0) {
+            const argValue = settingAttr.arguments[0].value;
+            return argValue.replace(/['"]/g, '');
+        }
+
+        // Default to field name
+        return field.name;
+    }
+
+    private mapTypeToSettingType(type: string): string {
+        const typeMap: { [key: string]: string } = {
+            'string': 'string',
+            'bool': 'boolean',
+            'boolean': 'boolean',
+            'int': 'number',
+            'long': 'number',
+            'double': 'number',
+            'float': 'number',
+            'decimal': 'number',
+            'DateTime': 'date',
+            'DateTimeOffset': 'date',
+            'TimeSpan': 'string',
+            'Guid': 'string',
+            'Uri': 'string',
+            'Array': 'array',
+            'List': 'array',
+            'Dictionary': 'object',
+            'object': 'object',
+            'dynamic': 'object'
+        };
+
+        // Handle array types
+        if (type.endsWith('[]')) {
+            return 'array';
+        }
+
+        // Handle generic types
+        const genericMatch = type.match(/<(.+)>/);
+        if (genericMatch) {
+            const baseType = type.split('<')[0];
+            if (baseType === 'List' || baseType === 'IList' || baseType === 'IEnumerable') {
+                return 'array';
+            }
+            if (baseType === 'Dictionary' || baseType === 'IDictionary') {
+                return 'object';
+            }
+        }
+
+        return typeMap[type] || 'object';
     }
 }

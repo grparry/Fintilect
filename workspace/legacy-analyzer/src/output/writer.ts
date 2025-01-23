@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
-import logger from '../utils/logger';
-import { ParsedClass } from '../parser/csharpParser';
+import { Logger } from '../utils/logger';
+import { ParsedClass } from '../parser/types';
 import { ClassDocWriter } from './classDocWriter';
 import { FileService } from '../services/fileService';
 import { TypeScriptWriter } from './typeScriptWriter';
@@ -21,6 +21,7 @@ export class OutputWriter {
   private fileService: FileService;
   private readonly isTest: boolean;
   private pathResolver: PathResolver;
+  private logger: Logger;
 
   constructor(options: OutputOptions) {
     this.outputDir = options.outputDir;
@@ -30,6 +31,7 @@ export class OutputWriter {
     this.fileService = new FileService(this.outputDir);
     this.classDocWriter = new ClassDocWriter(this.fileService);
     this.pathResolver = new PathResolver({ isTest: this.isTest });
+    this.logger = new Logger();
   }
 
   /**
@@ -44,10 +46,10 @@ export class OutputWriter {
       const errorPath = path.join(this.outputDir, this.errorFile);
       await this.fileService.ensureFile(errorPath);
 
-      logger.info(`Output directory initialized: ${this.outputDir}`);
+      this.logger.info(`Output directory initialized: ${this.outputDir}`);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      logger.error(`Failed to initialize output directory: ${errorMessage}`);
+      this.logger.error(`Failed to initialize output directory: ${errorMessage}`);
       throw error;
     }
   }
@@ -64,10 +66,10 @@ export class OutputWriter {
       const docPath = this.pathResolver.getTypeOutputPath(parsedClass).replace('.ts', '.md');
       await this.classDocWriter.writeClassDoc(parsedClass, docPath);
       
-      logger.info(`Class data written for ${parsedClass.name}`);
+      this.logger.info(`Class data written for ${parsedClass.name}`);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      logger.error(`Failed to write class data: ${errorMessage}`);
+      this.logger.error(`Failed to write class data: ${errorMessage}`);
       throw error;
     }
   }
@@ -83,7 +85,7 @@ export class OutputWriter {
       await fs.appendFile(errorPath, errorContent);
     } catch (appendError) {
       const errorMessage = appendError instanceof Error ? appendError.message : 'Unknown error';
-      logger.error(`Failed to write error: ${errorMessage}`);
+      this.logger.error(`Failed to write error: ${errorMessage}`);
       throw appendError;
     }
   }
@@ -113,7 +115,7 @@ export class OutputWriter {
     try {
       await this.fileService.remove(this.lockFile);
     } catch (error) {
-      logger.warn(`Failed to release lock: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      this.logger.warn(`Failed to release lock: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 

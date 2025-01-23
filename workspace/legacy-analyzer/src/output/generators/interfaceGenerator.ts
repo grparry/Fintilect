@@ -1,4 +1,4 @@
-import { ParsedField, ParsedEnum, ParsedClass } from '../../parser/csharpParser';
+import { ParsedField, ParsedEnum, ParsedEnumValue, ParsedClass } from '../../parser/types';
 import { TypeMapper } from '../typeSystem/typeMapper';
 import logger from '../../utils/logger';
 
@@ -12,12 +12,17 @@ export class InterfaceGenerator {
         let interfaceDefinition = `export interface ${className} {\n`;
         
         for (const property of properties) {
-            const propertyType = this.typeMapper.mapCSharpTypeToTypeScript(property.type);
-            interfaceDefinition += `    ${property.name}: ${propertyType};\n`;
+            interfaceDefinition += `    ${this.generateField(property)}\n`;
         }
         
         interfaceDefinition += '}\n';
         return interfaceDefinition;
+    }
+
+    private generateField(field: ParsedField): string {
+        const type = TypeMapper.mapCSharpTypeToTypeScript(field.type);
+        const nullableSuffix = field.isNullable ? '?' : '';
+        return `${field.name}${nullableSuffix}: ${type};`;
     }
 
     /**
@@ -27,7 +32,7 @@ export class InterfaceGenerator {
         let enumDefinition = `export enum ${enumDef.name} {\n`;
         
         if ('values' in enumDef && enumDef.values) {
-            enumDef.values.forEach(enumValue => {
+            enumDef.values.forEach((enumValue: ParsedEnumValue) => {
                 enumDefinition += `    ${enumValue.name}`;
                 if (enumValue.value !== undefined) {
                     enumDefinition += ` = ${enumValue.value}`;

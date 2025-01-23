@@ -5,30 +5,56 @@ class Logger {
     private logDir: string;
     private logFile: string;
     private errorFile: string;
+    private initialized: boolean = false;
+    private debugEnabled: boolean;
 
     constructor() {
         this.logDir = path.join(process.cwd(), 'logs');
         this.logFile = path.join(this.logDir, 'combined.log');
         this.errorFile = path.join(this.logDir, 'error.log');
-        
+        console.log('Environment variables:', process.env);
+        this.debugEnabled = process.env.DEBUG === 'true';
+        console.log('Debug enabled:', this.debugEnabled);
+        this.initializeLogs();
+    }
+
+    private initializeLogs() {
         try {
             // Create logs directory if it doesn't exist
             if (!fs.existsSync(this.logDir)) {
                 fs.mkdirSync(this.logDir, { recursive: true });
+                console.log(`Created logs directory at: ${this.logDir}`);
             }
 
-            // Clear existing log files
-            fs.writeFileSync(this.logFile, '');
-            fs.writeFileSync(this.errorFile, '');
+            // Create log files if they don't exist
+            if (!fs.existsSync(this.logFile)) {
+                fs.writeFileSync(this.logFile, '', { flag: 'w' });
+                console.log(`Created combined log file at: ${this.logFile}`);
+            }
+            if (!fs.existsSync(this.errorFile)) {
+                fs.writeFileSync(this.errorFile, '', { flag: 'w' });
+                console.log(`Created error log file at: ${this.errorFile}`);
+            }
+
+            // Test write access to both files
+            fs.appendFileSync(this.logFile, '');
+            fs.appendFileSync(this.errorFile, '');
+
+            this.initialized = true;
+            this.info('Logger initialized successfully');
+            if (this.debugEnabled) {
+                this.debug('Debug logging enabled');
+            }
         } catch (err) {
             console.error('Failed to initialize log files:', err);
+            throw err;
         }
     }
 
     private formatMessage(level: string, message: string, args: any[]): string {
         const timestamp = new Date().toISOString();
         const formattedArgs = args.length > 0 ? ' ' + args.map(arg => 
-            typeof arg === 'object' ? JSON.stringify(arg) : arg
+            typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
         ).join(' ') : '';
         
         return `[${timestamp}] ${level}: ${message}${formattedArgs}\n`;
@@ -36,9 +62,10 @@ class Logger {
 
     private writeToFile(filePath: string, message: string) {
         try {
-            fs.appendFileSync(filePath, message);
+            fs.appendFileSync(filePath, message, { flag: 'a', encoding: 'utf8' });
         } catch (err) {
             console.error(`Failed to write to ${filePath}:`, err);
+            throw err;
         }
     }
 
@@ -62,27 +89,30 @@ class Logger {
     }
 
     debug(message: string, ...args: any[]) {
+        if (!this.debugEnabled) return;
+        
         const logMessage = this.formatMessage('DEBUG', message, args);
         console.debug(logMessage.trim());
         this.writeToFile(this.logFile, logMessage);
     }
 }
 
+// Create a single instance of the logger
 const logger = new Logger();
+
+// Export both the class and default instance
+export { Logger };
+export default logger;
 
 // Ensure streams are closed when the process exits
 process.on('exit', () => {
-    // No-op since we're using synchronous file operations
+    // No cleanup needed since we're using synchronous operations
 });
 
 process.on('SIGINT', () => {
-    // No-op since we're using synchronous file operations
     process.exit();
 });
 
 process.on('SIGTERM', () => {
-    // No-op since we're using synchronous file operations
     process.exit();
 });
-
-export default logger;

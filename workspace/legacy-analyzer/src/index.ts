@@ -1,10 +1,10 @@
 import path from 'path';
 import { FileScanner } from './fileScanner';
-import { CSharpParser } from './parser/csharpParser';
+import { FileService } from './services/fileService';
+import { CSharpParser } from './parser/parser';
 import { OutputWriter } from './output/writer';
 import logger from './utils/logger';
 import fs from 'fs-extra';
-import { FileService } from './services/fileService';
 
 // Initialize logger
 logger.info('Starting legacy analyzer');
@@ -71,8 +71,12 @@ async function analyzeDirectory(directoryPath: string, outputDir: string) {
 async function main() {
     try {
         const args = process.argv.slice(2);
+        console.log('Command line arguments:', args);
+        
         const inputIndex = args.indexOf('--input');
+        console.log('Input index:', inputIndex);
         const outputIndex = args.indexOf('--output');
+        console.log('Output index:', outputIndex);
 
         if (inputIndex === -1 || outputIndex === -1 || inputIndex + 1 >= args.length || outputIndex + 1 >= args.length) {
             console.error('Usage: npm start -- --input <input_path> --output <output_path>');
@@ -80,7 +84,9 @@ async function main() {
         }
 
         const directoryPath = args[inputIndex + 1];
+        console.log('Directory path:', directoryPath);
         const outputDir = args[outputIndex + 1];
+        console.log('Output directory:', outputDir);
 
         // Clear previous logs
         await fs.remove('logs');

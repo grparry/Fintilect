@@ -1,5 +1,5 @@
 import path from 'path';
-import { ParsedClass, ParsedEnum } from '../../parser/csharpParser';
+import { ParsedClass, ParsedEnum } from '../../parser/types';
 import logger from '../../utils/logger';
 
 export interface PathResolverOptions {
@@ -8,9 +8,11 @@ export interface PathResolverOptions {
 
 export class PathResolver {
     private readonly isTest: boolean;
+    private typeRegistry: Map<string, { namespace: string, directory: string }>;
 
     constructor(options: PathResolverOptions = {}) {
         this.isTest = options.isTest || false;
+        this.typeRegistry = new Map();
     }
 
     /**
@@ -24,81 +26,24 @@ export class PathResolver {
             isTest: this.isTest
         });
         
-        const namespace = this.cleanMarkdownPath(parsedClass.namespace);
-
-        const parts = this.isTest ? ['classes'] : ['infrastructure', 'models'];
-        
-        if (namespace) {
-            const namespaceParts = namespace.split('.');
-            
-            if (!this.isTest) {
-                if (this.isInRootNamespace(namespaceParts) && !this.isInSubNamespace(namespaceParts)) {
-                    // Base namespace classes go directly in models directory
-                    // No additional parts needed
-                } else if (this.isInRootNamespace(namespaceParts)) {
-                    // For production with sub-namespaces, use specific subdirectory structure
-                    const subDir = this.getSubdirectoryFromNamespace(namespace);
-                    if (subDir) {
-                        parts.push(subDir);
-                    }
-                } else {
-                    // For non-root namespaces, use namespace hierarchy
-                    parts.push(...namespaceParts);
-                }
-            } else {
-                // For tests, always use namespace hierarchy
-                parts.push(...namespaceParts);
+        // For test files, maintain the original structure
+        if (this.isTest) {
+            const parts = ['classes'];
+            if (parsedClass.namespace) {
+                parts.push(...parsedClass.namespace.split('.'));
             }
+            const fileName = `${parsedClass.name}.ts`;
+            const fullPath = path.join(...parts, fileName);
+            logger.info('Generated TypeScript file path:', { fullPath });
+            return fullPath;
         }
-        
-        // Add the class name
+
+        // For production files, flatten the structure
+        const parts = ['infrastructure', 'models'];
         const fileName = `${parsedClass.name}.ts`;
-        
-        // Join all parts to create the final path
         const fullPath = path.join(...parts, fileName);
         logger.info('Generated TypeScript file path:', { fullPath });
-        
         return fullPath;
-    }
-
-    /**
-     * Get the relative import path between two files
-     */
-    public getRelativeImportPath(fromFile: string, toFile: string): string {
-        // Clean any markdown links from the paths
-        fromFile = this.cleanMarkdownPath(fromFile);
-        toFile = this.cleanMarkdownPath(toFile);
-
-        // Get the directory paths
-        const fromDir = path.dirname(fromFile);
-        const toDir = path.dirname(toFile);
-
-        // Get the relative path
-        let relativePath = path.relative(fromDir, toDir);
-
-        // If we're in the same directory, use './'
-        if (!relativePath) {
-            relativePath = '.';
-        }
-        // If the path doesn't start with . or .., add ./
-        else if (!relativePath.startsWith('.')) {
-            relativePath = './' + relativePath;
-        }
-
-        // Get the filename without extension
-        const toFileName = path.basename(toFile, '.ts');
-
-        // Combine the path and filename
-        return path.join(relativePath, toFileName).replace(/\\/g, '/');
-    }
-
-    private cleanMarkdownPath(filePath: string): string {
-        // Remove markdown-style links and just keep the path
-        const markdownLinkMatch = filePath.match(/\[(.*?)\]\((.*?)\)/);
-        if (markdownLinkMatch) {
-            return markdownLinkMatch[2];
-        }
-        return filePath;
     }
 
     private isInRootNamespace(namespaceParts: string[]): boolean {
@@ -133,5 +78,185 @@ export class PathResolver {
         parts.splice(0, parts.length - 1);
         
         return parts.join(path.sep).toLowerCase();
+    }
+
+    private cleanTypeName(type: string): string {
+        return type.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+    }
+
+    /**
+     * Check if a path is in the root models directory
+     */
+    private isInRootModelsDirectory(filePath: string): boolean {
+        const parts = filePath.split(path.sep);
+        const modelsIndex = parts.indexOf('models');
+        if (modelsIndex === -1) return false;
+        
+        // Check if there are any additional subdirectories after 'models'
+        // infrastructure/models/file.ts -> true
+        // infrastructure/models/subdirectory/file.ts -> false
+        return parts.length === modelsIndex + 2;
+    }
+
+    /**
+     * Get the subdirectory path for a type
+     */
+    private getTypeSubdirectoryPath(type: string): string | null {
+        // Special case handling for known subdirectories
+        if (type === 'MobileConfiguration') {
+            return 'MobileConfigurations';
+        }
+        // Add more special cases as needed
+        return null;
+    }
+
+    /**
+     * Get the relative import path for a type
+     */
+    public getRelativeImportPath(parsedClass: ParsedClass | ParsedEnum, importType: string): string {
+        // For test files, maintain the original structure
+        if (this.isTest) {
+            const parts = importType.split('.');
+            const typeName = parts.pop() || ''; // Remove type name
+            if (parts.length === 0) return `./${typeName}`;
+            return `../${parts.join('/')}/${typeName}`;
+        }
+
+        // For production files, all types are in the same directory
+        const typeName = importType.split('.').pop() || importType;
+        return `./${typeName}`;
+    }
+
+    /**
+     * Get the relative import path from one class to another (Legacy)
+     * @deprecated Use getRelativeImportPath instead
+     */
+    private getRelativeImportPathLegacy(fromClass: ParsedClass, toTypeName: string): string | null {
+        const registeredType = this.typeRegistry.get(toTypeName);
+        if (!registeredType) {
+            return null;
+        }
+
+        const fromPath = this.getTypeOutputPath(fromClass);
+        const toPath = this.getTypeOutputPath({
+            name: toTypeName,
+            namespace: registeredType.namespace,
+            fields: []
+        });
+
+        const fromDir = path.dirname(fromPath);
+        const toDir = path.dirname(toPath);
+
+        const relativePath = path.relative(fromDir, toDir);
+        const fileName = path.basename(toPath, '.ts');
+
+        if (relativePath === '') {
+            return `./${fileName}`;
+        }
+
+        return `${relativePath}/${fileName}`;
+    }
+
+    /**
+     * Get the relative import path from one class to another
+     */
+    public getRelativeImportPath(fromClass: ParsedClass, toTypeName: string): string | null {
+        // Clean any markdown-style links from the type name
+        const cleanToTypeName = this.cleanTypeName(toTypeName);
+
+        // Check if the type should be in a specific subdirectory
+        const subdir = this.getTypeSubdirectoryPath(cleanToTypeName);
+        if (subdir) {
+            return `./${subdir}/${cleanToTypeName}`;
+        }
+
+        // Get the full paths for both files
+        const fromPath = this.getTypeOutputPath(fromClass);
+        const toClass = { name: cleanToTypeName, namespace: fromClass.namespace } as ParsedClass;
+        const toPath = this.getTypeOutputPath(toClass);
+
+        // Convert both paths to use forward slashes for consistency
+        const normalizedFromPath = fromPath.replace(/\\/g, '/');
+        const normalizedToPath = toPath.replace(/\\/g, '/');
+
+        // Get the directories
+        const fromDir = path.dirname(normalizedFromPath);
+        const toDir = path.dirname(normalizedToPath);
+
+        // If paths are in the same directory
+        if (fromDir === toDir) {
+            return `./${cleanToTypeName}`;
+        }
+
+        // Handle cross-directory references
+        let relativePath = path.relative(fromDir, toDir);
+        relativePath = relativePath.replace(/\\/g, '/');
+
+        // Ensure the path starts with ./ or ../
+        if (!relativePath.startsWith('.')) {
+            relativePath = `./${relativePath}`;
+        }
+
+        // Return the final import path
+        return `${relativePath}/${cleanToTypeName}`;
+    }
+
+    /**
+     * Get the relative path for importing a type from another file
+     */
+    public getRelativePath(currentFile: string, typeName: string): string {
+        // For tests, use simple relative path
+        if (this.isTest) {
+            return `./${typeName}`;
+        }
+
+        // Get current file's directory
+        const currentDir = path.dirname(currentFile);
+        const isInRootDir = !currentDir.split(path.sep).slice(-2, -1)[0] || 
+                           currentDir.split(path.sep).slice(-2, -1)[0] === 'models';
+
+        // For imports from root directory files, include the full path
+        if (isInRootDir) {
+            return `./${typeName}`;
+        }
+
+        // For imports within subdirectories, use relative paths
+        const typeInfo = this.findTypeInfo(typeName);
+        if (!typeInfo) {
+            logger.warn(`Type information not found for ${typeName}, using default relative path`);
+            return `./${typeName}`;
+        }
+
+        if (typeInfo.directory) {
+            return `../${typeInfo.directory}/${typeName}`;
+        }
+
+        return `./${typeName}`;
+    }
+
+    /**
+     * Find type information in the registry
+     */
+    private findTypeInfo(typeName: string): { namespace: string, directory: string } | undefined {
+        // For tests, return empty directory
+        if (this.isTest) {
+            return { namespace: '', directory: '' };
+        }
+
+        // Check if type exists in registry
+        const typeInfo = this.typeRegistry.get(typeName);
+        if (typeInfo) {
+            return typeInfo;
+        }
+
+        return undefined;
+    }
+
+    getImportPath(fromFile: string, toFile: string): string {
+        const fromDir = path.dirname(fromFile);
+        const toDir = path.dirname(toFile);
+        const relativePath = path.relative(fromDir, toDir);
+        const toFileName = path.basename(toFile, '.ts');
+        return path.join(relativePath === '' ? '.' : relativePath, toFileName).replace(/\\/g, '/');
     }
 }

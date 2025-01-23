@@ -1,8 +1,10 @@
-import fs from 'fs-extra';
+import fs from 'fs';
 import path from 'path';
-import { ParsedClass, ParsedAttribute, ParsedEnum, ParsedField, ParsedEnumValue } from '../parser/csharpParser';
 import logger from '../utils/logger';
+import { ParsedClass, ParsedField, ParsedEnum } from '../parser/types';
 import { FileService } from '../services/fileService';
+import { TypeMapper } from './typeSystem/typeMapper';
+import { OutputWriter } from './writer';
 
 export class ClassDocWriter {
     constructor(private readonly fileService: FileService) {}
@@ -44,62 +46,6 @@ export class ClassDocWriter {
         
         // Join with path separator and prepend classes directory
         return path.join('classes', ...parts);
-    }
-
-    private mapCSharpTypeToTypeScript(csharpType: string): string {
-        const typeMap: { [key: string]: string } = {
-            'string': 'string',
-            'int': 'number',
-            'long': 'number',
-            'double': 'number',
-            'float': 'number',
-            'decimal': 'number',
-            'bool': 'boolean',
-            'DateTime': 'Date',
-            'DateTimeOffset': 'Date',
-            'Guid': 'string',
-            'object': 'any',
-            'dynamic': 'any',
-            'void': 'void'
-        };
-
-        // Handle arrays
-        if (csharpType.endsWith('[]')) {
-            const baseType = csharpType.slice(0, -2);
-            return `${this.mapCSharpTypeToTypeScript(baseType)}[]`;
-        }
-
-        // Handle nullable types
-        if (csharpType.startsWith('Nullable<') && csharpType.endsWith('>')) {
-            const innerType = csharpType.slice(9, -1);
-            return `${this.mapCSharpTypeToTypeScript(innerType)} | null`;
-        }
-
-        // Handle generic types
-        if (csharpType.includes('<') && csharpType.endsWith('>')) {
-            const match = csharpType.match(/^([^<]+)<(.+)>$/);
-            if (match) {
-                const baseType = match[1];
-                const typeArgs = match[2].split(',').map(t => this.mapCSharpTypeToTypeScript(t.trim()));
-                return `${baseType}<${typeArgs.join(', ')}>`;
-            }
-        }
-
-        // Handle List<T> as Array<T>
-        if (csharpType.startsWith('List<') && csharpType.endsWith('>')) {
-            const innerType = csharpType.slice(5, -1);
-            return `Array<${this.mapCSharpTypeToTypeScript(innerType)}>`;
-        }
-
-        // Handle Dictionary<K,V> as Record<K,V>
-        if (csharpType.startsWith('Dictionary<') && csharpType.endsWith('>')) {
-            const types = csharpType.slice(11, -1).split(',').map(t => t.trim());
-            if (types.length === 2) {
-                return `Record<${this.mapCSharpTypeToTypeScript(types[0])}, ${this.mapCSharpTypeToTypeScript(types[1])}>`;
-            }
-        }
-
-        return typeMap[csharpType] || csharpType;
     }
 
     private formatAttributeValue(value: string | undefined): string {
@@ -152,7 +98,7 @@ export class ClassDocWriter {
         return docs.join('\n');
     }
 
-    private formatValidationRules(attributes: ParsedAttribute[]): string[] {
+    private formatValidationRules(attributes: any[]): string[] {
         const rules: string[] = [];
         
         for (const attr of attributes) {
@@ -203,20 +149,17 @@ export class ClassDocWriter {
     private generateFieldMarkdown(field: ParsedField, sourceFile: string): string[] {
         const lines: string[] = [];
         if (field.name) {
-            lines.push(`### ${field.name}`);
+            const typeDisplay = field.documentationType || field.type;
+            lines.push(`### ${field.name}: \`${typeDisplay}\``);
             lines.push('');
-            lines.push('```typescript');
-            const tsType = this.mapCSharpTypeToTypeScript(field.type);
-            lines.push(`type: ${tsType}${field.isNullable ? ' | null' : ''}`);
-            if (sourceFile) {
-                lines.push(`sourceFile: ${sourceFile}`);
+            
+            // Documentation
+            if (field.documentation) {
+                const formattedDocs = this.formatDocumentation(field.documentation);
+                lines.push(formattedDocs);
+                lines.push('');
             }
-            lines.push(`visibility: ${field.isPublic ? 'public' : 'private'}`);
-            if (field.isReadOnly) lines.push('modifier: readonly');
-            if (field.defaultValue) lines.push(`default: ${field.defaultValue}`);
-            lines.push('```');
-            lines.push('');
-
+            
             // Add validation rules if present
             const validationRules = this.formatValidationRules(field.attributes);
             if (validationRules.length > 0) {

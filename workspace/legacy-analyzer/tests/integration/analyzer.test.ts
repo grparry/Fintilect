@@ -1,11 +1,11 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { FileScanner, ScannerOptions } from '../../src/fileScanner';
-import { CSharpParser } from '../../src/parser/csharpParser';
+import { describe, it, expect, beforeAll, afterAll, jest } from '@jest/globals';
+import { FileScanner } from '../../src/fileScanner';
+import { FileService } from '../../src/services/fileService';
+import { CSharpParser } from '../../src/parser/parser';
 import { OutputWriter } from '../../src/output/writer';
 import logger from '../../src/utils/logger';
-import { FileService } from '../../src/services/fileService';
-import { jest, describe, it, expect, beforeAll, beforeEach, afterAll } from '@jest/globals';
 
 describe('Legacy Analyzer Integration Tests', () => {
   const testDataDir = path.join(__dirname, '../fixtures');
@@ -94,8 +94,8 @@ namespace Test.Settings {
         
         // Check for toSettings method
         expect(outputContent).toContain('toSettings(): Setting[]');
-        expect(outputContent).toContain('{ key: \'test.setting1\', value: this._setting1, dataType: \'string\' }');
-        expect(outputContent).toContain('{ key: \'test.setting2\', value: this._setting2, dataType: \'number\' }');
+        expect(outputContent).toContain('{ key: "ValidSettings.Setting1", value: this._setting1, dataType: \'string\', label: "Setting1" }');
+        expect(outputContent).toContain('{ key: "ValidSettings.Setting2", value: this._setting2, dataType: \'number\', label: "Setting2" }');
 
       } finally {
         // Clean up test file
@@ -127,7 +127,8 @@ namespace Test.Settings {
         
         // Should still parse but with errors
         expect(parsedClasses).toHaveLength(1);
-        expect(parsedClasses[0].fields[0].settingKey).toBe('');
+        expect(parsedClasses[0].fields).toHaveLength(1);
+        expect(parsedClasses[0].fields[0].name).toBe('Setting1');
 
         for (const parsedClass of parsedClasses) {
             await writer.writeClassData(parsedClass, 'test.cs');
@@ -202,7 +203,7 @@ namespace Test.Settings {
         expect(settings1Content).toContain('export interface Settings1Config');
         expect(settings1Content).toContain('Setting1: string;');
         expect(settings1Content).toContain('private _setting1: string');
-        expect(settings1Content).toContain('{ key: \'test1\', value: this._setting1, dataType: \'string\' }');
+        expect(settings1Content).toContain('{ key: "Settings1.Setting1", value: this._setting1, dataType: \'string\', label: "Setting1" }');
 
         // Verify Settings2 output
         const settings2Path = path.join(outputDir, 'classes/Test/Settings/Settings2.ts');
@@ -211,7 +212,7 @@ namespace Test.Settings {
         expect(settings2Content).toContain('export interface Settings2Config');
         expect(settings2Content).toContain('Setting2: number;');
         expect(settings2Content).toContain('private _setting2: number');
-        expect(settings2Content).toContain('{ key: \'test2\', value: this._setting2, dataType: \'number\' }');
+        expect(settings2Content).toContain('{ key: "Settings2.Setting2", value: this._setting2, dataType: \'number\', label: "Setting2" }');
 
       } finally {
         await Promise.all(filePaths.map(fp => fs.remove(fp)));

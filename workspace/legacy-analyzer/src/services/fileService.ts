@@ -1,7 +1,7 @@
-import * as fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import path from 'path';
 import logger from '../utils/logger';
-import { ParsedClass } from '../parser/csharpParser';
+import { ParsedClass } from '../parser/types';
 import { ClassDocWriter } from '../output/classDocWriter';
 import { TypeScriptWriter } from '../output/typeScriptWriter';
 
@@ -196,6 +196,30 @@ export class FileService {
     } catch (error) {
       logger2.error(`Error writing TypeScript file: ${error}`);
       throw error;
+    }
+  }
+
+  async locateFile(scriptName: string): Promise<string> {
+    // First check if file exists as is
+    if (await this.fileExists(scriptName)) {
+      return scriptName;
+    }
+
+    // Check in source directory
+    const srcPath = path.join(this.outputDir, scriptName);
+    if (await this.fileExists(srcPath)) {
+      return srcPath;
+    }
+
+    throw new Error(`Could not locate file: ${scriptName}`);
+  }
+
+  private async fileExists(filePath: string): Promise<boolean> {
+    try {
+      await fs.access(filePath);
+      return true;
+    } catch {
+      return false;
     }
   }
 
