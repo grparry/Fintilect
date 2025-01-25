@@ -1,0 +1,26 @@
+{
+  "name": "fintilect",
+  "private": true,
+  "workspaces": [
+    "infrastructure",
+    "docs",
+    "logs",
+    "workbench/*",
+    "admin/*",
+    "api/*",
+    "application/*",
+    "ui/*"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc -b -w",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "clean": "rimraf **/dist"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.0",
+    "rimraf": "^5.0.0",
+    "jest": "^29.0.0"
+  }
+}
