@@ -1,15 +1,49 @@
 # Emerge Config System: Master Implementation Plan
 
+## Design Documents
+This implementation plan coordinates the designs specified in:
+
+1. **Base Architecture** (`cbp-admin/.cascade/plans/emerge-config-design.md`)
+   - Core component architecture
+   - Service layer integration
+   - Input component system
+   - Extension points
+
+2. **Navigation Design** (`cbp-admin/.cascade/plans/emerge-config-navigation.md`)
+   - URL structure
+   - Registry pattern
+   - Route generation
+   - Menu integration
+
+3. **Generator Design** (`workspace/emerge-config-gen/plans/generator-design.md`)
+   - Pipeline architecture
+   - Template system
+   - Input/Output formats
+   - CLI interface
+
+4. **Base Component Pattern** (`cbp-admin/.cascade/patterns/emerge-config/base-component.md`)
+   - Implementation patterns
+   - Anti-patterns
+   - Testing requirements
+   - Extension guidelines
+
+5. **Settings Type Generation** (`workspace/legacy-analyzer/plans/settings-type-generation.md`)
+   - Type generation
+   - Schema handling
+   - Legacy integration
+   - Migration support
+
 ## System Components
-- **Base Component** (cbp-admin)
-- **Navigation System** (cbp-admin)
-- **Generator Tool** (emerge-config-gen)
-- **Service Layer** (cbp-admin)
+- **Base Component** (cbp-admin) - See `emerge-config-design.md`
+- **Navigation System** (cbp-admin) - See `emerge-config-navigation.md`
+- **Generator Tool** (emerge-config-gen) - See `generator-design.md`
+- **Service Layer** (cbp-admin) - See `settings-type-generation.md`
 
 ## Implementation Phases
 
 ### Phase 1: Foundation (Week 1)
 Focus: Core infrastructure and validation patterns
+Reference: `emerge-config-design.md#base-component-architecture`
 
 #### 1.1 Base Component Core
 - [ ] Create `EmergeConfigSection` base class
@@ -53,6 +87,7 @@ describe('SettingsService', () => {
 
 ### Phase 2: Generator Foundation (Week 1-2)
 Focus: Basic generation pipeline and template system
+Reference: `generator-design.md#generator-pipeline`
 
 #### 2.1 Generator Core
 - [ ] Setup project structure
@@ -87,6 +122,7 @@ metadata:
 
 ### Phase 3: Navigation & Registry (Week 2)
 Focus: Component discovery and routing
+Reference: `emerge-config-navigation.md#section-registry`
 
 #### 3.1 Section Registry
 - [ ] Implement registry pattern
@@ -118,6 +154,7 @@ describe('ConfigSectionWrapper', () => {
 
 ### Phase 4: Full Pipeline (Week 2-3)
 Focus: End-to-end generation and integration
+Reference: `generator-design.md#output-structure`
 
 #### 4.1 Complete Generator
 - [ ] Add all template types
@@ -153,6 +190,7 @@ describe('E2E Tests', () => {
 
 ### Phase 5: Polish & Documentation (Week 3)
 Focus: Developer experience and production readiness
+Reference: `base-component.md#testing-requirements`
 
 #### 5.1 Developer Tools
 - [ ] Add watch mode
@@ -186,24 +224,28 @@ describe('Performance', () => {
 ## Validation Strategy
 
 ### 1. Unit Testing
+Reference: `base-component.md#testing-requirements`
 - Each component has isolated tests
 - Mock dependencies
 - Test edge cases
 - Verify types
 
 ### 2. Integration Testing
+Reference: `emerge-config-navigation.md#integration-points`
 - Test component interactions
 - Verify routing
 - Check data flow
 - Validate generation
 
 ### 3. E2E Testing
+Reference: `generator-design.md#testing-requirements`
 - Full generation pipeline
 - Component rendering
 - Navigation flow
 - Form submission
 
 ### 4. Manual Testing Points
+Reference: All design documents' testing sections
 After each phase:
 1. Generate test component
 2. Load in development
@@ -212,7 +254,7 @@ After each phase:
 5. Check performance
 
 ## Success Criteria
-
+[Success criteria with links to relevant design sections]
 ### Phase 1
 - [ ] Base component can manage values
 - [ ] Service layer validates JSON
@@ -239,7 +281,7 @@ After each phase:
 - [ ] Documentation complete
 
 ## Risk Mitigation
-
+[Risk mitigation with references to design considerations]
 ### Technical Risks
 1. **Type Generation**
    - Early validation with legacy-analyzer
@@ -268,6 +310,7 @@ After each phase:
    - Clear contracts
 
 ## Next Steps
+[Implementation steps with links to detailed designs]
 1. Create Phase 1 tasks
 2. Setup test infrastructure
 3. Begin base component

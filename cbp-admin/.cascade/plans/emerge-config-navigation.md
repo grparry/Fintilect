@@ -36,25 +36,46 @@ export const emergeConfigRoutes: RouteConfig[] = [
 // src/components/emerge-config/registry/ConfigSectionRegistry.ts
 export class ConfigSectionRegistry {
     private static sections = new Map<string, typeof EmergeConfigSection>();
-    
-    static register(key: string, section: typeof EmergeConfigSection) {
+    private static navigationItems: NavigationItem[] = [];
+
+    // Auto-registration support
+    static register(key: string, section: typeof EmergeConfigSection): void {
         this.sections.set(key, section);
+        this.updateNavigation();
     }
-    
+
+    // Lazy loading support
+    static async loadSection(groupId: string, sectionId: string): Promise<typeof EmergeConfigSection> {
+        const key = `${groupId}.${sectionId}`;
+        if (!this.sections.has(key)) {
+            const module = await import(`../sections/${groupId}/${sectionId}`);
+            // Registration happens automatically via static initializer
+            return module.default;
+        }
+        return this.sections.get(key)!;
+    }
+
+    private static updateNavigation(): void {
+        this.navigationItems = Array.from(this.sections.values())
+            .map(section => section.getNavigationItem())
+            .sort((a, b) => a.title.localeCompare(b.title));
+    }
+
     static getSection(groupId: string, sectionId: string): typeof EmergeConfigSection | undefined {
-        return this.sections.get(`${groupId}.${sectionId}`);
+        return Array.from(this.sections.values())
+            .find(section => 
+                section.metadata.groupId === groupId && 
+                section.metadata.sectionId === sectionId
+            );
     }
-    
+
     static getNavigationItems(): NavigationItem[] {
-        return Array.from(this.sections.values()).map(section => ({
-            id: section.metadata.key,
-            title: section.metadata.label,
-            path: `/admin/emerge-config/${section.metadata.groupId}/${section.metadata.sectionId}`,
-            icon: section.metadata.icon
-        }));
+        return this.navigationItems;
     }
 }
 ```
+
+For details on the complete registration flow and component integration, see `component-registration-flow.md`.
 
 ### 3. Section Wrapper
 ```typescript
@@ -183,3 +204,172 @@ export const generatedRoutes = [
    - Verify navigation state
    - Test section loading
    - Validate permissions
+
+## Validation Tests
+
+### 1. Registry Tests
+```typescript
+// Test at implementation of registry
+describe('ConfigSectionRegistry', () => {
+    // Registration
+    it('should register sections', () => {
+        const TestSection = createTestSection();
+        ConfigSectionRegistry.register('test', TestSection);
+        expect(ConfigSectionRegistry.getSection('test')).toBe(TestSection);
+    });
+
+    // Navigation Items
+    it('should generate navigation items', () => {
+        const items = ConfigSectionRegistry.getNavigationItems();
+        expect(items[0]).toMatchObject({
+            id: 'test',
+            title: 'Test Section',
+            path: '/admin/emerge-config/test'
+        });
+    });
+
+    // Permissions
+    it('should respect permissions', () => {
+        mockPermissions.deny('config.test');
+        const items = ConfigSectionRegistry.getNavigationItems();
+        expect(items).not.toContainEqual(
+            expect.objectContaining({ id: 'test' })
+        );
+    });
+});
+```
+
+### 2. Route Tests
+```typescript
+// Test at implementation of router
+describe('ConfigRouter', () => {
+    // Route Loading
+    it('should load correct section', async () => {
+        const { container } = render(
+            <MemoryRouter initialEntries={['/admin/emerge-config/test']}>
+                <ConfigRouter />
+            </MemoryRouter>
+        );
+        await waitFor(() => {
+            expect(container.querySelector('TestSection')).toBeInTheDocument();
+        });
+    });
+
+    // Not Found
+    it('should handle invalid routes', () => {
+        const { container } = render(
+            <MemoryRouter initialEntries={['/admin/emerge-config/invalid']}>
+                <ConfigRouter />
+            </MemoryRouter>
+        );
+        expect(container.querySelector('NotFound')).toBeInTheDocument();
+    });
+
+    // Loading State
+    it('should show loading state', () => {
+        const { container } = render(
+            <MemoryRouter initialEntries={['/admin/emerge-config/test']}>
+                <ConfigRouter />
+            </MemoryRouter>
+        );
+        expect(container.querySelector('LoadingIndicator')).toBeInTheDocument();
+    });
+});
+```
+
+### 3. Navigation State Tests
+```typescript
+// Test at implementation of navigation context
+describe('ConfigNavigationProvider', () => {
+    // State Updates
+    it('should update active section', () => {
+        const { result } = renderHook(() => useNavigation());
+        act(() => {
+            result.current.setActiveSection('test');
+        });
+        expect(result.current.state.activeSection).toBe('test');
+    });
+
+    // URL Sync
+    it('should sync with URL', () => {
+        const { result } = renderHook(() => useNavigation(), {
+            wrapper: MemoryRouter
+        });
+        act(() => {
+            result.current.navigate('/admin/emerge-config/test');
+        });
+        expect(result.current.state.activeSection).toBe('test');
+    });
+
+    // Persistence
+    it('should persist state', () => {
+        const { result, rerender } = renderHook(() => useNavigation());
+        act(() => {
+            result.current.setActiveSection('test');
+        });
+        rerender();
+        expect(result.current.state.activeSection).toBe('test');
+    });
+});
+```
+
+### 4. Integration Tests
+```typescript
+// Test after connecting components
+describe('Navigation Integration', () => {
+    // Menu + Router
+    it('should navigate on menu click', async () => {
+        const { container } = render(<ConfigNavigation />);
+        fireEvent.click(screen.getByText('Test Section'));
+        await waitFor(() => {
+            expect(container.querySelector('TestSection')).toBeInTheDocument();
+        });
+    });
+
+    // State + URL
+    it('should sync state and URL', () => {
+        const { result } = renderHook(() => useNavigation());
+        act(() => {
+            result.current.navigate('/admin/emerge-config/test');
+        });
+        expect(window.location.pathname).toBe('/admin/emerge-config/test');
+    });
+});
+```
+
+### 5. Error Boundary Tests
+```typescript
+// Test at implementation of error boundaries
+describe('NavigationErrorBoundary', () => {
+    // Loading Errors
+    it('should handle section load errors', () => {
+        const TestSection = createErrorSection();
+        ConfigSectionRegistry.register('error', TestSection);
+        
+        const { container } = render(
+            <MemoryRouter initialEntries={['/admin/emerge-config/error']}>
+                <ConfigRouter />
+            </MemoryRouter>
+        );
+        expect(container.querySelector('ErrorDisplay')).toBeInTheDocument();
+    });
+
+    // Recovery
+    it('should allow navigation after error', async () => {
+        const { container } = render(<ConfigNavigation />);
+        // Navigate to error section
+        fireEvent.click(screen.getByText('Error Section'));
+        // Navigate away
+        fireEvent.click(screen.getByText('Test Section'));
+        await waitFor(() => {
+            expect(container.querySelector('TestSection')).toBeInTheDocument();
+        });
+    });
+});
+```
+
+Each test suite should be implemented:
+1. During initial setup of each component
+2. When adding new navigation features
+3. After modifying routing logic
+4. During integration phases

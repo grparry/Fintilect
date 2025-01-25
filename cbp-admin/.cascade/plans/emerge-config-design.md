@@ -33,8 +33,22 @@ base/
 #### Base Component Implementation
 ```typescript
 export abstract class EmergeConfigSection<T = any> extends React.Component<ConfigSectionProps<T>> {
+    // Registration support
     static metadata: ConfigMetadata;
     
+    static register(key: string, component: typeof EmergeConfigSection): void {
+        ConfigSectionRegistry.register(key, component);
+    }
+
+    static getNavigationItem(): NavigationItem {
+        return {
+            id: this.metadata.key,
+            title: this.metadata.label,
+            path: `/admin/emerge-config/${this.metadata.groupId}/${this.metadata.sectionId}`,
+            icon: this.metadata.icon
+        };
+    }
+
     // Core functionality provided by base
     getValue(): T;
     setValue(value: T): void;
@@ -47,7 +61,9 @@ export abstract class EmergeConfigSection<T = any> extends React.Component<Confi
 }
 ```
 
-### 3. Service Layer Integration
+For details on the registration flow and navigation integration, see `component-registration-flow.md`.
+
+#### Service Layer Integration
 
 #### Settings Service Interface
 The base component integrates with the settings service:
@@ -79,7 +95,7 @@ export abstract class EmergeConfigSection<T = any> {
 }
 ```
 
-### 4. Input Components
+### 3. Input Components
 Located in `src/components/emerge-config/base/inputs/`:
 ```
 inputs/
@@ -135,7 +151,7 @@ export const NumberInput: React.FC<InputProps<number>> = ({
 };
 ```
 
-### 5. Code Generation
+### 4. Code Generation
 
 #### Generator Architecture
 Enhanced `legacy-analyzer` to generate:
@@ -186,7 +202,7 @@ export class AccountCategoriesSection extends EmergeConfigSection<AccountCategor
 }
 ```
 
-### 6. Component Customization
+### 5. Component Customization
 
 #### Override System
 ```typescript
@@ -227,6 +243,122 @@ export class CustomAccountCategoriesSection extends AccountCategoriesSection {
 2. Build custom editors
 3. Add layout customization
 4. Implement complex validation
+
+## Validation Tests
+
+### 1. Base Component Tests
+```typescript
+// Test at implementation of base class
+describe('EmergeConfigSection', () => {
+    // Value Management
+    it('should manage value lifecycle', async () => {
+        const section = new TestSection();
+        await section.setValue({ test: true });
+        expect(section.getValue()).toEqual({ test: true });
+    });
+
+    // Validation
+    it('should validate against schema', async () => {
+        const section = new TestSection();
+        const result = await section.validate();
+        expect(result.valid).toBe(false);
+        expect(result.errors[0].field).toBe('requiredField');
+    });
+
+    // Service Integration
+    it('should interact with settings service', async () => {
+        const section = new TestSection();
+        await section.load();
+        expect(mockSettingsService.getSetting).toHaveBeenCalled();
+    });
+});
+```
+
+### 2. Input Component Tests
+```typescript
+// Test at implementation of each input type
+describe('JsonInput', () => {
+    // Schema Validation
+    it('should validate against JSON schema', async () => {
+        const input = render(<JsonInput schema={testSchema} />);
+        await input.setValue({ invalid: true });
+        expect(input.getByText('Invalid format')).toBeInTheDocument();
+    });
+
+    // Value Updates
+    it('should emit valid changes', async () => {
+        const onChange = jest.fn();
+        const input = render(<JsonInput onChange={onChange} />);
+        await input.setValue({ valid: true });
+        expect(onChange).toHaveBeenCalledWith({ valid: true });
+    });
+});
+```
+
+### 3. Service Layer Tests
+```typescript
+// Test at implementation of settings service
+describe('SettingsService', () => {
+    // JSON Schema
+    it('should validate JSON settings', async () => {
+        const service = new SettingsService();
+        const result = await service.validateSetting('test', {
+            value: { invalid: true }
+        });
+        expect(result.valid).toBe(false);
+    });
+
+    // Type Safety
+    it('should preserve types', async () => {
+        const service = new SettingsService();
+        await service.updateSetting('test', { num: 123 });
+        const result = await service.getSetting('test');
+        expect(typeof result.value.num).toBe('number');
+    });
+});
+```
+
+### 4. Integration Tests
+```typescript
+// Test after connecting components
+describe('Config Section Integration', () => {
+    // Component + Service
+    it('should save changes to service', async () => {
+        const section = render(<TestSection />);
+        await section.setValue({ test: true });
+        expect(mockSettingsService.updateSetting).toHaveBeenCalled();
+    });
+
+    // Input + Validation
+    it('should validate input changes', async () => {
+        const section = render(<TestSection />);
+        const input = section.getByLabelText('Test Input');
+        await fireEvent.change(input, { target: { value: 'invalid' }});
+        expect(section.getByText('Validation failed')).toBeInTheDocument();
+    });
+});
+```
+
+### 5. Error Handling Tests
+```typescript
+// Test at each error boundary
+describe('Error Handling', () => {
+    // Service Errors
+    it('should handle service failures', async () => {
+        mockSettingsService.simulateError('updateSetting');
+        const section = render(<TestSection />);
+        await section.setValue({ test: true });
+        expect(section.getByText('Failed to save')).toBeInTheDocument();
+    });
+
+    // Validation Errors
+    it('should handle validation failures', async () => {
+        const section = render(<TestSection />);
+        await section.setValue({ invalid: true });
+        expect(section.getByText('Invalid format')).toBeInTheDocument();
+    });
+});
+```
 
 ## Component Workflow
 
