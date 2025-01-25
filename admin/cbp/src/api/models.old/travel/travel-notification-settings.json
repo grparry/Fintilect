@@ -1,0 +1,16 @@
+{
+  "TravelNotificationSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/TravelNotificationSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/TravelNotificationFeatures"
+      }
+    }
+  }
+}

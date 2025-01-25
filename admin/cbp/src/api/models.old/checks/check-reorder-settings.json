@@ -1,0 +1,33 @@
+{
+  "CheckReorderSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.CheckReorder.CheckReorder",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/CheckReorderSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/CheckReorderFeatures"
+      },
+      "accountInfoCacheExpirationTimeInHours": {
+        "type": "integer",
+        "description": "Cache expiration time for account info in hours",
+        "x-setting-key": "CheckReorder.AccountInfoCacheExpirationTimeInHours"
+      },
+      "jointOwnerOnChecksIsEnabled": {
+        "type": "boolean",
+        "description": "Whether joint owner on checks is enabled",
+        "x-setting-key": "CheckReorder.JointOwnerOnChecksIsEnabled"
+      },
+      "harland": {
+        "$ref": "./harland-settings.json#/HarlandSettings"
+      },
+      "mainStreet": {
+        "$ref": "./main-street-settings.json#/MainStreetSettings"
+      }
+    }
+  }
+}

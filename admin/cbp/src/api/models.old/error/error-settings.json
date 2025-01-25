@@ -1,0 +1,10 @@
+{
+  "ErrorSettings": {
+    "type": "object",
+    "properties": {
+      "errorMessageConfiguration": {
+        "$ref": "./error-message-configuration.json#/ErrorMessageConfiguration"
+      }
+    }
+  }
+}

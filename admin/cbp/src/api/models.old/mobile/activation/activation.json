@@ -1,0 +1,36 @@
+{
+  "ActivationSettings": {
+    "type": "object",
+    "description": "Settings for mobile app activation",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Activation.Activation",
+    "properties": {
+      "maximumAttempts": {
+        "type": "string",
+        "description": "Maximum number of activation attempts allowed",
+        "x-setting-key": "Mobile.Activation.MaximumActivationAttempsAllowed"
+      },
+      "versionControl": {
+        "type": "object",
+        "description": "Version control settings for activation",
+        "properties": {
+          "androidIosMinimumVersionsEnabled": {
+            "type": "boolean",
+            "description": "Whether minimum version requirements for Android and iOS are enabled",
+            "x-setting-key": "Mobile.Activation.AndroidIosMinimumVersionsEnabled"
+          }
+        }
+      },
+      "security": {
+        "type": "object",
+        "description": "Security settings for activation",
+        "properties": {
+          "outOfWalletEnabled": {
+            "type": "boolean",
+            "description": "Whether out-of-wallet verification is enabled during activation",
+            "x-setting-key": "Mobile.Activation.OutOfWalletEnabled"
+          }
+        }
+      }
+    }
+  }
+}

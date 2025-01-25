@@ -1,0 +1,40 @@
+{
+  "LinkedAccountHistorySettings": {
+    "type": "object",
+    "description": "Settings for linked account history functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.History.LinkedAccountHistory",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "AccountHistory.LinkedAccounts.Enabled",
+        "description": "Whether linked account history is enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "AccountHistory.LinkedAccounts.MinVersion",
+        "description": "Minimum supported version"
+      },
+      "minimumAndroidVersion": {
+        "type": "string",
+        "x-setting-key": "AccountHistory.LinkedAccounts.MinimumAndroidVersion",
+        "description": "Minimum required Android version",
+        "pattern": "^\\d+(\\.\\d+)*$"
+      },
+      "minimumIosVersion": {
+        "type": "string",
+        "x-setting-key": "AccountHistory.LinkedAccounts.MinimumIosVersion",
+        "description": "Minimum required iOS version",
+        "pattern": "^\\d+(\\.\\d+)*$"
+      },
+      "maximumRecordsToReturn": {
+        "type": "integer",
+        "x-setting-key": "AccountHistory.LinkedAccounts.MaximumRecordsToReturn",
+        "description": "Maximum number of records to return per request",
+        "minimum": 1,
+        "default": 20
+      }
+    },
+    "required": ["enabled", "minVersion", "minimumAndroidVersion", "minimumIosVersion", "maximumRecordsToReturn"]
+  }
+}

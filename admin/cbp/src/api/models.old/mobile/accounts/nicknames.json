@@ -1,0 +1,41 @@
+{
+  "NicknamesSettings": {
+    "type": "object",
+    "description": "Settings for account nicknames in mobile applications",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Accounts.Nicknames",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether account nicknames are enabled",
+        "x-setting-key": "Mobile.Accounts.Nicknames.Enabled"
+      },
+      "minimumVersions": {
+        "type": "object",
+        "description": "Minimum version requirements for account nicknames",
+        "properties": {
+          "android": {
+            "type": "string",
+            "description": "Minimum Android version required",
+            "x-setting-key": "Mobile.Accounts.Nicknames.MinimumAndroidVersion"
+          },
+          "ios": {
+            "type": "string",
+            "description": "Minimum iOS version required",
+            "x-setting-key": "Mobile.Accounts.Nicknames.MinimumIosVersion"
+          }
+        }
+      },
+      "storage": {
+        "type": "object",
+        "description": "Storage configuration for account nicknames",
+        "properties": {
+          "useCoreSuffixOnly": {
+            "type": "boolean",
+            "description": "If true, nicknames will be stored in the core. If false, they will be stored in HomeBankingAccountAlias table. Only valid for DNA and Spectrum cores.",
+            "x-setting-key": "Account.UseCoreSuffixNicknamesOnly"
+          }
+        }
+      }
+    }
+  }
+}

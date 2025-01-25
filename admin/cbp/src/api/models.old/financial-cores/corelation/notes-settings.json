@@ -1,0 +1,144 @@
+{
+  "CorelationNotesSettings": {
+    "type": "object",
+    "description": "Settings for Corelation-specific notes functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.FinancialCores.CorelationSettings.Notes",
+    "properties": {
+      "onlineBankingAccessSerial": {
+        "type": "string",
+        "description": "Serial for online banking access note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.OnlineBankingAccess"
+      },
+      "billPaySerial": {
+        "type": "string",
+        "description": "Serial for bill pay access note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.BillPay"
+      },
+      "businessAccountSerial": {
+        "type": "string",
+        "description": "Serial for business account note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.BusinessAccount"
+      },
+      "estatementDisclosureSerial": {
+        "type": "string",
+        "description": "Serial for eStatement disclosure note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.EstatementDisclosure"
+      },
+      "checkWithdrawalRrestrictedSerial": {
+        "type": "string",
+        "description": "Serial for check withdrawal restriction note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.CheckWithdrawalRrestricted"
+      },
+      "edocumentsDisclosureSerial": {
+        "type": "string",
+        "description": "Serial for eDocuments disclosure note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.EdocumentsDisclosure"
+      },
+      "freeCheckReorderFlagSerial": {
+        "type": "string",
+        "description": "Serial for free check reorder flag note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.FreeCheckReorderFlag"
+      },
+      "hasCreditCardSerial": {
+        "type": "string",
+        "description": "Serial for credit card flag note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.HasCreditCard"
+      },
+      "isDebitCardFlagSerial": {
+        "type": "string",
+        "description": "Serial for debit card flag note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.IsDebitCardFlag"
+      },
+      "isEmployeeSerial": {
+        "type": "string",
+        "description": "Serial for employee flag note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.IsEmployee"
+      },
+      "loanClosedFlagSerial": {
+        "type": "string",
+        "description": "Serial for loan closed flag note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.LoanClosedFlag"
+      },
+      "loanRestrictedSerial": {
+        "type": "string",
+        "description": "Serial for loan restriction note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.LoanRestricted"
+      },
+      "inquiryOnLoanRestrictedSerial": {
+        "type": "string",
+        "description": "Serial for loan inquiry restriction note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.InquiryOnLoanRestricted"
+      },
+      "hasDebitCardsSerial": {
+        "type": "string",
+        "description": "Serial for multiple debit cards flag note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.HasDebitCards"
+      },
+      "midwestLoansSerial": {
+        "type": "string",
+        "description": "Serial for Midwest loans note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.MidwestLoans"
+      },
+      "mobileDepositAllowedSerial": {
+        "type": "string",
+        "description": "Serial for mobile deposit allowed note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.MobileDepositAllowed"
+      },
+      "mobileDepositRestrictedSerial": {
+        "type": "string",
+        "description": "Serial for mobile deposit restriction note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.MobileDepositRestricted"
+      },
+      "mobileDepositDisclosureSerial": {
+        "type": "string",
+        "description": "Serial for mobile deposit disclosure note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.MobileDepositDisclosure"
+      },
+      "nsfFlagsSerial": {
+        "type": "string",
+        "description": "Serial for NSF flag note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.NsfFlags"
+      },
+      "memberRestrictedFromTransfersSerial": {
+        "type": "string",
+        "description": "Serial for member transfer restriction note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.MemberRestrictedFromTransfers"
+      },
+      "memberRestrictedFromDepositSerial": {
+        "type": "string",
+        "description": "Serial for member deposit restriction note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.MemberRestrictedFromDeposit"
+      },
+      "memberrestricedFromInquirySerial": {
+        "type": "string",
+        "description": "Serial for member inquiry restriction note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.MemberrestricedFromInquiry"
+      },
+      "shareIsRestrictedFromDepositSerial": {
+        "type": "string",
+        "description": "Serial for share deposit restriction note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.ShareIsRestrictedFromDeposit"
+      },
+      "shareRestrictedFromInquirySerial": {
+        "type": "string",
+        "description": "Serial for share inquiry restriction note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.ShareRestrictedFromInquiry"
+      },
+      "shareRestrictedFromTransfersSerial": {
+        "type": "string",
+        "description": "Serial for share transfer restriction note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.ShareRestrictedFromTransfers"
+      },
+      "restrictViewingCardFlagSerial": {
+        "type": "string",
+        "description": "Serial for card viewing restriction note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.RestrictViewingCardFlag"
+      },
+      "shareClosedFlagsSerial": {
+        "type": "string",
+        "description": "Serial for share closed flag note",
+        "x-setting-key": "FinacialCore.Corelation.Notes.ShareClosedFlags"
+      }
+    }
+  }
+}

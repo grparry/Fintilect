@@ -1,0 +1,16 @@
+{
+  "ChatSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "liveChat": {
+        "$ref": "./providers/live-chat.json#/LiveChatSettings"
+      },
+      "coBrowse": {
+        "$ref": "./providers/co-browse.json#/CoBrowseSettings"
+      }
+    }
+  }
+}

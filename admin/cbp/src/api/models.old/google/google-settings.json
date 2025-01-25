@@ -1,0 +1,10 @@
+{
+  "GoogleSettings": {
+    "type": "object",
+    "properties": {
+      "googleTags": {
+        "$ref": "./google-tags.json#/GoogleTagsSettings"
+      }
+    }
+  }
+}

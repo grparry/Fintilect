@@ -1,0 +1,119 @@
+{
+  "FinancialCoreSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.FinancialCores.FinancialCore",
+    "properties": {
+      "coreType": {
+        "type": "string",
+        "x-setting-key": "FinancialCore.CoreType",
+        "enum": ["Symitar", "DNA", "EPL", "Mercury", "Summit", "PsiCore", "Corelation"]
+      },
+      "useClassicCore": {
+        "type": "boolean",
+        "x-setting-key": "FinancialCore.UseClassicCore"
+      },
+      "shouldBypassICoreForAccountInquiry": {
+        "type": "boolean",
+        "x-setting-key": "FinancialCore.ShouldBypassICoreForAccountInquiry"
+      },
+      "shouldBypassICoreForScheduledTransfers": {
+        "type": "boolean",
+        "x-setting-key": "FinancialCore.ShouldBypassICoreForScheduledTransfers"
+      },
+      "shouldMapPasswordDuringAccountInquiry": {
+        "type": "boolean",
+        "x-setting-key": "FinancialCore.ClassicCores.ShouldMapPasswordDuringAccountInquiry"
+      },
+      "coreConnectionString": {
+        "type": "string",
+        "x-setting-key": "FinancialCore.CoreConnectionString"
+      },
+      "cacheAccountInquiry": {
+        "type": "boolean",
+        "x-setting-key": "FinacialCore.Caching.CacheAccountInquiry"
+      },
+      "cacheAccountInquiryForClassicCores": {
+        "type": "boolean",
+        "x-setting-key": "FinancialCore.Caching.CacheAccountInquiryForClassicCores"
+      },
+      "dna": {
+        "$ref": "./dna/dna-settings.json#/DnaSettings"
+      },
+      "corelation": {
+        "type": "object",
+        "properties": {
+          "settings": {
+            "$ref": "./corelation/corelation-settings.json#/CorelationSettings"
+          },
+          "accountTypes": {
+            "$ref": "./corelation/account-types.json#/AccountTypeSettings"
+          },
+          "pullCredit": {
+            "$ref": "./corelation/pull-credit.json#/PullCreditSettings"
+          },
+          "personType": {
+            "$ref": "./corelation/person-type.json#/PersonTypeSettings"
+          },
+          "draftLookup": {
+            "$ref": "./corelation/draft-lookup.json#/DraftLookupSettings"
+          },
+          "notes": {
+            "$ref": "./corelation/notes.json#/NotesSettings"
+          },
+          "funding": {
+            "$ref": "./corelation/funding.json#/FundingSettings"
+          },
+          "cardType": {
+            "$ref": "./corelation/card-type.json#/CardTypeSettings"
+          },
+          "identification": {
+            "$ref": "./corelation/identification.json#/IdentificationSettings"
+          },
+          "lossScreening": {
+            "$ref": "./corelation/loss-screening.json#/LossScreeningSettings"
+          },
+          "enrollment": {
+            "$ref": "./corelation/enrollment.json#/EnrollmentSettings"
+          }
+        }
+      },
+      "epl": {
+        "$ref": "./epl/epl-settings.json#/EplSettings"
+      },
+      "psiCore": {
+        "$ref": "./psi/psi-core.json#/PsiCoreSettings"
+      },
+      "symitar": {
+        "type": "object",
+        "properties": {
+          "settings": {
+            "$ref": "./symitar/symitar-settings.json#/SymitarSettings"
+          },
+          "remoteDepositCheckHold": {
+            "$ref": "./symitar/remote-deposit-check-hold.json#/RemoteDepositCheckHoldSettings"
+          }
+        }
+      },
+      "summit": {
+        "type": "object",
+        "properties": {
+          "settings": {
+            "$ref": "./summit/summit-settings.json#/SummitSettings"
+          },
+          "regularAchTransfers": {
+            "$ref": "./summit/regular-ach-transfers.json#/RegularAchTransfersSettings"
+          }
+        }
+      },
+      "loanOrigination": {
+        "$ref": "./loan-origination/loan-origination-settings.json#/LoanOriginationSettings"
+      },
+      "transactionSettings": {
+        "$ref": "./transaction-settings.json#/TransactionSettings"
+      },
+      "transferSettings": {
+        "$ref": "./transfer-settings.json#/TransferSettings"
+      }
+    }
+  }
+}

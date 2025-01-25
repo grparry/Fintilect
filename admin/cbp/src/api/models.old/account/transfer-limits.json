@@ -1,0 +1,65 @@
+{
+  "TransferLimits": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.TransferLimits",
+    "properties": {
+      "limits": {
+        "type": "object",
+        "x-setting-key": "Transfers.TransferLimits",
+        "description": "Transfer limit settings including groups and amounts",
+        "properties": {
+          "limitGroups": {
+            "type": "array",
+            "description": "Groups of transfer limits ordered by number of days",
+            "items": {
+              "type": "object",
+              "properties": {
+                "numberOfDays": {
+                  "type": "integer",
+                  "description": "Number of days for this limit group"
+                },
+                "transferLimits": {
+                  "type": "array",
+                  "description": "Transfer limits for this group",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "amount": {
+                        "type": "number",
+                        "format": "decimal",
+                        "description": "Maximum amount allowed for this transfer type"
+                      },
+                      "transferKinds": {
+                        "type": "array",
+                        "description": "Types of transfers this limit applies to",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "Internal",
+                            "External",
+                            "Wire",
+                            "ACH",
+                            "CreditCard",
+                            "Loan"
+                          ]
+                        }
+                      }
+                    },
+                    "required": ["amount", "transferKinds"]
+                  }
+                }
+              },
+              "required": ["numberOfDays", "transferLimits"]
+            }
+          }
+        },
+        "required": ["limitGroups"]
+      },
+      "customTransferLimitMessagesEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.CustomTransferLimitMessagesEnabled",
+        "description": "Whether custom messages for transfer limits are enabled"
+      }
+    }
+  }
+}

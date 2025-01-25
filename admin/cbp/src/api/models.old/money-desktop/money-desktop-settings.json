@@ -1,0 +1,83 @@
+{
+  "MoneyDesktopSettings": {
+    "type": "object",
+    "description": "Money Desktop settings",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.MoneyDesktop.MoneyDesktop",
+    "properties": {
+      "autoEnrollEnabled": {
+        "type": "boolean",
+        "description": "Whether auto enrollment is enabled",
+        "x-setting-key": "MoneyDesktop.AutoEnrollEnabled"
+      },
+      "dashboard": {
+        "type": "object",
+        "description": "Dashboard configuration",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.MoneyDesktop.Dashboard",
+        "properties": {
+          "showIndividualPanels": {
+            "type": "boolean",
+            "description": "Whether to show individual panels",
+            "x-setting-key": "MoneyDesktop.Dashboard.IndividualPanels"
+          }
+        }
+      },
+      "summary": {
+        "type": "object",
+        "description": "Summary configuration",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.MoneyDesktop.Summary",
+        "properties": {
+          "sidePanelsEnabled": {
+            "type": "boolean",
+            "description": "Whether side panels are enabled",
+            "x-setting-key": "MoneyDesktop.Summary.SidePanelsEnabled"
+          }
+        }
+      },
+      "enrollment": {
+        "type": "object",
+        "description": "Enrollment configuration",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.MoneyDesktop.Enrollment",
+        "properties": {
+          "shouldUseDefaultPhoneNumber": {
+            "type": "boolean",
+            "description": "Whether to use default phone number",
+            "x-setting-key": "MoneyDesktop.Enrollment.ShouldUseDefaultPhoneNumber"
+          }
+        }
+      },
+      "mobile": {
+        "type": "object",
+        "description": "Mobile-specific settings",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.MobileConfigurations.MoneyDesktop",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether Money Desktop is enabled for mobile",
+            "x-setting-key": "Mobile.MoneyDesktop.Enabled"
+          },
+          "minimumVersion": {
+            "type": "string",
+            "description": "Minimum version required",
+            "x-setting-key": "Mobile.MoneyDesktop.MinimumVersion"
+          },
+          "minimumAndroidVersion": {
+            "type": "string",
+            "description": "Minimum Android version required",
+            "x-setting-key": "Mobile.MoneyDesktop.MinimumAndroidVersion"
+          },
+          "minimumIosVersion": {
+            "type": "string",
+            "description": "Minimum iOS version required",
+            "x-setting-key": "Mobile.MoneyDesktop.MinimumIosVersion"
+          }
+        }
+      },
+      "settings": {
+        "$ref": "./settings.json#/MoneyDesktopSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/MoneyDesktopFeatures"
+      }
+    }
+  }
+}

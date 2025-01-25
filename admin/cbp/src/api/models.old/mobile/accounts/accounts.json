@@ -1,0 +1,136 @@
+{
+  "AccountsSettings": {
+    "type": "object",
+    "description": "Settings for mobile accounts functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Accounts.Accounts",
+    "properties": {
+      "display": {
+        "type": "object",
+        "description": "Display settings for accounts",
+        "properties": {
+          "showBalanceAndAvailable": {
+            "type": "boolean",
+            "description": "Whether to display both balance and available balance",
+            "x-setting-key": "Mobile.Accounts.DisplayBalanceAndAvailable"
+          },
+          "canHideClosedAccounts": {
+            "type": "boolean",
+            "description": "Whether users can hide closed accounts",
+            "x-setting-key": "Mobile.Accounts.CanHideClosedAccounts"
+          },
+          "showCertificateDetails": {
+            "type": "boolean",
+            "description": "Whether to show certificate details",
+            "x-setting-key": "Mobile.Accounts.ShouldShowCertificateDetails"
+          },
+          "showMicrNumber": {
+            "type": "boolean",
+            "description": "Whether to show MICR number",
+            "x-setting-key": "Mobile.Accounts.ShouldShowMicrNumber"
+          },
+          "usePreviousMicrNumber": {
+            "type": "boolean",
+            "description": "Whether to use previous MICR number",
+            "x-setting-key": "Mobile.Accounts.UsePreviousMicrNumber"
+          },
+          "showMaskedAccountSuffixInName": {
+            "type": "boolean",
+            "description": "Whether to show masked account suffix in account name",
+            "x-setting-key": "Mobile.Summary.ShowMaskedAccountSuffixInAccountName"
+          }
+        }
+      },
+      "interface": {
+        "type": "object",
+        "description": "Interface settings for accounts",
+        "properties": {
+          "newInterfaceEnabled": {
+            "type": "boolean",
+            "description": "Whether the new accounts interface is enabled",
+            "x-setting-key": "Mobile.Accounts.NewAccountsInterfaceEnabled"
+          },
+          "loadCrossAccounts": {
+            "type": "boolean",
+            "description": "Whether to load cross accounts",
+            "x-setting-key": "Mobile.Accounts.LoadCrossAccounts"
+          },
+          "accountHistorySearchEnabled": {
+            "type": "boolean",
+            "description": "Whether account history search bar is enabled",
+            "x-setting-key": "Mobile.Accounts.AccountHistorySearchBarEnabled"
+          }
+        }
+      },
+      "creditCard": {
+        "type": "object",
+        "description": "Credit card application settings",
+        "properties": {
+          "showApplyForCreditCard": {
+            "type": "boolean",
+            "description": "Whether to show apply for credit card option",
+            "x-setting-key": "Mobile.Accounts.ShouldShowApplyForCreditCard"
+          },
+          "applyUrl": {
+            "type": "string",
+            "description": "URL for credit card application",
+            "x-setting-key": "Mobile.Accounts.ApplyForCreditCardUrl"
+          },
+          "applyUrlTarget": {
+            "type": "string",
+            "description": "Target for credit card application URL",
+            "x-setting-key": "Mobile.Accounts.ApplyForCreditCardUrlTarget"
+          }
+        }
+      },
+      "inquiry": {
+        "type": "object",
+        "description": "Account inquiry settings",
+        "properties": {
+          "expirationTime": {
+            "type": "integer",
+            "description": "Expiration time for account inquiry in seconds",
+            "x-setting-key": "X.App.HomeBanking.AccountInquiryExpirationTime"
+          }
+        }
+      },
+      "linkedAccounts": {
+        "type": "object",
+        "description": "Settings for linked accounts",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Accounts.LinkedAccounts",
+        "properties": {
+          "minimumVersions": {
+            "type": "object",
+            "description": "Minimum version requirements for linked accounts",
+            "properties": {
+              "android": {
+                "type": "string",
+                "description": "Minimum Android version required",
+                "x-setting-key": "Mobile.LinkedAccounts.MinimumAndroidVersion"
+              },
+              "ios": {
+                "type": "string",
+                "description": "Minimum iOS version required",
+                "x-setting-key": "Mobile.LinkedAccounts.MinimumIosVersion"
+              }
+            }
+          },
+          "verifyAccountEnabled": {
+            "type": "boolean",
+            "description": "Whether account verification is enabled",
+            "x-setting-key": "Mobile.LinkedAccounts.VerifyAccountEnabled"
+          },
+          "nameRegex": {
+            "type": "string",
+            "description": "Regex pattern for linked account names",
+            "x-setting-key": "X.App.HomeBanking.AlphaNumSpace"
+          },
+          "showDeletedAccounts": {
+            "type": "boolean",
+            "description": "Whether to show deleted accounts",
+            "x-setting-key": "LinkedAccounts.ShowDeletedAccounts.Enabled"
+          }
+        }
+      }
+    }
+  }
+}

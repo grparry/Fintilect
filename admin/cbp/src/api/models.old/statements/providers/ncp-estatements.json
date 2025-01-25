@@ -1,0 +1,97 @@
+{
+  "NcpEstatementsSettings": {
+    "type": "object",
+    "description": "Configuration settings for NCP estatements integration",
+    "required": ["enabled", "authentication", "endpoints"],
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether NCP estatements integration is enabled",
+        "default": false
+      },
+      "versionRequirements": {
+        "type": "object",
+        "description": "Version requirements for NCP estatements",
+        "required": ["minimumVersion"],
+        "properties": {
+          "minimumVersion": {
+            "type": "number",
+            "description": "Minimum version required for NCP estatements",
+            "minimum": 0
+          }
+        }
+      },
+      "authentication": {
+        "type": "object",
+        "description": "Authentication settings for NCP estatements",
+        "required": ["userId", "password", "sharedSecret"],
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "User ID for NCP estatements authentication"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password for NCP estatements authentication",
+            "format": "password"
+          },
+          "sharedSecret": {
+            "type": "string",
+            "description": "Shared secret for NCP estatements authentication",
+            "format": "password"
+          }
+        }
+      },
+      "endpoints": {
+        "type": "object",
+        "description": "Endpoint configurations for NCP estatements",
+        "required": ["postUrl", "ssoUrl"],
+        "properties": {
+          "postUrl": {
+            "type": "string",
+            "description": "URL for posting estatement data",
+            "format": "uri"
+          },
+          "ssoUrl": {
+            "type": "string",
+            "description": "URL for SSO integration",
+            "format": "uri"
+          }
+        }
+      },
+      "accountNumbering": {
+        "type": "object",
+        "description": "Account number formatting settings",
+        "properties": {
+          "padCount": {
+            "type": "integer",
+            "description": "Number of digits to pad account numbers to",
+            "minimum": 0
+          },
+          "padCharacter": {
+            "type": "string",
+            "description": "Character to use for padding account numbers",
+            "default": "0",
+            "maxLength": 1
+          }
+        }
+      },
+      "security": {
+        "type": "object",
+        "description": "Security settings for NCP estatements",
+        "properties": {
+          "encryptionEnabled": {
+            "type": "boolean",
+            "description": "Whether to encrypt sensitive data",
+            "default": true
+          },
+          "sslVerification": {
+            "type": "boolean",
+            "description": "Whether to verify SSL certificates",
+            "default": true
+          }
+        }
+      }
+    }
+  }
+}

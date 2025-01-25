@@ -1,0 +1,289 @@
+{
+  "WidgetModel": {
+    "type": "object",
+    "description": "Configuration model for dashboard widgets",
+    "x-legacy-models": [
+      "Psi.Models.ClientConfigurationModels.Widgets.WidgetSettings",
+      "Psi.Models.ClientConfigurationModels.Cardlytics.CardlyticsWidget"
+    ],
+    "required": ["widgetConfiguration", "dashboardLayout"],
+    "properties": {
+      "widgetConfiguration": {
+        "type": "object",
+        "description": "Core widget configuration settings",
+        "required": ["availableWidgets", "nonHideableWidgets"],
+        "properties": {
+          "availableWidgets": {
+            "type": "object",
+            "description": "Configuration for all available widgets",
+            "properties": {
+              "accountSummary": {
+                "type": "object",
+                "description": "Account summary widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the account summary widget is enabled",
+                    "default": true,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableAccountSummaryWidget"
+                  },
+                  "useNewVersion": {
+                    "type": "boolean",
+                    "description": "Whether to use the new account summary widget",
+                    "x-setting-key": "ConnectNative.Dashboard.EnableNewAccountSummaryWidget"
+                  },
+                  "expandedHeight": {
+                    "type": "string",
+                    "description": "Height in rem when expanded",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$",
+                    "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetExpandedHeight"
+                  },
+                  "headerLinks": {
+                    "type": "object",
+                    "properties": {
+                      "newAccount": {
+                        "type": "string",
+                        "format": "uri",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.NewAccount"
+                      },
+                      "creditCardApply": {
+                        "type": "string",
+                        "format": "uri",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.CreditCardApply"
+                      },
+                      "loanApply": {
+                        "type": "string",
+                        "format": "uri",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.LoanApply"
+                      },
+                      "linkAccount": {
+                        "type": "string",
+                        "format": "uri",
+                        "x-setting-key": "ConnectNative.Dashboard.AccountsWidgetHeaderLink.LinkAccount"
+                      }
+                    }
+                  }
+                }
+              },
+              "scheduledTransfers": {
+                "type": "object",
+                "description": "Scheduled transfers widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the scheduled transfers widget is enabled",
+                    "default": true,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableScheduledTransfersWidget"
+                  },
+                  "expandedHeight": {
+                    "type": "string",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$"
+                  }
+                }
+              },
+              "savedTransfers": {
+                "type": "object",
+                "description": "Saved transfers widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the saved transfers widget is enabled",
+                    "default": true,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableSavedTransfersWidget"
+                  }
+                }
+              },
+              "cardlytics": {
+                "type": "object",
+                "description": "Cardlytics widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the cardlytics widget is enabled",
+                    "default": false,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableCardlyticsWidget"
+                  },
+                  "expandedHeight": {
+                    "type": "string",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$"
+                  },
+                  "showOnWelcomeSummary": {
+                    "type": "boolean",
+                    "description": "Whether to show the widget on welcome summary pages",
+                    "default": false,
+                    "x-setting-key": "Cardlytics.ShowWidgetOnWelcomeSummaryPages"
+                  }
+                }
+              },
+              "savvyMoney": {
+                "type": "object",
+                "description": "Savvy Money widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the savvy money widget is enabled",
+                    "default": false,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableSavvyMoneyWidget"
+                  }
+                }
+              },
+              "moneyDesktop": {
+                "type": "object",
+                "description": "Money Desktop widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the money desktop widget is enabled",
+                    "default": false,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableMoneyDesktopWidget"
+                  }
+                }
+              },
+              "cunexus": {
+                "type": "object",
+                "description": "Cunexus widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the cunexus widget is enabled",
+                    "default": false,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableCunexusWidget"
+                  }
+                }
+              },
+              "billPay": {
+                "type": "object",
+                "description": "Bill Pay widget configuration",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the bill pay widget is enabled",
+                    "default": false,
+                    "x-setting-key": "ConnectNative.Dashboard.EnableBillPayWidget"
+                  }
+                }
+              }
+            }
+          },
+          "nonHideableWidgets": {
+            "type": "array",
+            "description": "List of widget IDs that cannot be hidden by users",
+            "items": {
+              "type": "string",
+              "enum": [
+                "account-summary",
+                "scheduled-transfers",
+                "saved-transfers",
+                "cardlytics",
+                "savvy-money",
+                "money-desktop",
+                "cunexus",
+                "bill-pay"
+              ]
+            },
+            "x-setting-key": "ConnectNative.Dashboard.NonHideableWidgets"
+          }
+        }
+      },
+      "dashboardLayout": {
+        "type": "object",
+        "description": "Dashboard layout configuration",
+        "required": ["layoutRules"],
+        "properties": {
+          "defaultWidgets": {
+            "type": "string",
+            "description": "Default widgets configuration for Connect Native dashboard",
+            "x-setting-key": "ConnectNative.Dashboard.Widgets.Default"
+          },
+          "layoutRules": {
+            "type": "object",
+            "description": "Rules for widget layout",
+            "properties": {
+              "columns": {
+                "type": "object",
+                "properties": {
+                  "desktop": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 3
+                  },
+                  "tablet": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 2
+                  },
+                  "mobile": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 1
+                  }
+                }
+              },
+              "spacing": {
+                "type": "object",
+                "properties": {
+                  "between": {
+                    "type": "string",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$",
+                    "default": "1rem"
+                  },
+                  "margin": {
+                    "type": "string",
+                    "pattern": "^[0-9]+(\\.[0-9]+)?rem$",
+                    "default": "1rem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "widgetBehavior": {
+        "type": "object",
+        "description": "General widget behavior settings",
+        "properties": {
+          "animations": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": true
+              },
+              "duration": {
+                "type": "string",
+                "pattern": "^[0-9]+(\\.[0-9]+)?s$",
+                "default": "0.3s"
+              }
+            }
+          },
+          "persistence": {
+            "type": "object",
+            "properties": {
+              "saveLayout": {
+                "type": "boolean",
+                "default": true
+              },
+              "saveCollapsedState": {
+                "type": "boolean",
+                "default": true
+              }
+            }
+          },
+          "accessibility": {
+            "type": "object",
+            "properties": {
+              "keyboardNavigation": {
+                "type": "boolean",
+                "default": true
+              },
+              "screenReaderSupport": {
+                "type": "boolean",
+                "default": true
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

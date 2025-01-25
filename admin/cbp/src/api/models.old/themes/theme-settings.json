@@ -1,0 +1,108 @@
+{
+  "ThemeSettings": {
+    "type": "object",
+    "description": "Configuration settings for themes",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Themes.Themes",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "deployment": {
+        "$ref": "./deployment.json#/ThemeDeploymentSettings"
+      },
+      "customPages": {
+        "$ref": "./custom-pages.json#/CustomPagesSettings"
+      },
+      "widgets": {
+        "$ref": "./widgets.json#/WidgetSettings"
+      },
+      "connectNative": {
+        "type": "object",
+        "description": "Connect Native theme settings",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.Themes.ConnectNative",
+        "required": ["enabled", "versionRequirements", "themes", "paths", "coreAttributes"],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether Connect Native themes are enabled",
+            "x-setting-key": "Themes.ConnectNative.Enabled"
+          },
+          "versionRequirements": {
+            "type": "object",
+            "description": "Version requirements",
+            "required": ["minimum"],
+            "properties": {
+              "minimum": {
+                "type": "number",
+                "description": "Minimum version required",
+                "x-setting-key": "Themes.ConnectNative.MinVersion"
+              }
+            }
+          },
+          "themes": {
+            "type": "object",
+            "description": "Theme configuration",
+            "required": ["deployed", "browser", "useVersionBundles"],
+            "properties": {
+              "deployed": {
+                "type": "array",
+                "description": "List of deployed themes",
+                "items": {
+                  "type": "string"
+                },
+                "x-setting-key": "Themes.ConnectNative.DeployedThemes"
+              },
+              "browser": {
+                "type": "array",
+                "description": "List of browser themes",
+                "items": {
+                  "type": "string"
+                },
+                "x-setting-key": "Themes.ConnectNative.BrowserThemes"
+              },
+              "useVersionBundles": {
+                "type": "boolean",
+                "description": "Whether to use version bundles",
+                "x-setting-key": "Themes.ConnectNative.UseVersionBundles"
+              }
+            }
+          },
+          "paths": {
+            "type": "object",
+            "description": "Path configuration",
+            "required": ["useRelativeSitePath", "themesFiles", "baseThemeSubThemes"],
+            "properties": {
+              "useRelativeSitePath": {
+                "type": "boolean",
+                "description": "Whether to use relative site path for themes files",
+                "x-setting-key": "Themes.ConnectNative.UseRelativeSitePathForThemesFiles"
+              },
+              "themesFiles": {
+                "type": "string",
+                "description": "Path to themes files",
+                "x-setting-key": "Themes.ConnectNative.ThemesFilesPath"
+              },
+              "baseThemeSubThemes": {
+                "type": "string",
+                "description": "Path to base theme sub-themes files",
+                "x-setting-key": "Themes.ConnectNative.BaseThemeSubThemesFilesPath"
+              }
+            }
+          },
+          "coreAttributes": {
+            "type": "object",
+            "description": "Core attribute configuration",
+            "required": ["themeMemoNumber"],
+            "properties": {
+              "themeMemoNumber": {
+                "type": "string",
+                "description": "Core attribute theme memo number",
+                "x-setting-key": "Themes.ConnectNative.CoreAttributeTheme.MemoNumber"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

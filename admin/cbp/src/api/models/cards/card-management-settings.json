@@ -1,0 +1,140 @@
+{
+  "CardManagementSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.CardManagement.CardManagementSettings",
+    "properties": {
+      "isPinChangeEnabled": {
+        "type": "boolean",
+        "x-setting-key": "CardManagement.IsPinChangeEnabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "x-setting-key": "CardManagement.MinVersion"
+      },
+      "cotsSettings": {
+        "type": "object",
+        "x-setting-key": "CardManagement.COTS"
+      },
+      "supportedCardTypes": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["Debit", "Credit", "ATM", "Virtual"]
+        },
+        "x-setting-key": "CardManagement.PinChange.SupportedCardTypes"
+      },
+      "removeCvvValidationForTheseCardTypes": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["Debit", "Credit", "ATM", "Virtual"]
+        },
+        "x-setting-key": "CardManagement.PinChange.RemoveCvvValidationForTheseCardTypes"
+      },
+      "unacceptablePins": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "CardManagement.PinChange.UnacceptablePins"
+      },
+      "dnaShouldCallCoreForCardNumbers": {
+        "type": "boolean",
+        "x-setting-key": "CardManagement.Dna.ShouldCallCoreForCardNumbers"
+      },
+      "transactionDisputeEnabled": {
+        "type": "boolean",
+        "x-setting-key": "CardManagement.TransactionDispute.Enabled"
+      },
+      "pinChange": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.PinChange",
+        "properties": {
+          "minimumAndroidVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.PinChange.MinimumAndroidVersion"
+          },
+          "minimumIosVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.PinChange.MinimumIosVersion"
+          },
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.PinChange.Enabled"
+          },
+          "shouldLoadWhenCardListLoads": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.PinChange.ShouldLoadWhenCardListLoads"
+          }
+        }
+      },
+      "pinEncryption": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.PinEncryption",
+        "properties": {
+          "minimumAndroidVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.PinEncryption.MinimumAndroidVersion"
+          },
+          "minimumIosVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.PinEncryption.MinimumIosVersion"
+          }
+        }
+      },
+      "quickAccessPin": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Security.QuickAccess.QuickAccessPin",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.Security.QuickAccess.Pin.Enabled"
+          },
+          "type": {
+            "type": "string",
+            "description": "Pin type can be numeric or alphanumeric",
+            "x-setting-key": "Mobile.Security.QuickAccess.Pin.Type"
+          },
+          "length": {
+            "type": "integer",
+            "x-setting-key": "Mobile.Security.QuickAccess.Pin.Length"
+          },
+          "resetDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "If a user has not created a pin since before this date, the user must create a new pin",
+            "x-setting-key": "Mobile.Security.QuickAccess.Pin.ResetDate"
+          }
+        }
+      },
+      "lostOrStolen": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.LostOrStolenCardSettings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.CardControl.LostOrStolen.Enabled"
+          },
+          "sendSecureMessageEnabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.CardControl.LostOrStolen.SendSecureMessageEnabled"
+          },
+          "eligibleCardTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "Mobile.CardControl.LostOrStolen.EligibleCardTypes"
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "Mobile.CardControl.LostOrStolen.Locations"
+          }
+        }
+      }
+    }
+  }
+}

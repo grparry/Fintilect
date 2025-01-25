@@ -1,0 +1,16 @@
+{
+  "WindowsServiceSettings": {
+    "type": "object",
+    "properties": {
+      "pscuLogFileTransform": {
+        "$ref": "./pscu/log-file-transform.json#/PscuLogFileTransformServiceSettings"
+      },
+      "verafinFileBatch": {
+        "$ref": "./verafin/file-batch.json#/VerafinFileBatchServiceSettings"
+      },
+      "psiServices": {
+        "$ref": "./psi/psi-services.json#/PsiServicesSettings"
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "ImiMobileTextBankingSettings": {
+    "type": "object",
+    "description": "Settings for IMI Mobile text banking integration",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.ImiMobileTextBanking.ImiMobileTextBankingSettings",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether IMI Mobile text banking is enabled",
+        "x-setting-key": "TextBanking.ImiMobile.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "description": "Minimum supported version of the text banking service",
+        "x-setting-key": "TextBanking.ImiMobile.MinVersion"
+      },
+      "maxRecordsToReturn": {
+        "type": "integer",
+        "description": "Maximum number of records to return in responses",
+        "x-setting-key": "TextBanking.ImiMobile.MaxRecordsToReturn"
+      },
+      "historyDays": {
+        "type": "integer",
+        "description": "Number of days of history to maintain",
+        "x-setting-key": "TextBanking.ImiMobile.HistoryDays"
+      },
+      "maxSendSize": {
+        "type": "integer",
+        "description": "Maximum size of messages that can be sent",
+        "x-setting-key": "TextBanking.ImiMobile.MaxSendSize"
+      }
+    }
+  }
+}

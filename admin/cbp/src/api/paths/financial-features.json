@@ -1,0 +1,180 @@
+{
+  "/financial-features": {
+    "get": {
+      "tags": ["financial-features"],
+      "summary": "List all financial feature configurations",
+      "operationId": "listFinancialFeatureConfigs",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 20
+          }
+        },
+        {
+          "name": "feature",
+          "in": "query",
+          "schema": {
+            "type": "string",
+            "enum": ["overdraft-protection", "checking-rewards", "regular-expressions", "restricted-words"]
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Financial feature configurations retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../models/financial-features.json#/FinancialFeaturesSettings"
+                    }
+                  },
+                  "total": {
+                    "type": "integer"
+                  },
+                  "page": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["financial-features"],
+      "summary": "Create a new financial feature configuration",
+      "operationId": "createFinancialFeatureConfig",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/financial-features.json#/FinancialFeaturesSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Financial feature configuration created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/financial-features.json#/FinancialFeaturesSettings"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/financial-features/{id}": {
+    "get": {
+      "tags": ["financial-features"],
+      "summary": "Get a specific financial feature configuration",
+      "operationId": "getFinancialFeatureConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Financial feature configuration retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/financial-features.json#/FinancialFeaturesSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["financial-features"],
+      "summary": "Update a financial feature configuration",
+      "operationId": "updateFinancialFeatureConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/financial-features.json#/FinancialFeaturesSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Financial feature configuration updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/financial-features.json#/FinancialFeaturesSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["financial-features"],
+      "summary": "Delete a financial feature configuration",
+      "operationId": "deleteFinancialFeatureConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Financial feature configuration deleted successfully"
+        }
+      }
+    }
+  }
+}

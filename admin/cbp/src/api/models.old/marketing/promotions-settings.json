@@ -1,0 +1,16 @@
+{
+  "PromotionsSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/PromotionsSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/PromotionsFeatures"
+      }
+    }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "DoximEstatementsSettings": {
+    "type": "object",
+    "description": "Configuration settings for Doxim estatements integration",
+    "required": ["enabled", "authentication", "endpoints"],
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether Doxim estatements integration is enabled",
+        "default": false
+      },
+      "versionRequirements": {
+        "type": "object",
+        "description": "Version requirements for Doxim estatements",
+        "required": ["minimumVersion"],
+        "properties": {
+          "minimumVersion": {
+            "type": "number",
+            "description": "Minimum version required for Doxim estatements",
+            "minimum": 0
+          }
+        }
+      },
+      "authentication": {
+        "type": "object",
+        "description": "Authentication settings for Doxim estatements",
+        "required": ["apiKey", "institutionId"],
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "description": "API key for Doxim estatements",
+            "format": "password"
+          },
+          "institutionId": {
+            "type": "string",
+            "description": "Institution ID for Doxim estatements"
+          },
+          "ssoConfiguration": {
+            "type": "object",
+            "description": "SSO configuration settings",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether SSO is enabled",
+                "default": true
+              },
+              "secretKey": {
+                "type": "string",
+                "description": "Secret key for SSO authentication",
+                "format": "password"
+              },
+              "tokenLifetime": {
+                "type": "integer",
+                "description": "SSO token lifetime in seconds",
+                "minimum": 0,
+                "default": 3600
+              }
+            }
+          }
+        }
+      },
+      "endpoints": {
+        "type": "object",
+        "description": "Endpoint configurations for Doxim estatements",
+        "required": ["apiUrl", "ssoUrl"],
+        "properties": {
+          "apiUrl": {
+            "type": "string",
+            "description": "Base URL for Doxim API",
+            "format": "uri"
+          },
+          "ssoUrl": {
+            "type": "string",
+            "description": "URL for SSO integration",
+            "format": "uri"
+          },
+          "webhookUrl": {
+            "type": "string",
+            "description": "URL for webhook notifications",
+            "format": "uri"
+          }
+        }
+      },
+      "documentSettings": {
+        "type": "object",
+        "description": "Document handling settings",
+        "properties": {
+          "defaultFormat": {
+            "type": "string",
+            "description": "Default document format",
+            "enum": ["pdf", "html"],
+            "default": "pdf"
+          },
+          "retention": {
+            "type": "object",
+            "description": "Document retention settings",
+            "properties": {
+              "period": {
+                "type": "integer",
+                "description": "Retention period in months",
+                "minimum": 1,
+                "default": 84
+              },
+              "archiveEnabled": {
+                "type": "boolean",
+                "description": "Whether to archive documents after retention period",
+                "default": true
+              }
+            }
+          },
+          "compression": {
+            "type": "object",
+            "description": "Document compression settings",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether to compress documents",
+                "default": true
+              },
+              "quality": {
+                "type": "string",
+                "description": "Compression quality",
+                "enum": ["high", "medium", "low"],
+                "default": "high"
+              }
+            }
+          }
+        }
+      },
+      "notifications": {
+        "type": "object",
+        "description": "Notification settings",
+        "properties": {
+          "email": {
+            "type": "object",
+            "description": "Email notification settings",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether to send email notifications",
+                "default": true
+              },
+              "fromAddress": {
+                "type": "string",
+                "description": "From address for notifications",
+                "format": "email"
+              },
+              "templates": {
+                "type": "object",
+                "description": "Email template settings",
+                "properties": {
+                  "newStatement": {
+                    "type": "string",
+                    "description": "Template for new statement notifications"
+                  },
+                  "reminderStatement": {
+                    "type": "string",
+                    "description": "Template for statement reminder notifications"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

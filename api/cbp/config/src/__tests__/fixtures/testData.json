@@ -1,0 +1,247 @@
+{
+  "payments": [
+    {
+      "PaymentId": "pmt_1",
+      "ClientId": "client_1",
+      "ClientName": "Acme Corp",
+      "PayeeId": "payee_1",
+      "PayeeName": "Electric Company",
+      "Amount": 500.00,
+      "Currency": "USD",
+      "PaymentMethod": "ACH",
+      "Status": "PENDING",
+      "EffectiveDate": "2024-12-20T00:00:00Z",
+      "Description": "Electric bill payment",
+      "Priority": "HIGH",
+      "CreatedAt": "2024-12-16T00:00:00Z",
+      "UpdatedAt": "2024-12-16T00:00:00Z",
+      "Metadata": {
+        "InvoiceNumber": "INV-001",
+        "Department": "Operations"
+      }
+    },
+    {
+      "PaymentId": "pmt_2",
+      "ClientId": "client_1",
+      "ClientName": "Acme Corp",
+      "PayeeId": "payee_2",
+      "PayeeName": "Water Utility",
+      "Amount": 100.00,
+      "Currency": "USD",
+      "PaymentMethod": "ACH",
+      "Status": "COMPLETED",
+      "EffectiveDate": "2024-12-15T00:00:00Z",
+      "Description": "Water utility payment",
+      "Priority": "MEDIUM",
+      "CreatedAt": "2024-12-14T00:00:00Z",
+      "UpdatedAt": "2024-12-15T00:00:00Z",
+      "Metadata": {
+        "InvoiceNumber": "INV-002",
+        "Department": "Facilities"
+      }
+    }
+  ],
+  "pendingPayments": [
+    {
+      "PaymentId": "payment_1",
+      "ClientId": "client_1",
+      "ClientName": "Acme Corp",
+      "PayeeId": "payee_1",
+      "PayeeName": "John Doe",
+      "Amount": 1000.00,
+      "Currency": "USD",
+      "PaymentMethod": "ACH",
+      "Status": "PENDING",
+      "Priority": "HIGH",
+      "EffectiveDate": "2024-12-30",
+      "CreatedAt": "2024-12-30T09:00:00Z",
+      "UpdatedAt": "2024-12-30T09:00:00Z",
+      "Recipient": {
+        "Name": "John Doe",
+        "AccountNumber": "1234567890",
+        "RoutingNumber": "123456789",
+        "BankName": "First Bank"
+      },
+      "Metadata": {
+        "InvoiceNumber": "INV-001",
+        "Department": "Sales"
+      }
+    }
+  ],
+  "payees": [
+    {
+      "PayeeId": "payee_1",
+      "Name": "Electric Company",
+      "AccountNumber": "1234567890",
+      "RoutingNumber": "987654321",
+      "BankName": "First Bank",
+      "PaymentMethods": ["ACH", "CHECK"],
+      "Status": "ACTIVE",
+      "Address": "123 Power St",
+      "City": "Energy City",
+      "State": "EC",
+      "ZipCode": "12345"
+    },
+    {
+      "PayeeId": "payee_2",
+      "Name": "Water Utility",
+      "AccountNumber": "0987654321",
+      "RoutingNumber": "123456789",
+      "BankName": "Second Bank",
+      "PaymentMethods": ["ACH"],
+      "Status": "ACTIVE",
+      "Address": "456 Water Ave",
+      "City": "Hydro City",
+      "State": "HC",
+      "ZipCode": "67890"
+    }
+  ],
+  "clients": [
+    {
+      "ClientId": "client_1",
+      "Name": "Acme Corp",
+      "Type": "ENTERPRISE",
+      "Status": "ACTIVE",
+      "Environment": "PRODUCTION",
+      "Settings": {
+        "General": {
+          "Timezone": "America/Denver",
+          "DateFormat": "MM/DD/YYYY",
+          "TimeFormat": "12h",
+          "Currency": "USD",
+          "Language": "en"
+        },
+        "Security": {
+          "PasswordPolicy": {
+            "MinLength": 8,
+            "RequireUppercase": true,
+            "RequireLowercase": true,
+            "RequireNumbers": true,
+            "RequireSpecialChars": true,
+            "ExpirationDays": 90
+          },
+          "LoginPolicy": {
+            "MaxAttempts": 3,
+            "LockoutDuration": 15
+          },
+          "SessionTimeout": 30,
+          "MfaEnabled": true,
+          "IpWhitelist": ["192.168.1.1", "10.0.0.1"]
+        },
+        "Notifications": {
+          "EmailEnabled": true,
+          "SmsEnabled": true,
+          "PushEnabled": true,
+          "Frequency": "daily",
+          "AlertTypes": ["payment", "security", "system"]
+        }
+      }
+    }
+  ],
+  "users": [
+    {
+      "UserId": 1,
+      "Username": "admin",
+      "FirstName": "Admin",
+      "LastName": "User",
+      "Email": "admin@example.com",
+      "Role": "ADMIN",
+      "Status": "ACTIVE",
+      "Department": "IT Administration",
+      "LastLogin": "2024-12-30T09:00:00Z",
+      "Locked": false
+    },
+    {
+      "UserId": 2,
+      "Username": "user1",
+      "FirstName": "John",
+      "LastName": "Smith",
+      "Email": "john.smith@example.com",
+      "Role": "USER",
+      "Status": "ACTIVE",
+      "Department": "Operations",
+      "LastLogin": "2024-12-30T08:00:00Z",
+      "Locked": false
+    }
+  ],
+  "payeeOptions": [
+    {
+      "UserId": "client_1",
+      "PayeeId": "payee_1",
+      "DefaultPaymentMethod": "ACH",
+      "AllowedPaymentMethods": ["ACH", "CHECK"],
+      "PaymentLimits": {
+        "Daily": 1000,
+        "Weekly": 5000,
+        "Monthly": 20000
+      },
+      "AutoPayEnabled": true,
+      "NotificationPreferences": {
+        "Email": true,
+        "SMS": false
+      }
+    }
+  ],
+  "hostInfo": [
+    {
+      "UserId": "client_1",
+      "HostId": "host_1",
+      "Name": "Primary Host",
+      "ConnectionStatus": "ACTIVE",
+      "LastConnectionTime": "2024-12-28T21:43:09-07:00",
+      "Features": ["ACH", "WIRE"],
+      "Settings": {
+        "Timeout": 30,
+        "RetryAttempts": 3
+      }
+    }
+  ],
+  "holidays": [
+    {
+      "HolidayId": 1,
+      "Name": "New Year's Day",
+      "Date": "2024-01-01",
+      "Type": "Federal",
+      "Status": "Active"
+    }
+  ],
+  "notificationTemplates": [
+    {
+      "TemplateId": 1,
+      "Name": "Payment Confirmation",
+      "Type": "Email",
+      "Category": "Payment",
+      "Subject": "Payment Confirmation",
+      "Content": "Your payment of {{amount}} has been processed",
+      "Active": true,
+      "LastModified": "2024-12-28T21:43:09-07:00"
+    }
+  ],
+  "activity": [
+    {
+      "ActivityId": "act_1",
+      "UserId": 1,
+      "Type": "PAYMENT_CREATED",
+      "Details": {
+        "PaymentId": "pmt_1",
+        "Amount": 500.00,
+        "Status": "PENDING"
+      },
+      "Timestamp": "2024-12-16T00:00:00Z"
+    }
+  ],
+  "alerts": [
+    {
+      "AlertId": "alert_1",
+      "Type": "PAYMENT_FAILED",
+      "Severity": "HIGH",
+      "Message": "Payment processing failed",
+      "Details": {
+        "PaymentId": "pmt_1",
+        "Reason": "Insufficient funds"
+      },
+      "CreatedAt": "2024-12-16T00:00:00Z",
+      "Status": "ACTIVE"
+    }
+  ]
+}

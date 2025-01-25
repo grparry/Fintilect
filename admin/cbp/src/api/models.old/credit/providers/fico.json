@@ -1,0 +1,49 @@
+{
+  "FICOSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.FICO.FicoCreditScore",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "FicoCreditScore.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "FicoCreditScore.MinVersion"
+      },
+      "stepSsoUrl": {
+        "type": "string",
+        "x-setting-key": "FicoCreditScore.StepSsoUrl"
+      },
+      "hostIpAddress": {
+        "type": "string",
+        "x-setting-key": "FicoCreditScore.HostIpAddress"
+      },
+      "certificateFilename": {
+        "type": "string",
+        "x-setting-key": "FicoCreditScore.CertificateFilename"
+      },
+      "certificatePassword": {
+        "type": "string",
+        "x-setting-key": "FicoCreditScore.CertificatePassword"
+      },
+      "siteId": {
+        "type": "string",
+        "x-setting-key": "FicoCreditScore.SiteId"
+      },
+      "clientId": {
+        "type": "string",
+        "x-setting-key": "FicoCreditScore.ClientId"
+      },
+      "optOutFlagNumber": {
+        "type": "integer",
+        "x-setting-key": "FicoCreditScore.OptOutFlagNumber"
+      },
+      "issuerNameId": {
+        "type": "string",
+        "x-setting-key": "FicoCreditScore.IssuerNameId"
+      }
+    }
+  }
+}

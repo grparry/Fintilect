@@ -1,0 +1,23 @@
+{
+  "RemoteDepositCheckHoldSettings": {
+    "type": "object",
+    "description": "Settings for remote deposit check holds",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.FinancialCores.SymitarSettings.RemoteDepositCheckHoldSettings",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether remote deposit check holds are enabled",
+        "x-setting-key": "FinancialCore.Symitar.RemoteDepositCheckHold"
+      },
+      "settings": {
+        "$ref": "./settings.json#/RemoteDepositCheckHoldSettings",
+        "description": "Core settings for remote deposit check holds"
+      },
+      "features": {
+        "$ref": "./features.json#/RemoteDepositCheckHoldFeatures",
+        "description": "Feature flags and configuration for remote deposit check holds"
+      }
+    },
+    "required": ["enabled", "settings", "features"]
+  }
+}

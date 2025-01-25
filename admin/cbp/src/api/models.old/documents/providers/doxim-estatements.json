@@ -1,0 +1,28 @@
+{
+  "DoximEstatements": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Estatements.DoximEstatements",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Doxim Estatements enabled",
+        "x-setting-key": "Estatements.DoximEstatements.Enabled"
+      },
+      "endpointAddress": {
+        "type": "string",
+        "description": "Doxim Estatements endpoint address (url). Provided by Doxim.",
+        "x-setting-key": "Estatements.DoximEstatements.EndpointAddress"
+      },
+      "identifier": {
+        "type": "string",
+        "description": "Doxim Estatements Institution Identifier (e.g., 'connectfss'). This is how their system knows who is making the request.",
+        "x-setting-key": "Estatements.DoximEstatements.Identifier"
+      },
+      "secretKey": {
+        "type": "string",
+        "description": "Secret key for HMAC-SHA-256 encryption. This is the key used to encrypt the .hmac property on the request object.",
+        "x-setting-key": "Estatements.DoximEstatements.SecretKey"
+      }
+    }
+  }
+}

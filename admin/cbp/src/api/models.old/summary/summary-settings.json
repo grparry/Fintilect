@@ -1,0 +1,10 @@
+{
+  "SummarySettings": {
+    "type": "object",
+    "properties": {
+      "creditCards": {
+        "$ref": "./credit-cards-summary-settings.json#/CreditCardsSummarySettings"
+      }
+    }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "HouseHoldingSettings": {
+    "type": "object",
+    "description": "Settings for House Holding functionality",
+    "properties": {
+      "mobile": {
+        "type": "object",
+        "description": "Mobile-specific House Holding settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.HouseHolding",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether House Holding is enabled in mobile",
+            "x-setting-key": "Mobile.HouseHolding.Enabled"
+          },
+          "minimumVersions": {
+            "type": "object",
+            "description": "Minimum version requirements for different platforms",
+            "properties": {
+              "general": {
+                "type": "string",
+                "description": "General minimum version requirement",
+                "x-setting-key": "Mobile.HouseHolding.MinimumVersion"
+              },
+              "android": {
+                "type": "string",
+                "description": "Minimum Android version required",
+                "x-setting-key": "Mobile.HouseHolding.MinimumAndroidVersion"
+              },
+              "ios": {
+                "type": "string",
+                "description": "Minimum iOS version required",
+                "x-setting-key": "Mobile.HouseHolding.MinimumIosVersion"
+              }
+            }
+          },
+          "permissionsUrl": {
+            "type": "string",
+            "description": "URL for permissions management",
+            "x-setting-key": "Mobile.HouseHolding.PermissionsUrl"
+          }
+        }
+      },
+      "crossAccount": {
+        "type": "object",
+        "description": "Cross-account House Holding settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.CrossAccountSettings",
+        "properties": {
+          "creditCard": {
+            "type": "object",
+            "description": "Credit card related settings",
+            "properties": {
+              "historyEnabled": {
+                "type": "boolean",
+                "description": "Whether credit card history is enabled for house holding",
+                "x-setting-key": "Account.CrossAccount.HouseHoldingCreditCardHistoryEnabled"
+              },
+              "disallowWithdrawals": {
+                "type": "boolean",
+                "description": "If true, disallow withdrawals from credit cards on cross-account access screens",
+                "x-setting-key": "Account.CrossAccount.DisallowWithdrawalsFromCreditCards"
+              },
+              "disableMoreDetails": {
+                "type": "boolean",
+                "description": "If true, disable the 'more details' button next to credit cards in the card summary section",
+                "x-setting-key": "Account.CrossAccount.DisableCreditCardMoreDetailButton"
+              },
+              "readFromCore": {
+                "type": "boolean",
+                "description": "Whether to read credit cards from core",
+                "x-setting-key": "Account.CrossAccount.ReadCreditCardsFromCore"
+              }
+            }
+          },
+          "disclosure": {
+            "type": "object",
+            "description": "Disclosure acceptance settings",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether disclosure acceptance is enabled",
+                "x-setting-key": "Account.CrossAccount.DisclosureAcceptanceEnabled"
+              },
+              "flagName": {
+                "type": "string",
+                "description": "Flag name for disclosure acceptance on core",
+                "x-setting-key": "Account.CrossAccount.DisclosureAcceptanceFlag"
+              }
+            }
+          },
+          "permissions": {
+            "type": "object",
+            "description": "Permission management settings",
+            "properties": {
+              "hideRequestButton": {
+                "type": "boolean",
+                "description": "Whether to hide the request permissions button/page for another account",
+                "x-setting-key": "Account.CrossAccount.HideAbilityToRequestPermissionsForAnotherAccount"
+              },
+              "getFromCrossAccountNode": {
+                "type": "boolean",
+                "description": "Whether to use the CrossAccountNode for house holding permissions",
+                "x-setting-key": "Account.CrossAccount.GetHouseholdingPermissionsFromCrossAccountNode"
+              },
+              "source": {
+                "type": "string",
+                "description": "Source for house holding permissions",
+                "x-setting-key": "X.App.HBBOL.HouseholdingPermissionSource"
+              },
+              "checkFromDatabase": {
+                "type": "boolean",
+                "description": "Whether to check house holding values from database",
+                "x-setting-key": "Householding.CheckHouseHoldingValuesFromDatabase"
+              }
+            }
+          },
+          "grantDelays": {
+            "type": "object",
+            "description": "Delay times for granting permissions",
+            "properties": {
+              "inquiry": {
+                "type": "integer",
+                "description": "Delay time for granting inquiry permission",
+                "x-setting-key": "Householding.GrantInquiryPermissionDelayTime"
+              },
+              "deposit": {
+                "type": "integer",
+                "description": "Delay time for granting deposit permission",
+                "x-setting-key": "Householding.GrantDepositPermissionDelayTime"
+              },
+              "withdrawal": {
+                "type": "integer",
+                "description": "Delay time for granting withdrawal permission",
+                "x-setting-key": "Householding.GrantWithdrawalPermissionDelayTime"
+              }
+            }
+          },
+          "accountManagement": {
+            "type": "object",
+            "description": "Account management settings",
+            "properties": {
+              "useOwnerNameAsDescription": {
+                "type": "boolean",
+                "description": "Whether to use the owner's name as the cross account description",
+                "x-setting-key": "Account.CrossAccount.ShouldUseCrossAccountOwnerNameAsCrossAccountDescription"
+              },
+              "showLoanSsoLink": {
+                "type": "boolean",
+                "description": "Whether to show SSO link for cross account loans",
+                "x-setting-key": "Account.CrossAccount.ShouldShowSsoLinkForCrossAccountLoans"
+              },
+              "inquiryByTin": {
+                "type": "boolean",
+                "description": "Whether to use TIN for cross account inquiry",
+                "x-setting-key": "X.App.HBBOL.IsCrossAccountInquiryByTin"
+              },
+              "deleteSubAccountNoHouseholding": {
+                "type": "boolean",
+                "description": "Whether to delete sub account with no house holding",
+                "x-setting-key": "X.App.HBBOL.DeleteSubAccountNoHouseholding"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

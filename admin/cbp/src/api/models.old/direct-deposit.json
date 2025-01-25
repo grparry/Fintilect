@@ -1,0 +1,164 @@
+{
+  "DirectDepositSettings": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "enabled": {
+        "type": "boolean"
+      },
+      "routing": {
+        "type": "object",
+        "properties": {
+          "routingNumber": {
+            "type": "string",
+            "pattern": "^[0-9]{9}$"
+          },
+          "wireRoutingNumber": {
+            "type": "string",
+            "pattern": "^[0-9]{9}$"
+          },
+          "achRoutingNumber": {
+            "type": "string",
+            "pattern": "^[0-9]{9}$"
+          }
+        }
+      },
+      "supportedTypes": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "Payroll",
+            "Government",
+            "SocialSecurity",
+            "Pension",
+            "Investment",
+            "Other"
+          ]
+        }
+      },
+      "earlyDeposit": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "maxDaysEarly": {
+            "type": "integer"
+          },
+          "eligibleAccountTypes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["Checking", "Savings"]
+            }
+          },
+          "minimumAmount": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "verification": {
+        "type": "object",
+        "properties": {
+          "prenoteRequired": {
+            "type": "boolean"
+          },
+          "prenoteDays": {
+            "type": "integer"
+          },
+          "microDepositVerification": {
+            "type": "boolean"
+          },
+          "instantVerification": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "maxAttempts": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "notifications": {
+        "type": "object",
+        "properties": {
+          "depositReceived": {
+            "type": "boolean"
+          },
+          "depositPending": {
+            "type": "boolean"
+          },
+          "depositFailed": {
+            "type": "boolean"
+          },
+          "depositChange": {
+            "type": "boolean"
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["Email", "SMS", "Push", "InApp"]
+            }
+          }
+        }
+      },
+      "limits": {
+        "type": "object",
+        "properties": {
+          "maxDepositsPerDay": {
+            "type": "integer"
+          },
+          "maxAmountPerDeposit": {
+            "type": "number",
+            "format": "float"
+          },
+          "maxAmountPerDay": {
+            "type": "number",
+            "format": "float"
+          },
+          "maxAmountPerMonth": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "reporting": {
+        "type": "object",
+        "properties": {
+          "generateReports": {
+            "type": "boolean"
+          },
+          "reportFrequency": {
+            "type": "string",
+            "enum": ["Daily", "Weekly", "Monthly"]
+          },
+          "includeDetails": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "AccountInfo",
+                "DepositAmount",
+                "DepositDate",
+                "OriginatorInfo",
+                "Status"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

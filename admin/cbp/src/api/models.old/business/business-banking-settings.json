@@ -1,0 +1,16 @@
+{
+  "BusinessBankingSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/BusinessBankingSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/BusinessBankingFeatures"
+      }
+    }
+  }
+}

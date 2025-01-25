@@ -1,0 +1,43 @@
+{
+  "MainStreetSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.CheckReorder.MainStreetCheckReorder",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether Main Street check reorder is enabled",
+        "x-setting-key": "CheckReorder.MainStreetCheckReorder.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "description": "Minimum version required",
+        "x-setting-key": "CheckReorder.MainStreetCheckReorder.MinVersion"
+      },
+      "ssoUrl": {
+        "type": "string",
+        "description": "SSO URL for Main Street",
+        "x-setting-key": "CheckReorder.MainStreetCheckReorder.SsoUrl"
+      },
+      "bankId": {
+        "type": "string",
+        "description": "Bank ID for Main Street",
+        "x-setting-key": "CheckReorder.MainStreetCheckReorder.BankId"
+      },
+      "branchNumber": {
+        "type": "string",
+        "description": "Branch number",
+        "x-setting-key": "CheckReorder.MainStreetCheckReorder.BranchNumber"
+      },
+      "userId": {
+        "type": "string",
+        "description": "User ID for Main Street",
+        "x-setting-key": "CheckReorder.MainStreetCheckReorder.UserId"
+      },
+      "key": {
+        "type": "string",
+        "description": "Authentication key",
+        "x-setting-key": "CheckReorder.MainStreetCheckReorder.Key"
+      }
+    }
+  }
+}

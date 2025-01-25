@@ -1,0 +1,20 @@
+{
+  "GoodFundsSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.BillPay.GoodFunds",
+    "properties": {
+      "micrNumberStart": {
+        "type": "string",
+        "x-setting-key": "Billpay.BillPaySettings.GoodFunds.MicrNumberStart"
+      },
+      "billPayFundingType": {
+        "type": "string",
+        "x-setting-key": "Billpay.BillPaySettings.GoodFunds.BillPayFundingType"
+      },
+      "accountAndSuffixUseSuffixFromFile": {
+        "type": "boolean",
+        "x-setting-key": "Billpay.BillPaySettings.GoodFunds.AccountAndSuffixUseSuffixFromFile"
+      }
+    }
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "VertifiSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "apiEndpoint": {
+        "type": "string"
+      },
+      "credentials": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string"
+          },
+          "apiKey": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "limits": {
+        "type": "object",
+        "properties": {
+          "dailyAmount": {
+            "type": "number"
+          },
+          "dailyCount": {
+            "type": "integer"
+          },
+          "monthlyAmount": {
+            "type": "number"
+          },
+          "monthlyCount": {
+            "type": "integer"
+          }
+        }
+      },
+      "imageQuality": {
+        "type": "object",
+        "properties": {
+          "minDPI": {
+            "type": "integer"
+          },
+          "maxFileSize": {
+            "type": "integer",
+            "description": "Maximum file size in bytes"
+          },
+          "allowedFormats": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["JPEG", "PNG", "TIFF"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "ProfitStarsSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "serviceUrl": {
+        "type": "string"
+      },
+      "institutionId": {
+        "type": "string"
+      },
+      "credentials": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "processing": {
+        "type": "object",
+        "properties": {
+          "cutoffTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "holdPeriod": {
+            "type": "integer",
+            "description": "Hold period in days"
+          },
+          "allowedAccountTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "validation": {
+        "type": "object",
+        "properties": {
+          "duplicateDetection": {
+            "type": "boolean"
+          },
+          "micr": {
+            "type": "boolean"
+          },
+          "imageAnalysis": {
+            "type": "boolean"
+          }
+        }
+      },
+      "reporting": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "frequency": {
+            "type": "string",
+            "enum": ["Daily", "Weekly", "Monthly"]
+          },
+          "recipients": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "EnsentaSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "endpoint": {
+        "type": "string"
+      },
+      "merchantId": {
+        "type": "string"
+      },
+      "apiSecret": {
+        "type": "string",
+        "format": "password"
+      },
+      "features": {
+        "type": "object",
+        "properties": {
+          "autoAcceptance": {
+            "type": "boolean"
+          },
+          "manualReview": {
+            "type": "boolean"
+          },
+          "riskScoring": {
+            "type": "boolean"
+          }
+        }
+      },
+      "limits": {
+        "type": "object",
+        "properties": {
+          "perTransaction": {
+            "type": "number"
+          },
+          "perDay": {
+            "type": "number"
+          },
+          "perMonth": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}

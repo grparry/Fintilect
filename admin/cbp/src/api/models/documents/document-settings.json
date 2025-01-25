@@ -1,0 +1,105 @@
+{
+  "EstatementsSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Estatements.Estatements",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether estatements are enabled",
+        "x-setting-key": "Estatements.EstatementsEnabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "description": "Minimum version required for estatements",
+        "x-setting-key": "Estatements.MinVersion"
+      },
+      "redirectStatementsAndNoticesToEstatementsPageAndReturn": {
+        "type": "boolean",
+        "description": "Whether to redirect statements and notices to estatements page and return",
+        "x-setting-key": "Estatements.RedirectStatementsAndNoticesToEstatementsPageAndReturn"
+      },
+      "openInNewWindow": {
+        "type": "boolean",
+        "description": "Whether estatements should open in a new window rather than an iFrame (applies to mobile web and desktop web)",
+        "x-setting-key": "Estatements.OpenInNewWindow"
+      },
+      "willOpenInNewWindowOnMobileDevices": {
+        "type": "boolean",
+        "description": "Whether estatements should open in a new window on mobile devices (only applies to mobile web)",
+        "x-setting-key": "Estatements.WillOpenInNewWindowOnMobileDevices"
+      },
+      "willOpenInIFrameInMobileApp": {
+        "type": "boolean",
+        "description": "Whether estatements should open in an iFrame in the mobile app",
+        "x-setting-key": "Estatements.WillOpenInIFrameInMobileApp"
+      },
+      "disclosureUrl": {
+        "type": "string",
+        "description": "URL for estatements disclosure",
+        "x-setting-key": "Estatements.DisclosureUrl"
+      },
+      "shouldShowAllStatementAccountsOrgs": {
+        "type": "boolean",
+        "description": "Whether estatements should be visible for organizations",
+        "x-setting-key": "Estatements.ShouldShowAllStatementAccountsOrgs"
+      },
+      "ignoreDisclosure": {
+        "type": "string",
+        "description": "Disclosure settings to ignore",
+        "x-setting-key": "Estatements.IgnoreDisclosure"
+      },
+      "defaultSearchRange": {
+        "type": "integer",
+        "description": "Default search range in days (negative value)",
+        "x-setting-key": "Estatements.DefaultSearchRange"
+      },
+      "shouldShowEstatementsWhenMemberHasInquireRightsOnAllShares": {
+        "type": "boolean",
+        "description": "Whether to show estatements when member has inquire rights on all shares",
+        "x-setting-key": "Estatements.ShowEstatementsWhenMemberHasInquireRightsOnAllShares"
+      },
+      "useBITFormPostOnIFrame": {
+        "type": "boolean",
+        "description": "Whether to use BIT form post on iFrame",
+        "x-setting-key": "Estatements.UseBITFormPostOnIFrame"
+      },
+      "epl": {
+        "type": "object",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.Estatements.EplEstatements",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether EPL estatements are enabled",
+            "x-setting-key": "Estatements.EplEstatements.Enabled"
+          },
+          "endpointAddress": {
+            "type": "string",
+            "description": "EPL estatements endpoint address (URL)",
+            "x-setting-key": "Estatements.EplEstatements.EndpointAddress"
+          },
+          "groupName": {
+            "type": "string",
+            "description": "EPL estatements group name (should be 'Connect Online Banking')",
+            "x-setting-key": "Estatements.EplEstatements.GroupName"
+          },
+          "identifier": {
+            "type": "string",
+            "description": "EPL estatements identifier",
+            "x-setting-key": "Estatements.EplEstatements.Identifier"
+          },
+          "privateKey": {
+            "type": "string",
+            "description": "EPL estatements private key",
+            "x-setting-key": "Estatements.EplEstatements.PrivateKey"
+          },
+          "encryptionInitializationVector": {
+            "type": "string",
+            "description": "EPL estatements encryption initialization vector",
+            "x-setting-key": "Estatements.EplEstatements.EncryptionInitializationVector"
+          }
+        }
+      }
+    }
+  }
+}

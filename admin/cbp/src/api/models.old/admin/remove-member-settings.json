@@ -1,0 +1,26 @@
+{
+  "RemoveMemberSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Membership.RemoveMemberFromOnlineBanking",
+    "description": "Settings for removing members from online banking",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether the remove member feature is enabled"
+      },
+      "shouldRemoveOnlineBankingFlag": {
+        "type": "boolean",
+        "x-setting-key": "RemoveMemberFromOnlineBanking.ShouldRemoveOnlineBankingFlag",
+        "description": "Whether to remove the online banking flag when removing a member"
+      },
+      "settings": {
+        "$ref": "./settings.json#/RemoveMemberSettings",
+        "description": "Additional settings for removing members"
+      },
+      "features": {
+        "$ref": "./features.json#/RemoveMemberFeatures",
+        "description": "Features configuration for removing members"
+      }
+    }
+  }
+}

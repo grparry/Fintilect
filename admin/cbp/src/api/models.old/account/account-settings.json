@@ -1,0 +1,128 @@
+{
+  "AccountSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.AccountSettings",
+    "properties": {
+      "getDebitCardsDuringAccountInquiry": {
+        "type": "boolean",
+        "x-setting-key": "Accounts.GetDebitCardsDuringAccountInquiry",
+        "description": "Whether to retrieve debit card information during account inquiry"
+      },
+      "showClosedAccountsOnDashboard": {
+        "type": "boolean",
+        "x-setting-key": "Accounts.ShowClosedAccountsOnDashboard",
+        "description": "Whether to display closed accounts on the dashboard"
+      },
+      "hideLoanSummaryControlWhenMemberHasNoLoans": {
+        "type": "boolean",
+        "x-setting-key": "Accounts.HideLoanSummaryControlWhenMemberHasNoLoans",
+        "description": "Whether to hide the loan summary control when member has no loans"
+      },
+      "showRateForSharesOnDashboardAndSummary": {
+        "type": "boolean",
+        "x-setting-key": "Accounts.ShowRateForSharesOnDashboardAndSummary",
+        "description": "If true, show rate for shares on summary and dashboard views in HomeBanking"
+      },
+      "certificateCategoriesForRates": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "Accounts.CertificateCategoriesForRates",
+        "description": "List of valid share categories for certificates. Default: IRA"
+      },
+      "useCoreSuffixNicknamesOnly": {
+        "type": "boolean",
+        "x-setting-key": "Account.UseCoreSuffixNicknamesOnly",
+        "description": "If true, nicknames will be stored in the core. If false, nicknames will be stored in HomeBankingAccountAlias table"
+      },
+      "accountCategoriesWithChecks": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.HomeBanking.AccountHasChecks",
+        "description": "Comma-delimited list of account types that have checks (for check image retrieval)"
+      },
+      "checkingAccountCategories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.HBBOL.obsCheckingAccounts",
+        "description": "List of Account categories that are Checking accounts"
+      },
+      "shareAccountCategories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.HomeBanking.obsShareAccounts",
+        "description": "List of Account categories that are share accounts"
+      },
+      "savingsAccountCategories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.HomeBanking.SavingsAccounts",
+        "description": "List of Account categories that are savings accounts"
+      },
+      "showMmaChecks": {
+        "type": "boolean",
+        "x-setting-key": "X.App.HomeBanking.ShowMMAChecks",
+        "description": "Whether to show MMA checks"
+      },
+      "homeEquityCheckingAccountCategories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.HomeBanking.HECheckCategory",
+        "description": "List of Account categories that are loan home equity accounts"
+      },
+      "masking": {
+        "$ref": "./account-masking.json#/AccountMaskingSettings"
+      },
+      "achTransfer": {
+        "$ref": "./ach-transfer.json#/AchTransferSettings"
+      },
+      "anyMemberTransfers": {
+        "$ref": "./any-member-transfers.json#/AnyMemberTransfersSettings"
+      },
+      "cards": {
+        "$ref": "./cards.json#/CardsSettings"
+      },
+      "crossAccount": {
+        "$ref": "./cross-account.json#/CrossAccountSettings"
+      },
+      "escheat": {
+        "$ref": "./escheat.json#/EscheatSettings"
+      },
+      "jointOwners": {
+        "$ref": "./joint-owners.json#/JointOwnersSettings"
+      },
+      "linkedAccount": {
+        "$ref": "./linked-account.json#/LinkedAccountSettings"
+      },
+      "placeHoldsOnAch": {
+        "$ref": "./place-holds-on-ach.json#/PlaceHoldsOnAchSettings"
+      },
+      "scheduledTransfers": {
+        "$ref": "./scheduled-transfers.json#/ScheduledTransfersSettings"
+      },
+      "transferLimits": {
+        "$ref": "./transfer-limits.json#/TransferLimitsSettings"
+      },
+      "transferTimeouts": {
+        "$ref": "./transfer-timeouts.json#/TransferTimeoutsSettings"
+      },
+      "transfers": {
+        "$ref": "./transfers.json#/TransfersSettings"
+      },
+      "usaEpay": {
+        "$ref": "./usa-epay.json#/UsaEpaySettings"
+      }
+    }
+  }
+}

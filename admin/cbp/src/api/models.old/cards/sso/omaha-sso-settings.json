@@ -1,0 +1,87 @@
+{
+  "OmahaSsoSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.CreditCards.OmahaSso",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "CreditCards.OmahaSSO.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "x-setting-key": "CreditCards.OmahaSSO.MinimumVersion"
+      },
+      "url": {
+        "type": "string",
+        "x-setting-key": "CreditCards.OmahaSSO.Url"
+      },
+      "certification": {
+        "type": "object",
+        "properties": {
+          "store": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.Certification.Store"
+          },
+          "emergePrivateThumbPrint": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.Certification.Emerge.PrivateThumbPrint"
+          },
+          "vendorPublicThumbPrint": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.Certification.Vendor.PublicThumbPrint"
+          }
+        }
+      },
+      "minimumVersions": {
+        "type": "object",
+        "properties": {
+          "android": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.MinimumAndroidVersion"
+          },
+          "ios": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.MinimumIosVersion"
+          }
+        }
+      },
+      "urls": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSso.StartUrl"
+          },
+          "return": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSso.ReturnUrl"
+          },
+          "logout": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSso.LogoutUrl"
+          }
+        }
+      },
+      "appId": {
+        "type": "string",
+        "x-setting-key": "CreditCards.OmahaSso.AppId"
+      },
+      "clientId": {
+        "type": "string",
+        "x-setting-key": "CreditCards.OmahaSso.ClientId"
+      },
+      "assertionLogEnabled": {
+        "type": "boolean",
+        "x-setting-key": "CreditCards.OmahaSso.AssertionLogEnabled"
+      },
+      "issuer": {
+        "type": "string",
+        "x-setting-key": "CreditCards.OmahaSso.Issuer"
+      },
+      "responseIssuer": {
+        "type": "string",
+        "x-setting-key": "CreditCards.OmahaSSO.ResponseIssuer"
+      }
+    }
+  }
+}

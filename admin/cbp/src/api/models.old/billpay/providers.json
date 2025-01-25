@@ -1,0 +1,274 @@
+{
+  "CheckFreeSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.BillPay.CheckFree",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "CheckFreeBillPaySso.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "x-setting-key": "CheckFreeBillPaySso.MinVersion"
+      },
+      "accountTypeMap": {
+        "type": "object",
+        "x-setting-key": "CheckFreeBillPaySso.AccountTypeMap",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "urls": {
+        "type": "object",
+        "properties": {
+          "certificationBaseUrl": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.CertificationBaseUrl"
+          },
+          "regularBaseUrl": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.RegularBaseUrl"
+          },
+          "builderCertificationBaseUrl": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.BuilderCertificationBaseUrl"
+          },
+          "builderRegularBaseUrl": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.BuilderRegularBaseUrl"
+          }
+        }
+      },
+      "endpoints": {
+        "type": "object",
+        "properties": {
+          "authSso": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.EndPoint.AuthSso"
+          },
+          "subscriberService": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.EndPoint.SubscriberService"
+          },
+          "sessionService": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.EndPoint.SessionService"
+          },
+          "keyManagement": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.EndPoint.KeyManagement"
+          }
+        }
+      },
+      "clientInfo": {
+        "type": "object",
+        "properties": {
+          "appText": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.ClientAppText"
+          },
+          "appVersion": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.ClientAppVersion"
+          },
+          "certificateName": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.ClientCertificateName"
+          }
+        }
+      },
+      "configuration": {
+        "type": "object",
+        "properties": {
+          "isCertification": {
+            "type": "boolean",
+            "x-setting-key": "CheckFreeBillPaySso.IsCertification"
+          },
+          "isSolicitationAllowed": {
+            "type": "boolean",
+            "x-setting-key": "CheckFreeBillPaySso.IsSolicitationAllowed"
+          },
+          "products": {
+            "type": "object",
+            "x-setting-key": "CheckFreeBillPaySso.Products",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "sponsorId": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.SponsorId"
+          },
+          "subscriberPwDefaultForAll": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.SubscriberPwDefaultForAll"
+          },
+          "timeZoneOffset": {
+            "type": "integer",
+            "x-setting-key": "CheckFreeBillPaySso.TimeZoneOffset"
+          },
+          "routingNumber": {
+            "type": "string",
+            "x-setting-key": "X.App.HomeBanking.IntraBankRoutingNumber"
+          },
+          "generatedKeyLength": {
+            "type": "integer",
+            "x-setting-key": "CheckFreeBillPaySso.GeneratedKeyLength"
+          },
+          "serviceRunConfiguration": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.ServiceRunConfiguration"
+          },
+          "subscriberInfoCallEnabled": {
+            "type": "boolean",
+            "x-setting-key": "CheckFreeBillPaySso.SubscriberInfoCallEnabled"
+          },
+          "sessionServiceVersion": {
+            "type": "string",
+            "x-setting-key": "CheckFreeBillPaySso.SessionServiceVersion"
+          }
+        }
+      }
+    }
+  },
+  "SymmetryBillPaySettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.BillPay.Symmetry",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "SymmetryBillPaySso.Enabled"
+      },
+      "clientId": {
+        "type": "string",
+        "x-setting-key": "SymmetryBillPaySso.ClientId"
+      },
+      "apiKey": {
+        "type": "string",
+        "format": "password",
+        "x-setting-key": "SymmetryBillPaySso.ApiKey"
+      },
+      "features": {
+        "type": "object",
+        "properties": {
+          "billPresentation": {
+            "type": "boolean",
+            "x-setting-key": "SymmetryBillPaySso.Features.BillPresentation"
+          },
+          "paymentProcessing": {
+            "type": "boolean",
+            "x-setting-key": "SymmetryBillPaySso.Features.PaymentProcessing"
+          },
+          "payeeDirectory": {
+            "type": "boolean",
+            "x-setting-key": "SymmetryBillPaySso.Features.PayeeDirectory"
+          }
+        }
+      },
+      "processing": {
+        "type": "object",
+        "properties": {
+          "batchSize": {
+            "type": "integer",
+            "x-setting-key": "SymmetryBillPaySso.Processing.BatchSize"
+          },
+          "retryAttempts": {
+            "type": "integer",
+            "x-setting-key": "SymmetryBillPaySso.Processing.RetryAttempts"
+          }
+        }
+      }
+    }
+  },
+  "CheckFreeAdminSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.BillPay.CheckFreeAdmin",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "CheckFreeAdminSso.Enabled"
+      },
+      "adminPortalUrl": {
+        "type": "string",
+        "x-setting-key": "CheckFreeAdminSso.AdminPortalUrl"
+      },
+      "credentials": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "x-setting-key": "CheckFreeAdminSso.Credentials.Username"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "x-setting-key": "CheckFreeAdminSso.Credentials.Password"
+          }
+        }
+      },
+      "permissions": {
+        "type": "object",
+        "properties": {
+          "userManagement": {
+            "type": "boolean",
+            "x-setting-key": "CheckFreeAdminSso.Permissions.UserManagement"
+          },
+          "payeeManagement": {
+            "type": "boolean",
+            "x-setting-key": "CheckFreeAdminSso.Permissions.PayeeManagement"
+          },
+          "reportAccess": {
+            "type": "boolean",
+            "x-setting-key": "CheckFreeAdminSso.Permissions.ReportAccess"
+          }
+        }
+      }
+    }
+  },
+  "OutOfBandSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.BillPay.OutOfBand",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "OutOfBandSso.Enabled"
+      },
+      "actions": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "BillPayEnroll",
+            "BillPayAccess",
+            "AddPayee",
+            "TransferAmount",
+            "CreateSubAccount",
+            "AddLinkedAccount",
+            "LinkedTransferAmount",
+            "ChangeAddress",
+            "ChangeEmail"
+          ],
+          "x-setting-key": "OutOfBandSso.Actions"
+        }
+      },
+      "authentication": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": ["SMS", "Email", "Push"],
+            "x-setting-key": "OutOfBandSso.Authentication.Method"
+          },
+          "codeLength": {
+            "type": "integer",
+            "x-setting-key": "OutOfBandSso.Authentication.CodeLength"
+          },
+          "expirationMinutes": {
+            "type": "integer",
+            "x-setting-key": "OutOfBandSso.Authentication.ExpirationMinutes"
+          }
+        }
+      }
+    }
+  }
+}

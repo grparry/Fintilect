@@ -1,0 +1,352 @@
+{
+  "CardControlSettings": {
+    "type": "object",
+    "description": "Settings for card control functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.CardControl",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether card control functionality is enabled",
+        "x-setting-key": "Mobile.CardControl.Enabled"
+      },
+      "minimumVersions": {
+        "type": "object",
+        "description": "Minimum version requirements for card control",
+        "properties": {
+          "general": {
+            "type": "string",
+            "description": "General minimum version required",
+            "x-setting-key": "Mobile.CardControl.MinimumVersion"
+          },
+          "android": {
+            "type": "string",
+            "description": "Minimum Android version required",
+            "x-setting-key": "Mobile.CardControl.MinimumAndroidVersion"
+          },
+          "ios": {
+            "type": "string",
+            "description": "Minimum iOS version required",
+            "x-setting-key": "Mobile.CardControl.MinimumIosVersion"
+          }
+        }
+      },
+      "features": {
+        "type": "object",
+        "description": "Feature toggles for card control",
+        "properties": {
+          "spendingLimits": {
+            "type": "boolean",
+            "description": "Whether spending limits feature is enabled",
+            "x-setting-key": "Mobile.CardControl.SpendingLimitsEnabled"
+          },
+          "transactionTypes": {
+            "type": "boolean",
+            "description": "Whether transaction types feature is enabled",
+            "x-setting-key": "Mobile.CardControl.TransactionTypesEnabled"
+          },
+          "managePermissions": {
+            "type": "boolean",
+            "description": "Whether manage permissions feature is enabled",
+            "x-setting-key": "Mobile.CardControl.ManagePermissionsEnabled"
+          },
+          "userDeviceSetup": {
+            "type": "boolean",
+            "description": "Whether user device setup feature is enabled",
+            "x-setting-key": "Mobile.CardControl.UserDeviceSetupEnabled"
+          },
+          "alertPreferences": {
+            "type": "boolean",
+            "description": "Whether alert preferences feature is enabled",
+            "x-setting-key": "Mobile.CardControl.AlertPreferencesEnabled"
+          },
+          "merchantTypes": {
+            "type": "boolean",
+            "description": "Whether merchant types feature is enabled",
+            "x-setting-key": "Mobile.CardControl.MerchantTypesEnabled"
+          }
+        }
+      },
+      "timeControls": {
+        "type": "object",
+        "description": "Time-based control settings",
+        "properties": {
+          "cardOffFixedTime": {
+            "type": "boolean",
+            "description": "Whether fixed time card-off feature is enabled",
+            "x-setting-key": "Mobile.CardControl.CardOffFixedTimeEnabled"
+          },
+          "cardOffUserDefinedTime": {
+            "type": "boolean",
+            "description": "Whether user-defined time card-off feature is enabled",
+            "x-setting-key": "Mobile.CardControl.CardOffUserDefinedTimeEnabled"
+          },
+          "timeOfDayRange": {
+            "type": "boolean",
+            "description": "Whether time of day range control is enabled",
+            "x-setting-key": "Mobile.CardControl.TimeOfDayRangeControlEnabled"
+          }
+        }
+      },
+      "transactionControls": {
+        "type": "object",
+        "description": "Transaction control settings",
+        "properties": {
+          "largeTransaction": {
+            "type": "boolean",
+            "description": "Whether large transaction control is enabled",
+            "x-setting-key": "Mobile.CardControl.LargeTransactionControlEnabled"
+          },
+          "international": {
+            "type": "boolean",
+            "description": "Whether international transaction control is enabled",
+            "x-setting-key": "Mobile.CardControl.InternationalTransactionControlEnabled"
+          },
+          "internet": {
+            "type": "boolean",
+            "description": "Whether internet transaction control is enabled",
+            "x-setting-key": "Mobile.CardControl.InternetTransactionControlEnabled"
+          },
+          "merchantStateList": {
+            "type": "boolean",
+            "description": "Whether merchant state list control is enabled",
+            "x-setting-key": "Mobile.CardControl.MerchantStateListControlEnabled"
+          }
+        }
+      },
+      "cardStates": {
+        "type": "object",
+        "description": "Card state settings",
+        "properties": {
+          "activeStateCode": {
+            "type": "string",
+            "description": "Common code for active card state",
+            "x-setting-key": "Mobile.CardControl.ActiveCardStateCommonCode"
+          },
+          "closedStateCode": {
+            "type": "string",
+            "description": "Common code for closed card state",
+            "x-setting-key": "Mobile.CardControl.ClosedCardStateCommonCode"
+          },
+          "restrictedStateCode": {
+            "type": "string",
+            "description": "Common code for restricted card state",
+            "x-setting-key": "Mobile.CardControl.RestrictedCardStateCommonCode"
+          },
+          "deleteClosedCards": {
+            "type": "boolean",
+            "description": "Whether to delete closed cards",
+            "x-setting-key": "Mobile.CardControl.DeleteClosedCards"
+          },
+          "addPendingCards": {
+            "type": "boolean",
+            "description": "Whether to add pending cards",
+            "x-setting-key": "Mobile.CardControl.AddPendingCards"
+          }
+        }
+      },
+      "display": {
+        "type": "object",
+        "description": "Display settings",
+        "properties": {
+          "hideCardNicknames": {
+            "type": "boolean",
+            "description": "Whether to hide card nicknames",
+            "x-setting-key": "Mobile.CardControl.HideCardNicknames"
+          },
+          "showRegisterCardOption": {
+            "type": "boolean",
+            "description": "Whether to show register card option",
+            "x-setting-key": "Mobile.CardControl.ShowRegisterCardOption"
+          }
+        }
+      },
+      "vendors": {
+        "type": "object",
+        "description": "Vendor settings",
+        "properties": {
+          "general": {
+            "type": "string",
+            "description": "General card control vendor",
+            "x-setting-key": "Mobile.CardControl.Vendor"
+          },
+          "debitCard": {
+            "type": "string",
+            "description": "Debit card vendor",
+            "x-setting-key": "Mobile.CardControl.DebitCardVendor"
+          },
+          "creditCard": {
+            "type": "string",
+            "description": "Credit card vendor",
+            "x-setting-key": "Mobile.CardControl.CreditCardVendor"
+          }
+        }
+      },
+      "ondotDx": {
+        "type": "object",
+        "description": "Ondot DX settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.OndotDxSettings",
+        "properties": {
+          "clientId": {
+            "type": "integer",
+            "description": "Ondot DX client ID",
+            "x-setting-key": "Mobile.CardControl.OndotDx.ClientId"
+          },
+          "url": {
+            "type": "string",
+            "description": "Ondot DX URL",
+            "x-setting-key": "Mobile.CardControl.OndotDx.Url"
+          },
+          "mockData": {
+            "type": "object",
+            "description": "Mock data settings",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether mock data is enabled",
+                "x-setting-key": "Mobile.CardControl.OndotDx.IsMockDataEnabled"
+              },
+              "preferencesData": {
+                "type": "string",
+                "description": "Mock preferences data",
+                "x-setting-key": "Mobile.CardControl.OndotDx.MockGetPreferencesData"
+              }
+            }
+          },
+          "registration": {
+            "type": "object",
+            "description": "Registration settings",
+            "properties": {
+              "enableAllMerchantTypes": {
+                "type": "boolean",
+                "description": "Whether to enable all merchant types on registration",
+                "x-setting-key": "Mobile.CardControl.OndotDx.EnableAllMerchantTypesOnRegistration"
+              },
+              "enableAllTransactionTypes": {
+                "type": "boolean",
+                "description": "Whether to enable all transaction types on registration",
+                "x-setting-key": "Mobile.CardControl.OndotDx.EnableAllTransactionTypesOnRegistration"
+              }
+            }
+          },
+          "alerts": {
+            "type": "object",
+            "description": "Alert settings",
+            "properties": {
+              "declinedTransactionEnabled": {
+                "type": "boolean",
+                "description": "Whether declined transaction alerts are enabled",
+                "x-setting-key": "Mobile.CardControl.OndotDx.AlertsDeliveryDeclinedTransactionEnabled"
+              },
+              "sendAmountAsDollars": {
+                "type": "boolean",
+                "description": "Whether to send amounts as dollars",
+                "x-setting-key": "Moblie.CardControl.OnDotDx.SendAmountAsDollars"
+              }
+            }
+          }
+        }
+      },
+      "debitCard": {
+        "type": "object",
+        "description": "Debit card specific settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.DebitCardSettings",
+        "properties": {
+          "alertPreferences": {
+            "type": "boolean",
+            "description": "Whether alert preferences are enabled for debit cards",
+            "x-setting-key": "Mobile.CardControl.DebitCard.AlertPreferencesEnabled"
+          },
+          "userDeviceSetup": {
+            "type": "boolean",
+            "description": "Whether user device setup is enabled for debit cards",
+            "x-setting-key": "Mobile.CardControl.DebitCard.UserDeviceSetupEnabled"
+          },
+          "managePermissions": {
+            "type": "boolean",
+            "description": "Whether manage permissions is enabled for debit cards",
+            "x-setting-key": "Mobile.CardControl.DebitCard.ManagePermissionsEnabled"
+          },
+          "dynamicTransactionTypes": {
+            "type": "boolean",
+            "description": "Whether to use dynamic transaction types for debit cards",
+            "x-setting-key": "Mobile.CardControl.DebitCard.ShouldUseDynamicTransactionTypes"
+          },
+          "controls": {
+            "type": "object",
+            "description": "Control settings for debit cards",
+            "properties": {
+              "internet": {
+                "type": "boolean",
+                "description": "Whether internet transaction control is enabled for debit cards",
+                "x-setting-key": "Mobile.CardControl.DebitCard.InternetTransactionControlEnabled"
+              },
+              "largeTransaction": {
+                "type": "boolean",
+                "description": "Whether large transaction control is enabled for debit cards",
+                "x-setting-key": "Mobile.CardControl.DebitCard.LargeTransactionControlEnabled"
+              },
+              "timeOfDay": {
+                "type": "boolean",
+                "description": "Whether time of day control is enabled for debit cards",
+                "x-setting-key": "Mobile.CardControl.DebitCard.TimeOfDayRangeControlEnabled"
+              },
+              "cardOffUserDefined": {
+                "type": "boolean",
+                "description": "Whether user-defined card-off is enabled for debit cards",
+                "x-setting-key": "Mobile.CardControl.DebitCard.CardOffUserDefinedTimeEnabled"
+              }
+            }
+          }
+        }
+      },
+      "creditCard": {
+        "type": "object",
+        "description": "Credit card specific settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.CreditCardSettings",
+        "properties": {
+          "alertPreferences": {
+            "type": "boolean",
+            "description": "Whether alert preferences are enabled for credit cards",
+            "x-setting-key": "Mobile.CardControl.CreditCard.AlertPreferencesEnabled"
+          },
+          "userDeviceSetup": {
+            "type": "boolean",
+            "description": "Whether user device setup is enabled for credit cards",
+            "x-setting-key": "Mobile.CardControl.CreditCard.UserDeviceSetupEnabled"
+          },
+          "managePermissions": {
+            "type": "boolean",
+            "description": "Whether manage permissions is enabled for credit cards",
+            "x-setting-key": "Mobile.CardControl.CreditCard.ManagePermissionsEnabled"
+          },
+          "dynamicTransactionTypes": {
+            "type": "boolean",
+            "description": "Whether to use dynamic transaction types for credit cards",
+            "x-setting-key": "Mobile.CardControl.CreditCard.ShouldUseDynamicTransactionTypes"
+          },
+          "features": {
+            "type": "object",
+            "description": "Feature settings for credit cards",
+            "properties": {
+              "merchantTypes": {
+                "type": "boolean",
+                "description": "Whether merchant types are enabled for credit cards",
+                "x-setting-key": "Mobile.CardControl.CreditCard.MerchantTypesEnabled"
+              },
+              "spendingLimits": {
+                "type": "boolean",
+                "description": "Whether spending limits are enabled for credit cards",
+                "x-setting-key": "Mobile.CardControl.CreditCard.SpendingLimitsEnabled"
+              },
+              "transactionTypes": {
+                "type": "boolean",
+                "description": "Whether transaction types are enabled for credit cards",
+                "x-setting-key": "Mobile.CardControl.CreditCard.TransactionTypesEnabled"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

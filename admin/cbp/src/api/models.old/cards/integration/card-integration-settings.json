@@ -1,0 +1,165 @@
+{
+  "CardIntegrationSettings": {
+    "type": "object",
+    "properties": {
+      "pscu": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.CreditCards.PscuSso",
+        "properties": {
+          "sso": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "x-setting-key": "CreditCards.PscuSso.Enabled"
+              },
+              "minimumVersion": {
+                "type": "number",
+                "x-setting-key": "CreditCards.PscuSso.MinimumVersion"
+              },
+              "url": {
+                "type": "string",
+                "x-setting-key": "CreditCards.PscuSso.Url"
+              },
+              "certification": {
+                "type": "object",
+                "properties": {
+                  "store": {
+                    "type": "string",
+                    "x-setting-key": "CreditCards.PscuSso.Certification.Store"
+                  },
+                  "emergePrivateThumbPrint": {
+                    "type": "string",
+                    "x-setting-key": "CreditCards.PscuSso.Certification.Emerge.PrivateThumbPrint"
+                  },
+                  "vendorPublicThumbPrint": {
+                    "type": "string",
+                    "x-setting-key": "CreditCards.PscuSso.Certification.Vendor.PublicThumbPrint"
+                  }
+                }
+              },
+              "issuer": {
+                "type": "string",
+                "x-setting-key": "CreditCards.PscuSso.Issuer"
+              },
+              "responseIssuer": {
+                "type": "string",
+                "x-setting-key": "CreditCards.PscuSso.ResponseIssuer"
+              },
+              "appId": {
+                "type": "string",
+                "x-setting-key": "CreditCards.PscuSso.AppId"
+              },
+              "clientId": {
+                "type": "string",
+                "x-setting-key": "CreditCards.PscuSso.ClientId"
+              },
+              "keepAliveUrl": {
+                "type": "string",
+                "x-setting-key": "CreditCards.PscuSso.KeepAliveUrl"
+              },
+              "assertionLogEnabled": {
+                "type": "boolean",
+                "x-setting-key": "CreditCards.PscuSso.AssertionLogEnabled"
+              }
+            }
+          },
+          "history": {
+            "type": "object",
+            "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.History.CardHistory",
+            "properties": {
+              "ssoConfigId": {
+                "type": "string",
+                "x-setting-key": "X.App.HomeBanking.PSCUSSOConfigID"
+              },
+              "useSsoUrl": {
+                "type": "boolean",
+                "x-setting-key": "History.Card.UsePscuSsoUrl"
+              }
+            }
+          }
+        }
+      },
+      "fiserv": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.History.CardHistory",
+        "properties": {
+          "api": {
+            "type": "object",
+            "properties": {
+              "baseUrl": {
+                "type": "string",
+                "x-setting-key": "History.Card.Fiserv.ApiBaseUrl"
+              },
+              "tokenCreateEndpoint": {
+                "type": "string",
+                "x-setting-key": "History.Card.Fiserv.TokenCreateApiEndpoint"
+              },
+              "statementDetailsEndpoint": {
+                "type": "string",
+                "x-setting-key": "History.Card.Fiserv.StatementDetailsApiEndpoint"
+              },
+              "customerInquiryEndpoint": {
+                "type": "string",
+                "x-setting-key": "History.Card.Fiserv.CustomerInquiryApiEndpoint"
+              }
+            }
+          },
+          "credentials": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "type": "string",
+                "x-setting-key": "History.Card.Fiserv.UserId"
+              },
+              "password": {
+                "type": "string",
+                "x-setting-key": "History.Card.Fiserv.Password"
+              },
+              "x500Id": {
+                "type": "string",
+                "x-setting-key": "History.Card.Fiserv.x500Id"
+              }
+            }
+          },
+          "certificate": {
+            "type": "object",
+            "properties": {
+              "store": {
+                "type": "string",
+                "x-setting-key": "History.Card.Fiserv.CertificateStore"
+              },
+              "thumbPrint": {
+                "type": "string",
+                "x-setting-key": "History.Card.Fiserv.CertificateThumbPrint"
+              }
+            }
+          },
+          "debug": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "x-setting-key": "History.Card.Fiserv.DebugModeEnabled"
+              }
+            }
+          },
+          "cycle": {
+            "type": "string",
+            "x-setting-key": "History.Card.Fiserv.Cycle"
+          }
+        }
+      },
+      "dna": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.CardManagement.CardManagementSettings",
+        "properties": {
+          "shouldCallCoreForCardNumbers": {
+            "type": "boolean",
+            "x-setting-key": "CardManagement.Dna.ShouldCallCoreForCardNumbers"
+          }
+        }
+      }
+    }
+  }
+}

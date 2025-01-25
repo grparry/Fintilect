@@ -1,0 +1,47 @@
+{
+  "SavvyMoneySettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.SavvyMoney.SavvyMoneySettings",
+    "properties": {
+      "serviceSettings": {
+        "type": "object",
+        "x-setting-key": "SavvyMoney.ServiceSettings",
+        "description": "Service settings for SavvyMoney integration"
+      },
+      "serviceSettingsIframe": {
+        "type": "object",
+        "x-setting-key": "SavvyMoney.ServiceSettings.Iframe",
+        "description": "Service settings for SavvyMoney iframe integration"
+      },
+      "homeBankingEnabled": {
+        "type": "boolean",
+        "x-setting-key": "HomeBanking.SavvyMoney.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "HomeBanking.SavvyMoney.MinVersion"
+      },
+      "apiAuthId": {
+        "type": "string",
+        "x-setting-key": "SavvyMoney.Api.AuthId"
+      },
+      "apiAuthKey": {
+        "type": "string",
+        "x-setting-key": "SavvyMoney.Api.AuthKey"
+      },
+      "apiDomain": {
+        "type": "string",
+        "x-setting-key": "SavvyMoney.Api.Domain"
+      },
+      "apiPartnerId": {
+        "type": "string",
+        "x-setting-key": "SavvyMoney.Api.PartnerId"
+      },
+      "apiBaseUrl": {
+        "type": "string",
+        "x-setting-key": "SavvyMoney.Api.BaseUrl"
+      }
+    }
+  }
+}

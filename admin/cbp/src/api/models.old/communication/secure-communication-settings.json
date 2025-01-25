@@ -1,0 +1,16 @@
+{
+  "SecureCommunicationSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/SecureCommunicationSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/SecureCommunicationFeatures"
+      }
+    }
+  }
+}

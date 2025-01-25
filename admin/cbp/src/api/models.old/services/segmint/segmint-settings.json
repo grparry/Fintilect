@@ -1,0 +1,74 @@
+{
+  "SegmintSettings": {
+    "type": "object",
+    "description": "SegMint integration settings",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.SegMint.SegMintSettings",
+    "properties": {
+      "authentication": {
+        "type": "object",
+        "description": "Authentication settings for SegMint",
+        "properties": {
+          "secret": {
+            "type": "string",
+            "description": "Secret key for SegMint authentication",
+            "x-setting-key": "Marketing.SegMint.Secret"
+          },
+          "clientId": {
+            "type": "string",
+            "description": "Client ID for SegMint authentication",
+            "x-setting-key": "Marketing.SegMint.ClientId"
+          },
+          "partnerId": {
+            "type": "string",
+            "description": "Partner ID for SegMint integration",
+            "x-setting-key": "Marketing.SegMint.PartnerId"
+          }
+        }
+      },
+      "service": {
+        "type": "object",
+        "description": "Service configuration for SegMint",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Base URL for SegMint service",
+            "x-setting-key": "Marketing.SegMint.Url"
+          },
+          "dataConfigId": {
+            "type": "string",
+            "description": "Data config ID for SegMint javascript script",
+            "x-setting-key": "Marketing.SegMint.DataConfigId"
+          }
+        }
+      },
+      "zones": {
+        "type": "object",
+        "description": "Zone configuration for SegMint",
+        "properties": {
+          "zoneId": {
+            "type": "string",
+            "description": "Default zone ID",
+            "x-setting-key": "Marketing.SegMint.ZoneId"
+          }
+        }
+      },
+      "offers": {
+        "type": "object",
+        "description": "Offer settings for SegMint",
+        "properties": {
+          "maxOffersToReturn": {
+            "type": "integer",
+            "description": "Maximum number of offers to return (minimum 1)",
+            "minimum": 1,
+            "x-setting-key": "Marketing.SegMint.MaxOffersToReturn"
+          }
+        }
+      },
+      "shouldUseMarketingId": {
+        "type": "boolean",
+        "description": "Whether to use marketing ID",
+        "x-setting-key": "Marketing.Segmint.ShouldUseMarketingId"
+      }
+    }
+  }
+}

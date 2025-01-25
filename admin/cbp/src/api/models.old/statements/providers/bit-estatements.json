@@ -1,0 +1,118 @@
+{
+  "BitEstatementsSettings": {
+    "type": "object",
+    "description": "Configuration settings for BIT estatements integration",
+    "required": ["enabled", "authentication", "endpoints"],
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether BIT estatements integration is enabled",
+        "default": false
+      },
+      "versionRequirements": {
+        "type": "object",
+        "description": "Version requirements for BIT estatements",
+        "required": ["minimumVersion"],
+        "properties": {
+          "minimumVersion": {
+            "type": "number",
+            "description": "Minimum version required for BIT estatements",
+            "minimum": 0
+          }
+        }
+      },
+      "authentication": {
+        "type": "object",
+        "description": "Authentication settings for BIT estatements",
+        "required": ["credentials"],
+        "properties": {
+          "credentials": {
+            "type": "object",
+            "description": "Credentials for BIT estatements",
+            "required": ["clientId", "clientSecret"],
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "description": "Client ID for BIT estatements"
+              },
+              "clientSecret": {
+                "type": "string",
+                "description": "Client secret for BIT estatements",
+                "format": "password"
+              }
+            }
+          },
+          "tokenManagement": {
+            "type": "object",
+            "description": "Token management settings",
+            "properties": {
+              "tokenLifetime": {
+                "type": "integer",
+                "description": "Token lifetime in seconds",
+                "minimum": 0,
+                "default": 3600
+              },
+              "refreshEnabled": {
+                "type": "boolean",
+                "description": "Whether token refresh is enabled",
+                "default": true
+              }
+            }
+          }
+        }
+      },
+      "endpoints": {
+        "type": "object",
+        "description": "Endpoint configurations for BIT estatements",
+        "required": ["baseUrl", "apiVersion"],
+        "properties": {
+          "baseUrl": {
+            "type": "string",
+            "description": "Base URL for BIT estatements API",
+            "format": "uri"
+          },
+          "apiVersion": {
+            "type": "string",
+            "description": "API version to use",
+            "pattern": "^v\\d+(\\.\\d+)?$"
+          }
+        }
+      },
+      "integration": {
+        "type": "object",
+        "description": "Integration settings",
+        "properties": {
+          "ssoEnabled": {
+            "type": "boolean",
+            "description": "Whether SSO integration is enabled",
+            "default": true
+          },
+          "webhooksEnabled": {
+            "type": "boolean",
+            "description": "Whether webhook notifications are enabled",
+            "default": false
+          }
+        }
+      },
+      "security": {
+        "type": "object",
+        "description": "Security settings for BIT estatements",
+        "properties": {
+          "encryptionEnabled": {
+            "type": "boolean",
+            "description": "Whether to encrypt sensitive data",
+            "default": true
+          },
+          "ipWhitelist": {
+            "type": "array",
+            "description": "List of whitelisted IP addresses",
+            "items": {
+              "type": "string",
+              "format": "ipv4"
+            }
+          }
+        }
+      }
+    }
+  }
+}
