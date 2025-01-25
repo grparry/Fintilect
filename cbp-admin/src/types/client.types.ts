@@ -17,13 +17,18 @@ export enum Environment {
 export enum ClientType {
   Enterprise = 'ENTERPRISE',
   SMB = 'SMB',
-  Startup = 'STARTUP'
+  Startup = 'STARTUP',
+  Business = 'business',
+  Personal = 'personal'
 }
 
 export enum ClientStatus {
   Active = 'ACTIVE',
   Inactive = 'INACTIVE',
-  Suspended = 'SUSPENDED'
+  Suspended = 'SUSPENDED',
+  active = 'active',
+  inactive = 'inactive',
+  pending = 'pending'
 }
 
 // Date and Time Format Types
@@ -138,7 +143,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  role: UserRole;
+  roles: string[];
   status: UserStatus;
   department: string;
   lastLogin: string | null;

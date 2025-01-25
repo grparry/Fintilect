@@ -8,7 +8,7 @@ export const mockMembers: Member[] = [
     lastLogin: '2023-01-01',
     firstName: 'John',
     lastName: 'Doe',
-    email: 'john.doe@example.com',
+    email: 'john.doe',
     status: 'Active',
     phone: '+1234567890',
     address: {

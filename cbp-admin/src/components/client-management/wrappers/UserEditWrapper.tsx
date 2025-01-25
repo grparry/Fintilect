@@ -1,110 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Alert, CircularProgress, Box, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import { decodeId } from '../../../utils/idEncoder';
-import { clientService } from '../../../services/factory/ServiceFactory';
-import { User, UserGroup, UserStatus, UserRole } from '../../../types/client.types';
+import { Box, CircularProgress, Alert, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import UserForm from '../users/UserForm';
-
-const serviceUserToUIUser = (user: any): User => ({
-  id: user.id.toString(),
-  clientId: user.clientId.toString(),
-  username: user.username,
-  firstName: user.firstName,
-  lastName: user.lastName,
-  email: user.email,
-  role: user.role as UserRole,
-  status: user.status === 'ACTIVE' ? UserStatus.ACTIVE :
-         user.status === 'INACTIVE' ? UserStatus.INACTIVE :
-         user.status === 'LOCKED' ? UserStatus.LOCKED :
-         UserStatus.PENDING,
-  department: user.department || '',
-  lastLogin: user.lastLogin || null,
-  locked: user.locked || false,
-  createdAt: user.createdAt || new Date().toISOString(),
-  updatedAt: user.updatedAt || new Date().toISOString()
-});
-
-const uiUserToServiceUser = (user: Partial<User>) => {
-  const { id, clientId, status, lastLogin, ...rest } = user;
-  
-  // Convert status, excluding PENDING which is not supported by the service
-  let serviceStatus: UserStatus | undefined;
-  if (status && status !== UserStatus.PENDING) {
-    serviceStatus = status;
-  }
-
-  // Convert lastLogin from string | null to string | undefined
-  const serviceLastLogin = lastLogin === null ? undefined : lastLogin;
-
-  return {
-    ...rest,
-    id: id?.toString(),
-    clientId: clientId?.toString(),
-    status: serviceStatus,
-    lastLogin: serviceLastLogin
-  };
-};
-
-const serviceGroupToUIGroup = (group: any): UserGroup => ({
-  id: group.id,
-  name: group.name,
-  description: group.description || '',
-  clientId: group.clientId,
-  roles: [],
-  permissions: group.permissions.map((id: string) => ({
-    id,
-    name: '',
-    description: '',
-    category: 'user',
-    actions: []
-  })),
-  members: group.members || [],
-  createdAt: group.createdAt,
-  updatedAt: group.updatedAt
-});
+import { clientService } from '../../../services/factory/ServiceFactory';
+import { User, UserGroup } from '../../../types/client.types';
+import { decodeId } from '../../../utils/idEncoder';
+import logger from '../../../utils/logger';
 
 const UserEditWrapper: React.FC = () => {
   const navigate = useNavigate();
-  const { clientId, userId } = useParams<{ clientId: string; userId: string }>();
-  const [user, setUser] = useState<User | undefined>(undefined);
-  const [groups, setGroups] = useState<UserGroup[]>([]);
+  const { clientId = '', userId = '' } = useParams<{ clientId: string; userId: string }>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [groups, setGroups] = useState<UserGroup[]>([]);
   const [saving, setSaving] = useState(false);
 
-  // Get the return URL from state or default to users list
-  const getReturnUrl = () => {
-    const state = window.history.state;
-    return state?.returnUrl || `/admin/client-management/${clientId}/users`;
-  };
+  console.log('=== UserEditWrapper Debug Start ===');
+  console.log('Route params:', { clientId, userId });
 
   useEffect(() => {
     const loadData = async () => {
-      if (!clientId || !userId) {
-        setError('Missing client or user ID');
-        setLoading(false);
-        return;
-      }
-
       try {
         setLoading(true);
         setError(null);
 
+        if (!clientId || !userId) {
+          throw new Error('Missing required parameters');
+        }
+
         const decodedClientId = decodeId(clientId);
         const decodedUserId = decodeId(userId);
-
+        
+        console.log('Loading user data:', { decodedClientId, decodedUserId });
+        
         // Load user and groups in parallel
-        const [user, groups] = await Promise.all([
+        const [userData, groupsData] = await Promise.all([
           clientService.getUser(decodedClientId, decodedUserId),
           clientService.getGroups(decodedClientId)
         ]);
+        
+        if (!userData) {
+          throw new Error('User not found');
+        }
 
-        setUser(serviceUserToUIUser(user));
-        setGroups(groups.map(serviceGroupToUIGroup));
+        setUser(userData);
+        setGroups(groupsData);
+        logger.info(`User data loaded successfully: ${decodedUserId}`);
       } catch (err) {
-        console.error('Error loading user data:', err);
-        setError('Failed to load user data');
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        logger.error(`Failed to load user: ${errorMessage}`);
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -113,39 +59,33 @@ const UserEditWrapper: React.FC = () => {
     loadData();
   }, [clientId, userId]);
 
-  const handleSave = async (formUser: Partial<User>) => {
-    if (!clientId || !userId) {
-      setError('Missing client or user ID');
-      return;
-    }
-
+  const handleSave = async (formData: Partial<User>) => {
     try {
-      console.log('💾 UserEditWrapper.handleSave - Starting save');
       setSaving(true);
       setError(null);
+
+      if (!clientId || !userId) {
+        throw new Error('Missing required parameters');
+      }
 
       const decodedClientId = decodeId(clientId);
       const decodedUserId = decodeId(userId);
 
-      const updatedUser = await clientService.updateUser(
-        decodedClientId, 
-        decodedUserId, 
-        uiUserToServiceUser(formUser)
-      );
-
-      console.log('✅ UserEditWrapper.handleSave - Save successful, navigating back');
-      navigate(`/admin/client-management/${clientId}/users`, { replace: true });
+      await clientService.updateUser(decodedClientId, decodedUserId, formData);
+      logger.info('User updated successfully');
+      navigate(`/admin/client-management/edit/${clientId}/users`);
     } catch (err) {
-      console.error('Error updating user:', err);
-      setError('Failed to update user');
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      logger.error(`Failed to update user: ${errorMessage}`);
+      setError(errorMessage);
       setSaving(false);
     }
   };
 
-  const handleClose = () => {
-    console.log('🚪 UserEditWrapper.handleClose - Navigating back');
-    navigate(`/admin/client-management/${clientId}/users`, { replace: true });
-  };
+  const handleClose = useCallback(() => {
+    console.log('Navigating back to users list');
+    navigate(`/admin/client-management/edit/${clientId}/users`);
+  }, [navigate, clientId]);
 
   if (loading) {
     return (
@@ -159,12 +99,9 @@ const UserEditWrapper: React.FC = () => {
     return <Alert severity="error">{error}</Alert>;
   }
 
-  console.log('🔄 UserEditWrapper Render', {
-    hasUser: !!user,
-    loading,
-    saving,
-    error: !!error
-  });
+  if (!user) {
+    return <Alert severity="error">User not found</Alert>;
+  }
 
   return (
     <Dialog
@@ -174,7 +111,7 @@ const UserEditWrapper: React.FC = () => {
       fullWidth
     >
       <DialogTitle>
-        {user ? 'Edit User' : 'Add User'}
+        Edit User
       </DialogTitle>
       <DialogContent>
         <UserForm

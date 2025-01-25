@@ -30,14 +30,20 @@ const BillPayHeader: React.FC = () => {
   const billPayRoutes = allRoutes.filter(route => 
     route.sectionId === 'billPay' && 
     !route.hideFromSidebar &&
-    route.path !== '/admin/bill-pay'
+    route.path !== '/admin/bill-pay' && 
+    (!route.id || !route.id.endsWith('-header'))
   );
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Bill Pay
-      </Typography>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom color="text.primary">
+          Bill Pay
+        </Typography>
+        <Typography variant="body1" color="text.secondary" paragraph>
+          Welcome to Bill Pay. Access bill payment features, transaction history, and payment settings.
+        </Typography>
+      </Box>
       
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {billPayRoutes.map((route) => (

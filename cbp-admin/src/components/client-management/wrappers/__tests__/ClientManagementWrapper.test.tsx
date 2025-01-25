@@ -3,7 +3,7 @@ import { renderWithRouter } from '../../../../test-utils/navigation';
 import ClientManagementWrapper from '../ClientManagementWrapper';
 import { act } from 'react-dom/test-utils';
 import { Client, ClientType, ClientStatus, Environment as ClientEnvironment } from '../../../../types/client.types';
-import type { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '../../../../utils/api';
+import type { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '../../../../types/api.types';
 
 // Mock the idEncoder utility
 jest.mock('../../../../utils/idEncoder', () => ({
@@ -85,9 +85,11 @@ describe('ClientManagementWrapper', () => {
 
   const mockErrorResponse: ApiErrorResponse = {
     success: false,
+    status: 404,
     error: {
       code: 'NOT_FOUND',
-      message: 'Client not found'
+      message: 'Client not found',
+      timestamp: new Date().toISOString()
     }
   };
 

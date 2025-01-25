@@ -1,25 +1,30 @@
 import { ComponentType, LazyExoticComponent } from 'react';
+import { NavigationPermissionRequirement } from './section-navigation.types';
+import { SvgIconProps } from '@mui/material';
+
+export type IconComponent = ComponentType<SvgIconProps>;
 
 export interface BaseRouteConfig {
   id: string;
   path: string;
-  title: string;
-  icon?: string;
+  element?: ComponentType | LazyExoticComponent<any>;
+  children?: BaseRouteConfig[];
+  sectionId?: string;
+  permissions?: NavigationPermissionRequirement;
+  title?: string;
+  icon?: IconComponent;
   hideFromSidebar?: boolean;
 }
 
 export interface RouteConfig extends BaseRouteConfig {
-  element: ComponentType<any> | LazyExoticComponent<ComponentType<any>> | JSX.Element;
   children?: RouteConfig[];
-  items?: never;
-  sectionId?: string; // Added for navigation grouping
 }
 
 export interface NavigationItem {
   id: string;
   title: string;
   path: string;
-  icon?: string;
+  icon?: IconComponent;
 }
 
 export interface NavigationSection {

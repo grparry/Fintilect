@@ -348,7 +348,7 @@ export class MockClientService extends BaseMockService implements IClientService
 
         if (params) {
             if (params.role) {
-                filteredUsers = filteredUsers.filter(u => u.role === params.role);
+                filteredUsers = filteredUsers.filter(u => u.roles.includes(params.role));
             }
             if (params.searchTerm) {
                 const search = params.searchTerm.toLowerCase();

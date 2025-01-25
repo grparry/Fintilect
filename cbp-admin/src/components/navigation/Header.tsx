@@ -6,10 +6,14 @@ import {
   Typography,
   useTheme,
   Box,
+  Link,
+  Tooltip,
 } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '../../context/AuthContext';
 import { User } from '../../types/index';
 
@@ -29,46 +33,74 @@ const Header: React.FC<HeaderProps> = ({
   open,
 }) => {
   const theme = useTheme();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
     <AppBar
-      position="fixed"
+      position="relative"
       sx={{
-        width: { sm: open ? `calc(100% - ${drawerWidth}px)` : '100%' },
-        ml: { sm: open ? `${drawerWidth}px` : 0 },
+        width: '100%',
+        bgcolor: 'background.paper',
         zIndex: theme.zIndex.drawer + 1,
-        backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[900] : theme.palette.primary.main,
+        mb: 0,
         transition: theme.transitions.create(['margin', 'width'], {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.leavingScreen,
         }),
       }}
     >
-      <Toolbar>
+      <Toolbar sx={{ 
+        bgcolor: 'primary.main',
+        minHeight: 64,
+        p: 0
+      }}>
         <IconButton
           color="inherit"
           aria-label="open drawer"
-          onClick={onMenuClick}
           edge="start"
-          sx={{
-            marginRight: 2,
-            ...(open && { display: { sm: 'none' } }),
-          }}
+          onClick={onMenuClick}
+          sx={{ mr: 2 }}
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-          {user ? `Welcome, ${user.firstName}` : 'Welcome'}
-        </Typography>
-        <Box>
-          <IconButton 
-            onClick={toggleTheme} 
-            color="inherit"
-            aria-label="toggle theme"
-          >
+        <Link
+          component={RouterLink}
+          to="/admin"
+          color="inherit"
+          underline="none"
+          sx={{ flexGrow: 1 }}
+        >
+          <Typography variant="h6" noWrap component="div">
+            Admin Portal
+          </Typography>
+        </Link>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <IconButton sx={{ ml: 1 }} onClick={toggleTheme} color="inherit">
             {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
+          <Typography variant="body2" sx={{ ml: 2, mr: 2 }}>
+            {user?.email || 'Guest'}
+          </Typography>
+          <Tooltip title="Logout">
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleLogout}
+              sx={{ ml: 1 }}
+            >
+              <LogoutIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Toolbar>
     </AppBar>

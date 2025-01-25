@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
+import { useNavigate, useLocation, Routes, Route, Outlet, Navigate, useMatch } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -10,6 +10,7 @@ import {
   Chip,
 } from '@mui/material';
 import { Client, Environment, ClientStatus, ClientType } from '../../types/client.types';
+import { IpAddress } from '../../types/security.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import ContactInformation from './ContactInformation';
 import GroupsWrapper from './wrappers/GroupsWrapper';
@@ -43,6 +44,7 @@ function TabPanel(props: TabPanelProps) {
 
 interface ClientManagementProps {
   clientId: string;
+  children?: React.ReactNode;
 }
 
 const DEFAULT_SETTINGS = {
@@ -67,7 +69,7 @@ const DEFAULT_SETTINGS = {
     },
     sessionTimeout: 30,
     mfaEnabled: false,
-    ipWhitelist: [],
+    ipWhitelist: [] as IpAddress[],
   },
   notifications: {
     emailEnabled: true,
@@ -78,13 +80,18 @@ const DEFAULT_SETTINGS = {
   },
 };
 
-const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
+const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState(0);
+
+  console.log('=== ClientManagement Debug Start ===');
+  console.log('Props:', { clientId });
+  console.log('Current location:', location.pathname);
+  console.log('Current tab:', activeTab);
 
   // Load client data
   const loadClientData = useCallback(async () => {
@@ -114,16 +121,27 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
 
   const getCurrentTab = () => {
     const path = location.pathname;
-    if (path.includes('/users')) return 1;
-    if (path.includes('/groups')) return 2;
-    if (path.includes('/security')) return 3;
-    if (path.includes('/audit-log')) return 4;
-    return 0;
+    console.log('Getting current tab for path:', path);
+    
+    // Extract the last segment of the path
+    const segments = path.split('/');
+    const lastSegment = segments[segments.length - 1];
+    console.log('Path analysis:', { segments, lastSegment });
+
+    switch (lastSegment) {
+      case 'users': return 1;
+      case 'groups': return 2;
+      case 'security': return 3;
+      case 'audit-log': return 4;
+      default: return 0;
+    }
   };
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     const encodedId = encodeId(clientId);
-    const basePath = `/admin/client-management/${encodedId}`;
+    const basePath = `/admin/client-management/edit/${encodedId}`;
+    console.log('Tab change:', { newValue, basePath });
+    
     switch (newValue) {
       case 0:
         navigate(`${basePath}/contact`);
@@ -209,13 +227,7 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId }) => {
       </Tabs>
 
       <Box mt={3}>
-        <Routes>
-          <Route path="contact" element={<ContactInformation clientId={clientId} />} />
-          <Route path="users/*" element={<UsersWrapper />} />
-          <Route path="groups/*" element={<GroupsWrapper />} />
-          <Route path="security" element={<MemberSecuritySettingsWrapper />} />
-          <Route path="audit-log" element={<AuditSearchWrapper />} />
-        </Routes>
+        {children}
       </Box>
     </Box>
   );

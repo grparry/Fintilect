@@ -2,6 +2,8 @@ import React from 'react';
 import { lazy } from 'react';
 import { useParams } from 'react-router-dom';
 import { RouteConfig } from '../types/route.types';
+import BusinessIcon from '@mui/icons-material/Business';
+import ListIcon from '@mui/icons-material/List';
 
 // Lazy load components
 const ClientList = lazy(() => import('../components/client-management/ClientList'));
@@ -24,23 +26,23 @@ interface RouteParams {
 const clientManagementRoutes: RouteConfig[] = [
   {
     id: 'client-management',
-    path: '/admin/client-management',
+    path: '',  // Empty path for the base route
     title: 'Client Management',
     element: ClientManagementHeader,
-    icon: 'Business',
+    icon: BusinessIcon,
     sectionId: 'clientManagement',
   },
   {
     id: 'client-list',
-    path: '/admin/client-management/list',
+    path: 'list',
     title: 'Clients',
     element: ClientList,
-    icon: 'List',
+    icon: ListIcon,
     sectionId: 'clientManagement',
   },
   {
-    id: 'client-details',
-    path: '/admin/client-management/:clientId/*',
+    id: 'client-edit',
+    path: 'edit/:clientId/*',  // Added wildcard to match all child routes
     title: 'Client Details',
     element: ClientManagementWrapper,
     hideFromSidebar: true,
@@ -48,7 +50,7 @@ const clientManagementRoutes: RouteConfig[] = [
     children: [
       {
         id: 'client-contact',
-        path: 'contact',
+        path: '',  // Default tab
         title: 'Contact Information',
         element: ContactInformation,
         sectionId: 'clientManagement',

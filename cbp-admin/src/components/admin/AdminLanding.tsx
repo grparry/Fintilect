@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, Card, CardContent, Grid, Typography, Button, Stack } from '@mui/material';
+import { Box, Card, CardContent, Grid, Typography, Button, Stack, useTheme, alpha } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import routes from '../../routes';
 import { RouteSection } from '../../types/route.types';
+import { useNavigation } from '../../context/NavigationContext';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PaymentIcon from '@mui/icons-material/Payment';
 import GroupIcon from '@mui/icons-material/Group';
@@ -31,60 +32,76 @@ const getIconForRoute = (routeId: string) => {
   }
 };
 
-const getRouteDescription = (section: RouteSection): string => {
-  switch (section.id) {
-    case 'billPay':
-      return 'Manage bill payments, process transactions, and handle payment exceptions';
-    case 'clientManagement':
-      return 'Manage client accounts, users, and access controls';
-    case 'emerge':
-      return 'Configure Emerge settings and manage member services';
-    case 'development':
-      return 'Access development tools and system configurations';
-    default:
-      return `Manage ${section.title} settings and configurations`;
+const getRouteDescription = (route: RouteSection): string => {
+  if (route.routes && route.routes.length > 0) {
+    return `Access and manage ${route.title.toLowerCase()} features and settings.`;
   }
+  return 'No description available.';
 };
 
 const AdminLanding: React.FC = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const { toggleSection } = useNavigation();
   
-  // Get all main sections directly from routes object
+  // Get all main sections from routes object
   const adminRoutes: AdminRoute[] = [
     {
-      id: routes.clientManagement.id,
+      id: 'clientManagement',
       path: routes.clientManagement.basePath,
       title: routes.clientManagement.title,
       description: getRouteDescription(routes.clientManagement),
     },
     {
-      id: routes.emerge.id,
-      path: routes.emerge.basePath,
-      title: routes.emerge.title,
-      description: getRouteDescription(routes.emerge),
+      id: 'emergeAdmin',
+      path: routes.emergeAdmin.basePath,
+      title: routes.emergeAdmin.title,
+      description: getRouteDescription(routes.emergeAdmin),
     },
     {
-      id: routes.billPay.id,
+      id: 'emergeConfig',
+      path: routes.emergeConfig.basePath,
+      title: routes.emergeConfig.title,
+      description: getRouteDescription(routes.emergeConfig),
+    },
+    {
+      id: 'billPay',
       path: routes.billPay.basePath,
       title: routes.billPay.title,
       description: getRouteDescription(routes.billPay),
     },
     {
-      id: routes.development.id,
+      id: 'development',
       path: routes.development.basePath,
       title: routes.development.title,
       description: getRouteDescription(routes.development),
     },
   ];
 
+  const handleCardClick = (route: AdminRoute) => {
+    // Update navigation state first
+    toggleSection(route.id);
+    // Then navigate
+    navigate(route.path);
+  };
+
   return (
-    <Box sx={{ p: 3 }}>
-      <Stack spacing={3}>
-        <Box>
-          <Typography variant="h4" gutterBottom>
+    <Box sx={{ 
+      minHeight: '100vh',
+      width: '100%',
+      position: 'relative',
+      bgcolor: theme.palette.background.default
+    }}>
+      <Stack spacing={3} sx={{ p: 3 }}>
+        <Box sx={{ 
+          bgcolor: theme.palette.background.paper,
+          borderRadius: 1,
+          p: 2
+        }}>
+          <Typography variant="h4" gutterBottom color="text.primary">
             Admin Dashboard
           </Typography>
-          <Typography variant="body1" color="text.secondary" paragraph>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
             Welcome to the CBP Admin Dashboard. Select a section below to manage different aspects of the system.
           </Typography>
         </Box>
@@ -98,16 +115,29 @@ const AdminLanding: React.FC = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   transition: 'transform 0.2s, box-shadow 0.2s',
+                  bgcolor: theme.palette.background.paper,
                   '&:hover': {
                     transform: 'translateY(-4px)',
-                    boxShadow: 4,
+                    boxShadow: theme.palette.mode === 'dark' 
+                      ? `0 4px 20px ${alpha(theme.palette.common.white, 0.1)}`
+                      : 4,
                     cursor: 'pointer',
+                    bgcolor: theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.primary.main, 0.1)
+                      : theme.palette.grey[50],
                   },
                 }}
-                onClick={() => navigate(route.path)}
+                onClick={() => handleCardClick(route)}
               >
                 <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    mb: 2,
+                    bgcolor: theme.palette.background.paper,
+                    p: 2,
+                    borderRadius: 1
+                  }}>
                     <Box sx={{ 
                       mr: 2,
                       color: 'primary.main',
@@ -116,7 +146,7 @@ const AdminLanding: React.FC = () => {
                     }}>
                       {getIconForRoute(route.id)}
                     </Box>
-                    <Typography variant="h6" component="h2">
+                    <Typography variant="h6" component="h2" color="text.primary">
                       {route.title}
                     </Typography>
                   </Box>

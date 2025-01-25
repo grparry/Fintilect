@@ -1,62 +1,68 @@
-import React from 'react';
-import { Box, CssBaseline } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Box, useTheme } from '@mui/material';
+import { Outlet, useLocation } from 'react-router-dom';
+import { useNavigation } from '../../context/NavigationContext';
 import Header from '../navigation/Header';
 import Sidebar from '../navigation/Sidebar';
-import { useNavigation } from '../../context/NavigationContext';
-import { useTheme } from '../../context/ThemeContext';
-import { useLocation } from 'react-router-dom';
 import Breadcrumbs from '../navigation/Breadcrumbs';
+import { navigationConfig } from '../../config/navigation';
 
 const DRAWER_WIDTH = 240;
 
 interface MainLayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   toggleTheme: () => void;
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children, toggleTheme }) => {
-  const { isDarkMode } = useTheme();
-  const { state, toggleSidebar } = useNavigation();
+  const theme = useTheme();
   const location = useLocation();
+  const { state, setActivePath, toggleSidebar } = useNavigation();
 
-  // Don't show breadcrumbs on error pages or login page
-  const showBreadcrumbs = !location.pathname.includes('error') && location.pathname !== '/login';
+  useEffect(() => {
+    setActivePath(location.pathname);
+  }, [location.pathname, setActivePath]);
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        minHeight: '100vh',
-      }}
-    >
-      <CssBaseline />
+    <Box sx={{ 
+      display: 'flex', 
+      flex: 1,
+      flexDirection: 'column',
+      bgcolor: 'background.default'
+    }}>
       <Header 
-        drawerWidth={DRAWER_WIDTH}
+        open={state.sidebarOpen}
+        isDarkMode={theme.palette.mode === 'dark'}
         onMenuClick={toggleSidebar}
         toggleTheme={toggleTheme}
-        isDarkMode={isDarkMode}
-        open={state.sidebarOpen}
+        drawerWidth={DRAWER_WIDTH}
       />
-      <Sidebar 
-        open={state.sidebarOpen} 
-        onClose={toggleSidebar}
-      />
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: '100%',
-          mt: '64px',
-          transition: theme => theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-          }),
-          backgroundColor: theme => theme.palette.background.default,
-        }}
-      >
-        {showBreadcrumbs && <Breadcrumbs />}
-        {children}
+      <Box sx={{
+        display: 'flex',
+        flex: 1,
+        position: 'relative',
+        mt: 0,
+        bgcolor: 'background.default'
+      }}>
+        <Sidebar 
+          open={state.sidebarOpen}
+          onClose={toggleSidebar}
+          width={DRAWER_WIDTH}
+          navigationConfig={navigationConfig.sections}
+        />
+        <Box
+          component="main"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+            p: 3,
+            bgcolor: 'background.paper'
+          }}
+        >
+          <Breadcrumbs />
+          {children || <Outlet />}
+        </Box>
       </Box>
     </Box>
   );

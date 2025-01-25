@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Users from '../Users';
-import UserEditWrapper from './UserEditWrapper'; 
+import { Box, CircularProgress, Alert } from '@mui/material';
 import { clientService } from '../../../services/factory/ServiceFactory';
 import { User } from '../../../types/client.types';
 import { decodeId } from '../../../utils/idEncoder';
-import { Box, CircularProgress, Alert } from '@mui/material';
+import UserEditWrapper from './UserEditWrapper';
+import logger from '../../../utils/logger';
 
 const UsersWrapper: React.FC = () => {
   console.log('🔄 UsersWrapper mounted');
@@ -47,8 +48,8 @@ const UsersWrapper: React.FC = () => {
   const handleClose = () => {
     console.log('🔄 UsersWrapper.handleClose - About to navigate');
     console.log('Current URL:', window.location.href);
-    console.log('Navigating to:', `/admin/client-management/${clientId}/users`);
-    navigate(`/admin/client-management/${clientId}/users`, { replace: true });
+    console.log('Navigating to:', `/admin/client-management/edit/${clientId}/users`);
+    navigate(`/admin/client-management/edit/${clientId}/users`, { replace: true });
   };
 
   if (loading) {
@@ -63,11 +64,13 @@ const UsersWrapper: React.FC = () => {
     return <Alert severity="error">{error}</Alert>;
   }
 
+  // If we have a userId, show the edit form
   if (userId) {
     console.log('📝 Rendering UserEditWrapper');
     return <UserEditWrapper />;
   }
 
+  // Otherwise show the users list
   console.log('📋 Rendering Users list');
   return (
     <Users

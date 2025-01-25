@@ -1,40 +1,68 @@
 import billPayRoutes from './billPayRoutes';
 import clientManagementRoutes from './ClientManagementRoutes';
 import emergeAdminRoutes from './emergeAdminRoutes';
+import emergeConfigRoutes from './emergeConfigRoutes';
 import developmentRoutes from './developmentRoutes';
-import { RouteSections, RouteConfig, NavigationItem, NavigationConfig, NavigationSection } from '../types/route.types';
+import { NavigationConfig, NavigationSection, NavigationItem, RouteConfig, NavigationElement, NavigationPermissionRequirement } from '../types/section-navigation.types';
+import { sectionConfig, defaultSectionConfig } from '../config/section.config';
 import { lazy } from 'react';
+import BusinessIcon from '@mui/icons-material/Business';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PaymentIcon from '@mui/icons-material/Payment';
+import CodeIcon from '@mui/icons-material/Code';
 
-// Lazy load the AdminLanding component
+// Lazy load components
 const AdminLanding = lazy(() => import('../components/admin/AdminLanding'));
+const ClientManagementHeader = lazy(() => import('../components/client-management/ClientManagementHeader'));
+const EmergeAdminHeader = lazy(() => import('../components/emerge-admin/EmergeAdminHeader'));
+const EmergeConfigHeader = lazy(() => import('../components/emerge-config/EmergeConfigHeader'));
+const DevelopmentHeader = lazy(() => import('../components/development/DevelopmentHeader'));
+const BillPayHeader = lazy(() => import('../components/bill-pay/BillPayHeader'));
 
 // Define the route sections configuration
-const routes: RouteSections = {
+const routes = {
   clientManagement: {
     id: 'clientManagement',
     title: 'Client Management',
     basePath: '/admin/client-management',
     routes: clientManagementRoutes,
+    icon: BusinessIcon,
+    permissions: undefined as NavigationPermissionRequirement | undefined,
   },
-  emerge: {
-    id: 'emerge',
+  emergeAdmin: {
+    id: 'emergeAdmin',
     title: 'Emerge Admin',
     basePath: '/admin/emerge',
     routes: emergeAdminRoutes,
+    icon: AdminPanelSettingsIcon,
+    permissions: undefined as NavigationPermissionRequirement | undefined,
+  },
+  emergeConfig: {
+    id: 'emergeConfig',
+    title: 'Emerge Config',
+    basePath: '/admin/emerge-config',
+    routes: emergeConfigRoutes,
+    icon: SettingsIcon,
+    permissions: undefined as NavigationPermissionRequirement | undefined,
   },
   billPay: {
     id: 'billPay',
     title: 'Bill Pay',
     basePath: '/admin/bill-pay',
     routes: billPayRoutes,
+    icon: PaymentIcon,
+    permissions: undefined as NavigationPermissionRequirement | undefined,
   },
   development: {
     id: 'development',
     title: 'Development',
     basePath: '/admin/development',
     routes: developmentRoutes,
+    icon: CodeIcon,
+    permissions: undefined as NavigationPermissionRequirement | undefined,
   },
-};
+} as const;
 
 // Helper function to get full path
 export const getFullPath = (basePath: string, path: string): string => {
@@ -44,17 +72,30 @@ export const getFullPath = (basePath: string, path: string): string => {
   return cleanPath ? `${cleanBasePath}/${cleanPath}` : cleanBasePath;
 };
 
+// Helper function to process routes recursively
+const processRoutes = (routes: RouteConfig[], sectionId: string, basePath: string): RouteConfig[] => {
+  return routes.flatMap(route => {
+    const fullPath = getFullPath(basePath, route.path);
+    const processedRoute = {
+      ...route,
+      sectionId,
+      path: fullPath,
+    };
+
+    const children = route.children 
+      ? processRoutes(route.children, sectionId, fullPath)
+      : [];
+    
+    // Remove children from the processed route to avoid duplication
+    const { children: _, ...routeWithoutChildren } = processedRoute;
+    
+    return [routeWithoutChildren, ...children];
+  });
+};
+
 // Get all routes flattened with full paths
-export const getAllRoutes = (): RouteConfig[] => {
+export const getAllRoutes = () => {
   console.log('=== getAllRoutes Debug Start ===');
-  
-  // Log the routes object structure
-  console.log('Initial routes structure:', Object.entries(routes).map(([key, section]) => ({
-    key,
-    id: section.id,
-    basePath: section.basePath,
-    routeCount: section.routes.length
-  })));
   
   // Add root admin route
   const adminRoute: RouteConfig = {
@@ -62,201 +103,130 @@ export const getAllRoutes = (): RouteConfig[] => {
     path: '/admin',
     title: 'Admin Dashboard',
     element: AdminLanding,
-    sectionId: 'admin'
+    sectionId: 'admin',
+    hideFromSidebar: true,
   };
 
-  // Helper function to process a route and its children
-  const processRoute = (route: RouteConfig, sectionId: string, basePath: string): RouteConfig => {
-    console.log('Processing route:', {
-      route: {
-        path: route.path,
-        title: route.title,
-        hasChildren: !!route.children
-      },
-      sectionId,
-      basePath
-    });
+  // Process all routes
+  const processedRoutes = Object.entries(routes).flatMap(([sectionId, section]) => {
+    // Process section routes recursively
+    const sectionRoutes = processRoutes(section.routes, sectionId, section.basePath);
 
-    // For child routes, keep the path relative
-    const isChildRoute = route.path.startsWith('/') && !route.path.startsWith(basePath);
-    const fullPath = isChildRoute ? getFullPath(basePath, route.path) : route.path;
-    
-    const processedRoute: RouteConfig = {
-      id: route.id || `${sectionId}-${route.path.split('/').pop()}`,
-      path: fullPath,
-      title: route.title,
-      element: route.element,
-      icon: route.icon,
-      hideFromSidebar: route.hideFromSidebar,
-      sectionId,
-      children: route.children?.map(child => processRoute(child, sectionId, fullPath))
-    };
-
-    console.log('Processed route result:', {
-      id: processedRoute.id,
-      path: processedRoute.path,
-      title: processedRoute.title,
-      sectionId: processedRoute.sectionId,
-      hasChildren: !!processedRoute.children
-    });
-
-    return processedRoute;
-  };
-
-  // Convert the sections into a flat array of routes
-  const sectionRoutes = Object.entries(routes).reduce<RouteConfig[]>((allRoutes, [sectionKey, section]) => {
-    console.log(`Processing section ${section.id}:`, {
-      key: sectionKey,
-      basePath: section.basePath,
-      routeCount: section.routes.length,
-      routes: section.routes.map(r => ({
-        path: r.path,
-        title: r.title,
-        hasChildren: !!r.children
-      }))
-    });
-
-    // Get the correct header component for the section
-    const headerComponent = (() => {
-      switch (section.id) {
-        case 'emerge':
-          return lazy(() => import('../components/emerge-admin/EmergeAdminHeader'));
-        case 'billPay':
-          return lazy(() => import('../components/bill-pay/BillPayHeader'));
-        case 'clientManagement':
-          return lazy(() => import('../components/client-management/ClientManagementHeader'));
-        case 'development':
-          return lazy(() => import('../components/development/DevelopmentHeader'));
-        default:
-          return lazy(() => import('../components/common/NavigationLanding'));
-      }
-    })();
-
-    // Add the section root route with the correct header component
-    const sectionRoute: RouteConfig = {
-      id: section.id,
-      path: section.basePath,
-      title: section.title,
-      element: headerComponent,
-      sectionId: section.id
-    };
-    
-    // Process each route and its children
-    const processedRoutes = section.routes.map(route => 
-      processRoute(route, section.id, section.basePath)
+    // Only add header route if one doesn't already exist in the section routes
+    const hasHeaderRoute = sectionRoutes.some(route => 
+      route.id === `${sectionId}-header` || 
+      route.id === `${sectionId}-root`
     );
-    
-    // Add section route first, then all other routes
-    return allRoutes.concat([sectionRoute, ...processedRoutes]);
-  }, []);
 
-  const result = [adminRoute, ...sectionRoutes];
-  console.log('=== getAllRoutes Final Result ===', result.map(r => ({
-    id: r.id,
-    path: r.path,
-    title: r.title,
-    sectionId: r.sectionId
-  })));
-  
-  return result;
+    if (!hasHeaderRoute) {
+      // Add section header route
+      const headerRoute: RouteConfig = {
+        id: `${sectionId}-header`,
+        path: section.basePath,
+        title: section.title,
+        element: (() => {
+          switch(sectionId) {
+            case 'clientManagement':
+              return ClientManagementHeader;
+            case 'emergeAdmin':
+              return EmergeAdminHeader;
+            case 'emergeConfig':
+              return EmergeConfigHeader;
+            case 'billPay':
+              return BillPayHeader;
+            case 'development':
+              return DevelopmentHeader;
+            default:
+              return AdminLanding;
+          }
+        })(),
+        sectionId,
+      };
+      return [...sectionRoutes, headerRoute];
+    }
+
+    return sectionRoutes;
+  });
+
+  // Add admin route and return all routes
+  return [adminRoute, ...processedRoutes];
 };
 
 // Get navigation items for the sidebar
 export const getNavigationConfig = (): NavigationConfig => {
-  console.log('=== Navigation Config Debug Start ===');
-  
-  // Log available sections and their contents
-  console.log('Routes object:', Object.entries(routes).map(([key, section]) => ({
-    key,
-    id: section.id,
-    title: section.title,
-    basePath: section.basePath,
-    routeCount: section.routes.length
-  })));
-  
   // Get all processed routes
   const allRoutes = getAllRoutes();
-  console.log('All processed routes:', allRoutes.map(r => ({ 
-    id: r.id, 
-    path: r.path, 
-    sectionId: r.sectionId,
-    title: r.title,
-    hideFromSidebar: r.hideFromSidebar
-  })));
   
-  // Group routes by section
-  const routesBySection = allRoutes.reduce<Record<string, NavigationItem[]>>((acc, route) => {
-    // Skip routes without sectionId or that should be hidden
-    if (!route.sectionId) {
-      console.log('Skipping route - no sectionId:', { 
-        path: route.path,
-        title: route.title 
-      });
-      return acc;
-    }
+  // Helper function to build navigation tree
+  const buildNavigationTree = (routes: RouteConfig[]): NavigationItem[] => {
+    const routeMap = new Map<string, NavigationItem>();
+    const rootItems: NavigationItem[] = [];
 
-    if (!routes[route.sectionId]) {
-      console.log('Skipping route - invalid sectionId:', { 
-        path: route.path,
-        sectionId: route.sectionId,
-        title: route.title,
-        availableSections: Object.keys(routes)
-      });
-      return acc;
-    }
-
-    const section = routes[route.sectionId];
-    if (!route.hideFromSidebar && route.path !== section.basePath) {
-      if (!acc[route.sectionId]) {
-        acc[route.sectionId] = [];
+    // First pass: create all navigation items
+    routes.forEach(route => {
+      if (!route.hideFromSidebar && !route.id.endsWith('-header')) {
+        const item: NavigationItem = {
+          id: route.id,
+          title: route.title || '',
+          path: route.path,
+          icon: route.icon,
+          permissions: route.permissions,
+          items: []
+        };
+        routeMap.set(route.id, item);
       }
-      
-      console.log('Adding route to section:', {
-        sectionId: route.sectionId,
-        path: route.path,
-        title: route.title
-      });
-      
-      acc[route.sectionId].push({
-        id: route.id,
-        title: route.title,
-        path: route.path,
-        icon: route.icon
-      });
-    } else {
-      console.log('Skipping route - hidden or base path:', {
-        path: route.path,
-        sectionId: route.sectionId,
-        title: route.title,
-        hideFromSidebar: route.hideFromSidebar,
-        isBasePath: route.path === section.basePath
-      });
+    });
+
+    // Second pass: build the hierarchy
+    routes.forEach(route => {
+      if (!route.hideFromSidebar && !route.id.endsWith('-header')) {
+        const item = routeMap.get(route.id);
+        if (item) {
+          // Find the parent by checking if this route's path starts with another route's path
+          const parent = Array.from(routeMap.values()).find(potential => {
+            return potential.id !== route.id && 
+                   route.path.startsWith(potential.path + '/') &&
+                   !route.path.slice(potential.path.length + 1).includes('/');
+          });
+
+          if (parent) {
+            parent.items = parent.items || [];
+            parent.items.push(item);
+          } else {
+            rootItems.push(item);
+          }
+        }
+      }
+    });
+
+    return rootItems;
+  };
+
+  // Group routes by section
+  const routesBySection = allRoutes.reduce<Record<string, RouteConfig[]>>((acc, route) => {
+    if (!route.sectionId || !Object.hasOwn(routes, route.sectionId)) {
+      return acc;
     }
+
+    if (!acc[route.sectionId]) {
+      acc[route.sectionId] = [];
+    }
+
+    acc[route.sectionId].push(route);
     return acc;
   }, {});
 
-  console.log('Routes grouped by section:', routesBySection);
+  // Convert to sections array with hierarchical navigation items
+  const sections = Object.entries(routes).map(([sectionId, section]) => ({
+    id: sectionId,
+    title: section.title,
+    path: section.basePath,
+    icon: section.icon,
+    items: buildNavigationTree(routesBySection[sectionId] || []),
+    permissions: section.permissions,
+  }));
 
-  // Create navigation config using grouped routes
-  const config: NavigationConfig = Object.entries(routes)
-    .filter(([sectionId, section]) => {
-      const hasRoutes = routesBySection[sectionId]?.length > 0;
-      if (!hasRoutes) {
-        console.log('Skipping section - no visible routes:', {
-          sectionId,
-          title: section.title
-        });
-      }
-      return hasRoutes;
-    })
-    .map(([sectionId, section]): NavigationSection => ({
-      id: sectionId,
-      title: section.title,
-      items: routesBySection[sectionId] || []
-    }));
-
-  console.log('=== Final Navigation Config ===', config);
-  return config;
+  return { sections };
 };
 
 export default routes;

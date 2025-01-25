@@ -59,9 +59,7 @@ const UserTable: React.FC<UserTableProps> = ({
   const handleEdit = (user: UIUser) => {
     const encodedClientId = encodeId(clientId);
     const encodedUserId = encodeId(user.id);
-    const targetPath = `/admin/client-management/${encodedClientId}/users/${encodedUserId}`;
-    navigate(targetPath);
-    onEdit(user);
+    navigate(`/admin/client-management/edit/${encodedClientId}/users/${encodedUserId}`);
   };
 
   if (users.length === 0) {
@@ -99,9 +97,9 @@ const UserTable: React.FC<UserTableProps> = ({
               <TableCell>{user.email}</TableCell>
               <TableCell>
                 <Chip
-                  label={user.role}
+                  label={user.roles[0] || 'User'}
                   size="small"
-                  color={roleColors[user.role] || 'default'}
+                  color={roleColors[user.roles[0] || 'User'] || 'default'}
                   variant="outlined"
                 />
               </TableCell>

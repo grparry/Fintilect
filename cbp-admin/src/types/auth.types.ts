@@ -3,7 +3,7 @@ import { User } from './client.types';
 export interface LoginFormData {
   username: string;
   password: string;
-  rememberMe?: boolean;
+  clientId?: string;
 }
 
 export interface AuthTokens {
@@ -16,6 +16,7 @@ export interface AuthState {
   user: User | null;
   loading: boolean;
   error: string | null;
+  permissions: string[];
 }
 
 export interface LoginResponse {
@@ -28,6 +29,7 @@ export interface AuthContextType {
   user: User | null;
   loading: boolean;
   error: string | null;
+  permissions: string[];
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<void>;
@@ -43,33 +45,35 @@ export interface ProtectedRouteProps {
 export interface LoginCredentials {
   username: string;
   password: string;
-  rememberMe?: boolean;
+  clientId?: string;
 }
 
-export interface AuthenticationResponse extends LoginResponse {
-  expiresAt: number;
-  sessionId: string;
+export interface AuthenticationResponse {
+  user: User;
+  tokens: TokenResponse;
+  permissions?: string[];
 }
 
 export interface TokenResponse {
   accessToken: string;
-  refreshToken?: string;
-  expiresAt: number;
+  refreshToken: string;
+  expiresIn: number;
 }
 
 export interface SessionInfo {
-  id: string;
   user: User;
-  startedAt: number;
-  expiresAt: number;
-  lastActivity: number;
-  deviceInfo?: {
+  permissions: string[];
+  expiresAt: string;
+}
+
+export interface UserSession {
+  id: string;
+  userId: string;
+  clientId: string;
+  lastActivity: string;
+  deviceInfo: {
     browser: string;
     os: string;
     ip: string;
   };
-}
-
-export interface UserSession extends SessionInfo {
-  isCurrent: boolean;
 }

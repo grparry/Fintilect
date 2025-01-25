@@ -1,6 +1,19 @@
-import React from 'react';
 import { lazy } from 'react';
 import { RouteConfig } from '../types/route.types';
+import PaymentIcon from '@mui/icons-material/Payment';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import WarningIcon from '@mui/icons-material/Warning';
+import ErrorIcon from '@mui/icons-material/Error';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import BuildIcon from '@mui/icons-material/Build';
+import TransformIcon from '@mui/icons-material/Transform';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import SettingsIcon from '@mui/icons-material/Settings';
+import EventIcon from '@mui/icons-material/Event';
+import TuneIcon from '@mui/icons-material/Tune';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SecurityIcon from '@mui/icons-material/Security';
+import LockIcon from '@mui/icons-material/Lock';
 
 // Lazy load components
 const BillPayHeader = lazy(() => import('../components/bill-pay/BillPayHeader'));
@@ -17,6 +30,7 @@ const BillPayConfig = lazy(() => import('../components/bill-pay/settings/BillPay
 const NotificationTemplates = lazy(() => import('../components/bill-pay/settings/NotificationTemplates'));
 const PermissionGroups = lazy(() => import('../components/bill-pay/settings/PermissionGroups'));
 const BillPaySecuritySettings = lazy(() => import('../components/bill-pay/settings/security/BillPaySecuritySettings'));
+const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
 
 const billPayRoutes: RouteConfig[] = [
   {
@@ -24,7 +38,7 @@ const billPayRoutes: RouteConfig[] = [
     path: '/admin/bill-pay',
     title: 'Bill Pay',
     element: BillPayHeader,
-    icon: 'Payment',
+    icon: PaymentIcon,
     sectionId: 'billPay',
   },
   {
@@ -32,23 +46,35 @@ const billPayRoutes: RouteConfig[] = [
     path: '/admin/bill-pay/dashboard',
     title: 'Dashboard',
     element: Dashboard,
-    icon: 'Dashboard',
+    icon: DashboardIcon,
     sectionId: 'billPay',
   },
   {
-    id: 'payments',
+    id: 'billPay',
     path: '/admin/bill-pay/payments',
     title: 'Payments',
-    icon: 'Payment',
-    element: React.createElement(React.Fragment),
+    icon: PaymentIcon,
+    element: BillPay,
     sectionId: 'billPay',
     children: [
       {
+        id: 'payments',
+        path: '/admin/bill-pay/payments',
+        title: 'Payments',
+        element: PendingPayments,
+      },
+      {
         id: 'exceptions',
+        path: '/admin/bill-pay/exceptions',
+        title: 'Exceptions',
+        element: ExceptionTool,
+      },
+      {
+        id: 'exceptions-tool',
         path: '/admin/bill-pay/payments/exceptions',
         title: 'Exception Tool',
         element: ExceptionTool,
-        icon: 'Warning',
+        icon: WarningIcon,
         sectionId: 'billPay',
       },
       {
@@ -56,7 +82,7 @@ const billPayRoutes: RouteConfig[] = [
         path: '/admin/bill-pay/payments/fis-exceptions',
         title: 'FIS Exception Handling',
         element: FISExceptionHandling,
-        icon: 'Error',
+        icon: ErrorIcon,
         sectionId: 'billPay',
       },
       {
@@ -64,7 +90,7 @@ const billPayRoutes: RouteConfig[] = [
         path: '/admin/bill-pay/payments/pending',
         title: 'Pending Payments',
         element: PendingPayments,
-        icon: 'Schedule',
+        icon: ScheduleIcon,
         sectionId: 'billPay',
       },
       {
@@ -72,7 +98,7 @@ const billPayRoutes: RouteConfig[] = [
         path: '/admin/bill-pay/payments/manual',
         title: 'Manual Processing',
         element: ManualProcessing,
-        icon: 'Build',
+        icon: BuildIcon,
         sectionId: 'billPay',
       },
       {
@@ -80,7 +106,7 @@ const billPayRoutes: RouteConfig[] = [
         path: '/admin/bill-pay/payments/payee-conversion',
         title: 'Payee Conversion',
         element: PayeeConversion,
-        icon: 'Transform',
+        icon: TransformIcon,
         sectionId: 'billPay',
       }
     ]
@@ -90,14 +116,14 @@ const billPayRoutes: RouteConfig[] = [
     path: '/admin/bill-pay/reports',
     title: 'Reports',
     element: Reports,
-    icon: 'Assessment',
+    icon: AssessmentIcon,
     sectionId: 'billPay',
   },
   {
     id: 'settings',
     path: '/admin/bill-pay/settings',
     title: 'Settings',
-    icon: 'Settings',
+    icon: SettingsIcon,
     element: Settings,
     sectionId: 'billPay',
     children: [
@@ -106,7 +132,7 @@ const billPayRoutes: RouteConfig[] = [
         path: '/admin/bill-pay/settings/holidays',
         title: 'Holidays',
         element: Holidays,
-        icon: 'Event',
+        icon: EventIcon,
         sectionId: 'billPay',
       },
       {
@@ -114,7 +140,7 @@ const billPayRoutes: RouteConfig[] = [
         path: '/admin/bill-pay/settings/config',
         title: 'Bill Pay Config',
         element: BillPayConfig,
-        icon: 'Tune',
+        icon: TuneIcon,
         sectionId: 'billPay',
       },
       {
@@ -122,7 +148,7 @@ const billPayRoutes: RouteConfig[] = [
         path: '/admin/bill-pay/settings/notifications',
         title: 'Notification Templates',
         element: NotificationTemplates,
-        icon: 'Notifications',
+        icon: NotificationsIcon,
         sectionId: 'billPay',
       },
       {
@@ -130,7 +156,7 @@ const billPayRoutes: RouteConfig[] = [
         path: '/admin/bill-pay/settings/permissions',
         title: 'Permission Groups',
         element: PermissionGroups,
-        icon: 'Security',
+        icon: SecurityIcon,
         sectionId: 'billPay',
       },
       {
@@ -138,7 +164,7 @@ const billPayRoutes: RouteConfig[] = [
         path: '/admin/bill-pay/settings/security',
         title: 'Security Settings',
         element: BillPaySecuritySettings,
-        icon: 'Lock',
+        icon: LockIcon,
         sectionId: 'billPay',
       }
     ]

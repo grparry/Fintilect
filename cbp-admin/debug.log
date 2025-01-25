@@ -264,3 +264,259 @@
 2025-01-22T19:28:50.090Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzU3NDEzMDA4Nw"
 2025-01-22T19:28:50.152Z "Client data loaded successfully for 1"
 2025-01-22T19:28:50.186Z "Contact information loaded for client 1"
+2025-01-24T00:07:28.493Z {"message":"Navigation: Page not found","path":"/admin/emerge","referrer":"http://localhost:4000/admin","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T00:07:28.437Z"}
+2025-01-24T02:14:46.561Z {"message":"Navigation: Page not found","path":"/admin/client-management","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:14:46.538Z"}
+2025-01-24T02:14:49.328Z {"message":"Navigation: Page not found","path":"/admin/emerge","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:14:49.325Z"}
+2025-01-24T02:14:52.096Z {"message":"Navigation: Page not found","path":"/admin/client-management","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:14:52.091Z"}
+2025-01-24T02:14:53.167Z {"message":"Navigation: Page not found","path":"/admin/emerge","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:14:53.164Z"}
+2025-01-24T02:14:53.892Z {"message":"Navigation: Page not found","path":"/admin/bill-pay","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:14:53.889Z"}
+2025-01-24T02:14:55.324Z {"message":"Navigation: Page not found","path":"/admin/development","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:14:55.321Z"}
+2025-01-24T02:14:58.219Z {"message":"Navigation: Page not found","path":"/admin/client-management","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:14:58.213Z"}
+2025-01-24T02:15:06.643Z {"message":"Navigation: Redirect from 404","from":"/admin/client-management","to":"/admin/clients","timestamp":"2025-01-24T02:15:06.639Z"}
+2025-01-24T02:15:06.664Z {"message":"Navigation: Page not found","path":"/admin/client-management","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:15:06.659Z"}
+2025-01-24T02:15:07.455Z {"message":"Navigation: Redirect from 404","from":"/admin/client-management","to":"/admin/clients","timestamp":"2025-01-24T02:15:07.453Z"}
+2025-01-24T02:15:07.476Z {"message":"Navigation: Page not found","path":"/admin/client-management","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:15:07.471Z"}
+2025-01-24T02:30:15.523Z "Clients loaded successfully"
+2025-01-24T02:30:22.344Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NTgyMjM0MA"
+2025-01-24T02:30:22.357Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4NTgyMjM0MA/contact","referrer":"http://localhost:4000/admin/client-management","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:30:22.347Z"}
+2025-01-24T02:32:22.189Z {"message":"Navigation: Redirect from 404","from":"/admin/client-management/Y2JwXzFfMTczNzY4NTgyMjM0MA/contact","to":"/admin/clients","timestamp":"2025-01-24T02:32:22.183Z"}
+2025-01-24T02:32:23.518Z "Clients loaded successfully"
+2025-01-24T02:32:25.364Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NTk0NTM2Mw"
+2025-01-24T02:32:25.373Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4NTk0NTM2Mw/contact","referrer":"http://localhost:4000/admin/client-management","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:32:25.368Z"}
+2025-01-24T02:32:35.310Z "Clients loaded successfully"
+2025-01-24T02:32:36.910Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NTk1NjkwOA"
+2025-01-24T02:32:36.920Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4NTk1NjkwOA/contact","referrer":"http://localhost:4000/admin/client-management","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:32:36.914Z"}
+2025-01-24T02:34:22.395Z {"message":"Navigation: Redirect from 404","from":"/admin/client-management/Y2JwXzFfMTczNzY4NTk1NjkwOA/contact","to":"/admin/clients","timestamp":"2025-01-24T02:34:22.390Z"}
+2025-01-24T02:34:28.067Z "Clients loaded successfully"
+2025-01-24T02:34:29.136Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NjA2OTEzNA"
+2025-01-24T02:34:29.144Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4NjA2OTEzNA/contact","referrer":"http://localhost:4000/admin/client-management","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:34:29.140Z"}
+2025-01-24T02:35:42.346Z "Clients loaded successfully"
+2025-01-24T02:35:43.429Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NjE0MzQyNw"
+2025-01-24T02:35:43.437Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4NjE0MzQyNw/contact","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:35:43.433Z"}
+2025-01-24T02:38:55.382Z "Clients loaded successfully"
+2025-01-24T02:38:56.579Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NjMzNjU3Nw"
+2025-01-24T02:38:56.587Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4NjMzNjU3Nw/contact","referrer":"http://localhost:4000/admin/client-management/Y2JwXzFfMTczNzY4NjE0MzQyNw/contact","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:38:56.582Z"}
+2025-01-24T02:41:23.543Z "Clients loaded successfully"
+2025-01-24T02:41:26.510Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NjQ4NjUwOA"
+2025-01-24T02:41:26.518Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4NjQ4NjUwOA/contact","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:41:26.514Z"}
+2025-01-24T02:41:28.311Z "Clients loaded successfully"
+2025-01-24T02:41:47.014Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NjUwNzAwOQ"
+2025-01-24T02:41:47.030Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4NjUwNzAwOQ/contact","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:41:47.020Z"}
+2025-01-24T02:42:15.423Z "Clients loaded successfully"
+2025-01-24T02:42:18.484Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NjUzODQ4Mg"
+2025-01-24T02:42:18.497Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4NjUzODQ4Mg/contact","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:42:18.492Z"}
+2025-01-24T02:42:55.863Z "Clients loaded successfully"
+2025-01-24T02:42:57.078Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NjU3NzA3Ng"
+2025-01-24T02:42:57.089Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4NjU3NzA3Ng/contact","referrer":"http://localhost:4000/admin/client-management/Y2JwXzFfMTczNzY4NjUzODQ4Mg/contact","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:42:57.084Z"}
+2025-01-24T02:44:05.922Z "Clients loaded successfully"
+2025-01-24T02:44:08.257Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NjY0ODI1NQ"
+2025-01-24T02:44:08.269Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4NjY0ODI1NQ/contact","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:44:08.264Z"}
+2025-01-24T02:46:07.670Z "Clients loaded successfully"
+2025-01-24T02:46:08.992Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4Njc2ODk5MQ"
+2025-01-24T02:46:09.004Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzY4Njc2ODk5MQ/contact","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T02:46:09.000Z"}
+2025-01-24T02:48:09.869Z "Clients loaded successfully"
+2025-01-24T02:48:11.469Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4Njg5MTQ2Nw"
+2025-01-24T02:48:11.546Z "Client data loaded successfully for 1"
+2025-01-24T02:49:33.295Z "Clients loaded successfully"
+2025-01-24T02:49:34.809Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4Njk3NDgwNg"
+2025-01-24T02:49:34.877Z "Client data loaded successfully for 1"
+2025-01-24T02:50:55.279Z "Clients loaded successfully"
+2025-01-24T02:50:56.820Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NzA1NjgxOA"
+2025-01-24T02:50:56.882Z "Client data loaded successfully for 1"
+2025-01-24T02:50:56.903Z "Contact information loaded for client 1"
+2025-01-24T02:50:58.648Z "Users and groups loaded successfully"
+2025-01-24T02:51:02.663Z "Users and groups loaded successfully"
+2025-01-24T02:51:04.286Z "Client data loaded successfully for 1"
+2025-01-24T02:51:04.296Z "Users and groups loaded successfully"
+2025-01-24T02:51:05.994Z "Client data loaded successfully for 1"
+2025-01-24T02:51:06.000Z "Users and groups loaded successfully"
+2025-01-24T02:51:11.063Z "Users and groups loaded successfully"
+2025-01-24T02:51:13.238Z "Client data loaded successfully for 1"
+2025-01-24T02:51:13.247Z "Users and groups loaded successfully"
+2025-01-24T02:55:13.734Z "Clients loaded successfully"
+2025-01-24T02:55:15.056Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NzMxNTA1NQ"
+2025-01-24T02:55:15.115Z "Client data loaded successfully for 1"
+2025-01-24T02:55:15.138Z "Contact information loaded for client 1"
+2025-01-24T02:55:16.601Z "Users and groups loaded successfully"
+2025-01-24T02:55:18.215Z "Client data loaded successfully for 1"
+2025-01-24T02:55:20.202Z "Users and groups loaded successfully"
+2025-01-24T02:55:25.234Z "Client data loaded successfully for 1"
+2025-01-24T02:55:47.558Z "Clients loaded successfully"
+2025-01-24T02:55:48.928Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NzM0ODkyNg"
+2025-01-24T02:55:49.001Z "Client data loaded successfully for 1"
+2025-01-24T02:55:49.025Z "Contact information loaded for client 1"
+2025-01-24T02:55:50.574Z "Users and groups loaded successfully"
+2025-01-24T02:55:59.108Z "Client data loaded successfully for 1"
+2025-01-24T02:58:37.650Z "Clients loaded successfully"
+2025-01-24T02:58:39.121Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NzUxOTExOQ"
+2025-01-24T02:58:39.205Z "Client data loaded successfully for 1"
+2025-01-24T02:58:39.225Z "Contact information loaded for client 1"
+2025-01-24T02:58:40.251Z "Users and groups loaded successfully"
+2025-01-24T02:58:41.935Z "Client data loaded successfully for 1"
+2025-01-24T02:59:43.552Z "Clients loaded successfully"
+2025-01-24T02:59:49.275Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NzU4OTI3Mg"
+2025-01-24T02:59:49.368Z "Client data loaded successfully for 1"
+2025-01-24T02:59:49.390Z "Contact information loaded for client 1"
+2025-01-24T02:59:50.579Z "Users and groups loaded successfully"
+2025-01-24T02:59:52.406Z "Client data loaded successfully for 1"
+2025-01-24T03:00:16.831Z "Clients loaded successfully"
+2025-01-24T03:00:18.229Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NzYxODIyNw"
+2025-01-24T03:00:18.265Z "Client data loaded successfully for 1"
+2025-01-24T03:00:18.273Z "Contact information loaded for client 1"
+2025-01-24T03:00:19.030Z "Users and groups loaded successfully"
+2025-01-24T03:00:22.381Z "Client data loaded successfully for 1"
+2025-01-24T03:01:47.352Z "Clients loaded successfully"
+2025-01-24T03:01:48.628Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzY4NzcwODYyNg"
+2025-01-24T03:01:48.692Z "Client data loaded successfully for 1"
+2025-01-24T03:01:48.714Z "Contact information loaded for client 1"
+2025-01-24T03:01:49.579Z "Users and groups loaded successfully"
+2025-01-24T03:01:50.981Z "User data loaded successfully: 1"
+2025-01-24T03:01:52.595Z "Users and groups loaded successfully"
+2025-01-24T03:02:29.258Z "Clients loaded successfully"
+2025-01-24T03:02:43.130Z "Clients loaded successfully"
+2025-01-24T03:02:51.073Z "Clients loaded successfully"
+2025-01-24T03:03:23.456Z "Clients loaded successfully"
+2025-01-24T03:03:41.730Z "Clients loaded successfully"
+2025-01-24T03:04:52.827Z "Clients loaded successfully"
+2025-01-24T03:04:59.641Z "Clients loaded successfully"
+2025-01-24T03:05:29.179Z "Clients loaded successfully"
+2025-01-24T16:07:40.953Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzczNDg2MDkyNg"
+2025-01-24T16:07:41.027Z "Client data loaded successfully for 1"
+2025-01-24T16:07:41.052Z "Contact information loaded for client 1"
+2025-01-24T16:07:42.995Z "Users and groups loaded successfully"
+2025-01-24T16:07:44.092Z "User data loaded successfully: 1"
+2025-01-24T16:07:45.695Z "Users and groups loaded successfully"
+2025-01-24T16:07:53.767Z "Clients loaded successfully"
+2025-01-24T17:39:11.096Z {"message":"Navigation: Page not found","path":"/admin/emerge-config/cards-payments","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T17:39:11.075Z"}
+2025-01-24T17:42:14.646Z {"message":"Navigation: Page not found","path":"/admin/emerge-config/cards-payments/credit-cards","referrer":"http://localhost:4000/admin","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T17:42:14.621Z"}
+2025-01-24T18:01:37.569Z {"message":"Navigation: Page not found","path":"/admin/emerge-config/core","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:01:37.562Z"}
+2025-01-24T18:01:43.540Z {"message":"Navigation: Page not found","path":"/admin/emerge-config/core","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:01:43.535Z"}
+2025-01-24T18:10:53.129Z {"message":"Navigation: Page not found","path":"/admin/emerge-config/core","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:10:53.109Z"}
+2025-01-24T18:23:36.074Z {"message":"Navigation: Page not found","path":"/admin/emerge-config/core/app-info","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:23:36.024Z"}
+2025-01-24T18:23:39.950Z {"message":"Navigation: Page not found","path":"/admin/emerge-config/core/app-info","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:23:39.944Z"}
+2025-01-24T18:47:14.750Z {"message":"Navigation: Page not found","path":"/admin/emerge-config/loans-credit/credit-score-history","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:47:14.739Z"}
+2025-01-24T18:52:17.981Z {"message":"Navigation: Page not found","path":"/admin/client-management/list","referrer":"http://localhost:4000/admin","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:52:17.970Z"}
+2025-01-24T18:52:52.787Z {"message":"Navigation: Page not found","path":"/admin/development/api-testing","referrer":"http://localhost:4000/admin","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:52:52.780Z"}
+2025-01-24T18:53:06.797Z {"message":"Navigation: Redirect from 404","from":"/admin/development/api-testing","to":"/admin/clients","timestamp":"2025-01-24T18:53:06.790Z"}
+2025-01-24T18:53:06.807Z {"message":"Navigation: Page not found","path":"/admin/client-management","referrer":"http://localhost:4000/admin","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:53:06.800Z"}
+2025-01-24T18:53:07.865Z {"message":"Navigation: Redirect from 404","from":"/admin/client-management","to":"/admin/clients","timestamp":"2025-01-24T18:53:07.863Z"}
+2025-01-24T18:53:07.873Z {"message":"Navigation: Page not found","path":"/admin/client-management","referrer":"http://localhost:4000/admin","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:53:07.868Z"}
+2025-01-24T18:53:09.708Z {"message":"Navigation: Page not found","path":"/admin/development/api-testing","referrer":"http://localhost:4000/admin","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:53:09.704Z"}
+2025-01-24T18:53:36.155Z {"message":"Navigation: Page not found","path":"/admin/client-management/list","referrer":"http://localhost:4000/admin/development","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:53:36.144Z"}
+2025-01-24T18:55:48.821Z {"message":"Navigation: Page not found","path":"/admin/client-management/list","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:55:48.812Z"}
+2025-01-24T18:56:29.484Z {"message":"Navigation: Page not found","path":"/admin/client-management/list","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T18:56:29.474Z"}
+2025-01-24T19:02:31.348Z {"message":"Navigation: Page not found","path":"/admin/client-management/list","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T19:02:31.339Z"}
+2025-01-24T19:02:42.235Z {"message":"Navigation: Page not found","path":"/admin/client-management/list","referrer":"http://localhost:4000/admin","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T19:02:42.231Z"}
+2025-01-24T19:07:58.806Z {"message":"Navigation: Page not found","path":"/admin/client-management/list","referrer":"http://localhost:4000/admin","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T19:07:58.800Z"}
+2025-01-24T19:08:17.254Z {"message":"Navigation: Page not found","path":"/admin/client-management/list","referrer":"http://localhost:4000/admin","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T19:08:17.248Z"}
+2025-01-24T19:17:54.671Z "Clients loaded successfully"
+2025-01-24T19:19:22.531Z "Clients loaded successfully"
+2025-01-24T19:24:47.475Z "Clients loaded successfully"
+2025-01-24T19:24:51.219Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc0NjY5MTIxNw"
+2025-01-24T19:24:51.291Z "Client data loaded successfully for 1"
+2025-01-24T19:24:51.323Z "Contact information loaded for client 1"
+2025-01-24T19:24:52.606Z "Users and groups loaded successfully"
+2025-01-24T19:24:54.089Z "User data loaded successfully: 1"
+2025-01-24T19:24:56.012Z "Users and groups loaded successfully"
+2025-01-24T19:25:13.913Z "Clients loaded successfully"
+2025-01-24T19:25:29.477Z "Clients loaded successfully"
+2025-01-24T19:33:27.287Z "Clients loaded successfully"
+2025-01-24T20:30:32.084Z {"message":"Navigation: Page not found","path":"/admin/emerge","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T20:30:32.077Z"}
+2025-01-24T21:30:58.809Z "Clients loaded successfully"
+2025-01-24T21:31:05.227Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NDI2NTIyNA"
+2025-01-24T21:31:05.314Z "Failed to load contact information: [object Object]"
+2025-01-24T21:31:26.193Z "Clients loaded successfully"
+2025-01-24T21:31:48.637Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NDMwODYyNg"
+2025-01-24T21:31:48.670Z "Failed to load contact information: [object Object]"
+2025-01-24T21:32:03.617Z "Clients loaded successfully"
+2025-01-24T21:33:36.533Z {"message":"Navigation: Page not found","path":"/admin/emerge-config/core/connect-native","referrer":"http://localhost:4000/admin/client-management/list","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T21:33:36.526Z"}
+2025-01-24T21:33:48.750Z "Clients loaded successfully"
+2025-01-24T21:33:50.170Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NDQzMDE2OQ"
+2025-01-24T21:33:50.259Z "Failed to load contact information: [object Object]"
+2025-01-24T21:34:54.665Z "Clients loaded successfully"
+2025-01-24T21:35:18.322Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NDUxODMxNw"
+2025-01-24T21:35:18.424Z "Failed to load contact information: [object Object]"
+2025-01-24T21:36:13.458Z "Clients loaded successfully"
+2025-01-24T21:36:14.685Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NDU3NDY4Mw"
+2025-01-24T21:36:14.779Z "Failed to load contact information: [object Object]"
+2025-01-24T21:36:28.045Z "Clients loaded successfully"
+2025-01-24T21:36:29.065Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NDU4OTA2Mw"
+2025-01-24T21:36:29.154Z "Failed to load contact information: [object Object]"
+2025-01-24T21:40:15.621Z "Clients loaded successfully"
+2025-01-24T21:40:16.760Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NDgxNjc1OA"
+2025-01-24T21:40:16.858Z "Failed to load contact information: [object Object]"
+2025-01-24T21:40:31.713Z "Clients loaded successfully"
+2025-01-24T21:40:44.176Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NDg0NDE3Mw"
+2025-01-24T21:40:44.221Z "Failed to load contact information: [object Object]"
+2025-01-24T21:42:04.231Z "Clients loaded successfully"
+2025-01-24T21:42:05.309Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NDkyNTMwNw"
+2025-01-24T21:42:05.402Z "Failed to load contact information: Invalid input: ID must be a non-empty string"
+2025-01-24T21:42:24.737Z "Clients loaded successfully"
+2025-01-24T21:42:26.026Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NDk0NjAyNA"
+2025-01-24T21:42:26.107Z "Failed to load contact information: Invalid input: ID must be a non-empty string"
+2025-01-24T21:42:34.689Z "Clients loaded successfully"
+2025-01-24T21:42:38.322Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NDk1ODMyMA"
+2025-01-24T21:42:38.360Z "Failed to load contact information: Invalid input: ID must be a non-empty string"
+2025-01-24T21:48:23.496Z "Clients loaded successfully"
+2025-01-24T21:48:25.125Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NTMwNTEyMw"
+2025-01-24T21:48:25.212Z "Loading contact information for client undefined"
+2025-01-24T21:48:25.225Z "Failed to load contact information: [object Object]"
+2025-01-24T21:48:44.983Z "Clients loaded successfully"
+2025-01-24T21:48:47.536Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NTMyNzUzNA"
+2025-01-24T21:48:47.575Z "Loading contact information for client undefined"
+2025-01-24T21:48:47.581Z "Failed to load contact information: [object Object]"
+2025-01-24T21:52:07.562Z "Clients loaded successfully"
+2025-01-24T21:52:33.088Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NTU1MzA4Mw"
+2025-01-24T21:52:33.180Z "Failed to load contact information: [object Object]"
+2025-01-24T21:54:20.406Z "Clients loaded successfully"
+2025-01-24T21:54:21.537Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NTY2MTUzNg"
+2025-01-24T21:54:21.579Z "Client data loaded successfully for 1"
+2025-01-24T21:54:21.619Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzc1NTY2MTUzNg/contact","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T21:54:21.617Z"}
+2025-01-24T21:54:37.196Z "Clients loaded successfully"
+2025-01-24T21:54:38.434Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NTY3ODQzMg"
+2025-01-24T21:54:38.486Z "Client data loaded successfully for 1"
+2025-01-24T21:54:38.525Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzc1NTY3ODQzMg/contact","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T21:54:38.522Z"}
+2025-01-24T21:56:10.421Z "Clients loaded successfully"
+2025-01-24T21:56:11.823Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NTc3MTgyMA"
+2025-01-24T21:56:11.895Z {"message":"Navigation: Page not found","path":"/admin/client-management/edit/Y2JwXzFfMTczNzc1NTc3MTgyMA/contact","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T21:56:11.882Z"}
+2025-01-24T21:56:24.211Z "Clients loaded successfully"
+2025-01-24T21:56:27.881Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NTc4Nzg3OQ"
+2025-01-24T21:56:27.915Z {"message":"Navigation: Page not found","path":"/admin/client-management/edit/Y2JwXzFfMTczNzc1NTc4Nzg3OQ/contact","referrer":"http://localhost:4000/login","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T21:56:27.912Z"}
+2025-01-24T21:58:11.496Z "Clients loaded successfully"
+2025-01-24T21:58:12.463Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NTg5MjQ2MQ"
+2025-01-24T21:58:12.536Z {"message":"Navigation: Page not found","path":"/admin/client-management/edit/Y2JwXzFfMTczNzc1NTg5MjQ2MQ/contact","referrer":"http://localhost:4000/admin/client-management/edit/Y2JwXzFfMTczNzc1NTc4Nzg3OQ/contact","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T21:58:12.527Z"}
+2025-01-24T21:58:21.311Z "Clients loaded successfully"
+2025-01-24T21:58:22.367Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NTkwMjM2Ng"
+2025-01-24T21:58:22.448Z "Client data loaded successfully for 1"
+2025-01-24T22:01:12.672Z "Clients loaded successfully"
+2025-01-24T22:01:13.536Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NjA3MzUzNQ"
+2025-01-24T22:01:13.615Z "Client data loaded successfully for 1"
+2025-01-24T22:01:13.635Z "Contact information loaded for client 1"
+2025-01-24T22:01:14.861Z "Users and groups loaded successfully"
+2025-01-24T22:01:18.503Z "Users and groups loaded successfully"
+2025-01-24T22:01:20.423Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzc1NjA4MDQwMw/users/Y2JwXzFfMTczNzc1NjA4MDQwMw","referrer":"http://localhost:4000/admin/client-management/edit/Y2JwXzFfMTczNzc1NTkwODYyMw/contact","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T22:01:20.415Z"}
+2025-01-24T22:02:39.643Z "Client data loaded successfully for 1"
+2025-01-24T22:02:39.652Z "Users and groups loaded successfully"
+2025-01-24T22:02:50.182Z "Users and groups loaded successfully"
+2025-01-24T22:04:37.325Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzc1NjI3NzI4OA/users/Y2JwXzFfMTczNzc1NjI3NzI4OA","referrer":"http://localhost:4000/admin/client-management/edit/Y2JwXzFfMTczNzc1NTkwODYyMw/contact","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T22:04:37.300Z"}
+2025-01-24T22:06:43.133Z "Clients loaded successfully"
+2025-01-24T22:06:44.255Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NjQwNDI1NA"
+2025-01-24T22:06:44.336Z "Client data loaded successfully for 1"
+2025-01-24T22:06:44.357Z "Contact information loaded for client 1"
+2025-01-24T22:06:45.138Z "Users and groups loaded successfully"
+2025-01-24T22:06:46.541Z "User data loaded successfully: 1"
+2025-01-24T22:06:48.604Z {"message":"Navigation: Page not found","path":"/admin/client-management/Y2JwXzFfMTczNzc1NjQwNjUxNg/users","referrer":"http://localhost:4000/admin/client-management/Y2JwXzFfMTczNzc1NjI3NzI4OA/users/Y2JwXzFfMTczNzc1NjI3NzI4OA","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T22:06:48.597Z"}
+2025-01-24T22:08:41.753Z "Clients loaded successfully"
+2025-01-24T22:08:45.108Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1NjUyNTEwNQ"
+2025-01-24T22:08:45.196Z "Client data loaded successfully for 1"
+2025-01-24T22:08:45.210Z "Contact information loaded for client 1"
+2025-01-24T22:08:46.238Z "Users and groups loaded successfully"
+2025-01-24T22:08:47.565Z "User data loaded successfully: 1"
+2025-01-24T22:08:49.015Z "Users and groups loaded successfully"
+2025-01-24T22:24:41.238Z {"message":"Navigation: Page not found","path":"/admin/emerge-config/core/connect-native","referrer":"http://localhost:4000/admin/client-management/Y2JwXzFfMTczNzc1NjQwNjUxNg/users","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","timestamp":"2025-01-24T22:24:41.222Z"}
+2025-01-24T22:24:44.686Z {"message":"Navigation: Redirect from 404","from":"/admin/emerge-config/core/connect-native","action":"back","timestamp":"2025-01-24T22:24:44.684Z"}
+2025-01-24T23:00:29.619Z "Clients loaded successfully"
+2025-01-24T23:00:31.780Z "Navigating to edit client - ID: 1, Encoded: Y2JwXzFfMTczNzc1OTYzMTc3OQ"
+2025-01-24T23:00:31.851Z "Client data loaded successfully for 1"
+2025-01-24T23:00:31.858Z "Contact information loaded for client 1"
+2025-01-24T23:00:33.127Z "Users and groups loaded successfully"

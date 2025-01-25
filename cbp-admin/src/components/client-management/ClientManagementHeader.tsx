@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link as RouterLink, useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Box, Typography, Grid, Paper, Link, Alert, CircularProgress } from '@mui/material';
 import { getAllRoutes } from '../../routes';
 import PeopleIcon from '@mui/icons-material/People';
@@ -63,13 +63,6 @@ const ClientManagementHeader: React.FC = () => {
     loadClientData();
   }, [clientId]);
 
-  const allRoutes = getAllRoutes();
-  const clientRoutes = allRoutes.filter(route => 
-    route.sectionId === 'clientManagement' && 
-    !route.hideFromSidebar &&
-    route.path !== '/admin/client-management'
-  );
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
@@ -80,10 +73,15 @@ const ClientManagementHeader: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        {client ? `${client.name} - Client Management` : 'Client Management'}
-      </Typography>
-
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom color="text.primary">
+          Client Management
+        </Typography>
+        <Typography variant="body1" color="text.secondary" paragraph>
+          Welcome to Client Management. Here you can manage client accounts, users, and access settings.
+        </Typography>
+      </Box>
+      
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
@@ -91,46 +89,36 @@ const ClientManagementHeader: React.FC = () => {
       )}
       
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        {clientRoutes.map((route) => (
-          <Grid item xs={12} sm={6} md={4} key={route.path}>
-            <Paper 
-              sx={{ 
-                p: 3, 
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                '&:hover': {
-                  bgcolor: 'action.hover'
-                }
-              }}
+        <Grid item xs={12} sm={6} md={4}>
+          <Paper 
+            sx={{ 
+              p: 3, 
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              '&:hover': {
+                bgcolor: 'action.hover'
+              }
+            }}
+          >
+            <Link
+              component={RouterLink}
+              to="list"
+              color="inherit"
+              underline="none"
+              sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
-              <Link
-                component={RouterLink}
-                to={route.path}
-                color="inherit"
-                underline="none"
-                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
-              >
-                {getRouteIcon(route.title)}
-                <Typography variant="h6" gutterBottom>
-                  {route.title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {route.title === 'Clients' && 'View and manage all client accounts'}
-                  {route.title === 'Client Details' && 'View detailed client information'}
-                  {route.title === 'Contact Information' && 'Manage client contact details'}
-                  {route.title === 'Users' && 'Manage client user accounts and permissions'}
-                  {route.title === 'Groups' && 'Configure client user groups and roles'}
-                  {route.title === 'Security Settings' && 'Configure client security policies'}
-                  {route.title === 'Audit History' && 'View client activity and changes'}
-                </Typography>
-              </Link>
-            </Paper>
-          </Grid>
-        ))}
+              <PeopleIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
+              <Typography variant="h6" gutterBottom>
+                Client List
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                View and manage all client accounts
+              </Typography>
+            </Link>
+          </Paper>
+        </Grid>
       </Grid>
-
-      <Outlet />
     </Box>
   );
 };

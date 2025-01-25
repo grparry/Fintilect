@@ -1,5 +1,8 @@
 import { lazy } from 'react';
 import { RouteConfig } from '../types/route.types';
+import AppsIcon from '@mui/icons-material/Apps';
+import PeopleIcon from '@mui/icons-material/People';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 // Lazy load components
 const EmergeAdminHeader = lazy(() => {
@@ -16,24 +19,24 @@ const emergeAdminRoutes: RouteConfig[] = [
     path: '/admin/emerge',
     title: 'Emerge Admin',
     element: EmergeAdminHeader,
-    icon: 'Apps',
-    sectionId: 'emerge',
+    icon: AppsIcon,
+    sectionId: 'emergeAdmin',
     children: [
       {
         id: 'member-center',
         path: '/admin/emerge/member-center',
         title: 'Member Center',
         element: MemberDashboard,
-        icon: 'People',
-        sectionId: 'emerge'
+        icon: PeopleIcon,
+        sectionId: 'emergeAdmin'
       },
       {
         id: 'money-desktop',
         path: '/admin/emerge/money-desktop',
         title: 'Money Desktop',
         element: MoneyDesktop,
-        icon: 'AccountBalance',
-        sectionId: 'emerge'
+        icon: AccountBalanceIcon,
+        sectionId: 'emergeAdmin'
       }
     ]
   }

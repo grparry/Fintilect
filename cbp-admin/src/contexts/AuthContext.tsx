@@ -24,7 +24,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isAuthenticated: false,
     user: null,
     loading: false,
-    error: null
+    error: null,
+    permissions: []
   });
 
   const login = useCallback(async (credentials: LoginCredentials) => {
@@ -35,7 +36,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         ...prev,
         isAuthenticated: true,
         user: response.user,
-        loading: false
+        loading: false,
+        permissions: []
       }));
     } catch (error) {
       setState(prev => ({
@@ -54,7 +56,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: false,
         user: null,
         loading: false,
-        error: null
+        error: null,
+        permissions: []
       });
     } catch (error) {
       setState(prev => ({

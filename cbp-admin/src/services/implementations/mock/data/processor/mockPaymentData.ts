@@ -237,8 +237,8 @@ export const mockPayeeConversionFiles = {
         totalRecords: 100,
         validRecords: 0,
         invalidRecords: 0,
-        errors: [],
-        warnings: []
+        errors: [] as Array<{ field: string; message: string }>,
+        warnings: [] as Array<{ field: string; message: string }>
       }
     },
     {
@@ -250,8 +250,8 @@ export const mockPayeeConversionFiles = {
         totalRecords: 50,
         validRecords: 45,
         invalidRecords: 5,
-        errors: [],
-        warnings: []
+        errors: [] as Array<{ field: string; message: string }>,
+        warnings: [] as Array<{ field: string; message: string }>
       }
     }
   ]

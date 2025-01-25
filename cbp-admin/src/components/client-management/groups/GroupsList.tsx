@@ -33,6 +33,7 @@ import { UserGroup as Group } from '../../../types/client.types';
 import { clientService } from '../../../services/factory/ServiceFactory';
 import { shouldUseMockData } from '../../../config/api.config';
 import { decodeId } from '../../../utils/idEncoder';
+import { PermissionAction } from '../../../types/permission.types';
 
 interface GroupsListProps {
   clientId: string;
@@ -55,12 +56,12 @@ const serviceGroupToUIGroup = (group: any, clientId: string): Group => ({
   description: group.description || '',
   clientId,
   roles: [],
-  permissions: group.permissions.map((id: string) => ({
-    id,
-    name: '',
-    description: '',
+  permissions: group.permissions.map((permission: any) => ({
+    id: permission.id,
+    name: permission.name,
+    description: permission.description,
     category: 'user',
-    actions: []
+    actions: [] as PermissionAction[]
   })),
   members: group.members || [],
   createdAt: group.createdAt,

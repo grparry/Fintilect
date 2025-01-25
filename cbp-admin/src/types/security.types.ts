@@ -192,7 +192,15 @@ export interface SecurityMetrics {
     riskLevels: Record<RiskLevel, number>;
 }
 
-// Bill Pay Specific Security Types
+export interface IpAddress {
+  address: string;
+  description?: string;
+  createdAt: string;
+  lastUsed?: string;
+  status: 'active' | 'blocked';
+}
+
+// General Security Types
 export interface BillPayPasswordPolicy {
     minLength: number;
     requireUppercase: boolean;

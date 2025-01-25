@@ -13,6 +13,8 @@ import LoginPage from './components/auth/LoginPage';
 import NotFound from './components/common/NotFound';
 import { getAllRoutes } from './routes';
 import { RouteConfig } from './types/route.types';
+import { navigationConfig } from './config/navigation';
+import { Box } from '@mui/material';
 import './App.css';
 
 interface ProtectedRouteProps {
@@ -33,7 +35,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  return <AppWrapper>{children}</AppWrapper>;
+  return <>{children}</>;
 };
 
 interface PublicRouteProps {
@@ -73,18 +75,16 @@ interface RouteElementProps {
 }
 
 const RouteElement: React.FC<RouteElementProps> = ({ Component, path }) => {
-  console.log('RouteElement rendering:', {
-    path,
-    componentType: typeof Component,
-    isLazy: Component.constructor?.name === 'LazyExoticComponent',
-    componentName: typeof Component === 'function' ? Component.name : 'Unknown'
-  });
+  const { toggleTheme } = useTheme();
+  console.log('Rendering route element for path:', path);
   
   return (
     <ProtectedRoute>
       <Suspense fallback={<LoadingFallback />}>
         <ErrorBoundary>
-          <Component />
+          <MainLayout toggleTheme={toggleTheme}>
+            <Component />
+          </MainLayout>
         </ErrorBoundary>
       </Suspense>
     </ProtectedRoute>
@@ -100,6 +100,7 @@ const createElementWrapper = (element: JSX.Element): FC => {
 const BillPayHeader = lazy(() => import('./components/bill-pay/BillPayHeader'));
 const ClientManagementHeader = lazy(() => import('./components/client-management/ClientManagementHeader'));
 const EmergeAdminHeader = lazy(() => import('./components/emerge-admin/EmergeAdminHeader'));
+const EmergeConfigHeader = lazy(() => import('./components/emerge-config/EmergeConfigHeader'));
 const DevelopmentHeader = lazy(() => import('./components/development/DevelopmentHeader'));
 
 const renderRoutes = (routes: RouteConfig[]) => {
@@ -114,46 +115,26 @@ const renderRoutes = (routes: RouteConfig[]) => {
   })));
   
   return routes.map((route) => {
-    const fullPath = route.path;
     console.log(`Processing route:`, {
       id: route.id,
-      path: fullPath,
+      path: route.path,
       elementType: typeof route.element,
       hasChildren: !!route.children,
       isLazy: route.element?.constructor?.name === 'LazyExoticComponent',
       elementName: typeof route.element === 'function' ? route.element.name : 'Unknown'
     });
 
-    // Regular route handling
-    if (React.isValidElement(route.element)) {
-      console.log(`Route ${route.id} has valid React element`);
-      const ElementWrapper = createElementWrapper(route.element);
-      return (
-        <Route
-          key={route.id}
-          path={fullPath}
-          element={
-            <RouteElement
-              Component={ElementWrapper}
-              path={fullPath}
-            />
-          }
-        >
-          {route.children && renderRoutes(route.children)}
-        </Route>
-      );
-    }
-
-    console.log(`Route ${route.id} using component type`);
     const Component = route.element as React.ComponentType<any> | React.LazyExoticComponent<React.ComponentType<any>>;
+    console.log(`Creating route element for ${route.id} with path ${route.path}`);
+    
     return (
       <Route
         key={route.id}
-        path={fullPath}
+        path={route.path}
         element={
           <RouteElement
             Component={Component}
-            path={fullPath}
+            path={route.path}
           />
         }
       >
@@ -174,18 +155,27 @@ const App: React.FC = () => {
           <Router>
             <ServiceProvider>
               <AuthProvider>
-                <NavigationProvider>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <Routes>
-                      <Route key="login" path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-                      <Route key="root" path="/" element={<Navigate to="/admin" replace />} />
-                      <Route key="old-clients" path="/admin/clients" element={<Navigate to="/admin/client-management" replace />} />
-                      <Route key="old-clients-list" path="/admin/clients/list" element={<Navigate to="/admin/client-management/list" replace />} />
-                      <Route key="old-client-details" path="/admin/clients/:clientId/*" element={<Navigate to="/admin/client-management/:clientId/*" replace />} />
-                      {renderRoutes(routes)}
-                      <Route key="not-found" path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
-                    </Routes>
-                  </Suspense>
+                <NavigationProvider config={navigationConfig}>
+                  <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: '100vh',
+                    bgcolor: 'background.default'
+                  }}>
+                    <Suspense fallback={<LoadingFallback />}>
+                      <Routes>
+                        <Route key="login" path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+                        <Route key="root" path="/" element={<Navigate to="/admin" replace />} />
+                        <Route key="admin" path="/admin">
+                          <Route key="old-clients" path="clients" element={<Navigate to="/admin/client-management" replace />} />
+                          <Route key="old-clients-list" path="clients/list" element={<Navigate to="/admin/client-management/list" replace />} />
+                          <Route key="old-client-details" path="clients/:clientId/*" element={<Navigate to="/admin/client-management/edit/:clientId/*" replace />} />
+                          {renderRoutes(routes)}
+                        </Route>
+                        <Route key="not-found" path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
+                      </Routes>
+                    </Suspense>
+                  </Box>
                 </NavigationProvider>
               </AuthProvider>
             </ServiceProvider>

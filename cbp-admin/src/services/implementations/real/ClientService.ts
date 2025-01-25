@@ -208,7 +208,7 @@ export class ClientService extends BaseService implements IClientService {
         const response = await this.get<ApiResponse<{ logs: AuditLog[]; total: number }>>(`/${clientId}/audit-logs`, { params: request });
         
         if (!response.success) {
-            throw new Error(response.error.message);
+            throw this.handleError(new Error('Failed to fetch audit logs'), 'Failed to fetch audit logs');
         }
         
         return response.data;

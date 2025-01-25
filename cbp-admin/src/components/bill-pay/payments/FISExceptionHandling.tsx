@@ -216,14 +216,18 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
     try {
       setLoading(true);
       const response = await api.retryException(exception.id);
-      if (response.success) {
-        setRetryResult(response.data);
-        if (response.data.success) {
-          await loadExceptions();
-          setDialogState({ open: false, exception: null, action: null });
-        }
-      } else {
-        setError(response.error?.message || 'Failed to retry exception');
+      if ('error' in response) {
+        setError(response.error.message || 'Failed to retry exception');
+        return;
+      }
+      if (!response.success) {
+        setError('Failed to retry exception');
+        return;
+      }
+      setRetryResult(response.data);
+      if (response.data.success) {
+        await loadExceptions();
+        setDialogState({ open: false, exception: null, action: null });
       }
     } catch (err) {
       setError('Failed to retry exception');
@@ -239,12 +243,16 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
     try {
       setLoading(true);
       const response = await api.bulkRetry(selectedIds);
-      if (response.success) {
-        await loadExceptions();
-        setSelectedIds([]);
-      } else {
-        setError(response.error?.message || 'Failed to retry selected exceptions');
+      if ('error' in response) {
+        setError(response.error.message || 'Failed to retry selected exceptions');
+        return;
       }
+      if (!response.success) {
+        setError('Failed to retry selected exceptions');
+        return;
+      }
+      await loadExceptions();
+      setSelectedIds([]);
     } catch (err) {
       setError('Failed to retry selected exceptions');
       console.error(err);

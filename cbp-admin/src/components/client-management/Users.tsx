@@ -27,6 +27,7 @@ import UserForm from './users/UserForm';
 import { useNavigate } from 'react-router-dom';
 import { encodeId } from '../../utils/idEncoder';
 import logger from '../../utils/logger';
+import { UserFormData } from './users/UserForm';
 
 interface UsersState {
   users: User[];
@@ -109,15 +110,18 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     loadData();
   }, [loadData]);
 
-  const handleCreateUser = async (userData: Partial<User>) => {
+  const handleCreateUser = async (formData: Partial<UserFormData>) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
 
       const newUser: Omit<User, 'id'> = {
-        ...userData,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        username: formData.username,
         clientId,
-        status: userData.status || UserStatus.ACTIVE,
-        role: userData.role || UserRole.User
+        status: formData.status || UserStatus.ACTIVE,
+        roles: [formData.role || UserRole.User]
       } as Omit<User, 'id'>;
 
       await userService.createUser(newUser);
@@ -148,7 +152,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
 
-      await userService.updateUser(state.selectedUser.id, userData);
+      await userService.updateUser(userData.id || state.selectedUser.id, userData);
 
       setState(prev => ({
         ...prev,
@@ -232,9 +236,11 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
   }
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h5">Users</Typography>
+    <Box sx={{ p: 3 }}>
+      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h5" component="h1">
+          Users
+        </Typography>
         <Button
           variant="contained"
           color="primary"
@@ -258,12 +264,15 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
         </Alert>
       )}
 
-      <UserSearch onSearch={handleSearch} loading={state.loading} />
+      <UserSearch
+        onSearch={handleSearch}
+        loading={state.loading}
+      />
 
       <UserTable
         users={state.users}
         groups={state.groups}
-        onEdit={(user) => setState(prev => ({ ...prev, selectedUser: user, isFormOpen: true }))}
+        onEdit={() => {}} // No-op since navigation is handled in UserTable
         onDelete={handleDeleteUser}
         onToggleLock={handleToggleLock}
         clientId={clientId}

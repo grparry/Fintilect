@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { User, UserRole, UserStatus, UserGroup } from '../../../types/client.types';
 
-interface UserFormData {
+export interface UserFormData {
   firstName: string;
   lastName: string;
   email: string;
@@ -58,7 +58,7 @@ const UserForm: React.FC<UserFormProps> = ({
         lastName: user.lastName,
         email: user.email,
         username: user.username,
-        role: user.role,
+        role: (user.roles?.[0] as UserRole) || UserRole.User,
         status: user.status,
         department: user.department,
         password: '', // Clear password when editing
@@ -99,7 +99,7 @@ const UserForm: React.FC<UserFormProps> = ({
         lastName: formData.lastName,
         email: formData.email,
         username: formData.username,
-        role: formData.role,
+        roles: [formData.role],
         status: formData.status,
         department: formData.department,
         password: formData.password,

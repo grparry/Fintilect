@@ -18,15 +18,20 @@ const DevelopmentHeader: React.FC = () => {
   const devRoutes = allRoutes.filter(route => 
     route.sectionId === 'development' && 
     !route.hideFromSidebar &&
-    route.path !== '/admin/dev' && // Exclude the section root
-    route.id !== 'development' // Exclude the development route itself
+    route.path !== '/admin/development' &&
+    (!route.id || !route.id.endsWith('-header')) 
   );
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Development
-      </Typography>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom color="text.primary">
+          Development
+        </Typography>
+        <Typography variant="body1" color="text.secondary" paragraph>
+          Welcome to Development. Access development tools, API testing, and system configurations.
+        </Typography>
+      </Box>
       
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {devRoutes.map((route) => (

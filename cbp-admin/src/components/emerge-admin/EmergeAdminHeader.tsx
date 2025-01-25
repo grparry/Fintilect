@@ -18,17 +18,33 @@ const getRouteIcon = (title: string) => {
 
 const EmergeAdminHeader: React.FC = () => {
   const allRoutes = getAllRoutes();
+  console.log('EmergeAdminHeader - Rendering with routes:', allRoutes);
+  
   const emergeRoutes = allRoutes.filter(route => 
-    route.sectionId === 'emerge' && 
+    route.sectionId === 'emergeAdmin' && 
     !route.hideFromSidebar &&
-    route.path !== '/admin/emerge' // Exclude the section root
+    route.path !== '/admin/emerge' && 
+    (!route.id || !route.id.endsWith('-header')) 
   );
+  console.log('EmergeAdminHeader - Filtered routes:', emergeRoutes);
+
+  React.useEffect(() => {
+    console.log('EmergeAdminHeader - Mounted');
+    return () => {
+      console.log('EmergeAdminHeader - Unmounted');
+    };
+  }, []);
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Emerge Admin
-      </Typography>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom color="text.primary">
+          Emerge Admin
+        </Typography>
+        <Typography variant="body1" color="text.secondary" paragraph>
+          Welcome to Emerge Admin. Manage Emerge configurations, settings, and administrative tasks.
+        </Typography>
+      </Box>
       
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {emergeRoutes.map((route) => (

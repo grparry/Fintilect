@@ -78,7 +78,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ item, depth = 0 }) => {
             sx={menuItemStyles.text}
           />
           {item.children && (
-            state.expandedSections.includes(item.id) ? (
+            state.expandedItems.includes(item.id) ? (
               <ExpandLess />
             ) : (
               <ExpandMore />
@@ -87,7 +87,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ item, depth = 0 }) => {
         </ListItemButton>
       </ListItem>
       {item.children && (
-        <Collapse in={state.expandedSections.includes(item.id)}>
+        <Collapse in={state.expandedItems.includes(item.id)}>
           <List component="div" disablePadding>
             {item.children.map((child) => (
               <SidebarItem

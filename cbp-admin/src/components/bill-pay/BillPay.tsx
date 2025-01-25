@@ -115,13 +115,13 @@ const BillPay: React.FC = () => {
       const fisExceptions: FISException[] = response.items.map(tx => ({
         id: tx.id,
         requestId: tx.metadata?.requestId?.toString() || '',
-        status: FISExceptionStatus.PENDING, // Use enum value
-        errorCode: tx.metadata?.errorCode as FISErrorCode || 'UNKNOWN_ERROR',
-        errorMessage: tx.metadata?.errorMessage?.toString() || 'Unknown error',
-        metadata: tx.metadata,
+        status: tx.status === PaymentStatus.FAILED ? FISExceptionStatus.FAILED : FISExceptionStatus.PENDING,
+        errorCode: tx.metadata?.errorCode as FISErrorCode || FISErrorCode.TECHNICAL_ERROR,
+        errorMessage: tx.metadata?.errorMessage?.toString() || 'Technical error occurred',
+        metadata: tx.metadata || {},
         createdAt: tx.createdAt.toISOString(),
         updatedAt: tx.updatedAt.toISOString(),
-        retryCount: Number(tx.metadata?.retryCount || 0)
+        retryCount: Number(tx.metadata?.retryCount) || 0
       }));
 
       return {
@@ -254,7 +254,7 @@ const BillPay: React.FC = () => {
     async getExceptionStats(): Promise<ApiSuccessResponse<ExceptionStats>> {
       const response = await this.getExceptions({});
       
-      const byStatus = response.data.reduce((acc: Record<string, number>, curr) => {
+      const byStatus = response.data.reduce((acc: Record<string, number>, curr: FISException) => {
         acc[curr.status] = (acc[curr.status] || 0) + 1;
         return acc;
       }, {});
@@ -268,7 +268,7 @@ const BillPay: React.FC = () => {
           WIRE: 0
         },
         resolutionRate: 0,
-        averageRetryCount: response.data.reduce((acc, curr) => acc + curr.retryCount, 0) / response.data.length
+        averageRetryCount: response.data.reduce((acc: number, curr: FISException) => acc + curr.retryCount, 0) / response.data.length
       };
 
       return {

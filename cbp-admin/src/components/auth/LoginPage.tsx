@@ -27,11 +27,7 @@ const LoginPage: React.FC = () => {
       required: true,
       defaultValue: '',
       validation: {
-        required: 'Username is required',
-        minLength: {
-          value: 3,
-          message: 'Username must be at least 3 characters'
-        }
+        required: 'Username is required'
       }
     },
     {
@@ -47,12 +43,6 @@ const LoginPage: React.FC = () => {
           message: 'Password must be at least 8 characters'
         }
       }
-    },
-    {
-      name: 'rememberMe',
-      label: 'Remember Me',
-      type: 'checkbox',
-      defaultValue: false
     }
   ];
 
@@ -65,31 +55,18 @@ const LoginPage: React.FC = () => {
       const credentials: LoginCredentials = {
         username: data.username,
         password: data.password,
-        rememberMe: data.rememberMe
+        clientId: '1' // Default clientId
       };
 
       console.log('LoginPage: Calling login with credentials:', { ...credentials, password: '[REDACTED]' });
       await login(credentials);
-      console.log('LoginPage: Login successful');
       
-      const from = (location.state as any)?.from?.pathname || '/';
-      console.log('LoginPage: Navigating to:', from);
+      // Get the return URL from location state or default to home
+      const from = location.state?.from?.pathname || '/';
       navigate(from);
     } catch (err) {
       console.error('LoginPage: Login failed:', err);
-      if (err instanceof Error) {
-        setError({
-          message: err.message,
-          code: 'AUTH_ERROR',
-          status: 401
-        });
-      } else {
-        setError({
-          message: 'An unexpected error occurred',
-          code: 'UNKNOWN_ERROR',
-          status: 500
-        });
-      }
+      setError(err as ApiError);
     } finally {
       setLoading(false);
     }
@@ -99,7 +76,7 @@ const LoginPage: React.FC = () => {
     <Container maxWidth="sm">
       <Box sx={{ mt: 8 }}>
         <Paper sx={{ p: 4 }}>
-          <Typography variant="h4" align="center" gutterBottom>
+          <Typography variant="h4" component="h1" gutterBottom align="center">
             Login
           </Typography>
           {error && (

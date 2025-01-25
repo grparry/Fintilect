@@ -104,7 +104,7 @@ const ClientList: React.FC = () => {
     try {
       const encodedId = encodeId(clientId);
       logger.info(`Navigating to edit client - ID: ${clientId}, Encoded: ${encodedId}`);
-      navigate(`/admin/client-management/${encodedId}/contact`);
+      navigate(`/admin/client-management/edit/${encodedId}`);
     } catch (error) {
       logger.error(`Error encoding client ID: ${error instanceof Error ? error.message : String(error)}`);
       enqueueSnackbar('Error navigating to client details', { variant: 'error' });

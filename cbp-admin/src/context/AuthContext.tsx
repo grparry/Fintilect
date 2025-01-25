@@ -1,41 +1,13 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { ServiceFactory } from '../services/factory/ServiceFactory';
-import { LoginCredentials, AuthState, SessionInfo } from '../types/auth.types';
+import { LoginCredentials, AuthState, SessionInfo, AuthContextType } from '../types/auth.types';
 import { User } from '../types/client.types';
-
-interface AuthContextType {
-  isAuthenticated: boolean;
-  user: User | null;
-  loading: boolean;
-  error: string | null;
-  login: (credentials: LoginCredentials) => Promise<void>;
-  logout: () => Promise<void>;
-  refreshToken: () => Promise<void>;
-  clearError: () => void;
-}
-
-export const AuthContext = createContext<AuthContextType>({
-  isAuthenticated: false,
-  user: null,
-  loading: true,
-  error: null,
-  login: async () => {},
-  logout: async () => {},
-  refreshToken: async () => {},
-  clearError: () => {}
-});
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const authService = ServiceFactory.getInstance().getAuthService();
@@ -43,25 +15,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: false,
     user: null,
     loading: true,
-    error: null
+    error: null,
+    permissions: [],
   });
 
   useEffect(() => {
     const initializeAuth = async () => {
+      console.log('=== AuthContext Initialization ===');
+      console.log('Starting auth initialization');
       try {
         const session = await authService.getCurrentSession();
+        console.log('Session retrieved:', { hasSession: !!session, user: session?.user });
         setState({
           isAuthenticated: !!session,
           user: session?.user || null,
+          permissions: session?.permissions || [],
           loading: false,
-          error: null
+          error: null,
+        });
+        console.log('Auth state updated:', {
+          isAuthenticated: !!session,
+          hasUser: !!session?.user,
+          permissions: session?.permissions || [],
         });
       } catch (error) {
+        console.error('Auth initialization error:', error);
         setState({
           isAuthenticated: false,
           user: null,
+          permissions: [],
           loading: false,
-          error: error instanceof Error ? error.message : 'An error occurred'
+          error: error instanceof Error ? error.message : 'An error occurred',
         });
       }
     };
@@ -69,37 +53,46 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initializeAuth();
   }, [authService]);
 
-  const login = useCallback(async (credentials: LoginCredentials) => {
+  const login = useCallback(async (credentials: LoginCredentials): Promise<void> => {
+    console.log('=== Login Attempt ===');
+    setState(prev => ({ ...prev, loading: true, error: null }));
     try {
       const response = await authService.login(credentials);
+      console.log('Login successful:', { hasUser: !!response.user });
       setState({
         isAuthenticated: true,
         user: response.user,
+        permissions: response.permissions,
         loading: false,
-        error: null
+        error: null,
       });
     } catch (error) {
+      console.error('Login error:', error);
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Login failed'
+        loading: false,
+        error: error instanceof Error ? error.message : 'An error occurred during login',
       }));
       throw error;
     }
   }, [authService]);
 
   const logout = useCallback(async () => {
+    setState(prev => ({ ...prev, loading: true }));
     try {
       await authService.logout();
       setState({
         isAuthenticated: false,
         user: null,
+        permissions: [],
         loading: false,
-        error: null
+        error: null,
       });
     } catch (error) {
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Logout failed'
+        error: error instanceof Error ? error.message : 'An error occurred',
+        loading: false,
       }));
     }
   }, [authService]);
@@ -112,13 +105,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setState(prev => ({
           ...prev,
           isAuthenticated: true,
-          user: session.user
+          user: session.user,
+          permissions: session.permissions,
         }));
       }
     } catch (error) {
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Token refresh failed'
+        error: error instanceof Error ? error.message : 'An error occurred',
       }));
     }
   }, [authService]);
@@ -127,18 +121,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setState(prev => ({ ...prev, error: null }));
   }, []);
 
-  return (
-    <AuthContext.Provider value={{
-      isAuthenticated: state.isAuthenticated,
-      user: state.user,
-      loading: state.loading,
-      error: state.error,
-      login,
-      logout,
-      refreshToken,
-      clearError
-    }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const value: AuthContextType = {
+    ...state,
+    login,
+    logout,
+    refreshToken,
+    clearError,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };

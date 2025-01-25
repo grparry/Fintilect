@@ -138,12 +138,12 @@ export class MockUserService extends BaseMockService implements IUserService {
     return updatedPrefs;
   }
 
-  async updateUserStatus(userId: string, status: UserStatus): Promise<User> {
-    return this.updateUser(userId, { status });
+  async updateUserRole(userId: string, role: UserRole): Promise<User> {
+    return this.updateUser(userId, { roles: [role] });
   }
 
-  async updateUserRole(userId: string, role: UserRole): Promise<User> {
-    return this.updateUser(userId, { role });
+  async updateUserStatus(userId: string, status: UserStatus): Promise<User> {
+    return this.updateUser(userId, { status });
   }
 
   async userExists(userId: string): Promise<boolean> {
@@ -157,7 +157,7 @@ export class MockUserService extends BaseMockService implements IUserService {
       filteredUsers = filteredUsers.filter(u => u.status === filters.status);
     }
     if (filters.role) {
-      filteredUsers = filteredUsers.filter(u => u.role === filters.role);
+      filteredUsers = filteredUsers.filter(u => u.roles.includes(filters.role));
     }
     if (filters.search) {
       const search = filters.search.toLowerCase();
