@@ -24,6 +24,7 @@ interface HeaderProps {
   isDarkMode: boolean;
   open: boolean;
 }
+
 const Header: React.FC<HeaderProps> = ({
   drawerWidth,
   onMenuClick,
@@ -34,6 +35,7 @@ const Header: React.FC<HeaderProps> = ({
   const theme = useTheme();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -42,6 +44,7 @@ const Header: React.FC<HeaderProps> = ({
       console.error('Logout failed:', error);
     }
   };
+
   return (
     <AppBar
       position="relative"
@@ -103,4 +106,5 @@ const Header: React.FC<HeaderProps> = ({
     </AppBar>
   );
 };
+
 export default Header;

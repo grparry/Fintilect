@@ -8,12 +8,15 @@ interface NavigationLandingProps {
   routes: RouteConfig[];
   basePath: string;
 }
+
 const NavigationLanding: React.FC<NavigationLandingProps> = ({ title, routes, basePath }) => {
   const location = useLocation();
+  
   // Filter out routes that should be hidden from sidebar/navigation and the current path
   const visibleRoutes = routes.filter(route => 
     !route.hideFromSidebar && route.path !== basePath
   );
+
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -23,6 +26,7 @@ const NavigationLanding: React.FC<NavigationLandingProps> = ({ title, routes, ba
         {visibleRoutes.map((route) => {
           const isSelected = location.pathname === route.path;
           const key = route.id || route.path; // Fallback to path if ID is missing
+
           return (
             <ListItem key={key} disablePadding>
               <ListItemButton
@@ -52,4 +56,5 @@ const NavigationLanding: React.FC<NavigationLandingProps> = ({ title, routes, ba
     </Box>
   );
 };
+
 export default NavigationLanding;

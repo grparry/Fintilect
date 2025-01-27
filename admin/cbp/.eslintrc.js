@@ -4,7 +4,7 @@ module.exports = {
     'react-app/jest'
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react-hooks'],
+  plugins: ['@typescript-eslint'],
   rules: {
     // Typescript
     '@typescript-eslint/no-unused-vars': 'off',

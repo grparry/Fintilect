@@ -13,9 +13,8 @@ import PolicyIcon from '@mui/icons-material/Policy';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 
 // Lazy load components
-const EmergeConfigWrapper = lazy(() => import('../components/emerge-config/EmergeConfigWrapper'));
-const EmergeConfigHeader = lazy(() => import('../components/emerge-config/EmergeConfigHeader'));
 const EmergeConfigLanding = lazy(() => import('../components/emerge-config/EmergeConfigLanding'));
+const EmergeConfigHeader = lazy(() => import('../components/emerge-config/EmergeConfigHeader'));
 const CoreSettingsLanding = lazy(() => import('../components/emerge-config/core/CoreSettingsLanding'));
 const AccountsLanding = lazy(() => import('../components/emerge-config/accounts/AccountsLanding'));
 const CardsPaymentsLanding = lazy(() => import('../components/emerge-config/cards-payments/CardsPaymentsLanding'));
@@ -27,13 +26,11 @@ const MarketingOffersLanding = lazy(() => import('../components/emerge-config/ma
 const ComplianceSupportLanding = lazy(() => import('../components/emerge-config/compliance-support/ComplianceSupportLanding'));
 const MiscLanding = lazy(() => import('../components/emerge-config/misc/MiscLanding'));
 
-// Create a wrapper component that combines EmergeConfigWrapper and EmergeConfigHeader
-const WrappedEmergeConfigHeader: ComponentType = () => {
+// Create a simple header component
+const ConfigHeader: ComponentType = () => {
   return (
     <React.Suspense fallback={null}>
-      <EmergeConfigWrapper>
-        <EmergeConfigHeader />
-      </EmergeConfigWrapper>
+      <EmergeConfigHeader />
     </React.Suspense>
   );
 };
@@ -43,7 +40,7 @@ const emergeConfigRoutes: RouteConfig[] = [
   {
     id: 'emerge-config',
     path: '',
-    element: WrappedEmergeConfigHeader,
+    element: ConfigHeader,
     sectionId: 'emergeConfig',
     children: [
       {

@@ -7,6 +7,7 @@ interface SectionHeaderProps {
   color: string;
   icon: string;
 }
+
 const HeaderContainer = styled(Box)<{ backgroundColor: string }>(({ backgroundColor }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -19,6 +20,7 @@ const HeaderContainer = styled(Box)<{ backgroundColor: string }>(({ backgroundCo
     color: 'inherit',
   },
 }));
+
 const SectionHeader: React.FC<SectionHeaderProps> = ({ title, color, icon }) => {
   return (
     <HeaderContainer backgroundColor={color}>
@@ -29,4 +31,5 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title, color, icon }) => 
     </HeaderContainer>
   );
 };
+
 export default SectionHeader;

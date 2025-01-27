@@ -7,20 +7,24 @@ interface SectionSwitcherProps {
   activeSection: string | null;
   onSectionSwitch: (sectionId: string) => void;
 }
+
 const SectionSwitcher: React.FC<SectionSwitcherProps> = ({
   sections,
   activeSection,
   onSectionSwitch,
 }) => {
   const theme = useTheme();
+
   const handleChange = (_: React.MouseEvent<HTMLElement>, sectionId: string) => {
     if (sectionId) {
       onSectionSwitch(sectionId);
     }
   };
+
   if (sections.length === 0) {
     return null;
   }
+
   return (
     <Box sx={{ width: '100%', overflow: 'hidden' }}>
       <ToggleButtonGroup
@@ -94,4 +98,5 @@ const SectionSwitcher: React.FC<SectionSwitcherProps> = ({
     </Box>
   );
 };
+
 export default SectionSwitcher;

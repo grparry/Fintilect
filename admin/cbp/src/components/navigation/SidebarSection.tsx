@@ -15,11 +15,13 @@ import SidebarItem from './SidebarItem';
 interface SidebarSectionProps {
   section: NavigationSection;
 }
+
 const StyledSection = styled(List)(({ theme }) => ({
   width: '100%',
   maxWidth: 360,
   backgroundColor: theme.palette.background.paper,
 }));
+
 const StyledSectionHeader = styled(ListItemButton)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
@@ -42,11 +44,14 @@ const StyledSectionHeader = styled(ListItemButton)(({ theme }) => ({
     lineHeight: 1.2,
   },
 }));
+
 const SidebarSection: React.FC<SidebarSectionProps> = ({ section }) => {
   const [open, setOpen] = useState(true);
+
   const handleClick = () => {
     setOpen(!open);
   };
+
   return (
     <StyledSection>
       <StyledSectionHeader onClick={handleClick}>
@@ -65,4 +70,5 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({ section }) => {
     </StyledSection>
   );
 };
+
 export default SidebarSection;
