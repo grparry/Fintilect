@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { NavigationConfig, NavigationSection, NavigationPermissionRequirement } from '@/types/section-navigation.types';
-import { useNavigationPermissions } from '@/hooks/useNavigationPermissions';
+import { NavigationConfig, NavigationSection, NavigationPermissionRequirement } from '../types/section-navigation.types';
+import { useNavigationPermissions } from '../hooks/useNavigationPermissions';
 
 interface NavigationState {
   sidebarOpen: boolean;

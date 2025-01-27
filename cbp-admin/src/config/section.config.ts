@@ -1,4 +1,4 @@
-import { NavigationSection } from '@/types/section-navigation.types';
+import { NavigationSection } from '../types/section-navigation.types';
 import BusinessIcon from '@mui/icons-material/Business';
 import GroupIcon from '@mui/icons-material/Group';
 import SettingsIcon from '@mui/icons-material/Settings';

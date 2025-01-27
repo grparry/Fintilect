@@ -1,4 +1,4 @@
-import { IReportService } from '@/../interfaces/IReportService';
+import { IReportService } from '../../interfaces/IReportService';
 import {
     ReportType,
     ReportData,
@@ -7,16 +7,16 @@ import {
     AuditRecord,
     TransactionRecord,
     UserRecord
-} from '@/../../types/report.types';
+} from '../../../types/report.types';
 import {
     BaseReportArguments,
     ExportReportArguments,
     ScheduleReportArguments,
     ReportRunRequest,
     ReportResponse
-} from '@/../../types/report-api.types';
-import { PaginatedResponse } from '@/../../types/common.types';
-import { BaseService } from '@/BaseService';
+} from '../../../types/report-api.types';
+import { PaginatedResponse } from '../../../types/common.types';
+import { BaseService } from './BaseService';
 
 export class ReportService extends BaseService implements IReportService {
     constructor(basePath: string = '/api/v1/reports') {

@@ -1,5 +1,5 @@
-import { IClientService } from '@/../interfaces/IClientService';
-import { BaseService } from '@/BaseService';
+import { IClientService } from '../../interfaces/IClientService';
+import { BaseService } from './BaseService';
 import {
     Client,
     ClientType,
@@ -22,8 +22,8 @@ import {
     PaginatedResponse,
     SecuritySettings,
     ApiResponse
-} from '@/../../types/client.types';
-import logger from '@/../../utils/logger';
+} from '../../../types/client.types';
+import logger from '../../../utils/logger';
 
 /**
  * Real implementation of ClientService

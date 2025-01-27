@@ -1,4 +1,4 @@
-import { IBaseService } from '@/IBaseService';
+import { IBaseService } from './IBaseService';
 import { 
     User,
     UserGroup,
@@ -7,8 +7,8 @@ import {
     UserStats,
     UsersResponse,
     UserStatus
-} from '@/../types/client.types';
-import { PaginatedResponse, QueryOptions } from '@/../types/index';
+} from '../../types/client.types';
+import { PaginatedResponse, QueryOptions } from '../../types/index';
 
 /**
  * Interface for user management operations

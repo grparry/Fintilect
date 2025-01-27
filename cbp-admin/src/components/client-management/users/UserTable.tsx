@@ -17,9 +17,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { User as UIUser, UserGroup as UIUserGroup, UserStatus } from '@/../../types/client.types';
+import { User as UIUser, UserGroup as UIUserGroup, UserStatus } from '../../../types/client.types';
 import dayjs from 'dayjs';
-import { encodeId } from '@/../../utils/idEncoder';
+import { encodeId } from '../../../utils/idEncoder';
 import { useNavigate } from 'react-router-dom';
 
 interface UserTableProps {

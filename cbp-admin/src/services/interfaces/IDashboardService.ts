@@ -1,4 +1,4 @@
-import { IBaseService } from '@/IBaseService';
+import { IBaseService } from './IBaseService';
 import {
   DashboardMetrics,
   DashboardFilters,
@@ -6,8 +6,8 @@ import {
   TransactionStats,
   UserActivityData,
   ChartDataPoint
-} from '@/../types/dashboard.types';
-import { TimeRange } from '@/../types';
+} from '../../types/dashboard.types';
+import { TimeRange } from '../../types';
 
 /**
  * Interface for dashboard operations

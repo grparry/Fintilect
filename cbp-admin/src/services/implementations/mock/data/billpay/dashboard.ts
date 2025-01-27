@@ -1,6 +1,6 @@
-import { ChartDataPoint, TimeRangeOption, ChartViewOption } from '@/../../../../types/dashboard.types';
-import { BillPayStats, PaymentMethod, PaymentStatus, TransactionTrend } from '@/../../../../types/bill-pay.types';
-import { TimeRange } from '@/../../../../types';
+import { ChartDataPoint, TimeRangeOption, ChartViewOption } from '../../../../../types/dashboard.types';
+import { BillPayStats, PaymentMethod, PaymentStatus, TransactionTrend } from '../../../../../types/bill-pay.types';
+import { TimeRange } from '../../../../../types';
 
 export const mockChartData: ChartDataPoint[] = [
   { date: '2024-12-10', value: 1000 },

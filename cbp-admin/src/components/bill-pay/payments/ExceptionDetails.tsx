@@ -25,7 +25,7 @@ import {
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import HistoryIcon from '@mui/icons-material/History';
-import { useAuth } from '@/../../hooks/useAuth';
+import { useAuth } from '../../../hooks/useAuth';
 import {
   PaymentException,
   ExceptionResolution,
@@ -34,8 +34,8 @@ import {
   FISRetryResult,
   FISExceptionHistory,
   ExceptionToolStatus,
-} from '@/../../types/bill-pay.types';
-import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
+} from '../../../types/bill-pay.types';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import dayjs from 'dayjs';
 
 interface ExceptionDetailsProps {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { Warning as WarningIcon } from '@mui/icons-material';
-import { ErrorBoundaryProps, ErrorBoundaryState } from '@/../types/components.types';
-import { ServiceFactory } from '@/../services/factory/ServiceFactory';
-import logger from '@/../utils/logger';
+import { ErrorBoundaryProps, ErrorBoundaryState } from '../../types/components.types';
+import { ServiceFactory } from '../../services/factory/ServiceFactory';
+import logger from '../../utils/logger';
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   private auditService = ServiceFactory.getInstance().getAuditService();

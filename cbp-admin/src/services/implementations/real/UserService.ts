@@ -1,7 +1,7 @@
-import { IUserService } from '@/../interfaces/IUserService';
-import { User, UserGroup, UserPreferences, UserStatus } from '@/../../types/client.types';
-import { PaginatedResponse, QueryOptions } from '@/../../types/index';
-import { BaseService } from '@/BaseService';
+import { IUserService } from '../../interfaces/IUserService';
+import { User, UserGroup, UserPreferences, UserStatus } from '../../../types/client.types';
+import { PaginatedResponse, QueryOptions } from '../../../types/index';
+import { BaseService } from './BaseService';
 
 export class UserService extends BaseService implements IUserService {
     constructor(basePath: string = '/api/v1/users') {

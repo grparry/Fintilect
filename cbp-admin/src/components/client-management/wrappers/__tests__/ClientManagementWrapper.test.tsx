@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { renderWithRouter } from '@/../../../test-utils/navigation';
-import ClientManagementWrapper from '@/ClientManagementWrapper';
+import { renderWithRouter } from '../../../../test-utils/navigation';
+import ClientManagementWrapper from '../ClientManagementWrapper';
 import { act } from 'react-dom/test-utils';
-import { Client, ClientType, ClientStatus, Environment as ClientEnvironment } from '@/../../../types/client.types';
-import type { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '@/../../../types/api.types';
+import { Client, ClientType, ClientStatus, Environment as ClientEnvironment } from '../../../../types/client.types';
+import type { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '../../../../types/api.types';
 
 // Mock the idEncoder utility
 jest.mock('../../../../utils/idEncoder', () => ({

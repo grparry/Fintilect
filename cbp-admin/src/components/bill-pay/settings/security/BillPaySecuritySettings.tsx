@@ -24,8 +24,8 @@ import {
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import SendIcon from '@mui/icons-material/Send';
-import { BillPaySecuritySettings as BillPaySecuritySettingsType, BillPayOTPMethod } from '@/../../../types/security.types';
-import { ServiceFactory } from '@/../../../services/factory/ServiceFactory';
+import { BillPaySecuritySettings as BillPaySecuritySettingsType, BillPayOTPMethod } from '../../../../types/security.types';
+import { ServiceFactory } from '../../../../services/factory/ServiceFactory';
 
 const BillPaySecuritySettings: React.FC = () => {
   const billPayService = ServiceFactory.getInstance().getBillPayService();

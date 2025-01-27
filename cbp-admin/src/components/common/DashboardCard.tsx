@@ -7,7 +7,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { ElementType } from 'react';
-import { DashboardCardProps } from '@/../types/components.types';
+import { DashboardCardProps } from '../../types/components.types';
 
 interface ExtendedDashboardCardProps extends DashboardCardProps {
   value?: string | number;

@@ -1,4 +1,4 @@
-import { IBaseService } from '@/IBaseService';
+import { IBaseService } from './IBaseService';
 import {
     BillPayConfig,
     BillPayConfigUpdate,
@@ -17,13 +17,13 @@ import {
     HolidayInput,
     NotificationTemplate,
     NotificationTemplateInput
-} from '@/../types/bill-pay.types';
+} from '../../types/bill-pay.types';
 import {
     BillPaySecuritySettings,
     BillPaySecurityValidation,
     BillPayOTPMethod
-} from '@/../types/security.types';
-import { PaginatedResponse, QueryOptions } from '@/../types/index';
+} from '../../types/security.types';
+import { PaginatedResponse, QueryOptions } from '../../types/index';
 
 /**
  * Interface for bill pay operations

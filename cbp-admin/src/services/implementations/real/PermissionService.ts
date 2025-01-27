@@ -1,4 +1,4 @@
-import { IPermissionService } from '@/../interfaces/IPermissionService';
+import { IPermissionService } from '../../interfaces/IPermissionService';
 import {
   Permission,
   PermissionGroup,
@@ -7,9 +7,9 @@ import {
   PermissionGroupValidation,
   PermissionCategoryType,
   PermissionAction
-} from '@/../../types/permission.types';
-import { PaginatedResponse } from '@/../../types/common.types';
-import { BaseService } from '@/BaseService';
+} from '../../../types/permission.types';
+import { PaginatedResponse } from '../../../types/common.types';
+import { BaseService } from './BaseService';
 
 export class PermissionService extends BaseService implements IPermissionService {
   constructor(basePath: string = '/api/v1/permissions') {

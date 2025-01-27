@@ -1,7 +1,7 @@
-import { IAuditService, AuditEvent, AuditLogFilters } from '@/../interfaces/IAuditService';
-import { PaginatedResponse } from '@/../../types/common.types';
-import { BaseService } from '@/BaseService';
-import logger from '@/../../utils/logger';
+import { IAuditService, AuditEvent, AuditLogFilters } from '../../interfaces/IAuditService';
+import { PaginatedResponse } from '../../../types/common.types';
+import { BaseService } from './BaseService';
+import logger from '../../../utils/logger';
 
 export class AuditService extends BaseService implements IAuditService {
     constructor(basePath: string = '/api/v1/audit') {

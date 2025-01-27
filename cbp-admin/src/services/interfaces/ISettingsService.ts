@@ -1,6 +1,6 @@
-import { ApiSuccessResponse } from '@/../types/api.types';
-import { Setting, SettingGroup } from '@/../types/settings.types';
-import { IBaseService } from '@/IBaseService';
+import { ApiSuccessResponse } from '../../types/api.types';
+import { Setting, SettingGroup } from '../../types/settings.types';
+import { IBaseService } from './IBaseService';
 
 export interface ISettingsService extends IBaseService {
   getSettingsGroup(groupName: string): Promise<ApiSuccessResponse<SettingGroup>>;

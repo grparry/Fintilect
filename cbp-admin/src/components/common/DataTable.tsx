@@ -10,8 +10,8 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { Box, Alert } from '@mui/material';
-import { ServiceFactory } from '@/../services/factory/ServiceFactory';
-import logger from '@/../utils/logger';
+import { ServiceFactory } from '../../services/factory/ServiceFactory';
+import logger from '../../utils/logger';
 
 export interface Column<T extends GridValidRowModel> {
   field: keyof T;

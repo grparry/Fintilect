@@ -1,4 +1,4 @@
-import { Permission, PermissionGroup, PermissionCategoryType, PermissionAction } from '@/../../../../types/permission.types';
+import { Permission, PermissionGroup, PermissionCategoryType, PermissionAction } from '../../../../../types/permission.types';
 
 export const mockPermissions: Permission[] = [
     // System Permissions

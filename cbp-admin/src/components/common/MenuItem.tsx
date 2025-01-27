@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ListItem, ListItemIcon, ListItemText, SxProps, Theme } from '@mui/material';
-import logger from '@/../utils/logger';
+import logger from '../../utils/logger';
 
 interface MenuItemProps {
   to: string;

@@ -1,5 +1,5 @@
-import { IPayeeService } from '@/../interfaces/IPayeeService';
-import { BaseService } from '@/BaseService';
+import { IPayeeService } from '../../interfaces/IPayeeService';
+import { BaseService } from './BaseService';
 import {
   Payee,
   PayeeStatus,
@@ -14,8 +14,8 @@ import {
   PayeeConversionProgress,
   PayeeConversionRecord,
   PayeeConversionTemplate
-} from '@/../../types/bill-pay.types';
-import { PaginatedResponse } from '@/../../types/common.types';
+} from '../../../types/bill-pay.types';
+import { PaginatedResponse } from '../../../types/common.types';
 
 export class PayeeService extends BaseService implements IPayeeService {
   constructor(basePath: string = '/api/v1/payees') {

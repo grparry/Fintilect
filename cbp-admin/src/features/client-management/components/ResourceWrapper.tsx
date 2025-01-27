@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, List, ListItem } from '@mui/material';
-import BaseModal from '@/../../components/common/BaseModal';
+import BaseModal from '../../../components/common/BaseModal';
 
 export interface Resource {
   id: string;

@@ -1,4 +1,4 @@
-import { PaymentMethod, PaymentStatus, PendingPayment, Priority, Payment } from '@/../../../../types/bill-pay.types';
+import { PaymentMethod, PaymentStatus, PendingPayment, Priority, Payment } from '../../../../../types/bill-pay.types';
 
 // Payment status distribution for mock data
 export const mockPaymentStatusDistribution: Record<PaymentStatus, number> = {

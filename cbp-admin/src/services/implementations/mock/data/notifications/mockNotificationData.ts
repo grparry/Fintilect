@@ -1,4 +1,4 @@
-import { DeliverySettings } from '@/../../../../types/notification.types';
+import { DeliverySettings } from '../../../../../types/notification.types';
 
 export const mockDeliverySettings: DeliverySettings = {
     emailEnabled: true,

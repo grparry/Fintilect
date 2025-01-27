@@ -1,4 +1,4 @@
-import { ISecurityService } from '@/../interfaces/ISecurityService';
+import { ISecurityService } from '../../interfaces/ISecurityService';
 import {
     SecuritySettings,
     SecurityPolicy,
@@ -8,9 +8,9 @@ import {
     SecurityAlert,
     AuditLog,
     AuditLogFilters
-} from '@/../../types/security.types';
-import { PaginatedResponse } from '@/../../types/common.types';
-import { BaseService } from '@/BaseService';
+} from '../../../types/security.types';
+import { PaginatedResponse } from '../../../types/common.types';
+import { BaseService } from './BaseService';
 
 export class SecurityService extends BaseService implements ISecurityService {
     constructor(basePath: string = '/api/v1/security') {

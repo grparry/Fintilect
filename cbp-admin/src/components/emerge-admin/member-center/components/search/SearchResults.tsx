@@ -22,7 +22,7 @@ import {
   Block as BlockIcon,
   HourglassEmpty as PendingIcon,
 } from '@mui/icons-material';
-import { Member, MemberSearchResult, MemberStatus } from '@/../../../../types/member-center.types';
+import { Member, MemberSearchResult, MemberStatus } from '../../../../../types/member-center.types';
 
 interface SearchResultsProps {
   results: MemberSearchResult;

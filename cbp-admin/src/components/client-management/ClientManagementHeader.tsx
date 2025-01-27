@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Box, Typography, Grid, Paper, Link, Alert, CircularProgress } from '@mui/material';
-import { getAllRoutes } from '@/../routes';
+import { getAllRoutes } from '../../routes';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonIcon from '@mui/icons-material/Person';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import GroupIcon from '@mui/icons-material/Group';
 import SecurityIcon from '@mui/icons-material/Security';
 import HistoryIcon from '@mui/icons-material/History';
-import { clientService } from '@/../services/factory/ServiceFactory';
-import { Client } from '@/../types/client.types';
-import { decodeId } from '@/../utils/idEncoder';
-import logger from '@/../utils/logger';
+import { clientService } from '../../services/factory/ServiceFactory';
+import { Client } from '../../types/client.types';
+import { decodeId } from '../../utils/idEncoder';
+import logger from '../../utils/logger';
 
 const getRouteIcon = (title: string) => {
   switch (title) {

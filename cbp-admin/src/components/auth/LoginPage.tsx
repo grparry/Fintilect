@@ -7,10 +7,10 @@ import {
   Box,
   Alert,
 } from '@mui/material';
-import Form, { FormField } from '@/common/Form';
-import { useAuth } from '@/../context/AuthContext';
-import { LoginFormData, LoginCredentials } from '@/../types/auth.types';
-import { ApiError } from '@/../types/index';
+import Form, { FormField } from '../common/Form';
+import { useAuth } from '../../context/AuthContext';
+import { LoginFormData, LoginCredentials } from '../../types/auth.types';
+import { ApiError } from '../../types/index';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
-import { ServiceFactory } from '@/services/factory/ServiceFactory';
-import { LoginCredentials, AuthState, SessionInfo, AuthContextType } from '@/types/auth.types';
-import { User } from '@/types/client.types';
+import { ServiceFactory } from '../services/factory/ServiceFactory';
+import { LoginCredentials, AuthState, SessionInfo, AuthContextType } from '../types/auth.types';
+import { User } from '../types/client.types';
 
 interface AuthProviderProps {
   children: ReactNode;

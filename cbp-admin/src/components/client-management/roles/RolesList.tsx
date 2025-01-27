@@ -29,12 +29,12 @@ import {
   Search as SearchIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { SecurityRole, Permission } from '@/../../types/client.types';
-import { ClientService } from '@/../../services/implementations/real/ClientService';
-import { PermissionService } from '@/../../services/implementations/real/PermissionService';
-import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
-import { encodeId, decodeId } from '@/../../utils/idEncoder';
-import { shouldUseMockData } from '@/../../config/api.config';
+import { SecurityRole, Permission } from '../../../types/client.types';
+import { ClientService } from '../../../services/implementations/real/ClientService';
+import { PermissionService } from '../../../services/implementations/real/PermissionService';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+import { encodeId, decodeId } from '../../../utils/idEncoder';
+import { shouldUseMockData } from '../../../config/api.config';
 
 // Get service instances
 const clientService = ServiceFactory.getInstance().getClientService();

@@ -1,4 +1,4 @@
-import { NotificationType, NotificationCategory, NotificationVariable, NotificationTemplate } from '@/../../../../types/bill-pay.types';
+import { NotificationType, NotificationCategory, NotificationVariable, NotificationTemplate } from '../../../../../types/bill-pay.types';
 
 export const mockNotificationTypes: NotificationType[] = [
     NotificationType.PAYMENT_COMPLETED,

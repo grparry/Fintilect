@@ -13,7 +13,7 @@ import {
     AuditSettings,
     AlertSettings,
     MFAMethod
-} from '@/../../../../types/security.types';
+} from '../../../../../types/security.types';
 
 export const mockSecuritySettings: SecuritySettings = {
     passwordPolicy: {

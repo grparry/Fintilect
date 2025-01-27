@@ -37,10 +37,10 @@ import {
   PermissionCategoryType,
   ApiResponse,
   UserStatus,
-} from '@/../types/client.types';
-import { clientService, userService } from '@/../services/factory/ServiceFactory';
+} from '../../types/client.types';
+import { clientService, userService } from '../../services/factory/ServiceFactory';
 import { useNavigate } from 'react-router-dom';
-import { encodeId } from '@/../utils/idEncoder';
+import { encodeId } from '../../utils/idEncoder';
 
 interface GroupsProps {
   clientId: string;

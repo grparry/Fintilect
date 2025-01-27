@@ -1,6 +1,6 @@
-import { IBaseService } from '@/../interfaces/IBaseService';
-import { ApiResponse, ApiSuccessResponse, ApiErrorResponse, ApiRequestOptions } from '@/../../types/api.types';
-import api from '@/../api';
+import { IBaseService } from '../../interfaces/IBaseService';
+import { ApiResponse, ApiSuccessResponse, ApiErrorResponse, ApiRequestOptions } from '../../../types/api.types';
+import api from '../../api';
 
 /**
  * Base service implementation with common HTTP methods

@@ -1,4 +1,4 @@
-import { ConfigurationCategory } from '@/types/configuration.types';
+import { ConfigurationCategory } from '../types/configuration.types';
 
 export const BILL_PAY_CONFIG_KEYS = {
   CUTOFF_TIME: 'bill_pay.cutoff_time',

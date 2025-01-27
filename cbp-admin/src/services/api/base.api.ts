@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@api/../config/api.config';
+import { API_BASE_URL } from '../../config/api.config';
 
 interface RequestConfig extends RequestInit {
   params?: Record<string, string>;

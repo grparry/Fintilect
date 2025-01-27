@@ -40,7 +40,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import SearchIcon from '@mui/icons-material/Search';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import dayjs from 'dayjs';
-import { ApiResponse } from '@/../../types/api.types';
+import { ApiResponse } from '../../../types/api.types';
 import {
   FISException,
   FISExceptionFilters,
@@ -49,8 +49,8 @@ import {
   ExceptionStats,
   FISExceptionStatus,
   FISErrorCode,
-} from '@/../../types/bill-pay.types';
-import { useAuth } from '@/../../hooks/useAuth';
+} from '../../../types/bill-pay.types';
+import { useAuth } from '../../../hooks/useAuth';
 
 interface FISDialogState {
   open: boolean;

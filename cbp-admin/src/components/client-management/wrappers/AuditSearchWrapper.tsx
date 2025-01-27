@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Alert } from '@mui/material';
-import AuditSearch from '@/security/AuditSearch';
-import { decodeId } from '@/../../utils/idEncoder';
+import AuditSearch from '../security/AuditSearch';
+import { decodeId } from '../../../utils/idEncoder';
 
 const AuditSearchWrapper: React.FC = () => {
   const { clientId } = useParams<{ clientId: string }>();

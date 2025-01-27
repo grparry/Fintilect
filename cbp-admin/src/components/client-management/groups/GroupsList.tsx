@@ -29,11 +29,11 @@ import {
   Search as SearchIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { UserGroup as Group } from '@/../../types/client.types';
-import { clientService } from '@/../../services/factory/ServiceFactory';
-import { shouldUseMockData } from '@/../../config/api.config';
-import { decodeId } from '@/../../utils/idEncoder';
-import { PermissionAction } from '@/../../types/permission.types';
+import { UserGroup as Group } from '../../../types/client.types';
+import { clientService } from '../../../services/factory/ServiceFactory';
+import { shouldUseMockData } from '../../../config/api.config';
+import { decodeId } from '../../../utils/idEncoder';
+import { PermissionAction } from '../../../types/permission.types';
 
 interface GroupsListProps {
   clientId: string;

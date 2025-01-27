@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { dashboardService } from '@/services/factory/ServiceFactory';
-import { TimeRange } from '@/types';
-import { DashboardMetrics } from '@/types/dashboard.types';
+import { dashboardService } from '../services/factory/ServiceFactory';
+import { TimeRange } from '../types';
+import { DashboardMetrics } from '../types/dashboard.types';
 
 interface UseStatsResult {
   stats: DashboardMetrics | null;

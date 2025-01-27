@@ -1,8 +1,8 @@
 import React from 'react';
 import { Breadcrumbs as MuiBreadcrumbs, Link, Typography, Box } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { useNavigation } from '@/../context/NavigationContext';
-import { NavigationSection } from '@/../types/section-navigation.types';
+import { useNavigation } from '../../context/NavigationContext';
+import { NavigationSection } from '../../types/section-navigation.types';
 
 const Breadcrumbs: React.FC = () => {
   const { navigationConfig, state } = useNavigation();

@@ -11,8 +11,8 @@ import {
   SvgIcon
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useNavigation } from '@/../context/NavigationContext';
-import { NavigationSection as NavigationSectionType, NavigationItem } from '@/../types/section-navigation.types';
+import { useNavigation } from '../../context/NavigationContext';
+import { NavigationSection as NavigationSectionType, NavigationItem } from '../../types/section-navigation.types';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 

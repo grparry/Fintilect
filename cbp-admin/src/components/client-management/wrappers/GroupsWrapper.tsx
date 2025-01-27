@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Alert, CircularProgress, Box } from '@mui/material';
-import Groups from '@/Groups';
-import GroupEdit from '@/groups/GroupEdit';
-import { clientService } from '@/../../services/factory/ServiceFactory';
-import { decodeId } from '@/../../utils/idEncoder';
-import { UserGroup } from '@/../../types/client.types';
+import Groups from '../Groups';
+import GroupEdit from '../groups/GroupEdit';
+import { clientService } from '../../../services/factory/ServiceFactory';
+import { decodeId } from '../../../utils/idEncoder';
+import { UserGroup } from '../../../types/client.types';
 
 const GroupsWrapper: React.FC = () => {
   const navigate = useNavigate();

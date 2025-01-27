@@ -1,4 +1,4 @@
-import { TimeRange } from '@/index';
+import { TimeRange } from './index';
 
 // Dashboard related types
 

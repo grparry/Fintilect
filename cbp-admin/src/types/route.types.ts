@@ -1,5 +1,5 @@
 import { ComponentType, LazyExoticComponent } from 'react';
-import { NavigationPermissionRequirement } from '@/section-navigation.types';
+import { NavigationPermissionRequirement } from './section-navigation.types';
 import { SvgIconProps } from '@mui/material';
 
 export type IconComponent = ComponentType<SvgIconProps>;

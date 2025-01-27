@@ -1,4 +1,4 @@
-import { IBaseService } from '@/IBaseService';
+import { IBaseService } from './IBaseService';
 import {
   Permission,
   PermissionGroup,
@@ -7,8 +7,8 @@ import {
   PermissionGroupValidation,
   PermissionCategoryType,
   PermissionAction
-} from '@/../types/permission.types';
-import { PaginatedResponse } from '@/../types/common.types';
+} from '../../types/permission.types';
+import { PaginatedResponse } from '../../types/common.types';
 
 /**
  * Interface for permission management

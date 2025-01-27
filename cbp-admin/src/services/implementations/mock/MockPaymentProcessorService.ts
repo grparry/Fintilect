@@ -1,5 +1,5 @@
-import { IPaymentProcessorService } from '@/../interfaces/IPaymentProcessorService';
-import { BaseMockService } from '@/BaseMockService';
+import { IPaymentProcessorService } from '../../interfaces/IPaymentProcessorService';
+import { BaseMockService } from './BaseMockService';
 import {
     PaymentTransaction,
     PaymentStatus,
@@ -16,8 +16,8 @@ import {
     TransactionSummary,
     ProcessorMetrics,
     DateRange
-} from '@/../../types/payment.types';
-import { PaginatedResponse } from '@/../../types/common.types';
+} from '../../../types/payment.types';
+import { PaginatedResponse } from '../../../types/common.types';
 import { v4 as uuidv4 } from 'uuid';
 
 export class MockPaymentProcessorService extends BaseMockService implements IPaymentProcessorService {

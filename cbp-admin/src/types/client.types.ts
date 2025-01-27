@@ -1,7 +1,7 @@
 import { Dayjs } from 'dayjs';
-import type { ApiResponse } from '@/api.types';
-import { PaginationOptions } from '@/common.types';
-import { PasswordPolicy, SecuritySettings, AuditLog } from '@/security.types';
+import type { ApiResponse } from './api.types';
+import { PaginationOptions } from './common.types';
+import { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';
 
 // Payment Types
 export type PaymentMethod = 'ACH' | 'Wire' | 'RTP' | 'Check';
@@ -323,7 +323,7 @@ export interface AuditSearchRequest {
 }
 
 // Re-export ApiResponse type for backwards compatibility
-export type { ApiResponse } from '@/api.types';
+export type { ApiResponse } from './api.types';
 
 // Re-export security types
-export type { PasswordPolicy, SecuritySettings, AuditLog } from '@/security.types';
+export type { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';

@@ -16,7 +16,7 @@ import {
   ExpandLess as ExpandLessIcon,
   Info as InfoIcon,
 } from '@mui/icons-material';
-import { Permission, SecurityRole, PermissionCategoryType } from '@/../../types/client.types';
+import { Permission, SecurityRole, PermissionCategoryType } from '../../../types/client.types';
 
 interface PermissionTreeViewProps {
   permissions: Permission[];

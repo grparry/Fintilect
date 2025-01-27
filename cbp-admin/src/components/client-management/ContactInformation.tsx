@@ -10,9 +10,9 @@ import {
   Paper,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { Client } from '@/../types/client.types';
-import { clientService } from '@/../services/factory/ServiceFactory';
-import logger from '@/../utils/logger';
+import { Client } from '../../types/client.types';
+import { clientService } from '../../services/factory/ServiceFactory';
+import logger from '../../utils/logger';
 
 interface ContactInformationProps {
   clientId: string;

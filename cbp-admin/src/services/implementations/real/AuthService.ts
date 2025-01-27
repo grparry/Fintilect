@@ -1,13 +1,13 @@
-import { IAuthService } from '@/../interfaces/IAuthService';
+import { IAuthService } from '../../interfaces/IAuthService';
 import { 
     AuthenticationResponse, 
     LoginCredentials,
     SessionInfo,
     TokenResponse,
     UserSession
-} from '@/../../types/auth.types';
-import { BaseService } from '@/BaseService';
-import logger from '@/../../utils/logger';
+} from '../../../types/auth.types';
+import { BaseService } from './BaseService';
+import logger from '../../../utils/logger';
 
 export class AuthService extends BaseService implements IAuthService {
     constructor(basePath: string = '/api/v1/auth') {

@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { IMemberService } from '@/services/interfaces/IMemberService';
+import { IMemberService } from '../services/interfaces/IMemberService';
 
 export interface ServiceContextType {
   memberService: IMemberService;

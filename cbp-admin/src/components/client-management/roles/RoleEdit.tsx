@@ -9,13 +9,13 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { SecurityRole, Permission } from '@/../../types/client.types';
-import { ClientService } from '@/../../services/implementations/real/ClientService';
-import { PermissionService } from '@/../../services/implementations/real/PermissionService';
-import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
-import { PermissionCategory, PermissionAction } from '@/../../types/permission.types';
-import { encodeId, decodeId } from '@/../../utils/idEncoder';
-import PermissionTreeView from '@/groups/PermissionTreeView';
+import { SecurityRole, Permission } from '../../../types/client.types';
+import { ClientService } from '../../../services/implementations/real/ClientService';
+import { PermissionService } from '../../../services/implementations/real/PermissionService';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+import { PermissionCategory, PermissionAction } from '../../../types/permission.types';
+import { encodeId, decodeId } from '../../../utils/idEncoder';
+import PermissionTreeView from '../groups/PermissionTreeView';
 
 interface RoleEditProps {
   clientId: string;

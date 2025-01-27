@@ -3,7 +3,7 @@ import {
   SecurityRole,
   UserGroup,
   PermissionCategoryType
-} from '@/../../../../types/client.types';
+} from '../../../../../types/client.types';
 
 export const mockPermissions: Permission[] = [
   {

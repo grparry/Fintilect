@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link as RouterLink, useLocation } from 'react-router-dom';
 import { Box, Typography, Grid, Paper } from '@mui/material';
-import { getAllRoutes } from '@/../routes';
+import { getAllRoutes } from '../../routes';
 
 const EmergeConfigHeader: React.FC = () => {
   console.log('EmergeConfigHeader - Component called');

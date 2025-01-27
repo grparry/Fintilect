@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Card, CardContent, Grid, Typography, Button, Stack, useTheme, alpha } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import routes from '@admin/../routes';
-import { RouteSection } from '@admin/../types/route.types';
-import { useNavigation } from '@admin/../context/NavigationContext';
+import routes from '../../routes';
+import { RouteSection } from '../../types/route.types';
+import { useNavigation } from '../../context/NavigationContext';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PaymentIcon from '@mui/icons-material/Payment';
 import GroupIcon from '@mui/icons-material/Group';

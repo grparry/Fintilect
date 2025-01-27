@@ -19,10 +19,10 @@ import {
 import { Edit as EditIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { Client, ClientStatus, ClientType, Environment } from '@/../types/client.types';
-import { clientService } from '@/../services/factory/ServiceFactory';
-import { encodeId } from '@/../utils/idEncoder';
-import logger from '@/../utils/logger';
+import { Client, ClientStatus, ClientType, Environment } from '../../types/client.types';
+import { clientService } from '../../services/factory/ServiceFactory';
+import { encodeId } from '../../utils/idEncoder';
+import logger from '../../utils/logger';
 
 const ClientList: React.FC = () => {
   const [clients, setClients] = useState<Client[]>([]);

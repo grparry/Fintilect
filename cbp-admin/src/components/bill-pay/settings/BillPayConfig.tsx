@@ -28,8 +28,8 @@ import {
   BillPayConfig as IBillPayConfig,
   BillPayConfigUpdate,
   BillPayConfigValidation
-} from '@/../../types/bill-pay.types';
-import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
+} from '../../../types/bill-pay.types';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 
 type ValidationErrors = Partial<Record<keyof BillPayConfigUpdate, string>>;
 

@@ -16,13 +16,13 @@ import GroupIcon from '@mui/icons-material/Group';
 import SecurityIcon from '@mui/icons-material/Security';
 import EventIcon from '@mui/icons-material/Event';
 import HistoryIcon from '@mui/icons-material/History';
-import NotificationTemplates from '@/NotificationTemplates';
-import BillPayConfig from '@/BillPayConfig';
-import PermissionGroups from '@/PermissionGroups';
-import BillPaySecuritySettings from '@/security/BillPaySecuritySettings';
-import Holidays from '@/Holidays';
-import AuditLog from '@/AuditLog';
-import { TabPanelProps, SettingsState } from '@/../../types/bill-pay.types';
+import NotificationTemplates from './NotificationTemplates';
+import BillPayConfig from './BillPayConfig';
+import PermissionGroups from './PermissionGroups';
+import BillPaySecuritySettings from './security/BillPaySecuritySettings';
+import Holidays from './Holidays';
+import AuditLog from './AuditLog';
+import { TabPanelProps, SettingsState } from '../../../types/bill-pay.types';
 
 const TabPanel: React.FC<TabPanelProps> = ({
   children,

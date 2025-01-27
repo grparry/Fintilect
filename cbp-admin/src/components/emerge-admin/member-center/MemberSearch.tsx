@@ -5,12 +5,12 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-import { Member, MemberSearchFilters, MemberStatus, MemberSearchResult } from '@/../../types/member-center.types';
-import { IMemberService } from '@/../../services/interfaces/IMemberService';
-import { useService } from '@/../../hooks/useService';
-import MemberSearchForm from '@/components/search/MemberSearch';
-import SearchResults from '@/components/search/SearchResults';
-import { PaginatedResponse } from '@/../../types/common.types';
+import { Member, MemberSearchFilters, MemberStatus, MemberSearchResult } from '../../../types/member-center.types';
+import { IMemberService } from '../../../services/interfaces/IMemberService';
+import { useService } from '../../../hooks/useService';
+import MemberSearchForm from './components/search/MemberSearch';
+import SearchResults from './components/search/SearchResults';
+import { PaginatedResponse } from '../../../types/common.types';
 
 interface MemberSearchProps {
   onViewMember?: (member: Member) => void;

@@ -3,17 +3,17 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation }
 import { CircularProgress } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { AuthProvider, useAuth } from '@/context/AuthContext';
-import { ThemeProvider, useTheme } from '@/context/ThemeContext';
-import { NavigationProvider } from '@/context/NavigationContext';
-import { ServiceProvider } from '@/providers/ServiceProvider';
-import MainLayout from '@/components/layout/MainLayout';
-import ErrorBoundary from '@/components/common/ErrorBoundary';
-import LoginPage from '@/components/auth/LoginPage';
-import NotFound from '@/components/common/NotFound';
-import { getAllRoutes } from '@/routes';
-import { RouteConfig } from '@/types/route.types';
-import { navigationConfig } from '@/config/navigation';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { NavigationProvider } from './context/NavigationContext';
+import { ServiceProvider } from './providers/ServiceProvider';
+import MainLayout from './components/layout/MainLayout';
+import ErrorBoundary from './components/common/ErrorBoundary';
+import LoginPage from './components/auth/LoginPage';
+import NotFound from './components/common/NotFound';
+import { getAllRoutes } from './routes';
+import { RouteConfig } from './types/route.types';
+import { navigationConfig } from './config/navigation';
 import { Box } from '@mui/material';
 import './App.css';
 

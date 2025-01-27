@@ -10,10 +10,10 @@ import {
     FISRefundRequest,
     ExceptionFilters,
     FISExceptionFilters
-} from '@/../../types/bill-pay.types';
-import { PaginatedResponse } from '@/../../types/common.types';
-import { IExceptionService } from '@/../interfaces/IExceptionService';
-import { BaseService } from '@/BaseService';
+} from '../../../types/bill-pay.types';
+import { PaginatedResponse } from '../../../types/common.types';
+import { IExceptionService } from '../../interfaces/IExceptionService';
+import { BaseService } from './BaseService';
 
 export class ExceptionService extends BaseService implements IExceptionService {
     constructor(basePath: string = '/api/v1/exceptions') {

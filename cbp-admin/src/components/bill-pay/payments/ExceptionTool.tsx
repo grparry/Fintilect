@@ -35,7 +35,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import dayjs from 'dayjs';
-import { useAuth } from '@/../../hooks/useAuth';
+import { useAuth } from '../../../hooks/useAuth';
 import {
   PaymentException,
   ExceptionResolution,
@@ -44,8 +44,8 @@ import {
   ExceptionToolStatus,
   ExceptionFilters,
   PaginatedResponse
-} from '@/../../types/bill-pay.types';
-import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
+} from '../../../types/bill-pay.types';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 
 interface ExceptionToolProps {
   onClose?: () => void;

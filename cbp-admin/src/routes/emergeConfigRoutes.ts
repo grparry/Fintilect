@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { RouteConfig } from '@/types/route.types';
+import { RouteConfig } from '../types/route.types';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';

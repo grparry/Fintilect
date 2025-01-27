@@ -17,14 +17,14 @@ import {
   Divider,
   SelectChangeEvent,
 } from '@mui/material';
-import { useAuth } from '@/../../hooks/useAuth';
+import { useAuth } from '../../../hooks/useAuth';
 import {
   PaymentException,
   ExceptionResolution as ExceptionResolutionType,
   ExceptionToolStatus,
   ExceptionTool,
-} from '@/../../types/bill-pay.types';
-import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
+} from '../../../types/bill-pay.types';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 
 interface ExceptionResolutionProps {
   exception: ExceptionTool;

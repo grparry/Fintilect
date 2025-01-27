@@ -1,5 +1,5 @@
-import { INotificationService } from '@/../interfaces/INotificationService';
-import { BaseMockService } from '@/BaseMockService';
+import { INotificationService } from '../../interfaces/INotificationService';
+import { BaseMockService } from './BaseMockService';
 import {
     NotificationTemplate,
     NotificationTemplateInput,
@@ -8,21 +8,21 @@ import {
     NotificationType,
     NotificationVariable,
     NotificationCategory
-} from '@/../../types/bill-pay.types';
-import { PaginatedResponse } from '@/../../types/common.types';
+} from '../../../types/bill-pay.types';
+import { PaginatedResponse } from '../../../types/common.types';
 import { 
     mockTemplates,
     mockTemplateCategories,
     mockTemplateVariables,
     mockTemplateVersions
-} from '@/data/notification/templates';
+} from './data/notification/templates';
 import { 
     mockDeliveryMethods,
     mockDeliveryPreferences,
     mockDeliveryStats
-} from '@/data/notification/delivery';
+} from './data/notification/delivery';
 import { v4 as uuidv4 } from 'uuid';
-import { mockDeliverySettings } from '@/data/notifications/mockNotificationData';
+import { mockDeliverySettings } from './data/notifications/mockNotificationData';
 
 export class MockNotificationService extends BaseMockService implements INotificationService {
     constructor(basePath: string = '/api/v1/notifications') {

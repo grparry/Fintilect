@@ -11,7 +11,7 @@ import {
   UserGroup,
   SecurityRole,
   AuditLog
-} from '@/../../../../types/client.types';
+} from '../../../../../types/client.types';
 
 // Default Settings
 export const defaultSettings: ClientSettings = {

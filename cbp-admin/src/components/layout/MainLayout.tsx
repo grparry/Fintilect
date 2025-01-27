@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Box, useTheme } from '@mui/material';
 import { Outlet, useLocation } from 'react-router-dom';
-import { useNavigation } from '@/../context/NavigationContext';
-import Header from '@/navigation/Header';
-import Sidebar from '@/navigation/Sidebar';
-import Breadcrumbs from '@/navigation/Breadcrumbs';
-import { navigationConfig } from '@/../config/navigation';
+import { useNavigation } from '../../context/NavigationContext';
+import Header from '../navigation/Header';
+import Sidebar from '../navigation/Sidebar';
+import Breadcrumbs from '../navigation/Breadcrumbs';
+import { navigationConfig } from '../../config/navigation';
 
 const DRAWER_WIDTH = 240;
 

@@ -1,10 +1,10 @@
-import billPayRoutes from '@/billPayRoutes';
-import clientManagementRoutes from '@/ClientManagementRoutes';
-import emergeAdminRoutes from '@/emergeAdminRoutes';
-import emergeConfigRoutes from '@/emergeConfigRoutes';
-import developmentRoutes from '@/developmentRoutes';
-import { NavigationConfig, NavigationSection, NavigationItem, RouteConfig, NavigationElement, NavigationPermissionRequirement } from '@/types/section-navigation.types';
-import { sectionConfig, defaultSectionConfig } from '@/config/section.config';
+import billPayRoutes from './billPayRoutes';
+import clientManagementRoutes from './ClientManagementRoutes';
+import emergeAdminRoutes from './emergeAdminRoutes';
+import emergeConfigRoutes from './emergeConfigRoutes';
+import developmentRoutes from './developmentRoutes';
+import { NavigationConfig, NavigationSection, NavigationItem, RouteConfig, NavigationElement, NavigationPermissionRequirement } from '../types/section-navigation.types';
+import { sectionConfig, defaultSectionConfig } from '../config/section.config';
 import { lazy } from 'react';
 import BusinessIcon from '@mui/icons-material/Business';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';

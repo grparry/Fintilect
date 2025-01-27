@@ -1,4 +1,4 @@
-import { User } from '@/client.types';
+import { User } from './client.types';
 
 export interface LoginFormData {
   username: string;

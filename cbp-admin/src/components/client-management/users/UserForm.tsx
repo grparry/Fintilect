@@ -12,7 +12,7 @@ import {
   CircularProgress,
   SelectChangeEvent,
 } from '@mui/material';
-import { User, UserRole, UserStatus, UserGroup } from '@/../../types/client.types';
+import { User, UserRole, UserStatus, UserGroup } from '../../../types/client.types';
 
 export interface UserFormData {
   firstName: string;

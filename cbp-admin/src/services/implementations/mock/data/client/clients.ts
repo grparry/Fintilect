@@ -7,8 +7,8 @@ import {
   ClientSettings,
   GeneralSettings,
   SecuritySettings
-} from '@/../../../../types/client.types';
-import { mockClients as mockClientData } from '@/mockClientData';
+} from '../../../../../types/client.types';
+import { mockClients as mockClientData } from './mockClientData';
 
 export const paymentMethodOptions: PaymentMethod[] = [
   'ACH',

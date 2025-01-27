@@ -13,10 +13,10 @@ import {
   FISErrorCode,
   PaymentType,
   PaymentStatus
-} from '@/../../types/bill-pay.types';
-import { IExceptionService } from '@/../interfaces/IExceptionService';
-import { PaginatedResponse } from '@/../../types/common.types';
-import { BaseMockService } from '@/BaseMockService';
+} from '../../../types/bill-pay.types';
+import { IExceptionService } from '../../interfaces/IExceptionService';
+import { PaginatedResponse } from '../../../types/common.types';
+import { BaseMockService } from './BaseMockService';
 import { v4 as uuidv4 } from 'uuid';
 
 export class MockExceptionService extends BaseMockService implements IExceptionService {

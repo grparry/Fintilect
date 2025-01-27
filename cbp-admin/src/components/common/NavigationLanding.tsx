@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, List, ListItem, ListItemText, ListItemButton } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
-import { RouteConfig } from '@/../types/route.types';
+import { RouteConfig } from '../../types/route.types';
 
 interface NavigationLandingProps {
   title: string;

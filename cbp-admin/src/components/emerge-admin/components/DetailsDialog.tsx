@@ -11,8 +11,8 @@ import {
   Chip,
   Alert,
 } from '@mui/material';
-import { Connection, Account, DetailsDialogProps } from '@/../../types/money-desktop.types';
-import { statusColors } from '@/MoneyDesktop';
+import { Connection, Account, DetailsDialogProps } from '../../../types/money-desktop.types';
+import { statusColors } from '../MoneyDesktop';
 
 const DetailsDialog: React.FC<DetailsDialogProps> = ({
   open,

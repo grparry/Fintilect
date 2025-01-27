@@ -1,4 +1,4 @@
-import { Holiday, HolidayInput, HolidayValidation } from '@/../types/bill-pay.types';
+import { Holiday, HolidayInput, HolidayValidation } from '../../types/bill-pay.types';
 
 export interface IHolidayService {
   /**

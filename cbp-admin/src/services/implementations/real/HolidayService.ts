@@ -1,6 +1,6 @@
-import { IHolidayService } from '@/../interfaces/IHolidayService';
-import { BaseService } from '@/BaseService';
-import { Holiday, HolidayInput, HolidayValidation } from '@/../../types/bill-pay.types';
+import { IHolidayService } from '../../interfaces/IHolidayService';
+import { BaseService } from './BaseService';
+import { Holiday, HolidayInput, HolidayValidation } from '../../../types/bill-pay.types';
 
 export class HolidayService extends BaseService implements IHolidayService {
     constructor(basePath: string = '/api/v1/holidays') {

@@ -1,4 +1,4 @@
-import { IBaseService } from '@/IBaseService';
+import { IBaseService } from './IBaseService';
 import {
     NotificationTemplate,
     NotificationTemplateInput,
@@ -7,8 +7,8 @@ import {
     NotificationType,
     NotificationVariable,
     NotificationCategory
-} from '@/../types/bill-pay.types';
-import { PaginatedResponse } from '@/../types/common.types';
+} from '../../types/bill-pay.types';
+import { PaginatedResponse } from '../../types/common.types';
 
 /**
  * Interface for notification management

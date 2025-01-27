@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Collapse } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { NavigationItem } from '@/../types/section-navigation.types';
+import { NavigationItem } from '../../types/section-navigation.types';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { useNavigation } from '@/../context/NavigationContext';
+import { useNavigation } from '../../context/NavigationContext';
 
 interface NavigationContentProps {
   items: NavigationItem[];

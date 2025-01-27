@@ -10,9 +10,9 @@ import {
   useTheme,
 } from '@mui/material';
 import * as Icons from '@mui/icons-material';
-import { NavigationItem } from '@/../types/navigation.types';
+import { NavigationItem } from '../../types/navigation.types';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { useNavigation } from '@/../context/NavigationContext';
+import { useNavigation } from '../../context/NavigationContext';
 
 interface SidebarItemProps {
   item: NavigationItem;

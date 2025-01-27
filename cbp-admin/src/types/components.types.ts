@@ -1,5 +1,5 @@
 import { ReactNode, CSSProperties } from 'react';
-import { SelectOption } from '@/index';
+import { SelectOption } from './index';
 
 // Common component props
 export interface BaseComponentProps {
@@ -67,7 +67,7 @@ export interface GlobalProfilerProps extends BaseComponentProps {
 }
 
 // Re-export FormField from Form component
-export type { FormField } from '@/components/common/Form';
+export type { FormField } from '../components/common/Form';
 
 // Table props
 export interface TableColumn<T> {

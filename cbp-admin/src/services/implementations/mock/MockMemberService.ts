@@ -1,4 +1,4 @@
-import { IMemberService } from '@/../interfaces/IMemberService';
+import { IMemberService } from '../../interfaces/IMemberService';
 import { 
   Member, 
   MemberSearchFilters, 
@@ -8,11 +8,11 @@ import {
   MemberStatus, 
   SecuritySettings, 
   Device 
-} from '@/../../types/member-center.types';
-import { PaginatedResponse } from '@/../../types/common.types';
-import { BaseMockService } from '@/BaseMockService';
-import { mockMembers } from '@/data/members/mockMemberData';
-import { mockMemberActivity } from '@/data/members/mockActivityData';
+} from '../../../types/member-center.types';
+import { PaginatedResponse } from '../../../types/common.types';
+import { BaseMockService } from './BaseMockService';
+import { mockMembers } from './data/members/mockMemberData';
+import { mockMemberActivity } from './data/members/mockActivityData';
 
 export class MockMemberService extends BaseMockService implements IMemberService {
   private members: Member[] = [...mockMembers];

@@ -1,4 +1,4 @@
-import { IBaseService } from '@/IBaseService';
+import { IBaseService } from './IBaseService';
 import {
     Client,
     ClientType,
@@ -22,7 +22,7 @@ import {
     ContactInformation,
     Address,
     PaginatedResponse
-} from '@/../types/client.types';
+} from '../../types/client.types';
 
 /**
  * Interface for client management

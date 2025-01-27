@@ -1,6 +1,6 @@
 import React from 'react';
-import { ServiceContext, ServiceContextType } from '@/contexts/ServiceContext';
-import { memberService } from '@/services/factory/ServiceFactory';
+import { ServiceContext, ServiceContextType } from '../contexts/ServiceContext';
+import { memberService } from '../services/factory/ServiceFactory';
 
 interface ServiceProviderProps {
   children: React.ReactNode;

@@ -1,4 +1,4 @@
-import { IBaseService } from '@/IBaseService';
+import { IBaseService } from './IBaseService';
 import {
     PaymentTransaction,
     PaymentStatus,
@@ -16,7 +16,7 @@ import {
     ProcessorMetrics,
     PaginatedResponse,
     DateRange
-} from '@/../types/payment.types';
+} from '../../types/payment.types';
 
 /**
  * Interface for payment processor operations

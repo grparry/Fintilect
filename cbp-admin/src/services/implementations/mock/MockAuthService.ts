@@ -1,13 +1,13 @@
-import { IAuthService } from '@/../interfaces/IAuthService';
+import { IAuthService } from '../../interfaces/IAuthService';
 import {
   LoginCredentials,
   TokenResponse,
   AuthenticationResponse,
   SessionInfo,
   UserSession
-} from '@/../../types/auth.types';
-import { mockUsers } from '@/data/users/mockUserData';
-import { AuthError } from '@/../../utils/errors';
+} from '../../../types/auth.types';
+import { mockUsers } from './data/users/mockUserData';
+import { AuthError } from '../../../utils/errors';
 
 export class MockAuthService implements IAuthService {
   private currentSession: SessionInfo | null = null;

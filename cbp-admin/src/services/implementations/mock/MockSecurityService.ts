@@ -1,4 +1,4 @@
-import { ISecurityService } from '@/../interfaces/ISecurityService';
+import { ISecurityService } from '../../interfaces/ISecurityService';
 import { 
     SecuritySettings,
     SecurityPolicy,
@@ -8,16 +8,16 @@ import {
     AccessAttempt,
     SecurityAlert,
     AuditLogFilters
-} from '@/../../types/security.types';
-import { PaginatedResponse } from '@/../../types/common.types';
+} from '../../../types/security.types';
+import { PaginatedResponse } from '../../../types/common.types';
 import { 
     mockSecuritySettings,
     mockSecurityAuditLog,
     mockSecurityAlerts,
     mockSecurityMetrics
-} from '@/data/security/mockSecurityData';
+} from './data/security/mockSecurityData';
 import { v4 as uuidv4 } from 'uuid';
-import { BaseMockService } from '@/BaseMockService';
+import { BaseMockService } from './BaseMockService';
 
 export class MockSecurityService extends BaseMockService implements ISecurityService {
     constructor(basePath: string = '/api/v1/security') {

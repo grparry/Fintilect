@@ -1,7 +1,7 @@
 import { ComponentType, LazyExoticComponent } from 'react';
 import { SvgIconProps } from '@mui/material';
-import type { RouteConfig } from '@/route.types';
-import type { Permission, PermissionAction, PermissionCategoryType } from '@/permission.types';
+import type { RouteConfig } from './route.types';
+import type { Permission, PermissionAction, PermissionCategoryType } from './permission.types';
 
 export type NavigationElement = ComponentType | LazyExoticComponent<any>;
 export type IconComponent = React.ComponentType<SvgIconProps>;

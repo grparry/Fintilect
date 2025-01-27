@@ -1,11 +1,11 @@
-import { IBaseService } from '@/IBaseService';
+import { IBaseService } from './IBaseService';
 import { 
     AuthenticationResponse, 
     LoginCredentials,
     SessionInfo,
     TokenResponse,
     UserSession
-} from '@/../types/auth.types';
+} from '../../types/auth.types';
 
 /**
  * Interface for authentication service operations
