@@ -5,6 +5,7 @@
 - ✅ Base EmergeConfigSection component created
 - ✅ Settings service integration complete
 - ✅ Basic validation framework in place
+- ✅ Navigation simplified to use main app infrastructure
 - ❌ Code generation system pending
 - ❌ Hook system pending
 - ❌ Test infrastructure pending
@@ -17,7 +18,14 @@
 - Keys are structured as `{SettingGroupName}.{SettingName}`
 - Values support multiple data types (boolean, string, number, json)
 
-### 2. Base Component Architecture
+### 2. Navigation (✅ Simplified)
+- Uses main application's existing routing infrastructure
+- No custom navigation registry or state management
+- Configuration sections integrate directly with standard routing patterns
+- Simplified URL structure: /config/:sectionId
+- Breadcrumb integration with main app navigation
+
+### 3. Base Component Architecture
 
 #### Core Base Component (🟡 Partially Implemented)
 Current location: `src/components/emerge-config/core/`
@@ -51,7 +59,7 @@ export abstract class EmergeConfigSection<T = any> extends React.Component<Confi
         return {
             id: this.metadata.key,
             title: this.metadata.label,
-            path: `/admin/emerge-config/${this.metadata.groupId}/${this.metadata.sectionId}`,
+            path: `/config/${this.metadata.sectionId}`,
             icon: this.metadata.icon
         };
     }
