@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { clientService } from './services/factory/ServiceFactory';
-import { decodeId, isValidEncodedId } from './utils/idEncoder';
+import { clientService } from '../services/factory/ServiceFactory';
+import { decodeId, isValidEncodedId } from '../utils/idEncoder';
 
 interface CachedNames {
   clients: Record<string, string | null>;

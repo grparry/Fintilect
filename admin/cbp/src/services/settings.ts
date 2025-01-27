@@ -1,4 +1,4 @@
-import { ValidationResult } from '../types';
+import { ValidationResult } from './validation';
 
 export class SettingsService {
     private static instance: SettingsService;
@@ -10,8 +10,8 @@ export class SettingsService {
         }
         return SettingsService.instance;
     }
-    getValue(key: string): any {
-        return this.settings[key];
+    getValue<T>(key: string): T | null {
+        return this.settings[key] as T;
     }
     setValue(key: string, value: any): void {
         this.settings[key] = value;
@@ -20,7 +20,7 @@ export class SettingsService {
         // Basic validation implementation
         return {
             valid: true,
-            errors: {}
+            errors: []
         };
     }
 }

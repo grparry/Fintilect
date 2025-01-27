@@ -1,4 +1,4 @@
-import { IAuditService, AuditEvent, AuditLogFilters } from '../interfaces/IAuditService';
+import { IAuditService, AuditEvent, AuditLogFilters } from '../../interfaces/IAuditService';
 import { PaginatedResponse } from '../../../types/common.types';
 import { BaseMockService } from './BaseMockService';
 import { mockAuditLogs } from './data/client/mockClientData';

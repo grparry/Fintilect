@@ -235,6 +235,27 @@ export interface UserGroup {
   updatedAt: string;
 }
 
+export interface Group {
+  id: string;
+  name: string;
+  description: string;
+  clientId: string;
+  roles: SecurityRole[];
+  permissions: Permission[];
+  members: string[];
+  users: User[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GroupInput {
+  name: string;
+  description: string;
+  roles: string[];
+  permissions: string[];
+  members: string[];
+}
+
 export interface Address {
   street1: string;
   street2?: string;

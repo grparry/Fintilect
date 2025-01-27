@@ -4,11 +4,15 @@ import {
     ConfigValue,
     ConfigMetadata,
     ConfigSectionProps,
-    ConfigSectionState,
+    ConfigSectionState
+} from '../types/config';
+import {
     ValidationRules,
-    ValidationResult,
+    ValidationResult
+} from '../types/validation';
+import {
     LayoutDefinition
-} from '../types';
+} from '../types/layout';
 import { SettingsService } from '../../../services/settings';
 
 /**

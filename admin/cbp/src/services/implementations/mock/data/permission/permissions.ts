@@ -73,6 +73,7 @@ export const mockPermissionGroups: UserGroup[] = [
     roles: [mockRoles[0]],
     permissions: mockPermissions,
     members: ['user1'],
+    users: [],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z'
   },
@@ -84,6 +85,7 @@ export const mockPermissionGroups: UserGroup[] = [
     roles: [mockRoles[1]],
     permissions: [mockPermissions[0], mockPermissions[3]],
     members: ['user2'],
+    users: [],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z'
   },
@@ -95,6 +97,7 @@ export const mockPermissionGroups: UserGroup[] = [
     roles: [],
     permissions: [mockPermissions[3]],
     members: ['user3'],
+    users: [],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z'
   }

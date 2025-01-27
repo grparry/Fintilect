@@ -1,6 +1,6 @@
 import { ValidationResult, ValidationError } from './types';
 import ApiClient from '../api';
-import Ajv from 'ajv';
+import Ajv, { ErrorObject as AjvErrorObject } from 'ajv';
 import { ISettingsService } from '../interfaces/ISettingsService';
 import { ApiSuccessResponse, ApiErrorResponse } from '../../types/api.types';
 import { Setting as ApiSetting, SettingGroup } from '../../types/settings.types';
@@ -35,7 +35,6 @@ export interface ValidationRules {
 export class SettingsService implements ISettingsService {
     readonly basePath = '/api/settings';
     private ajv = new Ajv({ 
-        strict: false,
         allErrors: true
     });
     private apiClient;
@@ -128,7 +127,7 @@ export class SettingsService implements ISettingsService {
             }
         };
     }
-    async validateSetting(key: string, value: any): Promise<ApiSuccessResponse<ValidationResult>> {
+    async validateSetting(key: string, value: any): Promise<ApiSuccessResponse<{ isValid: boolean; errors?: string[] }>> {
         const setting = await this.getSetting(key);
         if (!setting.success || !setting.data) {
             throw new Error('Setting not found');
@@ -139,7 +138,10 @@ export class SettingsService implements ISettingsService {
         });
         return {
             success: true,
-            data: validationResult,
+            data: {
+                isValid: validationResult.valid,
+                errors: validationResult.errors?.map(e => e.message)
+            },
             meta: {
                 timestamp: new Date().toISOString(),
                 requestId: this.generateRequestId()
@@ -161,9 +163,9 @@ export class SettingsService implements ISettingsService {
         }
         return {
             valid: false,
-            errors: (this.ajv.errors || []).map(error => ({
-                field: error.instancePath || 'value',
-                message: 'Invalid value'
+            errors: (this.ajv.errors || []).map((error: AjvErrorObject) => ({
+                field: error.dataPath?.replace(/^\//, '') || 'value',
+                message: error.message || 'Invalid value'
             }))
         };
     }

@@ -11,15 +11,14 @@ import {
   DialogActions,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { 
+import {
   User,
-  UserInput,
   UserGroup,
-  UserStatus,
   UserRole,
-  PaginatedResponse,
-  UserFilters
+  UserStatus,
+  UserStats
 } from '../../types/client.types';
+import { PaginatedResponse } from '../../types/common.types';
 import { PaginationOptions, FilterOptions } from '../../types/common.types';
 import { clientService, userService } from '../../services/factory/ServiceFactory';
 import UserSearch from './users/UserSearch';
@@ -85,7 +84,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
         ...prev,
         loading: false,
         users: usersResponse.items,
-        totalUsers: usersResponse.pagination.total,
+        totalUsers: usersResponse.total,
         groups: groupsResponse
       }));
       logger.info('Users and groups loaded successfully');

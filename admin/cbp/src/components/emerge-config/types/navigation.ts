@@ -1,14 +1,11 @@
 import { ComponentType } from 'react';
+import { NavigationMetadata as BaseNavigationMetadata } from '../navigation/types';
 
 /**
  * Navigation metadata for a configuration section
  */
-export interface NavigationMetadata {
-    /** Parent section ID */
-    parent: string;
-    /** Order within parent section */
-    order: number;
-}
+export type NavigationMetadata = BaseNavigationMetadata;
+
 /**
  * Navigation item in the registry
  */
@@ -19,21 +16,23 @@ export interface NavigationItem {
     path: string;
     /** Display title */
     title: string;
+    /** Icon component */
+    icon?: any;
+    /** Child items */
+    children?: NavigationItem[];
     /** Parent navigation item ID */
     parent?: string;
     /** Display order */
     order: number;
-    /** Icon component */
-    icon?: ComponentType;
     /** Required permissions */
     permissions?: string[];
     /** Component to render */
     element?: ComponentType;
 }
+
 /**
  * Navigation tree node
  */
 export interface NavigationNode extends NavigationItem {
-    /** Child navigation items */
     children: NavigationNode[];
 }

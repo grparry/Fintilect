@@ -27,19 +27,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PeopleIcon from '@mui/icons-material/People';
 import {
-  Client,
-  UserGroup,
-  Permission,
-  SecurityRole,
   User,
-  PaginatedResponse,
-  UserFilters,
-  PermissionCategoryType,
-  ApiResponse,
-  UserStatus,
-  Group,
-  GroupInput,
+  UserGroup,
+  SecurityRole,
+  Permission
 } from '../../types/client.types';
+import { PaginatedResponse } from '../../types/common.types';
 import { clientService, userService } from '../../services/factory/ServiceFactory';
 import { useNavigate } from 'react-router-dom';
 import { encodeId } from '../../utils/idEncoder';
@@ -106,7 +99,9 @@ export default function Groups({ clientId }: GroupsProps) {
       let usersData: PaginatedResponse<User>;
       try {
         usersData = await userService.getUsers({ pagination: { page: 1, limit: 100 } });
-        console.log('Loaded users:', usersData);
+        const users = usersData.items;
+        const totalUsers = usersData.total;
+        console.log('Loaded users:', { users, totalUsers });
       } catch (err) {
         console.error('Error loading users:', err);
         throw new Error('Failed to load users');

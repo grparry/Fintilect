@@ -4,7 +4,9 @@ import {
   ChartData,
   TransactionStats,
   UserActivityData,
-  ChartDataPoint
+  ChartDataPoint,
+  DashboardTask,
+  DashboardNews
 } from '../../../../../types/dashboard.types';
 import { TimeRange } from '../../../../../types/index';
 

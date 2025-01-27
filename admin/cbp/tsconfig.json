@@ -23,11 +23,7 @@
     "jsx": "react-jsx",
     "baseUrl": "src",
     "paths": {
-      "@cbp-admin/*": ["src/*"],
-      "@infrastructure/*": ["infrastructure/src/*"],
-      "@models/*": ["infrastructure/src/models/*"],
-      "@logs/*": ["logs/src/*"],
-      "@/*": ["src/*"]
+      "@/*": ["*"],
       "@components/*": ["components/*"],
       "@services/*": ["services/*"],
       "@utils/*": ["utils/*"],

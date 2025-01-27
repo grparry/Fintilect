@@ -26,15 +26,18 @@ import {
   CheckCircle as CheckCircleIcon,
   Info as InfoIcon
 } from '@mui/icons-material';
-import { MemberDevice, DeviceStatus } from '../../../types/member-center.types';
+import {
+  Device,
+  DeviceStatus
+} from '../../../types/member-center.types';
 import { memberService } from '../../../services/factory/ServiceFactory';
 
 interface ManageDevicesDialogProps {
   open: boolean;
   onClose: () => void;
   memberId: string;
-  devices: MemberDevice[];
-  onDevicesUpdated: (devices: MemberDevice[]) => void;
+  devices: Device[];
+  onDevicesUpdated: (devices: Device[]) => void;
 }
 const ManageDevicesDialog: React.FC<ManageDevicesDialogProps> = ({
   open,
@@ -44,7 +47,7 @@ const ManageDevicesDialog: React.FC<ManageDevicesDialogProps> = ({
   onDevicesUpdated
 }) => {
   const [loading, setLoading] = useState(false);
-  const handleToggleDeviceStatus = async (device: MemberDevice, newStatus: DeviceStatus) => {
+  const handleToggleDeviceStatus = async (device: Device, newStatus: DeviceStatus) => {
     try {
       setLoading(true);
       // Update the device status

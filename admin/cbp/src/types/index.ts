@@ -118,4 +118,6 @@ export interface DateRange {
   startDate: string;
   endDate: string;
 }
+// Settings validation types
+
 export type { PaginationOptions } from './common.types';

@@ -145,7 +145,7 @@ const Holidays: React.FC = () => {
       field: 'date',
       headerName: 'Date',
       flex: 1,
-      valueFormatter: (params) => dayjs(params.value).format('MMM D, YYYY'),
+      valueFormatter: (params: { value: string }) => dayjs(params.value).format('MMM D, YYYY'),
     },
     {
       field: 'type',

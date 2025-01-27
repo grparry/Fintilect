@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useTransition, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { NavigationConfig, NavigationSection, NavigationPermissionRequirement } from '../types/section-navigation.types';
 import { useNavigationPermissions } from '../hooks/useNavigationPermissions';
@@ -21,7 +21,7 @@ export interface NavigationContextType {
   hasPermission: (requirements: NavigationPermissionRequirement) => Promise<boolean>;
 }
 const NavigationContext = createContext<NavigationContextType | null>(null);
-export const NavigationProvider: React.FC<{ children: React.ReactNode; config: NavigationConfig }> = ({
+export const NavigationProvider: React.FC<{ children?: React.ReactNode; config: NavigationConfig }> = ({
   children,
   config,
 }) => {
@@ -32,6 +32,8 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
     permissionCache: new Map(),
     expandedItems: []
   });
+  const [isPending, startTransition] = useTransition();
+
   const navigate = useNavigate();
   const location = useLocation();
   const { checkPermissions } = useNavigationPermissions();
@@ -57,90 +59,137 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
     return accessibleSections;
   }, [config.sections, hasPermission]);
   const setActiveSection = useCallback((sectionId: string | null) => {
-    setState(prev => ({
-      ...prev,
-      activeSection: sectionId
-    }));
+    console.log('NavigationContext - setActiveSection', { sectionId });
+    startTransition(() => {
+      setState(prev => {
+        if (prev.activeSection === sectionId) return prev;
+        return {
+          ...prev,
+          activeSection: sectionId
+        };
+      });
+    });
   }, []);
+
   const setActivePath = useCallback((path: string | null) => {
-    setState(prev => ({
-      ...prev,
-      activePath: path
-    }));
+    console.log('NavigationContext - setActivePath', { path });
+    startTransition(() => {
+      setState(prev => {
+        if (prev.activePath === path) return prev;
+        return {
+          ...prev,
+          activePath: path
+        };
+      });
+    });
   }, []);
-  const toggleSidebar = useCallback(() => {
-    setState(prev => ({ ...prev, sidebarOpen: !prev.sidebarOpen }));
-  }, []);
+
   const toggleSection = useCallback((sectionId: string) => {
-    console.log('NavigationContext - toggleSection called with:', sectionId);
-    setState(prev => {
-      // First try to find it in the sections
-      const section = config.sections.find(s => s.id === sectionId);
-      console.log('NavigationContext - Found section:', section);
-      // If not found in sections, look through all items recursively
-      const findInItems = (items: any[]): any => {
-        for (const item of items) {
-          if (item.id === sectionId) return item;
-          if (item.children) {
-            const found = findInItems(item.children);
-            if (found) return found;
+    console.log('NavigationContext - toggleSection', { sectionId });
+    startTransition(() => {
+      setState(prev => {
+        // First try to find it in the sections
+        const section = config.sections.find(s => s.id === sectionId);
+        console.log('NavigationContext - toggleSection - found section:', section);
+
+        // If not found in sections, look through all items recursively
+        const findInItems = (items: any[]): any => {
+          for (const item of items) {
+            if (item.id === sectionId) return item;
+            if (item.children) {
+              const found = findInItems(item.children);
+              if (found) return found;
+            }
+          }
+          return null;
+        };
+
+        // Find the parent section of an item
+        const findParentSection = (): NavigationSection | null => {
+          for (const s of config.sections) {
+            const findInSection = (items: any[]): boolean => {
+              for (const item of items) {
+                if (item.id === sectionId) return true;
+                if (item.children && findInSection(item.children)) return true;
+              }
+              return false;
+            };
+            if (findInSection(s.items || [])) return s;
+          }
+          return null;
+        };
+
+        // Find the target item (either section or nested item)
+        let foundItem = null;
+        if (!section) {
+          for (const s of config.sections) {
+            foundItem = findInItems(s.items || []);
+            if (foundItem) break;
           }
         }
-        return null;
-      };
-      // Find the parent section of an item
-      const findParentSection = (): NavigationSection | null => {
-        for (const s of config.sections) {
-          const findInSection = (items: any[]): boolean => {
-            for (const item of items) {
-              if (item.id === sectionId) return true;
-              if (item.children && findInSection(item.children)) return true;
-            }
+
+        const target = section || foundItem;
+        if (!target) return prev;
+
+        // Get current expanded state
+        const isExpanded = prev.expandedItems.includes(sectionId);
+        let newExpandedItems: string[];
+
+        if (isExpanded) {
+          // If collapsing, just remove this item but keep parent sections expanded
+          newExpandedItems = prev.expandedItems.filter(id => {
+            if (id === sectionId) return false;
+            const isSection = config.sections.some(s => s.id === id);
+            return isSection || id !== sectionId;
+          });
+        } else {
+          // If expanding, we need to:
+          // 1. Keep the parent section expanded
+          // 2. Collapse any sibling items
+          // 3. Add this item to expanded items
+          const parentSection = findParentSection();
+          newExpandedItems = prev.expandedItems.filter(id => {
+            // Keep parent section expanded
+            if (parentSection && id === parentSection.id) return true;
+            // Keep items from other sections
+            const itemSection = config.sections.find(s => s.id === id);
+            if (itemSection) return true;
+            // Remove all other items from this section
             return false;
-          };
-          if (findInSection(s.items || [])) return s;
+          });
+          
+          // Add this item to expanded items if not already there
+          if (!newExpandedItems.includes(sectionId)) {
+            newExpandedItems.push(sectionId);
+          }
         }
-        return null;
-      };
-      let foundItem = null;
-      if (!section) {
-        for (const s of config.sections) {
-          foundItem = findInItems(s.items || []);
-          if (foundItem) break;
+
+        // Only update path if this is a section (not a nested item) and we're expanding
+        const newPath = (!isExpanded && section?.basePath) ? section.basePath : prev.activePath;
+
+        // Only update if something changed
+        if (newExpandedItems.length === prev.expandedItems.length &&
+            newExpandedItems.every(id => prev.expandedItems.includes(id)) &&
+            newPath === prev.activePath) {
+          return prev;
         }
-      }
-      const target = section || foundItem;
-      if (!target) return prev;
-      const isExpanded = prev.expandedItems.includes(sectionId);
-      let newExpandedItems: string[];
-      if (isExpanded) {
-        // If we're collapsing, just remove this item
-        newExpandedItems = prev.expandedItems.filter(id => id !== sectionId);
-      } else {
-        // If we're expanding, we need to:
-        // 1. Keep the parent section expanded
-        // 2. Collapse any sibling items
-        // 3. Add this item to expanded items
-        const parentSection = findParentSection();
-        newExpandedItems = prev.expandedItems.filter(id => {
-          // Keep parent section expanded
-          if (parentSection && id === parentSection.id) return true;
-          // Keep items from other sections
-          const itemSection = config.sections.find(s => s.id === id);
-          if (itemSection) return true;
-          // Remove all other items from this section
-          return false;
-        });
-        newExpandedItems.push(sectionId);
-      }
-      return {
-        ...prev,
-        expandedItems: newExpandedItems,
-        activeSection: section ? sectionId : prev.activeSection,
-        activePath: section ? section.path : prev.activePath
-      };
+
+        return {
+          ...prev,
+          expandedItems: newExpandedItems,
+          activePath: newPath,
+          activeSection: section ? sectionId : prev.activeSection
+        };
+      });
     });
   }, [config.sections]);
+
+  const toggleSidebar = useCallback(() => {
+    startTransition(() => {
+      setState(prev => ({ ...prev, sidebarOpen: !prev.sidebarOpen }));
+    });
+  }, []);
+
   useEffect(() => {
     const initializeSection = async () => {
       // If we're on the admin dashboard, deactivate all sections

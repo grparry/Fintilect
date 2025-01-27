@@ -51,17 +51,12 @@ interface GroupsListState {
 const serviceGroupToUIGroup = (group: any, clientId: string): Group => ({
   id: group.id,
   name: group.name,
-  description: group.description || '',
-  clientId,
-  roles: [],
-  permissions: group.permissions.map((permission: any) => ({
-    id: permission.id,
-    name: permission.name,
-    description: permission.description,
-    category: 'user',
-    actions: [] as PermissionAction[]
-  })),
-  members: group.members || [],
+  description: group.description,
+  clientId: clientId,
+  roles: group.roles || [],
+  permissions: group.permissions,
+  members: group.members,
+  users: group.users || [],
   createdAt: group.createdAt,
   updatedAt: group.updatedAt
 });

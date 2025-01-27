@@ -48,5 +48,5 @@ export const mockUtils = {
   }
 };
 
-export * from '../../../../../mockValidation';
-export * from '../../../../../generators/base';
+export * from './mockValidation';
+export * from './generators/base';

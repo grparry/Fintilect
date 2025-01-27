@@ -1,5 +1,3 @@
-
-
 export interface Member {
   id: string;
   firstName: string;
@@ -204,6 +202,13 @@ export interface Device {
   operatingSystem?: string;
   location?: string;
 }
+
+export interface MemberDevice extends Device {
+  memberId: string;
+  registeredDate: string;
+  lastActivity: string;
+}
+
 export interface Account {
   id: string;
   accountNumber: string;

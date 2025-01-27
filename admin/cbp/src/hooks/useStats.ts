@@ -1,22 +1,26 @@
 import { useState, useEffect } from 'react';
 import { DashboardService } from '../services/implementations/real/DashboardService';
 import { TimeRange } from '../types/index';
-import { DashboardMetrics } from './types/dashboard.types';
+import { DashboardMetrics } from '@/types/dashboard.types';
 
 interface UseStatsResult {
   stats: DashboardMetrics | null;
   loading: boolean;
   error: string | null;
 }
+
+const dashboardService = new DashboardService();
+
 export const useStats = (timeRange: TimeRange): UseStatsResult => {
   const [stats, setStats] = useState<DashboardMetrics | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchStats = async (): Promise<void> => {
       setLoading(true);
       try {
-        const data = await DashboardService.getDashboardMetrics({ timeRange });
+        const data = await dashboardService.getDashboardMetrics({ timeRange });
         setStats(data);
         setError(null);
       } catch (err) {
@@ -28,5 +32,6 @@ export const useStats = (timeRange: TimeRange): UseStatsResult => {
     };
     fetchStats();
   }, [timeRange]);
+
   return { stats, loading, error };
-};
+}

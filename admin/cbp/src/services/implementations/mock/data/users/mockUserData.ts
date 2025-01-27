@@ -1,4 +1,4 @@
-import { User, UserRole, UserStatus } from '../../../../types/client.types';
+import { User, UserRole, UserStatus } from '../../../../../types/client.types';
 
 export const mockUsers: User[] = [
   {
@@ -15,7 +15,8 @@ export const mockUsers: User[] = [
     password: 'Admin@123!Secure', // For testing only
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    clientId: 'default-client'
+    clientId: 'default-client',
+    groups: []
   },
   {
     id: "2",
@@ -31,6 +32,7 @@ export const mockUsers: User[] = [
     password: 'Admin@123!Secure', // For testing only
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    clientId: 'default-client'
+    clientId: 'default-client',
+    groups: []
   }
 ];

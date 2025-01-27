@@ -1,4 +1,4 @@
-import { UserGroup, Permission } from '../../../../../../types/client.types';
+import { UserGroup, Permission } from '@/types/client.types';
 
 export const mockGroups: UserGroup[] = [
   {
@@ -24,6 +24,7 @@ export const mockGroups: UserGroup[] = [
         actions: ['create', 'edit', 'delete']
       }
     ],
+    users: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
@@ -50,6 +51,7 @@ export const mockGroups: UserGroup[] = [
         actions: ['create', 'edit', 'delete']
       }
     ],
+    users: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   }
