@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { OmahaSso } from './OmahaSso';
-import { PscuSso } from './PscuSso';
+import { OmahaSso } from '@infrastructure/OmahaSso';
+import { PscuSso } from '@infrastructure/PscuSso';
 export interface CreditCardSettingsConfig {
     OmahaSso: OmahaSso;
     PscuSso: PscuSso;

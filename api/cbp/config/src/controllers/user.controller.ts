@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { Database } from '../config/db';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { logger } from '@cbp-config-api/config/logger';
+import { Database } from '@cbp-config-api/config/db';
 import bcrypt from 'bcrypt';
-import { generateToken } from '../utils/auth';
-import { UserService } from '../services/user.service';
+import { generateToken } from '@cbp-config-api/utils/auth';
+import { UserService } from '@cbp-config-api/services/user.service';
 
 export class UserController {
   private db: Database;

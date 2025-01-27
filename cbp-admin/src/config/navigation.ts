@@ -1,4 +1,4 @@
-import { NavigationConfig } from '../types/section-navigation.types';
+import { NavigationConfig } from '@/types/section-navigation.types';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import PhonelinkIcon from '@mui/icons-material/Phonelink';

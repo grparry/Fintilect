@@ -1,0 +1,185 @@
+{
+  "PSCULogFileTransformSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "inputDirectory": {
+        "type": "string"
+      },
+      "outputDirectory": {
+        "type": "string"
+      },
+      "archiveDirectory": {
+        "type": "string"
+      },
+      "errorDirectory": {
+        "type": "string"
+      },
+      "filePattern": {
+        "type": "string"
+      },
+      "processingInterval": {
+        "type": "integer",
+        "description": "Processing interval in seconds"
+      },
+      "retentionDays": {
+        "type": "integer"
+      },
+      "transformationRules": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "fieldName": {
+              "type": "string"
+            },
+            "transformation": {
+              "type": "string",
+              "enum": ["Uppercase", "Lowercase", "TrimSpaces", "RemoveSpecialChars"]
+            }
+          }
+        }
+      },
+      "notifications": {
+        "type": "object",
+        "properties": {
+          "emailEnabled": {
+            "type": "boolean"
+          },
+          "recipients": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "errorThreshold": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  },
+  "VerafinFileBatchSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "batchDirectory": {
+        "type": "string"
+      },
+      "processedDirectory": {
+        "type": "string"
+      },
+      "failedDirectory": {
+        "type": "string"
+      },
+      "batchSize": {
+        "type": "integer"
+      },
+      "processingSchedule": {
+        "type": "string",
+        "description": "Cron expression for processing schedule"
+      },
+      "retryAttempts": {
+        "type": "integer"
+      },
+      "retryInterval": {
+        "type": "integer",
+        "description": "Retry interval in minutes"
+      },
+      "logging": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "string",
+            "enum": ["Debug", "Info", "Warning", "Error"]
+          },
+          "retention": {
+            "type": "integer",
+            "description": "Log retention in days"
+          }
+        }
+      }
+    }
+  },
+  "PSIServicesSettings": {
+    "type": "object",
+    "properties": {
+      "general": {
+        "type": "object",
+        "properties": {
+          "serviceName": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "startupType": {
+            "type": "string",
+            "enum": ["Automatic", "Manual", "Disabled"]
+          }
+        }
+      },
+      "monitoring": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "healthCheckInterval": {
+            "type": "integer",
+            "description": "Interval in seconds"
+          },
+          "restartOnFailure": {
+            "type": "boolean"
+          },
+          "maxRestartAttempts": {
+            "type": "integer"
+          }
+        }
+      },
+      "performance": {
+        "type": "object",
+        "properties": {
+          "maxThreads": {
+            "type": "integer"
+          },
+          "maxMemory": {
+            "type": "integer",
+            "description": "Maximum memory in MB"
+          },
+          "timeoutSeconds": {
+            "type": "integer"
+          }
+        }
+      },
+      "security": {
+        "type": "object",
+        "properties": {
+          "runAs": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "dependencies": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

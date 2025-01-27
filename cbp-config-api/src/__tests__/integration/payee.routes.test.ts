@@ -6,7 +6,7 @@ import {
   getAuthHeader,
   setupTestDb,
   cleanupTestDb
-} from './helpers';
+} from '@/helpers';
 
 describe('Payee Routes', () => {
   beforeAll(async () => {

@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { DateTime } from './System.DateTime';
+import { DateTime } from '@infrastructure/System.DateTime';
 export interface QuickAccessPinConfig {
     Enabled: boolean;
     Type: string;

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import { logger } from './config/logger';
-import app from './app';
+import { logger } from '@cbp-config-api/config/logger';
+import app from '@cbp-config-api/app';
 
 // Load environment variables
 dotenv.config();

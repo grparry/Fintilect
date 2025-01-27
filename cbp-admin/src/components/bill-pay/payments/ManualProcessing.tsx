@@ -41,7 +41,7 @@ import {
   PendingPayment,
   Payment,
   Priority
-} from '../../../types/bill-pay.types';
+} from '@/../../types/bill-pay.types';
 import {
   PaymentTransaction,
   PaymentType,
@@ -51,11 +51,11 @@ import {
   ProcessorConfig,
   PaymentMethod,
   PaymentSchedule
-} from '../../../types/payment.types';
-import { Client, ClientStatus } from '../../../types/client.types';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
-import { useAuth } from '../../../hooks/useAuth';
-import { AuthContextType } from '../../../types/auth.types';
+} from '@/../../types/payment.types';
+import { Client, ClientStatus } from '@/../../types/client.types';
+import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
+import { useAuth } from '@/../../hooks/useAuth';
+import { AuthContextType } from '@/../../types/auth.types';
 
 interface PaymentForm {
   clientId: string;

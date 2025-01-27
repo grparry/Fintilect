@@ -1,0 +1,237 @@
+{
+  "AlertsSettings": {
+    "type": "object",
+    "description": "Settings for alerts functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Alerts.Alert",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether alerts functionality is enabled",
+        "x-setting-key": "X.App.HomeBanking.Alerts2Enabled"
+      },
+      "scheduledAlerts": {
+        "type": "object",
+        "description": "Settings for scheduled alerts",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether scheduled alerts are enabled",
+            "x-setting-key": "Alert.ScheduledAlertsEnabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "description": "Minimum version required for scheduled alerts",
+            "x-setting-key": "Alert.ScheduledAlerts.MinVersion"
+          }
+        }
+      },
+      "adHocAlerts": {
+        "type": "object",
+        "description": "Settings for ad-hoc alerts",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether ad-hoc alerts are enabled",
+            "x-setting-key": "Alert.AdHocAlerts.Enabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "description": "Minimum version required for ad-hoc alerts",
+            "x-setting-key": "Alert.AdHocAlerts.MinVersion"
+          }
+        }
+      },
+      "inactiveAccounts": {
+        "type": "object",
+        "description": "Settings for inactive account alerts",
+        "properties": {
+          "thresholdDays": {
+            "type": "array",
+            "description": "List of threshold days for inactive account alerts",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "x-setting-key": "Alert.InactiveAccountsThresholdDayValues"
+          }
+        }
+      },
+      "availableAccountCategories": {
+        "type": "array",
+        "description": "List of account categories available for alerts",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "Alert.AvailableAccountCategoriesForAlerts"
+      },
+      "delivery": {
+        "type": "object",
+        "description": "Alert delivery settings",
+        "properties": {
+          "defaultChannels": {
+            "type": "array",
+            "description": "Default delivery channels for alerts",
+            "items": {
+              "type": "string",
+              "enum": ["HomeBanking", "Email", "SMS", "PushNotification"]
+            },
+            "x-setting-key": "Alerts.DefaultDeliveryChannels"
+          },
+          "messageLimits": {
+            "type": "object",
+            "description": "Maximum length limits for alert messages",
+            "properties": {
+              "sms": {
+                "type": "integer",
+                "description": "Maximum length for SMS messages",
+                "minimum": 1,
+                "x-setting-key": "Alert.SMSMessageMaxLength"
+              },
+              "email": {
+                "type": "integer",
+                "description": "Maximum length for email messages",
+                "minimum": 1,
+                "x-setting-key": "Alert.EmailMessageMaxLength"
+              },
+              "olb": {
+                "type": "integer",
+                "description": "Maximum length for online banking messages",
+                "minimum": 1,
+                "x-setting-key": "Alert.OLBMessageMaxLength"
+              },
+              "pushNotification": {
+                "type": "integer",
+                "description": "Maximum length for push notification messages",
+                "minimum": 1,
+                "x-setting-key": "Alert.PushNotificationMessageMaxLength"
+              }
+            }
+          }
+        }
+      },
+      "dataFeed": {
+        "type": "object",
+        "description": "Alert data feed settings",
+        "properties": {
+          "accountTypes": {
+            "type": "array",
+            "description": "Account types for data feed",
+            "items": {
+              "type": "object"
+            },
+            "x-setting-key": "Alerts.DataFeed.AccountTypes"
+          },
+          "bulkInsertEnabled": {
+            "type": "boolean",
+            "description": "Whether bulk insert is enabled for data feed",
+            "x-setting-key": "Alerts.DataFeed.BulkInsertEnabled"
+          },
+          "batchSize": {
+            "type": "integer",
+            "description": "Batch size for data feed operations",
+            "minimum": 1,
+            "x-setting-key": "Alerts.DataFeed.BatchSize"
+          }
+        }
+      },
+      "cardAlerts": {
+        "type": "object",
+        "description": "Settings for card alerts",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardAlerts",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether card alerts are enabled",
+            "x-setting-key": "Mobile.CardAlerts.Enabled"
+          },
+          "minimumVersions": {
+            "type": "object",
+            "description": "Minimum version requirements for card alerts",
+            "properties": {
+              "android": {
+                "type": "string",
+                "description": "Minimum Android version required",
+                "x-setting-key": "Mobile.CardAlerts.MinimumAndroidVersion"
+              },
+              "ios": {
+                "type": "string",
+                "description": "Minimum iOS version required",
+                "x-setting-key": "Mobile.CardAlerts.MinimumIosVersion"
+              }
+            }
+          },
+          "urls": {
+            "type": "string",
+            "description": "URLs for card alerts",
+            "x-setting-key": "Mobile.CardAlerts.Urls"
+          },
+          "cardControl": {
+            "type": "object",
+            "description": "Card control alert settings",
+            "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.CardControl",
+            "properties": {
+              "memberControlEnabled": {
+                "type": "boolean",
+                "description": "Whether members can control alerts",
+                "x-setting-key": "Mobile.CardControl.Alerts.MemberControlOfAlertsEnabled"
+              },
+              "allAlertsToggleEnabled": {
+                "type": "boolean",
+                "description": "Whether all alerts can be toggled on/off",
+                "x-setting-key": "Mobile.CardControl.Alerts.AllAlertsOnOffEnabled"
+              },
+              "spendingLimitAlertsEnabled": {
+                "type": "boolean",
+                "description": "Whether spending limit alerts are enabled",
+                "x-setting-key": "Mobile.CardControl.Alerts.SpendingLimitAlertsEnabled"
+              },
+              "transactionAmountAlertEnabled": {
+                "type": "boolean",
+                "description": "Whether transaction amount alerts are enabled",
+                "x-setting-key": "Mobile.CardControl.Alerts.TransactionAmountAlertEnabled"
+              },
+              "monthlyTransactionAlertEnabled": {
+                "type": "boolean",
+                "description": "Whether monthly transaction amount alerts are enabled",
+                "x-setting-key": "Mobile.CardControl.Alerts.MonthlyTransactionAmountAlertEnabled"
+              },
+              "delivery": {
+                "type": "object",
+                "description": "Card alert delivery settings",
+                "properties": {
+                  "transactionAmountEnabled": {
+                    "type": "boolean",
+                    "description": "Whether transaction amount alert delivery is enabled",
+                    "x-setting-key": "Mobile.CardControl.AlertsDelivery.TransactionAmountAlertEnabled"
+                  },
+                  "anyTransactionEnabled": {
+                    "type": "boolean",
+                    "description": "Whether any transaction alert delivery is enabled",
+                    "x-setting-key": "Mobile.CardControl.AlertsDelivery.AnyTransactionAlertEnabled"
+                  },
+                  "useMessageText": {
+                    "type": "boolean",
+                    "description": "Whether to use message text for alert delivery",
+                    "x-setting-key": "Mobile.CardControl.AlertsDelivery.ShouldUseMessageText"
+                  },
+                  "monthlySpendingEnabled": {
+                    "type": "boolean",
+                    "description": "Whether monthly spending alert delivery is enabled",
+                    "x-setting-key": "Mobile.CardControl.AlertsDelivery.MonthlySpendingAlertEnabled"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": ["enabled"]
+      },
+      "settings": {
+        "$ref": "./settings.json#/AlertsSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/AlertsFeatures"
+      }
+    }
+  }
+}

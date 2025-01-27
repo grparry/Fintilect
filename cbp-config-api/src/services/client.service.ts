@@ -1,7 +1,7 @@
-import { Database } from '../config/db';
-import { HttpError } from '../utils/errors';
-import { PaginatedResponse } from '../types/common';
-import { logger } from '../config/logger';
+import { Database } from '@/config/db';
+import { HttpError } from '@/utils/errors';
+import { PaginatedResponse } from '@/types/common';
+import { logger } from '@/config/logger';
 
 export interface ClientRecord {
   ClientId: string;

@@ -1,0 +1,73 @@
+{
+  "CheckImagesSettings": {
+    "type": "object",
+    "description": "Check images settings",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.CheckImages.CheckImages",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether check images feature is enabled",
+        "x-setting-key": "X.App.HomeBanking.gbCheckImages"
+      },
+      "hideCrossAccountsInAccountsDropDown": {
+        "type": "boolean",
+        "description": "Whether to hide cross accounts in accounts dropdown",
+        "x-setting-key": "CheckImages.HideCrossAccountsInAccountsDropDown"
+      },
+      "showCrossAccountCheckImages": {
+        "type": "boolean",
+        "description": "Whether to show cross account check images",
+        "x-setting-key": "CheckImages.ShowCrossAccountCheckImages"
+      },
+      "outputType": {
+        "$ref": "./check-image-output-types.json#/CheckImageOutputTypes",
+        "description": "Output type for check images",
+        "x-setting-key": "CheckImages.OutputType"
+      },
+      "simnetConfiguration": {
+        "$ref": "./simnet-configuration.json#/SimnetConfiguration",
+        "description": "Simnet configuration",
+        "x-setting-key": "CheckImages.SymnetConfiguration"
+      },
+      "corporateOne": {
+        "type": "object",
+        "description": "Corporate One settings",
+        "properties": {
+          "routingTransitNumber": {
+            "type": "string",
+            "description": "Routing transit number",
+            "x-setting-key": "CheckImages.CorporateOne.RoutingTransitNumber"
+          },
+          "securityKey": {
+            "type": "string",
+            "description": "Security key",
+            "x-setting-key": "CheckImages.CorporateOne.SecurityKey"
+          },
+          "url": {
+            "type": "string",
+            "description": "Corporate One URL",
+            "x-setting-key": "CheckImages.CorporateOne.Url"
+          }
+        }
+      },
+      "validation": {
+        "type": "object",
+        "description": "Validation settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.CheckImages.Validation",
+        "properties": {
+          "noResultImage": {
+            "type": "string",
+            "description": "Image to show when no results are found",
+            "x-setting-key": "CheckImages.NoResultImage"
+          }
+        }
+      },
+      "settings": {
+        "$ref": "./settings.json#/CheckImagesSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/CheckImagesFeatures"
+      }
+    }
+  }
+}

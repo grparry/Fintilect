@@ -4,24 +4,24 @@ import helmet from 'helmet';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './docs/swagger';
-import { logger } from './config/logger';
-import { requestLogger } from './middleware/logging.middleware';
-import { authMiddleware } from './middleware/auth.middleware';
-import { errorMiddleware } from './middleware/error.middleware';
+import { swaggerSpec } from '@cbp-config-api/docs/swagger';
+import { logger } from '@cbp-config-api/config/logger';
+import { requestLogger } from '@cbp-config-api/middleware/logging.middleware';
+import { authMiddleware } from '@cbp-config-api/middleware/auth.middleware';
+import { errorMiddleware } from '@cbp-config-api/middleware/error.middleware';
 
 // Import routes
-import clientRoutes from './routes/clients.routes';
-import hostRoutes from './routes/host.routes';
-import { createUserRouter } from './routes/user.routes';
-import payeeRoutes from './routes/payees.routes';
-import paymentRoutes from './routes/payments.routes';
-import systemRoutes from './routes/system.routes';
-import utilityRoutes from './routes/utility.routes';
-import trackingRoutes from './routes/tracking.routes';
-import exceptionRoutes from './routes/exception.routes';
-import exceptionHistoryRoutes from './routes/exception-history.routes';
-import { db } from './config/db';
+import clientRoutes from '@cbp-config-api/routes/clients.routes';
+import hostRoutes from '@cbp-config-api/routes/host.routes';
+import { createUserRouter } from '@cbp-config-api/routes/user.routes';
+import payeeRoutes from '@cbp-config-api/routes/payees.routes';
+import paymentRoutes from '@cbp-config-api/routes/payments.routes';
+import systemRoutes from '@cbp-config-api/routes/system.routes';
+import utilityRoutes from '@cbp-config-api/routes/utility.routes';
+import trackingRoutes from '@cbp-config-api/routes/tracking.routes';
+import exceptionRoutes from '@cbp-config-api/routes/exception.routes';
+import exceptionHistoryRoutes from '@cbp-config-api/routes/exception-history.routes';
+import { db } from '@cbp-config-api/config/db';
 
 const app = express();
 

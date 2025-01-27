@@ -1,4 +1,4 @@
-import { IBaseService } from './IBaseService';
+import { IBaseService } from '@/IBaseService';
 import {
     AuditLog,
     AuditLogFilters,
@@ -8,8 +8,8 @@ import {
     RiskAssessment,
     AccessAttempt,
     SecurityAlert
-} from '../../types/security.types';
-import { PaginatedResponse } from '../../types/common.types';
+} from '@/../types/security.types';
+import { PaginatedResponse } from '@/../types/common.types';
 
 /**
  * Interface for security operations

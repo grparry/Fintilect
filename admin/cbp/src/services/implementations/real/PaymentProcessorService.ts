@@ -26,7 +26,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
     ) {
         super(basePath);
     }
-
     async processPayment(transaction: PaymentTransaction): Promise<PaymentTransaction> {
         try {
             return await this.post<PaymentTransaction>('/process', transaction);
@@ -34,7 +33,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to process payment');
         }
     }
-
     async processBatch(transactions: PaymentTransaction[]): Promise<TransactionBatch> {
         try {
             return await this.post<TransactionBatch>('/batches', { transactions });
@@ -42,7 +40,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to process batch');
         }
     }
-
     async getTransaction(transactionId: string): Promise<PaymentTransaction> {
         try {
             return await this.get<PaymentTransaction>(`/transactions/${transactionId}`);
@@ -50,7 +47,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to get transaction');
         }
     }
-
     async searchTransactions(params: {
         status?: PaymentStatus[];
         method?: PaymentMethod;
@@ -67,7 +63,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to search transactions');
         }
     }
-
     async getBatch(batchId: string): Promise<TransactionBatch> {
         try {
             return await this.get<TransactionBatch>(`/batches/${batchId}`);
@@ -75,7 +70,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to get batch');
         }
     }
-
     async getBatches(params: {
         status?: BatchStatus[];
         dateRange?: DateRange;
@@ -89,7 +83,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to get batches');
         }
     }
-
     async cancelTransaction(transactionId: string): Promise<PaymentTransaction> {
         try {
             return await this.post<PaymentTransaction>(`/transactions/${transactionId}/cancel`);
@@ -97,7 +90,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to cancel transaction');
         }
     }
-
     async retryTransaction(transactionId: string): Promise<PaymentTransaction> {
         try {
             return await this.post<PaymentTransaction>(`/transactions/${transactionId}/retry`);
@@ -105,7 +97,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to retry transaction');
         }
     }
-
     async schedulePayment(transaction: PaymentTransaction, schedule: PaymentSchedule): Promise<PaymentTransaction> {
         try {
             return await this.post<PaymentTransaction>('/schedule', { transaction, schedule });
@@ -113,7 +104,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to schedule payment');
         }
     }
-
     async validatePayment(transaction: PaymentTransaction): Promise<PaymentValidation> {
         try {
             return await this.post<PaymentValidation>('/validate', transaction);
@@ -121,7 +111,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to validate payment');
         }
     }
-
     async getPaymentReceipt(transactionId: string): Promise<PaymentReceipt> {
         try {
             return await this.get<PaymentReceipt>(`/transactions/${transactionId}/receipt`);
@@ -129,7 +118,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to get payment receipt');
         }
     }
-
     async getProcessorConfig(): Promise<ProcessorConfig> {
         try {
             return await this.get<ProcessorConfig>('/config');
@@ -137,7 +125,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to get processor config');
         }
     }
-
     async updateProcessorConfig(config: Partial<ProcessorConfig>): Promise<ProcessorConfig> {
         try {
             return await this.put<ProcessorConfig>('/config', config);
@@ -145,7 +132,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to update processor config');
         }
     }
-
     async getProcessingErrors(transactionId: string): Promise<ProcessingError[]> {
         try {
             return await this.get<ProcessingError[]>(`/transactions/${transactionId}/errors`);
@@ -153,7 +139,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to get processing errors');
         }
     }
-
     async getTransactionSummary(params: {
         dateRange: DateRange;
         clientId?: string;
@@ -165,7 +150,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to get transaction summary');
         }
     }
-
     async getProcessorMetrics(params: {
         dateRange: DateRange;
         clientId?: string;
@@ -176,7 +160,6 @@ export class PaymentProcessorService extends BaseService implements IPaymentProc
             throw this.handleError(error, 'Failed to get processor metrics');
         }
     }
-
     protected handleError(error: unknown, defaultMessage: string = 'Payment processor error'): Error {
         if (error instanceof Error) {
             return error;

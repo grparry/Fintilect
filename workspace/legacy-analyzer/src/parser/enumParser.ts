@@ -1,7 +1,7 @@
 import Parser = require('web-tree-sitter');
-import { ParsedEnum, ParsedEnumValue } from './types';
-import { DocumentationParser } from './documentationParser';
-import { Logger } from '../utils/logger';
+import { ParsedEnum, ParsedEnumValue } from '@/types';
+import { DocumentationParser } from '@/documentationParser';
+import { Logger } from '@/utils/logger';
 
 export class EnumParser {
   private static logger = new Logger();

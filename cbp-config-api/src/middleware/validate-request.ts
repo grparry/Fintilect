@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpError } from '../utils/errors';
+import { HttpError } from '@/utils/errors';
 
 interface ValidationSchema {
   params?: {

@@ -7,13 +7,11 @@ export const mockNotificationTypes: NotificationType[] = [
     NotificationType.PAYMENT_CANCELLED,
     NotificationType.PAYMENT_EXPIRED
 ];
-
 export const mockNotificationCategories: NotificationCategory[] = [
     NotificationCategory.PAYMENT,
     NotificationCategory.ACCOUNT,
     NotificationCategory.SYSTEM
 ];
-
 export const mockTemplateVariables: Record<NotificationType, NotificationVariable[]> = {
     [NotificationType.PAYMENT_COMPLETED]: [
         {
@@ -81,7 +79,6 @@ export const mockTemplateVariables: Record<NotificationType, NotificationVariabl
         }
     ]
 };
-
 export const mockTemplates: NotificationTemplate[] = [
   {
     id: 1,
@@ -106,9 +103,7 @@ export const mockTemplates: NotificationTemplate[] = [
     variables: mockTemplateVariables[NotificationType.PAYMENT_FAILED]
   }
 ];
-
 export const mockTemplateCategories = mockNotificationCategories;
-
 export const mockTemplateVersions = [
   {
     id: 1,
@@ -127,7 +122,6 @@ export const mockTemplateVersions = [
     active: true
   }
 ];
-
 export const mockNotificationTemplates = [
     {
         id: 1,

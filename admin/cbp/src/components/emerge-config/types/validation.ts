@@ -1,3 +1,5 @@
+
+
 /**
  * Validation error for a specific field
  */
@@ -7,7 +9,6 @@ export interface ValidationError {
     /** Error message */
     message: string;
 }
-
 /**
  * Result of validation
  */
@@ -17,7 +18,6 @@ export interface ValidationResult {
     /** List of validation errors if any */
     errors?: ValidationError[];
 }
-
 /**
  * Single validation rule
  */
@@ -39,7 +39,6 @@ export interface ValidationRule {
     /** Custom validation function */
     custom?: (value: unknown) => ValidationError | null;
 }
-
 /**
  * Map of field names to validation rules
  */

@@ -1,7 +1,7 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { ModulePortAuthority } from './AppWhiteList.ModulePortAuthority';
-import { ModuleSecureCamera } from './AppWhiteList.ModuleSecureCamera';
-import { ModuleSecureKeyboard } from './AppWhiteList.ModuleSecureKeyboard';
+import { ModulePortAuthority } from '@infrastructure/AppWhiteList.ModulePortAuthority';
+import { ModuleSecureCamera } from '@infrastructure/AppWhiteList.ModuleSecureCamera';
+import { ModuleSecureKeyboard } from '@infrastructure/AppWhiteList.ModuleSecureKeyboard';
 export interface AppShieldConfig {
     Enabled: boolean;
     AndroidDevLicenseKey: string;

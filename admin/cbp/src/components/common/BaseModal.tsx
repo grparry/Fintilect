@@ -19,7 +19,6 @@ export interface BaseModalProps {
   'data-testid'?: string;
   modalId?: string;
 }
-
 const BaseModal: React.FC<BaseModalProps> = ({
   open,
   onClose,
@@ -38,7 +37,6 @@ const BaseModal: React.FC<BaseModalProps> = ({
       });
     }
   }, [open, modalId, title]);
-
   const handleClose = (event: React.MouseEvent | {}, reason: string) => {
     logger.info({
       message: 'Modal: Close attempt',
@@ -48,12 +46,10 @@ const BaseModal: React.FC<BaseModalProps> = ({
       allowed: reason !== 'backdropClick',
       timestamp: new Date().toISOString()
     });
-
     if (reason !== 'backdropClick') {
       onClose();
     }
   };
-
   const handleCloseButtonClick = () => {
     logger.info({
       message: 'Modal: Close button clicked',
@@ -63,7 +59,6 @@ const BaseModal: React.FC<BaseModalProps> = ({
     });
     onClose();
   };
-
   return (
     <Dialog
       open={open}
@@ -111,5 +106,4 @@ const BaseModal: React.FC<BaseModalProps> = ({
     </Dialog>
   );
 };
-
 export default BaseModal;

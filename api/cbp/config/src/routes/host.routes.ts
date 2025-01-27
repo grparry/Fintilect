@@ -100,11 +100,11 @@
  */
 
 import { Router } from 'express';
-import { HostController } from '../controllers/host.controller';
-import { db } from '../config/db';
-import { validateRequest } from '../middleware/validation.middleware';
+import { HostController } from '@cbp-config-api/controllers/host.controller';
+import { db } from '@cbp-config-api/config/db';
+import { validateRequest } from '@cbp-config-api/middleware/validation.middleware';
 import { z } from 'zod';
-import { authMiddleware } from '../middleware/auth.middleware';
+import { authMiddleware } from '@cbp-config-api/middleware/auth.middleware';
 
 const hostController = new HostController(db);
 const router = Router();

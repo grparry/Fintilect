@@ -1,5 +1,5 @@
-import { IBaseService } from './IBaseService';
-import { Account, Connection, MoneyDesktopFilters } from '../../types/money-desktop.types';
+import { IBaseService } from '@/IBaseService';
+import { Account, Connection, MoneyDesktopFilters } from '@/../types/money-desktop.types';
 
 export interface IMoneyDesktopService extends IBaseService {
   /**

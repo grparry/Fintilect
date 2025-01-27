@@ -3,7 +3,7 @@ import {
   ContactType,
   Address,
   NotificationType
-} from '../../../../../types/client.types';
+} from '@/../../../../types/client.types';
 
 export const contactTypes: ContactType[] = [
   'Primary',

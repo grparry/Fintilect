@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { HarlandLoanEngine } from './HarlandLoanEngine';
+import { HarlandLoanEngine } from '@infrastructure/HarlandLoanEngine';
 export interface LoanSettingsConfig {
     HarlandLoanEngine: HarlandLoanEngine;
     ShowPayoffAmountForTheseCollateralCodes: string[];

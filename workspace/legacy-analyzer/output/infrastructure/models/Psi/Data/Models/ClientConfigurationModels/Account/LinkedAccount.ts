@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { char } from './char';
+import { char } from '@infrastructure/char';
 export interface LinkedAccountConfig {
     ShouldShowAddNewAccountOnHistoryPage: boolean;
     ShouldDisableLinkedAccountWhenNoticeOfChangeReceivedEnabled: boolean;

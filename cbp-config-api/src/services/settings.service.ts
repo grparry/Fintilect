@@ -1,9 +1,9 @@
 import * as sql from 'mssql';
-import { Database } from '../config/db';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { BaseRepository } from '../repositories/base.repository';
-import { PaginatedResponse, SqlResponse } from '../types/common';
+import { Database } from '@/config/db';
+import { HttpError } from '@/utils/errors';
+import { logger } from '@/config/logger';
+import { BaseRepository } from '@/repositories/base.repository';
+import { PaginatedResponse, SqlResponse } from '@/types/common';
 
 export interface SettingRecord {
   SettingId: string;

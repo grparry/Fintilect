@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { EnrollmentSteps } from './EnrollmentSteps';
+import { EnrollmentSteps } from '@infrastructure/EnrollmentSteps';
 export interface IntegratedEnrollmentSettingsConfig {
     AchEnabled: boolean;
     ShouldStoreUserIdAndPassword: boolean;

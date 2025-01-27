@@ -31,14 +31,12 @@ interface FormData {
   type: HolidayType;
   status: HolidayStatus;
 }
-
 const initialFormData: FormData = {
   name: '',
   date: dayjs(),
   type: HolidayType.FEDERAL,
   status: HolidayStatus.ACTIVE,
 };
-
 const Holidays: React.FC = () => {
   // State
   const [holidays, setHolidays] = useState<Holiday[]>([]);
@@ -48,9 +46,7 @@ const Holidays: React.FC = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [validationErrors, setValidationErrors] = useState<Partial<Record<keyof HolidayInput, string>>>({});
   const [editingId, setEditingId] = useState<number | null>(null);
-
   const holidayService = ServiceFactory.getInstance().getHolidayService();
-
   // Load holidays
   useEffect(() => {
     const loadHolidays = async () => {
@@ -65,15 +61,12 @@ const Holidays: React.FC = () => {
         setLoading(false);
       }
     };
-
     loadHolidays();
   }, []);
-
   // Handle form submission
   const handleSubmit = async () => {
     try {
       setValidationErrors({});
-      
       // Convert form data to HolidayInput
       const holidayData: HolidayInput = {
         name: formData.name.trim(),
@@ -81,7 +74,6 @@ const Holidays: React.FC = () => {
         type: formData.type,
         status: formData.status,
       };
-
       // Validate holiday data
       const validation = await holidayService.validateHoliday(holidayData);
       if (!validation.isValid && validation.errors) {
@@ -94,24 +86,20 @@ const Holidays: React.FC = () => {
         setValidationErrors(errors);
         return;
       }
-
       if (editingId) {
         await holidayService.updateHoliday(editingId, holidayData);
       } else {
         await holidayService.createHoliday(holidayData);
       }
-
       // Refresh holidays list
       const updatedHolidays = await holidayService.getHolidays();
       setHolidays(updatedHolidays);
-      
       // Reset form
       handleCloseDialog();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to save holiday');
     }
   };
-
   // Handle holiday deletion
   const handleDelete = async (id: number) => {
     try {
@@ -123,7 +111,6 @@ const Holidays: React.FC = () => {
       setError(err instanceof Error ? err.message : 'Failed to delete holiday');
     }
   };
-
   // Handle dialog open/close
   const handleOpenDialog = (holiday?: Holiday) => {
     if (holiday) {
@@ -141,14 +128,12 @@ const Holidays: React.FC = () => {
     setValidationErrors({});
     setDialogOpen(true);
   };
-
   const handleCloseDialog = () => {
     setDialogOpen(false);
     setFormData(initialFormData);
     setValidationErrors({});
     setEditingId(null);
   };
-
   // Grid columns
   const columns: GridColDef[] = [
     {
@@ -196,7 +181,6 @@ const Holidays: React.FC = () => {
       ),
     },
   ];
-
   return (
     <Box>
       {error && (
@@ -204,7 +188,6 @@ const Holidays: React.FC = () => {
           {error}
         </Alert>
       )}
-
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Typography variant="h5">Holidays</Typography>
         <Button
@@ -215,7 +198,6 @@ const Holidays: React.FC = () => {
           Add Holiday
         </Button>
       </Box>
-
       <DataGrid
         rows={holidays}
         columns={columns}
@@ -227,7 +209,6 @@ const Holidays: React.FC = () => {
         }}
         pageSizeOptions={[10, 25, 50]}
       />
-
       <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
         <DialogTitle>
           {editingId ? 'Edit Holiday' : 'Add Holiday'}
@@ -242,7 +223,6 @@ const Holidays: React.FC = () => {
               helperText={validationErrors.name}
               fullWidth
             />
-
             <DatePicker
               label="Date"
               value={formData.date}
@@ -255,7 +235,6 @@ const Holidays: React.FC = () => {
                 },
               }}
             />
-
             <FormControl fullWidth error={!!validationErrors.type}>
               <InputLabel>Type</InputLabel>
               <Select
@@ -271,7 +250,6 @@ const Holidays: React.FC = () => {
                 <FormHelperText>{validationErrors.type}</FormHelperText>
               )}
             </FormControl>
-
             <FormControl fullWidth error={!!validationErrors.status}>
               <InputLabel>Status</InputLabel>
               <Select
@@ -298,5 +276,4 @@ const Holidays: React.FC = () => {
     </Box>
   );
 };
-
 export default Holidays;

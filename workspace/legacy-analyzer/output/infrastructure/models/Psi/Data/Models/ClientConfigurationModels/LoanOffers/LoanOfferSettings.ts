@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { CuNexusLoanOfferSso } from './CuNexusLoanOfferSso';
+import { CuNexusLoanOfferSso } from '@infrastructure/CuNexusLoanOfferSso';
 export interface LoanOfferSettingsConfig {
     CuNexusLoanOfferSso: CuNexusLoanOfferSso;
 }

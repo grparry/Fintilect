@@ -1,13 +1,13 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { AdminAccountSettings } from './AdminAccountSettings';
-import { Enrollment } from './Enrollment';
-import { MemberSettings } from './MemberSettings';
-import { DeviceSettings } from './DeviceSettings';
-import { MfaSettings } from './MfaSettings';
-import { AuditLogs } from './AuditLogs';
-import { SmsSettings } from './SmsSettings';
-import { MemberView } from './MemberView';
-import { TransferSettings } from './TransferSettings';
+import { AdminAccountSettings } from '@infrastructure/AdminAccountSettings';
+import { Enrollment } from '@infrastructure/Enrollment';
+import { MemberSettings } from '@infrastructure/MemberSettings';
+import { DeviceSettings } from '@infrastructure/DeviceSettings';
+import { MfaSettings } from '@infrastructure/MfaSettings';
+import { AuditLogs } from '@infrastructure/AuditLogs';
+import { SmsSettings } from '@infrastructure/SmsSettings';
+import { MemberView } from '@infrastructure/MemberView';
+import { TransferSettings } from '@infrastructure/TransferSettings';
 export interface AdminSettingsConfig {
     DoesAdminPasswordExpire: boolean;
     Account: AdminAccountSettings;

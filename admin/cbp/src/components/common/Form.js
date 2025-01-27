@@ -29,10 +29,8 @@ const Form = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-
   const renderField = (field) => {
     const { name, label, type = 'text', required, options, ...rest } = field;
-
     switch (type) {
       case 'select':
         return (
@@ -62,7 +60,6 @@ const Form = ({
             )}
           />
         );
-
       case 'checkbox':
         return (
           <Controller
@@ -82,7 +79,6 @@ const Form = ({
             )}
           />
         );
-
       default:
         return (
           <Controller
@@ -104,7 +100,6 @@ const Form = ({
         );
     }
   };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2}>
@@ -133,7 +128,6 @@ const Form = ({
     </form>
   );
 };
-
 Form.propTypes = {
   defaultValues: PropTypes.object,
   onSubmit: PropTypes.func.isRequired,
@@ -155,5 +149,4 @@ Form.propTypes = {
   resetText: PropTypes.string,
   showReset: PropTypes.bool,
 };
-
 export default Form;

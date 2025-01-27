@@ -1,7 +1,7 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Validation } from './Validation';
-import { SimnetConfiguration } from './SimnetConfiguration';
-import { CheckImageOutputTypes } from './CheckImageOutputTypes';
+import { Validation } from '@infrastructure/Validation';
+import { SimnetConfiguration } from '@infrastructure/SimnetConfiguration';
+import { CheckImageOutputTypes } from '@infrastructure/CheckImageOutputTypes';
 export interface CheckImagesConfig {
     HideCrossAccountsInAccountsDropDown: boolean;
     ShowCrossAccountCheckImages: boolean;

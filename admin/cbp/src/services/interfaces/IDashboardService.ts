@@ -7,7 +7,7 @@ import {
   UserActivityData,
   ChartDataPoint
 } from '../../types/dashboard.types';
-import { TimeRange } from '../../types';
+import { TimeRange } from '../../types/index';
 
 /**
  * Interface for dashboard operations
@@ -19,19 +19,16 @@ export interface IDashboardService extends IBaseService {
    * @param filters Dashboard filters
    */
   getDashboardMetrics(filters: DashboardFilters): Promise<DashboardMetrics>;
-
   /**
    * Get transaction statistics
    * @param timeRange Time range for stats
    */
   getTransactionStats(timeRange: TimeRange): Promise<TransactionStats>;
-
   /**
    * Get user activity data
    * @param timeRange Time range for activity
    */
   getUserActivityData(timeRange: TimeRange): Promise<UserActivityData>;
-
   /**
    * Get transaction volume chart data
    * @param timeRange Time range for chart
@@ -41,19 +38,16 @@ export interface IDashboardService extends IBaseService {
     timeRange: TimeRange,
     interval: 'hour' | 'day' | 'week' | 'month'
   ): Promise<ChartData>;
-
   /**
    * Get user growth chart data
    * @param timeRange Time range for chart
    */
   getUserGrowthChart(timeRange: TimeRange): Promise<ChartData>;
-
   /**
    * Get activity breakdown chart data
    * @param timeRange Time range for chart
    */
   getActivityBreakdownChart(timeRange: TimeRange): Promise<ChartData>;
-
   /**
    * Get real-time transaction metrics
    * Updates every minute
@@ -64,7 +58,6 @@ export interface IDashboardService extends IBaseService {
     errorRate: number;
     averageResponseTime: number;
   }>;
-
   /**
    * Get system health metrics
    */
@@ -78,7 +71,6 @@ export interface IDashboardService extends IBaseService {
     };
     lastChecked: string;
   }>;
-
   /**
    * Get trending metrics over time
    * @param metric Metric to track
@@ -88,7 +80,6 @@ export interface IDashboardService extends IBaseService {
     metric: 'transactions' | 'users' | 'errors' | 'response_time',
     timeRange: TimeRange
   ): Promise<ChartDataPoint[]>;
-
   /**
    * Get performance insights
    * Analyzes system performance and provides actionable insights
@@ -101,7 +92,6 @@ export interface IDashboardService extends IBaseService {
     trend?: 'up' | 'down' | 'stable';
     timestamp: string;
   }>>;
-
   /**
    * Export dashboard data
    * @param metrics Metrics to include in export
@@ -111,7 +101,6 @@ export interface IDashboardService extends IBaseService {
     metrics: string[],
     format: 'csv' | 'json' | 'pdf'
   ): Promise<string>;
-
   /**
    * Subscribe to real-time updates
    * @param callback Callback function for updates
@@ -119,7 +108,6 @@ export interface IDashboardService extends IBaseService {
   subscribeToUpdates(
     callback: (updates: Partial<DashboardMetrics>) => void
   ): () => void;
-
   /**
    * Get custom metric data
    * @param metricKey Custom metric identifier

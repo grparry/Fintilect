@@ -1,8 +1,8 @@
-import { PaymentService } from '../../services/payment.service';
-import { TestDb } from '../../config/test.db';
-import { TestContext } from '../integration/context/TestContext';
-import { HttpError } from '../../utils/errors';
-import { PaymentTestHelper, mockPayments } from '../integration/helpers/payment.helper';
+import { PaymentService } from '@/../services/payment.service';
+import { TestDb } from '@/../config/test.db';
+import { TestContext } from '@/integration/context/TestContext';
+import { HttpError } from '@/../utils/errors';
+import { PaymentTestHelper, mockPayments } from '@/integration/helpers/payment.helper';
 
 describe('PaymentService', () => {
   let paymentService: PaymentService;

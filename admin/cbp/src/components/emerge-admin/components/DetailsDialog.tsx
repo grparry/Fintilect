@@ -22,14 +22,11 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({
   onSync,
 }) => {
   const isConnection = type === 'connection';
-
   if (!item) {
     return null;
   }
-
   const connectionItem = item as Connection;
   const accountItem = item as Account;
-
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
@@ -133,5 +130,4 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({
     </Dialog>
   );
 };
-
 export default DetailsDialog;

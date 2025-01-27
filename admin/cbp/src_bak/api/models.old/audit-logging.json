@@ -1,0 +1,258 @@
+{
+  "AuditLoggingSettings": {
+    "type": "object",
+    "description": "Settings for audit logging",
+    "x-legacy-model": ["Psi.Data.Models.ClientConfigurationModels.Admin.AuditLogs", "Psi.Data.Models.ClientConfigurationModels.AuditLogging.AuditLoggingFeature"],
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "enabled": {
+        "type": "boolean"
+      },
+      "storage": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string",
+            "enum": ["ElasticSearch", "Splunk", "AzureMonitor", "Custom"]
+          },
+          "retentionPeriod": {
+            "type": "integer",
+            "description": "Log retention period in days"
+          },
+          "archivalSettings": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "archiveAfterDays": {
+                "type": "integer"
+              },
+              "storageLocation": {
+                "type": "string",
+                "enum": ["S3", "AzureBlob", "LocalStorage"]
+              }
+            }
+          }
+        }
+      },
+      "eventTypes": {
+        "type": "object",
+        "properties": {
+          "authentication": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "events": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "Login",
+                    "Logout",
+                    "PasswordChange",
+                    "MFAChange",
+                    "DeviceRegistration"
+                  ]
+                }
+              }
+            }
+          },
+          "transactions": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "events": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "Transfer",
+                    "BillPay",
+                    "RemoteDeposit",
+                    "CardTransaction",
+                    "ACH"
+                  ]
+                }
+              }
+            }
+          },
+          "configuration": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "events": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "SettingsChange",
+                    "ProfileUpdate",
+                    "PreferencesUpdate",
+                    "SecurityUpdate"
+                  ]
+                }
+              }
+            }
+          },
+          "system": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "events": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "ServiceStart",
+                    "ServiceStop",
+                    "Error",
+                    "Warning",
+                    "DatabaseChange"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "alerting": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["Email", "SMS", "Webhook", "Dashboard"]
+            }
+          },
+          "severityLevels": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["Critical", "Error", "Warning", "Info"]
+            }
+          },
+          "customRules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "eventPattern": {
+                  "type": "string"
+                },
+                "severity": {
+                  "type": "string",
+                  "enum": ["Critical", "Error", "Warning", "Info"]
+                },
+                "channels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["Email", "SMS", "Webhook", "Dashboard"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "compliance": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "standards": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["SOX", "PCI", "GDPR", "CCPA", "Custom"]
+            }
+          },
+          "dataRetention": {
+            "type": "object",
+            "properties": {
+              "personalData": {
+                "type": "integer",
+                "description": "Retention period in days for personal data"
+              },
+              "transactionData": {
+                "type": "integer",
+                "description": "Retention period in days for transaction data"
+              },
+              "systemLogs": {
+                "type": "integer",
+                "description": "Retention period in days for system logs"
+              }
+            }
+          }
+        }
+      },
+      "monitoring": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "EventVolume",
+                "ErrorRate",
+                "ResponseTime",
+                "StorageUsage",
+                "UserActivity"
+              ]
+            }
+          },
+          "dashboards": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Security",
+                "Performance",
+                "Compliance",
+                "UserActivity",
+                "Custom"
+              ]
+            }
+          }
+        }
+      },
+      "showUsernameOnEventDetails": {
+        "type": "boolean",
+        "description": "Whether to show username on event details",
+        "x-setting-key": "Admin.AuditLogs.ShowUsernameOnEventDetails"
+      },
+      "showReasonFlagsOnLoginFailure": {
+        "type": "boolean",
+        "description": "Whether to show reason flags on login failure",
+        "x-setting-key": "AuditLogging.ShowReasonFlagsOnLoginFailure"
+      },
+      "restrictedFlagsForAuditLoggingDuringLogin": {
+        "type": "string",
+        "description": "Restricted flags for audit logging during login",
+        "x-setting-key": "AuditLogging.RestrictedFlagsForAuditLoggingDuringLogin"
+      }
+    },
+    "required": ["id", "enabled"]
+  }
+}

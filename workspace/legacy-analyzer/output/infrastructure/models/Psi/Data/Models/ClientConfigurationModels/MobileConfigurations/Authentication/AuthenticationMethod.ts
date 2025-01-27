@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Guid } from './Guid';
-import { AuthenticationMethodType } from './AuthenticationMethodType';
+import { Guid } from '@infrastructure/Guid';
+import { AuthenticationMethodType } from '@infrastructure/AuthenticationMethodType';
 export interface AuthenticationMethodConfig {
     Id: number;
     PublicId: string;

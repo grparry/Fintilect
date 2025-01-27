@@ -25,12 +25,12 @@ import {
   Legend,
   Tooltip,
 } from 'recharts';
-import DashboardCard from '../../../components/common/DashboardCard';
+import DashboardCard from '@/../../components/common/DashboardCard';
 import {
   DASHBOARD_CARDS,
   TIME_RANGES,
   CHART_VIEWS,
-} from './constants';
+} from '@/constants';
 import { 
   DashboardMetrics,
   TransactionStats,
@@ -38,13 +38,13 @@ import {
   ChartData,
   TimeRangeOption,
   ChartViewOption
-} from '../../../types/dashboard.types';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
-import { IBillPayService } from '../../../services/interfaces/IBillPayService';
-import { IPaymentProcessorService } from '../../../services/interfaces/IPaymentProcessorService';
-import { BillPayStats, PaymentFilters } from '../../../types/bill-pay.types';
-import { ProcessorMetrics, TransactionSummary, DateRange } from '../../../types/payment.types';
-import { PaymentStatus } from '../../../types/bill-pay.types';
+} from '@/../../types/dashboard.types';
+import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
+import { IBillPayService } from '@/../../services/interfaces/IBillPayService';
+import { IPaymentProcessorService } from '@/../../services/interfaces/IPaymentProcessorService';
+import { BillPayStats, PaymentFilters } from '@/../../types/bill-pay.types';
+import { ProcessorMetrics, TransactionSummary, DateRange } from '@/../../types/payment.types';
+import { PaymentStatus } from '@/../../types/bill-pay.types';
 
 interface DashboardState {
   billPayStats: BillPayStats | null;

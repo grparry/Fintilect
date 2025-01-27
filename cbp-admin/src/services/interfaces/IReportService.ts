@@ -1,4 +1,4 @@
-import { IBaseService } from './IBaseService';
+import { IBaseService } from '@/IBaseService';
 import {
     ReportType,
     ReportData,
@@ -7,15 +7,15 @@ import {
     AuditRecord,
     TransactionRecord,
     UserRecord
-} from '../../types/report.types';
+} from '@/../types/report.types';
 import {
     BaseReportArguments,
     ExportReportArguments,
     ScheduleReportArguments,
     ReportRunRequest,
     ReportResponse
-} from '../../types/report-api.types';
-import { PaginatedResponse } from '../../types/common.types';
+} from '@/../types/report-api.types';
+import { PaginatedResponse } from '@/../types/common.types';
 
 /**
  * Interface for report management

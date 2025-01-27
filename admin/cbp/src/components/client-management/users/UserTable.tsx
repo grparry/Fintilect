@@ -30,14 +30,12 @@ interface UserTableProps {
   onToggleLock: (user: UIUser) => void;
   clientId: string;
 }
-
 const statusColors: Record<string, "success" | "error" | "warning"> = {
   ACTIVE: 'success',
   INACTIVE: 'error',
   PENDING: 'warning',
   LOCKED: 'error',
 };
-
 const roleColors: Record<string, "error" | "default" | "warning" | "info"> = {
   Admin: 'error',
   User: 'default',
@@ -45,7 +43,6 @@ const roleColors: Record<string, "error" | "default" | "warning" | "info"> = {
   Support: 'info',
   ReadOnly: 'default',
 };
-
 const UserTable: React.FC<UserTableProps> = ({
   users,
   groups,
@@ -55,13 +52,11 @@ const UserTable: React.FC<UserTableProps> = ({
   clientId,
 }) => {
   const navigate = useNavigate();
-
   const handleEdit = (user: UIUser) => {
     const encodedClientId = encodeId(clientId);
     const encodedUserId = encodeId(user.id);
     navigate(`/admin/client-management/edit/${encodedClientId}/users/${encodedUserId}`);
   };
-
   if (users.length === 0) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
@@ -71,7 +66,6 @@ const UserTable: React.FC<UserTableProps> = ({
       </Box>
     );
   }
-
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -148,5 +142,4 @@ const UserTable: React.FC<UserTableProps> = ({
     </TableContainer>
   );
 };
-
 export default UserTable;

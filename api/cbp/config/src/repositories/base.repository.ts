@@ -1,8 +1,8 @@
 import * as mssql from 'mssql';
-import { executeQuery, executeStoredProcedure, withTransaction } from '../config/database';
-import { logger } from '../config/logger';
+import { executeQuery, executeStoredProcedure, withTransaction } from '@cbp-config-api/config/database';
+import { logger } from '@cbp-config-api/config/logger';
 import { IResult } from 'mssql';
-import { Database } from '../database';
+import { Database } from '@cbp-config-api/database';
 
 export interface QueryOptions {
   transaction?: mssql.Transaction;

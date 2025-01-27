@@ -1,9 +1,9 @@
 import * as sql from 'mssql';
-import { Database } from '../config/db';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
+import { Database } from '@/config/db';
+import { HttpError } from '@/utils/errors';
+import { logger } from '@/config/logger';
 import { IResult, IRecordSet } from 'mssql';
-import { PaginatedResponse, SqlResponse } from '../types/common';
+import { PaginatedResponse, SqlResponse } from '@/types/common';
 
 export interface PaymentRecord {
   PaymentId: string;

@@ -1,22 +1,18 @@
 import { TimeRange } from './index';
 
 // Dashboard related types
-
 export interface ChartDataPoint {
   date: string;
   value: number;
 }
-
 export interface TimeRangeOption {
   label: string;
   value: TimeRange;
 }
-
 export interface ChartViewOption {
   label: string;
   value: 'line' | 'bar' | 'pie';
 }
-
 export interface ChartDataset {
   label: string;
   data: number[];
@@ -24,12 +20,10 @@ export interface ChartDataset {
   borderColor?: string;
   fill?: boolean;
 }
-
 export interface ChartData {
   labels: string[];
   datasets: ChartDataset[];
 }
-
 export interface DashboardFilters {
   timeRange: TimeRange;
   category?: string;
@@ -39,7 +33,6 @@ export interface DashboardFilters {
     endDate: string;
   };
 }
-
 export interface TransactionStats {
   successful: number;
   failed: number;
@@ -51,14 +44,12 @@ export interface TransactionStats {
     monthly: number;
   };
 }
-
 export interface UserActivityData {
   activeUsers: number;
   newUsers: number;
   returningUsers: number;
   averageSessionDuration: number;
 }
-
 export interface DashboardMetrics {
   transactions: TransactionStats;
   userActivity: UserActivityData;
@@ -68,7 +59,6 @@ export interface DashboardMetrics {
     activityBreakdown: ChartData;
   };
 }
-
 export interface DashboardWidgetProps {
   title: string;
   value: number | string;
@@ -76,7 +66,6 @@ export interface DashboardWidgetProps {
   changeType?: 'increase' | 'decrease';
   loading?: boolean;
 }
-
 export interface DashboardTask {
   id: string;
   title: string;
@@ -84,7 +73,6 @@ export interface DashboardTask {
   dueDate: string;
   completed: boolean;
 }
-
 export interface DashboardNews {
   id: string;
   title: string;
@@ -92,7 +80,6 @@ export interface DashboardNews {
   date: string;
   category: 'maintenance' | 'feature' | 'update' | 'alert';
 }
-
 export interface DashboardAlert {
   id: string;
   type: 'warning' | 'info' | 'error';

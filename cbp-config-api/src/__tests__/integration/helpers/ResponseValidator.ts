@@ -1,4 +1,4 @@
-import { PaginatedResponse, SqlResponse, ValidationError } from '../../../types/common';
+import { PaginatedResponse, SqlResponse, ValidationError } from '@/../../types/common';
 
 export class ResponseValidator {
   static validateArrayResponse<T>(response: T[], expectedLength?: number) {

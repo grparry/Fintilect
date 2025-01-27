@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { Database } from '../config/db';
-import { NotificationService } from '../services/notification.service';
-import { NotificationRequest, NotificationHistorySearchRequest } from '../types/notification';
-import { HttpError } from '../utils/errors';
+import { Database } from '@/config/db';
+import { NotificationService } from '@/services/notification.service';
+import { NotificationRequest, NotificationHistorySearchRequest } from '@/types/notification';
+import { HttpError } from '@/utils/errors';
 
 export class NotificationController {
   private service: NotificationService;

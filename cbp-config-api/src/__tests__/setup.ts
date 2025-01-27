@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { TestContext } from './integration/context/TestContext';
+import { TestContext } from '@/integration/context/TestContext';
 
 // Load environment variables from .env.test if it exists, otherwise from .env
 dotenv.config({ path: '.env.test' });

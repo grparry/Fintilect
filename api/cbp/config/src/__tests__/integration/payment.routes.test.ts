@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { testApp, createTestAdmin, getAuthHeader, setupTestDb, cleanupTestDb } from './helpers';
+import { testApp, createTestAdmin, getAuthHeader, setupTestDb, cleanupTestDb } from '@/helpers';
 
 describe('Payment Routes', () => {
   let adminToken: string;

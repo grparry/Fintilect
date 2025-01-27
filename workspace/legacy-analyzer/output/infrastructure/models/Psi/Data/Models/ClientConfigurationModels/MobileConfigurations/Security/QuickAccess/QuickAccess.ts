@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { QuickAccessPin } from './QuickAccessPin';
+import { QuickAccessPin } from '@infrastructure/QuickAccessPin';
 export interface QuickAccessConfig {
     MinimumVersion: string;
     MinimumAndroidVersion: string;

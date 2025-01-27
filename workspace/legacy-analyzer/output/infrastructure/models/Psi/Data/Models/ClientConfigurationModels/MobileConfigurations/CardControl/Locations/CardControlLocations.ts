@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { CreditCardLocationSettings } from './CreditCardLocationSettings';
-import { DebitCardLocationSettings } from './DebitCardLocationSettings';
+import { CreditCardLocationSettings } from '@infrastructure/CreditCardLocationSettings';
+import { DebitCardLocationSettings } from '@infrastructure/DebitCardLocationSettings';
 export interface CardControlLocationsConfig {
     CreditCard: CreditCardLocationSettings;
     DebitCard: DebitCardLocationSettings;

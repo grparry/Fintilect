@@ -1,4 +1,4 @@
-import { IPaymentService } from '../../interfaces/IPaymentService';
+import { IPaymentService } from '@/../interfaces/IPaymentService';
 import {
   PendingPayment,
   PendingPaymentSummary,
@@ -10,9 +10,9 @@ import {
   PaginatedResponse,
   PaymentConfirmationResponse,
   ConfirmationStatus
-} from '../../../types/bill-pay.types';
-import { BaseMockService } from './BaseMockService';
-import { mockPayments, mockPendingPayments } from './data/billpay/payments';
+} from '@/../../types/bill-pay.types';
+import { BaseMockService } from '@/BaseMockService';
+import { mockPayments, mockPendingPayments } from '@/data/billpay/payments';
 
 export class MockPaymentService extends BaseMockService implements IPaymentService {
   constructor(basePath: string = '/api/v1/payments') {

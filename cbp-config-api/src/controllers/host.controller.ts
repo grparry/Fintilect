@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { Database } from '../config/db';
-import { JwtUser } from '../types/user';
+import { HttpError } from '@/utils/errors';
+import { logger } from '@/config/logger';
+import { Database } from '@/config/db';
+import { JwtUser } from '@/types/user';
 
 declare module 'express' {
   interface Request {

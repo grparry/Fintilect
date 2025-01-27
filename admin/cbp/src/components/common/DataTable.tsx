@@ -22,7 +22,6 @@ export interface Column<T extends GridValidRowModel> {
   renderCell?: (params: GridRenderCellParams<T>) => React.ReactElement;
   align?: 'left' | 'center' | 'right';
 }
-
 export interface DataTableProps<T extends GridValidRowModel> {
   rows: T[];
   columns: Column<T>[];
@@ -43,7 +42,6 @@ export interface DataTableProps<T extends GridValidRowModel> {
   error?: string;
   tableId?: string;
 }
-
 const DataTable = <T extends GridValidRowModel>({
   rows,
   columns,
@@ -69,7 +67,6 @@ const DataTable = <T extends GridValidRowModel>({
     page: 0,
     pageSize,
   });
-
   logger.info({
     message: 'DataTable: Initializing',
     tableId,
@@ -78,7 +75,6 @@ const DataTable = <T extends GridValidRowModel>({
     pageSize,
     loading
   });
-
   // Convert our Column type to GridColDef
   const gridColumns: GridColDef<T>[] = columns.map((col) => ({
     field: col.field as string,
@@ -90,7 +86,6 @@ const DataTable = <T extends GridValidRowModel>({
     align: col.align,
     type: 'string', // Add default type
   }));
-
   const handlePaginationModelChange = (newModel: GridPaginationModel) => {
     logger.info({
       message: 'DataTable: Pagination changed',
@@ -98,9 +93,7 @@ const DataTable = <T extends GridValidRowModel>({
       oldModel: paginationModel,
       newModel
     });
-
     setPaginationModel(newModel);
-
     // Log pagination change to audit service
     auditService.logEvent({
       eventType: 'TABLE_PAGINATION',
@@ -120,7 +113,6 @@ const DataTable = <T extends GridValidRowModel>({
         error: err
       });
     });
-
     if (onPageChange) {
       onPageChange(newModel.page);
     }
@@ -128,18 +120,15 @@ const DataTable = <T extends GridValidRowModel>({
       onPageSizeChange(newModel.pageSize);
     }
   };
-
   const handleSortModelChange = (model: GridSortModel) => {
     if (onSortChange && model.length > 0) {
       const { field, sort } = model[0];
-
       logger.info({
         message: 'DataTable: Sort changed',
         tableId,
         field,
         sort
       });
-
       // Log sort change to audit service
       auditService.logEvent({
         eventType: 'TABLE_SORT',
@@ -158,11 +147,9 @@ const DataTable = <T extends GridValidRowModel>({
           error: err
         });
       });
-
       onSortChange(field, sort as 'asc' | 'desc');
     }
   };
-
   const handleRowClick = (params: GridRowParams<T>) => {
     if (onRowClick) {
       logger.info({
@@ -170,7 +157,6 @@ const DataTable = <T extends GridValidRowModel>({
         tableId,
         rowId: params.id
       });
-
       // Log row click to audit service
       auditService.logEvent({
         eventType: 'TABLE_ROW_CLICK',
@@ -188,11 +174,9 @@ const DataTable = <T extends GridValidRowModel>({
           error: err
         });
       });
-
       onRowClick(params.row);
     }
   };
-
   const handleSelectionModelChange = (newModel: GridRowSelectionModel) => {
     if (onSelectionModelChange) {
       logger.info({
@@ -200,7 +184,6 @@ const DataTable = <T extends GridValidRowModel>({
         tableId,
         selectedRows: newModel
       });
-
       // Log selection change to audit service
       auditService.logEvent({
         eventType: 'TABLE_SELECTION',
@@ -218,25 +201,21 @@ const DataTable = <T extends GridValidRowModel>({
           error: err
         });
       });
-
       onSelectionModelChange(newModel);
     }
   };
-
   if (error) {
     logger.error({
       message: 'DataTable: Error state',
       tableId,
       error
     });
-
     return (
       <Alert severity="error" sx={{ mb: 2 }}>
         {error}
       </Alert>
     );
   }
-
   return (
     <Box sx={{ width: '100%', height: 400, ...style }} className={className}>
       <DataGrid<T>
@@ -269,5 +248,4 @@ const DataTable = <T extends GridValidRowModel>({
     </Box>
   );
 };
-
 export default DataTable;

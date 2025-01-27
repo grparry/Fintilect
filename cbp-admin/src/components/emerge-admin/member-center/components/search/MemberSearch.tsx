@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { MemberSearchFilters, MemberStatus, AlertType } from '../../../../../types/member-center.types';
+import { MemberSearchFilters, MemberStatus, AlertType } from '@/../../../../types/member-center.types';
 
 interface MemberSearchProps {
   onSearch: (filters: MemberSearchFilters) => void;

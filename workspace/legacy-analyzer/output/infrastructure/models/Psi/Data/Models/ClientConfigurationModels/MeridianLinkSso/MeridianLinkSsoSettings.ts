@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { MeridianLinkFields } from './MeridianLinkFields';
+import { MeridianLinkFields } from '@infrastructure/MeridianLinkFields';
 export interface MeridianLinkSsoSettingsConfig {
     ShouldUseMemberNumber: boolean;
     ShouldSendMemberInfo: boolean;

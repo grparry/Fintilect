@@ -13,6 +13,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { 
   User,
+  UserInput,
   UserGroup,
   UserStatus,
   UserRole,
@@ -43,12 +44,10 @@ interface UsersState {
   limit: number;
   searchTerm: string;
 }
-
 interface UsersProps {
   clientId: string;
   loading?: boolean;
 }
-
 const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
   const navigate = useNavigate();
   const [state, setState] = useState<UsersState>({
@@ -65,16 +64,13 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     limit: 10,
     searchTerm: ''
   });
-
   const loadData = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
-
       const filters: FilterOptions = {
         clientId,
         ...(state.searchTerm && { searchTerm: state.searchTerm })
       };
-
       const [usersResponse, groupsResponse] = await Promise.all([
         userService.getUsers({
           pagination: {
@@ -85,7 +81,6 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
         }),
         clientService.getClientUserGroups(clientId)
       ]);
-
       setState(prev => ({
         ...prev,
         loading: false,
@@ -93,7 +88,6 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
         totalUsers: usersResponse.pagination.total,
         groups: groupsResponse
       }));
-
       logger.info('Users and groups loaded successfully');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to load users and groups';
@@ -105,15 +99,12 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       }));
     }
   }, [clientId, state.page, state.limit, state.searchTerm]);
-
   useEffect(() => {
     loadData();
   }, [loadData]);
-
   const handleCreateUser = async (formData: Partial<UserFormData>) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
-
       const newUser: Omit<User, 'id'> = {
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -123,16 +114,13 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
         status: formData.status || UserStatus.ACTIVE,
         roles: [formData.role || UserRole.User]
       } as Omit<User, 'id'>;
-
       await userService.createUser(newUser);
-
       setState(prev => ({
         ...prev,
         saving: false,
         isFormOpen: false,
         success: 'User created successfully'
       }));
-
       loadData();
       logger.info('User created successfully');
     } catch (error) {
@@ -145,15 +133,11 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       }));
     }
   };
-
   const handleUpdateUser = async (userData: Partial<User>) => {
     if (!state.selectedUser) return;
-
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
-
       await userService.updateUser(userData.id || state.selectedUser.id, userData);
-
       setState(prev => ({
         ...prev,
         saving: false,
@@ -161,7 +145,6 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
         isFormOpen: false,
         success: 'User updated successfully'
       }));
-
       loadData();
       logger.info('User updated successfully');
     } catch (error) {
@@ -174,19 +157,15 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       }));
     }
   };
-
   const handleDeleteUser = async (user: User) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
-
       await userService.deleteUser(user.id);
-
       setState(prev => ({
         ...prev,
         saving: false,
         success: 'User deleted successfully'
       }));
-
       loadData();
       logger.info('User deleted successfully');
     } catch (error) {
@@ -199,7 +178,6 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       }));
     }
   };
-
   const handleSearch = (searchTerm: string) => {
     setState(prev => ({
       ...prev,
@@ -207,11 +185,9 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       page: 0
     }));
   };
-
   const handlePageChange = (_event: unknown, newPage: number) => {
     setState(prev => ({ ...prev, page: newPage }));
   };
-
   const handleLimitChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState(prev => ({
       ...prev,
@@ -219,14 +195,12 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       page: 0
     }));
   };
-
   const handleToggleLock = (user: User) => {
     handleUpdateUser({
       id: user.id,
       status: user.status === UserStatus.LOCKED ? UserStatus.ACTIVE : UserStatus.LOCKED
     });
   };
-
   if (state.loading || parentLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
@@ -234,7 +208,6 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       </Box>
     );
   }
-
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -251,24 +224,20 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
           Add User
         </Button>
       </Box>
-
       {state.error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {state.error}
         </Alert>
       )}
-
       {state.success && (
         <Alert severity="success" sx={{ mb: 2 }}>
           {state.success}
         </Alert>
       )}
-
       <UserSearch
         onSearch={handleSearch}
         loading={state.loading}
       />
-
       <UserTable
         users={state.users}
         groups={state.groups}
@@ -277,7 +246,6 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
         onToggleLock={handleToggleLock}
         clientId={clientId}
       />
-
       <Dialog
         open={state.isFormOpen}
         onClose={() => setState(prev => ({ ...prev, isFormOpen: false, selectedUser: undefined }))}
@@ -300,5 +268,4 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     </Box>
   );
 };
-
 export default Users;

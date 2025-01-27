@@ -24,7 +24,6 @@ const getRouteIcon = (title: string) => {
       return null;
   }
 };
-
 const BillPayHeader: React.FC = () => {
   const allRoutes = getAllRoutes();
   const billPayRoutes = allRoutes.filter(route => 
@@ -33,7 +32,6 @@ const BillPayHeader: React.FC = () => {
     route.path !== '/admin/bill-pay' && 
     (!route.id || !route.id.endsWith('-header'))
   );
-
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 4 }}>
@@ -44,7 +42,6 @@ const BillPayHeader: React.FC = () => {
           Welcome to Bill Pay. Access bill payment features, transaction history, and payment settings.
         </Typography>
       </Box>
-      
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {billPayRoutes.map((route) => (
           <Grid item xs={12} sm={6} md={4} key={route.path}>
@@ -78,10 +75,8 @@ const BillPayHeader: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-
       <Outlet />
     </Box>
   );
 };
-
 export default BillPayHeader;

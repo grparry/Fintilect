@@ -1,12 +1,12 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { FinancialCoreTypes } from './FinancialCoreTypes';
-import { Corelation } from './Corelation';
-import { Epl } from './Epl';
-import { DNA } from './DNA';
-import { PsiCore } from './PsiCore';
-import { Symitar } from './Symitar';
-import { Summit } from './Summit';
-import { Notes } from './Notes';
+import { FinancialCoreTypes } from '@infrastructure/FinancialCoreTypes';
+import { Corelation } from '@infrastructure/Corelation';
+import { Epl } from '@infrastructure/Epl';
+import { DNA } from '@infrastructure/DNA';
+import { PsiCore } from '@infrastructure/PsiCore';
+import { Symitar } from '@infrastructure/Symitar';
+import { Summit } from '@infrastructure/Summit';
+import { Notes } from '@infrastructure/Notes';
 export interface FinancialCoreConfig {
     CoreType: FinancialCoreTypes;
     UseClassicCore: boolean;

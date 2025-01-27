@@ -50,7 +50,6 @@ import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 interface ExceptionToolProps {
   onClose?: () => void;
 }
-
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
     case 'resolved':
@@ -62,7 +61,6 @@ const getStatusColor = (status: string) => {
       return 'warning';
   }
 };
-
 const getPriorityColor = (priority: string) => {
   switch (priority) {
     case 'high':
@@ -74,7 +72,6 @@ const getPriorityColor = (priority: string) => {
       return 'info';
   }
 };
-
 const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -82,9 +79,7 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
   const [exceptions, setExceptions] = useState<IExceptionTool[]>([]);
   const [selectedException, setSelectedException] = useState<IExceptionTool | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-
   const exceptionService = ServiceFactory.getInstance().getExceptionService();
-
   const loadExceptions = async () => {
     try {
       setLoading(true);
@@ -104,19 +99,15 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     loadExceptions();
   }, []);
-
   const handleExceptionClick = (exception: IExceptionTool) => {
     setSelectedException(exception);
     setDialogOpen(true);
   };
-
   const handleResolution = async (status: string, notes: string = '') => {
     if (!selectedException) return;
-
     try {
       setLoading(true);
       setError(null);
@@ -135,7 +126,6 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
       setLoading(false);
     }
   };
-
   return (
     <Box sx={{ p: 3 }}>
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
@@ -149,13 +139,11 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
           </Button>
         )}
       </Stack>
-
       {error && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
-
       {loading ? (
         <Box display="flex" justifyContent="center">
           <CircularProgress />
@@ -203,7 +191,6 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
           </Table>
         </TableContainer>
       )}
-
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>
         {selectedException && (
           <>
@@ -256,5 +243,4 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
     </Box>
   );
 };
-
 export default ExceptionTool;

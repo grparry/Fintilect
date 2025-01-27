@@ -1,13 +1,13 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { ResetPassword } from './ResetPassword';
-import { Notifications } from './Notifications.Notifications';
-import { AtmLocator } from './AtmLocator.AtmLocator';
-import { BokuSettings } from './Boku.BokuSettings';
-import { ChangeAddress } from './ChangeAddress';
-import { ChangeEmail } from './ChangeEmail';
-import { TieredAccessAdmin } from './TieredAccessAdmin';
-import { ChangePhoneNumbers } from './ChangePhoneNumbers';
-import { Authentication } from './Authentication.Authentication';
+import { ResetPassword } from '@infrastructure/ResetPassword';
+import { Notifications } from '@infrastructure/Notifications.Notifications';
+import { AtmLocator } from '@infrastructure/AtmLocator.AtmLocator';
+import { BokuSettings } from '@infrastructure/Boku.BokuSettings';
+import { ChangeAddress } from '@infrastructure/ChangeAddress';
+import { ChangeEmail } from '@infrastructure/ChangeEmail';
+import { TieredAccessAdmin } from '@infrastructure/TieredAccessAdmin';
+import { ChangePhoneNumbers } from '@infrastructure/ChangePhoneNumbers';
+import { Authentication } from '@infrastructure/Authentication.Authentication';
 export interface SettingsConfig {
     IsLogoutButtonEnabled: boolean;
     ResetPassword: ResetPassword;

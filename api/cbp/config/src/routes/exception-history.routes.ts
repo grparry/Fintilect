@@ -154,12 +154,12 @@
  */
 
 import { Router } from 'express';
-import { db } from '../config/db';
-import { ExceptionHistoryController } from '../controllers/exception-history.controller';
-import { validateRequest } from '../middleware/validate-request';
-import { auth } from '../middleware/auth';
-import { ExceptionPermissions } from '../types/permissions';
-import { ExceptionHistoryType } from '../types/exception-history';
+import { db } from '@cbp-config-api/config/db';
+import { ExceptionHistoryController } from '@cbp-config-api/controllers/exception-history.controller';
+import { validateRequest } from '@cbp-config-api/middleware/validate-request';
+import { auth } from '@cbp-config-api/middleware/auth';
+import { ExceptionPermissions } from '@cbp-config-api/types/permissions';
+import { ExceptionHistoryType } from '@cbp-config-api/types/exception-history';
 
 const router = Router();
 const historyController = new ExceptionHistoryController(db);

@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { RouteConfig } from '../types/route.types';
+import { RouteConfig } from '@/types/route.types';
 import PaymentIcon from '@mui/icons-material/Payment';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import WarningIcon from '@mui/icons-material/Warning';

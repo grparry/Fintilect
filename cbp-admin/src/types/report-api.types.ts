@@ -1,5 +1,5 @@
-import { ReportType } from './report.types';
-import { ExportOptions } from './report.types';
+import { ReportType } from '@/report.types';
+import { ExportOptions } from '@/report.types';
 
 /**
  * Common report arguments

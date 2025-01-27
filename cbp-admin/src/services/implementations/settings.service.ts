@@ -1,5 +1,5 @@
-import api from '../api';
-import { ApiSuccessResponse } from '../../types/api.types';
+import api from '@/api';
+import { ApiSuccessResponse } from '@/../types/api.types';
 
 export interface Setting {
   key: string;

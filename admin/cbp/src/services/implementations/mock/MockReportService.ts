@@ -26,12 +26,10 @@ export class MockReportService extends BaseMockService {
         includeHeaders: true,
         dateFormat: 'YYYY-MM-DD'
     };
-
     constructor(basePath: string = '/api/v1/reports') {
         super(basePath);
         this.initializeData();
     }
-
     private initializeData(): void {
         // Initialize with mock data
         mockReportData.forEach(report => {
@@ -39,7 +37,6 @@ export class MockReportService extends BaseMockService {
             this.reports.set(id, report);
         });
     }
-
     async runReport(request: ReportRunRequest): Promise<ReportResponse<ReportData>> {
         await this.delay();
         const reportId = Math.random().toString(36).substring(7);
@@ -47,7 +44,6 @@ export class MockReportService extends BaseMockService {
             ...mockReportData[0]
         };
         this.reports.set(reportId, report);
-        
         return {
             data: report,
             status: 'completed',
@@ -55,7 +51,6 @@ export class MockReportService extends BaseMockService {
             completedAt: new Date().toISOString()
         };
     }
-
     async getReport(reportId: string): Promise<ReportData> {
         await this.delay();
         const report = this.reports.get(reportId);
@@ -64,7 +59,6 @@ export class MockReportService extends BaseMockService {
         }
         return report;
     }
-
     async searchReports(filters: ReportFilters): Promise<PaginatedResponse<ReportData>> {
         await this.delay();
         const reports = Array.from(this.reports.values());
@@ -76,22 +70,18 @@ export class MockReportService extends BaseMockService {
             totalPages: 1
         };
     }
-
     async scheduleReport(request: ReportRunRequest<ScheduleReportArguments>): Promise<string> {
         await this.delay();
         return Math.random().toString(36).substring(7);
     }
-
     async cancelScheduledReport(reportId: string): Promise<void> {
         await this.delay();
         // No-op in mock
     }
-
     async exportReport(request: ReportRunRequest<ExportReportArguments>): Promise<string> {
         await this.delay();
         return 'https://mock-export-url.com/report.pdf';
     }
-
     async getAuditRecords(filters: ReportFilters): Promise<PaginatedResponse<AuditRecord>> {
         await this.delay();
         return {
@@ -102,7 +92,6 @@ export class MockReportService extends BaseMockService {
             totalPages: 1
         };
     }
-
     async getTransactionRecords(filters: ReportFilters): Promise<PaginatedResponse<TransactionRecord>> {
         await this.delay();
         return {
@@ -113,7 +102,6 @@ export class MockReportService extends BaseMockService {
             totalPages: 1
         };
     }
-
     async getUserRecords(filters: ReportFilters): Promise<PaginatedResponse<UserRecord>> {
         await this.delay();
         return {
@@ -124,22 +112,18 @@ export class MockReportService extends BaseMockService {
             totalPages: 1
         };
     }
-
     async getReportTypes(): Promise<ReportType[]> {
         await this.delay();
         return this.reportTypes;
     }
-
     async getExportOptions(): Promise<ExportOptions> {
         await this.delay();
         return this.exportOptions;
     }
-
     async validateReportArgs(args: BaseReportArguments): Promise<boolean> {
         await this.delay();
         return true;
     }
-
     async getReportErrors(reportId: string): Promise<string[]> {
         await this.delay();
         return [];

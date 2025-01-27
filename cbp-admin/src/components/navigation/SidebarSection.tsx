@@ -9,8 +9,8 @@ import {
   ListItemButton,
 } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { NavigationSection } from '../../types/navigation.types';
-import SidebarItem from './SidebarItem';
+import { NavigationSection } from '@/../types/navigation.types';
+import SidebarItem from '@/SidebarItem';
 
 interface SidebarSectionProps {
   section: NavigationSection;

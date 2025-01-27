@@ -61,7 +61,6 @@ export const mockSecuritySettings: SecuritySettings = {
         severityLevels: ['high', 'critical']
     }
 };
-
 export const mockSecurityPolicies: SecurityPolicy[] = [
     {
         id: 'policy-1',
@@ -85,7 +84,6 @@ export const mockSecurityPolicies: SecurityPolicy[] = [
         lastUpdated: new Date().toISOString()
     }
 ];
-
 export const mockAuditLogs: AuditLog[] = [
     {
         id: 'log-1',
@@ -124,7 +122,6 @@ export const mockAuditLogs: AuditLog[] = [
         riskLevel: 'medium' as RiskLevel
     }
 ];
-
 export const mockSecurityAuditLog: AuditLog[] = [
     {
         id: '1',
@@ -157,7 +154,6 @@ export const mockSecurityAuditLog: AuditLog[] = [
         riskLevel: 'low' as RiskLevel
     }
 ];
-
 export const mockAccessAttempts: AccessAttempt[] = [
     {
         id: 'attempt-1',
@@ -185,7 +181,6 @@ export const mockAccessAttempts: AccessAttempt[] = [
         }
     }
 ];
-
 export const mockSecurityAlerts: SecurityAlert[] = [
     {
         id: 'alert-1',
@@ -206,7 +201,6 @@ export const mockSecurityAlerts: SecurityAlert[] = [
         ]
     }
 ];
-
 export const mockSecurityMetrics: SecurityMetrics = {
     loginAttempts: {
         successful: 1250,

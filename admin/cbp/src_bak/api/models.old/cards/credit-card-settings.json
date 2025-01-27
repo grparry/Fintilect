@@ -1,0 +1,120 @@
+{
+  "CreditCardSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.CreditCards.CreditCardSettings",
+    "properties": {
+      "omahaSso": {
+        "type": "object",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.CreditCards.OmahaSso",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "CreditCards.OmahaSSO.Enabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "x-setting-key": "CreditCards.OmahaSSO.MinimumVersion"
+          },
+          "url": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.Url"
+          },
+          "certificationStore": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.Certification.Store"
+          },
+          "certificationEmergePrivateThumbPrint": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.Certification.Emerge.PrivateThumbPrint"
+          },
+          "certificationVendorPublicThumbPrint": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.Certification.Vendor.PublicThumbPrint"
+          },
+          "minimumAndroidVersion": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.MinimumAndroidVersion"
+          },
+          "minimumIosVersion": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.MinimumIosVersion"
+          },
+          "responseIssuer": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSSO.ResponseIssuer"
+          },
+          "startUrl": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSso.StartUrl"
+          },
+          "returnUrl": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSso.ReturnUrl"
+          },
+          "logoutUrl": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSso.LogoutUrl"
+          },
+          "appId": {
+            "type": "string",
+            "x-setting-key": "CreditCards.OmahaSso.AppId"
+          }
+        }
+      },
+      "pscuSso": {
+        "type": "object",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.CreditCards.PscuSso",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "CreditCards.PscuSso.Enabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "x-setting-key": "CreditCards.PscuSso.MinimumVersion"
+          },
+          "url": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.Url"
+          },
+          "certificationStore": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.Certification.Store"
+          },
+          "certificationEmergePrivateThumbPrint": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.Certification.Emerge.PrivateThumbPrint"
+          },
+          "certificationVendorPublicThumbPrint": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.Certification.Vendor.PublicThumbPrint"
+          },
+          "issuer": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.Issuer"
+          },
+          "responseIssuer": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.ResponseIssuer"
+          },
+          "appId": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.AppId"
+          },
+          "clientId": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.ClientId"
+          },
+          "keepAliveUrl": {
+            "type": "string",
+            "x-setting-key": "CreditCards.PscuSso.KeepAliveUrl"
+          },
+          "assertionLogEnabled": {
+            "type": "boolean",
+            "x-setting-key": "CreditCards.PscuSso.AssertionLogEnabled"
+          }
+        }
+      }
+    }
+  }
+}

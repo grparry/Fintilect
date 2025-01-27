@@ -23,11 +23,9 @@ import { shouldUseMockData } from '../../../config/api.config';
 // Get service instances through factory
 const clientService = ServiceFactory.getInstance().getClientService();
 const permissionService = ServiceFactory.getInstance().getPermissionService();
-
 interface SecuritySettingsProps {
   clientId: string;
 }
-
 const defaultSecuritySettings: SecuritySettingsType = {
   passwordPolicy: {
     minLength: 8,
@@ -75,7 +73,6 @@ const defaultSecuritySettings: SecuritySettingsType = {
     severityLevels: ['high', 'critical']
   }
 };
-
 const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
   const [settings, setSettings] = useState<SecuritySettingsType | null>(null);
   const [loading, setLoading] = useState(true);
@@ -84,26 +81,21 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
   const [saving, setSaving] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const isMockMode = shouldUseMockData();
-
   useEffect(() => {
     console.log('SecuritySettings - Using mock data:', isMockMode);
     loadSettings();
   }, [clientId]);
-
   const loadSettings = async () => {
     try {
       setLoading(true);
       setError(null);
-      
       // Get settings through service factory
       const response = await clientService.getClientSettings(clientId);
-      
       // Ensure all required fields are present by merging with defaults
       const mergedSettings: SecuritySettingsType = {
         ...defaultSecuritySettings,
         ...response.security
       };
-      
       setSettings(mergedSettings);
       setIsDirty(false);
     } catch (err) {
@@ -113,11 +105,9 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
       setLoading(false);
     }
   };
-
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
-
   const handlePasswordPolicyChange = (field: keyof SecuritySettingsType['passwordPolicy'], value: any) => {
     setSettings(prev => {
       if (!prev) return prev;
@@ -131,7 +121,6 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     });
     setIsDirty(true);
   };
-
   const handleLoginPolicyChange = (field: keyof SecuritySettingsType['loginPolicy'], value: any) => {
     setSettings(prev => {
       if (!prev) return prev;
@@ -145,7 +134,6 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     });
     setIsDirty(true);
   };
-
   const handleSettingChange = (field: keyof SecuritySettingsType, value: any) => {
     setSettings(prev => {
       if (!prev) return prev;
@@ -156,7 +144,6 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     });
     setIsDirty(true);
   };
-
   const validateSettings = (settings: SecuritySettingsType): string | null => {
     if (settings.passwordPolicy.minLength < 8) {
       return 'Minimum password length must be at least 8 characters';
@@ -178,26 +165,21 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     }
     return null;
   };
-
   const handleSave = async () => {
     if (!settings) return;
-    
     // Validate settings locally
     const validationError = validateSettings(settings);
     if (validationError) {
       setError(validationError);
       return;
     }
-    
     try {
       setSaving(true);
       setError(null);
-      
       // Update settings through service factory
       const updatedSettings = await clientService.updateClientSettings(clientId, {
         security: settings
       });
-      
       setSettings(updatedSettings.security);
       setIsDirty(false);
     } catch (err) {
@@ -207,14 +189,12 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
       setSaving(false);
     }
   };
-
   const handleReset = () => {
     if (isDirty && !window.confirm('Are you sure you want to discard your changes?')) {
       return;
     }
     loadSettings();
   };
-
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -222,11 +202,9 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
       </Box>
     );
   }
-
   if (error) {
     return <Alert severity="error">{error}</Alert>;
   }
-
   return (
     <Box>
       <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -239,14 +217,12 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
           />
         )}
       </Box>
-
       <Paper sx={{ mb: 3 }}>
         <Tabs value={activeTab} onChange={handleTabChange}>
           <Tab label="Security Settings" />
           <Tab label="Audit Logs" />
         </Tabs>
       </Paper>
-
       {activeTab === 0 && settings && (
         <Box sx={{ p: 3 }}>
           <Grid container spacing={3}>
@@ -321,7 +297,6 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
                 </Grid>
               </Grid>
             </Grid>
-
             <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
                 Login Policy
@@ -373,7 +348,6 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
                 </Grid>
               </Grid>
             </Grid>
-
             <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
                 General Security
@@ -392,13 +366,11 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
                 </Grid>
               </Grid>
             </Grid>
-
             {error && (
               <Grid item xs={12}>
                 <Typography color="error">{error}</Typography>
               </Grid>
             )}
-
             <Grid item xs={12}>
               <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
                 <Button
@@ -420,10 +392,8 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
           </Grid>
         </Box>
       )}
-
       {activeTab === 1 && <AuditSearch clientId={clientId} />}
     </Box>
   );
 };
-
 export default SecuritySettings;

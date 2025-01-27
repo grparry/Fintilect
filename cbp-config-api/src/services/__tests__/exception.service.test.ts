@@ -1,6 +1,6 @@
-import { Database } from '../../config/db';
-import { ExceptionService } from '../exception.service';
-import { ExceptionHistoryService } from '../exception-history.service';
+import { Database } from '@/../config/db';
+import { ExceptionService } from '@/exception.service';
+import { ExceptionHistoryService } from '@/exception-history.service';
 import { 
   ExceptionSearchRequest,
   ExceptionUpdateRequest,
@@ -8,8 +8,8 @@ import {
   ExceptionNotificationRequest,
   ExceptionError, 
   ExceptionErrorCodes 
-} from '../../types/fis-exception';
-import { ExceptionHistoryType } from '../../types/exception-history';
+} from '@/../types/fis-exception';
+import { ExceptionHistoryType } from '@/../types/exception-history';
 import { IRecordSet, IResult, IProcedureResult } from 'mssql';
 
 jest.mock('../../config/db');

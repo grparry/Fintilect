@@ -59,7 +59,6 @@ const Reports: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
-
   const loadReportData = useCallback(async () => {
     try {
       setLoading(true);
@@ -81,38 +80,30 @@ const Reports: React.FC = () => {
       setLoading(false);
     }
   }, [filters]);
-
   useEffect(() => {
     loadReportData();
   }, [loadReportData]);
-
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
-
   const handleDateChange = (field: 'startDate' | 'endDate') => (date: dayjs.Dayjs | null) => {
     if (date) {
       setFilters(prev => ({ ...prev, [field]: date }));
     }
   };
-
   const handleReportTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilters(prev => ({ ...prev, reportType: event.target.value as ReportType }));
   };
-
   const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilters(prev => ({ ...prev, searchTerm: event.target.value }));
   };
-
   const handleSearch = () => {
     loadReportData();
   };
-
   const handleExport = async () => {
     try {
       setExporting(true);
       setError(null);
-      
       const request: ReportRunRequest<ExportReportArguments> = {
         name: filters.reportType,
         arguments: {
@@ -125,7 +116,6 @@ const Reports: React.FC = () => {
           dateFormat: 'YYYY-MM-DD'
         }
       };
-      
       await reportService.exportReport(request);
       setSuccess('Report exported successfully');
     } catch (err) {
@@ -134,7 +124,6 @@ const Reports: React.FC = () => {
       setExporting(false);
     }
   };
-
   const renderAuditTable = () => (
     <TableContainer component={Paper}>
       <Table>
@@ -159,7 +148,6 @@ const Reports: React.FC = () => {
       </Table>
     </TableContainer>
   );
-
   const renderTransactionTable = () => (
     <TableContainer component={Paper}>
       <Table>
@@ -186,7 +174,6 @@ const Reports: React.FC = () => {
       </Table>
     </TableContainer>
   );
-
   const renderUserTable = () => (
     <TableContainer component={Paper}>
       <Table>
@@ -211,7 +198,6 @@ const Reports: React.FC = () => {
       </Table>
     </TableContainer>
   );
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
@@ -219,26 +205,22 @@ const Reports: React.FC = () => {
       </Box>
     );
   }
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
         <Typography variant="h4" gutterBottom>
           Reports
         </Typography>
-
         {error && (
           <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
             {error}
           </Alert>
         )}
-
         {success && (
           <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess(null)}>
             {success}
           </Alert>
         )}
-        
         <Card sx={{ mb: 3 }}>
           <CardContent>
             <Tabs value={selectedTab} onChange={handleTabChange} sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
@@ -246,7 +228,6 @@ const Reports: React.FC = () => {
               <Tab label="Transaction Reports" />
               <Tab label="User Reports" />
             </Tabs>
-
             <Grid container spacing={3} sx={{ mb: 3 }}>
               <Grid item xs={12} md={3}>
                 <DatePicker
@@ -287,7 +268,6 @@ const Reports: React.FC = () => {
                 />
               </Grid>
             </Grid>
-
             <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
               <Button
                 variant="contained"
@@ -305,7 +285,6 @@ const Reports: React.FC = () => {
                 {exporting ? 'Exporting...' : 'Export'}
               </Button>
             </Box>
-
             <Box sx={{ mt: 3 }}>
               {selectedTab === 0 && renderAuditTable()}
               {selectedTab === 1 && renderTransactionTable()}
@@ -317,5 +296,4 @@ const Reports: React.FC = () => {
     </LocalizationProvider>
   );
 };
-
 export default Reports;

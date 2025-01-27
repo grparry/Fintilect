@@ -14,7 +14,6 @@ const CustomPagination = () => {
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
   return (
     <Pagination
       color="primary"
@@ -24,7 +23,6 @@ const CustomPagination = () => {
     />
   );
 };
-
 const DataTable = ({
   rows,
   columns,
@@ -64,7 +62,6 @@ const DataTable = ({
     </Box>
   );
 };
-
 DataTable.propTypes = {
   rows: PropTypes.array.isRequired,
   columns: PropTypes.array.isRequired,
@@ -75,5 +72,4 @@ DataTable.propTypes = {
   getRowId: PropTypes.func,
   error: PropTypes.string,
 };
-
 export default DataTable;

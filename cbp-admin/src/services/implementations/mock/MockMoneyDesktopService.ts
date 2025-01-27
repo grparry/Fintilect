@@ -1,7 +1,7 @@
-import { BaseMockService } from './BaseMockService';
-import { IMoneyDesktopService } from '../../interfaces/IMoneyDesktopService';
-import { Account, Connection, MoneyDesktopFilters } from '../../../types/money-desktop.types';
-import { mockConnections, mockAccounts } from './data/money-desktop/mockMoneyDesktopData';
+import { BaseMockService } from '@/BaseMockService';
+import { IMoneyDesktopService } from '@/../interfaces/IMoneyDesktopService';
+import { Account, Connection, MoneyDesktopFilters } from '@/../../types/money-desktop.types';
+import { mockConnections, mockAccounts } from '@/data/money-desktop/mockMoneyDesktopData';
 
 export class MockMoneyDesktopService extends BaseMockService implements IMoneyDesktopService {
   private connections: Connection[] = [...mockConnections];

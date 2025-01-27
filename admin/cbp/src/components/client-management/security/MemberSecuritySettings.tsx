@@ -20,19 +20,16 @@ import { ISecurityService } from '../../../services/interfaces/ISecurityService'
 interface MemberSecuritySettingsProps {
   clientId: string;
 }
-
 const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientId }) => {
   // Services
   const clientService = ServiceFactory.getInstance().getClientService();
   const securityService = ServiceFactory.getInstance().getSecurityService();
-
   // State
   const [settings, setSettings] = useState<SecuritySettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false);
-
   const defaultSecuritySettings: SecuritySettings = {
     passwordPolicy: {
       minLength: 8,
@@ -80,26 +77,21 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
       severityLevels: ['high', 'critical']
     }
   };
-
   // Load initial data
   useEffect(() => {
     loadSettings();
   }, [clientId]);
-
   const loadSettings = async () => {
     try {
       setLoading(true);
       setError(null);
-      
       // Get security settings through service factory
       const response = await clientService.getSecuritySettings(clientId);
-      
       // Ensure all required fields are present by merging with defaults
       const mergedSettings: SecuritySettings = {
         ...defaultSecuritySettings,
         ...response
       };
-      
       setSettings(mergedSettings);
       setIsDirty(false);
     } catch (err) {
@@ -109,7 +101,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
       setLoading(false);
     }
   };
-
   const validateSettings = (settings: SecuritySettings): string | null => {
     if (settings.passwordPolicy.minLength < 8) {
       return 'Minimum password length must be at least 8 characters';
@@ -131,24 +122,19 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
     }
     return null;
   };
-
   const handleSave = async () => {
     if (!settings) return;
-    
     // Validate settings
     const validationError = validateSettings(settings);
     if (validationError) {
       setError(validationError);
       return;
     }
-    
     try {
       setSaving(true);
       setError(null);
-      
       // Update settings through service factory
       const updatedSettings = await clientService.updateSecuritySettings(clientId, settings);
-      
       setSettings(updatedSettings);
       setIsDirty(false);
     } catch (err) {
@@ -158,7 +144,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
       setSaving(false);
     }
   };
-
   const handlePasswordPolicyChange = (field: keyof SecuritySettings['passwordPolicy'], value: any) => {
     if (!settings) return;
     setSettings({
@@ -170,7 +155,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
     });
     setIsDirty(true);
   };
-
   const handleLoginPolicyChange = (field: keyof SecuritySettings['loginPolicy'], value: any) => {
     if (!settings) return;
     setSettings({
@@ -182,7 +166,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
     });
     setIsDirty(true);
   };
-
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -190,7 +173,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
       </Box>
     );
   }
-
   if (!settings) {
     return (
       <Alert severity="error">
@@ -198,7 +180,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
       </Alert>
     );
   }
-
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -213,13 +194,11 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
           {saving ? 'Saving...' : 'Save Changes'}
         </Button>
       </Box>
-
       {error && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
-
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography variant="h6" gutterBottom>
@@ -250,7 +229,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
             </Grid>
           </Grid>
         </Grid>
-
         <Grid item xs={12}>
           <Typography variant="h6" gutterBottom>
             Login Policy
@@ -284,5 +262,4 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
     </Box>
   );
 };
-
 export default MemberSecuritySettings;

@@ -1,6 +1,6 @@
-import { TestContext } from '../context/TestContext';
-import { PaymentHelper } from '../../../helpers/payment.helper';
-import { PaymentTestHelper, mockPayments } from './payment.helper';
+import { TestContext } from '@/context/TestContext';
+import { PaymentHelper } from '@/../../helpers/payment.helper';
+import { PaymentTestHelper, mockPayments } from '@/payment.helper';
 
 describe('PaymentHelper', () => {
   let helper: PaymentHelper;

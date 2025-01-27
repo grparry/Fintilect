@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { EyeScan } from './EyeScan';
-import { FaceUnlock } from './FaceUnlock';
+import { EyeScan } from '@infrastructure/EyeScan';
+import { FaceUnlock } from '@infrastructure/FaceUnlock';
 export interface BiometricsConfig {
     MinimumVersion: string;
     MinimumAndroidVersion: string;

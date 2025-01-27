@@ -205,9 +205,9 @@
  */
 
 import { Router } from 'express';
-import { UserController } from '../controllers/user.controller';
-import { Database } from '../config/db';
-import { authMiddleware } from '../middleware/auth.middleware';
+import { UserController } from '@/controllers/user.controller';
+import { Database } from '@/config/db';
+import { authMiddleware } from '@/middleware/auth.middleware';
 
 export function createUserRouter(db: Database): Router {
   const router = Router();

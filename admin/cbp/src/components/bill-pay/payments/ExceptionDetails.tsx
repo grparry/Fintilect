@@ -43,7 +43,6 @@ interface ExceptionDetailsProps {
   onClose: () => void;
   onResolutionComplete: () => void;
 }
-
 const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
   exception,
   onClose,
@@ -62,13 +61,10 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
   const [history, setHistory] = useState<ResolutionHistory[]>([]);
   const [historyDialogOpen, setHistoryDialogOpen] = useState(false);
   const [retryResult, setRetryResult] = useState<FISRetryResult | null>(null);
-
   const exceptionService = ServiceFactory.getInstance().getExceptionService();
-
   useEffect(() => {
     loadResolutionHistory();
   }, [exception.id]);
-
   const mapFISHistoryToResolutionHistory = (fisHistory: FISExceptionHistory[]): ResolutionHistory[] => {
     return fisHistory.map(item => ({
       id: parseInt(item.id),
@@ -79,7 +75,6 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
       timestamp: item.timestamp,
     }));
   };
-
   const loadResolutionHistory = async () => {
     try {
       setLoading(true);
@@ -91,13 +86,11 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
       setLoading(false);
     }
   };
-
   const handleResolve = async () => {
     if (!resolution.action || !resolution.notes) {
       setError('Please provide both action and notes for resolution');
       return;
     }
-
     try {
       setLoading(true);
       await exceptionService.updateExceptionStatus(
@@ -116,7 +109,6 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
       setLoading(false);
     }
   };
-
   const handleRetry = async () => {
     try {
       setLoading(true);
@@ -135,7 +127,6 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
       setLoading(false);
     }
   };
-
   const renderResolutionHistory = () => (
     <Dialog open={historyDialogOpen} onClose={() => setHistoryDialogOpen(false)} maxWidth="md" fullWidth>
       <DialogTitle>Resolution History</DialogTitle>
@@ -169,7 +160,6 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
       </DialogActions>
     </Dialog>
   );
-
   return (
     <Card>
       <CardContent>
@@ -190,7 +180,6 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
               )}
             </Alert>
           )}
-
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="h6">Exception Details</Typography>
             <Stack direction="row" spacing={1}>
@@ -208,7 +197,6 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
               )}
             </Stack>
           </Box>
-
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
               <Typography variant="subtitle2">Status</Typography>
@@ -241,7 +229,6 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
               </Grid>
             )}
           </Grid>
-
           {exception.status === ExceptionStatus.PENDING && (
             <>
               <Divider sx={{ my: 2 }} />
@@ -301,7 +288,6 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
                   />
                 </Grid>
               </Grid>
-
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                 <Button onClick={onClose} sx={{ mr: 1 }}>
                   Cancel
@@ -322,5 +308,4 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
     </Card>
   );
 };
-
 export default ExceptionDetails;

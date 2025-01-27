@@ -9,7 +9,6 @@ export interface NavigationMetadata {
     /** Order within parent section */
     order: number;
 }
-
 /**
  * Navigation item in the registry
  */
@@ -31,7 +30,6 @@ export interface NavigationItem {
     /** Component to render */
     element?: ComponentType;
 }
-
 /**
  * Navigation tree node
  */

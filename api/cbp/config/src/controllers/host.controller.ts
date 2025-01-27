@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { Database } from '../config/db';
-import { JwtUser } from '../types/user';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { logger } from '@cbp-config-api/config/logger';
+import { Database } from '@cbp-config-api/config/db';
+import { JwtUser } from '@cbp-config-api/types/user';
 
 declare module 'express' {
   interface Request {

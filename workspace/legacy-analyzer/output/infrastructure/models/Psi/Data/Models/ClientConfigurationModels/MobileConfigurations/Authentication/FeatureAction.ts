@@ -1,7 +1,7 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Guid } from './Guid';
-import { FeatureActionTypeEnum } from './ClientConfigurationRepository.FeatureActionTypeEnum';
-import { AuthenticationRule } from './AuthenticationRule';
+import { Guid } from '@infrastructure/Guid';
+import { FeatureActionTypeEnum } from '@infrastructure/ClientConfigurationRepository.FeatureActionTypeEnum';
+import { AuthenticationRule } from '@infrastructure/AuthenticationRule';
 export interface FeatureActionConfig {
     ActionId: number;
     PublicId: string;

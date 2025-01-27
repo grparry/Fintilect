@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { ClientController } from '../controllers/client.controller';
-import { ClientService } from '../services/client.service';
-import { db } from '../config/db';
-import { validateRequest } from '../middleware/validation.middleware';
+import { ClientController } from '@cbp-config-api/controllers/client.controller';
+import { ClientService } from '@cbp-config-api/services/client.service';
+import { db } from '@cbp-config-api/config/db';
+import { validateRequest } from '@cbp-config-api/middleware/validation.middleware';
 import { z } from 'zod';
-import { authorize } from '../middleware/auth.middleware';
+import { authorize } from '@cbp-config-api/middleware/auth.middleware';
 
 /**
  * @swagger

@@ -1,7 +1,7 @@
-import { ExceptionHistoryService } from '../exception-history.service';
-import { ExceptionHistoryType } from '../../types/exception-history';
-import { TestDatabase } from '../../config/test.db';
-import { ExceptionError, ExceptionErrorCodes } from '../../types/fis-exception';
+import { ExceptionHistoryService } from '@/exception-history.service';
+import { ExceptionHistoryType } from '@/../types/exception-history';
+import { TestDatabase } from '@/../config/test.db';
+import { ExceptionError, ExceptionErrorCodes } from '@/../types/fis-exception';
 import { IResult, IRecordSet, IProcedureResult } from 'mssql';
 
 jest.mock('../../utils/logger');

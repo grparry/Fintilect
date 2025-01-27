@@ -12,7 +12,6 @@ interface NavigationCard {
   icon: React.ElementType;
   description: string;
 }
-
 const navigationCards: NavigationCard[] = [
   {
     id: 'ada-compliance',
@@ -36,11 +35,9 @@ const navigationCards: NavigationCard[] = [
     description: 'Configure co-browsing features and support settings'
   }
 ];
-
 const ComplianceSupportLanding: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -49,11 +46,9 @@ const ComplianceSupportLanding: React.FC = () => {
       <Typography variant="body1" sx={{ mb: 4 }}>
         Configure compliance requirements and support features for the Emerge platform.
       </Typography>
-
       <Grid container spacing={3}>
         {navigationCards.map((card) => {
           const Icon = card.icon;
-          
           return (
             <Grid item xs={12} sm={6} md={4} key={card.id}>
               <Card 
@@ -102,5 +97,4 @@ const ComplianceSupportLanding: React.FC = () => {
     </Box>
   );
 };
-
 export default ComplianceSupportLanding;

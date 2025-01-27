@@ -13,15 +13,12 @@ interface UserSearchProps {
   onSearch: (searchTerm: string) => void;
   loading?: boolean;
 }
-
 const UserSearch: React.FC<UserSearchProps> = ({ onSearch, loading }) => {
   const [searchTerm, setSearchTerm] = React.useState('');
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     onSearch(searchTerm);
   };
-
   return (
     <Card>
       <CardContent>
@@ -53,5 +50,4 @@ const UserSearch: React.FC<UserSearchProps> = ({ onSearch, loading }) => {
     </Card>
   );
 };
-
 export default UserSearch;

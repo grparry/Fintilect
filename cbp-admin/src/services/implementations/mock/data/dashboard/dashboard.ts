@@ -6,8 +6,8 @@ import {
   ChartDataPoint,
   DashboardTask,
   DashboardNews
-} from '../../../../../types/dashboard.types';
-import { TimeRange } from '../../../../../types';
+} from '@/../../../../types/dashboard.types';
+import { TimeRange } from '@/../../../../types';
 
 // Helper function to generate random data points
 const generateDataPoints = (count: number, min: number, max: number): number[] => {

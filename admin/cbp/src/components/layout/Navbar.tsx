@@ -33,7 +33,6 @@ interface NavbarProps {
   isDarkMode: boolean;
   toggleTheme: () => void;
 }
-
 const Navbar: React.FC<NavbarProps> = ({
   isSidebarOpen,
   toggleSidebar,
@@ -45,15 +44,12 @@ const Navbar: React.FC<NavbarProps> = ({
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
   const handleProfileMenuOpen = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleProfileMenuClose = () => {
     setAnchorEl(null);
   };
-
   const handleLogout = async () => {
     try {
       await logout();
@@ -63,7 +59,6 @@ const Navbar: React.FC<NavbarProps> = ({
       console.error('Logout failed:', error);
     }
   };
-
   return (
     <AppBar
       position="fixed"
@@ -119,7 +114,6 @@ const Navbar: React.FC<NavbarProps> = ({
           </IconButton>
         </Box>
       </Toolbar>
-
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -159,5 +153,4 @@ const Navbar: React.FC<NavbarProps> = ({
     </AppBar>
   );
 };
-
 export default Navbar;

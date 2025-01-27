@@ -11,11 +11,9 @@ export class BillPayConfigAdapter {
       const config = systemConfig.configurations.find(c => c.key === key);
       return config?.value ?? this.getDefaultValue(key);
     };
-
     const lastUpdated = systemConfig.configurations.find(
       c => c.key.startsWith('bill_pay.')
     );
-
     return {
       id: 'bill-pay-config',
       cutoffTime: findValue(BILL_PAY_CONFIG_KEYS.CUTOFF_TIME) as string,
@@ -38,7 +36,6 @@ export class BillPayConfigAdapter {
       }
     };
   }
-
   /**
    * Get default value for a configuration key
    */

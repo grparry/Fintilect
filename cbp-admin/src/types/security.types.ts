@@ -1,5 +1,5 @@
-import { PaginationOptions, BaseEntity } from './common.types';
-import { User } from './client.types';
+import { PaginationOptions, BaseEntity } from '@/common.types';
+import { User } from '@/client.types';
 
 // General Security Types
 export interface SecuritySettings {

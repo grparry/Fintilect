@@ -8,21 +8,17 @@ import Breadcrumbs from '../navigation/Breadcrumbs';
 import { navigationConfig } from '../../config/navigation';
 
 const DRAWER_WIDTH = 240;
-
 interface MainLayoutProps {
   children?: React.ReactNode;
   toggleTheme: () => void;
 }
-
 const MainLayout: React.FC<MainLayoutProps> = ({ children, toggleTheme }) => {
   const theme = useTheme();
   const location = useLocation();
   const { state, setActivePath, toggleSidebar } = useNavigation();
-
   useEffect(() => {
     setActivePath(location.pathname);
   }, [location.pathname, setActivePath]);
-
   return (
     <Box sx={{ 
       display: 'flex', 
@@ -67,5 +63,4 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, toggleTheme }) => {
     </Box>
   );
 };
-
 export default MainLayout;

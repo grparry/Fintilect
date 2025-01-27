@@ -1,0 +1,60 @@
+{
+  "LoanOriginationSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.FinancialCores.LoanOriginationSettings",
+    "properties": {
+      "applicationTypeSerial": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.ApplicationTypeSerial"
+      },
+      "applicationChannel": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.ApplicationChannel"
+      },
+      "applicationBranch": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.ApplicationBranch"
+      },
+      "defaultCreditLimit": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.DefaultCreditLimit"
+      },
+      "defaultPaymentAmount": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.DefaultPaymentAmount"
+      },
+      "workFlowSerial": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.WorkFlowSerial"
+      },
+      "workQueueApproveSerial": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.WorkQueueApproveSerial"
+      },
+      "workQueueRescreenSerial": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.WorkQueueRescreenSerial"
+      },
+      "workQueueReviewSerial": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.WorkQueueReviewSerial"
+      },
+      "workQueueDeclineSerial": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.WorkQueueDeclineSerial"
+      },
+      "workQueueIlaDefaultSerial": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.WorkQueueIlaDefaultSerial"
+      },
+      "onlineApplicationNoteTypeSerial": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.OnlineApplicationNoteTypeSerial"
+      },
+      "commentsNoteTypeSerial": {
+        "type": "string",
+        "x-setting-key": "FinacialCore.Corelation.LoanOrigination.CommentsNoteTypeSerial"
+      }
+    }
+  }
+}

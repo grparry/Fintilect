@@ -1,9 +1,9 @@
 import path from 'path';
-import { FileScanner } from './fileScanner';
-import { FileService } from './services/fileService';
-import { CSharpParser } from './parser/parser';
-import { OutputWriter } from './output/writer';
-import logger from './utils/logger';
+import { FileScanner } from '@legacy-analyzer/fileScanner';
+import { FileService } from '@legacy-analyzer/services/fileService';
+import { CSharpParser } from '@legacy-analyzer/parser/parser';
+import { OutputWriter } from '@legacy-analyzer/output/writer';
+import logger from '@legacy-analyzer/utils/logger';
 import fs from 'fs-extra';
 
 // Initialize logger

@@ -1,6 +1,6 @@
-import { PayeeCreateData, PayeeUpdateData, PayeeRecord } from '../types/payee';
-import { DatabaseService } from '../interfaces/database';
-import { HttpError } from '../utils/errors';
+import { PayeeCreateData, PayeeUpdateData, PayeeRecord } from '@/types/payee';
+import { DatabaseService } from '@/interfaces/database';
+import { HttpError } from '@/utils/errors';
 
 export interface PayeeQueryResult {
   PayeeId: string;

@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { SecurityCodeVerificationSettings } from './SecurityCodeVerificationSettings';
+import { SecurityCodeVerificationSettings } from '@infrastructure/SecurityCodeVerificationSettings';
 export interface SmsSettingsConfig {
     SecurityCodeVerification: SecurityCodeVerificationSettings;
     SmsCodeOneTimeEnabled: boolean;

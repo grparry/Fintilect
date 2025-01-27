@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Authentication } from './Authentication.Authentication';
+import { Authentication } from '@infrastructure/Authentication.Authentication';
 export interface MiniOaoConfig {
     MinimumVersion: string;
     MinimumAndroidVersion: string;

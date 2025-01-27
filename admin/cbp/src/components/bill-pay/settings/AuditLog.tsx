@@ -34,13 +34,11 @@ const AuditLog: React.FC = () => {
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());
   const [searchTerm, setSearchTerm] = useState('');
   const [total, setTotal] = useState(0);
-
   // Load audit logs
   const loadAuditLogs = async () => {
     try {
       setLoading(true);
       setError(null);
-
       const filters: AuditLogFilters = {
         startDate: startDate?.toISOString(),
         endDate: endDate?.toISOString(),
@@ -48,7 +46,6 @@ const AuditLog: React.FC = () => {
         page: page + 1,
         pageSize: rowsPerPage
       };
-
       const response = await auditService.searchLogs(filters);
       setAuditLogs(response.items);
       setTotal(response.total);
@@ -58,22 +55,18 @@ const AuditLog: React.FC = () => {
       setLoading(false);
     }
   };
-
   // Load logs on mount and when filters change
   useEffect(() => {
     loadAuditLogs();
   }, [page, rowsPerPage, startDate, endDate, searchTerm]);
-
   // Handle pagination changes
   const handlePageChange = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
-
   const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
   // Format metadata for display
   const formatMetadata = (metadata: Record<string, any> | undefined): string => {
     if (!metadata) return '';
@@ -83,7 +76,6 @@ const AuditLog: React.FC = () => {
       return 'Invalid metadata format';
     }
   };
-
   return (
     <Box>
       {error && (
@@ -91,7 +83,6 @@ const AuditLog: React.FC = () => {
           {error}
         </Alert>
       )}
-
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Typography variant="h5">Audit Log</Typography>
         <Tooltip title="Refresh">
@@ -100,7 +91,6 @@ const AuditLog: React.FC = () => {
           </IconButton>
         </Tooltip>
       </Box>
-
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={4}>
           <DatePicker
@@ -139,7 +129,6 @@ const AuditLog: React.FC = () => {
           />
         </Grid>
       </Grid>
-
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -188,7 +177,6 @@ const AuditLog: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
       <TablePagination
         component="div"
         count={total}
@@ -201,5 +189,4 @@ const AuditLog: React.FC = () => {
     </Box>
   );
 };
-
 export default AuditLog;

@@ -1,14 +1,14 @@
 import React, { Suspense } from 'react';
 import { useParams, useNavigate, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 import { Alert, CircularProgress } from '@mui/material';
-import ClientManagement from '../ClientManagement';
-import ContactInformation from '../ContactInformation';
-import UsersWrapper from './UsersWrapper';
-import GroupsWrapper from './GroupsWrapper';
-import MemberSecuritySettingsWrapper from './MemberSecuritySettingsWrapper';
-import AuditSearchWrapper from './AuditSearchWrapper';
-import { decodeId } from '../../../utils/idEncoder';
-import logger from '../../../utils/logger';
+import ClientManagement from '@/ClientManagement';
+import ContactInformation from '@/ContactInformation';
+import UsersWrapper from '@/UsersWrapper';
+import GroupsWrapper from '@/GroupsWrapper';
+import MemberSecuritySettingsWrapper from '@/MemberSecuritySettingsWrapper';
+import AuditSearchWrapper from '@/AuditSearchWrapper';
+import { decodeId } from '@/../../utils/idEncoder';
+import logger from '@/../../utils/logger';
 
 const ClientManagementWrapper: React.FC = () => {
   const navigate = useNavigate();

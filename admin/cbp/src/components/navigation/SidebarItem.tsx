@@ -18,13 +18,11 @@ interface SidebarItemProps {
   item: NavigationItem;
   depth?: number;
 }
-
 const SidebarItem: React.FC<SidebarItemProps> = ({ item, depth = 0 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { state, toggleSection } = useNavigation();
   const Icon = item.icon ? Icons[item.icon as keyof typeof Icons] : null;
-
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (item.children) {
@@ -33,7 +31,6 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ item, depth = 0 }) => {
       navigate(item.path);
     }
   };
-
   const menuItemStyles = {
     button: {
       pl: 2 + depth * 2,
@@ -56,11 +53,9 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ item, depth = 0 }) => {
       color: theme.palette.text.primary,
     },
   };
-
   if (item.hideFromSidebar) {
     return null;
   }
-
   return (
     <>
       <ListItem disablePadding>
@@ -102,5 +97,4 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ item, depth = 0 }) => {
     </>
   );
 };
-
 export default SidebarItem;

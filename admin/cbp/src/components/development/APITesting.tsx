@@ -36,7 +36,6 @@ interface ApiSpec {
   };
   security?: Array<Record<string, string[]>>;
 }
-
 interface TreeNodeProps {
   nodeId: string;
   label: string;
@@ -45,10 +44,8 @@ interface TreeNodeProps {
   description?: string;
   examples?: any;
 }
-
 const TreeNode: React.FC<TreeNodeProps> = ({ nodeId, label, children, level = 0, description, examples }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
   return (
     <div>
       <ListItem
@@ -101,19 +98,16 @@ const TreeNode: React.FC<TreeNodeProps> = ({ nodeId, label, children, level = 0,
     </div>
   );
 };
-
 const APITesting: React.FC = () => {
   const [selectedApi, setSelectedApi] = useState('');
   const [apiSpec, setApiSpec] = useState<ApiSpec | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const apiOptions = [
     { value: 'cbp.admin-api.json', label: 'CBP Admin API' },
     { value: 'cbp.api.json', label: 'CBP Core Processing API'},
     { value: 'cbp.admin-cu-api.json', label: 'CBP Admin CU API' }
   ];
-  
   const loadApiSpec = async (filename: string) => {
     setLoading(true);
     setError(null);
@@ -132,39 +126,30 @@ const APITesting: React.FC = () => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     if (selectedApi) {
       loadApiSpec(selectedApi);
     }
   }, [selectedApi]);
-
   const resolveRef = (ref: string, apiSpec: ApiSpec | null): any => {
     if (!ref || !apiSpec) return null;
-    
     const parts = ref.split('/');
     let current: any = apiSpec;
-    
     // Skip the first empty part and '#' if present
     const startIndex = parts[0] === '#' ? 1 : 0;
-    
     for (let i = startIndex; i < parts.length; i++) {
       if (!current) return null;
       current = current[parts[i]];
     }
-    
     return current;
   };
-
   const resolveSchema = (schema: any, apiSpec: ApiSpec | null): any => {
     if (!schema) return null;
-    
     // Handle $ref
     if (schema.$ref) {
       const resolved = resolveRef(schema.$ref, apiSpec);
       return resolveSchema(resolved, apiSpec);
     }
-    
     // Handle array type
     if (schema.type === 'array' && schema.items) {
       return {
@@ -172,14 +157,12 @@ const APITesting: React.FC = () => {
         items: resolveSchema(schema.items, apiSpec)
       };
     }
-    
     // Handle allOf, anyOf, oneOf
     ['allOf', 'anyOf', 'oneOf'].forEach(key => {
       if (schema[key]) {
         schema[key] = schema[key].map((subSchema: any) => resolveSchema(subSchema, apiSpec));
       }
     });
-    
     // Handle nested properties
     if (schema.properties) {
       const resolvedProperties: Record<string, any> = {};
@@ -188,17 +171,13 @@ const APITesting: React.FC = () => {
       });
       schema.properties = resolvedProperties;
     }
-    
     return schema;
   };
-
   const renderSchemaProperties = (schema: any, level: number = 0): React.ReactNode => {
     if (!schema || !schema.properties) return null;
-    
     return Object.entries(schema.properties).map(([name, propSchema]: [string, any]) => {
       const resolvedSchema = resolveSchema(propSchema, apiSpec);
       if (!resolvedSchema) return null;
-
       const type = resolvedSchema.type || 'object';
       const description = resolvedSchema.description || '';
       const examples = resolvedSchema.example || resolvedSchema.examples;
@@ -206,13 +185,11 @@ const APITesting: React.FC = () => {
       const format = resolvedSchema.format ? ` (${resolvedSchema.format})` : '';
       const nodeId = `${level}-${name}`;
       const label = `${name}${required} (${type}${format})`;
-      
       // Handle nested objects and arrays
       const hasChildren = (
         (type === 'object' && resolvedSchema.properties) ||
         (type === 'array' && resolvedSchema.items)
       );
-      
       if (hasChildren) {
         return (
           <TreeNode
@@ -234,7 +211,6 @@ const APITesting: React.FC = () => {
           </TreeNode>
         );
       }
-      
       return (
         <TreeNode
           key={nodeId}
@@ -247,7 +223,6 @@ const APITesting: React.FC = () => {
       );
     });
   };
-
   const renderEndpoint = (path: string, methods: Record<string, any>) => {
     return Object.entries(methods).map(([method, details]) => {
       const operationId = details.operationId || `${method}-${path}`;
@@ -255,11 +230,9 @@ const APITesting: React.FC = () => {
       const description = details.description || '';
       const security = details.security || apiSpec?.security || [];
       const label = `${method.toUpperCase()} ${path}`;
-      
       const securityInfo = security.length > 0 
         ? `Authentication: ${security.map((s: any) => Object.keys(s).join(', ')).join(' or ')}` 
         : 'No authentication required';
-
       return (
         <TreeNode
           key={operationId}
@@ -278,7 +251,6 @@ const APITesting: React.FC = () => {
               {details.parameters.map((param: any) => {
                 const resolvedParam = param.$ref ? resolveRef(param.$ref, apiSpec) : param;
                 const resolvedSchema = resolveSchema(resolvedParam.schema, apiSpec);
-                
                 return (
                   <TreeNode
                     key={`${operationId}-param-${resolvedParam.name}`}
@@ -357,14 +329,12 @@ const APITesting: React.FC = () => {
       );
     });
   };
-
   return (
     <Card>
       <CardContent>
         <Typography variant="h5" component="h2" gutterBottom>
           API Testing
         </Typography>
-        
         <FormControl fullWidth variant="outlined" sx={{ mb: 3 }}>
           <InputLabel>Select API</InputLabel>
           <Select
@@ -379,19 +349,16 @@ const APITesting: React.FC = () => {
             ))}
           </Select>
         </FormControl>
-
         {error && (
           <Alert severity="error" sx={{ mb: 3 }}>
             {error}
           </Alert>
         )}
-
         {loading && (
           <Box display="flex" justifyContent="center" my={4}>
             <CircularProgress />
           </Box>
         )}
-
         {apiSpec && !loading && (
           <Box>
             <Typography variant="h6" gutterBottom>
@@ -400,7 +367,6 @@ const APITesting: React.FC = () => {
             <Typography variant="body2" color="textSecondary" paragraph>
               {apiSpec.info.description}
             </Typography>
-            
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
               {Object.entries(apiSpec.paths).map(([path, methods]) => (
                 renderEndpoint(path, methods)
@@ -412,5 +378,4 @@ const APITesting: React.FC = () => {
     </Card>
   );
 };
-
 export default APITesting;

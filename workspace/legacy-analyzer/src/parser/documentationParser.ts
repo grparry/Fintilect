@@ -1,5 +1,5 @@
 import Parser = require('web-tree-sitter');
-import logger from '../utils/logger';
+import logger from '@/utils/logger';
 
 export class DocumentationParser {
   public static getDocumentation(node: Parser.SyntaxNode): string {

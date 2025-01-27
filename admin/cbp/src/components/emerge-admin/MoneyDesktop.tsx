@@ -53,7 +53,6 @@ export const statusColors: StatusColor = {
   Active: 'success',
   Inactive: 'error',
 };
-
 interface MoneyDesktopState {
   connections: Connection[];
   accounts: Account[];
@@ -67,7 +66,6 @@ interface MoneyDesktopState {
   selectedItem: Connection | Account | null;
   selectedItemType: 'connection' | 'account' | null;
 }
-
 const MoneyDesktop: React.FC = () => {
   const [state, setState] = useState<MoneyDesktopState>({
     connections: [],
@@ -87,11 +85,9 @@ const MoneyDesktop: React.FC = () => {
     selectedItem: null,
     selectedItemType: null
   });
-
   useEffect(() => {
     loadData();
   }, []);
-
   const loadData = async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
@@ -99,7 +95,6 @@ const MoneyDesktop: React.FC = () => {
         moneyDesktopService.getConnections(state.filters),
         moneyDesktopService.getAccounts(state.filters)
       ]);
-
       setState(prev => ({
         ...prev,
         connections,
@@ -115,14 +110,11 @@ const MoneyDesktop: React.FC = () => {
       console.error('Error loading data:', error);
     }
   };
-
   const handleSync = async (connection: Connection) => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
       await moneyDesktopService.syncConnection(connection.id);
-
       await loadData(); // Reload data after sync
-
       setState(prev => ({
         ...prev,
         success: 'Connection synced successfully',
@@ -138,21 +130,18 @@ const MoneyDesktop: React.FC = () => {
       console.error('Error syncing connection:', error);
     }
   };
-
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setState(prev => ({
       ...prev,
       selectedTab: newValue
     }));
   };
-
   const handleFilterChange = (filters: MoneyDesktopFilters) => {
     setState(prev => ({
       ...prev,
       filters
     }));
   };
-
   const handleOpenSyncDialog = (connection: Connection) => {
     setState(prev => ({
       ...prev,
@@ -161,7 +150,6 @@ const MoneyDesktop: React.FC = () => {
       selectedItemType: 'connection'
     }));
   };
-
   const handleOpenDetailsDialog = (item: Connection | Account, type: 'connection' | 'account') => {
     setState(prev => ({
       ...prev,
@@ -170,7 +158,6 @@ const MoneyDesktop: React.FC = () => {
       selectedItemType: type
     }));
   };
-
   const handleCloseDialogs = () => {
     setState(prev => ({
       ...prev,
@@ -180,20 +167,17 @@ const MoneyDesktop: React.FC = () => {
       selectedItemType: null
     }));
   };
-
   const filteredConnections = state.connections.filter(connection => {
     const matchesSearch = connection.institutionName.toLowerCase().includes(state.filters.searchTerm.toLowerCase());
     const matchesStatus = state.filters.selectedStatus === 'all' || connection.status === state.filters.selectedStatus;
     return matchesSearch && matchesStatus;
   });
-
   const filteredAccounts = state.accounts.filter(account => {
     const matchesSearch = account.institutionName.toLowerCase().includes(state.filters.searchTerm.toLowerCase()) ||
                          account.accountName.toLowerCase().includes(state.filters.searchTerm.toLowerCase());
     const matchesStatus = state.filters.selectedStatus === 'all' || account.status === state.filters.selectedStatus;
     return matchesSearch && matchesStatus;
   });
-
   if (state.loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
@@ -201,33 +185,28 @@ const MoneyDesktop: React.FC = () => {
       </Box>
     );
   }
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
         <Typography variant="h5" gutterBottom>
           Money Desktop
         </Typography>
-
         {state.error && (
           <Alert severity="error" sx={{ mb: 3 }} onClose={() => setState(prev => ({ ...prev, error: null }))}>
             {state.error}
           </Alert>
         )}
-
         {state.success && (
           <Alert severity="success" sx={{ mb: 3 }} onClose={() => setState(prev => ({ ...prev, success: null }))}>
             {state.success}
           </Alert>
         )}
-        
         <Card>
           <CardContent>
             <Tabs value={state.selectedTab} onChange={handleTabChange} sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
               <Tab label="Connections" />
               <Tab label="Accounts" />
             </Tabs>
-
             <Grid container spacing={2} sx={{ mb: 3 }}>
               <Grid item xs={12} md={3}>
                 <DatePicker
@@ -270,7 +249,6 @@ const MoneyDesktop: React.FC = () => {
                 />
               </Grid>
             </Grid>
-
             <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
               <Button
                 variant="contained"
@@ -295,7 +273,6 @@ const MoneyDesktop: React.FC = () => {
                     const blob = await (state.selectedTab === 0
                       ? moneyDesktopService.exportConnections(state.filters)
                       : moneyDesktopService.exportAccounts(state.filters));
-
                     // Create download link
                     const url = window.URL.createObjectURL(blob);
                     const link = document.createElement('a');
@@ -308,7 +285,6 @@ const MoneyDesktop: React.FC = () => {
                     link.click();
                     link.remove();
                     window.URL.revokeObjectURL(url);
-
                     setState(prev => ({
                       ...prev,
                       success: 'Export completed successfully',
@@ -327,7 +303,6 @@ const MoneyDesktop: React.FC = () => {
                 Export
               </Button>
             </Stack>
-
             <Box sx={{ mt: 3 }}>
               {state.selectedTab === 0 ? (
                 <TableContainer component={Paper}>
@@ -424,14 +399,12 @@ const MoneyDesktop: React.FC = () => {
             </Box>
           </CardContent>
         </Card>
-
         <SyncDialog
           open={state.syncDialogOpen}
           onClose={handleCloseDialogs}
           connection={state.selectedItem as Connection}
           onSync={handleSync}
         />
-
         <DetailsDialog
           open={state.detailsDialogOpen}
           onClose={handleCloseDialogs}
@@ -443,5 +416,4 @@ const MoneyDesktop: React.FC = () => {
     </LocalizationProvider>
   );
 };
-
 export default MoneyDesktop;

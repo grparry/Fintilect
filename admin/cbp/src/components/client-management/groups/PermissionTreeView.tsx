@@ -17,6 +17,7 @@ import {
   Info as InfoIcon,
 } from '@mui/icons-material';
 import { Permission, SecurityRole, PermissionCategoryType } from '../../../types/client.types';
+import { clientService } from '../../../services/factory/ServiceFactory';
 
 interface PermissionTreeViewProps {
   permissions: Permission[];
@@ -26,13 +27,11 @@ interface PermissionTreeViewProps {
   onPermissionToggle: (permission: Permission) => void;
   onRoleToggle: (role: SecurityRole) => void;
 }
-
 interface PermissionNode {
   category: PermissionCategoryType;
   permissions: Permission[];
   expanded: boolean;
 }
-
 export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
   permissions,
   selectedPermissions,
@@ -42,7 +41,6 @@ export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
   onRoleToggle,
 }) => {
   const [expandedNodes, setExpandedNodes] = React.useState<Record<string, boolean>>({});
-
   const permissionTree = useMemo(() => {
     const tree: Record<PermissionCategoryType, Permission[]> = {
       user: [],
@@ -54,21 +52,17 @@ export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
       billpay: [],
       moneydesktop: []
     };
-    
     permissions.forEach((permission) => {
       tree[permission.category].push(permission);
     });
-    
     return tree;
   }, [permissions]);
-
   const handleNodeToggle = (category: string) => {
     setExpandedNodes((prev) => ({
       ...prev,
       [category]: !prev[category],
     }));
   };
-
   const isPermissionSelected = (permission: Permission) => {
     return (
       selectedPermissions.some((p) => p.id === permission.id) ||
@@ -77,13 +71,11 @@ export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
       )
     );
   };
-
   const isPermissionInherited = (permission: Permission) => {
     return selectedRoles.some((role) =>
       role.permissions.some((p) => p.id === permission.id)
     );
   };
-
   return (
     <Box>
       {/* Roles Section */}
@@ -106,7 +98,6 @@ export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
           </Box>
         ))}
       </Box>
-
       {/* Permissions Tree */}
       <Typography variant="h6" gutterBottom>
         Additional Permissions
@@ -172,5 +163,4 @@ export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
     </Box>
   );
 };
-
 export default PermissionTreeView;

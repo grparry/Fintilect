@@ -12,10 +12,10 @@ import {
   InputAdornment,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { SecuritySettings } from '../../../types/security.types';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
-import { IClientService } from '../../../services/interfaces/IClientService';
-import { ISecurityService } from '../../../services/interfaces/ISecurityService';
+import { SecuritySettings } from '@/../../types/security.types';
+import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
+import { IClientService } from '@/../../services/interfaces/IClientService';
+import { ISecurityService } from '@/../../services/interfaces/ISecurityService';
 
 interface MemberSecuritySettingsProps {
   clientId: string;

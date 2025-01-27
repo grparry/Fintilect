@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import NodeCache from 'node-cache';
-import { logger } from '../config/logger';
+import { logger } from '@cbp-config-api/config/logger';
 
 // Initialize cache with default TTL of 5 minutes and check period of 10 minutes
 const cache = new NodeCache({

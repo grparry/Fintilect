@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { Database } from '../config/db';
-import { ExceptionService } from '../services/exception.service';
+import { Database } from '@/config/db';
+import { ExceptionService } from '@/services/exception.service';
 import { 
   ExceptionSearchRequest,
   ExceptionUpdateRequest,
@@ -8,7 +8,7 @@ import {
   ExceptionNotificationRequest,
   ExceptionError,
   ExceptionErrorCodes 
-} from '../types/fis-exception';
+} from '@/types/fis-exception';
 
 export class ExceptionController {
   private service: ExceptionService;

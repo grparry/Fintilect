@@ -1,5 +1,5 @@
 import * as mssql from 'mssql';
-import { logger } from './logger';
+import { logger } from '@/logger';
 
 // SQL Server configuration
 export const sqlConfig: mssql.config = {

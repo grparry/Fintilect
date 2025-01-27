@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { JoinCreditUnion } from './JoinCreditUnion.JoinCreditUnion';
-import { MiniOao } from './MiniOao.MiniOao';
+import { JoinCreditUnion } from '@infrastructure/JoinCreditUnion.JoinCreditUnion';
+import { MiniOao } from '@infrastructure/MiniOao.MiniOao';
 export interface AccountOpeningConfig {
     JoinCreditUnion: JoinCreditUnion;
     MiniOao: MiniOao;

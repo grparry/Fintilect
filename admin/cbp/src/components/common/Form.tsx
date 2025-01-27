@@ -33,7 +33,6 @@ export interface FormField<T> {
     max?: { value: number; message: string };
   };
 }
-
 export interface FormProps<T extends FieldValues> {
   fields: FormField<T>[];
   onSubmit: (data: T) => Promise<void>;
@@ -42,7 +41,6 @@ export interface FormProps<T extends FieldValues> {
   loading?: boolean;
   formId?: string;
 }
-
 const Form = <T extends FieldValues>({
   fields,
   onSubmit,
@@ -52,24 +50,20 @@ const Form = <T extends FieldValues>({
   formId
 }: FormProps<T>) => {
   const auditService = ServiceFactory.getInstance().getAuditService();
-  
   logger.info({
     message: 'Form: Initializing',
     formId,
     fields: fields.map(f => ({ name: f.name, type: f.type }))
   });
-  
   const defaultValues = fields.reduce((acc, field) => {
     acc[field.name] = field.defaultValue ?? '';
     return acc;
   }, {} as DefaultValues<T>);
-
   logger.info({
     message: 'Form: Using default values',
     formId,
     defaultValues
   });
-
   const {
     control,
     handleSubmit,
@@ -78,7 +72,6 @@ const Form = <T extends FieldValues>({
     defaultValues,
     mode: 'onBlur'
   });
-
   const onSubmitWrapper = async (data: T) => {
     try {
       await onSubmit(data);
@@ -89,7 +82,6 @@ const Form = <T extends FieldValues>({
       });
     }
   };
-
   return (
     <form id={formId || 'dynamic-form'} onSubmit={handleSubmit(onSubmitWrapper)}>
       {title && (
@@ -172,5 +164,4 @@ const Form = <T extends FieldValues>({
     </form>
   );
 };
-
 export default Form;

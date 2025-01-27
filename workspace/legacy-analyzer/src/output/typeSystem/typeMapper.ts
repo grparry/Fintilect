@@ -1,4 +1,4 @@
-import logger from '../../utils/logger';
+import logger from '@/../utils/logger';
 
 export class TypeMapper {
     private typeRegistry: Map<string, { namespace: string; directory: string; typeName: string }> = new Map();

@@ -50,8 +50,8 @@ import HistoryIcon from '@mui/icons-material/History';
 import LockIcon from '@mui/icons-material/Lock';
 import dayjs, { Dayjs } from 'dayjs';
 
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
-import { useAuth } from '../../../hooks/useAuth';
+import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
+import { useAuth } from '@/../../hooks/useAuth';
 import {
   PendingPayment,
   PendingPaymentSummary,
@@ -63,7 +63,7 @@ import {
   ConfirmationMethod,
   PaymentConfirmationRequest,
   PaymentConfirmationResponse,
-} from '../../../types/bill-pay.types';
+} from '@/../../types/bill-pay.types';
 
 interface PaymentDialogState {
   open: boolean;

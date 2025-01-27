@@ -1,8 +1,8 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { OmegaConfiguration } from './OmegaConfiguration';
-import { OnlineBankingConfiguration } from './OnlineBankingConfiguration';
-import { SparkUiConfiguration } from './SparkUiConfiguration';
-import { FlexUiConfiguration } from './FlexUiConfiguration';
+import { OmegaConfiguration } from '@infrastructure/OmegaConfiguration';
+import { OnlineBankingConfiguration } from '@infrastructure/OnlineBankingConfiguration';
+import { SparkUiConfiguration } from '@infrastructure/SparkUiConfiguration';
+import { FlexUiConfiguration } from '@infrastructure/FlexUiConfiguration';
 export interface ApplicationConfigurationConfig {
     Omega: OmegaConfiguration;
     OnlineBanking: OnlineBankingConfiguration;

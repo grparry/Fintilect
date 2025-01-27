@@ -38,7 +38,6 @@ import { PermissionAction } from '../../../types/permission.types';
 interface GroupsListProps {
   clientId: string;
 }
-
 interface GroupsListState {
   groups: Group[];
   loading: boolean;
@@ -49,7 +48,6 @@ interface GroupsListState {
   sortDirection: 'asc' | 'desc';
   filterText: string;
 }
-
 const serviceGroupToUIGroup = (group: any, clientId: string): Group => ({
   id: group.id,
   name: group.name,
@@ -67,7 +65,6 @@ const serviceGroupToUIGroup = (group: any, clientId: string): Group => ({
   createdAt: group.createdAt,
   updatedAt: group.updatedAt
 });
-
 const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
   const navigate = useNavigate();
   const [state, setState] = useState<GroupsListState>({
@@ -80,17 +77,14 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
     sortDirection: 'asc',
     filterText: ''
   });
-
   useEffect(() => {
     fetchGroups();
   }, [clientId]);
-
   const fetchGroups = async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
       const decodedClientId = decodeId(clientId);
       const groups = await clientService.getGroups(decodedClientId);
-
       setState(prev => ({
         ...prev,
         groups: groups.map(group => serviceGroupToUIGroup(group, clientId)),
@@ -104,7 +98,6 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
       }));
     }
   };
-
   const handleDeleteClick = (group: Group) => {
     setState(prev => ({
       ...prev,
@@ -112,7 +105,6 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
       groupToDelete: group
     }));
   };
-
   const handleDeleteConfirm = async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
@@ -134,7 +126,6 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
       }));
     }
   };
-
   const handleDeleteCancel = () => {
     setState(prev => ({
       ...prev,
@@ -142,7 +133,6 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
       groupToDelete: null
     }));
   };
-
   const handleSort = (field: 'name' | 'description' | 'members') => {
     setState(prev => ({
       ...prev,
@@ -150,14 +140,12 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
       sortDirection: prev.sortBy === field && prev.sortDirection === 'asc' ? 'desc' : 'asc'
     }));
   };
-
   const handleFilterChange = (value: string) => {
     setState(prev => ({
       ...prev,
       filterText: value
     }));
   };
-
   const filteredAndSortedGroups = state.groups
     .filter(group => 
       group.name.toLowerCase().includes(state.filterText.toLowerCase()) ||
@@ -165,16 +153,13 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
     )
     .sort((a, b) => {
       const direction = state.sortDirection === 'asc' ? 1 : -1;
-      
       if (state.sortBy === 'members') {
         return direction * ((a.members?.length || 0) - (b.members?.length || 0));
       }
-      
       const aValue = a[state.sortBy] || '';
       const bValue = b[state.sortBy] || '';
       return direction * aValue.localeCompare(bValue);
     });
-
   if (state.loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
@@ -182,7 +167,6 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
       </Box>
     );
   }
-
   return (
     <Box>
       <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -200,13 +184,11 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
           }}
         />
       </Box>
-
       {state.error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {state.error}
         </Alert>
       )}
-
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -250,7 +232,6 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
           </TableBody>
         </Table>
       </TableContainer>
-
       <Dialog
         open={state.deleteDialogOpen}
         onClose={handleDeleteCancel}
@@ -272,5 +253,4 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
     </Box>
   );
 };
-
 export default GroupsList;

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { PaymentService } from '../services/payment.service';
-import { HttpError } from '../utils/errors';
+import { PaymentService } from '@/services/payment.service';
+import { HttpError } from '@/utils/errors';
 
 export class PaymentController {
   constructor(private paymentService: PaymentService) {}

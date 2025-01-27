@@ -22,63 +22,54 @@ export interface IMemberService extends IBaseService {
      * @returns Paginated search results
      */
     searchMembers(filters: MemberSearchFilters): Promise<PaginatedResponse<MemberSearchResult>>;
-
     /**
      * Get member details by ID
      * @param memberId Member identifier
      * @returns Member details
      */
     getMember(memberId: string): Promise<Member>;
-
     /**
      * Get member activity history
      * @param memberId Member identifier
      * @returns List of member activities
      */
     getMemberActivity(memberId: string): Promise<MemberActivity[]>;
-
     /**
      * Get member alerts
      * @param memberId Member identifier
      * @returns List of member alerts
      */
     getMemberAlerts(memberId: string): Promise<Alert[]>;
-
     /**
      * Update member status
      * @param memberId Member identifier
      * @param status New status
      */
     updateMemberStatus(memberId: string, status: MemberStatus): Promise<void>;
-
     /**
      * Get member security settings
      * @param memberId Member identifier
      * @returns Security settings
      */
     getSecuritySettings(memberId: string): Promise<SecuritySettings>;
-
     /**
      * Update member security settings
      * @param memberId Member identifier
      * @param settings Updated security settings
      */
     updateSecuritySettings(memberId: string, settings: Partial<SecuritySettings>): Promise<void>;
-
     /**
      * Get member devices
      * @param memberId Member identifier
      * @returns List of registered devices
      */
     getMemberDevices(memberId: string): Promise<Device[]>;
-
     /**
      * Remove member device
      * @param memberId Member identifier
      * @param deviceId Device identifier
      */
     removeDevice(memberId: string, deviceId: string): Promise<void>;
-
     /**
      * Update member devices
      * @param memberId Member identifier

@@ -1,4 +1,4 @@
-import { IUserService } from '../../interfaces/IUserService';
+import { IUserService } from '@/../interfaces/IUserService';
 import { 
     User, 
     UserGroup, 
@@ -8,10 +8,10 @@ import {
     UserFilters, 
     UserStats, 
     Permission 
-} from '../../../types/client.types';
-import { PaginatedResponse, QueryOptions } from '../../../types/index';
-import { BaseMockService } from './BaseMockService';
-import { mockUsers } from './data/users/mockUserData';
+} from '@/../../types/client.types';
+import { PaginatedResponse, QueryOptions } from '@/../../types/index';
+import { BaseMockService } from '@/BaseMockService';
+import { mockUsers } from '@/data/users/mockUserData';
 
 /**
  * Mock implementation of UserService

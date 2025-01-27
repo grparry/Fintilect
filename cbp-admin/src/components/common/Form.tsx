@@ -13,9 +13,9 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { Controller, useForm, Path, FieldValues, DefaultValues } from 'react-hook-form';
-import { SelectOption } from '../../types/index';
-import { ServiceFactory } from '../../services/factory/ServiceFactory';
-import logger from '../../utils/logger';
+import { SelectOption } from '@/../types/index';
+import { ServiceFactory } from '@/../services/factory/ServiceFactory';
+import logger from '@/../utils/logger';
 
 export interface FormField<T> {
   name: Path<T>;

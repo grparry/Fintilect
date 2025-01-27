@@ -1,6 +1,6 @@
-import { ISettingsService } from '../interfaces/ISettingsService';
-import { Setting, SettingGroup, ISettingsMetadata } from '../../types/settings.types';
-import { ApiSuccessResponse, ApiErrorResponse } from '../../types/api.types';
+import { ISettingsService } from '@/interfaces/ISettingsService';
+import { Setting, SettingGroup, ISettingsMetadata } from '@/../types/settings.types';
+import { ApiSuccessResponse, ApiErrorResponse } from '@/../types/api.types';
 
 export class SettingsManager {
     private readonly settingsService: ISettingsService;

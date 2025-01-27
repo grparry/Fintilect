@@ -9,16 +9,16 @@ import {
   Alert,
   Chip,
 } from '@mui/material';
-import { Client, Environment, ClientStatus, ClientType } from '../../types/client.types';
-import { IpAddress } from '../../types/security.types';
-import { clientService } from '../../services/factory/ServiceFactory';
-import ContactInformation from './ContactInformation';
-import GroupsWrapper from './wrappers/GroupsWrapper';
-import UsersWrapper from './wrappers/UsersWrapper';
-import MemberSecuritySettingsWrapper from './wrappers/MemberSecuritySettingsWrapper';
-import AuditSearchWrapper from './wrappers/AuditSearchWrapper';
-import { encodeId } from '../../utils/idEncoder';
-import logger from '../../utils/logger';
+import { Client, Environment, ClientStatus, ClientType } from '@/../types/client.types';
+import { IpAddress } from '@/../types/security.types';
+import { clientService } from '@/../services/factory/ServiceFactory';
+import ContactInformation from '@/ContactInformation';
+import GroupsWrapper from '@/wrappers/GroupsWrapper';
+import UsersWrapper from '@/wrappers/UsersWrapper';
+import MemberSecuritySettingsWrapper from '@/wrappers/MemberSecuritySettingsWrapper';
+import AuditSearchWrapper from '@/wrappers/AuditSearchWrapper';
+import { encodeId } from '@/../utils/idEncoder';
+import logger from '@/../utils/logger';
 
 interface TabPanelProps {
   children?: React.ReactNode;

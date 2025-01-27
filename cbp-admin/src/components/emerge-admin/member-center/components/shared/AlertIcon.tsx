@@ -1,6 +1,6 @@
 import React from 'react';
 import { SvgIcon, SvgIconProps } from '@mui/material';
-import { AlertSeverity } from '../../../../../types/member-center.types';
+import { AlertSeverity } from '@/../../../../types/member-center.types';
 
 interface AlertIconProps extends Omit<SvgIconProps, 'color'> {
   severity: AlertSeverity;

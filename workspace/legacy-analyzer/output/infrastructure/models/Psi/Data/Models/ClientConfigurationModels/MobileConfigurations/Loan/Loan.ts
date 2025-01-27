@@ -1,7 +1,7 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { LoanApplication } from './LoanApplication';
-import { LoanCalculator } from './LoanCalculator';
-import { LoanPayment } from './LoanPayment';
+import { LoanApplication } from '@infrastructure/LoanApplication';
+import { LoanCalculator } from '@infrastructure/LoanCalculator';
+import { LoanPayment } from '@infrastructure/LoanPayment';
 export interface LoanConfig {
     Application: LoanApplication;
     Calculator: LoanCalculator;

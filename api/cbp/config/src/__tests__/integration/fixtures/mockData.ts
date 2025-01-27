@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { UserRecord } from '../../../services/user.service';
+import { UserRecord } from '@/../../services/user.service';
 
 export const mockTimestamps = {
   past: new Date('2024-01-01T00:00:00Z'),

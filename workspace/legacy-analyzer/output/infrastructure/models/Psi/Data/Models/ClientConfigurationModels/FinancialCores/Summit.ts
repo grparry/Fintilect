@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { RegularAchTransfers } from './RegularAchTransfers';
+import { RegularAchTransfers } from '@infrastructure/RegularAchTransfers';
 export interface SummitConfig {
     TransferCommandCode: string;
     SegmintMarketingIdEnabled: string;

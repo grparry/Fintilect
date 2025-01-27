@@ -1,4 +1,4 @@
-import { ServiceResponse } from './common';
+import { ServiceResponse } from '@/common';
 
 export enum NotificationType {
   EMAIL = 'EMAIL',

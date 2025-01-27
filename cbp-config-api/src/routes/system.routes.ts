@@ -179,10 +179,10 @@
  */
 
 import { Router } from 'express';
-import { validateRequest } from '../middleware/validation.middleware';
-import { SystemController } from '../controllers/system.controller';
-import { cacheMiddleware } from '../middleware/cache.middleware';
-import { db } from '../config/db';
+import { validateRequest } from '@/middleware/validation.middleware';
+import { SystemController } from '@/controllers/system.controller';
+import { cacheMiddleware } from '@/middleware/cache.middleware';
+import { db } from '@/config/db';
 import { z } from 'zod';
 
 const router = Router();

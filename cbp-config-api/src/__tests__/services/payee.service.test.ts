@@ -1,8 +1,8 @@
-import { PayeeService } from '../../services/payee.service';
-import { PayeeRecord, PayeeResponse, PaginatedResponse } from '../../types/payee';
-import { DatabaseService } from '../../interfaces/database';
-import { PayeeTestHelper, mockPayees } from '../integration/helpers/payee.helper';
-import { HttpError } from '../../utils/errors';
+import { PayeeService } from '@/../services/payee.service';
+import { PayeeRecord, PayeeResponse, PaginatedResponse } from '@/../types/payee';
+import { DatabaseService } from '@/../interfaces/database';
+import { PayeeTestHelper, mockPayees } from '@/integration/helpers/payee.helper';
+import { HttpError } from '@/../utils/errors';
 
 describe('PayeeService', () => {
   let payeeService: PayeeService;

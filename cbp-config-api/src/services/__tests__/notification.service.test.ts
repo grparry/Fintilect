@@ -1,12 +1,12 @@
-import { Database } from '../../config/db';
-import { NotificationService } from '../notification.service';
+import { Database } from '@/../config/db';
+import { NotificationService } from '@/notification.service';
 import {
   NotificationType,
   NotificationTemplate,
   NotificationRequest,
   NotificationHistory
-} from '../../types/notification';
-import type { ServiceResponse } from '../../types/common';
+} from '@/../types/notification';
+import type { ServiceResponse } from '@/../types/common';
 import sql from 'mssql';
 
 describe('NotificationService', () => {

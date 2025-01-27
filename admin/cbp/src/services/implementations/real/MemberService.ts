@@ -16,12 +16,10 @@ export class MemberService extends BaseService implements IMemberService {
     constructor(basePath: string = '/api/v1/members') {
         super(basePath);
     }
-
     async searchMembers(filters: MemberSearchFilters): Promise<PaginatedResponse<MemberSearchResult>> {
         try {
             const response = await this.get<PaginatedResponse<Member>>('/search', { params: filters });
             const members = response.items;
-            
             return {
                 items: [{
                     totalCount: response.total,
@@ -51,7 +49,6 @@ export class MemberService extends BaseService implements IMemberService {
             throw this.handleError(error, 'Failed to search members');
         }
     }
-
     async getMember(memberId: string): Promise<Member> {
         try {
             return await this.get<Member>(`/${memberId}`);
@@ -59,7 +56,6 @@ export class MemberService extends BaseService implements IMemberService {
             throw this.handleError(error, 'Failed to get member');
         }
     }
-
     async getMemberActivity(memberId: string): Promise<MemberActivity[]> {
         try {
             return await this.get<MemberActivity[]>(`/${memberId}/activity`);
@@ -67,7 +63,6 @@ export class MemberService extends BaseService implements IMemberService {
             throw this.handleError(error, 'Failed to get member activity');
         }
     }
-
     async getMemberAlerts(memberId: string): Promise<Alert[]> {
         try {
             return await this.get<Alert[]>(`/${memberId}/alerts`);
@@ -75,7 +70,6 @@ export class MemberService extends BaseService implements IMemberService {
             throw this.handleError(error, 'Failed to get member alerts');
         }
     }
-
     async updateMemberStatus(memberId: string, status: MemberStatus): Promise<void> {
         try {
             await this.patch(`/${memberId}/status`, { status });
@@ -83,7 +77,6 @@ export class MemberService extends BaseService implements IMemberService {
             throw this.handleError(error, 'Failed to update member status');
         }
     }
-
     async getSecuritySettings(memberId: string): Promise<any> {
         try {
             return await this.get<SecuritySettings>(`/${memberId}/security`);
@@ -91,7 +84,6 @@ export class MemberService extends BaseService implements IMemberService {
             throw this.handleError(error, 'Failed to get security settings');
         }
     }
-
     async updateSecuritySettings(memberId: string, settings: Partial<SecuritySettings>): Promise<void> {
         try {
             await this.patch(`/${memberId}/security`, settings);
@@ -99,7 +91,6 @@ export class MemberService extends BaseService implements IMemberService {
             throw this.handleError(error, 'Failed to update security settings');
         }
     }
-
     async getMemberDevices(memberId: string): Promise<Device[]> {
         try {
             return await this.get<Device[]>(`/${memberId}/devices`);
@@ -107,7 +98,6 @@ export class MemberService extends BaseService implements IMemberService {
             throw this.handleError(error, 'Failed to get member devices');
         }
     }
-
     async removeDevice(memberId: string, deviceId: string): Promise<void> {
         try {
             await this.delete<void>(`/${memberId}/devices/${deviceId}`);
@@ -115,7 +105,6 @@ export class MemberService extends BaseService implements IMemberService {
             throw this.handleError(error, 'Failed to remove device');
         }
     }
-
     async updateMemberDevice(memberId: string, deviceId: string, updates: Partial<Device>): Promise<Device> {
         try {
             return await this.patch<Device>(
@@ -126,7 +115,6 @@ export class MemberService extends BaseService implements IMemberService {
             throw this.handleError(error, 'Failed to update member device');
         }
     }
-
     /**
      * Update member devices
      * @param memberId Member identifier
@@ -135,12 +123,10 @@ export class MemberService extends BaseService implements IMemberService {
     async updateDevices(memberId: string, devices: Device[]): Promise<void> {
         await this.put(`${memberId}/devices`, devices);
     }
-
     private handleError(error: any, defaultMessage: string): Error {
         if (error instanceof Error) {
             return error;
         }
         return new Error(defaultMessage);
     }
-
 }

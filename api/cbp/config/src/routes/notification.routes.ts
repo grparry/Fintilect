@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { NotificationController } from '../controllers/notification.controller';
-import { Database } from '../config/db';
-import { authMiddleware } from '../middleware/auth.middleware';
-import { validateRequest } from '../middleware/validation.middleware';
-import { NotificationRequestSchema, NotificationHistorySearchRequestSchema } from '../schemas/notification.schema';
+import { NotificationController } from '@cbp-config-api/controllers/notification.controller';
+import { Database } from '@cbp-config-api/config/db';
+import { authMiddleware } from '@cbp-config-api/middleware/auth.middleware';
+import { validateRequest } from '@cbp-config-api/middleware/validation.middleware';
+import { NotificationRequestSchema, NotificationHistorySearchRequestSchema } from '@cbp-config-api/schemas/notification.schema';
 
 /**
  * @swagger

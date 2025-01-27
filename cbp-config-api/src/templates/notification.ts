@@ -1,5 +1,5 @@
-import { NotificationTemplate, NotificationTemplateData } from '../types/notification';
-import { HttpError } from '../utils/errors';
+import { NotificationTemplate, NotificationTemplateData } from '@/types/notification';
+import { HttpError } from '@/utils/errors';
 
 interface NotificationContent {
   subject: string;

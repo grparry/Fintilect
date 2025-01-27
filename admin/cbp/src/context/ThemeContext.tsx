@@ -6,13 +6,10 @@ interface ThemeContextType {
   toggleTheme: () => void;
   theme: Theme;
 }
-
 interface ThemeProviderProps {
   children: ReactNode;
 }
-
 const ThemeContext = createContext<ThemeContextType | null>(null);
-
 const lightTheme = createTheme({
   palette: {
     mode: 'light',
@@ -41,7 +38,6 @@ const lightTheme = createTheme({
     },
   },
 });
-
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -80,13 +76,11 @@ const darkTheme = createTheme({
     },
   },
 });
-
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('theme');
     return savedMode === 'dark';
   });
-
   const toggleTheme = useCallback(() => {
     setIsDarkMode((prev) => {
       const newMode = !prev;
@@ -94,16 +88,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       return newMode;
     });
   }, []);
-
   const theme = isDarkMode ? darkTheme : lightTheme;
-
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme, theme }}>
       <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
     </ThemeContext.Provider>
   );
 };
-
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (!context) {

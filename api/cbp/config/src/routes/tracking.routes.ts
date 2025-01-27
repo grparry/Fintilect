@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { TrackingController } from '../controllers/tracking.controller';
-import { db } from '../config/db';
-import { validateRequest } from '../middleware/validation.middleware';
+import { TrackingController } from '@cbp-config-api/controllers/tracking.controller';
+import { db } from '@cbp-config-api/config/db';
+import { validateRequest } from '@cbp-config-api/middleware/validation.middleware';
 import { z } from 'zod';
-import { authMiddleware } from '../middleware/auth.middleware';
-import { cacheMiddleware } from '../middleware/cache.middleware';
+import { authMiddleware } from '@cbp-config-api/middleware/auth.middleware';
+import { cacheMiddleware } from '@cbp-config-api/middleware/cache.middleware';
 
 /**
  * @swagger

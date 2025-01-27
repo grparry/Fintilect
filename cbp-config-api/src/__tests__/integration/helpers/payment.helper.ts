@@ -1,6 +1,6 @@
-import { TestDatabase } from '../../../config/test.db';
-import { Payment } from '../../../helpers/payment.helper';
-import { PaymentRecord } from '../../../services/payment.service';
+import { TestDatabase } from '@/../../config/test.db';
+import { Payment } from '@/../../helpers/payment.helper';
+import { PaymentRecord } from '@/../../services/payment.service';
 
 export const mockPayments = {
   standard: {

@@ -32,21 +32,18 @@ export interface IPayeeService extends IBaseService {
         type?: PayeeType;
         searchTerm?: string;
     }): Promise<PaginatedResponse<Payee>>;
-
     /**
      * Get specific payee
      * @param payeeId Payee identifier
      * @returns Payee details
      */
     getPayee(payeeId: string): Promise<Payee>;
-
     /**
      * Create payee
      * @param payee Payee to create
      * @returns Created payee
      */
     createPayee(payee: Omit<Payee, 'id' | 'createdAt' | 'updatedAt'>): Promise<Payee>;
-
     /**
      * Update payee
      * @param payeeId Payee identifier
@@ -54,39 +51,33 @@ export interface IPayeeService extends IBaseService {
      * @returns Updated payee
      */
     updatePayee(payeeId: string, payee: Partial<Payee>): Promise<Payee>;
-
     /**
      * Delete payee
      * @param payeeId Payee identifier
      */
     deletePayee(payeeId: string): Promise<void>;
-
     /**
      * Validate payee
      * @param payee Payee data to validate
      * @returns Validation results
      */
     validatePayee(payee: Partial<Payee>): Promise<PayeeValidationResult>;
-
     /**
      * Get payee conversion summary
      * @returns Conversion summary statistics
      */
     getConversionSummary(): Promise<PayeeConversionSummary>;
-
     /**
      * Get payee conversions with pagination and filtering
      * @param filters Conversion filters
      * @returns Paginated list of conversion records
      */
     getConversions(filters: PayeeConversionFilters): Promise<PaginatedResponse<PayeeConversionRecord>>;
-
     /**
      * Get conversion files
      * @returns List of conversion files
      */
     getConversionFiles(): Promise<PayeeConversionFile[]>;
-
     /**
      * Upload conversion file
      * @param file File data
@@ -97,47 +88,40 @@ export interface IPayeeService extends IBaseService {
         file: File,
         templateId: string
     ): Promise<PayeeConversionFileUploadResponse>;
-
     /**
      * Validate conversion file
      * @param fileId File identifier
      * @returns Validation results
      */
     validateConversionFile(fileId: string): Promise<PayeeConversionValidation>;
-
     /**
      * Start conversion process
      * @param fileId File identifier
      * @returns Initial progress response
      */
     startConversion(fileId: string): Promise<PayeeConversionProgressResponse>;
-
     /**
      * Get conversion progress
      * @param fileId File identifier
      * @returns Current progress
      */
     getConversionProgress(fileId: string): Promise<PayeeConversionProgress>;
-
     /**
      * Cancel conversion
      * @param fileId File identifier
      */
     cancelConversion(fileId: string): Promise<void>;
-
     /**
      * Get conversion templates
      * @returns List of conversion templates
      */
     getConversionTemplates(): Promise<PayeeConversionTemplate[]>;
-
     /**
      * Create conversion template
      * @param template Template to create
      * @returns Created template
      */
     createConversionTemplate(template: Omit<PayeeConversionTemplate, 'id' | 'createdAt' | 'updatedAt'>): Promise<PayeeConversionTemplate>;
-
     /**
      * Update conversion template
      * @param templateId Template identifier
@@ -148,13 +132,11 @@ export interface IPayeeService extends IBaseService {
         templateId: string,
         template: Partial<PayeeConversionTemplate>
     ): Promise<PayeeConversionTemplate>;
-
     /**
      * Delete conversion template
      * @param templateId Template identifier
      */
     deleteConversionTemplate(templateId: string): Promise<void>;
-
     /**
      * Get conversion history
      * @param conversionId Conversion identifier
@@ -166,7 +148,6 @@ export interface IPayeeService extends IBaseService {
         details: Record<string, unknown>;
         user: string;
     }>>;
-
     /**
      * Export conversion results
      * @param conversionId Conversion identifier
@@ -177,7 +158,6 @@ export interface IPayeeService extends IBaseService {
         conversionId: string,
         format: 'csv' | 'excel'
     ): Promise<string>;
-
     /**
      * Retry failed conversions
      * @param conversionId Conversion identifier

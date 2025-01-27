@@ -1,15 +1,16 @@
 import { IUserService } from '../../interfaces/IUserService';
 import { 
-    User, 
-    UserGroup, 
-    UserPreferences, 
+    User,
+    UserGroup,
+    UserPreferences,
     UserStatus, 
     UserRole, 
     UserFilters, 
-    UserStats, 
+    UserStats,
     Permission 
 } from '../../../types/client.types';
-import { PaginatedResponse, QueryOptions } from '../../../types/index';
+import { PaginatedResponse } from '../../../types/common.types';
+import { QueryOptions } from '../../../types/index';
 import { BaseMockService } from './BaseMockService';
 import { mockUsers } from './data/users/mockUserData';
 
@@ -20,40 +21,32 @@ export class MockUserService extends BaseMockService implements IUserService {
   private users: User[] = [...mockUsers];
   private userGroups: Map<string, UserGroup[]> = new Map();
   private userPreferences: Map<string, UserPreferences> = new Map();
-
   constructor(basePath: string = '/api/v1/users') {
     super(basePath);
   }
-
   async getUser(userId: string): Promise<User> {
     const user = this.users.find(u => u.id === userId);
     if (!user) {
       throw this.createError(`User not found: ${userId}`, 404);
     }
-
     return user;
   }
-
   async getUsers(queryParams: QueryOptions): Promise<PaginatedResponse<User>> {
     const page = queryParams.pagination?.page || 1;
     const limit = queryParams.pagination?.limit || 10;
-    const start = (page - 1) * limit;
-    const end = start + limit;
-
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
     const filteredUsers = this.users;
-    const paginatedUsers = filteredUsers.slice(start, end);
+    const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
 
     return {
       items: paginatedUsers,
-      pagination: {
-        total: filteredUsers.length,
-        page,
-        limit,
-        pages: Math.ceil(filteredUsers.length / limit)
-      }
+      total: filteredUsers.length,
+      page,
+      limit,
+      totalPages: Math.ceil(filteredUsers.length / limit)
     };
   }
-
   async createUser(user: Omit<User, 'id'>): Promise<User> {
     const newUser: User = {
       id: String(this.users.length + 1),
@@ -64,13 +57,11 @@ export class MockUserService extends BaseMockService implements IUserService {
     this.users.push(newUser);
     return newUser;
   }
-
   async updateUser(userId: string, updates: Partial<User>): Promise<User> {
     const index = this.users.findIndex(u => u.id === userId);
     if (index === -1) {
       throw this.createError(`User not found: ${userId}`, 404);
     }
-
     const updatedUser = {
       ...this.users[index],
       ...updates,
@@ -79,7 +70,6 @@ export class MockUserService extends BaseMockService implements IUserService {
     this.users[index] = updatedUser;
     return updatedUser;
   }
-
   async deleteUser(userId: string): Promise<void> {
     const index = this.users.findIndex(u => u.id === userId);
     if (index === -1) {
@@ -87,34 +77,28 @@ export class MockUserService extends BaseMockService implements IUserService {
     }
     this.users.splice(index, 1);
   }
-
   async getUsersByGroup(groupId: string, queryParams: QueryOptions): Promise<PaginatedResponse<User>> {
     const page = queryParams.pagination?.page || 1;
     const limit = queryParams.pagination?.limit || 10;
-    const start = (page - 1) * limit;
-    const end = start + limit;
-
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
     const usersInGroup = this.users.filter(user => {
       const groups = this.userGroups.get(user.id) || [];
       return groups.some(g => g.id === groupId);
     });
-    const paginatedUsers = usersInGroup.slice(start, end);
+    const paginatedUsers = usersInGroup.slice(startIndex, endIndex);
 
     return {
       items: paginatedUsers,
-      pagination: {
-        total: usersInGroup.length,
-        page,
-        limit,
-        pages: Math.ceil(usersInGroup.length / limit)
-      }
+      total: usersInGroup.length,
+      page,
+      limit,
+      totalPages: Math.ceil(usersInGroup.length / limit)
     };
   }
-
   async getUserGroups(userId: string): Promise<UserGroup[]> {
     return this.userGroups.get(userId) || [];
   }
-
   async getUserPreferences(userId: string): Promise<UserPreferences> {
     const defaultPreferences: UserPreferences = {
       theme: 'light',
@@ -130,34 +114,30 @@ export class MockUserService extends BaseMockService implements IUserService {
     };
     return this.userPreferences.get(userId) || defaultPreferences;
   }
-
   async updateUserPreferences(userId: string, preferences: Partial<UserPreferences>): Promise<UserPreferences> {
     const currentPrefs = await this.getUserPreferences(userId);
     const updatedPrefs = { ...currentPrefs, ...preferences };
     this.userPreferences.set(userId, updatedPrefs);
     return updatedPrefs;
   }
-
   async updateUserRole(userId: string, role: UserRole): Promise<User> {
     return this.updateUser(userId, { roles: [role] });
   }
-
   async updateUserStatus(userId: string, status: UserStatus): Promise<User> {
     return this.updateUser(userId, { status });
   }
-
   async userExists(userId: string): Promise<boolean> {
     return this.users.some(u => u.id === userId);
   }
-
   async searchUsers(filters: UserFilters): Promise<{ users: User[], total: number }> {
     let filteredUsers = [...this.users];
-
     if (filters.status) {
       filteredUsers = filteredUsers.filter(u => u.status === filters.status);
     }
     if (filters.role) {
-      filteredUsers = filteredUsers.filter(u => u.roles.includes(filters.role));
+      filteredUsers = filteredUsers.filter(user => 
+        user.roles.includes(filters.role as string)
+      );
     }
     if (filters.search) {
       const search = filters.search.toLowerCase();
@@ -168,18 +148,15 @@ export class MockUserService extends BaseMockService implements IUserService {
         u.lastName?.toLowerCase().includes(search)
       );
     }
-
     return {
       users: filteredUsers,
       total: filteredUsers.length
     };
   }
-
   async getUserStats(userId: string): Promise<UserStats> {
     if (!this.users.some(u => u.id === userId)) {
       throw this.createError(`User not found: ${userId}`, 404);
     }
-
     return {
       totalLogins: Math.floor(Math.random() * 100),
       lastActiveDate: new Date().toISOString(),
@@ -190,7 +167,6 @@ export class MockUserService extends BaseMockService implements IUserService {
       activeSessionCount: Math.floor(Math.random() * 3)
     };
   }
-
   async addUserToGroup(userId: string, groupId: string): Promise<void> {
     const userGroups = this.userGroups.get(userId) || [];
     if (!userGroups.find(g => g.id === groupId)) {
@@ -200,16 +176,16 @@ export class MockUserService extends BaseMockService implements IUserService {
         description: 'Auto-generated group',
         clientId: userId.split('-')[0], 
         roles: [], 
-        permissions: [] as Permission[],
+        permissions: [], 
+        members: [],
+        users: [],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        members: []
+        updatedAt: new Date().toISOString()
       };
       userGroups.push(newGroup);
       this.userGroups.set(userId, userGroups);
     }
   }
-
   async removeUserFromGroup(userId: string, groupId: string): Promise<void> {
     const userGroups = this.userGroups.get(userId) || [];
     const updatedGroups = userGroups.filter(g => g.id !== groupId);

@@ -1,5 +1,5 @@
-import { IPaymentProcessorService } from '../../interfaces/IPaymentProcessorService';
-import { PaginatedResponse } from '../../../types/common.types';
+import { IPaymentProcessorService } from '@/../interfaces/IPaymentProcessorService';
+import { PaginatedResponse } from '@/../../types/common.types';
 import { 
     PaymentTransaction, 
     PaymentStatus,
@@ -16,9 +16,9 @@ import {
     TransactionSummary,
     ProcessorMetrics,
     DateRange,
-} from '../../../types/payment.types';
-import { BaseService } from './BaseService';
-import logger from '../../../utils/logger';
+} from '@/../../types/payment.types';
+import { BaseService } from '@/BaseService';
+import logger from '@/../../utils/logger';
 
 export class PaymentProcessorService extends BaseService implements IPaymentProcessorService {
     constructor(

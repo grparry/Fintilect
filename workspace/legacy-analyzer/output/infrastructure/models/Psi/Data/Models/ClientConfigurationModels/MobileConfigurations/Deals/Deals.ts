@@ -1,7 +1,7 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Cardlytics } from './Cardlytics.Cardlytics';
-import { RelevantSolutions } from './RelevantSolutions.RelevantSolutions';
-import { CheckingRewards } from './CheckingRewards.CheckingRewards';
+import { Cardlytics } from '@infrastructure/Cardlytics.Cardlytics';
+import { RelevantSolutions } from '@infrastructure/RelevantSolutions.RelevantSolutions';
+import { CheckingRewards } from '@infrastructure/CheckingRewards.CheckingRewards';
 export interface DealsConfig {
     Cardlytics: Cardlytics;
     RelevantSolutions: RelevantSolutions;

@@ -1,6 +1,6 @@
-import { Database } from '../config/db';
-import { logger } from '../config/logger';
-import { getNotificationContent } from '../templates/notification';
+import { Database } from '@cbp-config-api/config/db';
+import { logger } from '@cbp-config-api/config/logger';
+import { getNotificationContent } from '@cbp-config-api/templates/notification';
 import {
   NotificationRequest,
   NotificationResponse,
@@ -8,9 +8,9 @@ import {
   NotificationHistorySearchRequest,
   NotificationHistorySearchResponse,
   NotificationType
-} from '../types/notification';
-import { ServiceResponse } from '../types/common';
-import { HttpError } from '../utils/errors';
+} from '@cbp-config-api/types/notification';
+import { ServiceResponse } from '@cbp-config-api/types/common';
+import { HttpError } from '@cbp-config-api/utils/errors';
 
 export class NotificationService {
   constructor(private db: Database) {}

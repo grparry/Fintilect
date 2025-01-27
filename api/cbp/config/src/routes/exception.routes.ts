@@ -230,10 +230,10 @@
  */
 
 import { Router } from 'express';
-import { ExceptionController } from '../controllers/exception.controller';
-import { db } from '../config/db';
-import { validateRequest } from '../middleware/validation.middleware';
-import { authorize } from '../middleware/auth.middleware';
+import { ExceptionController } from '@cbp-config-api/controllers/exception.controller';
+import { db } from '@cbp-config-api/config/db';
+import { validateRequest } from '@cbp-config-api/middleware/validation.middleware';
+import { authorize } from '@cbp-config-api/middleware/auth.middleware';
 import { z } from 'zod';
 
 const router = Router();

@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { MultiAccountAccessPermissionSource } from './MultiAccountAccessPermissionSource';
+import { MultiAccountAccessPermissionSource } from '@infrastructure/MultiAccountAccessPermissionSource';
 export interface MultiAccountAccessConfig {
     Enabled: boolean;
     MinVersion: number;

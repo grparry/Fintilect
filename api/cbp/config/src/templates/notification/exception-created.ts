@@ -1,4 +1,4 @@
-import { NotificationTemplateData } from '../../types/notification';
+import { NotificationTemplateData } from '@cbp-config-api/../types/notification';
 
 export const getSubject = (data: NotificationTemplateData): string => {
   return `New Exception ${data.exceptionId} Created`;

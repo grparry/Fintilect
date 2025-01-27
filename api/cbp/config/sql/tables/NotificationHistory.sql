@@ -1,0 +1,12 @@
+CREATE TABLE [dbo].[NotificationHistory] (
+  [Id] INT IDENTITY(1,1) PRIMARY KEY,
+  [Type] NVARCHAR(50) NOT NULL,
+  [Template] NVARCHAR(50) NOT NULL,
+  [Recipients] NVARCHAR(MAX) NOT NULL,
+  [Data] NVARCHAR(MAX) NOT NULL,
+  [UserId] NVARCHAR(50) NOT NULL,
+  [Status] NVARCHAR(20) NOT NULL,
+  [Error] NVARCHAR(MAX) NULL,
+  [CreatedAt] DATETIME NOT NULL,
+  [UpdatedAt] DATETIME NULL
+);

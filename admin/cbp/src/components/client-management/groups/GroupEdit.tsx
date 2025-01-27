@@ -24,7 +24,6 @@ interface GroupEditProps {
   onSave: () => void;
   onCancel: () => void;
 }
-
 interface ServicePermission {
   id: string;
   name: string;
@@ -32,7 +31,6 @@ interface ServicePermission {
   category: string;
   scope: 'READ' | 'WRITE' | 'ADMIN';
 }
-
 const decodeId = (id: string): string => {
   try {
     return atob(id);
@@ -40,7 +38,6 @@ const decodeId = (id: string): string => {
     return id;
   }
 };
-
 const GroupEdit: React.FC<GroupEditProps> = ({
   clientId,
   groupId,
@@ -54,7 +51,6 @@ const GroupEdit: React.FC<GroupEditProps> = ({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
   useEffect(() => {
     const loadPermissions = async () => {
       try {
@@ -67,13 +63,11 @@ const GroupEdit: React.FC<GroupEditProps> = ({
         setLoading(false);
       }
     };
-
     const loadGroup = async () => {
       if (!groupId) {
         setLoading(false);
         return;
       }
-
       try {
         setLoading(true);
         const decodedClientId = decodeId(clientId);
@@ -87,13 +81,11 @@ const GroupEdit: React.FC<GroupEditProps> = ({
         setLoading(false);
       }
     };
-
     Promise.all([loadPermissions(), loadGroup()]).catch(err => {
       setError(err.message || 'Failed to load data');
       setLoading(false);
     });
   }, [clientId, groupId]);
-
   const handlePermissionToggle = (permissionId: string) => {
     setSelectedPermissions((prev) =>
       prev.includes(permissionId)
@@ -101,11 +93,9 @@ const GroupEdit: React.FC<GroupEditProps> = ({
         : [...prev, permissionId]
     );
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!group) return;
-
     try {
       setSaving(true);
       const decodedClientId = decodeId(clientId);
@@ -114,14 +104,12 @@ const GroupEdit: React.FC<GroupEditProps> = ({
         ...group,
         permissions
       };
-
       if (groupId) {
         const decodedGroupId = decodeId(groupId);
         await clientService.updateGroup(decodedClientId, decodedGroupId, groupData);
       } else {
         await clientService.createGroup(decodedClientId, groupData);
       }
-
       onSave();
     } catch (err: any) {
       setError(err.message || 'Failed to save group');
@@ -129,10 +117,8 @@ const GroupEdit: React.FC<GroupEditProps> = ({
       setSaving(false);
     }
   };
-
   const handleDelete = async () => {
     if (!groupId || !group) return;
-
     try {
       setSaving(true);
       const decodedClientId = decodeId(clientId);
@@ -145,7 +131,6 @@ const GroupEdit: React.FC<GroupEditProps> = ({
       setSaving(false);
     }
   };
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
@@ -153,7 +138,6 @@ const GroupEdit: React.FC<GroupEditProps> = ({
       </Box>
     );
   }
-
   return (
     <Paper sx={{ p: 3 }}>
       <form onSubmit={handleSubmit}>
@@ -162,14 +146,12 @@ const GroupEdit: React.FC<GroupEditProps> = ({
             {error}
           </Alert>
         )}
-
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Typography variant="h6">
               {groupId ? 'Edit Group' : 'Create New Group'}
             </Typography>
           </Grid>
-
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -183,7 +165,6 @@ const GroupEdit: React.FC<GroupEditProps> = ({
               required
             />
           </Grid>
-
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -198,7 +179,6 @@ const GroupEdit: React.FC<GroupEditProps> = ({
               rows={3}
             />
           </Grid>
-
           <Grid item xs={12}>
             <Typography variant="subtitle1" sx={{ mb: 2 }}>
               Permissions
@@ -223,7 +203,6 @@ const GroupEdit: React.FC<GroupEditProps> = ({
               ))}
             </Box>
           </Grid>
-
           <Grid item xs={12}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
               <Button onClick={onCancel}>Cancel</Button>
@@ -251,5 +230,4 @@ const GroupEdit: React.FC<GroupEditProps> = ({
     </Paper>
   );
 };
-
 export default GroupEdit;

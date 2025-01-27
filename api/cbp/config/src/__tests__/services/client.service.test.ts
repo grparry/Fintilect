@@ -1,10 +1,10 @@
-import { ClientService } from '../../services/client.service';
-import { TestDb } from '../../config/test.db';
-import { TestContext } from '../integration/context/TestContext';
-import { ClientTestHelper, mockClients } from '../integration/helpers/client.helper';
-import { ResponseValidator } from '../integration/helpers/ResponseValidator';
-import { mockErrors } from '../integration/fixtures/mockData';
-import { HttpError } from '../../utils/errors';
+import { ClientService } from '@/../services/client.service';
+import { TestDb } from '@/../config/test.db';
+import { TestContext } from '@/integration/context/TestContext';
+import { ClientTestHelper, mockClients } from '@/integration/helpers/client.helper';
+import { ResponseValidator } from '@/integration/helpers/ResponseValidator';
+import { mockErrors } from '@/integration/fixtures/mockData';
+import { HttpError } from '@/../utils/errors';
 
 describe('ClientService', () => {
   let clientService: ClientService;

@@ -11,11 +11,9 @@ export interface NavigationItem {
     parent?: string;
     order?: number;
 }
-
 export class NavigationRegistry {
     private static routes: Map<string, NavigationItem> = new Map();
     private static navigationItems: NavigationItem[] = [];
-
     static register(item: NavigationItem) {
         this.routes.set(item.id, item);
         if (item.children) {
@@ -23,7 +21,6 @@ export class NavigationRegistry {
         }
         this.navigationItems.push(item);
     }
-
     static getRoute(id: string): NavigationItem {
         const route = this.routes.get(id);
         if (!route) {
@@ -31,11 +28,9 @@ export class NavigationRegistry {
         }
         return route;
     }
-
     static getNavigationItems(): NavigationItem[] {
         return this.navigationItems;
     }
-
     static clear() {
         this.routes.clear();
         this.navigationItems = [];

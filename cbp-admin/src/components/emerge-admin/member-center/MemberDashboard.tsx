@@ -66,14 +66,14 @@ import {
   SecuritySettings,
   Device,
   Account
-} from '../../../types/member-center.types';
-import type { ApiResponse } from '../../../types/api.types';
-import { IMemberService } from '../../../services/interfaces/IMemberService';
-import { useService } from '../../../hooks/useService';
-import MemberSearch from './components/search/MemberSearch';
-import SearchResults from './components/search/SearchResults';
-import MemberSecuritySettings from '../security/MemberSecuritySettings';
-import ManageDevicesDialog from './ManageDevicesDialog';
+} from '@/../../types/member-center.types';
+import type { ApiResponse } from '@/../../types/api.types';
+import { IMemberService } from '@/../../services/interfaces/IMemberService';
+import { useService } from '@/../../hooks/useService';
+import MemberSearch from '@/components/search/MemberSearch';
+import SearchResults from '@/components/search/SearchResults';
+import MemberSecuritySettings from '@/security/MemberSecuritySettings';
+import ManageDevicesDialog from '@/ManageDevicesDialog';
 
 interface TabPanelProps {
   children?: React.ReactNode;

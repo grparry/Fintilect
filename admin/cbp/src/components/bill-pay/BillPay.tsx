@@ -40,7 +40,6 @@ interface ExceptionToolAdapter {
   getExceptions(): Promise<PaymentApiResponse<PaymentException[]>>;
   resolveException(id: string, resolution: ExceptionResolution): Promise<PaymentApiResponse<void>>;
 }
-
 // Adapter for FISExceptionHandling component
 interface FISExceptionAdapter {
   getExceptions(filters: FISExceptionFilters): Promise<ApiSuccessResponse<FISException[]>>;
@@ -52,15 +51,12 @@ interface FISExceptionAdapter {
   exportExceptions(filters: FISExceptionFilters): Promise<Blob>;
   getExceptionStats(): Promise<ApiSuccessResponse<ExceptionStats>>;
 }
-
 const BillPay: React.FC = () => {
   const navigate = useNavigate();
-
   // Services
   const billPayService = ServiceFactory.getInstance().getBillPayService();
   const paymentProcessorService = ServiceFactory.getInstance().getPaymentProcessorService();
   const exceptionService = ServiceFactory.getInstance().getExceptionService();
-
   // Create adapter for ExceptionTool
   const exceptionToolAdapter: ExceptionToolAdapter = {
     async getExceptions() {
@@ -69,7 +65,6 @@ const BillPay: React.FC = () => {
         page: 1,
         limit: 100
       });
-      
       // Convert ExceptionTool to PaymentException
       const paymentExceptions: PaymentException[] = response.items.map(item => ({
         id: item.id.toString(),
@@ -82,7 +77,6 @@ const BillPay: React.FC = () => {
         updatedAt: item.timestamp,
         resolutions: []
       }));
-
       return {
         success: true,
         data: paymentExceptions,
@@ -102,7 +96,6 @@ const BillPay: React.FC = () => {
       };
     }
   };
-
   // Create adapter for FISExceptionHandling
   const fisExceptionAdapter: FISExceptionAdapter = {
     async getExceptions(filters: FISExceptionFilters): Promise<ApiSuccessResponse<FISException[]>> {
@@ -110,7 +103,6 @@ const BillPay: React.FC = () => {
         status: filters.status?.map(s => PaymentStatus[s as keyof typeof PaymentStatus]),
         type: PaymentType.DEBIT
       });
-
       // Convert PaymentTransaction to FISException
       const fisExceptions: FISException[] = response.items.map(tx => ({
         id: tx.id,
@@ -123,7 +115,6 @@ const BillPay: React.FC = () => {
         updatedAt: tx.updatedAt.toISOString(),
         retryCount: Number(tx.metadata?.retryCount) || 0
       }));
-
       return {
         success: true,
         data: fisExceptions,
@@ -169,9 +160,7 @@ const BillPay: React.FC = () => {
           retryCount: 1
         }
       };
-
       const result = await paymentProcessorService.processPayment(tx);
-
       const retryResult: FISRetryResult = {
         success: result.status === PaymentStatus.COMPLETED,
         message: result.metadata?.errorMessage?.toString() || 'Retry successful',
@@ -179,7 +168,6 @@ const BillPay: React.FC = () => {
         lastRetryAt: result.updatedAt.toISOString(),
         newStatus: result.status
       };
-
       return {
         success: true,
         data: retryResult,
@@ -206,9 +194,7 @@ const BillPay: React.FC = () => {
           ignored: true
         }
       };
-
       await paymentProcessorService.processPayment(tx);
-
       return {
         success: true,
         data: void 0,
@@ -253,12 +239,10 @@ const BillPay: React.FC = () => {
     },
     async getExceptionStats(): Promise<ApiSuccessResponse<ExceptionStats>> {
       const response = await this.getExceptions({});
-      
       const byStatus = response.data.reduce((acc: Record<string, number>, curr: FISException) => {
         acc[curr.status] = (acc[curr.status] || 0) + 1;
         return acc;
       }, {});
-
       const stats: ExceptionStats = {
         total: response.data.length,
         byStatus,
@@ -270,7 +254,6 @@ const BillPay: React.FC = () => {
         resolutionRate: 0,
         averageRetryCount: response.data.reduce((acc: number, curr: FISException) => acc + curr.retryCount, 0) / response.data.length
       };
-
       return {
         success: true,
         data: stats,
@@ -281,11 +264,9 @@ const BillPay: React.FC = () => {
       };
     }
   };
-
   const handleClose = () => {
     navigate('/payments');
   };
-
   return (
     <Routes>
       <Route path="/" element={<Navigate to="dashboard" replace />} />
@@ -307,5 +288,4 @@ const BillPay: React.FC = () => {
     </Routes>
   );
 };
-
 export default BillPay;

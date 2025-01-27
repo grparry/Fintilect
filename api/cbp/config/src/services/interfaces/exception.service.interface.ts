@@ -1,4 +1,4 @@
-import { ServiceResponse } from '../../types/common';
+import { ServiceResponse } from '@cbp-config-api/../types/common';
 import {
   ExceptionSearchRequest,
   ExceptionSearchResponse,
@@ -7,7 +7,7 @@ import {
   ExceptionRefundResponse,
   ExceptionNotificationRequest,
   FisException
-} from '../../types/fis-exception';
+} from '@cbp-config-api/../types/fis-exception';
 
 export interface IExceptionService {
   searchExceptions(request: ExceptionSearchRequest): Promise<ServiceResponse<ExceptionSearchResponse>>;

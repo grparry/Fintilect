@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { PassThroughErrorMessageConfiguration } from './PassThroughErrorMessageConfiguration';
+import { PassThroughErrorMessageConfiguration } from '@infrastructure/PassThroughErrorMessageConfiguration';
 export interface ErrorMessageConfigurationConfig {
     PassThroughErrorConfiguration: PassThroughErrorMessageConfiguration;
 }

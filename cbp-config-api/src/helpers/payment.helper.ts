@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { TestDatabase } from '../config/test.db';
+import { TestDatabase } from '@/config/test.db';
 
 export interface Payment {
   id: number;

@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { testApp, setupTestDb, cleanupTestDb, createTestAdmin, createTestUser, getAuthHeader } from './helpers';
-import { ClientRecord } from '../../models/client';
+import { testApp, setupTestDb, cleanupTestDb, createTestAdmin, createTestUser, getAuthHeader } from '@/helpers';
+import { ClientRecord } from '@/../models/client';
 
 describe('Client Integration Tests', () => {
   let adminToken: string;

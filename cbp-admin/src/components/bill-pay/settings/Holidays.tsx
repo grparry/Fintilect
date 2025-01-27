@@ -22,8 +22,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Holiday, HolidayInput, HolidayType, HolidayStatus } from '../../../types/bill-pay.types';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+import { Holiday, HolidayInput, HolidayType, HolidayStatus } from '@/../../types/bill-pay.types';
+import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
 
 interface FormData {
   name: string;

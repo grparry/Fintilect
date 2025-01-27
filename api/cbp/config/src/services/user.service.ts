@@ -1,8 +1,8 @@
 import * as sql from 'mssql';
-import { Database } from '../config/db';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { PaginatedResponse, SqlResponse } from '../types/common';
+import { Database } from '@cbp-config-api/config/db';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { logger } from '@cbp-config-api/config/logger';
+import { PaginatedResponse, SqlResponse } from '@cbp-config-api/types/common';
 
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'system';

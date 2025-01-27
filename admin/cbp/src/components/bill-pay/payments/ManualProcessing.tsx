@@ -68,7 +68,6 @@ interface PaymentForm {
   routingNumber: string;
   bankName: string;
 }
-
 interface PaymentLimits {
   min: number;
   max: number;
@@ -76,12 +75,10 @@ interface PaymentLimits {
   dailyLimit: number;
   monthlyLimit: number;
 }
-
 interface ValidationState {
   errors: Record<string, string>;
   warnings: Record<string, string>;
 }
-
 const initialPaymentForm: PaymentForm = {
   clientId: '',
   payeeId: '',
@@ -93,19 +90,16 @@ const initialPaymentForm: PaymentForm = {
   routingNumber: '',
   bankName: '',
 };
-
 const paymentTypes = [
   { value: PaymentMethod.ACH, label: 'ACH' },
   { value: PaymentMethod.WIRE, label: 'Wire' },
   { value: PaymentMethod.CHECK, label: 'Check' },
   { value: PaymentMethod.CARD, label: 'Card' }
 ];
-
 const ManualProcessing: React.FC = () => {
   const auth = useAuth();
   const paymentProcessorService = ServiceFactory.getInstance().getPaymentProcessorService();
   const clientService = ServiceFactory.getInstance().getClientService();
-
   // State
   const [clients, setClients] = useState<BillPayClient[]>([]);
   const [payees, setPayees] = useState<Payee[]>([]);
@@ -125,7 +119,6 @@ const ManualProcessing: React.FC = () => {
     [PaymentMethod.CARD]: 0
   });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-
   // Fetch initial data
   const fetchInitialData = useCallback(async () => {
     try {
@@ -146,7 +139,6 @@ const ManualProcessing: React.FC = () => {
       console.error('Error loading clients:', err);
     }
   }, [clientService]);
-
   // Fetch payees when client changes
   const fetchPayees = useCallback(async () => {
     if (!selectedClient) return;
@@ -172,7 +164,6 @@ const ManualProcessing: React.FC = () => {
       console.error('Error loading payees:', err);
     }
   }, [selectedClient, clientService]);
-
   // Fetch payment limits when client or payment type changes
   const fetchPaymentLimits = useCallback(async () => {
     if (!selectedClient) return;
@@ -190,19 +181,15 @@ const ManualProcessing: React.FC = () => {
       console.error('Error loading payment limits:', err);
     }
   }, [selectedClient, form.paymentType, paymentProcessorService]);
-
   useEffect(() => {
     fetchInitialData();
   }, [fetchInitialData]);
-
   useEffect(() => {
     fetchPayees();
   }, [fetchPayees]);
-
   useEffect(() => {
     fetchPaymentLimits();
   }, [fetchPaymentLimits]);
-
   // Form handlers
   const handleClientChange = (
     _: React.SyntheticEvent,
@@ -217,7 +204,6 @@ const ManualProcessing: React.FC = () => {
     }));
     setValidation({ errors: {}, warnings: {} });
   };
-
   const handlePayeeChange = (
     _: React.SyntheticEvent,
     payee: Payee | null
@@ -229,7 +215,6 @@ const ManualProcessing: React.FC = () => {
     }));
     setValidation({ errors: {}, warnings: {} });
   };
-
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
@@ -237,33 +222,28 @@ const ManualProcessing: React.FC = () => {
       validateAmount(value);
     }
   };
-
   const handlePaymentTypeChange = (event: SelectChangeEvent<PaymentMethod>) => {
     setForm((prev) => ({
       ...prev,
       paymentType: event.target.value as PaymentMethod,
     }));
   };
-
   const handleDateChange = (date: Dayjs | null) => {
     setForm((prev) => ({
       ...prev,
       effectiveDate: date || dayjs(),
     }));
   };
-
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-
   // Validation
   const validateAmount = (amount: string) => {
     const errors: Record<string, string> = {};
     const warnings: Record<string, string> = {};
-
     if (!amount) {
       errors.amount = 'Amount is required';
     } else {
@@ -280,17 +260,14 @@ const ManualProcessing: React.FC = () => {
         }
       }
     }
-
     setValidation((prev) => ({
       ...prev,
       errors: { ...prev.errors, ...errors },
       warnings: { ...prev.warnings, ...warnings },
     }));
   };
-
   const validateForm = async (): Promise<ManualPaymentValidation> => {
     const errors: Array<{ field: keyof ManualPaymentFormData; message: string }> = [];
-
     // Required field validation
     if (!form.clientId) {
       errors.push({ field: 'clientId', message: 'Client is required' });
@@ -316,30 +293,24 @@ const ManualProcessing: React.FC = () => {
     if (!form.bankName) {
       errors.push({ field: 'bankName', message: 'Bank name is required' });
     }
-
     // Convert validation errors to state format
     const validationState: ValidationState = {
       errors: {},
       warnings: {}
     };
-
     errors.forEach(({ field, message }) => {
       validationState.errors[field] = message;
     });
-
     setValidation(validationState);
-
     return {
       valid: errors.length === 0,
       errors
     };
   };
-
   const handleSubmit = async () => {
     try {
       setLoading(true);
       setError(null);
-
       const transaction: PaymentTransaction = {
         id: '', // Will be assigned by service
         clientId: form.clientId,
@@ -359,9 +330,7 @@ const ManualProcessing: React.FC = () => {
           memo: form.memo
         }
       };
-
       const validationResult = await paymentProcessorService.validatePayment(transaction);
-
       if (!validationResult.isValid) {
         setValidation({
           errors: validationResult.errors.reduce((acc: Record<string, string>, err: { code: string; message: string }) => ({
@@ -372,14 +341,11 @@ const ManualProcessing: React.FC = () => {
         });
         return;
       }
-
       const processedPayment = await paymentProcessorService.processPayment(transaction);
-
       setForm(initialPaymentForm);
       setSelectedClient(null);
       setSelectedPayee(null);
       setConfirmDialogOpen(false);
-      
       // Show success message or redirect
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create payment');
@@ -387,16 +353,13 @@ const ManualProcessing: React.FC = () => {
       setLoading(false);
     }
   };
-
   const handleSaveDraft = async () => {
     if (!form.clientId) {
       setValidation({ errors: { clientId: 'Client is required' }, warnings: {} });
       return;
     }
-
     setLoading(true);
     setError(null);
-
     try {
       const transaction: PaymentTransaction = {
         id: '', // Will be assigned by service
@@ -417,11 +380,9 @@ const ManualProcessing: React.FC = () => {
           memo: form.memo
         }
       };
-
       const schedule: PaymentSchedule = {
         scheduledDate: form.effectiveDate.toDate()
       };
-
       const response = await paymentProcessorService.schedulePayment(transaction, schedule);
       if (response) {
         // Show success message
@@ -437,7 +398,6 @@ const ManualProcessing: React.FC = () => {
       setLoading(false);
     }
   };
-
   // Render functions
   const renderClientField = () => (
     <Autocomplete
@@ -458,7 +418,6 @@ const ManualProcessing: React.FC = () => {
       disabled={loading}
     />
   );
-
   const renderPayeeField = () => (
     <Autocomplete
       id="payee-select"
@@ -478,7 +437,6 @@ const ManualProcessing: React.FC = () => {
       disabled={!selectedClient || loading}
     />
   );
-
   const renderAmountField = () => (
     <TextField
       label="Amount"
@@ -498,7 +456,6 @@ const ManualProcessing: React.FC = () => {
       disabled={loading}
     />
   );
-
   const renderPaymentTypeField = () => (
     <FormControl
       fullWidth
@@ -523,7 +480,6 @@ const ManualProcessing: React.FC = () => {
       )}
     </FormControl>
   );
-
   const renderConfirmDialog = () => (
     <Dialog open={confirmDialogOpen} onClose={() => setConfirmDialogOpen(false)}>
       <DialogTitle>Confirm Payment</DialogTitle>
@@ -573,19 +529,16 @@ const ManualProcessing: React.FC = () => {
       </DialogActions>
     </Dialog>
   );
-
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h5" sx={{ mb: 3 }}>
         Manual Payment Processing
       </Typography>
-
       {error && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
-
       <Paper sx={{ p: 3 }}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
@@ -690,10 +643,8 @@ const ManualProcessing: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-
       {renderConfirmDialog()}
     </Box>
   );
 };
-
 export default ManualProcessing;

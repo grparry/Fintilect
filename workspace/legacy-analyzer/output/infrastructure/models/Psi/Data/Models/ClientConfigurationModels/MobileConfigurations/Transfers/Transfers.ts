@@ -1,7 +1,7 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { SavedTransfers } from './SavedTransfers';
-import { ScheduledTransfersSettings } from './ScheduledTransfersSettings';
-import { Authentication } from './Authentication.Authentication';
+import { SavedTransfers } from '@infrastructure/SavedTransfers';
+import { ScheduledTransfersSettings } from '@infrastructure/ScheduledTransfersSettings';
+import { Authentication } from '@infrastructure/Authentication.Authentication';
 export interface TransfersConfig {
     ShouldShowConfirmDialog: boolean;
     UserTransferDescriptionType: string;

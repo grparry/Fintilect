@@ -1,9 +1,9 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { AchTransfer } from './AchTransfer';
-import { WireTransfer } from './WireTransfer';
-import { TransferLimits } from './TransferLimits';
-import { AnyMemberTransfers } from './AnyMemberTransfers';
-import { TransferTimeouts } from './TransferTimeouts';
+import { AchTransfer } from '@infrastructure/AchTransfer';
+import { WireTransfer } from '@infrastructure/WireTransfer';
+import { TransferLimits } from '@infrastructure/TransferLimits';
+import { AnyMemberTransfers } from '@infrastructure/AnyMemberTransfers';
+import { TransferTimeouts } from '@infrastructure/TransferTimeouts';
 export interface TransfersConfig {
     ACH: AchTransfer;
     Wire: WireTransfer;

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { ClientService, CreateClientRequest, UpdateClientRequest } from '../services/client.service';
-import { HttpError } from '../utils/errors';
+import { ClientService, CreateClientRequest, UpdateClientRequest } from '@/services/client.service';
+import { HttpError } from '@/utils/errors';
 
 export class ClientController {
   constructor(private clientService: ClientService) {}

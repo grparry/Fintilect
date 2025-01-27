@@ -1,11 +1,11 @@
 import React, { useState, Suspense } from 'react';
 import { Box, CssBaseline, useTheme as useMuiTheme } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../navigation/Sidebar';
-import Header from '../navigation/Header';
-import { NavigationProvider } from '../../context/NavigationContext';
-import { useTheme } from '../../context/ThemeContext';
-import { navigationConfig } from '../../config/navigation';
+import Sidebar from '@/navigation/Sidebar';
+import Header from '@/navigation/Header';
+import { NavigationProvider } from '@/../context/NavigationContext';
+import { useTheme } from '@/../context/ThemeContext';
+import { navigationConfig } from '@/../config/navigation';
 
 const DRAWER_WIDTH = 280;
 

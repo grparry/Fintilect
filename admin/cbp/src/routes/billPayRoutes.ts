@@ -31,7 +31,6 @@ const NotificationTemplates = lazy(() => import('../components/bill-pay/settings
 const PermissionGroups = lazy(() => import('../components/bill-pay/settings/PermissionGroups'));
 const BillPaySecuritySettings = lazy(() => import('../components/bill-pay/settings/security/BillPaySecuritySettings'));
 const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
-
 const billPayRoutes: RouteConfig[] = [
   {
     id: 'bill-pay',
@@ -170,5 +169,4 @@ const billPayRoutes: RouteConfig[] = [
     ]
   }
 ];
-
 export default billPayRoutes;

@@ -29,7 +29,6 @@ interface SearchResultsProps {
   onSelect: (member: Member) => void;
   onUpdateStatus: (member: Member, newStatus: MemberStatus) => void;
 }
-
 const getStatusIcon = (status: MemberStatus) => {
   switch (status) {
     case 'Active':
@@ -44,7 +43,6 @@ const getStatusIcon = (status: MemberStatus) => {
       return <CheckCircleIcon fontSize="small" />;
   }
 };
-
 const getStatusColor = (status: MemberStatus): "success" | "error" | "warning" | "info" | "default" => {
   switch (status) {
     case 'Active':
@@ -59,28 +57,23 @@ const getStatusColor = (status: MemberStatus): "success" | "error" | "warning" |
       return 'default';
   }
 };
-
 const SearchResults: React.FC<SearchResultsProps> = ({ results, onSelect, onUpdateStatus }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectedMember, setSelectedMember] = React.useState<Member | null>(null);
-
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, member: Member) => {
     setAnchorEl(event.currentTarget);
     setSelectedMember(member);
   };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
     setSelectedMember(null);
   };
-
   const handleStatusUpdate = (newStatus: MemberStatus) => {
     if (selectedMember) {
       onUpdateStatus(selectedMember, newStatus);
       handleMenuClose();
     }
   };
-
   if (!results.members.length) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
@@ -90,7 +83,6 @@ const SearchResults: React.FC<SearchResultsProps> = ({ results, onSelect, onUpda
       </Box>
     );
   }
-
   return (
     <Box>
       <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -150,7 +142,6 @@ const SearchResults: React.FC<SearchResultsProps> = ({ results, onSelect, onUpda
           </TableBody>
         </Table>
       </TableContainer>
-
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -165,5 +156,4 @@ const SearchResults: React.FC<SearchResultsProps> = ({ results, onSelect, onUpda
     </Box>
   );
 };
-
 export default SearchResults;

@@ -1,10 +1,10 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Ensenta } from './Ensenta';
-import { Vertifi } from './Vertifi';
-import { ProfitStars } from './ProfitStars';
-import { RemoteDepositServiceType } from './RemoteDepositServiceType';
-import { RemoteDepositAccountFormat } from './RemoteDepositAccountFormat';
-import { RelationshipCodeDepositLimit } from './RelationshipCodeDepositLimit';
+import { Ensenta } from '@infrastructure/Ensenta';
+import { Vertifi } from '@infrastructure/Vertifi';
+import { ProfitStars } from '@infrastructure/ProfitStars';
+import { RemoteDepositServiceType } from '@infrastructure/RemoteDepositServiceType';
+import { RemoteDepositAccountFormat } from '@infrastructure/RemoteDepositAccountFormat';
+import { RelationshipCodeDepositLimit } from '@infrastructure/RelationshipCodeDepositLimit';
 export interface RemoteDepositConfig {
     Ensenta: Ensenta;
     Vertifi: Vertifi;

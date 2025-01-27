@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Feature } from './Feature';
-import { DocumentArchitectSso } from './DocumentArchitectSso';
+import { Feature } from '@infrastructure/Feature';
+import { DocumentArchitectSso } from '@infrastructure/DocumentArchitectSso';
 export interface OmegaConfigurationConfig {
     EnvironmentConnections: string;
     HomeBankingResetConfigUrl: string;

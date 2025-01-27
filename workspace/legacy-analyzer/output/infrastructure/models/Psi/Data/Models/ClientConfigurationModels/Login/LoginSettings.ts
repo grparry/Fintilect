@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { ConnectNativeLoginRedirectChoiceType } from './ConnectNativeLoginRedirectChoiceType';
+import { ConnectNativeLoginRedirectChoiceType } from '@infrastructure/ConnectNativeLoginRedirectChoiceType';
 export interface LoginSettingsConfig {
     LoginFailuresBeforeLockingAccountMinusOne: number;
     ConnectNativeLandingPageUrl: string;

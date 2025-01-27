@@ -1,0 +1,146 @@
+{
+  "FinancialCore": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "type": {
+        "type": "string",
+        "enum": ["Symitar", "DNA", "Corelation", "Summit", "EPL"]
+      },
+      "settings": {
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SymitarSettings"
+          },
+          {
+            "$ref": "#/components/schemas/DNASettings"
+          },
+          {
+            "$ref": "#/components/schemas/CorelationSettings"
+          },
+          {
+            "$ref": "#/components/schemas/SummitSettings"
+          },
+          {
+            "$ref": "#/components/schemas/EPLSettings"
+          }
+        ]
+      }
+    }
+  },
+  "SymitarSettings": {
+    "type": "object",
+    "properties": {
+      "remoteDepositCheckHold": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "holdDays": {
+            "type": "integer"
+          }
+        }
+      },
+      "accountTypes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "DNASettings": {
+    "type": "object",
+    "properties": {
+      "connectionSettings": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer"
+          },
+          "useSsl": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "CorelationSettings": {
+    "type": "object",
+    "properties": {
+      "accountTypeSettings": {
+        "$ref": "#/components/schemas/CorelationAccountTypeSettings"
+      },
+      "cardTypeSettings": {
+        "$ref": "#/components/schemas/CorelationCardTypeSettings"
+      },
+      "personTypeSettings": {
+        "$ref": "#/components/schemas/CorelationPersonTypeSettings"
+      },
+      "lossScreeningSettings": {
+        "$ref": "#/components/schemas/CorelationLossScreeningSettings"
+      }
+    }
+  },
+  "CorelationAccountTypeSettings": {
+    "type": "object",
+    "properties": {
+      "accountTypes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "CorelationCardTypeSettings": {
+    "type": "object",
+    "properties": {
+      "cardTypes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string",
+              "enum": ["DEBIT", "CREDIT", "ATM"]
+            }
+          }
+        }
+      }
+    }
+  }
+}

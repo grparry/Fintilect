@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { AccountNumberReassignmentSettings } from './AccountNumberReassignmentSettings';
+import { AccountNumberReassignmentSettings } from '@infrastructure/AccountNumberReassignmentSettings';
 export interface AdminAccountSettingsConfig {
     AccountNumberReassignment: AccountNumberReassignmentSettings;
     AllowAccountNumberReassignmentEnabled: boolean;

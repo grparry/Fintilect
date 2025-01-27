@@ -5,7 +5,6 @@ import { ServiceFactory } from './factory/ServiceFactory';
 
 class MoneyDesktopService {
   private readonly baseUrl = '/api/money-desktop';
-
   async getConnections(filters: MoneyDesktopFilters): Promise<Connection[]> {
     const response = await api.get<Connection[]>(`${this.baseUrl}/connections`, {
       params: {
@@ -17,7 +16,6 @@ class MoneyDesktopService {
     });
     return response.data;
   }
-
   async getAccounts(filters: MoneyDesktopFilters): Promise<Account[]> {
     const response = await api.get<Account[]>(`${this.baseUrl}/accounts`, {
       params: {
@@ -29,11 +27,9 @@ class MoneyDesktopService {
     });
     return response.data;
   }
-
   async syncConnection(connectionId: number): Promise<void> {
     await api.post<void>(`${this.baseUrl}/connections/${connectionId}/sync`);
   }
-
   async exportConnections(filters: MoneyDesktopFilters): Promise<Blob> {
     const response = await api.get<Blob>(`${this.baseUrl}/connections/export`, {
       params: {
@@ -46,7 +42,6 @@ class MoneyDesktopService {
     });
     return response.data;
   }
-
   async exportAccounts(filters: MoneyDesktopFilters): Promise<Blob> {
     const response = await api.get<Blob>(`${this.baseUrl}/accounts/export`, {
       params: {
@@ -60,6 +55,5 @@ class MoneyDesktopService {
     return response.data;
   }
 }
-
 const moneyDesktopService = ServiceFactory.getInstance().getMoneyDesktopService();
 export { moneyDesktopService };

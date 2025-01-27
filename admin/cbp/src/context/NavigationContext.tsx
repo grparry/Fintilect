@@ -10,7 +10,6 @@ interface NavigationState {
   permissionCache: Map<string, boolean>;
   expandedItems: string[];
 }
-
 export interface NavigationContextType {
   navigationConfig: NavigationConfig;
   state: NavigationState;
@@ -21,9 +20,7 @@ export interface NavigationContextType {
   getAccessibleSections: () => Promise<NavigationSection[]>;
   hasPermission: (requirements: NavigationPermissionRequirement) => Promise<boolean>;
 }
-
 const NavigationContext = createContext<NavigationContextType | null>(null);
-
 export const NavigationProvider: React.FC<{ children: React.ReactNode; config: NavigationConfig }> = ({
   children,
   config,
@@ -38,59 +35,48 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
   const navigate = useNavigate();
   const location = useLocation();
   const { checkPermissions } = useNavigationPermissions();
-
   const hasPermission = useCallback(async (requirements: NavigationPermissionRequirement) => {
     if (!requirements) return true;
-
     const cacheKey = JSON.stringify(requirements);
     if (state.permissionCache.has(cacheKey)) {
       return state.permissionCache.get(cacheKey) || false;
     }
-
     const result = await checkPermissions([requirements]);
     const newCache = new Map(state.permissionCache);
     newCache.set(cacheKey, result);
     setState(prev => ({ ...prev, permissionCache: newCache }));
     return result;
   }, [checkPermissions, state.permissionCache]);
-
   const getAccessibleSections = useCallback(async () => {
     const accessibleSections: NavigationSection[] = [];
-
     for (const section of config.sections) {
       if (!section.permissions || await hasPermission(section.permissions)) {
         accessibleSections.push(section);
       }
     }
-
     return accessibleSections;
   }, [config.sections, hasPermission]);
-
   const setActiveSection = useCallback((sectionId: string | null) => {
     setState(prev => ({
       ...prev,
       activeSection: sectionId
     }));
   }, []);
-
   const setActivePath = useCallback((path: string | null) => {
     setState(prev => ({
       ...prev,
       activePath: path
     }));
   }, []);
-
   const toggleSidebar = useCallback(() => {
     setState(prev => ({ ...prev, sidebarOpen: !prev.sidebarOpen }));
   }, []);
-
   const toggleSection = useCallback((sectionId: string) => {
     console.log('NavigationContext - toggleSection called with:', sectionId);
     setState(prev => {
       // First try to find it in the sections
       const section = config.sections.find(s => s.id === sectionId);
       console.log('NavigationContext - Found section:', section);
-
       // If not found in sections, look through all items recursively
       const findInItems = (items: any[]): any => {
         for (const item of items) {
@@ -102,7 +88,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
         }
         return null;
       };
-
       // Find the parent section of an item
       const findParentSection = (): NavigationSection | null => {
         for (const s of config.sections) {
@@ -117,7 +102,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
         }
         return null;
       };
-
       let foundItem = null;
       if (!section) {
         for (const s of config.sections) {
@@ -125,13 +109,10 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
           if (foundItem) break;
         }
       }
-
       const target = section || foundItem;
       if (!target) return prev;
-
       const isExpanded = prev.expandedItems.includes(sectionId);
       let newExpandedItems: string[];
-
       if (isExpanded) {
         // If we're collapsing, just remove this item
         newExpandedItems = prev.expandedItems.filter(id => id !== sectionId);
@@ -152,7 +133,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
         });
         newExpandedItems.push(sectionId);
       }
-
       return {
         ...prev,
         expandedItems: newExpandedItems,
@@ -161,7 +141,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
       };
     });
   }, [config.sections]);
-
   useEffect(() => {
     const initializeSection = async () => {
       // If we're on the admin dashboard, deactivate all sections
@@ -169,11 +148,9 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
         setState(prev => ({ ...prev, activeSection: null }));
         return;
       }
-
       const matchingSection = config.sections.find(section =>
         section.items.some(item => location.pathname.startsWith(item.path))
       );
-
       if (matchingSection) {
         const hasAccess = await hasPermission(matchingSection.permissions);
         if (hasAccess) {
@@ -191,10 +168,8 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
         }
       }
     };
-
     initializeSection();
   }, [location.pathname, config.sections, config.defaultSection, hasPermission, navigate]);
-
   const value: NavigationContextType = {
     navigationConfig: config,
     state,
@@ -205,14 +180,12 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
     getAccessibleSections,
     hasPermission,
   };
-
   return (
     <NavigationContext.Provider value={value}>
       {children}
     </NavigationContext.Provider>
   );
 };
-
 export const useNavigation = (): NavigationContextType => {
   const context = useContext(NavigationContext);
   if (!context) {

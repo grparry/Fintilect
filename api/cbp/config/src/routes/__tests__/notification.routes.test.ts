@@ -1,9 +1,9 @@
 import request from 'supertest';
 import express, { Request, Response, NextFunction } from 'express';
-import { Database } from '../../config/db';
-import { createNotificationRouter } from '../notification.routes';
-import { NotificationType, NotificationTemplate } from '../../types/notification';
-import { JwtUser } from '../../types/auth';
+import { Database } from '@cbp-config-api/../config/db';
+import { createNotificationRouter } from '@cbp-config-api/notification.routes';
+import { NotificationType, NotificationTemplate } from '@cbp-config-api/../types/notification';
+import { JwtUser } from '@cbp-config-api/../types/auth';
 
 // Mock authentication middleware
 const mockAuthMiddleware = jest.fn((req: Request, res: Response, next: NextFunction) => {

@@ -1,15 +1,14 @@
+
+
 class ApiClient {
     private static instance: ApiClient | null = null;
-
     private constructor() {}
-
     static getInstance(): ApiClient {
         if (!ApiClient.instance) {
             ApiClient.instance = new ApiClient();
         }
         return ApiClient.instance;
     }
-
     async get<T>(url: string): Promise<T> {
         const response = await fetch(url);
         if (!response.ok) {
@@ -17,7 +16,6 @@ class ApiClient {
         }
         return response.json();
     }
-
     async post<T>(url: string, data: unknown): Promise<T> {
         const response = await fetch(url, {
             method: 'POST',
@@ -31,7 +29,6 @@ class ApiClient {
         }
         return response.json();
     }
-
     async put<T>(url: string, data: unknown): Promise<T> {
         const response = await fetch(url, {
             method: 'PUT',
@@ -45,7 +42,6 @@ class ApiClient {
         }
         return response.json();
     }
-
     async delete(url: string): Promise<void> {
         const response = await fetch(url, { method: 'DELETE' });
         if (!response.ok) {
@@ -53,5 +49,4 @@ class ApiClient {
         }
     }
 }
-
 export default ApiClient;

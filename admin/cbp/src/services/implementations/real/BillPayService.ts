@@ -23,7 +23,8 @@ import {
     BillPaySecurityValidation,
     BillPayOTPMethod
 } from '../../../types/security.types';
-import { PaginatedResponse, QueryOptions } from '../../../types/index';
+import { PaginatedResponse } from '../../../types/common.types';
+import { QueryOptions } from '../../../types/index';
 import { ApiResponse } from '../../../types/api.types';
 import api from '../../api';
 import { BaseService } from './BaseService';
@@ -33,7 +34,6 @@ export class BillPayService extends BaseService implements IBillPayService {
     constructor(basePath: string = '/api/v1/bill-pay') {
         super(basePath);
     }
-
     async getConfiguration(): Promise<BillPayConfig> {
         try {
             return await this.get<BillPayConfig>('/config');
@@ -42,7 +42,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async updateConfiguration(config: BillPayConfigUpdate): Promise<BillPayConfigValidation> {
         try {
             return await this.put<BillPayConfigValidation>('/config', config);
@@ -51,7 +50,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async validateConfiguration(config: BillPayConfigUpdate): Promise<BillPayConfigValidation> {
         try {
             return await this.post<BillPayConfigValidation>('/config/validate', config);
@@ -60,7 +58,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getPayments(filters: PaymentFilters): Promise<PaginatedResponse<Payment>> {
         try {
             return await this.get<PaginatedResponse<Payment>>('/payments', filters);
@@ -69,7 +66,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getPayment(paymentId: string): Promise<Payment> {
         try {
             return await this.get<Payment>(`/payments/${paymentId}`);
@@ -78,7 +74,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async createPayment(payment: Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>): Promise<Payment> {
         try {
             return await this.post<Payment>('/payments', payment);
@@ -87,7 +82,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async updatePayment(paymentId: string, payment: Partial<Payment>): Promise<Payment> {
         try {
             return await this.put<Payment>(`/payments/${paymentId}`, payment);
@@ -96,7 +90,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async cancelPayment(paymentId: string, reason: string): Promise<void> {
         try {
             await this.put<void>(`/payments/${paymentId}/cancel`, { reason });
@@ -105,7 +98,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getPaymentHistory(paymentId: string): Promise<PaymentHistory[]> {
         try {
             return await this.get<PaymentHistory[]>(`/payments/${paymentId}/history`);
@@ -114,7 +106,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getExceptions(filters: PaymentFilters): Promise<PaginatedResponse<PaymentException>> {
         try {
             return await this.get<PaginatedResponse<PaymentException>>('/exceptions', filters);
@@ -123,7 +114,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async resolveException(exceptionId: string, resolution: ExceptionResolution): Promise<void> {
         try {
             await this.put<void>(`/exceptions/${exceptionId}/resolve`, resolution);
@@ -132,7 +122,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getClients(): Promise<Client[]> {
         try {
             return await this.get<Client[]>('/clients');
@@ -141,7 +130,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getPayees(clientId: string): Promise<Payee[]> {
         try {
             return await this.get<Payee[]>(`/clients/${clientId}/payees`);
@@ -150,7 +138,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getStats(timeframe: 'day' | 'week' | 'month'): Promise<BillPayStats> {
         try {
             return await this.get<BillPayStats>('/stats', { timeframe });
@@ -159,7 +146,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getTransactionTrends(timeframe: 'day' | 'week' | 'month'): Promise<TransactionTrend[]> {
         try {
             return await this.get<TransactionTrend[]>('/trends', { timeframe });
@@ -168,7 +154,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getHolidays(): Promise<Holiday[]> {
         try {
             return await this.get<Holiday[]>('/holidays');
@@ -177,7 +162,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async addHoliday(holiday: HolidayInput): Promise<Holiday> {
         try {
             return await this.post<Holiday>('/holidays', holiday);
@@ -186,7 +170,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getNotificationTemplates(): Promise<NotificationTemplate[]> {
         try {
             return await this.get<NotificationTemplate[]>('/notifications/templates');
@@ -195,7 +178,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async updateNotificationTemplate(
         templateId: number,
         template: NotificationTemplateInput
@@ -207,7 +189,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getPaymentActions(paymentId: string): Promise<PaymentAction[]> {
         try {
             return await this.get<PaymentAction[]>(`/payments/${paymentId}/actions`);
@@ -216,7 +197,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async getSecuritySettings(): Promise<BillPaySecuritySettings> {
         try {
             return await this.get<BillPaySecuritySettings>('/security/settings');
@@ -225,7 +205,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async updateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecuritySettings> {
         try {
             return await this.put<BillPaySecuritySettings>('/security/settings', settings);
@@ -234,7 +213,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async validateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecurityValidation> {
         try {
             return await this.post<BillPaySecurityValidation>('/security/settings/validate', settings);
@@ -243,7 +221,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     async sendOTP(method: BillPayOTPMethod, destination: string): Promise<void> {
         try {
             await this.post('/security/otp/send', { method, destination });
@@ -252,7 +229,6 @@ export class BillPayService extends BaseService implements IBillPayService {
             throw error;
         }
     }
-
     private handleError(error: unknown, defaultMessage: string): Error {
         if (error instanceof Error) {
             return error;

@@ -29,20 +29,18 @@ import {
   Lock as LockIcon,
   QuestionAnswer as QuestionIcon,
 } from '@mui/icons-material';
-import { SecurityQuestion } from '../../../types/member-center.types';
+import { Member, SecuritySettings } from '../../../types/member-center.types';
 
 interface MemberSecuritySettingsProps {
   open: boolean;
   onClose: () => void;
   memberId: string;
 }
-
 interface OTPSettings {
   method: 'email' | 'sms';
   email: string;
   phone: string;
 }
-
 const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({
   open,
   onClose,
@@ -56,14 +54,12 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({
   const [twoFactorEnabled, setTwoFactorEnabled] = useState<boolean>(false);
   const [otpSent, setOtpSent] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
   const handleOTPSettingsChange = (field: keyof OTPSettings, value: string) => {
     setOtpSettings(prev => ({
       ...prev,
       [field]: value,
     }));
   };
-
   const handleSendOTP = async () => {
     try {
       setError(null);
@@ -76,7 +72,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({
       console.error('Error sending OTP:', err);
     }
   };
-
   const handleToggle2FA = async () => {
     try {
       setError(null);
@@ -88,7 +83,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({
       console.error('Error toggling 2FA:', err);
     }
   };
-
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
@@ -103,7 +97,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({
             {error}
           </Alert>
         )}
-
         <List>
           <ListItem>
             <ListItemIcon>
@@ -122,13 +115,10 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({
             </ListItemSecondaryAction>
           </ListItem>
         </List>
-
         <Divider sx={{ my: 2 }} />
-
         <Typography variant="h6" gutterBottom>
           Verification Method
         </Typography>
-
         <FormControl component="fieldset" sx={{ mb: 2, width: '100%' }}>
           <RadioGroup
             value={otpSettings.method}
@@ -156,7 +146,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({
             />
           </RadioGroup>
         </FormControl>
-
         {otpSettings.method === 'email' && (
           <TextField
             fullWidth
@@ -166,7 +155,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({
             sx={{ mb: 2 }}
           />
         )}
-
         {otpSettings.method === 'sms' && (
           <TextField
             fullWidth
@@ -176,7 +164,6 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({
             sx={{ mb: 2 }}
           />
         )}
-
         <Button
           variant="contained"
           color="primary"
@@ -191,5 +178,4 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({
     </Dialog>
   );
 };
-
 export default MemberSecuritySettings;

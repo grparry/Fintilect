@@ -1,0 +1,40 @@
+{
+  "JoinCreditUnionSettings": {
+    "type": "object",
+    "description": "Settings for Join Credit Union functionality in mobile account opening",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.AccountOpening.JoinCreditUnion.JoinCreditUnion",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether Join Credit Union is enabled",
+        "x-setting-key": "Mobile.AccountOpening.JoinCreditUnion.Enabled"
+      },
+      "url": {
+        "type": "string",
+        "description": "URL for the Join Credit Union feature",
+        "x-setting-key": "Mobile.AccountOpening.JoinCreditUnion.Url"
+      },
+      "minimumVersions": {
+        "type": "object",
+        "description": "Minimum version requirements for different platforms",
+        "properties": {
+          "general": {
+            "type": "string",
+            "description": "General minimum version requirement",
+            "x-setting-key": "Mobile.AccountOpening.JoinCreditUnion.MinimumVersion"
+          },
+          "android": {
+            "type": "string",
+            "description": "Minimum Android version required",
+            "x-setting-key": "Mobile.AccountOpening.JoinCreditUnion.MinimumAndroidVersion"
+          },
+          "ios": {
+            "type": "string",
+            "description": "Minimum iOS version required",
+            "x-setting-key": "Mobile.AccountOpening.JoinCreditUnion.MinimumIosVersion"
+          }
+        }
+      }
+    }
+  }
+}

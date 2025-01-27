@@ -1,0 +1,172 @@
+{
+  "/financial-cores": {
+    "get": {
+      "tags": ["financial-cores"],
+      "summary": "List all financial core configurations",
+      "operationId": "listFinancialCores",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 20
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Financial core configurations retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../models/financial-cores.json#/FinancialCore"
+                    }
+                  },
+                  "total": {
+                    "type": "integer"
+                  },
+                  "page": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["financial-cores"],
+      "summary": "Create a new financial core configuration",
+      "operationId": "createFinancialCore",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/financial-cores.json#/FinancialCore"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Financial core configuration created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/financial-cores.json#/FinancialCore"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/financial-cores/{id}": {
+    "get": {
+      "tags": ["financial-cores"],
+      "summary": "Get a specific financial core configuration",
+      "operationId": "getFinancialCore",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Financial core configuration retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/financial-cores.json#/FinancialCore"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["financial-cores"],
+      "summary": "Update a financial core configuration",
+      "operationId": "updateFinancialCore",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/financial-cores.json#/FinancialCore"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Financial core configuration updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/financial-cores.json#/FinancialCore"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["financial-cores"],
+      "summary": "Delete a financial core configuration",
+      "operationId": "deleteFinancialCore",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Financial core configuration deleted successfully"
+        }
+      }
+    }
+  }
+}

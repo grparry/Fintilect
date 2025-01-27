@@ -10,7 +10,6 @@ export interface SecuritySettings {
     auditSettings: AuditSettings;
     alertSettings: AlertSettings;
 }
-
 export interface PasswordPolicy {
     minLength: number;
     requireUppercase: boolean;
@@ -21,7 +20,6 @@ export interface PasswordPolicy {
     preventReuse: number;
     complexityScore: number;
 }
-
 export interface LoginPolicy {
     maxAttempts: number;
     lockoutDuration: number;
@@ -31,35 +29,29 @@ export interface LoginPolicy {
     allowMultipleSessions: boolean;
     requirePasswordChange: boolean;
 }
-
 export interface IPWhitelist {
     enabled: boolean;
     addresses: string[];
     allowedRanges: string[];
 }
-
 export interface MFASettings {
     methods: MFAMethod[];
     defaultMethod: MFAMethod;
     gracePeriod: number;
     trustDuration: number;
 }
-
 export type MFAMethod = 'email' | 'sms' | 'authenticator' | 'security-key';
-
 export interface AuditSettings {
     retentionDays: number;
     highRiskEvents: string[];
     alertThresholds: Record<string, number>;
 }
-
 export interface AlertSettings {
     enableEmailAlerts: boolean;
     enableSMSAlerts: boolean;
     recipients: string[];
     severityLevels: string[];
 }
-
 export interface AuditLog {
     id: string;
     timestamp: string;
@@ -75,9 +67,7 @@ export interface AuditLog {
     details: Record<string, unknown>;
     riskLevel: RiskLevel;
 }
-
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
-
 export interface AuditLogFilters extends PaginationOptions {
     startDate?: string;
     endDate?: string;
@@ -88,14 +78,12 @@ export interface AuditLogFilters extends PaginationOptions {
     riskLevels?: RiskLevel[];
     status?: 'success' | 'failure';
 }
-
 export interface AuditSearchRequest extends AuditLogFilters {
     page?: number;
     limit?: number;
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
 }
-
 export interface SecurityPolicy {
     id: string;
     name: string;
@@ -106,18 +94,15 @@ export interface SecurityPolicy {
     priority: number;
     lastUpdated: string;
 }
-
 export interface SecurityRule {
     condition: string;
     parameters: Record<string, unknown>;
     type: 'allow' | 'deny';
 }
-
 export interface SecurityAction {
     type: string;
     parameters: Record<string, unknown>;
 }
-
 export interface SecurityEvent {
     type: string;
     user?: User;
@@ -129,7 +114,6 @@ export interface SecurityEvent {
     severity: RiskLevel;
     timestamp?: string;
 }
-
 export interface RiskAssessment {
     score: number;
     level: RiskLevel;
@@ -137,13 +121,11 @@ export interface RiskAssessment {
     recommendations: string[];
     timestamp: string;
 }
-
 export interface RiskFactor {
     name: string;
     score: number;
     details: string;
 }
-
 export interface AccessAttempt {
     id: string;
     timestamp: string;
@@ -157,7 +139,6 @@ export interface AccessAttempt {
         city: string;
     };
 }
-
 export interface SecurityAlert {
     id: string;
     type: string;
@@ -172,7 +153,6 @@ export interface SecurityAlert {
         id: string;
     }>;
 }
-
 export interface SecurityMetrics {
     loginAttempts: {
         successful: number;
@@ -191,7 +171,6 @@ export interface SecurityMetrics {
     };
     riskLevels: Record<RiskLevel, number>;
 }
-
 export interface IpAddress {
   address: string;
   description?: string;
@@ -199,7 +178,6 @@ export interface IpAddress {
   lastUsed?: string;
   status: 'active' | 'blocked';
 }
-
 // General Security Types
 export interface BillPayPasswordPolicy {
     minLength: number;
@@ -210,7 +188,6 @@ export interface BillPayPasswordPolicy {
     expiryDays: number;
     preventReuse: number;
 }
-
 export interface BillPayLoginPolicy {
     maxAttempts: number;
     lockoutDuration: number;
@@ -218,23 +195,19 @@ export interface BillPayLoginPolicy {
     requireMFA: boolean;
     allowRememberMe: boolean;
 }
-
 export interface BillPayIPWhitelist {
     enabled: boolean;
     addresses: string;
 }
-
 export enum BillPayOTPMethod {
     EMAIL = 'email',
     SMS = 'sms'
 }
-
 export interface BillPayOTPSettings {
     method: BillPayOTPMethod;
     email: string;
     phone: string;
 }
-
 export interface BillPaySecuritySettings {
     passwordPolicy: BillPayPasswordPolicy;
     loginPolicy: BillPayLoginPolicy;
@@ -245,7 +218,6 @@ export interface BillPaySecuritySettings {
      */
     etag?: string;
 }
-
 export interface BillPaySecurityValidation {
     isValid: boolean;
     errors: Record<string, string>;

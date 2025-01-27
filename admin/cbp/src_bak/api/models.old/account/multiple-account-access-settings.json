@@ -1,0 +1,65 @@
+{
+  "MultipleAccountAccessSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Membership.MultiAccountAccess",
+    "description": "Settings for controlling access to multiple accounts",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "MultiAccountAccess.Enabled",
+        "description": "Whether multiple account access is enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "MultiAccountAccess.MinVersion",
+        "description": "Minimum version required for multiple account access"
+      },
+      "mobileEnabled": {
+        "type": "boolean",
+        "x-setting-key": "MultiAccountAccess.MobileEnabled",
+        "description": "Whether multiple account access is enabled on mobile"
+      },
+      "minimumAndroidVersion": {
+        "type": "string",
+        "x-setting-key": "MultiAccountAccess.MinimumAndroidVersion",
+        "description": "Minimum Android version required for multiple account access"
+      },
+      "minimumIosVersion": {
+        "type": "string",
+        "x-setting-key": "MultiAccountAccess.MinimumIosVersion",
+        "description": "Minimum iOS version required for multiple account access"
+      },
+      "permissionSource": {
+        "type": "string",
+        "enum": ["Database", "ActiveDirectory", "Custom"],
+        "x-setting-key": "MultiAccountAccess.PermissionSource",
+        "description": "Source of permissions for multiple account access",
+        "default": "Database"
+      },
+      "lastNameMatchingNumberOfCharactersToMatch": {
+        "type": "integer",
+        "x-setting-key": "MultiAccountAccess.LastNameMatching.NumberOfCharactersToMatch",
+        "description": "Number of characters to match when comparing last names"
+      },
+      "disclosureShouldShowLink": {
+        "type": "boolean",
+        "x-setting-key": "MultiAccountAccess.Disclosure.ShouldShowLink",
+        "description": "Whether to show the disclosure link"
+      },
+      "globalFeatureAccessEncrypted": {
+        "type": "string",
+        "x-setting-key": "MultiAccountAccess.GlobalFeatureAccess",
+        "description": "Encrypted string containing global feature access permissions"
+      },
+      "settings": {
+        "$ref": "./settings.json#/MultipleAccountAccessSettings",
+        "description": "Additional settings for multiple account access"
+      },
+      "features": {
+        "$ref": "./features.json#/MultipleAccountAccessFeatures",
+        "description": "Features configuration for multiple account access"
+      }
+    }
+  }
+}

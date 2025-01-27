@@ -1,7 +1,7 @@
-import { TestDb } from '../../../config/test.db';
-import { ResponseValidator } from './ResponseValidator';
-import { PaginatedResponse } from '../../../types/common';
-import { SettingRecord as ServiceSettingRecord, SettingCreateData as ServiceSettingCreateData, SettingUpdateData as ServiceSettingUpdateData } from '../../../services/settings.service';
+import { TestDb } from '@/../../config/test.db';
+import { ResponseValidator } from '@/ResponseValidator';
+import { PaginatedResponse } from '@/../../types/common';
+import { SettingRecord as ServiceSettingRecord, SettingCreateData as ServiceSettingCreateData, SettingUpdateData as ServiceSettingUpdateData } from '@/../../services/settings.service';
 
 export type SettingRecord = ServiceSettingRecord;
 export type SettingCreateData = ServiceSettingCreateData;

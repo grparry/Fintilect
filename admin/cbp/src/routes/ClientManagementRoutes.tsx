@@ -1,7 +1,7 @@
 import React from 'react';
 import { lazy } from 'react';
 import { useParams } from 'react-router-dom';
-import { RouteConfig } from '../types/route.types';
+import { RouteConfig } from './types/route.types';
 import BusinessIcon from '@mui/icons-material/Business';
 import ListIcon from '@mui/icons-material/List';
 
@@ -15,13 +15,11 @@ const GroupsWrapper = lazy(() => import('../components/client-management/wrapper
 const SecuritySettingsWrapper = lazy(() => import('../components/client-management/wrappers/SecuritySettingsWrapper'));
 const AuditSearch = lazy(() => import('../components/client-management/security/AuditSearch'));
 const ClientManagementHeader = lazy(() => import('../components/client-management/ClientManagementHeader'));
-
 interface RouteParams {
   clientId?: string;
   userId?: string;
   groupId?: string;
 }
-
 // Route configuration
 const clientManagementRoutes: RouteConfig[] = [
   {
@@ -96,5 +94,4 @@ const clientManagementRoutes: RouteConfig[] = [
     ]
   }
 ];
-
 export default clientManagementRoutes;

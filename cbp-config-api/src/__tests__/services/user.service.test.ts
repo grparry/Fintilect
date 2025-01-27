@@ -1,8 +1,8 @@
-import { UserService, UserDetails, PayeeOptions, HostInfo, CreateUserRequest, UpdateUserRequest } from '../../services/user.service';
-import { TestDatabase } from '../../config/test.db';
-import { HttpError } from '../../utils/errors';
-import { UserTestHelper } from '../integration/helpers/user.helper';
-import { mockUsers } from '../integration/fixtures/mockData';
+import { UserService, UserDetails, PayeeOptions, HostInfo, CreateUserRequest, UpdateUserRequest } from '@/../services/user.service';
+import { TestDatabase } from '@/../config/test.db';
+import { HttpError } from '@/../utils/errors';
+import { UserTestHelper } from '@/integration/helpers/user.helper';
+import { mockUsers } from '@/integration/fixtures/mockData';
 
 describe('UserService', () => {
   let userService: UserService;

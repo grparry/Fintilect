@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Preferences } from './Preferences';
+import { Preferences } from '@infrastructure/Preferences';
 export interface QuickBalanceConfig {
     MinimumVersion: string;
     MinimumAndroidVersion: string;

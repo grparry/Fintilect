@@ -1,5 +1,5 @@
-import { Database } from '../config/db';
-import { IExceptionService } from './interfaces/exception.service.interface';
+import { Database } from '@cbp-config-api/config/db';
+import { IExceptionService } from '@cbp-config-api/interfaces/exception.service.interface';
 import { 
   ExceptionSearchRequest,
   ExceptionSearchResponse,
@@ -10,9 +10,9 @@ import {
   ExceptionError,
   ExceptionErrorCodes,
   FisException
-} from '../types/fis-exception';
-import { ServiceResponse } from '../types/common';
-import { logger } from '../config/logger';
+} from '@cbp-config-api/types/fis-exception';
+import { ServiceResponse } from '@cbp-config-api/types/common';
+import { logger } from '@cbp-config-api/config/logger';
 
 export class ExceptionService implements IExceptionService {
   constructor(private db: Database) {}

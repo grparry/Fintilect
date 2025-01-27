@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { ConnectNative } from './ConnectNative';
+import { ConnectNative } from '@infrastructure/ConnectNative';
 export interface ThemesConfig {
     ConnectNative: ConnectNative;
 }

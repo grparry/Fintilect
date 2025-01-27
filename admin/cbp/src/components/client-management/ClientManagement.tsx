@@ -25,10 +25,8 @@ interface TabPanelProps {
   index: number;
   value: number;
 }
-
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
-
   return (
     <div
       role="tabpanel"
@@ -41,12 +39,10 @@ function TabPanel(props: TabPanelProps) {
     </div>
   );
 }
-
 interface ClientManagementProps {
   clientId: string;
   children?: React.ReactNode;
 }
-
 const DEFAULT_SETTINGS = {
   general: {
     timezone: 'UTC',
@@ -79,7 +75,6 @@ const DEFAULT_SETTINGS = {
     alertTypes: ['payment', 'security', 'system'],
   },
 };
-
 const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -87,12 +82,10 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState(0);
-
   console.log('=== ClientManagement Debug Start ===');
   console.log('Props:', { clientId });
   console.log('Current location:', location.pathname);
   console.log('Current tab:', activeTab);
-
   // Load client data
   const loadClientData = useCallback(async () => {
     try {
@@ -114,20 +107,16 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
       setLoading(false);
     }
   }, [clientId]);
-
   useEffect(() => {
     loadClientData();
   }, [loadClientData]);
-
   const getCurrentTab = () => {
     const path = location.pathname;
     console.log('Getting current tab for path:', path);
-    
     // Extract the last segment of the path
     const segments = path.split('/');
     const lastSegment = segments[segments.length - 1];
     console.log('Path analysis:', { segments, lastSegment });
-
     switch (lastSegment) {
       case 'users': return 1;
       case 'groups': return 2;
@@ -136,12 +125,10 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
       default: return 0;
     }
   };
-
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     const encodedId = encodeId(clientId);
     const basePath = `/admin/client-management/edit/${encodedId}`;
     console.log('Tab change:', { newValue, basePath });
-    
     switch (newValue) {
       case 0:
         navigate(`${basePath}/contact`);
@@ -160,7 +147,6 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
         break;
     }
   };
-
   const getStatusColor = (status: ClientStatus) => {
     switch (status) {
       case ClientStatus.Active:
@@ -173,7 +159,6 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
         return 'default';
     }
   };
-
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -181,7 +166,6 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
       </Box>
     );
   }
-
   if (error) {
     return (
       <Box mb={2}>
@@ -189,7 +173,6 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
       </Box>
     );
   }
-
   if (!client) {
     return (
       <Box mb={2}>
@@ -197,7 +180,6 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
       </Box>
     );
   }
-
   return (
     <Box>
       <Box display="flex" alignItems="center" mb={3}>
@@ -217,7 +199,6 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
           sx={{ ml: 1 }}
         />
       </Box>
-
       <Tabs value={getCurrentTab()} onChange={handleTabChange}>
         <Tab label="Contact Information" />
         <Tab label="Users" />
@@ -225,12 +206,10 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
         <Tab label="Security Settings" />
         <Tab label="Audit Log" />
       </Tabs>
-
       <Box mt={3}>
         {children}
       </Box>
     </Box>
   );
 };
-
 export default ClientManagement;

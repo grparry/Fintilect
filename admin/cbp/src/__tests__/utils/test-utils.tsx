@@ -13,7 +13,6 @@ export const TestUtils = {
       </MemoryRouter>
     );
   },
-
   renderWithProviders: (ui: React.ReactElement) => {
     return render(
       <ThemeProvider theme={theme}>
@@ -21,7 +20,6 @@ export const TestUtils = {
       </ThemeProvider>
     );
   },
-
   mockNavigation: () => {
     return {
       navigate: jest.fn(),
@@ -29,7 +27,6 @@ export const TestUtils = {
     };
   }
 };
-
 describe('Test Utils', () => {
   it('should render test components correctly', () => {
     const TestComponent = () => <div>Test Component</div>;
@@ -37,5 +34,4 @@ describe('Test Utils', () => {
     expect(getByText('Test Component')).toBeInTheDocument();
   });
 });
-
 export default TestUtils;

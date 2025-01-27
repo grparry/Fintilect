@@ -18,7 +18,6 @@ interface NavigationCard {
   path: string;
   icon: React.ElementType;
 }
-
 const navigationCards: NavigationCard[] = [
   {
     id: 'core-settings',
@@ -81,11 +80,9 @@ const navigationCards: NavigationCard[] = [
     icon: ExtensionIcon
   }
 ];
-
 const EmergeConfigLanding: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -94,11 +91,9 @@ const EmergeConfigLanding: React.FC = () => {
       <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary' }}>
         Configure and manage all aspects of the Emerge platform, from settings to specific feature configurations.
       </Typography>
-
       <Grid container spacing={2}>
         {navigationCards.map((card) => {
           const Icon = card.icon;
-          
           return (
             <Grid item xs={12} sm={6} md={4} key={card.id}>
               <Card 
@@ -128,5 +123,4 @@ const EmergeConfigLanding: React.FC = () => {
     </Box>
   );
 };
-
 export default EmergeConfigLanding;

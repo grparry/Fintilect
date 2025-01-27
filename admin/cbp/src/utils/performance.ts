@@ -2,7 +2,6 @@ import React, { ComponentType } from 'react';
 
 type PerformanceFunction<T> = () => T;
 type MarkerEndFunction = () => void;
-
 /**
  * Measures the performance of a function execution
  * @param name The name of the operation being measured
@@ -13,14 +12,11 @@ export const measurePerformance = <T>(name: string, fn: PerformanceFunction<T>):
   const start = performance.now();
   const result = fn();
   const duration = performance.now() - start;
-  
   if (duration > 16) { // 16ms = 60fps threshold
     console.warn(`[Performance Warning] Operation '${name}' took ${duration.toFixed(2)}ms`);
   }
-  
   return result;
 };
-
 /**
  * Creates a performance marker for measuring duration between start and end points
  * @param markerId The unique identifier for this performance marker
@@ -32,10 +28,8 @@ export const createPerformanceMarker = (markerId: string): MarkerEndFunction => 
     return () => {
       window.performance.mark(`${markerId}-end`);
       window.performance.measure(markerId, `${markerId}-start`, `${markerId}-end`);
-      
       const measurements = window.performance.getEntriesByName(markerId);
       const lastMeasurement = measurements[measurements.length - 1];
-      
       if (lastMeasurement.duration > 16) {
         console.warn(`[Performance Warning] Marker '${markerId}' duration: ${lastMeasurement.duration.toFixed(2)}ms`);
       }
@@ -43,7 +37,6 @@ export const createPerformanceMarker = (markerId: string): MarkerEndFunction => 
   }
   return () => {};
 };
-
 /**
  * Higher-order component that tracks render performance of a component
  * @param WrappedComponent The component to track
@@ -60,7 +53,6 @@ export function withPerformanceTracking<P extends object>(
     console.timeEnd(`render-${componentName}`);
     return result;
   };
-
   PerformanceTrackedComponent.displayName = `WithPerformanceTracking(${componentName})`;
   return PerformanceTrackedComponent;
 };

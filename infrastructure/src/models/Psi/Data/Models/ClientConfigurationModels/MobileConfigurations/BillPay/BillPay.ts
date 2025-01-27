@@ -1,6 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
 import { BillPayMethod } from './BillPayMethod';
-import { DateTime? } from './DateTime?';
 import { AddPayee } from './AddPayee.AddPayee';
 import { PhotoBillPay } from './PhotoBillPay.PhotoBillPay';
 import { RecurringBillPay } from './RecurringBillPay';

@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { MiddlewareHealthThreshold } from './MiddlewareHealthThreshold';
+import { MiddlewareHealthThreshold } from '@infrastructure/MiddlewareHealthThreshold';
 export interface MonitoringSettingsConfig {
     MiddlewareHealthThreshold: MiddlewareHealthThreshold;
 }

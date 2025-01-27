@@ -9,7 +9,6 @@ import { NavigationMetadata } from './navigation';
 export interface ConfigValue {
     [key: string]: unknown;
 }
-
 /**
  * Metadata for configuration sections
  */
@@ -27,7 +26,6 @@ export interface ConfigMetadata {
     /** Navigation metadata */
     navigation: NavigationMetadata;
 }
-
 /**
  * Configuration section state
  */
@@ -41,7 +39,6 @@ export interface ConfigSectionState<T extends ConfigValue> {
     /** Validation state */
     validationResult: ValidationResult | null;
 }
-
 /**
  * Props for configuration sections
  */

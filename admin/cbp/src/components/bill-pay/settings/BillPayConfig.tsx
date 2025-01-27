@@ -32,7 +32,6 @@ import {
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 
 type ValidationErrors = Partial<Record<keyof BillPayConfigUpdate, string>>;
-
 const BillPayConfig: React.FC = () => {
   // State
   const [config, setConfig] = useState<BillPayConfigUpdate>({
@@ -51,9 +50,7 @@ const BillPayConfig: React.FC = () => {
   const [testingEmail, setTestingEmail] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
-
   const billPayService = ServiceFactory.getInstance().getBillPayService();
-
   // Load initial config
   useEffect(() => {
     const loadConfig = async () => {
@@ -78,17 +75,14 @@ const BillPayConfig: React.FC = () => {
         setLoading(false);
       }
     };
-
     loadConfig();
   }, []);
-
   // Handle form submission
   const handleSubmit = async () => {
     try {
       setSaving(true);
       setError(null);
       setValidationErrors({});
-      
       const validation = await billPayService.updateConfiguration(config);
       if (!validation.valid) {
         const errors: ValidationErrors = {};
@@ -98,7 +92,6 @@ const BillPayConfig: React.FC = () => {
         setValidationErrors(errors);
         throw new Error('Validation failed');
       }
-
       const updatedConfig = await billPayService.getConfiguration();
       setOriginalConfig(updatedConfig);
       setConfig({
@@ -117,23 +110,19 @@ const BillPayConfig: React.FC = () => {
       setSaving(false);
     }
   };
-
   // Handle test email
   const handleTestEmail = async () => {
     try {
       setTestingEmail(true);
       setError(null);
-      
       // TODO: Implement test email functionality once service method is available
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to send test email');
     } finally {
       setTestingEmail(false);
     }
   };
-
   // Handle reset
   const handleReset = () => {
     if (originalConfig) {
@@ -151,7 +140,6 @@ const BillPayConfig: React.FC = () => {
       setError(null);
     }
   };
-
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -159,19 +147,16 @@ const BillPayConfig: React.FC = () => {
       </Box>
     );
   }
-
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
         Bill Pay Configuration
       </Typography>
-
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
-
       <Card>
         <CardContent>
           <Grid container spacing={3}>
@@ -198,7 +183,6 @@ const BillPayConfig: React.FC = () => {
                 />
               </LocalizationProvider>
             </Grid>
-
             <Grid item xs={12} md={6}>
               <TextField
                 label="Maximum Daily Limit"
@@ -213,7 +197,6 @@ const BillPayConfig: React.FC = () => {
                 }}
               />
             </Grid>
-
             <Grid item xs={12} md={6}>
               <TextField
                 label="Maximum Transaction Limit"
@@ -228,7 +211,6 @@ const BillPayConfig: React.FC = () => {
                 }}
               />
             </Grid>
-
             <Grid item xs={12} md={6}>
               <TextField
                 label="Retry Attempts"
@@ -240,7 +222,6 @@ const BillPayConfig: React.FC = () => {
                 fullWidth
               />
             </Grid>
-
             <Grid item xs={12}>
               <Divider sx={{ my: 2 }} />
               <Typography variant="subtitle1" gutterBottom>
@@ -265,7 +246,6 @@ const BillPayConfig: React.FC = () => {
                     </Box>
                   }
                 />
-
                 <FormControlLabel
                   control={
                     <Switch
@@ -286,7 +266,6 @@ const BillPayConfig: React.FC = () => {
                 />
               </Stack>
             </Grid>
-
             <Grid item xs={12}>
               <Divider sx={{ my: 2 }} />
               <Typography variant="subtitle1" gutterBottom>
@@ -302,7 +281,6 @@ const BillPayConfig: React.FC = () => {
                   }
                   label="Enable Email Notifications"
                 />
-
                 <TextField
                   label="Notification Email"
                   value={config.notificationEmail}
@@ -329,7 +307,6 @@ const BillPayConfig: React.FC = () => {
               </Stack>
             </Grid>
           </Grid>
-
           <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
             <Button
               variant="outlined"
@@ -353,5 +330,4 @@ const BillPayConfig: React.FC = () => {
     </Box>
   );
 };
-
 export default BillPayConfig;

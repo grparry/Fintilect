@@ -1,7 +1,7 @@
-import { Database } from '../config/db';
-import { HttpError } from '../utils/errors';
-import { PaginatedResponse } from '../types/common';
-import { logger } from '../config/logger';
+import { Database } from '@cbp-config-api/config/db';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { PaginatedResponse } from '@cbp-config-api/types/common';
+import { logger } from '@cbp-config-api/config/logger';
 
 export interface ClientRecord {
   ClientId: string;

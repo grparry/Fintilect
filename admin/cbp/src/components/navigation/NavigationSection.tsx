@@ -22,7 +22,6 @@ interface NavigationSectionProps {
   expandedItems: string[];
   activePath: string;
 }
-
 const NavigationSection: React.FC<NavigationSectionProps> = ({ 
   section, 
   level, 
@@ -31,29 +30,23 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
 }) => {
   // Return null if section is undefined
   if (!section) return null;
-
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const { state, toggleSection } = useNavigation();
   const isActive = section.id ? state.activeSection === section.id : false;
-  
   // For top-level sections (level 0), always keep them expanded when active
   const isSectionExpanded = level === 0 ? isActive : expandedItems.includes(section.id || '');
-
   const handleSectionClick = () => {
     if (!section?.id) return;
-    
     console.log('NavigationSection - Section clicked:', {
       id: section.id,
       path: section.path,
       basePath: section.basePath,
       currentPath: location.pathname
     });
-    
     // Always toggle the section first
     toggleSection(section.id);
-    
     // Then navigate if we have a path and we're not already there
     if (section.path && location.pathname !== section.path) {
       console.log('NavigationSection - Navigating to:', section.path);
@@ -65,31 +58,24 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
       });
     }
   };
-
   const renderNavigationItem = (item: NavigationItem, level: number = 1) => {
     if (!item) return null;
-    
     const itemPath = item.path;
     const isSelected = activePath === itemPath;
     const hasChildren = !!(item.items?.length || item.children?.length);
     const isItemOpen = item.id ? expandedItems.includes(item.id) : false;
-
     const handleItemClick = () => {
       if (!item) return;
-      
       // Toggle section if it has an ID
       if (item.id) {
         toggleSection(item.id);
       }
-
       // Navigate if we have a path and we're not already there
       if (item.path && location.pathname !== item.path) {
         navigate(item.path);
       }
     };
-
     const IconComponent = item.icon;
-
     return (
       <Box key={item.id || Math.random()}>
         <ListItemButton
@@ -136,9 +122,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
       </Box>
     );
   };
-
   const SectionIconComponent = section.icon;
-
   return (
     <Box>
       <ListItemButton
@@ -196,5 +180,4 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
     </Box>
   );
 };
-
 export default NavigationSection;

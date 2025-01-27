@@ -1,0 +1,90 @@
+{
+  "AnyMemberTransfers": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.AnyMemberTransfers",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.AnyMember.Enabled",
+        "description": "Whether any-member transfers are enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "Transfers.AnyMember.MinVersion",
+        "description": "Minimum version required for any-member transfers"
+      },
+      "requiredFields": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "AccountNumber",
+            "AccountType",
+            "Suffix",
+            "Amount",
+            "Description"
+          ]
+        },
+        "x-setting-key": "Transfers.AnyMember.RequiredFields",
+        "description": "List of fields that are required for any-member transfers"
+      },
+      "optionalFields": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "AccountNumber",
+            "AccountType",
+            "Suffix",
+            "Amount",
+            "Description"
+          ]
+        },
+        "x-setting-key": "Transfers.AnyMember.OptionalFields",
+        "description": "List of fields that are optional for any-member transfers"
+      },
+      "defaultSuffix": {
+        "type": "string",
+        "x-setting-key": "Transfers.AnyMember.DefaultSuffix",
+        "description": "Default suffix to use for any-member transfers"
+      },
+      "accountTypes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "Transfers.AnyMember.AccountTypes",
+        "description": "List of allowed account types for any-member transfers"
+      },
+      "maxFailedTransferAttemptsPerDay": {
+        "type": "integer",
+        "x-setting-key": "Transfers.AnyMember.MaxFailedTransferAttemptsPerDay",
+        "description": "Maximum number of failed transfer attempts allowed per day"
+      },
+      "minimumTransferAmount": {
+        "type": "integer",
+        "x-setting-key": "Transfers.AnyMember.MinimumTransferAmount",
+        "description": "Minimum amount allowed for any-member transfers"
+      },
+      "accountTypeMappings": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        },
+        "x-setting-key": "Transfers.AnyMember.AccountTypeMappings",
+        "description": "Mappings between display account types and system account types"
+      },
+      "accessTypeFlagNumber": {
+        "type": "integer",
+        "x-setting-key": "Transfers.AnyMember.FlagNumber",
+        "description": "Flag number used for access type checking"
+      },
+      "defaultAccountType": {
+        "type": "string",
+        "x-setting-key": "Transfers.AnyMember.DefaultAccountType",
+        "description": "Default account type to use for any-member transfers"
+      }
+    }
+  }
+}

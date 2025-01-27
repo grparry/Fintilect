@@ -14,7 +14,6 @@ const GroupsWrapper: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [group, setGroup] = useState<UserGroup | null>(null);
-
   if (!clientId) {
     return (
       <Alert severity="error" sx={{ mt: 2 }}>
@@ -22,10 +21,8 @@ const GroupsWrapper: React.FC = () => {
       </Alert>
     );
   }
-
   try {
     const decodedClientId = decodeId(clientId);
-
     // If groupId is present, show the edit view
     if (groupId) {
       return (
@@ -50,7 +47,6 @@ const GroupsWrapper: React.FC = () => {
         />
       );
     }
-
     // Otherwise show the groups list
     return <Groups clientId={decodedClientId} />;
   } catch (err) {
@@ -61,5 +57,4 @@ const GroupsWrapper: React.FC = () => {
     );
   }
 };
-
 export default GroupsWrapper;

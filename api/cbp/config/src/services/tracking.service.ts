@@ -1,8 +1,8 @@
 import * as sql from 'mssql';
-import { Database, db } from '../config/db';
-import { BaseRepository } from '../repositories/base.repository';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
+import { Database, db } from '@cbp-config-api/config/db';
+import { BaseRepository } from '@cbp-config-api/repositories/base.repository';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { logger } from '@cbp-config-api/config/logger';
 
 interface QueryParams {
   page: number;

@@ -1,9 +1,9 @@
 import * as sql from 'mssql';
-import { Database } from '../config/db';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { BaseRepository } from '../repositories/base.repository';
-import { clearCache } from '../middleware/cache.middleware';
+import { Database } from '@/config/db';
+import { HttpError } from '@/utils/errors';
+import { logger } from '@/config/logger';
+import { BaseRepository } from '@/repositories/base.repository';
+import { clearCache } from '@/middleware/cache.middleware';
 
 interface CalendarDate {
   Date: string;

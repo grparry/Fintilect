@@ -1,0 +1,46 @@
+{
+  "MultipleEmailSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Email.MultipleEmailSettings",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "MultipleEmailAddresses.Enabled",
+        "description": "Whether multiple email addresses feature is enabled"
+      },
+      "settings": {
+        "$ref": "./settings.json#/MultipleEmailSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/MultipleEmailFeatures"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "MultipleEmailAddresses.MinVersion",
+        "description": "Minimum version required for multiple email addresses feature"
+      },
+      "emailTypes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "MultipleEmailAddresses.EmailTypes",
+        "description": "List of valid email types that can be used"
+      },
+      "emailTypesThatCanBeDeleted": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "MultipleEmailAddresses.EmailTypesThatCanBeDeleted",
+        "description": "List of email types that can be deleted"
+      },
+      "defaultEmailType": {
+        "type": "string",
+        "x-setting-key": "MultipleEmailAddresses.DefaultEmailType",
+        "description": "The default email type to use when not specified"
+      }
+    }
+  }
+}

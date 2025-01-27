@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { RemoteDepositCheckHold } from './RemoteDepositCheckHold';
+import { RemoteDepositCheckHold } from '@infrastructure/RemoteDepositCheckHold';
 export interface RemoteDepositCheckHoldSettingsConfig {
     RemoteDepositCheckHold: RemoteDepositCheckHold;
 }

@@ -11,14 +11,13 @@ import {
   Chip,
   Alert,
 } from '@mui/material';
-import { Connection, SyncDialogProps } from '../../../types/money-desktop.types';
+import { SyncDialogProps } from '../../../types/money-desktop.types';
 
 const statusColors = {
   Connected: 'success',
   Error: 'error',
   Pending: 'warning'
 } as const;
-
 const SyncDialog: React.FC<SyncDialogProps> = ({
   open,
   onClose,
@@ -28,7 +27,6 @@ const SyncDialog: React.FC<SyncDialogProps> = ({
   if (!connection) {
     return null;
   }
-
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Sync Connection</DialogTitle>
@@ -78,5 +76,4 @@ const SyncDialog: React.FC<SyncDialogProps> = ({
     </Dialog>
   );
 };
-
 export default SyncDialog;

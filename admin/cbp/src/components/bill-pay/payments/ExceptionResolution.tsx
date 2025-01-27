@@ -31,7 +31,6 @@ interface ExceptionResolutionProps {
   onClose: () => void;
   onResolutionComplete: () => void;
 }
-
 const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
   exception,
   onClose,
@@ -47,15 +46,12 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
     userId: user?.id?.toString() || '',
     timestamp: new Date().toISOString(),
   });
-
   const exceptionService = ServiceFactory.getInstance().getExceptionService();
-
   const handleResolve = async () => {
     if (!resolution.action || !resolution.notes) {
       setError('Please provide both action and notes for resolution');
       return;
     }
-
     try {
       setLoading(true);
       await exceptionService.updateExceptionStatus(
@@ -71,7 +67,6 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
       setLoading(false);
     }
   };
-
   return (
     <Card>
       <CardContent>
@@ -81,7 +76,6 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
               {error}
             </Alert>
           )}
-
           <Box>
             <Typography variant="h6">Exception Details</Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -105,9 +99,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
               )}
             </Grid>
           </Box>
-
           <Divider />
-
           <Box>
             <Typography variant="h6">Resolution</Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -166,7 +158,6 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
               </Grid>
             </Grid>
           </Box>
-
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
             <Button onClick={onClose} variant="outlined">
               Cancel
@@ -184,5 +175,4 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
     </Card>
   );
 };
-
 export default ExceptionResolution;

@@ -1,7 +1,7 @@
-import { Holiday, HolidayInput, HolidayValidation, HolidayStatus } from '../../../types/bill-pay.types';
-import { IHolidayService } from '../../interfaces/IHolidayService';
-import { BaseMockService } from './BaseMockService';
-import { mockHolidays } from './data/holiday/holidays';
+import { Holiday, HolidayInput, HolidayValidation, HolidayStatus } from '@/../../types/bill-pay.types';
+import { IHolidayService } from '@/../interfaces/IHolidayService';
+import { BaseMockService } from '@/BaseMockService';
+import { mockHolidays } from '@/data/holiday/holidays';
 import { addDays, isWeekend, parseISO } from 'date-fns';
 
 export class MockHolidayService extends BaseMockService implements IHolidayService {

@@ -1,0 +1,382 @@
+Source File,Import Statement,Normalized Import
+src/features/client-management/components/ResourceWrapper.tsx,import BaseModal from './../../components/common/BaseModal';,import BaseModal from '../../../components/common/BaseModal';
+src/components/emerge-admin/member-center/ManageDevicesDialog.tsx,"import { Device\, DeviceStatus } from './../../types/member-center.types';","import { Device\, DeviceStatus } from '../../../types/member-center.types';"
+src/components/emerge-admin/member-center/ManageDevicesDialog.tsx,import { memberService } from './../../services/factory/ServiceFactory';,import { memberService } from '../../../services/factory/ServiceFactory';
+src/components/emerge-admin/member-center/components/shared/AlertIcon.tsx,import { AlertSeverity } from './../../../../types/member-center.types';,import { AlertSeverity } from '../../../../../types/member-center.types';
+src/components/emerge-admin/member-center/components/search/SearchResults.tsx,"import { Member\, MemberSearchResult\, MemberStatus } from './../../../../types/member-center.types';","import { Member\, MemberSearchResult\, MemberStatus } from '../../../../../types/member-center.types';"
+src/components/emerge-admin/member-center/components/search/MemberSearch.tsx,"import { MemberSearchFilters\, MemberStatus\, AlertType } from './../../../../types/member-center.types';","import { MemberSearchFilters\, MemberStatus\, AlertType } from '../../../../../types/member-center.types';"
+src/components/emerge-admin/member-center/MemberSearch.tsx,"import { Member\, MemberSearchFilters\, MemberStatus\, MemberSearchResult } from './../../types/member-center.types';","import { Member\, MemberSearchFilters\, MemberStatus\, MemberSearchResult } from '../../../types/member-center.types';"
+src/components/emerge-admin/member-center/MemberSearch.tsx,import { IMemberService } from './../../services/interfaces/IMemberService';,import { IMemberService } from '../../../services/interfaces/IMemberService';
+src/components/emerge-admin/member-center/MemberSearch.tsx,import { useService } from './../../hooks/useService';,import { useService } from '../../../hooks/useService';
+src/components/emerge-admin/member-center/MemberSearch.tsx,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/components/emerge-admin/member-center/MemberDashboard.tsx,} from './../../types/member-center.types';,} from '../../../types/member-center.types';
+src/components/emerge-admin/member-center/MemberDashboard.tsx,import type { ApiResponse } from './../../types/api.types';,import type { ApiResponse } from '../../../types/api.types';
+src/components/emerge-admin/member-center/MemberDashboard.tsx,import { IMemberService } from './../../services/interfaces/IMemberService';,import { IMemberService } from '../../../services/interfaces/IMemberService';
+src/components/emerge-admin/member-center/MemberDashboard.tsx,import { useService } from './../../hooks/useService';,import { useService } from '../../../hooks/useService';
+src/components/emerge-admin/EmergeAdminHeader.tsx,import { getAllRoutes } from './../routes';,import { getAllRoutes } from '../../routes';
+src/components/emerge-admin/MoneyDesktop.tsx,} from './../types/money-desktop.types';,} from '../../types/money-desktop.types';
+src/components/emerge-admin/MoneyDesktop.tsx,import { moneyDesktopService } from './../services/money-desktop.service';,import { moneyDesktopService } from '../../services/money-desktop.service';
+src/components/emerge-admin/security/MemberSecuritySettings.tsx,import { SecurityQuestion } from './../../types/member-center.types';,import { SecurityQuestion } from '../../../types/member-center.types';
+src/components/emerge-admin/components/SyncDialog.tsx,"import { Connection\, SyncDialogProps } from './../../types/money-desktop.types';","import { Connection\, SyncDialogProps } from '../../../types/money-desktop.types';"
+src/components/emerge-admin/components/DetailsDialog.tsx,"import { Connection\, Account\, DetailsDialogProps } from './../../types/money-desktop.types';","import { Connection\, Account\, DetailsDialogProps } from '../../../types/money-desktop.types';"
+src/components/bill-pay/settings/Settings.tsx,"import { TabPanelProps\, SettingsState } from './../../types/bill-pay.types';","import { TabPanelProps\, SettingsState } from '../../../types/bill-pay.types';"
+src/components/bill-pay/settings/BillPayConfig.tsx,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/components/bill-pay/settings/BillPayConfig.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/settings/security/BillPaySecuritySettings.tsx,"import { BillPaySecuritySettings as BillPaySecuritySettingsType\, BillPayOTPMethod } from './../../../types/security.types';","import { BillPaySecuritySettings as BillPaySecuritySettingsType\, BillPayOTPMethod } from '../../../../types/security.types';"
+src/components/bill-pay/settings/security/BillPaySecuritySettings.tsx,import { ServiceFactory } from './../../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../../services/factory/ServiceFactory';
+src/components/bill-pay/settings/NotificationTemplates.tsx,import { notificationService } from './../../services/factory/ServiceFactory';,import { notificationService } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/settings/NotificationTemplates.tsx,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/components/bill-pay/settings/Holidays.tsx,"import { Holiday\, HolidayInput\, HolidayType\, HolidayStatus } from './../../types/bill-pay.types';","import { Holiday\, HolidayInput\, HolidayType\, HolidayStatus } from '../../../types/bill-pay.types';"
+src/components/bill-pay/settings/Holidays.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/settings/PermissionGroups.tsx,} from './../../types/permission.types';,} from '../../../types/permission.types';
+src/components/bill-pay/settings/PermissionGroups.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/settings/AuditLog.tsx,import { auditService } from './../../services/factory/ServiceFactory';,import { auditService } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/settings/AuditLog.tsx,"import { AuditEvent\, AuditLogFilters } from './../../services/interfaces/IAuditService';","import { AuditEvent\, AuditLogFilters } from '../../../services/interfaces/IAuditService';"
+src/components/bill-pay/payments/ManualProcessing.tsx,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/components/bill-pay/payments/ManualProcessing.tsx,} from './../../types/payment.types';,} from '../../../types/payment.types';
+src/components/bill-pay/payments/ManualProcessing.tsx,"import { Client\, ClientStatus } from './../../types/client.types';","import { Client\, ClientStatus } from '../../../types/client.types';"
+src/components/bill-pay/payments/ManualProcessing.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/payments/ManualProcessing.tsx,import { useAuth } from './../../hooks/useAuth';,import { useAuth } from '../../../hooks/useAuth';
+src/components/bill-pay/payments/ManualProcessing.tsx,import { AuthContextType } from './../../types/auth.types';,import { AuthContextType } from '../../../types/auth.types';
+src/components/bill-pay/payments/FISExceptionHandling.tsx,import { ApiResponse } from './../../types/api.types';,import { ApiResponse } from '../../../types/api.types';
+src/components/bill-pay/payments/FISExceptionHandling.tsx,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/components/bill-pay/payments/FISExceptionHandling.tsx,import { useAuth } from './../../hooks/useAuth';,import { useAuth } from '../../../hooks/useAuth';
+src/components/bill-pay/payments/PayeeConversion.tsx,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/components/bill-pay/payments/PayeeConversion.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/payments/PayeeConversion.tsx,import { useAuth } from './../../hooks/useAuth';,import { useAuth } from '../../../hooks/useAuth';
+src/components/bill-pay/payments/ExceptionDetails.tsx,import { useAuth } from './../../hooks/useAuth';,import { useAuth } from '../../../hooks/useAuth';
+src/components/bill-pay/payments/ExceptionDetails.tsx,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/components/bill-pay/payments/ExceptionDetails.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/payments/ExceptionResolution.tsx,import { useAuth } from './../../hooks/useAuth';,import { useAuth } from '../../../hooks/useAuth';
+src/components/bill-pay/payments/ExceptionResolution.tsx,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/components/bill-pay/payments/ExceptionResolution.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/payments/PendingPayments.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/payments/PendingPayments.tsx,import { useAuth } from './../../hooks/useAuth';,import { useAuth } from '../../../hooks/useAuth';
+src/components/bill-pay/payments/PendingPayments.tsx,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/components/bill-pay/payments/ExceptionTool.tsx,import { useAuth } from './../../hooks/useAuth';,import { useAuth } from '../../../hooks/useAuth';
+src/components/bill-pay/payments/ExceptionTool.tsx,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/components/bill-pay/payments/ExceptionTool.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/dashboard/Dashboard.tsx,import DashboardCard from './../../components/common/DashboardCard';,import DashboardCard from '../../../components/common/DashboardCard';
+src/components/bill-pay/dashboard/Dashboard.tsx,} from './../../types/dashboard.types';,} from '../../../types/dashboard.types';
+src/components/bill-pay/dashboard/Dashboard.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/dashboard/Dashboard.tsx,import { IBillPayService } from './../../services/interfaces/IBillPayService';,import { IBillPayService } from '../../../services/interfaces/IBillPayService';
+src/components/bill-pay/dashboard/Dashboard.tsx,import { IPaymentProcessorService } from './../../services/interfaces/IPaymentProcessorService';,import { IPaymentProcessorService } from '../../../services/interfaces/IPaymentProcessorService';
+src/components/bill-pay/dashboard/Dashboard.tsx,"import { BillPayStats\, PaymentFilters } from './../../types/bill-pay.types';","import { BillPayStats\, PaymentFilters } from '../../../types/bill-pay.types';"
+src/components/bill-pay/dashboard/Dashboard.tsx,"import { ProcessorMetrics\, TransactionSummary\, DateRange } from './../../types/payment.types';","import { ProcessorMetrics\, TransactionSummary\, DateRange } from '../../../types/payment.types';"
+src/components/bill-pay/dashboard/Dashboard.tsx,import { PaymentStatus } from './../../types/bill-pay.types';,import { PaymentStatus } from '../../../types/bill-pay.types';
+src/components/bill-pay/BillPay.tsx,import { ServiceFactory } from './../services/factory/ServiceFactory';,import { ServiceFactory } from '../../services/factory/ServiceFactory';
+src/components/bill-pay/BillPay.tsx,import { IBillPayService } from './../services/interfaces/IBillPayService';,import { IBillPayService } from '../../services/interfaces/IBillPayService';
+src/components/bill-pay/BillPay.tsx,import { IPaymentProcessorService } from './../services/interfaces/IPaymentProcessorService';,import { IPaymentProcessorService } from '../../services/interfaces/IPaymentProcessorService';
+src/components/bill-pay/BillPay.tsx,import { IExceptionService } from './../services/interfaces/IExceptionService';,import { IExceptionService } from '../../services/interfaces/IExceptionService';
+src/components/bill-pay/BillPay.tsx,} from './../types/bill-pay.types';,} from '../../types/bill-pay.types';
+src/components/bill-pay/BillPay.tsx,"import { PaymentTransaction\, PaymentType\, PaymentMethod\, PaymentStatus\, PaymentPriority } from './../types/payment.types';","import { PaymentTransaction\, PaymentType\, PaymentMethod\, PaymentStatus\, PaymentPriority } from '../../types/payment.types';"
+src/components/bill-pay/BillPay.tsx,import { PaginatedResponse } from './../types/common.types';,import { PaginatedResponse } from '../../types/common.types';
+src/components/bill-pay/BillPay.tsx,"import { ApiResponse\, PaymentApiResponse\, ApiSuccessResponse } from './../types/api.types';","import { ApiResponse\, PaymentApiResponse\, ApiSuccessResponse } from '../../types/api.types';"
+src/components/bill-pay/reports/Reports.tsx,} from './../../types/report.types';,} from '../../../types/report.types';
+src/components/bill-pay/reports/Reports.tsx,} from './../../types/report-api.types';,} from '../../../types/report-api.types';
+src/components/bill-pay/reports/Reports.tsx,import { reportService } from './../../services/factory/ServiceFactory';,import { reportService } from '../../../services/factory/ServiceFactory';
+src/components/bill-pay/BillPayHeader.tsx,import { getAllRoutes } from './../routes';,import { getAllRoutes } from '../../routes';
+src/components/emerge-config/core/__tests__/mocks.tsx,"import { ConfigValue\, ConfigMetadata\, LayoutDefinition } from './../types';","import { ConfigValue\, ConfigMetadata\, LayoutDefinition } from '../../../../types';"
+src/components/emerge-config/core/__tests__/setup.ts,import { ValidationResult } from './../types';,import { ValidationResult } from '../../../../types';
+src/components/emerge-config/core/__tests__/helpers.tsx,import { ConfigValue } from './../types';,import { ConfigValue } from '../../../../types';
+src/components/emerge-config/EmergeConfigHeader.tsx,import { getAllRoutes } from './../routes';,import { getAllRoutes } from '../../routes';
+src/components/auth/LoginPage.tsx,import { useAuth } from './../context/AuthContext';,import { useAuth } from '../../context/AuthContext';
+src/components/auth/LoginPage.tsx,"import { LoginFormData\, LoginCredentials } from './../types/auth.types';","import { LoginFormData\, LoginCredentials } from '../../types/auth.types';"
+src/components/auth/LoginPage.tsx,import { ApiError } from './../types/index';,import { ApiError } from '../../types/index';
+src/components/auth/ProtectedRoute.tsx,import { useAuth } from './../context/AuthContext';,import { useAuth } from '../../context/AuthContext';
+src/components/development/DevelopmentHeader.tsx,import { getAllRoutes } from './../routes';,import { getAllRoutes } from '../../routes';
+src/components/layout/Navbar.tsx,import { useAuth } from './../context/AuthContext';,import { useAuth } from '../../context/AuthContext';
+src/components/layout/MainLayout.tsx,import { useNavigation } from './../context/NavigationContext';,import { useNavigation } from '../../context/NavigationContext';
+src/components/layout/MainLayout.tsx,import { navigationConfig } from './../config/navigation';,import { navigationConfig } from '../../config/navigation';
+src/components/layout/AppLayout.tsx,import { NavigationProvider } from './../context/NavigationContext';,import { NavigationProvider } from '../../context/NavigationContext';
+src/components/layout/AppLayout.tsx,import { useTheme } from './../context/ThemeContext';,import { useTheme } from '../../context/ThemeContext';
+src/components/layout/AppLayout.tsx,import { navigationConfig } from './../config/navigation';,import { navigationConfig } from '../../config/navigation';
+src/components/navigation/SidebarSection.tsx,import { NavigationSection } from './../types/navigation.types';,import { NavigationSection } from '../../types/navigation.types';
+src/components/navigation/SectionSwitcher.tsx,import { NavigationSection } from './../types/section-navigation.types';,import { NavigationSection } from '../../types/section-navigation.types';
+src/components/navigation/Breadcrumbs.tsx,import { useNavigation } from './../context/NavigationContext';,import { useNavigation } from '../../context/NavigationContext';
+src/components/navigation/Breadcrumbs.tsx,import { NavigationSection } from './../types/section-navigation.types';,import { NavigationSection } from '../../types/section-navigation.types';
+src/components/navigation/NavigationSection.tsx,import { useNavigation } from './../context/NavigationContext';,import { useNavigation } from '../../context/NavigationContext';
+src/components/navigation/NavigationSection.tsx,"import { NavigationSection as NavigationSectionType\, NavigationItem } from './../types/section-navigation.types';","import { NavigationSection as NavigationSectionType\, NavigationItem } from '../../types/section-navigation.types';"
+src/components/navigation/NavigationContent.tsx,import { NavigationItem } from './../types/section-navigation.types';,import { NavigationItem } from '../../types/section-navigation.types';
+src/components/navigation/NavigationContent.tsx,import { useNavigation } from './../context/NavigationContext';,import { useNavigation } from '../../context/NavigationContext';
+src/components/navigation/NavigationLanding.tsx,import { useNavigation } from './../context/NavigationContext';,import { useNavigation } from '../../context/NavigationContext';
+src/components/navigation/Header.tsx,import { useAuth } from './../context/AuthContext';,import { useAuth } from '../../context/AuthContext';
+src/components/navigation/Header.tsx,import { User } from './../types/index';,import { User } from '../../types/index';
+src/components/navigation/Sidebar.tsx,import { useNavigation } from './../context/NavigationContext';,import { useNavigation } from '../../context/NavigationContext';
+src/components/navigation/Sidebar.tsx,import { NavigationSection as NavigationSectionType } from './../types/section-navigation.types';,import { NavigationSection as NavigationSectionType } from '../../types/section-navigation.types';
+src/components/navigation/SidebarItem.tsx,import { NavigationItem } from './../types/navigation.types';,import { NavigationItem } from '../../types/navigation.types';
+src/components/navigation/SidebarItem.tsx,import { useNavigation } from './../context/NavigationContext';,import { useNavigation } from '../../context/NavigationContext';
+src/components/common/GlobalProfiler.tsx,import { GlobalProfilerProps } from './../types/components.types';,import { GlobalProfilerProps } from '../../types/components.types';
+src/components/common/DashboardCard.tsx,import { DashboardCardProps } from './../types/components.types';,import { DashboardCardProps } from '../../types/components.types';
+src/components/common/BaseModal.tsx,import logger from './../utils/logger';,import logger from '../../utils/logger';
+src/components/common/NavigationLanding.tsx,import { RouteConfig } from './../types/route.types';,import { RouteConfig } from '../../types/route.types';
+src/components/common/MenuItem.tsx,import logger from './../utils/logger';,import logger from '../../utils/logger';
+src/components/common/DataTable.tsx,import { ServiceFactory } from './../services/factory/ServiceFactory';,import { ServiceFactory } from '../../services/factory/ServiceFactory';
+src/components/common/DataTable.tsx,import logger from './../utils/logger';,import logger from '../../utils/logger';
+src/components/common/NotFound.tsx,import logger from './../utils/logger';,import logger from '../../utils/logger';
+src/components/common/ErrorBoundary.tsx,"import { ErrorBoundaryProps\, ErrorBoundaryState } from './../types/components.types';","import { ErrorBoundaryProps\, ErrorBoundaryState } from '../../types/components.types';"
+src/components/common/ErrorBoundary.tsx,import { ServiceFactory } from './../services/factory/ServiceFactory';,import { ServiceFactory } from '../../services/factory/ServiceFactory';
+src/components/common/ErrorBoundary.tsx,import logger from './../utils/logger';,import logger from '../../utils/logger';
+src/components/common/Form.tsx,import { SelectOption } from './../types/index';,import { SelectOption } from '../../types/index';
+src/components/common/Form.tsx,import { ServiceFactory } from './../services/factory/ServiceFactory';,import { ServiceFactory } from '../../services/factory/ServiceFactory';
+src/components/common/Form.tsx,import logger from './../utils/logger';,import logger from '../../utils/logger';
+src/components/client-management/wrappers/AuditSearchWrapper.tsx,import { decodeId } from './../../utils/idEncoder';,import { decodeId } from '../../../utils/idEncoder';
+src/components/client-management/wrappers/__tests__/ClientManagementWrapper.test.tsx,import { renderWithRouter } from './../../../test-utils/navigation';,import { renderWithRouter } from '../../../../test-utils/navigation';
+src/components/client-management/wrappers/__tests__/ClientManagementWrapper.test.tsx,"import { Client\, ClientType\, ClientStatus\, Environment as ClientEnvironment } from './../../../types/client.types';","import { Client\, ClientType\, ClientStatus\, Environment as ClientEnvironment } from '../../../../types/client.types';"
+src/components/client-management/wrappers/__tests__/ClientManagementWrapper.test.tsx,"import type { ApiResponse\, ApiSuccessResponse\, ApiErrorResponse } from './../../../types/api.types';","import type { ApiResponse\, ApiSuccessResponse\, ApiErrorResponse } from '../../../../types/api.types';"
+src/components/client-management/wrappers/UsersWrapper.tsx,import { clientService } from './../../services/factory/ServiceFactory';,import { clientService } from '../../../services/factory/ServiceFactory';
+src/components/client-management/wrappers/UsersWrapper.tsx,import { User } from './../../types/client.types';,import { User } from '../../../types/client.types';
+src/components/client-management/wrappers/UsersWrapper.tsx,import { decodeId } from './../../utils/idEncoder';,import { decodeId } from '../../../utils/idEncoder';
+src/components/client-management/wrappers/UsersWrapper.tsx,import logger from './../../utils/logger';,import logger from '../../../utils/logger';
+src/components/client-management/wrappers/UserEditWrapper.tsx,import { clientService } from './../../services/factory/ServiceFactory';,import { clientService } from '../../../services/factory/ServiceFactory';
+src/components/client-management/wrappers/UserEditWrapper.tsx,"import { User\, UserGroup } from './../../types/client.types';","import { User\, UserGroup } from '../../../types/client.types';"
+src/components/client-management/wrappers/UserEditWrapper.tsx,import { decodeId } from './../../utils/idEncoder';,import { decodeId } from '../../../utils/idEncoder';
+src/components/client-management/wrappers/UserEditWrapper.tsx,import logger from './../../utils/logger';,import logger from '../../../utils/logger';
+src/components/client-management/wrappers/GroupsWrapper.tsx,import { clientService } from './../../services/factory/ServiceFactory';,import { clientService } from '../../../services/factory/ServiceFactory';
+src/components/client-management/wrappers/GroupsWrapper.tsx,import { decodeId } from './../../utils/idEncoder';,import { decodeId } from '../../../utils/idEncoder';
+src/components/client-management/wrappers/GroupsWrapper.tsx,import { UserGroup } from './../../types/client.types';,import { UserGroup } from '../../../types/client.types';
+src/components/client-management/wrappers/ClientManagementWrapper.tsx,import { decodeId } from './../../utils/idEncoder';,import { decodeId } from '../../../utils/idEncoder';
+src/components/client-management/wrappers/ClientManagementWrapper.tsx,import logger from './../../utils/logger';,import logger from '../../../utils/logger';
+src/components/client-management/wrappers/MemberSecuritySettingsWrapper.tsx,import { decodeId } from './../../utils/idEncoder';,import { decodeId } from '../../../utils/idEncoder';
+src/components/client-management/ClientList.tsx,"import { Client\, ClientStatus\, ClientType\, Environment } from './../types/client.types';","import { Client\, ClientStatus\, ClientType\, Environment } from '../../types/client.types';"
+src/components/client-management/ClientList.tsx,import { clientService } from './../services/factory/ServiceFactory';,import { clientService } from '../../services/factory/ServiceFactory';
+src/components/client-management/ClientList.tsx,import { encodeId } from './../utils/idEncoder';,import { encodeId } from '../../utils/idEncoder';
+src/components/client-management/ClientList.tsx,import logger from './../utils/logger';,import logger from '../../utils/logger';
+src/components/client-management/ClientManagement.tsx,"import { Client\, Environment\, ClientStatus\, ClientType } from './../types/client.types';","import { Client\, Environment\, ClientStatus\, ClientType } from '../../types/client.types';"
+src/components/client-management/ClientManagement.tsx,import { IpAddress } from './../types/security.types';,import { IpAddress } from '../../types/security.types';
+src/components/client-management/ClientManagement.tsx,import { clientService } from './../services/factory/ServiceFactory';,import { clientService } from '../../services/factory/ServiceFactory';
+src/components/client-management/ClientManagement.tsx,import { encodeId } from './../utils/idEncoder';,import { encodeId } from '../../utils/idEncoder';
+src/components/client-management/ClientManagement.tsx,import logger from './../utils/logger';,import logger from '../../utils/logger';
+src/components/client-management/security/AuditSearch.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/client-management/security/AuditSearch.tsx,import { AuditLog } from './../../types/security.types';,import { AuditLog } from '../../../types/security.types';
+src/components/client-management/security/AuditSearch.tsx,import { AuditSearchRequest } from './../../types/client.types';,import { AuditSearchRequest } from '../../../types/client.types';
+src/components/client-management/security/AuditSearch.tsx,import { shouldUseMockService } from './../../config/api.config';,import { shouldUseMockService } from '../../../config/api.config';
+src/components/client-management/security/MemberSecuritySettings.tsx,import { SecuritySettings } from './../../types/security.types';,import { SecuritySettings } from '../../../types/security.types';
+src/components/client-management/security/MemberSecuritySettings.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/client-management/security/MemberSecuritySettings.tsx,import { IClientService } from './../../services/interfaces/IClientService';,import { IClientService } from '../../../services/interfaces/IClientService';
+src/components/client-management/security/MemberSecuritySettings.tsx,import { ISecurityService } from './../../services/interfaces/ISecurityService';,import { ISecurityService } from '../../../services/interfaces/ISecurityService';
+src/components/client-management/security/SecuritySettings.tsx,import { SecuritySettings as SecuritySettingsType } from './../../types/security.types';,import { SecuritySettings as SecuritySettingsType } from '../../../types/security.types';
+src/components/client-management/security/SecuritySettings.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/client-management/security/SecuritySettings.tsx,import { shouldUseMockData } from './../../config/api.config';,import { shouldUseMockData } from '../../../config/api.config';
+src/components/client-management/roles/RolesList.tsx,"import { SecurityRole\, Permission } from './../../types/client.types';","import { SecurityRole\, Permission } from '../../../types/client.types';"
+src/components/client-management/roles/RolesList.tsx,import { ClientService } from './../../services/implementations/real/ClientService';,import { ClientService } from '../../../services/implementations/real/ClientService';
+src/components/client-management/roles/RolesList.tsx,import { PermissionService } from './../../services/implementations/real/PermissionService';,import { PermissionService } from '../../../services/implementations/real/PermissionService';
+src/components/client-management/roles/RolesList.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/client-management/roles/RolesList.tsx,"import { encodeId\, decodeId } from './../../utils/idEncoder';","import { encodeId\, decodeId } from '../../../utils/idEncoder';"
+src/components/client-management/roles/RolesList.tsx,import { shouldUseMockData } from './../../config/api.config';,import { shouldUseMockData } from '../../../config/api.config';
+src/components/client-management/roles/RoleEdit.tsx,"import { SecurityRole\, Permission } from './../../types/client.types';","import { SecurityRole\, Permission } from '../../../types/client.types';"
+src/components/client-management/roles/RoleEdit.tsx,import { ClientService } from './../../services/implementations/real/ClientService';,import { ClientService } from '../../../services/implementations/real/ClientService';
+src/components/client-management/roles/RoleEdit.tsx,import { PermissionService } from './../../services/implementations/real/PermissionService';,import { PermissionService } from '../../../services/implementations/real/PermissionService';
+src/components/client-management/roles/RoleEdit.tsx,import { ServiceFactory } from './../../services/factory/ServiceFactory';,import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+src/components/client-management/roles/RoleEdit.tsx,"import { PermissionCategory\, PermissionAction } from './../../types/permission.types';","import { PermissionCategory\, PermissionAction } from '../../../types/permission.types';"
+src/components/client-management/roles/RoleEdit.tsx,"import { encodeId\, decodeId } from './../../utils/idEncoder';","import { encodeId\, decodeId } from '../../../utils/idEncoder';"
+src/components/client-management/groups/GroupEdit.tsx,"import { UserGroup\, SecurityRole\, Permission\, PermissionCategoryType } from './../../types/client.types';","import { UserGroup\, SecurityRole\, Permission\, PermissionCategoryType } from '../../../types/client.types';"
+src/components/client-management/groups/GroupEdit.tsx,import { clientService } from './../../services/factory/ServiceFactory';,import { clientService } from '../../../services/factory/ServiceFactory';
+src/components/client-management/groups/GroupsList.tsx,import { UserGroup as Group } from './../../types/client.types';,import { UserGroup as Group } from '../../../types/client.types';
+src/components/client-management/groups/GroupsList.tsx,import { clientService } from './../../services/factory/ServiceFactory';,import { clientService } from '../../../services/factory/ServiceFactory';
+src/components/client-management/groups/GroupsList.tsx,import { shouldUseMockData } from './../../config/api.config';,import { shouldUseMockData } from '../../../config/api.config';
+src/components/client-management/groups/GroupsList.tsx,import { decodeId } from './../../utils/idEncoder';,import { decodeId } from '../../../utils/idEncoder';
+src/components/client-management/groups/GroupsList.tsx,import { PermissionAction } from './../../types/permission.types';,import { PermissionAction } from '../../../types/permission.types';
+src/components/client-management/groups/PermissionTreeView.tsx,"import { Permission\, SecurityRole\, PermissionCategoryType } from './../../types/client.types';","import { Permission\, SecurityRole\, PermissionCategoryType } from '../../../types/client.types';"
+src/components/client-management/ContactInformation.tsx,import { Client } from './../types/client.types';,import { Client } from '../../types/client.types';
+src/components/client-management/ContactInformation.tsx,import { clientService } from './../services/factory/ServiceFactory';,import { clientService } from '../../services/factory/ServiceFactory';
+src/components/client-management/ContactInformation.tsx,import logger from './../utils/logger';,import logger from '../../utils/logger';
+src/components/client-management/Users.tsx,} from './../types/client.types';,} from '../../types/client.types';
+src/components/client-management/Users.tsx,"import { PaginationOptions\, FilterOptions } from './../types/common.types';","import { PaginationOptions\, FilterOptions } from '../../types/common.types';"
+src/components/client-management/Users.tsx,"import { clientService\, userService } from './../services/factory/ServiceFactory';","import { clientService\, userService } from '../../services/factory/ServiceFactory';"
+src/components/client-management/Users.tsx,import { encodeId } from './../utils/idEncoder';,import { encodeId } from '../../utils/idEncoder';
+src/components/client-management/Users.tsx,import logger from './../utils/logger';,import logger from '../../utils/logger';
+src/components/client-management/users/UserTable.tsx,"import { User as UIUser\, UserGroup as UIUserGroup\, UserStatus } from './../../types/client.types';","import { User as UIUser\, UserGroup as UIUserGroup\, UserStatus } from '../../../types/client.types';"
+src/components/client-management/users/UserTable.tsx,import { encodeId } from './../../utils/idEncoder';,import { encodeId } from '../../../utils/idEncoder';
+src/components/client-management/users/UserForm.tsx,"import { User\, UserRole\, UserStatus\, UserGroup } from './../../types/client.types';","import { User\, UserRole\, UserStatus\, UserGroup } from '../../../types/client.types';"
+src/components/client-management/Groups.tsx,} from './../types/client.types';,} from '../../types/client.types';
+src/components/client-management/Groups.tsx,"import { clientService\, userService } from './../services/factory/ServiceFactory';","import { clientService\, userService } from '../../services/factory/ServiceFactory';"
+src/components/client-management/Groups.tsx,import { encodeId } from './../utils/idEncoder';,import { encodeId } from '../../utils/idEncoder';
+src/components/client-management/ClientManagementHeader.tsx,import { getAllRoutes } from './../routes';,import { getAllRoutes } from '../../routes';
+src/components/client-management/ClientManagementHeader.tsx,import { clientService } from './../services/factory/ServiceFactory';,import { clientService } from '../../services/factory/ServiceFactory';
+src/components/client-management/ClientManagementHeader.tsx,import { Client } from './../types/client.types';,import { Client } from '../../types/client.types';
+src/components/client-management/ClientManagementHeader.tsx,import { decodeId } from './../utils/idEncoder';,import { decodeId } from '../../utils/idEncoder';
+src/components/client-management/ClientManagementHeader.tsx,import logger from './../utils/logger';,import logger from '../../utils/logger';
+src/__tests__/utils/test-utils.tsx,import { theme } from './../theme';,import { theme } from '../../theme';
+src/hooks/__tests__/test-utils.tsx,import { theme } from './../theme';,import { theme } from '../../theme';
+src/services/settings/__tests__/SettingsService.test.ts,import ApiClient from './../../services/api';,import ApiClient from '../../../services/api';
+src/services/settings/__tests__/SettingsService.test.ts,"import { ApiSuccessResponse\, ApiErrorResponse } from './../../types/api.types';","import { ApiSuccessResponse\, ApiErrorResponse } from '../../../types/api.types';"
+src/services/settings/__tests__/SettingsService.test.ts,import { Setting } from './../../types/settings.types';,import { Setting } from '../../../types/settings.types';
+src/services/settings/index.ts,"import { ApiSuccessResponse\, ApiErrorResponse } from './../types/api.types';","import { ApiSuccessResponse\, ApiErrorResponse } from '../../types/api.types';"
+src/services/settings/index.ts,"import { Setting as ApiSetting\, SettingGroup } from './../types/settings.types';","import { Setting as ApiSetting\, SettingGroup } from '../../types/settings.types';"
+src/services/implementations/real/MemberService.ts,import { IMemberService } from './../interfaces/IMemberService';,import { IMemberService } from '../../../interfaces/IMemberService';
+src/services/implementations/real/MemberService.ts,} from './../../types/member-center.types';,} from '../../../types/member-center.types';
+src/services/implementations/real/MemberService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/real/BaseService.ts,import { IBaseService } from './../interfaces/IBaseService';,import { IBaseService } from '../../../interfaces/IBaseService';
+src/services/implementations/real/BaseService.ts,"import { ApiResponse\, ApiSuccessResponse\, ApiErrorResponse\, ApiRequestOptions } from './../../types/api.types';","import { ApiResponse\, ApiSuccessResponse\, ApiErrorResponse\, ApiRequestOptions } from '../../../types/api.types';"
+src/services/implementations/real/BaseService.ts,import api from './../api';,import api from '../../../api';
+src/services/implementations/real/ExceptionService.ts,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/services/implementations/real/ExceptionService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/real/ExceptionService.ts,import { IExceptionService } from './../interfaces/IExceptionService';,import { IExceptionService } from '../../../interfaces/IExceptionService';
+src/services/implementations/real/NotificationService.ts,import { INotificationService } from './../interfaces/INotificationService';,import { INotificationService } from '../../../interfaces/INotificationService';
+src/services/implementations/real/NotificationService.ts,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/services/implementations/real/NotificationService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/real/HolidayService.ts,import { IHolidayService } from './../interfaces/IHolidayService';,import { IHolidayService } from '../../../interfaces/IHolidayService';
+src/services/implementations/real/HolidayService.ts,"import { Holiday\, HolidayInput\, HolidayValidation } from './../../types/bill-pay.types';","import { Holiday\, HolidayInput\, HolidayValidation } from '../../../types/bill-pay.types';"
+src/services/implementations/real/AuthService.ts,import { IAuthService } from './../interfaces/IAuthService';,import { IAuthService } from '../../../interfaces/IAuthService';
+src/services/implementations/real/AuthService.ts,import logger from './../../utils/logger';,import logger from '../../../utils/logger';
+src/services/implementations/real/PermissionService.ts,import { IPermissionService } from './../interfaces/IPermissionService';,import { IPermissionService } from '../../../interfaces/IPermissionService';
+src/services/implementations/real/PermissionService.ts,} from './../../types/permission.types';,} from '../../../types/permission.types';
+src/services/implementations/real/PermissionService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/real/MoneyDesktopService.ts,import { IMoneyDesktopService } from './../interfaces/IMoneyDesktopService';,import { IMoneyDesktopService } from '../../../interfaces/IMoneyDesktopService';
+src/services/implementations/real/MoneyDesktopService.ts,"import { Account\, Connection\, MoneyDesktopFilters } from './../../types/money-desktop.types';","import { Account\, Connection\, MoneyDesktopFilters } from '../../../types/money-desktop.types';"
+src/services/implementations/real/MoneyDesktopService.ts,import { ApiSuccessResponse } from './../../types/api.types';,import { ApiSuccessResponse } from '../../../types/api.types';
+src/services/implementations/real/ReportService.ts,import { IReportService } from './../interfaces/IReportService';,import { IReportService } from '../../../interfaces/IReportService';
+src/services/implementations/real/ReportService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/real/PayeeService.ts,import { IPayeeService } from './../interfaces/IPayeeService';,import { IPayeeService } from '../../../interfaces/IPayeeService';
+src/services/implementations/real/PayeeService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/real/PaymentService.ts,import { IPaymentService } from './../interfaces/IPaymentService';,import { IPaymentService } from '../../../interfaces/IPaymentService';
+src/services/implementations/real/PaymentService.ts,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/services/implementations/real/PaymentProcessorService.ts,import { IPaymentProcessorService } from './../interfaces/IPaymentProcessorService';,import { IPaymentProcessorService } from '../../../interfaces/IPaymentProcessorService';
+src/services/implementations/real/PaymentProcessorService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/real/PaymentProcessorService.ts,} from './../../types/payment.types';,} from '../../../types/payment.types';
+src/services/implementations/real/PaymentProcessorService.ts,import logger from './../../utils/logger';,import logger from '../../../utils/logger';
+src/services/implementations/real/UserService.ts,import { IUserService } from './../interfaces/IUserService';,import { IUserService } from '../../../interfaces/IUserService';
+src/services/implementations/real/UserService.ts,"import { User\, UserGroup\, UserPreferences\, UserStatus } from './../../types/client.types';","import { User\, UserGroup\, UserPreferences\, UserStatus } from '../../../types/client.types';"
+src/services/implementations/real/UserService.ts,"import { PaginatedResponse\, QueryOptions } from './../../types/index';","import { PaginatedResponse\, QueryOptions } from '../../../types/index';"
+src/services/implementations/real/BillPayService.ts,import { IBillPayService } from './../interfaces/IBillPayService';,import { IBillPayService } from '../../../interfaces/IBillPayService';
+src/services/implementations/real/BillPayService.ts,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/services/implementations/real/BillPayService.ts,} from './../../types/security.types';,} from '../../../types/security.types';
+src/services/implementations/real/BillPayService.ts,"import { PaginatedResponse\, QueryOptions } from './../../types/index';","import { PaginatedResponse\, QueryOptions } from '../../../types/index';"
+src/services/implementations/real/BillPayService.ts,import { ApiResponse } from './../../types/api.types';,import { ApiResponse } from '../../../types/api.types';
+src/services/implementations/real/BillPayService.ts,import api from './../api';,import api from '../../../api';
+src/services/implementations/real/BillPayService.ts,import logger from './../../utils/logger';,import logger from '../../../utils/logger';
+src/services/implementations/real/ClientService.ts,import { IClientService } from './../interfaces/IClientService';,import { IClientService } from '../../../interfaces/IClientService';
+src/services/implementations/real/ClientService.ts,} from './../../types/client.types';,} from '../../../types/client.types';
+src/services/implementations/real/ClientService.ts,import logger from './../../utils/logger';,import logger from '../../../utils/logger';
+src/services/implementations/real/SecurityService.ts,import { ISecurityService } from './../interfaces/ISecurityService';,import { ISecurityService } from '../../../interfaces/ISecurityService';
+src/services/implementations/real/SecurityService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/real/DashboardService.ts,import { IDashboardService } from './../interfaces/IDashboardService';,import { IDashboardService } from '../../../interfaces/IDashboardService';
+src/services/implementations/real/DashboardService.ts,} from './../../types/dashboard.types';,} from '../../../types/dashboard.types';
+src/services/implementations/real/DashboardService.ts,import { TimeRange } from './../../types';,import { TimeRange } from '../../../types';
+src/services/implementations/real/SettingsService.ts,import { ISettingsService } from './../interfaces/ISettingsService';,import { ISettingsService } from '../../../interfaces/ISettingsService';
+src/services/implementations/real/SettingsService.ts,"import { Setting\, SettingGroup } from './../../types/settings.types';","import { Setting\, SettingGroup } from '../../../types/settings.types';"
+src/services/implementations/real/SettingsService.ts,import { ApiSuccessResponse } from './../../types/api.types';,import { ApiSuccessResponse } from '../../../types/api.types';
+src/services/implementations/real/AuditService.ts,"import { IAuditService\, AuditEvent\, AuditLogFilters } from './../interfaces/IAuditService';","import { IAuditService\, AuditEvent\, AuditLogFilters } from '../../../interfaces/IAuditService';"
+src/services/implementations/real/AuditService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/real/AuditService.ts,import logger from './../../utils/logger';,import logger from '../../../utils/logger';
+src/services/implementations/mock/MockDashboardService.ts,import { IDashboardService } from './../interfaces/IDashboardService';,import { IDashboardService } from '../../../interfaces/IDashboardService';
+src/services/implementations/mock/MockDashboardService.ts,} from './../../types/dashboard.types';,} from '../../../types/dashboard.types';
+src/services/implementations/mock/MockDashboardService.ts,import { TimeRange } from './../../types';,import { TimeRange } from '../../../types';
+src/services/implementations/mock/MockPaymentService.ts,import { IPaymentService } from './../interfaces/IPaymentService';,import { IPaymentService } from '../../../interfaces/IPaymentService';
+src/services/implementations/mock/MockPaymentService.ts,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/services/implementations/mock/MockMemberService.ts,import { IMemberService } from './../interfaces/IMemberService';,import { IMemberService } from '../../../interfaces/IMemberService';
+src/services/implementations/mock/MockMemberService.ts,} from './../../types/member-center.types';,} from '../../../types/member-center.types';
+src/services/implementations/mock/MockMemberService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/mock/MockBillPayService.ts,import { IBillPayService } from './../interfaces/IBillPayService';,import { IBillPayService } from '../../../interfaces/IBillPayService';
+src/services/implementations/mock/MockBillPayService.ts,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/services/implementations/mock/MockBillPayService.ts,} from './../../types/security.types';,} from '../../../types/security.types';
+src/services/implementations/mock/MockBillPayService.ts,"import { PaginatedResponse\, Pagination\, PaginationOptions } from './../../types/index';","import { PaginatedResponse\, Pagination\, PaginationOptions } from '../../../types/index';"
+src/services/implementations/mock/MockAuthService.ts,import { IAuthService } from './../interfaces/IAuthService';,import { IAuthService } from '../../../interfaces/IAuthService';
+src/services/implementations/mock/MockAuthService.ts,} from './../../types/auth.types';,} from '../../../types/auth.types';
+src/services/implementations/mock/MockAuthService.ts,import { AuthError } from './../../utils/errors';,import { AuthError } from '../../../utils/errors';
+src/services/implementations/mock/MockNotificationService.ts,import { INotificationService } from './../interfaces/INotificationService';,import { INotificationService } from '../../../interfaces/INotificationService';
+src/services/implementations/mock/MockNotificationService.ts,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/services/implementations/mock/MockNotificationService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/mock/MockReportService.ts,} from './../../types/report.types';,} from '../../../types/report.types';
+src/services/implementations/mock/MockReportService.ts,} from './../../types/report-api.types';,} from '../../../types/report-api.types';
+src/services/implementations/mock/MockReportService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/mock/MockSecurityService.ts,import { ISecurityService } from './../interfaces/ISecurityService';,import { ISecurityService } from '../../../interfaces/ISecurityService';
+src/services/implementations/mock/MockSecurityService.ts,} from './../../types/security.types';,} from '../../../types/security.types';
+src/services/implementations/mock/MockSecurityService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/mock/MockPayeeService.ts,import { IPayeeService } from './../interfaces/IPayeeService';,import { IPayeeService } from '../../../interfaces/IPayeeService';
+src/services/implementations/mock/MockPayeeService.ts,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/services/implementations/mock/MockPayeeService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/mock/MockMoneyDesktopService.ts,import { IMoneyDesktopService } from './../interfaces/IMoneyDesktopService';,import { IMoneyDesktopService } from '../../../interfaces/IMoneyDesktopService';
+src/services/implementations/mock/MockMoneyDesktopService.ts,"import { Account\, Connection\, MoneyDesktopFilters } from './../../types/money-desktop.types';","import { Account\, Connection\, MoneyDesktopFilters } from '../../../types/money-desktop.types';"
+src/services/implementations/mock/MockSettingsService.ts,import { ISettingsService } from './../interfaces/ISettingsService';,import { ISettingsService } from '../../../interfaces/ISettingsService';
+src/services/implementations/mock/MockSettingsService.ts,"import { Setting\, SettingGroup } from './../../types/settings.types';","import { Setting\, SettingGroup } from '../../../types/settings.types';"
+src/services/implementations/mock/MockSettingsService.ts,"import { ApiSuccessResponse\, ApiErrorResponse } from './../../types/api.types';","import { ApiSuccessResponse\, ApiErrorResponse } from '../../../types/api.types';"
+src/services/implementations/mock/MockPermissionService.ts,import { IPermissionService } from './../interfaces/IPermissionService';,import { IPermissionService } from '../../../interfaces/IPermissionService';
+src/services/implementations/mock/MockPermissionService.ts,} from './../../types/permission.types';,} from '../../../types/permission.types';
+src/services/implementations/mock/MockPermissionService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/mock/MockUserService.ts,import { IUserService } from './../interfaces/IUserService';,import { IUserService } from '../../../interfaces/IUserService';
+src/services/implementations/mock/MockUserService.ts,} from './../../types/client.types';,} from '../../../types/client.types';
+src/services/implementations/mock/MockUserService.ts,"import { PaginatedResponse\, QueryOptions } from './../../types/index';","import { PaginatedResponse\, QueryOptions } from '../../../types/index';"
+src/services/implementations/mock/MockClientService.ts,import { IClientService } from './../interfaces/IClientService';,import { IClientService } from '../../../interfaces/IClientService';
+src/services/implementations/mock/MockClientService.ts,} from './../../types/client.types';,} from '../../../types/client.types';
+src/services/implementations/mock/MockClientService.ts,"import { AuditLog\, AuditSearchRequest\, SecuritySettings\, LoginPolicy } from './../../types/security.types';","import { AuditLog\, AuditSearchRequest\, SecuritySettings\, LoginPolicy } from '../../../types/security.types';"
+src/services/implementations/mock/MockPaymentProcessorService.ts,import { IPaymentProcessorService } from './../interfaces/IPaymentProcessorService';,import { IPaymentProcessorService } from '../../../interfaces/IPaymentProcessorService';
+src/services/implementations/mock/MockPaymentProcessorService.ts,} from './../../types/payment.types';,} from '../../../types/payment.types';
+src/services/implementations/mock/MockPaymentProcessorService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/mock/MockExceptionService.ts,} from './../../types/bill-pay.types';,} from '../../../types/bill-pay.types';
+src/services/implementations/mock/MockExceptionService.ts,import { IExceptionService } from './../interfaces/IExceptionService';,import { IExceptionService } from '../../../interfaces/IExceptionService';
+src/services/implementations/mock/MockExceptionService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/mock/MockHolidayService.ts,"import { Holiday\, HolidayInput\, HolidayValidation\, HolidayStatus } from './../../types/bill-pay.types';","import { Holiday\, HolidayInput\, HolidayValidation\, HolidayStatus } from '../../../types/bill-pay.types';"
+src/services/implementations/mock/MockHolidayService.ts,import { IHolidayService } from './../interfaces/IHolidayService';,import { IHolidayService } from '../../../interfaces/IHolidayService';
+src/services/implementations/mock/data/billpay/exceptions.ts,"import { PaymentException\, ExceptionStatus\, ExceptionResolution } from './../../../../types/bill-pay.types';","import { PaymentException\, ExceptionStatus\, ExceptionResolution } from '../../../../../types/bill-pay.types';"
+src/services/implementations/mock/data/billpay/settings.ts,} from './../../../../types/bill-pay.types';,} from '../../../../../types/bill-pay.types';
+src/services/implementations/mock/data/billpay/clients.ts,"import { Client\, Payee } from './../../../../types/bill-pay.types';","import { Client\, Payee } from '../../../../../types/bill-pay.types';"
+src/services/implementations/mock/data/billpay/dashboard.ts,"import { ChartDataPoint\, TimeRangeOption\, ChartViewOption } from './../../../../types/dashboard.types';","import { ChartDataPoint\, TimeRangeOption\, ChartViewOption } from '../../../../../types/dashboard.types';"
+src/services/implementations/mock/data/billpay/dashboard.ts,"import { BillPayStats\, PaymentMethod\, PaymentStatus\, TransactionTrend } from './../../../../types/bill-pay.types';","import { BillPayStats\, PaymentMethod\, PaymentStatus\, TransactionTrend } from '../../../../../types/bill-pay.types';"
+src/services/implementations/mock/data/billpay/dashboard.ts,import { TimeRange } from './../../../../types';,import { TimeRange } from '../../../../../types';
+src/services/implementations/mock/data/billpay/payments.ts,} from './../../../../types/bill-pay.types';,} from '../../../../../types/bill-pay.types';
+src/services/implementations/mock/data/settings/mockSettingsData.ts,"import { Setting\, SettingGroup } from './../../../../types/settings.types';","import { Setting\, SettingGroup } from '../../../../../types/settings.types';"
+src/services/implementations/mock/data/holiday/holidays.ts,"import { Holiday\, HolidayType\, HolidayStatus } from './../../../../types/bill-pay.types';","import { Holiday\, HolidayType\, HolidayStatus } from '../../../../../types/bill-pay.types';"
+src/services/implementations/mock/data/money-desktop/mockMoneyDesktopData.ts,"import { Account\, Connection } from './../../../../types/money-desktop.types';","import { Account\, Connection } from '../../../../../types/money-desktop.types';"
+src/services/implementations/mock/data/security/mockSecurityData.ts,} from './../../../../types/security.types';,} from '../../../../../types/security.types';
+src/services/implementations/mock/data/notification/templates.ts,"import { NotificationType\, NotificationCategory\, NotificationVariable\, NotificationTemplate } from './../../../../types/bill-pay.types';","import { NotificationType\, NotificationCategory\, NotificationVariable\, NotificationTemplate } from '../../../../../types/bill-pay.types';"
+src/services/implementations/mock/data/processor/mockPayeeConversionData.ts,import { PayeeConversionFile } from './../../../../types/bill-pay.types';,import { PayeeConversionFile } from '../../../../../types/bill-pay.types';
+src/services/implementations/mock/data/processor/mockPaymentData.ts,"import { PaymentMethod\, PaymentStatus\, PendingPayment\, Priority\, Payment } from './../../../../types/bill-pay.types';","import { PaymentMethod\, PaymentStatus\, PendingPayment\, Priority\, Payment } from '../../../../../types/bill-pay.types';"
+src/services/implementations/mock/data/permissions/mockPermissionData.ts,"import { Permission\, PermissionGroup\, PermissionCategoryType\, PermissionAction } from './../../../../types/permission.types';","import { Permission\, PermissionGroup\, PermissionCategoryType\, PermissionAction } from '../../../../../types/permission.types';"
+src/services/implementations/mock/data/dashboard/dashboard.ts,} from './../../../../types/dashboard.types';,} from '../../../../../types/dashboard.types';
+src/services/implementations/mock/data/dashboard/dashboard.ts,import { TimeRange } from './../../../../types';,import { TimeRange } from '../../../../../types';
+src/services/implementations/mock/data/users/mockUserData.ts,"import { User\, UserRole\, UserStatus } from './../../../../types/client.types';","import { User\, UserRole\, UserStatus } from '../../../../../types/client.types';"
+src/services/implementations/mock/data/report/reports.ts,import { ReportData } from './../../../../types/report.types';,import { ReportData } from '../../../../../types/report.types';
+src/services/implementations/mock/data/members/mockActivityData.ts,import { MemberActivity } from './../../../../types/member-center.types';,import { MemberActivity } from '../../../../../types/member-center.types';
+src/services/implementations/mock/data/members/mockMemberData.ts,"import { Member\, MemberStatus } from './../../../../types/member-center.types';","import { Member\, MemberStatus } from '../../../../../types/member-center.types';"
+src/services/implementations/mock/data/permission/permissions.ts,} from './../../../../types/client.types';,} from '../../../../../types/client.types';
+src/services/implementations/mock/data/client/permissions.ts,import { Permission } from './../../../../types/client.types';,import { Permission } from '../../../../../types/client.types';
+src/services/implementations/mock/data/client/clients.ts,} from './../../../../types/client.types';,} from '../../../../../types/client.types';
+src/services/implementations/mock/data/client/mockClientData.ts,} from './../../../../types/client.types';,} from '../../../../../types/client.types';
+src/services/implementations/mock/data/client/groups.ts,"import { UserGroup\, Permission } from './../../../../types/client.types';","import { UserGroup\, Permission } from '../../../../../types/client.types';"
+src/services/implementations/mock/data/client/roles.ts,import { Role } from './../../../../types/client.types';,import { Role } from '../../../../../types/client.types';
+src/services/implementations/mock/data/client/contacts.ts,} from './../../../../types/client.types';,} from '../../../../../types/client.types';
+src/services/implementations/mock/data/notifications/mockNotificationData.ts,import { DeliverySettings } from './../../../../types/notification.types';,import { DeliverySettings } from '../../../../../types/notification.types';
+src/services/implementations/mock/MockAuditService.ts,"import { IAuditService\, AuditEvent\, AuditLogFilters } from './../interfaces/IAuditService';","import { IAuditService\, AuditEvent\, AuditLogFilters } from '../../../interfaces/IAuditService';"
+src/services/implementations/mock/MockAuditService.ts,import { PaginatedResponse } from './../../types/common.types';,import { PaginatedResponse } from '../../../types/common.types';
+src/services/implementations/mock/BaseMockService.ts,import { IBaseService } from './../interfaces/IBaseService';,import { IBaseService } from '../../../interfaces/IBaseService';
+src/services/implementations/mock/BaseMockService.ts,"import { ApiResponse\, ApiSuccessResponse\, ApiErrorResponse } from './../../types/api.types';","import { ApiResponse\, ApiSuccessResponse\, ApiErrorResponse } from '../../../types/api.types';"
+src/services/implementations/mock/BaseMockService.ts,import { getConfig } from './../../config/api.config';,import { getConfig } from '../../../config/api.config';
+src/services/implementations/settings.service.ts,import { ApiSuccessResponse } from './../types/api.types';,import { ApiSuccessResponse } from '../../types/api.types';
+src/services/implementations/settings.manager.ts,"import { Setting\, SettingGroup\, ISettingsMetadata } from './../types/settings.types';","import { Setting\, SettingGroup\, ISettingsMetadata } from '../../types/settings.types';"
+src/services/implementations/settings.manager.ts,"import { ApiSuccessResponse\, ApiErrorResponse } from './../types/api.types';","import { ApiSuccessResponse\, ApiErrorResponse } from '../../types/api.types';"
+src/services/factory/ServiceFactory.ts,"import { getConfig\, shouldUseMockService } from './../config/api.config';","import { getConfig\, shouldUseMockService } from '../../config/api.config';"
+src/services/interfaces/IExceptionService.ts,} from './../types/bill-pay.types';,} from '../../types/bill-pay.types';
+src/services/interfaces/IExceptionService.ts,import { PaginatedResponse } from './../types/common.types';,import { PaginatedResponse } from '../../types/common.types';
+src/services/interfaces/IPayeeService.ts,} from './../types/bill-pay.types';,} from '../../types/bill-pay.types';
+src/services/interfaces/IPayeeService.ts,import { PaginatedResponse } from './../types/common.types';,import { PaginatedResponse } from '../../types/common.types';
+src/services/interfaces/IMemberService.ts,} from './../types/member-center.types';,} from '../../types/member-center.types';
+src/services/interfaces/IMemberService.ts,import { PaginatedResponse } from './../types/common.types';,import { PaginatedResponse } from '../../types/common.types';
+src/services/interfaces/IHolidayService.ts,"import { Holiday\, HolidayInput\, HolidayValidation } from './../types/bill-pay.types';","import { Holiday\, HolidayInput\, HolidayValidation } from '../../types/bill-pay.types';"
+src/services/interfaces/IReportService.ts,} from './../types/report.types';,} from '../../types/report.types';
+src/services/interfaces/IReportService.ts,} from './../types/report-api.types';,} from '../../types/report-api.types';
+src/services/interfaces/IReportService.ts,import { PaginatedResponse } from './../types/common.types';,import { PaginatedResponse } from '../../types/common.types';
+src/services/interfaces/IUserService.ts,} from './../types/client.types';,} from '../../types/client.types';
+src/services/interfaces/IUserService.ts,"import { PaginatedResponse\, QueryOptions } from './../types/index';","import { PaginatedResponse\, QueryOptions } from '../../types/index';"
+src/services/interfaces/IClientService.ts,} from './../types/client.types';,} from '../../types/client.types';
+src/services/interfaces/IAuditService.ts,import { PaginatedResponse } from './../types/common.types';,import { PaginatedResponse } from '../../types/common.types';
+src/services/interfaces/INotificationService.ts,} from './../types/bill-pay.types';,} from '../../types/bill-pay.types';
+src/services/interfaces/INotificationService.ts,import { PaginatedResponse } from './../types/common.types';,import { PaginatedResponse } from '../../types/common.types';
+src/services/interfaces/IMoneyDesktopService.ts,"import { Account\, Connection\, MoneyDesktopFilters } from './../types/money-desktop.types';","import { Account\, Connection\, MoneyDesktopFilters } from '../../types/money-desktop.types';"
+src/services/interfaces/IAuthService.ts,} from './../types/auth.types';,} from '../../types/auth.types';
+src/services/interfaces/IPaymentProcessorService.ts,} from './../types/payment.types';,} from '../../types/payment.types';
+src/services/interfaces/ISettingsService.ts,import { ApiSuccessResponse } from './../types/api.types';,import { ApiSuccessResponse } from '../../types/api.types';
+src/services/interfaces/ISettingsService.ts,"import { Setting\, SettingGroup } from './../types/settings.types';","import { Setting\, SettingGroup } from '../../types/settings.types';"
+src/services/interfaces/IDashboardService.ts,} from './../types/dashboard.types';,} from '../../types/dashboard.types';
+src/services/interfaces/IDashboardService.ts,import { TimeRange } from './../types';,import { TimeRange } from '../../types';
+src/services/interfaces/IBillPayService.ts,} from './../types/bill-pay.types';,} from '../../types/bill-pay.types';
+src/services/interfaces/IBillPayService.ts,} from './../types/security.types';,} from '../../types/security.types';
+src/services/interfaces/IBillPayService.ts,"import { PaginatedResponse\, QueryOptions } from './../types/index';","import { PaginatedResponse\, QueryOptions } from '../../types/index';"
+src/services/interfaces/IBaseService.ts,import { ApiResponse } from './../types/api.types';,import { ApiResponse } from '../../types/api.types';
+src/services/interfaces/IBaseService.ts,import { PaginatedResponse } from './../types/client.types';,import { PaginatedResponse } from '../../types/client.types';
+src/services/interfaces/ISecurityService.ts,} from './../types/security.types';,} from '../../types/security.types';
+src/services/interfaces/ISecurityService.ts,import { PaginatedResponse } from './../types/common.types';,import { PaginatedResponse } from '../../types/common.types';
+src/services/interfaces/IPermissionService.ts,} from './../types/permission.types';,} from '../../types/permission.types';
+src/services/interfaces/IPermissionService.ts,import { PaginatedResponse } from './../types/common.types';,import { PaginatedResponse } from '../../types/common.types';
+src/services/interfaces/IPaymentService.ts,} from './../types/bill-pay.types';,} from '../../types/bill-pay.types';

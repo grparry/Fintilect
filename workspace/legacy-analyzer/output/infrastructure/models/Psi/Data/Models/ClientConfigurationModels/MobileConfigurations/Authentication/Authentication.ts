@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { FeatureAction } from './FeatureAction';
+import { FeatureAction } from '@infrastructure/FeatureAction';
 export interface AuthenticationConfig {
     FeatureActions: FeatureAction[];
 }

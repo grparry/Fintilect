@@ -1,0 +1,29 @@
+{
+  "FundingSettings": {
+    "type": "object",
+    "description": "Settings for funding functionality in Corelation integration",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.FinancialCores.CorelationSettings.Funding",
+    "properties": {
+      "fundingIsEnabled": {
+        "type": "boolean",
+        "description": "Whether funding is enabled",
+        "x-setting-key": "FinancialCore.Corelation.Funding.Enabled"
+      },
+      "fromMemberAccountNumber": {
+        "type": "string",
+        "description": "Member account number to fund from",
+        "x-setting-key": "FinancialCore.Corelation.Funding.FromMemberAccountNumber"
+      },
+      "fromAccountNumber": {
+        "type": "string",
+        "description": "Account number to fund from",
+        "x-setting-key": "FinancialCore.Corelation.Funding.FromAccountNumber"
+      },
+      "description": {
+        "type": "string",
+        "description": "Description for funding transactions",
+        "x-setting-key": "FinancialCore.Corelation.Funding.Description"
+      }
+    }
+  }
+}

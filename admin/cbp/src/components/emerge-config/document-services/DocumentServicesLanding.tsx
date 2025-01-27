@@ -13,7 +13,6 @@ interface NavigationCard {
   icon: React.ElementType;
   description: string;
 }
-
 const navigationCards: NavigationCard[] = [
   {
     id: 'check-images',
@@ -44,11 +43,9 @@ const navigationCards: NavigationCard[] = [
     description: 'Manage custom page configurations and content'
   }
 ];
-
 const DocumentServicesLanding: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -57,11 +54,9 @@ const DocumentServicesLanding: React.FC = () => {
       <Typography variant="body1" sx={{ mb: 4 }}>
         Configure document-related services and features for the Emerge platform.
       </Typography>
-
       <Grid container spacing={3}>
         {navigationCards.map((card) => {
           const Icon = card.icon;
-          
           return (
             <Grid item xs={12} sm={6} md={4} key={card.id}>
               <Card 
@@ -110,5 +105,4 @@ const DocumentServicesLanding: React.FC = () => {
     </Box>
   );
 };
-
 export default DocumentServicesLanding;

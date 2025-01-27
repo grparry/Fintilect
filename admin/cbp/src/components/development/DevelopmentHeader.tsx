@@ -12,7 +12,6 @@ const getRouteIcon = (title: string) => {
       return null;
   }
 };
-
 const DevelopmentHeader: React.FC = () => {
   const allRoutes = getAllRoutes();
   const devRoutes = allRoutes.filter(route => 
@@ -21,7 +20,6 @@ const DevelopmentHeader: React.FC = () => {
     route.path !== '/admin/development' &&
     (!route.id || !route.id.endsWith('-header')) 
   );
-
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 4 }}>
@@ -32,7 +30,6 @@ const DevelopmentHeader: React.FC = () => {
           Welcome to Development. Access development tools, API testing, and system configurations.
         </Typography>
       </Box>
-      
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {devRoutes.map((route) => (
           <Grid item xs={12} sm={6} md={4} key={route.path}>
@@ -66,10 +63,8 @@ const DevelopmentHeader: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-
       <Outlet />
     </Box>
   );
 };
-
 export default DevelopmentHeader;

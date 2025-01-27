@@ -1,9 +1,9 @@
 import * as sql from 'mssql';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { BaseRepository } from '../repositories/base.repository';
-import { Database } from '../database';
-import { clearCache } from '../middleware/cache.middleware';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { logger } from '@cbp-config-api/config/logger';
+import { BaseRepository } from '@cbp-config-api/repositories/base.repository';
+import { Database } from '@cbp-config-api/database';
+import { clearCache } from '@cbp-config-api/middleware/cache.middleware';
 
 interface HostConnection {
   id: string;

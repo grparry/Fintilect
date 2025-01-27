@@ -1,24 +1,21 @@
 import {
   DashboardMetrics,
+  DashboardFilters,
+  ChartData,
   TransactionStats,
   UserActivityData,
-  ChartData,
-  ChartDataPoint,
-  DashboardTask,
-  DashboardNews
+  ChartDataPoint
 } from '../../../../../types/dashboard.types';
-import { TimeRange } from '../../../../../types';
+import { TimeRange } from '../../../../../types/index';
 
 // Helper function to generate random data points
 const generateDataPoints = (count: number, min: number, max: number): number[] => {
   return Array.from({ length: count }, () => Math.floor(Math.random() * (max - min + 1)) + min);
 };
-
 // Helper function to generate date labels
 const generateDateLabels = (count: number, interval: 'hour' | 'day' | 'week' | 'month'): string[] => {
   const now = new Date('2025-01-11T17:33:16-07:00');
   const labels: string[] = [];
-  
   for (let i = count - 1; i >= 0; i--) {
     const date = new Date(now);
     switch (interval) {
@@ -42,7 +39,6 @@ const generateDateLabels = (count: number, interval: 'hour' | 'day' | 'week' | '
   }
   return labels;
 };
-
 export const mockTransactionStats: TransactionStats = {
   successful: 1250,
   failed: 23,
@@ -54,17 +50,14 @@ export const mockTransactionStats: TransactionStats = {
     monthly: 12000
   }
 };
-
 export const mockUserActivityData: UserActivityData = {
   activeUsers: 850,
   newUsers: 125,
   returningUsers: 725,
   averageSessionDuration: 1800 // in seconds
 };
-
 export const mockChartData = (timeRange: TimeRange, interval: 'hour' | 'day' | 'week' | 'month'): ChartData => {
   const dataPoints = generateDataPoints(12, 100, 1000);
-
   return {
     labels: generateDateLabels(12, interval),
     datasets: [
@@ -78,7 +71,6 @@ export const mockChartData = (timeRange: TimeRange, interval: 'hour' | 'day' | '
     ]
   };
 };
-
 export const mockDashboardMetrics: DashboardMetrics = {
   transactions: mockTransactionStats,
   userActivity: mockUserActivityData,
@@ -96,10 +88,8 @@ export const mockDashboardMetrics: DashboardMetrics = {
     }
   }
 };
-
 export const mockDashboardStats = mockTransactionStats;
 export const mockDashboardCharts = mockChartData;
-
 export const mockDashboardTasks: DashboardTask[] = [
   {
     id: '1',
@@ -116,7 +106,6 @@ export const mockDashboardTasks: DashboardTask[] = [
     completed: true
   }
 ];
-
 export const mockDashboardNews: DashboardNews[] = [
   {
     id: '1',
@@ -133,7 +122,6 @@ export const mockDashboardNews: DashboardNews[] = [
     category: 'feature'
   }
 ];
-
 export const mockSystemHealth = {
   status: 'healthy' as const,
   components: {
@@ -144,14 +132,12 @@ export const mockSystemHealth = {
   },
   lastChecked: new Date('2025-01-11T17:33:16-07:00').toISOString()
 };
-
 export const mockRealTimeMetrics = {
   activeTransactions: 42,
   transactionsPerMinute: 8.5,
   errorRate: 0.02,
   averageResponseTime: 250 // in milliseconds
 };
-
 export const mockPerformanceInsights = [
   {
     category: 'performance' as const,
@@ -178,7 +164,6 @@ export const mockPerformanceInsights = [
     timestamp: new Date('2025-01-11T17:33:16-07:00').toISOString()
   }
 ];
-
 export const mockDashboardAlerts = [
   {
     id: '1',

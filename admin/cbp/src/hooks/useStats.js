@@ -5,7 +5,6 @@ export const useStats = (timeRange) => {
   const [stats, setStats] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -19,9 +18,7 @@ export const useStats = (timeRange) => {
         setIsLoading(false);
       }
     };
-
     fetchStats();
   }, [timeRange]);
-
   return { stats, isLoading, error };
 };

@@ -22,7 +22,6 @@ export interface FieldDefinition {
         value: unknown;
     };
 }
-
 /**
  * Section definition for layout
  */
@@ -36,7 +35,6 @@ export interface SectionDefinition {
     /** Whether the section is expanded by default */
     defaultExpanded?: boolean;
 }
-
 /**
  * Complete layout definition
  */

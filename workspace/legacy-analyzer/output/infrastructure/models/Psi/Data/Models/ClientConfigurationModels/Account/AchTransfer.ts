@@ -1,8 +1,8 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Guid } from './Guid';
-import { UsaEpay } from './UsaEpay';
-import { PlaceHoldsOnAchTransactions } from './PlaceHoldsOnAchTransactions';
-import { UseInformationalNoteInsteadOfTransferForAchTransactions } from './UseInformationalNoteInsteadOfTransferForAchTransactions';
+import { Guid } from '@infrastructure/Guid';
+import { UsaEpay } from '@infrastructure/UsaEpay';
+import { PlaceHoldsOnAchTransactions } from '@infrastructure/PlaceHoldsOnAchTransactions';
+import { UseInformationalNoteInsteadOfTransferForAchTransactions } from '@infrastructure/UseInformationalNoteInsteadOfTransferForAchTransactions';
 export interface AchTransferConfig {
     SameDayCutoffInLocalTime: string;
     NextDayCutoffInLocalTime: string;

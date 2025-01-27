@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { NotificationType, NotificationTemplate } from '../types/notification';
+import { NotificationType, NotificationTemplate } from '@cbp-config-api/types/notification';
 
 export const NotificationRecipientSchema = z.object({
   email: z.string().email().optional(),

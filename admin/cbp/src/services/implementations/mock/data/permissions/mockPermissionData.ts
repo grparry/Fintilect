@@ -1,4 +1,4 @@
-import { Permission, PermissionGroup, PermissionCategoryType, PermissionAction } from '../../../../../types/permission.types';
+import { Permission, PermissionGroup, PermissionCategoryType, PermissionAction } from '../../../../types/permission.types';
 
 export const mockPermissions: Permission[] = [
     // System Permissions
@@ -61,7 +61,6 @@ export const mockPermissions: Permission[] = [
         updatedAt: new Date().toISOString()
     }
 ];
-
 export const mockPermissionGroups: PermissionGroup[] = [
     {
         id: 1,

@@ -1,6 +1,6 @@
 import { Express } from 'express';
-import app from '../../app';
-import { Database } from '../../config/db';
+import app from '@/../app';
+import { Database } from '@/../config/db';
 import jwt from 'jsonwebtoken';
 import { ConnectionPool } from 'mssql';
 

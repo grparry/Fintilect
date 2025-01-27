@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { UtilityService } from '../services/utility.service';
-import { Database } from '../config/db';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
+import { UtilityService } from '@cbp-config-api/services/utility.service';
+import { Database } from '@cbp-config-api/config/db';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { logger } from '@cbp-config-api/config/logger';
 
 export class UtilityController {
   private utilityService: UtilityService;

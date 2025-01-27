@@ -8,16 +8,13 @@ import { useTheme } from '../../context/ThemeContext';
 import { navigationConfig } from '../../config/navigation';
 
 const DRAWER_WIDTH = 280;
-
 const AppLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { isDarkMode, toggleTheme } = useTheme();
   const muiTheme = useMuiTheme();
-
   const handleMenuClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
-
   return (
     <NavigationProvider config={navigationConfig}>
       <Box sx={{ 
@@ -72,5 +69,4 @@ const AppLayout: React.FC = () => {
     </NavigationProvider>
   );
 };
-
 export default AppLayout;

@@ -1,4 +1,4 @@
-import { IPermissionService } from '../../interfaces/IPermissionService';
+import { IPermissionService } from '@/../interfaces/IPermissionService';
 import { 
   Permission, 
   PermissionGroup, 
@@ -8,10 +8,10 @@ import {
   PermissionCategoryType, 
   PermissionAction,
   PermissionCategory 
-} from '../../../types/permission.types';
-import { PaginatedResponse } from '../../../types/common.types';
-import { BaseMockService } from './BaseMockService';
-import { mockPermissions, mockPermissionGroups } from './data/permissions/mockPermissionData';
+} from '@/../../types/permission.types';
+import { PaginatedResponse } from '@/../../types/common.types';
+import { BaseMockService } from '@/BaseMockService';
+import { mockPermissions, mockPermissionGroups } from '@/data/permissions/mockPermissionData';
 
 export class MockPermissionService extends BaseMockService implements IPermissionService {
   private permissions: Map<string, Permission> = new Map();

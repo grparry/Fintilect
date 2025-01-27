@@ -1,15 +1,14 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { BillPayMethod } from './BillPayMethod';
-import { DateTime? } from './DateTime?';
-import { AddPayee } from './AddPayee.AddPayee';
-import { PhotoBillPay } from './PhotoBillPay.PhotoBillPay';
-import { RecurringBillPay } from './RecurringBillPay';
-import { MakePayment } from './MakePayment';
-import { NewBillPayInterface } from './NewBillPayInterface';
-import { CheckFree } from './CheckFree';
-import { BillMatrix } from './BillMatrix';
-import { SymmetryBillPay } from './SymmetryBillPay';
-import { Authentication } from './Authentication.Authentication';
+import { BillPayMethod } from '@infrastructure/BillPayMethod';
+import { AddPayee } from '@infrastructure/AddPayee.AddPayee';
+import { PhotoBillPay } from '@infrastructure/PhotoBillPay.PhotoBillPay';
+import { RecurringBillPay } from '@infrastructure/RecurringBillPay';
+import { MakePayment } from '@infrastructure/MakePayment';
+import { NewBillPayInterface } from '@infrastructure/NewBillPayInterface';
+import { CheckFree } from '@infrastructure/CheckFree';
+import { BillMatrix } from '@infrastructure/BillMatrix';
+import { SymmetryBillPay } from '@infrastructure/SymmetryBillPay';
+import { Authentication } from '@infrastructure/Authentication.Authentication';
 export interface BillPayConfig {
     MinimumVersion: string;
     MinimumAndroidVersion: string;

@@ -1,6 +1,6 @@
-import { TestDatabase } from '../../../../src/config/test.db';
+import { TestDatabase } from '@/../../../src/config/test.db';
 import { v4 as uuidv4 } from 'uuid';
-import { logger } from '../../../../src/config/logger';
+import { logger } from '@/../../../src/config/logger';
 
 interface MockCall {
   params: any;

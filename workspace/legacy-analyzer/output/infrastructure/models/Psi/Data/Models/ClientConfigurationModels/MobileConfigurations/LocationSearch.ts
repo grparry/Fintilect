@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { LocationSearchProvider } from './LocationSearchProvider';
+import { LocationSearchProvider } from '@infrastructure/LocationSearchProvider';
 export interface LocationSearchConfig {
     MinimumVersion: string;
     MinimumAndroidVersion: string;

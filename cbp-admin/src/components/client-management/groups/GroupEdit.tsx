@@ -15,8 +15,8 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-import { UserGroup, SecurityRole, Permission, PermissionCategoryType } from '../../../types/client.types';
-import { clientService } from '../../../services/factory/ServiceFactory';
+import { UserGroup, SecurityRole, Permission, PermissionCategoryType } from '@/../../types/client.types';
+import { clientService } from '@/../../services/factory/ServiceFactory';
 
 interface GroupEditProps {
   clientId: string;

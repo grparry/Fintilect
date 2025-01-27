@@ -1,0 +1,16 @@
+{
+  "InstitutionSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/InstitutionSettings"
+      },
+      "appInfo": {
+        "$ref": "./app-info.json#/AppInfoSettings"
+      }
+    }
+  }
+}

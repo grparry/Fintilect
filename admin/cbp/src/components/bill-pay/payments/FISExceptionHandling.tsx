@@ -57,7 +57,6 @@ interface FISDialogState {
   exception: FISException | null;
   action: 'view' | 'retry' | 'delete' | null;
 }
-
 interface FilterState {
   startDate: string | null;
   endDate: string | null;
@@ -65,7 +64,6 @@ interface FilterState {
   errorCodes: FISErrorCode[];
   searchTerm: string;
 }
-
 interface FISExceptionHandlingProps {
   api: {
     getExceptions: (filters: FISExceptionFilters) => Promise<ApiResponse<FISException[]>>;
@@ -79,12 +77,10 @@ interface FISExceptionHandlingProps {
   };
   onClose: () => void;
 }
-
 interface ExceptionSummary {
   total: number;
   byStatus: Record<FISExceptionStatus, number>;
 }
-
 const getExceptionSummary = (exceptions: FISException[]): ExceptionSummary => {
   const summary: ExceptionSummary = {
     total: exceptions.length,
@@ -108,14 +104,11 @@ const getExceptionSummary = (exceptions: FISException[]): ExceptionSummary => {
       [FISExceptionStatus.PENDING_REINITIATE]: 0,
     },
   };
-
   exceptions.forEach((exception) => {
     summary.byStatus[exception.status]++;
   });
-
   return summary;
 };
-
 const ExceptionStatusChip: React.FC<{ status: FISExceptionStatus }> = ({ status }) => {
   const getColor = () => {
     switch (status) {
@@ -131,7 +124,6 @@ const ExceptionStatusChip: React.FC<{ status: FISExceptionStatus }> = ({ status 
         return 'default';
     }
   };
-
   return (
     <Chip
       label={status}
@@ -140,7 +132,6 @@ const ExceptionStatusChip: React.FC<{ status: FISExceptionStatus }> = ({ status 
     />
   );
 };
-
 const ExceptionSummaryDisplay: React.FC<{ summary: ExceptionSummary }> = ({ summary }) => {
   return (
     <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -162,10 +153,8 @@ const ExceptionSummaryDisplay: React.FC<{ summary: ExceptionSummary }> = ({ summ
     </Box>
   );
 };
-
 const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClose }) => {
   const { user } = useAuth();
-
   // State
   const [exceptions, setExceptions] = useState<FISException[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -188,7 +177,6 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [responseHistory, setResponseHistory] = useState<FISResponseHistory[]>([]);
   const [retryResult, setRetryResult] = useState<FISRetryResult | null>(null);
-
   const loadExceptions = useCallback(async () => {
     try {
       setLoading(true);
@@ -209,10 +197,8 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       setLoading(false);
     }
   }, [api, filters]);
-
   const handleRetry = async (exception: FISException | null) => {
     if (!exception) return;
-
     try {
       setLoading(true);
       const response = await api.retryException(exception.id);
@@ -236,10 +222,8 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       setLoading(false);
     }
   };
-
   const handleBulkRetry = async () => {
     if (!selectedIds.length) return;
-
     try {
       setLoading(true);
       const response = await api.bulkRetry(selectedIds);
@@ -260,10 +244,8 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       setLoading(false);
     }
   };
-
   const handleBulkDelete = async () => {
     if (!selectedIds.length) return;
-
     try {
       setLoading(true);
       await api.bulkDelete(selectedIds);
@@ -276,7 +258,6 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       setLoading(false);
     }
   };
-
   const handleExport = async () => {
     try {
       setLoading(true);
@@ -299,18 +280,15 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       setLoading(false);
     }
   };
-
   const handleFilterChange = <K extends keyof FilterState>(
     field: K,
     value: FilterState[K]
   ) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
   };
-
   const handleDateChange = (field: 'startDate' | 'endDate') => (date: string | null) => {
     handleFilterChange(field, date);
   };
-
   const handleStatusChange = (event: SelectChangeEvent<FISExceptionStatus[]>) => {
     const {
       target: { value },
@@ -320,7 +298,6 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       status: typeof value === 'string' ? [value as FISExceptionStatus] : value as FISExceptionStatus[],
     }));
   };
-
   const handleErrorCodeChange = (event: SelectChangeEvent<FISErrorCode[]>) => {
     const {
       target: { value },
@@ -330,11 +307,9 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       errorCodes: typeof value === 'string' ? [value as FISErrorCode] : value as FISErrorCode[],
     }));
   };
-
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleFilterChange('searchTerm', event.target.value);
   };
-
   const renderStats = () => (
     <Grid container spacing={2} sx={{ mb: 3 }}>
       <Grid item xs={12} md={3}>
@@ -375,7 +350,6 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       </Grid>
     </Grid>
   );
-
   const renderFilters = () => (
     <Card sx={{ mb: 3 }}>
       <CardContent>
@@ -452,7 +426,6 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       </CardContent>
     </Card>
   );
-
   const renderExceptionList = () => (
     <TableContainer component={Paper}>
       <Table>
@@ -552,7 +525,6 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       />
     </TableContainer>
   );
-
   const renderDialog = () => (
     <Dialog
       open={dialogState.open}
@@ -613,11 +585,9 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       </DialogActions>
     </Dialog>
   );
-
   useEffect(() => {
     loadExceptions();
   }, [loadExceptions]);
-
   return (
     <Box>
       {error && (
@@ -625,7 +595,6 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
           {error}
         </Alert>
       )}
-
       <Box
         sx={{
           mb: 3,
@@ -676,7 +645,6 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
           </Button>
         </Stack>
       </Box>
-
       {stats && (
         <ExceptionSummaryDisplay summary={{
           total: stats.total,
@@ -701,13 +669,10 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
           }
         }} />
       )}
-
       {renderFilters()}
-
       {renderExceptionList()}
       {renderDialog()}
     </Box>
   );
 };
-
 export default FISExceptionHandling;

@@ -1,12 +1,12 @@
-import { Database } from '../../config/db';
-import { NotificationService } from '../notification.service';
+import { Database } from '@cbp-config-api/../config/db';
+import { NotificationService } from '@cbp-config-api/notification.service';
 import {
   NotificationType,
   NotificationTemplate,
   NotificationRequest,
   NotificationHistory
-} from '../../types/notification';
-import type { ServiceResponse } from '../../types/common';
+} from '@cbp-config-api/../types/notification';
+import type { ServiceResponse } from '@cbp-config-api/../types/common';
 import sql from 'mssql';
 
 describe('NotificationService', () => {

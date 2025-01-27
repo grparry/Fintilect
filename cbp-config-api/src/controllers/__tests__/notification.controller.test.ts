@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { NotificationController } from '../notification.controller';
-import { NotificationService } from '../../services/notification.service';
-import { Database } from '../../config/db';
-import { NotificationType, NotificationTemplate } from '../../types/notification';
-import { JwtUser } from '../../types/auth';
+import { NotificationController } from '@/notification.controller';
+import { NotificationService } from '@/../services/notification.service';
+import { Database } from '@/../config/db';
+import { NotificationType, NotificationTemplate } from '@/../types/notification';
+import { JwtUser } from '@/../types/auth';
 
 jest.mock('../../services/notification.service');
 jest.mock('../../config/db');

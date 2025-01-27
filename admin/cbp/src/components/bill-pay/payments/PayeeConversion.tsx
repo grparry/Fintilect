@@ -50,7 +50,6 @@ import { useAuth } from '../../../hooks/useAuth';
 const PayeeConversion: React.FC = () => {
   const { user } = useAuth();
   const payeeService = ServiceFactory.getInstance().getPayeeService();
-  
   // State
   const [files, setFiles] = useState<PayeeConversionFile[]>([]);
   const [selectedFile, setSelectedFile] = useState<PayeeConversionFile | null>(null);
@@ -60,7 +59,6 @@ const PayeeConversion: React.FC = () => {
   const [validation, setValidation] = useState<PayeeConversionValidation | null>(null);
   const [progress, setProgress] = useState<PayeeConversionProgress | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-
   // Fetch data
   const fetchFiles = useCallback(async () => {
     setLoading(true);
@@ -75,7 +73,6 @@ const PayeeConversion: React.FC = () => {
       setLoading(false);
     }
   }, [payeeService]);
-
   const fetchRecords = useCallback(async (fileId: string) => {
     try {
       const response = await payeeService.getConversions({ 
@@ -94,11 +91,9 @@ const PayeeConversion: React.FC = () => {
       setError(err instanceof Error ? err.message : 'Failed to fetch conversion records');
     }
   }, [payeeService]);
-
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     try {
       const response = await payeeService.uploadConversionFile(file, 'default');
       setValidation({
@@ -117,7 +112,6 @@ const PayeeConversion: React.FC = () => {
       setError(err instanceof Error ? err.message : 'Failed to upload file');
     }
   };
-
   const handleStartConversion = async (fileId: string) => {
     try {
       await payeeService.startConversion(fileId);
@@ -136,7 +130,6 @@ const PayeeConversion: React.FC = () => {
       setError(err instanceof Error ? err.message : 'Failed to start conversion');
     }
   };
-
   const pollConversionProgress = useCallback((fileId: string) => {
     const poll = async () => {
       try {
@@ -150,7 +143,6 @@ const PayeeConversion: React.FC = () => {
           totalSteps: progress.totalSteps,
           errors: progress.errors
         });
-        
         if (progress.status !== 'PROCESSED') {
           setTimeout(poll, 2000);
         } else {
@@ -161,65 +153,50 @@ const PayeeConversion: React.FC = () => {
         setError(err instanceof Error ? err.message : 'Failed to get conversion progress');
       }
     };
-
     poll();
   }, [fetchFiles, payeeService]);
-
   useEffect(() => {
     let mounted = true;
-    
     const loadFiles = async () => {
       if (mounted) {
         await fetchFiles();
       }
     };
-    
     loadFiles();
-    
     return () => {
       mounted = false;
     };
   }, [fetchFiles]);
-
   useEffect(() => {
     if (selectedFile) {
       fetchRecords(selectedFile.id);
     }
   }, [selectedFile, fetchRecords]);
-
   // Debug state changes
   useEffect(() => {
     console.log('Files state changed:', files);
   }, [files]);
-
   useEffect(() => {
     console.log('Selected file state changed:', selectedFile);
   }, [selectedFile]);
-
   useEffect(() => {
     console.log('Records state changed:', records);
   }, [records]);
-
   useEffect(() => {
     console.log('Loading state changed:', loading);
   }, [loading]);
-
   useEffect(() => {
     console.log('Error state changed:', error);
   }, [error]);
-
   useEffect(() => {
     console.log('Validation state changed:', validation);
   }, [validation]);
-
   useEffect(() => {
     console.log('Progress state changed:', progress);
   }, [progress]);
-
   useEffect(() => {
     console.log('Dialog open state changed:', dialogOpen);
   }, [dialogOpen]);
-
   // Component lifecycle logging
   useEffect(() => {
     console.log('PayeeConversion component mounted');
@@ -227,10 +204,8 @@ const PayeeConversion: React.FC = () => {
       console.log('PayeeConversion component unmounted');
     };
   }, []);
-
   const renderFileList = () => {
     console.log('Rendering file list with files:', files);
-    
     if (!Array.isArray(files)) {
       console.error('Files is not an array:', files);
       return (
@@ -239,7 +214,6 @@ const PayeeConversion: React.FC = () => {
         </Alert>
       );
     }
-
     if (files.length === 0) {
       console.log('No files found');
       return (
@@ -248,7 +222,6 @@ const PayeeConversion: React.FC = () => {
         </Alert>
       );
     }
-
     return (
       <TableContainer component={Paper}>
         <Table>
@@ -294,7 +267,6 @@ const PayeeConversion: React.FC = () => {
       </TableContainer>
     );
   };
-
   const renderRecordList = () => (
     <TableContainer component={Paper}>
       <Table>
@@ -343,10 +315,8 @@ const PayeeConversion: React.FC = () => {
       </Table>
     </TableContainer>
   );
-
   const renderProgress = () => {
     if (!progress) return null;
-
     return (
       <Box sx={{ mb: 3 }}>
         <Typography variant="subtitle1" gutterBottom>
@@ -368,7 +338,6 @@ const PayeeConversion: React.FC = () => {
       </Box>
     );
   };
-
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 3 }}>
@@ -393,15 +362,12 @@ const PayeeConversion: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
-
       {error && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
-
       {progress && renderProgress()}
-
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
@@ -414,7 +380,6 @@ const PayeeConversion: React.FC = () => {
           )}
         </CardContent>
       </Card>
-
       {selectedFile && (
         <Card>
           <CardContent>
@@ -425,7 +390,6 @@ const PayeeConversion: React.FC = () => {
           </CardContent>
         </Card>
       )}
-
       <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
@@ -479,5 +443,4 @@ const PayeeConversion: React.FC = () => {
     </Box>
   );
 };
-
 export default PayeeConversion;

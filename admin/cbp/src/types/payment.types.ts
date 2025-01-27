@@ -8,26 +8,22 @@ export enum PaymentStatus {
     CANCELLED = 'CANCELLED',
     SCHEDULED = 'SCHEDULED'
 }
-
 export enum PaymentMethod {
     ACH = 'ACH',
     WIRE = 'WIRE',
     CHECK = 'CHECK',
     CARD = 'CARD'
 }
-
 export enum PaymentType {
     DEBIT = 'DEBIT',
     CREDIT = 'CREDIT',
     REFUND = 'REFUND'
 }
-
 export enum PaymentPriority {
     HIGH = 'HIGH',
     NORMAL = 'NORMAL',
     LOW = 'LOW'
 }
-
 export enum BatchStatus {
     PENDING = 'PENDING',
     PROCESSING = 'PROCESSING',
@@ -35,12 +31,10 @@ export enum BatchStatus {
     FAILED = 'FAILED',
     PARTIALLY_COMPLETED = 'PARTIALLY_COMPLETED'
 }
-
 export interface DateRange {
     startDate: string;
     endDate: string;
 }
-
 export interface PaymentTransaction {
     id: string;
     clientId: string;
@@ -56,7 +50,6 @@ export interface PaymentTransaction {
     processedAt?: Date;
     scheduledAt?: Date;
 }
-
 export interface PaymentSchedule {
     scheduledDate: Date;
     recurrence?: {
@@ -65,7 +58,6 @@ export interface PaymentSchedule {
         endDate?: Date;
     };
 }
-
 export interface TransactionBatch {
     id: string;
     status: BatchStatus;
@@ -76,7 +68,6 @@ export interface TransactionBatch {
     createdAt: Date;
     completedAt?: Date;
 }
-
 export interface ProcessorConfig {
     maxBatchSize: number;
     retryAttempts: number;
@@ -89,14 +80,12 @@ export interface ProcessorConfig {
         requiresApproval: number;
     };
 }
-
 export interface ProcessingError {
     code: string;
     message: string;
     timestamp: Date;
     details?: Record<string, unknown>;
 }
-
 export interface PaymentValidation {
     isValid: boolean;
     requiresApproval: boolean;
@@ -105,7 +94,6 @@ export interface PaymentValidation {
         message: string;
     }>;
 }
-
 export interface PaymentReceipt {
     transactionId: string;
     receiptNumber: string;
@@ -116,7 +104,6 @@ export interface PaymentReceipt {
     method: PaymentMethod;
     metadata?: Record<string, unknown>;
 }
-
 export interface TransactionSummary {
     totalCount: number;
     totalAmount: number;
@@ -126,7 +113,6 @@ export interface TransactionSummary {
     byType: Record<PaymentType, number>;
     byStatus: Record<PaymentStatus, number>;
 }
-
 export interface ProcessorMetrics {
     processingTime: {
         average: number;
@@ -145,5 +131,4 @@ export interface ProcessorMetrics {
         network: number;
     };
 }
-
 export type { PaginatedResponse } from './common.types';

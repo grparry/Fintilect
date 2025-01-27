@@ -1,9 +1,9 @@
-import { TestDatabase } from '../../../config/test.db';
-import { mockPayments } from '../fixtures/mockData';
-import { ResponseValidator } from './ResponseValidator';
-import { PaginatedResponse } from '../../../types/common';
-import { TestContext } from '../context/TestContext';
-import { BankAccount } from '../../../types/payee';
+import { TestDatabase } from '@/../../config/test.db';
+import { mockPayments } from '@/fixtures/mockData';
+import { ResponseValidator } from '@/ResponseValidator';
+import { PaginatedResponse } from '@/../../types/common';
+import { TestContext } from '@/context/TestContext';
+import { BankAccount } from '@/../../types/payee';
 
 export interface PayeeRecord {
   PayeeId: string;

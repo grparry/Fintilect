@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { EyeScanVendor } from './EyeScanVendor';
+import { EyeScanVendor } from '@infrastructure/EyeScanVendor';
 export interface EyeScanConfig {
     MinimumVersion: string;
     MinimumAndroidVersion: string;

@@ -1,8 +1,8 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Money } from './Money';
-import { AchAllowedType } from './AchAllowedType';
-import { DefaultTransferAmounts } from './DefaultTransferAmounts';
-import { TransferAmountType } from './TransferAmountType';
+import { Money } from '@infrastructure/Money';
+import { AchAllowedType } from '@infrastructure/AchAllowedType';
+import { DefaultTransferAmounts } from '@infrastructure/DefaultTransferAmounts';
+import { TransferAmountType } from '@infrastructure/TransferAmountType';
 export interface ConnectNativeTransfersConfig {
     EnableTransfersFromShares: boolean;
     EnableTransfersToShares: boolean;

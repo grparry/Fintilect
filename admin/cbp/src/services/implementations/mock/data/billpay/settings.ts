@@ -32,14 +32,12 @@ export const mockTemplates: NotificationTemplate[] = [
     lastModified: new Date().toISOString()
   }
 ];
-
 export const availableVariables: string[] = [
   'amount',
   'date',
   'paymentId',
   'status'
 ];
-
 export const initialHolidays: Holiday[] = [
   {
     id: 1,
@@ -56,7 +54,6 @@ export const initialHolidays: Holiday[] = [
     status: 'Active' as HolidayStatus
   }
 ];
-
 export const mockPermissionGroups: PermissionGroup[] = [
   {
     id: 1,

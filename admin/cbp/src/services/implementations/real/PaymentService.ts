@@ -10,13 +10,12 @@ import {
   PaginatedResponse,
   PaymentConfirmationResponse
 } from '../../../types/bill-pay.types';
-import { BaseService } from '../real/BaseService';
+import { BaseService } from './BaseService';
 
 export class PaymentService extends BaseService implements IPaymentService {
   constructor(basePath: string = '/api/v1/payments') {
     super(basePath);
   }
-
   async getPendingPayments(request: PendingPaymentSearchRequest): Promise<PaginatedResponse<PendingPayment>> {
     try {
       const response = await this.get<PaginatedResponse<PendingPayment>>('/pending', {
@@ -29,7 +28,6 @@ export class PaymentService extends BaseService implements IPaymentService {
           limit: request.limit || 10
         }
       });
-
       return {
         data: response.data || [],
         total: response.total || 0,
@@ -46,7 +44,6 @@ export class PaymentService extends BaseService implements IPaymentService {
       };
     }
   }
-
   async getPendingPaymentsSummary(request: PendingPaymentSearchRequest): Promise<PendingPaymentSummary> {
     try {
       const summary = await this.get<PendingPaymentSummary>('/pending/summary', {
@@ -55,7 +52,6 @@ export class PaymentService extends BaseService implements IPaymentService {
           endDate: request.endDate || new Date().toISOString()
         }
       });
-
       return {
         byMethod: {
           [PaymentMethod.ACH]: summary.byMethod?.[PaymentMethod.ACH] || { count: 0, amount: 0 },
@@ -132,7 +128,6 @@ export class PaymentService extends BaseService implements IPaymentService {
       };
     }
   }
-
   async exportPendingPayments(request: PendingPaymentSearchRequest): Promise<Blob> {
     try {
       const response = await this.get('/pending/export', {
@@ -150,7 +145,6 @@ export class PaymentService extends BaseService implements IPaymentService {
       throw new Error('Failed to export payments');
     }
   }
-
   async approvePayment(paymentId: string): Promise<void> {
     try {
       await this.post(`/pending/${paymentId}/approve`);
@@ -159,7 +153,6 @@ export class PaymentService extends BaseService implements IPaymentService {
       throw error;
     }
   }
-
   async rejectPayment(paymentId: string, reason: string): Promise<void> {
     try {
       await this.post(`/pending/${paymentId}/reject`, { reason });
@@ -168,7 +161,6 @@ export class PaymentService extends BaseService implements IPaymentService {
       throw error;
     }
   }
-
   async bulkApprove(paymentIds: string[]): Promise<boolean> {
     try {
       await this.post('/pending/bulk-approve', { paymentIds });
@@ -178,7 +170,6 @@ export class PaymentService extends BaseService implements IPaymentService {
       return false;
     }
   }
-
   async bulkReject(paymentIds: string[]): Promise<boolean> {
     try {
       await this.post('/pending/bulk-reject', { paymentIds });
@@ -188,7 +179,6 @@ export class PaymentService extends BaseService implements IPaymentService {
       return false;
     }
   }
-
   async getPaymentHistory(paymentId: string): Promise<PaymentHistory> {
     try {
       const history = await this.get<PaymentHistory>(`/pending/${paymentId}/history`);
@@ -198,7 +188,6 @@ export class PaymentService extends BaseService implements IPaymentService {
       throw error;
     }
   }
-
   async confirmPayment(paymentId: string, request: any): Promise<PaymentConfirmationResponse> {
     try {
       const response = await this.post<PaymentConfirmationResponse>(`/pending/${paymentId}/confirm`, request);

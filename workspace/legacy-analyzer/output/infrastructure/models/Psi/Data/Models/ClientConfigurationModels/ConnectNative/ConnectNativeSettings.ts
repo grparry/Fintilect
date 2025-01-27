@@ -1,8 +1,8 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { ConnectNativeTransfers } from './ConnectNativeTransfers';
-import { ConnectNativeAccountHistory } from './ConnectNativeAccountHistory';
-import { ConnectNativeMenuType } from './ConnectNativeMenuType';
-import { RoundedCornersOptions } from './RoundedCornersOptions';
+import { ConnectNativeTransfers } from '@infrastructure/ConnectNativeTransfers';
+import { ConnectNativeAccountHistory } from '@infrastructure/ConnectNativeAccountHistory';
+import { ConnectNativeMenuType } from '@infrastructure/ConnectNativeMenuType';
+import { RoundedCornersOptions } from '@infrastructure/RoundedCornersOptions';
 export interface ConnectNativeSettingsConfig {
     ConnectNativeTransfers: ConnectNativeTransfers;
     AccountHistory: ConnectNativeAccountHistory;

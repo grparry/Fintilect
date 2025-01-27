@@ -1,9 +1,9 @@
 import * as sql from 'mssql';
-import { Database } from '../config/db';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { BaseRepository } from '../repositories/base.repository';
-import { PaginatedResponse, SqlResponse } from '../types/common';
+import { Database } from '@cbp-config-api/config/db';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { logger } from '@cbp-config-api/config/logger';
+import { BaseRepository } from '@cbp-config-api/repositories/base.repository';
+import { PaginatedResponse, SqlResponse } from '@cbp-config-api/types/common';
 
 export interface SettingRecord {
   SettingId: string;

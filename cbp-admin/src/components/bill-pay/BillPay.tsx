@@ -1,22 +1,22 @@
 import React from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import Dashboard from './dashboard/Dashboard';
-import ExceptionTool from './payments/ExceptionTool';
-import FISExceptionHandling from './payments/FISExceptionHandling';
-import PendingPayments from './payments/PendingPayments';
-import ManualProcessing from './payments/ManualProcessing';
-import PayeeConversion from './payments/PayeeConversion';
-import Holidays from './settings/Holidays';
-import BillPayConfig from './settings/BillPayConfig';
-import NotificationTemplates from './settings/NotificationTemplates';
-import PermissionGroups from './settings/PermissionGroups';
-import Reports from './reports/Reports';
-import BillPaySecuritySettings from './settings/security/BillPaySecuritySettings';
-import Settings from './settings/Settings';
-import { ServiceFactory } from '../../services/factory/ServiceFactory';
-import { IBillPayService } from '../../services/interfaces/IBillPayService';
-import { IPaymentProcessorService } from '../../services/interfaces/IPaymentProcessorService';
-import { IExceptionService } from '../../services/interfaces/IExceptionService';
+import Dashboard from '@/dashboard/Dashboard';
+import ExceptionTool from '@/payments/ExceptionTool';
+import FISExceptionHandling from '@/payments/FISExceptionHandling';
+import PendingPayments from '@/payments/PendingPayments';
+import ManualProcessing from '@/payments/ManualProcessing';
+import PayeeConversion from '@/payments/PayeeConversion';
+import Holidays from '@/settings/Holidays';
+import BillPayConfig from '@/settings/BillPayConfig';
+import NotificationTemplates from '@/settings/NotificationTemplates';
+import PermissionGroups from '@/settings/PermissionGroups';
+import Reports from '@/reports/Reports';
+import BillPaySecuritySettings from '@/settings/security/BillPaySecuritySettings';
+import Settings from '@/settings/Settings';
+import { ServiceFactory } from '@/../services/factory/ServiceFactory';
+import { IBillPayService } from '@/../services/interfaces/IBillPayService';
+import { IPaymentProcessorService } from '@/../services/interfaces/IPaymentProcessorService';
+import { IExceptionService } from '@/../services/interfaces/IExceptionService';
 import {
   PaymentException,
   ExceptionResolution,
@@ -30,10 +30,10 @@ import {
   ExceptionStatus,
   FISExceptionStatus,
   FISErrorCode
-} from '../../types/bill-pay.types';
-import { PaymentTransaction, PaymentType, PaymentMethod, PaymentStatus, PaymentPriority } from '../../types/payment.types';
-import { PaginatedResponse } from '../../types/common.types';
-import { ApiResponse, PaymentApiResponse, ApiSuccessResponse } from '../../types/api.types';
+} from '@/../types/bill-pay.types';
+import { PaymentTransaction, PaymentType, PaymentMethod, PaymentStatus, PaymentPriority } from '@/../types/payment.types';
+import { PaginatedResponse } from '@/../types/common.types';
+import { ApiResponse, PaymentApiResponse, ApiSuccessResponse } from '@/../types/api.types';
 
 // Adapter for ExceptionTool component
 interface ExceptionToolAdapter {

@@ -10,7 +10,6 @@ export const BILL_PAY_CONFIG_KEYS = {
   NOTIFICATION_EMAIL: 'bill_pay.notification_email',
   ENABLE_EMAIL_NOTIFICATIONS: 'bill_pay.enable_email_notifications'
 } as const;
-
 // Default values for configuration items
 export const DEFAULT_BILL_PAY_CONFIG = {
   cutoffTime: '17:00',
@@ -30,7 +29,6 @@ export const DEFAULT_BILL_PAY_CONFIG = {
     maxRetryAttempts: 5
   }
 } as const;
-
 // Map configuration keys to their categories
 export const CONFIG_CATEGORIES = {
   [BILL_PAY_CONFIG_KEYS.CUTOFF_TIME]: ConfigurationCategory.BILL_PAY,

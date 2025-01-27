@@ -1,8 +1,8 @@
-import { BaseMockService } from './BaseMockService';
-import { ISettingsService } from '../../interfaces/ISettingsService';
-import { Setting, SettingGroup } from '../../../types/settings.types';
-import { ApiSuccessResponse, ApiErrorResponse } from '../../../types/api.types';
-import { mockSettings, mockSettingGroups } from './data/settings/mockSettingsData';
+import { BaseMockService } from '@/BaseMockService';
+import { ISettingsService } from '@/../interfaces/ISettingsService';
+import { Setting, SettingGroup } from '@/../../types/settings.types';
+import { ApiSuccessResponse, ApiErrorResponse } from '@/../../types/api.types';
+import { mockSettings, mockSettingGroups } from '@/data/settings/mockSettingsData';
 
 export class MockSettingsService extends BaseMockService implements ISettingsService {
     private settings: Setting[] = mockSettings;

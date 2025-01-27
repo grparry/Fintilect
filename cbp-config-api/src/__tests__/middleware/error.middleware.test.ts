@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { errorMiddleware } from '../../middleware/error.middleware';
-import { HttpError } from '../../utils/errors';
-import { logger } from '../../config/logger';
+import { errorMiddleware } from '@/../middleware/error.middleware';
+import { HttpError } from '@/../utils/errors';
+import { logger } from '@/../config/logger';
 
 jest.mock('../../config/logger');
 

@@ -36,8 +36,8 @@ import {
   PermissionGroupFilters,
   PermissionCategory,
   PermissionCategoryType
-} from '../../../types/permission.types';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+} from '@/../../types/permission.types';
+import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
 
 const initialCategories: Record<PermissionCategoryType, Permission[]> = {
   System: [],

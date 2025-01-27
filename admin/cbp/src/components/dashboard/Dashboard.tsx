@@ -9,7 +9,6 @@ interface FeatureCardProps {
   icon: React.ReactNode;
   onClick: () => void;
 }
-
 const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon, onClick }) => {
   const theme = useTheme();
   return (
@@ -38,11 +37,9 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon, onC
     </Card>
   );
 };
-
 const Dashboard: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  
   const features = [
     {
       title: 'Client Management',
@@ -69,7 +66,6 @@ const Dashboard: React.FC = () => {
       path: '/admin/development'
     }
   ];
-
   return (
     <Box sx={{ 
       p: 3,
@@ -82,7 +78,6 @@ const Dashboard: React.FC = () => {
       <Typography variant="body1" color="text.secondary" mb={4}>
         Welcome to the CBP Admin Dashboard
       </Typography>
-      
       <Grid container spacing={3}>
         {features.map((feature) => (
           <Grid item xs={12} sm={6} md={3} key={feature.title}>
@@ -98,5 +93,4 @@ const Dashboard: React.FC = () => {
     </Box>
   );
 };
-
 export default Dashboard;

@@ -11,7 +11,7 @@ import {
   Chip,
   Alert,
 } from '@mui/material';
-import { Connection, SyncDialogProps } from '../../../types/money-desktop.types';
+import { Connection, SyncDialogProps } from '@/../../types/money-desktop.types';
 
 const statusColors = {
   Connected: 'success',

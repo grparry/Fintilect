@@ -1,4 +1,4 @@
-import { IPaymentService } from '../../interfaces/IPaymentService';
+import { IPaymentService } from '@/../interfaces/IPaymentService';
 import {
   PendingPayment,
   PendingPaymentSummary,
@@ -9,8 +9,8 @@ import {
   PaymentHistory,
   PaginatedResponse,
   PaymentConfirmationResponse
-} from '../../../types/bill-pay.types';
-import { BaseService } from '../real/BaseService';
+} from '@/../../types/bill-pay.types';
+import { BaseService } from '@/real/BaseService';
 
 export class PaymentService extends BaseService implements IPaymentService {
   constructor(basePath: string = '/api/v1/payments') {

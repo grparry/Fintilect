@@ -7,7 +7,6 @@ import api from '../../api';
  */
 export class BaseService implements IBaseService {
   constructor(public readonly basePath: string) {}
-
   /**
    * Extract data from API response
    */
@@ -17,7 +16,6 @@ export class BaseService implements IBaseService {
     }
     throw new Error((response as ApiErrorResponse).error.message);
   }
-
   /**
    * Make a GET request
    */
@@ -26,7 +24,6 @@ export class BaseService implements IBaseService {
     const response = await api.get<T>(url, { params });
     return this.extractData(response);
   }
-
   /**
    * Make a POST request
    */
@@ -35,7 +32,6 @@ export class BaseService implements IBaseService {
     const response = await api.post<T>(url, data);
     return this.extractData(response);
   }
-
   /**
    * Make a PUT request
    */
@@ -44,7 +40,6 @@ export class BaseService implements IBaseService {
     const response = await api.put<T>(url, data);
     return this.extractData(response);
   }
-
   /**
    * Make a PATCH request
    */
@@ -53,7 +48,6 @@ export class BaseService implements IBaseService {
     const response = await api.patch<T>(url, data);
     return this.extractData(response);
   }
-
   /**
    * Make a DELETE request
    */
@@ -62,7 +56,6 @@ export class BaseService implements IBaseService {
     const response = await api.delete<T>(url);
     return this.extractData(response);
   }
-
   /**
    * Validate required parameters
    */

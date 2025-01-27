@@ -13,7 +13,6 @@ interface ExtendedDashboardCardProps extends DashboardCardProps {
   value?: string | number;
   icon?: ElementType;
 }
-
 const DashboardCard: React.FC<ExtendedDashboardCardProps> = ({
   title,
   value,
@@ -81,5 +80,4 @@ const DashboardCard: React.FC<ExtendedDashboardCardProps> = ({
     </Card>
   );
 };
-
 export default DashboardCard;

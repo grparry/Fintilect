@@ -1,7 +1,7 @@
-import { SettingsService } from '../../services/settings.service';
-import { TestDatabase } from '../../config/test.db';
-import { HttpError } from '../../utils/errors';
-import { SettingsTestHelper, mockSettings } from '../integration/helpers/settings.helper';
+import { SettingsService } from '@/../services/settings.service';
+import { TestDatabase } from '@/../config/test.db';
+import { HttpError } from '@/../utils/errors';
+import { SettingsTestHelper, mockSettings } from '@/integration/helpers/settings.helper';
 
 describe('SettingsService', () => {
   let settingsService: SettingsService;

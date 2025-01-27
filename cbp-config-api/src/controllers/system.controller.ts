@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { SystemService } from '../services/system.service';
-import { Database } from '../config/db';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
+import { SystemService } from '@/services/system.service';
+import { Database } from '@/config/db';
+import { HttpError } from '@/utils/errors';
+import { logger } from '@/config/logger';
 
 export class SystemController {
   private service: SystemService;

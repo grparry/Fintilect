@@ -7,30 +7,25 @@ import {
   UserActivityData,
   ChartDataPoint
 } from '../../../types/dashboard.types';
-import { TimeRange } from '../../../types';
+import { TimeRange } from '../../../types/index';
 import { BaseService } from './BaseService';
 
 export class DashboardService extends BaseService implements IDashboardService {
   private subscriptions: Map<string, (updates: Partial<DashboardMetrics>) => void> = new Map();
-
   constructor(
     basePath: string = '/api/v1/dashboard'
   ) {
     super(basePath);
   }
-
   async getDashboardMetrics(filters: DashboardFilters): Promise<DashboardMetrics> {
     return this.get<DashboardMetrics>('/metrics', { params: filters });
   }
-
   async getTransactionStats(timeRange: TimeRange): Promise<TransactionStats> {
     return this.get<TransactionStats>('/transactions/stats', { params: { timeRange } });
   }
-
   async getUserActivityData(timeRange: TimeRange): Promise<UserActivityData> {
     return this.get<UserActivityData>('/users/activity', { params: { timeRange } });
   }
-
   async getTransactionVolumeChart(
     timeRange: TimeRange,
     interval: 'hour' | 'day' | 'week' | 'month'
@@ -39,15 +34,12 @@ export class DashboardService extends BaseService implements IDashboardService {
       params: { timeRange, interval }
     });
   }
-
   async getUserGrowthChart(timeRange: TimeRange): Promise<ChartData> {
     return this.get<ChartData>('/charts/user-growth', { params: { timeRange } });
   }
-
   async getActivityBreakdownChart(timeRange: TimeRange): Promise<ChartData> {
     return this.get<ChartData>('/charts/activity-breakdown', { params: { timeRange } });
   }
-
   async getRealTimeMetrics(): Promise<{
     activeTransactions: number;
     transactionsPerMinute: number;
@@ -56,7 +48,6 @@ export class DashboardService extends BaseService implements IDashboardService {
   }> {
     return this.get('/metrics/realtime');
   }
-
   async getSystemHealth(): Promise<{
     status: 'healthy' | 'degraded' | 'down';
     components: {
@@ -69,7 +60,6 @@ export class DashboardService extends BaseService implements IDashboardService {
   }> {
     return this.get('/health');
   }
-
   async getMetricTrend(
     metric: 'transactions' | 'users' | 'errors' | 'response_time',
     timeRange: TimeRange
@@ -78,7 +68,6 @@ export class DashboardService extends BaseService implements IDashboardService {
       params: { metric, timeRange }
     });
   }
-
   async getPerformanceInsights(): Promise<Array<{
     category: 'performance' | 'security' | 'usage' | 'errors';
     severity: 'low' | 'medium' | 'high';
@@ -89,29 +78,24 @@ export class DashboardService extends BaseService implements IDashboardService {
   }>> {
     return this.get('/insights/performance');
   }
-
   async exportDashboardData(metrics: string[], format: 'csv' | 'json' | 'pdf'): Promise<string> {
     const response = await this.post<{ url: string }>('/export', { metrics, format });
     return response.url;
   }
-
   subscribeToUpdates(callback: (updates: Partial<DashboardMetrics>) => void): () => void {
     const id = Math.random().toString(36).substring(7);
     this.subscriptions.set(id, callback);
-
     // Set up WebSocket or SSE connection here
     const eventSource = new EventSource('/api/v1/dashboard/updates');
     eventSource.onmessage = (event) => {
       const updates = JSON.parse(event.data);
       callback(updates);
     };
-    
     return () => {
       this.subscriptions.delete(id);
       eventSource.close();
     };
   }
-
   async getCustomMetric(
     metricKey: string,
     timeRange: TimeRange,

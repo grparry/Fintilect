@@ -42,27 +42,22 @@ const TabPanel: React.FC<TabPanelProps> = ({
     </div>
   );
 };
-
 const a11yProps = (index: number) => {
   return {
     id: `settings-tab-${index}`,
     'aria-controls': `settings-tabpanel-${index}`,
   };
 };
-
 const Settings: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
   const [state, setState] = useState<SettingsState>({
     activeTab: 0,
   });
-
   // Handle tab change
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setState((prev) => ({ ...prev, activeTab: newValue }));
   };
-
   // Load last active tab from local storage
   useEffect(() => {
     const savedTab = localStorage.getItem('billPaySettingsTab');
@@ -73,12 +68,10 @@ const Settings: React.FC = () => {
       }));
     }
   }, []);
-
   // Save active tab to local storage
   useEffect(() => {
     localStorage.setItem('billPaySettingsTab', state.activeTab.toString());
   }, [state.activeTab]);
-
   return (
     <Box sx={{ width: '100%' }}>
       {/* Breadcrumbs */}
@@ -95,11 +88,9 @@ const Settings: React.FC = () => {
         </Link>
         <Typography color="text.primary">Settings</Typography>
       </Breadcrumbs>
-
       <Typography variant="h4" sx={{ mb: 3 }}>
         Bill Pay Settings
       </Typography>
-
       <Paper sx={{ width: '100%', mb: 2 }}>
         <Tabs
           value={state.activeTab}
@@ -147,7 +138,6 @@ const Settings: React.FC = () => {
             {...a11yProps(5)}
           />
         </Tabs>
-
         <TabPanel value={state.activeTab} index={0}>
           <BillPayConfig />
         </TabPanel>
@@ -170,5 +160,4 @@ const Settings: React.FC = () => {
     </Box>
   );
 };
-
 export default Settings;

@@ -17,13 +17,11 @@ import logger from '../../utils/logger';
 interface ContactInformationProps {
   clientId: string;
 }
-
 interface ContactInfo {
   name: string;
   email: string;
   phone: string;
 }
-
 const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => {
   const [contactInfo, setContactInfo] = useState<ContactInfo>({
     name: '',
@@ -34,17 +32,14 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
   const loadContactInfo = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       const client = await clientService.getClient(clientId);
-      
       if (!client) {
         throw new Error('Client not found');
       }
-
       setContactInfo({
         name: client.name || '',
         email: client.contactEmail || '',
@@ -59,11 +54,9 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
       setLoading(false);
     }
   }, [clientId]);
-
   useEffect(() => {
     loadContactInfo();
   }, [loadContactInfo]);
-
   const handleInputChange = useCallback((field: keyof ContactInfo) => (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -74,18 +67,15 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
     setSuccess(null);
     setError(null);
   }, []);
-
   const handleSave = useCallback(async () => {
     try {
       setSaving(true);
       setError(null);
-
       await clientService.updateClient(clientId, {
         contactEmail: contactInfo.email,
         contactPhone: contactInfo.phone,
         name: contactInfo.name,
       });
-
       setSuccess('Contact information updated successfully');
       logger.info(`Contact information updated for client ${clientId}`);
     } catch (err) {
@@ -96,7 +86,6 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
       setSaving(false);
     }
   }, [clientId, contactInfo]);
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
@@ -104,25 +93,21 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
       </Box>
     );
   }
-
   return (
     <Paper sx={{ p: 3 }}>
       <Typography variant="h6" gutterBottom>
         Contact Information
       </Typography>
-
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
-
       {success && (
         <Alert severity="success" sx={{ mb: 2 }}>
           {success}
         </Alert>
       )}
-
       <form onSubmit={(e) => {
         e.preventDefault();
         handleSave();
@@ -172,5 +157,4 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
     </Paper>
   );
 };
-
 export default ContactInformation;

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { logger } from '@cbp-config-api/config/logger';
 
 export const errorMiddleware = (
   error: Error,

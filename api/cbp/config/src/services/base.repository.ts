@@ -1,4 +1,4 @@
-import { Database } from '../config/db';
+import { Database } from '@cbp-config-api/config/db';
 
 export abstract class BaseRepository {
   protected db: Database;

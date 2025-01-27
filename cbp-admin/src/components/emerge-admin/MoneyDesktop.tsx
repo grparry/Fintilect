@@ -41,10 +41,10 @@ import {
   StatusColor,
   ConnectionStatus,
   AccountStatus,
-} from '../../types/money-desktop.types';
-import { moneyDesktopService } from '../../services/money-desktop.service';
-import SyncDialog from './components/SyncDialog';
-import DetailsDialog from './components/DetailsDialog';
+} from '@/../types/money-desktop.types';
+import { moneyDesktopService } from '@/../services/money-desktop.service';
+import SyncDialog from '@/components/SyncDialog';
+import DetailsDialog from '@/components/DetailsDialog';
 
 export const statusColors: StatusColor = {
   Connected: 'success',

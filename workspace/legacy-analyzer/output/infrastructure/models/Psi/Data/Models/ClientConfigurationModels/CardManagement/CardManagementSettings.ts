@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { CotsSettings } from './CotsSettings';
-import { CardType } from './CardType';
+import { CotsSettings } from '@infrastructure/CotsSettings';
+import { CardType } from '@infrastructure/CardType';
 export interface CardManagementSettingsConfig {
     IsPinChangeEnabled: boolean;
     MinVersion: number;

@@ -1,9 +1,9 @@
 import * as sql from 'mssql';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { BaseRepository } from '../repositories/base.repository';
-import { Database } from '../database';
-import { clearCache } from '../middleware/cache.middleware';
+import { HttpError } from '@/utils/errors';
+import { logger } from '@/config/logger';
+import { BaseRepository } from '@/repositories/base.repository';
+import { Database } from '@/database';
+import { clearCache } from '@/middleware/cache.middleware';
 
 interface HostConnection {
   id: string;

@@ -1,0 +1,49 @@
+{
+  "CardAlertsSettings": {
+    "type": "object",
+    "properties": {
+      "general": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardAlerts",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.CardAlerts.Enabled"
+          },
+          "minimumAndroidVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.CardAlerts.MinimumAndroidVersion"
+          },
+          "minimumIosVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.CardAlerts.MinimumIosVersion"
+          },
+          "urls": {
+            "type": "string",
+            "x-setting-key": "Mobile.CardAlerts.Urls"
+          }
+        }
+      },
+      "creditCard": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.CreditCardSettings",
+        "properties": {
+          "alertPreferencesEnabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.CardControl.CreditCard.AlertPreferencesEnabled"
+          }
+        }
+      },
+      "debitCard": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.DebitCardSettings",
+        "properties": {
+          "alertPreferencesEnabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.CardControl.DebitCard.AlertPreferencesEnabled"
+          }
+        }
+      }
+    }
+  }
+}

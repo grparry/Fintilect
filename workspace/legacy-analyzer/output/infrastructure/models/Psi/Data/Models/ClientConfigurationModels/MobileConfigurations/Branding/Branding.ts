@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Font } from './Font.Font';
+import { Font } from '@infrastructure/Font.Font';
 export interface BrandingConfig {
     BackgroundColor: string;
     PrimaryColor: string;

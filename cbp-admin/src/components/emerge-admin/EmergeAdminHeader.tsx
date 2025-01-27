@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
 import { Box, Typography, Grid, Paper, Link } from '@mui/material';
-import { getAllRoutes } from '../../routes';
+import { getAllRoutes } from '@/../routes';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 

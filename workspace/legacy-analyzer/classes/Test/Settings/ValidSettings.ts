@@ -5,7 +5,7 @@ export interface ValidSettingsConfig {
 }
 
 
-import { Setting, ISettingsGroup, ISettingsMetadata } from './interfaces';
+import { Setting, ISettingsGroup, ISettingsMetadata } from '@/interfaces';
 
 export class ValidSettings implements ISettingsGroup {
     static readonly metadata: ISettingsMetadata = {

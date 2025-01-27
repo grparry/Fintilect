@@ -1,9 +1,9 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { CheckDepositVendor } from './CheckDepositVendor';
-import { CheckDepositCameraType } from './CheckDepositCameraType';
-import { CheckDepositAutoCaptureType } from './CheckDepositAutoCaptureType';
-import { RearEndorsementDefaultType } from './RearEndorsementDefaultType';
-import { Authentication } from './Authentication.Authentication';
+import { CheckDepositVendor } from '@infrastructure/CheckDepositVendor';
+import { CheckDepositCameraType } from '@infrastructure/CheckDepositCameraType';
+import { CheckDepositAutoCaptureType } from '@infrastructure/CheckDepositAutoCaptureType';
+import { RearEndorsementDefaultType } from '@infrastructure/RearEndorsementDefaultType';
+import { Authentication } from '@infrastructure/Authentication.Authentication';
 export interface CheckDepositConfig {
     MinimumVersion: string;
     MinimumAndroidVersion: string;

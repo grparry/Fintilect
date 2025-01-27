@@ -1,6 +1,6 @@
-import { TestDb, TestRecordSet } from '../../../config/test.db';
-import { ClientRecord, ClientRecordWithTotal, ClientSettings } from '../../../services/client.service';
-import { ResponseValidator } from './ResponseValidator';
+import { TestDb, TestRecordSet } from '@/../../config/test.db';
+import { ClientRecord, ClientRecordWithTotal, ClientSettings } from '@/../../services/client.service';
+import { ResponseValidator } from '@/ResponseValidator';
 
 export const mockClients = {
   standard: {

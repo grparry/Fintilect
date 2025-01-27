@@ -8,16 +8,13 @@ class ErrorBoundary extends React.Component {
     super(props);
     this.state = { hasError: false, error: null };
   }
-
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
   }
-
   componentDidCatch(error, errorInfo) {
     // Log error to error reporting service
     console.error('Error caught by boundary:', error, errorInfo);
   }
-
   render() {
     if (this.state.hasError) {
       return (
@@ -49,13 +46,10 @@ class ErrorBoundary extends React.Component {
         </Box>
       );
     }
-
     return this.props.children;
   }
 }
-
 ErrorBoundary.propTypes = {
   children: PropTypes.node.isRequired,
 };
-
 export default ErrorBoundary;

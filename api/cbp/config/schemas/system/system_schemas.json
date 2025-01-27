@@ -1,0 +1,276 @@
+{
+  "SystemConfigRequest": {
+    "type": "object",
+    "properties": {
+      "processing": { "$ref": "#/ProcessingConfig" },
+      "security": { "$ref": "#/SecurityConfig" },
+      "monitoring": { "$ref": "#/MonitoringConfig" },
+      "maintenance": { "$ref": "#/MaintenanceConfig" },
+      "notifications": { "$ref": "#/NotificationConfig" },
+      "integrations": { "$ref": "#/IntegrationConfig" }
+    }
+  },
+  "ProcessingConfig": {
+    "type": "object",
+    "properties": {
+      "batchSchedule": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "schedule": { "type": "string" },
+            "priority": { "type": "integer" },
+            "retryPolicy": {
+              "type": "object",
+              "properties": {
+                "maxAttempts": { "type": "integer" },
+                "backoffMultiplier": { "type": "number" }
+              }
+            }
+          }
+        }
+      },
+      "cutoffTimes": {
+        "type": "object",
+        "properties": {
+          "ach": { "type": "string" },
+          "wire": { "type": "string" },
+          "check": { "type": "string" }
+        }
+      },
+      "processingWindows": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "startTime": { "type": "string" },
+            "endTime": { "type": "string" },
+            "type": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "SecurityConfig": {
+    "type": "object",
+    "properties": {
+      "passwordPolicy": {
+        "type": "object",
+        "properties": {
+          "minLength": { "type": "integer" },
+          "requireUppercase": { "type": "boolean" },
+          "requireNumbers": { "type": "boolean" },
+          "requireSpecialChars": { "type": "boolean" },
+          "expiryDays": { "type": "integer" },
+          "historyCount": { "type": "integer" }
+        }
+      },
+      "sessionPolicy": {
+        "type": "object",
+        "properties": {
+          "timeout": { "type": "integer" },
+          "maxConcurrent": { "type": "integer" },
+          "refreshTokenValidity": { "type": "integer" }
+        }
+      },
+      "ipWhitelist": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "fraudDetection": {
+        "type": "object",
+        "properties": {
+          "enabled": { "type": "boolean" },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": { "type": "string" },
+                "threshold": { "type": "number" },
+                "action": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "MonitoringConfig": {
+    "type": "object",
+    "properties": {
+      "metrics": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "type": { "type": "string" },
+            "interval": { "type": "integer" },
+            "threshold": { "type": "number" }
+          }
+        }
+      },
+      "alerts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "condition": { "type": "string" },
+            "severity": { "type": "string" },
+            "notification": { "type": "string" }
+          }
+        }
+      },
+      "logging": {
+        "type": "object",
+        "properties": {
+          "level": { "type": "string" },
+          "retention": { "type": "integer" },
+          "destinations": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "MaintenanceConfig": {
+    "type": "object",
+    "properties": {
+      "backupSchedule": {
+        "type": "object",
+        "properties": {
+          "frequency": { "type": "string" },
+          "retention": { "type": "integer" },
+          "type": { "type": "string" }
+        }
+      },
+      "maintenanceWindows": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "startTime": { "type": "string" },
+            "duration": { "type": "integer" },
+            "type": { "type": "string" }
+          }
+        }
+      },
+      "cleanupPolicies": {
+        "type": "object",
+        "properties": {
+          "auditLogs": { "type": "integer" },
+          "activityLogs": { "type": "integer" },
+          "tempFiles": { "type": "integer" }
+        }
+      }
+    }
+  },
+  "NotificationConfig": {
+    "type": "object",
+    "properties": {
+      "providers": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "object",
+            "properties": {
+              "service": { "type": "string" },
+              "from": { "type": "string" },
+              "templatePath": { "type": "string" }
+            }
+          },
+          "sms": {
+            "type": "object",
+            "properties": {
+              "provider": { "type": "string" },
+              "senderId": { "type": "string" }
+            }
+          }
+        }
+      },
+      "templates": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "subject": { "type": "string" },
+            "body": { "type": "string" },
+            "format": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "IntegrationConfig": {
+    "type": "object",
+    "properties": {
+      "endpoints": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "url": { "type": "string" },
+            "method": { "type": "string" },
+            "headers": { "type": "object" },
+            "timeout": { "type": "integer" }
+          }
+        }
+      },
+      "retryPolicy": {
+        "type": "object",
+        "properties": {
+          "maxAttempts": { "type": "integer" },
+          "backoffMultiplier": { "type": "number" },
+          "maxDelay": { "type": "integer" }
+        }
+      }
+    }
+  },
+  "HealthCheckResponse": {
+    "type": "object",
+    "properties": {
+      "status": { "type": "string" },
+      "timestamp": { "type": "string", "format": "date-time" },
+      "version": { "type": "string" },
+      "components": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string" },
+            "message": { "type": "string" },
+            "lastCheck": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    }
+  },
+  "SystemStatus": {
+    "type": "object",
+    "properties": {
+      "status": { "type": "string" },
+      "uptime": { "type": "number" },
+      "lastRestart": { "type": "string", "format": "date-time" },
+      "activeConnections": { "type": "integer" },
+      "queueStatus": {
+        "type": "object",
+        "properties": {
+          "pending": { "type": "integer" },
+          "processing": { "type": "integer" },
+          "failed": { "type": "integer" }
+        }
+      },
+      "resourceUsage": {
+        "type": "object",
+        "properties": {
+          "cpu": { "type": "number" },
+          "memory": { "type": "number" },
+          "disk": { "type": "number" }
+        }
+      }
+    }
+  }
+}

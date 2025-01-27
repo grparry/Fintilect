@@ -11,7 +11,6 @@ const EmergeAdminHeader = lazy(() => {
 });
 const MemberDashboard = lazy(() => import('../components/emerge-admin/member-center/MemberDashboard'));
 const MoneyDesktop = lazy(() => import('../components/emerge-admin/MoneyDesktop'));
-
 // Define the emerge admin routes
 const emergeAdminRoutes: RouteConfig[] = [
   {
@@ -41,7 +40,6 @@ const emergeAdminRoutes: RouteConfig[] = [
     ]
   }
 ];
-
 // Debug log the routes
 console.log('emergeAdminRoutes before export:', emergeAdminRoutes.map(r => ({
   id: r.id,
@@ -49,5 +47,4 @@ console.log('emergeAdminRoutes before export:', emergeAdminRoutes.map(r => ({
   title: r.title,
   hasChildren: !!r.children
 })));
-
 export default emergeAdminRoutes;

@@ -26,17 +26,16 @@ import {
   CheckCircle as CheckCircleIcon,
   Info as InfoIcon
 } from '@mui/icons-material';
-import { Device, DeviceStatus } from '../../../types/member-center.types';
+import { MemberDevice, DeviceStatus } from '../../../types/member-center.types';
 import { memberService } from '../../../services/factory/ServiceFactory';
 
 interface ManageDevicesDialogProps {
   open: boolean;
   onClose: () => void;
   memberId: string;
-  devices: Device[];
-  onDevicesUpdated: (devices: Device[]) => void;
+  devices: MemberDevice[];
+  onDevicesUpdated: (devices: MemberDevice[]) => void;
 }
-
 const ManageDevicesDialog: React.FC<ManageDevicesDialogProps> = ({
   open,
   onClose,
@@ -45,18 +44,15 @@ const ManageDevicesDialog: React.FC<ManageDevicesDialogProps> = ({
   onDevicesUpdated
 }) => {
   const [loading, setLoading] = useState(false);
-
-  const handleToggleDeviceStatus = async (device: Device, newStatus: DeviceStatus) => {
+  const handleToggleDeviceStatus = async (device: MemberDevice, newStatus: DeviceStatus) => {
     try {
       setLoading(true);
-      
       // Update the device status
       const updatedDevices = devices.map(d => 
         d.id === device.id 
           ? { ...d, status: newStatus, lastAccess: new Date().toISOString() }
           : d
       );
-
       // Update devices through the service
       await memberService.updateDevices(memberId, updatedDevices);
       onDevicesUpdated(updatedDevices);
@@ -66,7 +62,6 @@ const ManageDevicesDialog: React.FC<ManageDevicesDialogProps> = ({
       setLoading(false);
     }
   };
-
   const getStatusColor = (status: DeviceStatus) => {
     switch (status) {
       case 'Active':
@@ -81,11 +76,9 @@ const ManageDevicesDialog: React.FC<ManageDevicesDialogProps> = ({
         return 'default';
     }
   };
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
   };
-
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Manage Registered Devices</DialogTitle>
@@ -158,5 +151,4 @@ const ManageDevicesDialog: React.FC<ManageDevicesDialogProps> = ({
     </Dialog>
   );
 };
-
 export default ManageDevicesDialog;

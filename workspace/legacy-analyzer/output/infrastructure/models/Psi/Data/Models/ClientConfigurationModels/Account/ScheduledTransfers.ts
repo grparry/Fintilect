@@ -1,7 +1,7 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { ScheduledTransferResult } from './ScheduledTransferResult';
-import { RecurrenceType } from './RecurrenceType';
-import { ScheduledTransferEndOption } from './ScheduledTransferEndOption';
+import { ScheduledTransferResult } from '@infrastructure/ScheduledTransferResult';
+import { RecurrenceType } from '@infrastructure/RecurrenceType';
+import { ScheduledTransferEndOption } from '@infrastructure/ScheduledTransferEndOption';
 export interface ScheduledTransfersConfig {
     Enabled: boolean;
     MinVersion: number;

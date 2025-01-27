@@ -10,7 +10,6 @@ export const renderWithProviders = (ui: ReactElement) => {
     </ThemeProvider>
   );
 };
-
 describe('Test Utils', () => {
   it('should render test components correctly', () => {
     const TestComponent = () => <div>Test Component</div>;

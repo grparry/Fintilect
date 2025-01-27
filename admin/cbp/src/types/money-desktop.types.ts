@@ -3,7 +3,6 @@ import { ChipProps } from '@mui/material';
 export type ConnectionStatus = 'Connected' | 'Error' | 'Pending';
 export type AccountStatus = 'Active' | 'Inactive' | 'Error' | 'Pending';
 export type AccountType = 'Checking' | 'Savings' | 'Credit Card' | 'Investment' | 'Loan';
-
 export interface Connection {
   id: number;
   institutionName: string;
@@ -14,7 +13,6 @@ export interface Connection {
   createdAt: string;
   lastError: string | null;
 }
-
 export interface Account {
   id: number;
   connectionId: number;
@@ -26,25 +24,21 @@ export interface Account {
   status: AccountStatus;
   lastUpdated: string;
 }
-
 export type StatusColor = {
   [key in ConnectionStatus | AccountStatus]: ChipProps['color'];
 };
-
 export interface MoneyDesktopFilters {
   searchTerm: string;
   selectedStatus: 'all' | ConnectionStatus | AccountStatus;
   startDate: string | null;
   endDate: string | null;
 }
-
 export interface SyncDialogProps {
   open: boolean;
   onClose: () => void;
   connection: Connection | null;
   onSync: (connection: Connection) => void;
 }
-
 export interface DetailsDialogProps {
   open: boolean;
   onClose: () => void;

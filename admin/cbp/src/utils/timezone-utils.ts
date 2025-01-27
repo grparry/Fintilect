@@ -1,3 +1,5 @@
+
+
 /**
  * List of common time zones.
  * This is a subset of all available time zones, focusing on major cities and regions.
@@ -12,28 +14,24 @@ export const timeZones = [
   'America/Anchorage',
   'America/Toronto',
   'America/Vancouver',
-
   // Europe
   'Europe/London',
   'Europe/Paris',
   'Europe/Berlin',
   'Europe/Rome',
   'Europe/Moscow',
-
   // Asia
   'Asia/Dubai',
   'Asia/Shanghai',
   'Asia/Tokyo',
   'Asia/Singapore',
   'Asia/Hong_Kong',
-
   // Australia & New Zealand
   'Australia/Sydney',
   'Australia/Melbourne',
   'Australia/Perth',
   'Pacific/Auckland'
 ];
-
 /**
  * Validates if a given time zone string is valid.
  * @param timeZone - The time zone to validate
@@ -47,7 +45,6 @@ export const isValidTimeZone = (timeZone: string): boolean => {
     return false;
   }
 };
-
 /**
  * Gets the current offset for a given time zone.
  * @param timeZone - The time zone to get the offset for
@@ -65,7 +62,6 @@ export const getTimeZoneOffset = (timeZone: string): string => {
     return '';
   }
 };
-
 /**
  * Formats a date for a specific time zone.
  * @param date - The date to format
@@ -84,7 +80,6 @@ export const formatDateForTimeZone = (date: Date, timeZone: string): string => {
     hour12: false
   }).format(date);
 };
-
 /**
  * Converts a time from one time zone to another.
  * @param date - The date to convert
@@ -107,7 +102,6 @@ export const convertTimeZone = (
     second: 'numeric',
     hour12: false
   });
-
   const toFormatter = new Intl.DateTimeFormat('en-US', {
     timeZone: toTimeZone,
     year: 'numeric',
@@ -118,24 +112,20 @@ export const convertTimeZone = (
     second: 'numeric',
     hour12: false
   });
-
   const fromParts = fromFormatter.formatToParts(date);
   const toParts = toFormatter.formatToParts(date);
-
   const fromValues = fromParts.reduce((acc, part) => {
     if (part.type !== 'literal') {
       acc[part.type] = parseInt(part.value, 10);
     }
     return acc;
   }, {} as Record<string, number>);
-
   const toValues = toParts.reduce((acc, part) => {
     if (part.type !== 'literal') {
       acc[part.type] = parseInt(part.value, 10);
     }
     return acc;
   }, {} as Record<string, number>);
-
   return new Date(
     toValues.year,
     toValues.month - 1,

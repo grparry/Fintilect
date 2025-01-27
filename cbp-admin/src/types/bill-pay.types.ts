@@ -1,6 +1,6 @@
 // Remove unused Dayjs import since we're using string type for dates
-import { User } from './index';
-import { PaymentApiResponse } from './api.types';
+import { User } from '@/index';
+import { PaymentApiResponse } from '@/api.types';
 
 // Component Props Types
 export interface TabPanelProps {

@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { RemoteLoggingVendorType } from './RemoteLoggingVendorType';
-import { AccountNumberAssociation } from './AccountNumberAssociation';
+import { RemoteLoggingVendorType } from '@infrastructure/RemoteLoggingVendorType';
+import { AccountNumberAssociation } from '@infrastructure/AccountNumberAssociation';
 export interface FeatureConfig {
     RemoveBillSubscribersEnabled: boolean;
     XAppConfigEnabled: boolean;

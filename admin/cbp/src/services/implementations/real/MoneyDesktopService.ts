@@ -7,7 +7,6 @@ export class MoneyDesktopService extends BaseService implements IMoneyDesktopSer
   constructor(basePath: string = '/api/money-desktop') {
     super(basePath);
   }
-
   async getConnections(filters: MoneyDesktopFilters): Promise<Connection[]> {
     return this.get<Connection[]>('/connections', {
       params: {
@@ -18,7 +17,6 @@ export class MoneyDesktopService extends BaseService implements IMoneyDesktopSer
       },
     });
   }
-
   async getAccounts(filters: MoneyDesktopFilters): Promise<Account[]> {
     return this.get<Account[]>('/accounts', {
       params: {
@@ -29,11 +27,9 @@ export class MoneyDesktopService extends BaseService implements IMoneyDesktopSer
       },
     });
   }
-
   async syncConnection(connectionId: number): Promise<void> {
     await this.post(`/connections/${connectionId}/sync`);
   }
-
   async exportConnections(filters: MoneyDesktopFilters): Promise<Blob> {
     const response = await this.get<Blob>('/connections/export', {
       params: {
@@ -46,7 +42,6 @@ export class MoneyDesktopService extends BaseService implements IMoneyDesktopSer
     });
     return response;
   }
-
   async exportAccounts(filters: MoneyDesktopFilters): Promise<Blob> {
     const response = await this.get<Blob>('/accounts/export', {
       params: {

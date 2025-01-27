@@ -1,6 +1,6 @@
-import { ParsedField } from '../../parser/types';
-import { TypeMapper } from '../typeSystem/typeMapper';
-import logger from '../../utils/logger';
+import { ParsedField } from '@legacy-analyzer/../parser/types';
+import { TypeMapper } from '@legacy-analyzer/typeSystem/typeMapper';
+import logger from '@legacy-analyzer/../utils/logger';
 
 export class JsonGenerator {
     constructor(private readonly typeMapper: TypeMapper) {}

@@ -221,12 +221,12 @@
  */
 
 import { Router } from 'express';
-import { validateRequest } from '../middleware/validation.middleware';
-import { PayeeController } from '../controllers/payee.controller';
-import { PayeeService } from '../services/payee.service';
+import { validateRequest } from '@/middleware/validation.middleware';
+import { PayeeController } from '@/controllers/payee.controller';
+import { PayeeService } from '@/services/payee.service';
 import { z } from 'zod';
-import { cacheMiddleware } from '../middleware/cache.middleware';
-import { db } from '../config/db';
+import { cacheMiddleware } from '@/middleware/cache.middleware';
+import { db } from '@/config/db';
 
 const router = Router();
 const payeeService = new PayeeService(db);

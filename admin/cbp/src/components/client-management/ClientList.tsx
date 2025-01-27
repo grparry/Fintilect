@@ -33,21 +33,17 @@ const ClientList: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-
   const loadClients = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      
       const response = await clientService.getClients({
         page: page + 1,
         limit: rowsPerPage
       });
-
       if (!response || !response.items) {
         throw new Error('Failed to load clients');
       }
-
       setClients(response.items);
       setTotalCount(response.pagination.total);
       logger.info('Clients loaded successfully');
@@ -60,20 +56,16 @@ const ClientList: React.FC = () => {
       setLoading(false);
     }
   }, [page, rowsPerPage, enqueueSnackbar]);
-
   useEffect(() => {
     loadClients();
   }, [loadClients]);
-
   const handleChangePage = useCallback((_event: unknown, newPage: number) => {
     setPage(newPage);
   }, []);
-
   const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   }, []);
-
   const getTypeChipColor = (type: ClientType) => {
     switch (type) {
       case ClientType.Enterprise:
@@ -86,7 +78,6 @@ const ClientList: React.FC = () => {
         return 'default';
     }
   };
-
   const getStatusChipColor = (status: ClientStatus) => {
     switch (status) {
       case ClientStatus.Active:
@@ -99,7 +90,6 @@ const ClientList: React.FC = () => {
         return 'default';
     }
   };
-
   const handleEditClick = useCallback((clientId: string) => {
     try {
       const encodedId = encodeId(clientId);
@@ -110,7 +100,6 @@ const ClientList: React.FC = () => {
       enqueueSnackbar('Error navigating to client details', { variant: 'error' });
     }
   }, [navigate, enqueueSnackbar]);
-
   if (loading && clients.length === 0) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -118,7 +107,6 @@ const ClientList: React.FC = () => {
       </Box>
     );
   }
-
   if (error) {
     return (
       <Box mb={2}>
@@ -126,7 +114,6 @@ const ClientList: React.FC = () => {
       </Box>
     );
   }
-
   return (
     <Paper>
       <TableContainer>
@@ -199,5 +186,4 @@ const ClientList: React.FC = () => {
     </Paper>
   );
 };
-
 export default ClientList;

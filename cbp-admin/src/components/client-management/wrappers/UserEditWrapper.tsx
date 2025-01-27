@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Box, CircularProgress, Alert, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import UserForm from '../users/UserForm';
-import { clientService } from '../../../services/factory/ServiceFactory';
-import { User, UserGroup } from '../../../types/client.types';
-import { decodeId } from '../../../utils/idEncoder';
-import logger from '../../../utils/logger';
+import UserForm from '@/users/UserForm';
+import { clientService } from '@/../../services/factory/ServiceFactory';
+import { User, UserGroup } from '@/../../types/client.types';
+import { decodeId } from '@/../../utils/idEncoder';
+import logger from '@/../../utils/logger';
 
 const UserEditWrapper: React.FC = () => {
   const navigate = useNavigate();

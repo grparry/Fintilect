@@ -9,7 +9,7 @@ import {
     ValidationResult,
     LayoutDefinition
 } from '../types';
-import { SettingsService } from '@services/settings';
+import { SettingsService } from '../../../services/settings';
 
 /**
  * Base class for all configuration sections
@@ -17,10 +17,8 @@ import { SettingsService } from '@services/settings';
 export abstract class EmergeConfigSection<T extends ConfigValue> extends Component<ConfigSectionProps<T>, ConfigSectionState<T>> {
     /** Configuration metadata */
     static metadata: ConfigMetadata;
-    
     /** Settings service instance */
     private settingsService: SettingsService;
-
     constructor(props: ConfigSectionProps<T>) {
         super(props);
         this.settingsService = SettingsService.getInstance();
@@ -31,21 +29,17 @@ export abstract class EmergeConfigSection<T extends ConfigValue> extends Compone
             validationResult: null
         };
     }
-
     componentDidMount() {
         this.loadConfig();
     }
-
     /**
      * Get validation rules for the configuration
      */
     protected abstract getValidationRules(): ValidationRules;
-
     /**
      * Get layout definition for the configuration
      */
     protected abstract getLayout(): LayoutDefinition;
-
     /**
      * Load configuration from settings service
      */
@@ -53,7 +47,6 @@ export abstract class EmergeConfigSection<T extends ConfigValue> extends Compone
         try {
             const metadata = (this.constructor as typeof EmergeConfigSection).metadata;
             const value = await this.settingsService.getValue<T>(metadata.key);
-            
             this.setState({
                 loading: false,
                 value: value || this.getDefaultValue(),
@@ -66,7 +59,6 @@ export abstract class EmergeConfigSection<T extends ConfigValue> extends Compone
             });
         }
     }
-
     /**
      * Save configuration to settings service
      */
@@ -74,12 +66,10 @@ export abstract class EmergeConfigSection<T extends ConfigValue> extends Compone
         try {
             const metadata = (this.constructor as typeof EmergeConfigSection).metadata;
             await this.settingsService.setValue(metadata.key, value);
-            
             this.setState({
                 value,
                 error: null
             });
-
             this.props.onSave?.(value);
         } catch (error) {
             this.setState({
@@ -87,7 +77,6 @@ export abstract class EmergeConfigSection<T extends ConfigValue> extends Compone
             });
         }
     }
-
     /**
      * Validate configuration value
      */
@@ -109,7 +98,6 @@ export abstract class EmergeConfigSection<T extends ConfigValue> extends Compone
             return errorResult;
         }
     }
-
     /**
      * Handle field value change
      */
@@ -118,19 +106,16 @@ export abstract class EmergeConfigSection<T extends ConfigValue> extends Compone
             ...this.state.value,
             [field]: value
         } as T;
-
         this.setState({ value: newValue });
         this.validateConfig(newValue);
         this.props.onChange?.(newValue);
     };
-
     /**
      * Get default value for the configuration
      */
     protected getDefaultValue(): T {
         return {} as T;
     }
-
     /**
      * Render error state
      */
@@ -138,24 +123,20 @@ export abstract class EmergeConfigSection<T extends ConfigValue> extends Compone
         if (!this.state.error) return null;
         return <Alert severity="error">{this.state.error}</Alert>;
     }
-
     /**
      * Render loading state
      */
     protected renderLoading() {
         return <LinearProgress />;
     }
-
     /**
      * Render configuration form
      */
     protected abstract renderForm(): React.ReactNode;
-
     render() {
         if (this.state.loading) {
             return this.renderLoading();
         }
-
         return (
             <Box sx={{ p: 2 }}>
                 {this.renderError()}

@@ -1,11 +1,11 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { Logger } from '../utils/logger';
-import { ParsedClass } from '../parser/types';
-import { ClassDocWriter } from './classDocWriter';
-import { FileService } from '../services/fileService';
-import { TypeScriptWriter } from './typeScriptWriter';
-import { PathResolver } from './pathSystem/pathResolver';
+import { Logger } from '@legacy-analyzer/utils/logger';
+import { ParsedClass } from '@legacy-analyzer/parser/types';
+import { ClassDocWriter } from '@legacy-analyzer/classDocWriter';
+import { FileService } from '@legacy-analyzer/services/fileService';
+import { TypeScriptWriter } from '@legacy-analyzer/typeScriptWriter';
+import { PathResolver } from '@legacy-analyzer/pathSystem/pathResolver';
 
 export interface OutputOptions {
   outputDir: string;

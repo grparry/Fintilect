@@ -179,10 +179,10 @@
  */
 
 import { Router } from 'express';
-import { validateRequest } from '../middleware/validation.middleware';
-import { SystemController } from '../controllers/system.controller';
-import { cacheMiddleware } from '../middleware/cache.middleware';
-import { db } from '../config/db';
+import { validateRequest } from '@cbp-config-api/middleware/validation.middleware';
+import { SystemController } from '@cbp-config-api/controllers/system.controller';
+import { cacheMiddleware } from '@cbp-config-api/middleware/cache.middleware';
+import { db } from '@cbp-config-api/config/db';
 import { z } from 'zod';
 
 const router = Router();

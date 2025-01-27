@@ -32,7 +32,6 @@ export const mockConnections: Connection[] = [
     lastError: null
   }
 ];
-
 export const mockAccounts: Account[] = [
   {
     id: 101,

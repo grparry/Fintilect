@@ -1,4 +1,4 @@
-import { PaginatedResponse } from './common.types';
+import { PaginatedResponse } from '@/common.types';
 
 export enum PaymentStatus {
     PENDING = 'PENDING',
@@ -146,4 +146,4 @@ export interface ProcessorMetrics {
     };
 }
 
-export type { PaginatedResponse } from './common.types';
+export type { PaginatedResponse } from '@/common.types';

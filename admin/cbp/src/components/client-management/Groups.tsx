@@ -37,6 +37,8 @@ import {
   PermissionCategoryType,
   ApiResponse,
   UserStatus,
+  Group,
+  GroupInput,
 } from '../../types/client.types';
 import { clientService, userService } from '../../services/factory/ServiceFactory';
 import { useNavigate } from 'react-router-dom';
@@ -45,7 +47,6 @@ import { encodeId } from '../../utils/idEncoder';
 interface GroupsProps {
   clientId: string;
 }
-
 interface GroupFormData {
   name: string;
   description: string;
@@ -53,7 +54,6 @@ interface GroupFormData {
   roleIds: string[];
   members?: string[];
 }
-
 interface ServiceGroup {
   id: string;
   name: string;
@@ -62,10 +62,8 @@ interface ServiceGroup {
   roles: string[];
   members: string[];
 }
-
 export default function Groups({ clientId }: GroupsProps) {
   const navigate = useNavigate();
-
   // Data state
   const [groups, setGroups] = useState<UserGroup[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -78,27 +76,23 @@ export default function Groups({ clientId }: GroupsProps) {
     permissionIds: [],
     roleIds: [],
   });
-
   // UI state
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
   // Dialog state
   const [openGroupForm, setOpenGroupForm] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<UserGroup | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState<UserGroup | null>(null);
   const [openMembersDialog, setOpenMembersDialog] = useState(false);
-
   // Load initial data
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       console.log('Loading groups data for client:', clientId);
-
       // Load groups first
       let groupsData: UserGroup[];
       try {
@@ -108,7 +102,6 @@ export default function Groups({ clientId }: GroupsProps) {
         console.error('Error loading groups:', err);
         throw new Error('Failed to load groups');
       }
-
       // Load users
       let usersData: PaginatedResponse<User>;
       try {
@@ -118,7 +111,6 @@ export default function Groups({ clientId }: GroupsProps) {
         console.error('Error loading users:', err);
         throw new Error('Failed to load users');
       }
-
       // Load permissions
       let permissionsData: Permission[];
       try {
@@ -128,7 +120,6 @@ export default function Groups({ clientId }: GroupsProps) {
         console.error('Error loading permissions:', err);
         throw new Error('Failed to load permissions');
       }
-
       // Load roles
       let rolesData: SecurityRole[];
       try {
@@ -138,12 +129,10 @@ export default function Groups({ clientId }: GroupsProps) {
         console.error('Error loading roles:', err);
         throw new Error('Failed to load roles');
       }
-
       setGroups(groupsData);
       setUsers(usersData.items);
       setPermissions(permissionsData);
       setRoles(rolesData);
-      
       console.log('Successfully loaded all data');
     } catch (error) {
       console.error('Error in loadData:', error);
@@ -152,11 +141,9 @@ export default function Groups({ clientId }: GroupsProps) {
       setLoading(false);
     }
   }, [clientId]);
-
   useEffect(() => {
     loadData();
   }, [loadData]);
-
   const handleAddGroup = useCallback(() => {
     setSelectedGroup(null);
     setFormData({
@@ -167,7 +154,6 @@ export default function Groups({ clientId }: GroupsProps) {
     });
     setOpenGroupForm(true);
   }, []); // No dependencies needed
-
   const handleEditGroup = useCallback((group: UserGroup) => {
     const encodedClientId = encodeId(clientId);
     const encodedGroupId = encodeId(group.id);
@@ -180,12 +166,10 @@ export default function Groups({ clientId }: GroupsProps) {
     });
     setOpenGroupForm(true);
   }, [clientId]); // Depends on clientId for encoding
-
   const handleDeleteGroup = async (groupId: string) => {
     try {
       setLoading(true);
       setError(null);
-
       // TODO: Implement proper group deletion endpoint
       // For now, we'll use a mock implementation
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -196,10 +180,8 @@ export default function Groups({ clientId }: GroupsProps) {
       setLoading(false);
     }
   };
-
   const handleConfirmDelete = async () => {
     if (!groupToDelete) return;
-
     try {
       setError(null);
       await handleDeleteGroup(groupToDelete.id);
@@ -209,13 +191,11 @@ export default function Groups({ clientId }: GroupsProps) {
       setError(error instanceof Error ? error.message : 'Failed to delete group');
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setError(null);
       setSaving(true);
-
       if (selectedGroup) {
         await handleUpdateGroup(selectedGroup.id, formData);
       } else {
@@ -227,12 +207,10 @@ export default function Groups({ clientId }: GroupsProps) {
       setSaving(false);
     }
   };
-
   const handleCreateGroup = async (data: GroupFormData) => {
     try {
       setLoading(true);
       setError(null);
-
       // TODO: Implement proper group creation endpoint
       // For now, we'll use a mock implementation
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -244,12 +222,10 @@ export default function Groups({ clientId }: GroupsProps) {
       setLoading(false);
     }
   };
-
   const handleUpdateGroup = async (groupId: string, data: GroupFormData) => {
     try {
       setLoading(true);
       setError(null);
-
       // TODO: Implement proper group update endpoint
       // For now, we'll use a mock implementation
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -262,18 +238,15 @@ export default function Groups({ clientId }: GroupsProps) {
       setLoading(false);
     }
   };
-
   const handleOpenMembers = (group: UserGroup) => {
     setSelectedGroup(group);
     setSelectedMembers(group.members);
     setOpenMembersDialog(true);
   };
-
   const handleUpdateMembers = async () => {
     try {
       setError(null);
       setSaving(true);
-      
       if (selectedGroup) {
         // TODO: Implement proper member update endpoint
         // For now, we'll use a mock implementation
@@ -288,7 +261,6 @@ export default function Groups({ clientId }: GroupsProps) {
       setSaving(false);
     }
   };
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
@@ -296,7 +268,6 @@ export default function Groups({ clientId }: GroupsProps) {
       </Box>
     );
   }
-
   return (
     <Box>
       <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -310,19 +281,16 @@ export default function Groups({ clientId }: GroupsProps) {
           Add Group
         </Button>
       </Box>
-
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
-
       {success && (
         <Alert severity="success" sx={{ mb: 2 }}>
           {success}
         </Alert>
       )}
-
       <Grid container spacing={2}>
         {groups.map((group) => (
           <Grid item xs={12} sm={6} md={4} key={group.id}>
@@ -392,7 +360,6 @@ export default function Groups({ clientId }: GroupsProps) {
           </Grid>
         ))}
       </Grid>
-
       {/* Group Form Dialog */}
       <Dialog
         open={openGroupForm}
@@ -486,7 +453,6 @@ export default function Groups({ clientId }: GroupsProps) {
           </Button>
         </DialogActions>
       </Dialog>
-
       {/* Delete Confirmation Dialog */}
       <Dialog
         open={openDeleteDialog}
@@ -509,7 +475,6 @@ export default function Groups({ clientId }: GroupsProps) {
           </Button>
         </DialogActions>
       </Dialog>
-
       {/* Members Dialog */}
       <Dialog
         open={openMembersDialog}

@@ -10,7 +10,6 @@ export function renderWithRouter(
   { route = '/', path = '/' } = {}
 ) {
   window.history.pushState({}, 'Test page', route);
-
   return render(
     <BrowserRouter>
       <Routes>
@@ -19,7 +18,6 @@ export function renderWithRouter(
     </BrowserRouter>
   );
 }
-
 /**
  * Creates a mock navigation event
  */

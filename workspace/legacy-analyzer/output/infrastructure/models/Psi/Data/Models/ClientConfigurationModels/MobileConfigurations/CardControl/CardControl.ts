@@ -1,13 +1,13 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { OndotDxSettings } from './OndotDxSettings';
-import { OnDotSdkSettings } from './OnDotSdkSettings';
-import { CardControlLocations } from './CardControlLocations';
-import { CreditCardSettings } from './CreditCardSettings';
-import { DebitCardSettings } from './DebitCardSettings';
-import { LostOrStolenCardSettings } from './LostOrStolenCardSettings';
-import { CardControlTypeIdentifierByCategorySetting } from './CardControlTypeIdentifierByCategorySetting';
-import { CardControlVendor } from './CardControlVendor';
-import { Authentication } from './Authentication.Authentication';
+import { OndotDxSettings } from '@infrastructure/OndotDxSettings';
+import { OnDotSdkSettings } from '@infrastructure/OnDotSdkSettings';
+import { CardControlLocations } from '@infrastructure/CardControlLocations';
+import { CreditCardSettings } from '@infrastructure/CreditCardSettings';
+import { DebitCardSettings } from '@infrastructure/DebitCardSettings';
+import { LostOrStolenCardSettings } from '@infrastructure/LostOrStolenCardSettings';
+import { CardControlTypeIdentifierByCategorySetting } from '@infrastructure/CardControlTypeIdentifierByCategorySetting';
+import { CardControlVendor } from '@infrastructure/CardControlVendor';
+import { Authentication } from '@infrastructure/Authentication.Authentication';
 export interface CardControlConfig {
     OndotDxSettings: OndotDxSettings;
     OnDotSdk: OnDotSdkSettings;

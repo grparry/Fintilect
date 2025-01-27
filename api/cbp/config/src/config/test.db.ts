@@ -1,5 +1,5 @@
-import { Database } from './db';
-import { HttpError } from '../utils/errors';
+import { Database } from '@cbp-config-api/db';
+import { HttpError } from '@cbp-config-api/utils/errors';
 import * as sql from 'mssql';
 import { QueryResult } from 'pg';
 

@@ -1,6 +1,6 @@
-import { ParsedClass, ParsedField, ParsedAttribute } from '../../parser/types';
-import logger from '../../utils/logger';
-import { TypeMapper } from '../typeSystem/typeMapper'; 
+import { ParsedClass, ParsedField, ParsedAttribute } from '@/../parser/types';
+import logger from '@/../utils/logger';
+import { TypeMapper } from '@/typeSystem/typeMapper'; 
 
 export class SettingsGenerator {
     private typeMapper: TypeMapper;

@@ -1,4 +1,4 @@
-import { ServiceResponse } from './common';
+import { ServiceResponse } from '@cbp-config-api/common';
 
 export enum NotificationType {
   EMAIL = 'EMAIL',

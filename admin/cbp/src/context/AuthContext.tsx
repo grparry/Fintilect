@@ -6,9 +6,7 @@ import { User } from '../types/client.types';
 interface AuthProviderProps {
   children: ReactNode;
 }
-
 export const AuthContext = createContext<AuthContextType | null>(null);
-
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const authService = ServiceFactory.getInstance().getAuthService();
   const [state, setState] = useState<AuthState>({
@@ -18,7 +16,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     error: null,
     permissions: [],
   });
-
   useEffect(() => {
     const initializeAuth = async () => {
       console.log('=== AuthContext Initialization ===');
@@ -49,10 +46,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         });
       }
     };
-
     initializeAuth();
   }, [authService]);
-
   const login = useCallback(async (credentials: LoginCredentials): Promise<void> => {
     console.log('=== Login Attempt ===');
     setState(prev => ({ ...prev, loading: true, error: null }));
@@ -76,7 +71,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       throw error;
     }
   }, [authService]);
-
   const logout = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true }));
     try {
@@ -96,7 +90,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }));
     }
   }, [authService]);
-
   const refreshToken = useCallback(async () => {
     try {
       await authService.refreshToken();
@@ -116,11 +109,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }));
     }
   }, [authService]);
-
   const clearError = useCallback(() => {
     setState(prev => ({ ...prev, error: null }));
   }, []);
-
   const value: AuthContextType = {
     ...state,
     login,
@@ -128,10 +119,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     refreshToken,
     clearError,
   };
-
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {

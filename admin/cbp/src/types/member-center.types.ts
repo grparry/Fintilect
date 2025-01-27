@@ -1,3 +1,5 @@
+
+
 export interface Member {
   id: string;
   firstName: string;
@@ -14,9 +16,7 @@ export interface Member {
   devices?: Device[];
   securitySettings?: SecuritySettings;
 }
-
 export type MemberStatus = 'Active' | 'Inactive' | 'Suspended' | 'Pending';
-
 export interface Alert {
   id: string;
   type: AlertType;
@@ -26,10 +26,8 @@ export interface Alert {
   expiresAt?: string;
   acknowledged: boolean;
 }
-
 export type AlertType = 'Security' | 'Account' | 'Transaction' | 'System';
 export type AlertSeverity = 'info' | 'warning' | 'error';
-
 export interface MemberSearchFilters {
   searchTerm: string;
   searchType: 'accountNumber' | 'name' | 'email' | 'phone';
@@ -38,12 +36,10 @@ export interface MemberSearchFilters {
   endDate?: string;
   alertType?: AlertType | 'all';
 }
-
 export interface MemberSearchResult {
   totalCount: number;
   members: Member[];
 }
-
 export interface MemberDashboardStats {
   totalMembers: number;
   activeMembers: number;
@@ -56,7 +52,6 @@ export interface MemberDashboardStats {
     [key in AlertType]: number;
   };
 }
-
 export interface MemberActivity {
   id: string;
   memberId: string;
@@ -66,7 +61,6 @@ export interface MemberActivity {
   ipAddress?: string;
   device?: string;
 }
-
 export type ActivityType = 
   | 'Login'
   | 'Logout'
@@ -75,24 +69,20 @@ export type ActivityType =
   | 'AccountAccess'
   | 'TransactionInitiated'
   | 'AlertAcknowledged';
-
 // Payment and Account Types
 export type PaymentStatus = 'Completed' | 'Pending' | 'Failed' | 'Scheduled' | 'Cancelled';
 export type AccountType = 'Checking' | 'Savings' | 'Credit' | 'Debit';
 export type AccountStatus = 'Primary' | 'Active' | 'Inactive' | 'Suspended';
 export type PayeeStatus = 'Active' | 'Inactive' | 'Pending' | 'Suspended';
-
 // Device and Service Types
 export type DeviceType = 'Mobile' | 'Desktop' | 'Tablet' | 'Other';
 export type DeviceStatus = 'Active' | 'Inactive' | 'Blocked' | 'Unverified';
 export type ServiceStatus = 'Available' | 'Unavailable' | 'Maintenance';
-
 // Security Types
 export interface SecurityQuestion {
   question: string;
   isSet: boolean;
 }
-
 // Service Types
 export interface EnrolledService {
   id: number;
@@ -100,22 +90,18 @@ export interface EnrolledService {
   status: ServiceStatus;
   enrollDate?: string | null;
 }
-
 // Search Types
 export type SearchType = 'accountNumber' | 'name' | 'email' | 'phone';
-
 export interface SearchOption {
   value: SearchType;
   label: string;
 }
-
 export interface SearchResult {
   id: string;
   name: string;
   email: string;
   status: MemberStatus;
 }
-
 // Member Dashboard Interface
 export interface MemberDashboard {
   recentPayments: Array<{
@@ -195,20 +181,17 @@ export interface MemberDashboard {
   }>;
   otherServices?: EnrolledService[];
 }
-
 export interface Address {
   street: string;
   city: string;
   state: string;
   zip: string;
 }
-
 export interface SecuritySettings {
   twoFactorEnabled: boolean;
   preferredMethod: 'email' | 'sms';
   lastUpdated: string;
 }
-
 export interface Device {
   id: string;
   name: string;
@@ -221,7 +204,6 @@ export interface Device {
   operatingSystem?: string;
   location?: string;
 }
-
 export interface Account {
   id: string;
   accountNumber: string;

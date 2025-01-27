@@ -1,4 +1,4 @@
-import { PaymentMethod, PaymentStatus, PendingPayment, Priority, Payment } from '../../../../../types/bill-pay.types';
+import { PaymentMethod, PaymentStatus, PendingPayment, Priority, Payment } from '../../../../types/bill-pay.types';
 
 // Payment status distribution for mock data
 export const mockPaymentStatusDistribution: Record<PaymentStatus, number> = {
@@ -23,7 +23,6 @@ export const mockPaymentStatusDistribution: Record<PaymentStatus, number> = {
   [PaymentStatus.PARTIALLY_REFUNDED]: 1,
   [PaymentStatus.CHARGEBACK]: 1
 };
-
 // Regular payments
 export const mockPayments: Payment[] = [
   {
@@ -59,7 +58,6 @@ export const mockPayments: Payment[] = [
     updatedAt: '2024-12-15T00:00:00Z'
   }
 ];
-
 // Pending payments with more detailed information
 export const mockPendingPayments: PendingPayment[] = [
   {
@@ -138,7 +136,6 @@ export const mockPendingPayments: PendingPayment[] = [
     }
   }
 ];
-
 // Additional mock payment data
 export const mockAdditionalPayments: PendingPayment[] = [
   {
@@ -223,7 +220,6 @@ export const mockAdditionalPayments: PendingPayment[] = [
     }
   }
 ];
-
 // Mock payee conversion files
 export const mockPayeeConversionFiles = {
   success: true,
@@ -256,7 +252,6 @@ export const mockPayeeConversionFiles = {
     }
   ]
 };
-
 // Payment history for audit trails
 export const mockPaymentHistory = [
   {

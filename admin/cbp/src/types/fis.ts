@@ -1,5 +1,6 @@
-export type FISExceptionStatus = 'PENDING' | 'RESOLVED' | 'IGNORED';
 
+
+export type FISExceptionStatus = 'PENDING' | 'RESOLVED' | 'IGNORED';
 export interface FISException {
   id: string;
   status: FISExceptionStatus;
@@ -9,12 +10,10 @@ export interface FISException {
   message: string;
   details: Record<string, any>;
 }
-
 export interface FISRetryResult {
   success: boolean;
   message: string;
 }
-
 export interface FISExceptionFilters {
   status?: FISExceptionStatus[];
   startDate?: string;
@@ -22,7 +21,6 @@ export interface FISExceptionFilters {
   errorCodes?: string[];
   searchTerm?: string;
 }
-
 export interface FISResponseHistory {
   id: string;
   timestamp: string;
@@ -30,7 +28,6 @@ export interface FISResponseHistory {
   message: string;
   details?: Record<string, any>;
 }
-
 export interface ExceptionStats {
   total: number;
   pending: number;

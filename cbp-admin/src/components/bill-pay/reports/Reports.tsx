@@ -34,13 +34,13 @@ import {
   AuditRecord,
   TransactionRecord,
   UserRecord,
-} from '../../../types/report.types';
+} from '@/../../types/report.types';
 import { 
   ReportRunRequest,
   ExportReportArguments,
   BaseReportArguments
-} from '../../../types/report-api.types';
-import { reportService } from '../../../services/factory/ServiceFactory';
+} from '@/../../types/report-api.types';
+import { reportService } from '@/../../services/factory/ServiceFactory';
 
 const Reports: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<number>(0);

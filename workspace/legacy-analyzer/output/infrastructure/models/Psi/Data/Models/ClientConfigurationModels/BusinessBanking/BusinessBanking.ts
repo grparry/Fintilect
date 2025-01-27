@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { TieredAccessFeature } from './TieredAccessFeature';
+import { TieredAccessFeature } from '@infrastructure/TieredAccessFeature';
 export interface BusinessBankingConfig {
     AccountSelectorEnabled: boolean;
     ShouldBlockLoginForMasterUsers: boolean;

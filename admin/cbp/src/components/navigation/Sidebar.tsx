@@ -12,7 +12,6 @@ interface SidebarProps {
   width: number;
   navigationConfig: NavigationSectionType[];
 }
-
 const Sidebar: React.FC<SidebarProps> = ({ 
   open, 
   onClose, 
@@ -22,19 +21,16 @@ const Sidebar: React.FC<SidebarProps> = ({
   const theme = useTheme();
   const navigate = useNavigate();
   const { state, setActiveSection, toggleSection } = useNavigation();
-  
   const handleSectionClick = (sectionId: string) => {
     // Find the section in the navigation config
     const section = navigationConfig.find(s => s.id === sectionId);
     if (!section) return;
-
     // Match admin landing page behavior: toggle section first, then navigate
     toggleSection(sectionId);
     if (section.path) {
       navigate(section.path);
     }
   };
-
   return (
     <Box
       component="nav"
@@ -139,7 +135,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                 />
               )}
             </Box>
-
             {/* Inactive Sections Area - Only shown when a section is active */}
             {state.activeSection && (
               <Box
@@ -217,5 +212,4 @@ const Sidebar: React.FC<SidebarProps> = ({
     </Box>
   );
 };
-
 export default Sidebar;

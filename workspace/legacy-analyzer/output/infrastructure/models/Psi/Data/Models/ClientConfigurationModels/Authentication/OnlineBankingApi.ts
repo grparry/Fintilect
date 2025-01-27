@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Security } from './Security';
+import { Security } from '@infrastructure/Security';
 export interface OnlineBankingApiConfig {
     CredentialsExpirationTime: number;
     Security: Security;

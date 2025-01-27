@@ -1,4 +1,4 @@
-import { CreatePayeeRequest, UpdatePayeeRequest, ValidationError } from '../types/payee';
+import { CreatePayeeRequest, UpdatePayeeRequest, ValidationError } from '@/types/payee';
 
 export function validatePayeeData(data: CreatePayeeRequest | UpdatePayeeRequest): ValidationError[] {
   const errors: ValidationError[] = [];

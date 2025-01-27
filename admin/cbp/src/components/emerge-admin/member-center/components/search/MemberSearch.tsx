@@ -15,14 +15,12 @@ import { MemberSearchFilters, MemberStatus, AlertType } from '../../../../../typ
 interface MemberSearchProps {
   onSearch: (filters: MemberSearchFilters) => void;
 }
-
 const searchTypeOptions = [
   { value: 'accountNumber', label: 'Account Number' },
   { value: 'name', label: 'Name' },
   { value: 'email', label: 'Email' },
   { value: 'phone', label: 'Phone' },
 ] as const;
-
 const MemberSearch: React.FC<MemberSearchProps> = ({ onSearch }) => {
   const [filters, setFilters] = useState<MemberSearchFilters>({
     searchTerm: '',
@@ -30,31 +28,25 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onSearch }) => {
     status: 'all',
     alertType: 'all',
   });
-
   const handleSearchTypeChange = useCallback((event: React.ChangeEvent<{ value: unknown }>) => {
     setFilters(prev => ({
       ...prev,
       searchType: event.target.value as MemberSearchFilters['searchType'],
     }));
   }, []);
-
   const handleSearchTermChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setFilters(prev => ({ ...prev, searchTerm: event.target.value }));
   }, []);
-
   const handleStatusChange = useCallback((event: React.ChangeEvent<{ value: unknown }>) => {
     setFilters(prev => ({ ...prev, status: event.target.value as MemberStatus | 'all' }));
   }, []);
-
   const handleAlertTypeChange = useCallback((event: React.ChangeEvent<{ value: unknown }>) => {
     setFilters(prev => ({ ...prev, alertType: event.target.value as AlertType | 'all' }));
   }, []);
-
   const handleSubmit = useCallback((event: React.FormEvent) => {
     event.preventDefault();
     onSearch(filters);
   }, [filters, onSearch]);
-
   return (
     <Box component="form" onSubmit={handleSubmit}>
       <Grid container spacing={2} alignItems="flex-end">
@@ -133,5 +125,4 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onSearch }) => {
     </Box>
   );
 };
-
 export default MemberSearch;

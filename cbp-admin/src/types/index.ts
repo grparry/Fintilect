@@ -1,6 +1,6 @@
 // Common type definitions used across the application
 
-import { PaginationOptions } from './common.types';
+import { PaginationOptions } from '@/common.types';
 
 // User related types
 export interface User {
@@ -144,4 +144,4 @@ export interface DateRange {
   endDate: string;
 }
 
-export type { PaginationOptions } from './common.types';
+export type { PaginationOptions } from '@/common.types';

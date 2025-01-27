@@ -1,4 +1,4 @@
-import { IBillPayService } from '../../interfaces/IBillPayService';
+import { IBillPayService } from '@/../interfaces/IBillPayService';
 import {
     BillPayConfig,
     BillPayConfigUpdate,
@@ -19,25 +19,25 @@ import {
     NotificationTemplateInput,
     PaymentStatus,
     ExceptionStatus
-} from '../../../types/bill-pay.types';
+} from '@/../../types/bill-pay.types';
 import {
     BillPaySecuritySettings,
     BillPaySecurityValidation,
     BillPayOTPMethod
-} from '../../../types/security.types';
-import { PaginatedResponse, Pagination, PaginationOptions } from '../../../types/index';
+} from '@/../../types/security.types';
+import { PaginatedResponse, Pagination, PaginationOptions } from '@/../../types/index';
 import { 
     mockPayments,
     mockPendingPayments,
     mockPaymentHistory
-} from './data/billpay/payments';
-import { mockExceptions } from './data/billpay/exceptions';
-import { mockDashboardStats, generateMockTrends } from './data/billpay/dashboard';
-import { mockTemplates, initialHolidays } from './data/billpay/settings';
-import { mockClients, mockPayees } from './data/billpay/clients';
-import { mockPaymentActions } from './data/billpay/payments';
+} from '@/data/billpay/payments';
+import { mockExceptions } from '@/data/billpay/exceptions';
+import { mockDashboardStats, generateMockTrends } from '@/data/billpay/dashboard';
+import { mockTemplates, initialHolidays } from '@/data/billpay/settings';
+import { mockClients, mockPayees } from '@/data/billpay/clients';
+import { mockPaymentActions } from '@/data/billpay/payments';
 import { v4 as uuidv4 } from 'uuid';
-import { BaseMockService } from './BaseMockService';
+import { BaseMockService } from '@/BaseMockService';
 
 export class MockBillPayService extends BaseMockService implements IBillPayService {
     constructor(basePath: string = '/api/v1/bill-pay') {

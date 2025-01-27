@@ -6,7 +6,6 @@ import { decodeId } from '../../../utils/idEncoder';
 
 const MemberSecuritySettingsWrapper: React.FC = () => {
   const { clientId } = useParams<{ clientId: string }>();
-
   if (!clientId) {
     return (
       <Alert severity="error">
@@ -14,7 +13,6 @@ const MemberSecuritySettingsWrapper: React.FC = () => {
       </Alert>
     );
   }
-
   try {
     const decodedClientId = decodeId(clientId);
     return <MemberSecuritySettings clientId={decodedClientId} />;
@@ -26,5 +24,4 @@ const MemberSecuritySettingsWrapper: React.FC = () => {
     );
   }
 };
-
 export default MemberSecuritySettingsWrapper;

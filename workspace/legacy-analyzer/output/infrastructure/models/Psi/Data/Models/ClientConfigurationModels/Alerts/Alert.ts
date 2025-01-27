@@ -1,9 +1,9 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { AdHocAlerts } from './AdHocAlerts';
-import { ExternalEvents } from './ExternalEvents';
-import { MessagePumps } from './MessagePumps';
-import { DataFeedAccountType } from './DataFeedAccountType';
-import { AlertSmtpSettings } from './AlertSmtpSettings';
+import { AdHocAlerts } from '@infrastructure/AdHocAlerts';
+import { ExternalEvents } from '@infrastructure/ExternalEvents';
+import { MessagePumps } from '@infrastructure/MessagePumps';
+import { DataFeedAccountType } from '@infrastructure/DataFeedAccountType';
+import { AlertSmtpSettings } from '@infrastructure/AlertSmtpSettings';
 export interface AlertConfig {
     InactiveAccountsThresholdDayValues: number[];
     ScheduledAlertsEnabled: boolean;

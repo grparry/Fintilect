@@ -1,4 +1,4 @@
-import { IDashboardService } from '../../interfaces/IDashboardService';
+import { IDashboardService } from '@/../interfaces/IDashboardService';
 import {
   DashboardMetrics,
   DashboardFilters,
@@ -6,9 +6,9 @@ import {
   TransactionStats,
   UserActivityData,
   ChartDataPoint
-} from '../../../types/dashboard.types';
-import { TimeRange } from '../../../types';
-import { BaseService } from './BaseService';
+} from '@/../../types/dashboard.types';
+import { TimeRange } from '@/../../types';
+import { BaseService } from '@/BaseService';
 
 export class DashboardService extends BaseService implements IDashboardService {
   private subscriptions: Map<string, (updates: Partial<DashboardMetrics>) => void> = new Map();

@@ -33,17 +33,14 @@ const getRouteIcon = (title: string) => {
       return null;
   }
 };
-
 const ClientManagementHeader: React.FC = () => {
   const { clientId } = useParams<{ clientId: string }>();
   const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     const loadClientData = async () => {
       if (!clientId) return;
-
       try {
         setLoading(true);
         setError(null);
@@ -59,10 +56,8 @@ const ClientManagementHeader: React.FC = () => {
         setLoading(false);
       }
     };
-
     loadClientData();
   }, [clientId]);
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
@@ -70,7 +65,6 @@ const ClientManagementHeader: React.FC = () => {
       </Box>
     );
   }
-
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 4 }}>
@@ -81,13 +75,11 @@ const ClientManagementHeader: React.FC = () => {
           Welcome to Client Management. Here you can manage client accounts, users, and access settings.
         </Typography>
       </Box>
-      
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
-      
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} sm={6} md={4}>
           <Paper 
@@ -122,5 +114,4 @@ const ClientManagementHeader: React.FC = () => {
     </Box>
   );
 };
-
 export default ClientManagementHeader;

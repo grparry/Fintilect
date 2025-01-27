@@ -1,7 +1,7 @@
-import { NotificationTemplate, NotificationTemplateData } from '../../types/notification';
-import * as exceptionUpdated from './exception-updated';
-import * as exceptionRefunded from './exception-refunded';
-import * as exceptionCreated from './exception-created';
+import { NotificationTemplate, NotificationTemplateData } from '@cbp-config-api/../types/notification';
+import * as exceptionUpdated from '@cbp-config-api/exception-updated';
+import * as exceptionRefunded from '@cbp-config-api/exception-refunded';
+import * as exceptionCreated from '@cbp-config-api/exception-created';
 
 const templates = {
   [NotificationTemplate.EXCEPTION_UPDATED]: exceptionUpdated,

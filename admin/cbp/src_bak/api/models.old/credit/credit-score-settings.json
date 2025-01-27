@@ -1,0 +1,19 @@
+{
+  "CreditScoreSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "fico": {
+        "$ref": "./providers/fico.json#/FICOSettings"
+      },
+      "savvyMoney": {
+        "$ref": "./providers/savvy-money.json#/SavvyMoneySettings"
+      },
+      "creditScoreHistory": {
+        "$ref": "./history.json#/CreditScoreHistorySettings"
+      }
+    }
+  }
+}

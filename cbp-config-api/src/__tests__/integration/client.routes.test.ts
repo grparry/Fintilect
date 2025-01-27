@@ -6,7 +6,7 @@ import {
   getAuthHeader,
   setupTestDb,
   cleanupTestDb
-} from './helpers';
+} from '@/helpers';
 
 describe('Client Routes', () => {
   let token: string;

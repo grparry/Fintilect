@@ -2,12 +2,20 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "paths": {
+      "@config-gen/*": ["./src/*"],
+      "@models/*": ["./src/models/*"],
+      "@generators/*": ["./src/generators/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@tests/*": ["./src/__tests__/*"]
+    }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"],
+  "exclude": ["node_modules", "dist"],
   "references": [
     { "path": "../../infrastructure" },
-    { "path": "../../logs" }
+    { "path": "../../logs" },
+    { "path": "../shared" }
   ]
 }

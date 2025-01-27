@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { PayeeController } from '../../controllers/payee.controller';
-import { PayeeService } from '../../services/payee.service';
-import { DatabaseService } from '../../interfaces/database';
-import { HttpError } from '../../utils/errors';
-import { CreatePayeeRequest, PayeeRecord, PayeeResponse, PaginatedResponse, BankAccount } from '../../types/payee';
+import { PayeeController } from '@/../controllers/payee.controller';
+import { PayeeService } from '@/../services/payee.service';
+import { DatabaseService } from '@/../interfaces/database';
+import { HttpError } from '@/../utils/errors';
+import { CreatePayeeRequest, PayeeRecord, PayeeResponse, PaginatedResponse, BankAccount } from '@/../types/payee';
 
 describe('PayeeController', () => {
   let payeeController: PayeeController;

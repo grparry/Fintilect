@@ -14,11 +14,11 @@ import {
   FormControlLabel,
   Switch,
 } from '@mui/material';
-import { SecuritySettings as SecuritySettingsType } from '../../../types/security.types';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
-import MemberSecuritySettings from './MemberSecuritySettings';
-import AuditSearch from './AuditSearch';
-import { shouldUseMockData } from '../../../config/api.config';
+import { SecuritySettings as SecuritySettingsType } from '@/../../types/security.types';
+import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
+import MemberSecuritySettings from '@/MemberSecuritySettings';
+import AuditSearch from '@/AuditSearch';
+import { shouldUseMockData } from '@/../../config/api.config';
 
 // Get service instances through factory
 const clientService = ServiceFactory.getInstance().getClientService();

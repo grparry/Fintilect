@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { RemoteDepositCheckHoldSettings } from './RemoteDepositCheckHoldSettings';
-import { TrackingRecordFieldName } from './TrackingRecordFieldName';
+import { RemoteDepositCheckHoldSettings } from '@infrastructure/RemoteDepositCheckHoldSettings';
+import { TrackingRecordFieldName } from '@infrastructure/TrackingRecordFieldName';
 export interface SymitarConfig {
     RemoteDepositCheckHold: RemoteDepositCheckHoldSettings;
     IsTransferWithoutVirtualCardsEnabled: boolean;

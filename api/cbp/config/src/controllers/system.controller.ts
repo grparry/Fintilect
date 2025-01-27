@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { SystemService } from '../services/system.service';
-import { Database } from '../config/db';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
+import { SystemService } from '@cbp-config-api/services/system.service';
+import { Database } from '@cbp-config-api/config/db';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { logger } from '@cbp-config-api/config/logger';
 
 export class SystemController {
   private service: SystemService;

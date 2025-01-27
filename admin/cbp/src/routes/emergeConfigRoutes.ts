@@ -35,7 +35,6 @@ const MarketingOffersLanding = lazy(() => import('../components/emerge-config/ma
 const ComplianceSupportLanding = lazy(() => import('../components/emerge-config/compliance-support/ComplianceSupportLanding'));
 const MiscLanding = lazy(() => import('../components/emerge-config/misc/MiscLanding'));
 const ConfigPlaceholder = lazy(() => import('../components/emerge-config/ConfigPlaceholder'));
-
 const emergeConfigRoutes: RouteConfig[] = [
   // Root and landing routes
   {
@@ -487,5 +486,4 @@ const emergeConfigRoutes: RouteConfig[] = [
     ]
   }
 ];
-
 export default emergeConfigRoutes;

@@ -1,5 +1,5 @@
 import { IResult, IRecordSet, Table, IColumnMetadata, ISqlType, ISqlTypeFactoryWithLength, ISqlTypeFactoryWithNoParams, TYPES } from 'mssql';
-import { Database } from '../../database';
+import { Database } from '@/../database';
 
 interface MockParams {
   PayeeId?: string;

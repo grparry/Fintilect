@@ -1,8 +1,7 @@
 import { useContext } from 'react';
-import { ServiceContext, ServiceContextType } from '../contexts/ServiceContext';
+import { ServiceContext, ServiceContextType } from '../context/ServiceContext';
 
 type ServiceKeys = keyof ServiceContextType;
-
 /**
  * Hook to get a service instance from the ServiceContext
  * @param serviceName Name of the service to retrieve
@@ -13,11 +12,9 @@ export function useService<T>(serviceName: ServiceKeys): T {
   if (!services) {
     throw new Error('useService must be used within a ServiceContext.Provider');
   }
-  
   const service = services[serviceName];
   if (!service) {
     throw new Error(`Service ${serviceName} not found in ServiceContext`);
   }
-  
   return service as T;
 }

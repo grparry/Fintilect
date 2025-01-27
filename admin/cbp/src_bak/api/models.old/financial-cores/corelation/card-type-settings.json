@@ -1,0 +1,39 @@
+{
+  "CorelationCardTypeSettings": {
+    "type": "object",
+    "description": "Settings for card type configuration in Corelation integration",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.FinancialCores.CorelationSettings.CardTypeSettings",
+    "properties": {
+      "atmSerial": {
+        "type": "string",
+        "description": "Serial number for ATM card type",
+        "x-setting-key": "FinacialCore.Corelation.CardTypeSettings.AtmSerial"
+      },
+      "atmDescription": {
+        "type": "string",
+        "description": "Description for ATM card type",
+        "x-setting-key": "FinacialCore.Corelation.CardTypeSettings.AtmDescription"
+      },
+      "creditSerial": {
+        "type": "string",
+        "description": "Serial number for credit card type",
+        "x-setting-key": "FinacialCore.Corelation.CardTypeSettings.CreditSerial"
+      },
+      "creditDescription": {
+        "type": "string",
+        "description": "Description for credit card type",
+        "x-setting-key": "FinacialCore.Corelation.CardTypeSettings.CreditDescription"
+      },
+      "debitSerial": {
+        "type": "string",
+        "description": "Serial number for debit card type",
+        "x-setting-key": "FinacialCore.Corelation.CardTypeSettings.DebitSerial"
+      },
+      "debitDescription": {
+        "type": "string",
+        "description": "Description for debit card type",
+        "x-setting-key": "FinacialCore.Corelation.CardTypeSettings.DebitDescription"
+      }
+    }
+  }
+}

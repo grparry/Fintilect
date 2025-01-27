@@ -1,5 +1,5 @@
-import { IClientService } from '../../interfaces/IClientService';
-import { BaseMockService } from './BaseMockService';
+import { IClientService } from '@/../interfaces/IClientService';
+import { BaseMockService } from '@/BaseMockService';
 import {
     Client,
     ClientType,
@@ -20,9 +20,9 @@ import {
     PaginatedResponse,
     Contact,
     UserStatus
-} from '../../../types/client.types';
-import { AuditLog, AuditSearchRequest, SecuritySettings, LoginPolicy } from '../../../types/security.types';
-import { mockClients, mockUsers, defaultSettings, mockPermissions, mockGroups, mockAuditLogs } from './data/client/mockClientData';
+} from '@/../../types/client.types';
+import { AuditLog, AuditSearchRequest, SecuritySettings, LoginPolicy } from '@/../../types/security.types';
+import { mockClients, mockUsers, defaultSettings, mockPermissions, mockGroups, mockAuditLogs } from '@/data/client/mockClientData';
 
 /**
  * Mock implementation of ClientService

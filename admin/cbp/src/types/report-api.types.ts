@@ -10,7 +10,6 @@ export interface BaseReportArguments {
   reportType: ReportType;
   searchTerm?: string;
 }
-
 /**
  * Export report arguments
  */
@@ -19,7 +18,6 @@ export interface ExportReportArguments extends BaseReportArguments {
   includeHeaders: boolean;
   dateFormat: string;
 }
-
 /**
  * Schedule report arguments
  */
@@ -27,7 +25,6 @@ export interface ScheduleReportArguments extends BaseReportArguments {
   schedule: string;
   export?: ExportOptions;
 }
-
 /**
  * Base interface for report requests
  */
@@ -35,7 +32,6 @@ export interface ReportRunRequest<T = BaseReportArguments> {
   name: string;
   arguments: T;
 }
-
 /**
  * Report response interface
  */

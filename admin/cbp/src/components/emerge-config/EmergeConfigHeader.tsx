@@ -7,10 +7,8 @@ const EmergeConfigHeader: React.FC = () => {
   console.log('EmergeConfigHeader - Component called');
   const location = useLocation();
   const isRootPath = location.pathname === '/admin/emerge-config' || location.pathname === '/admin/emerge-config/';
-  
   const allRoutes = getAllRoutes();
   console.log('EmergeConfigHeader - All routes:', allRoutes);
-  
   // Filter routes to only show direct children of emerge-config
   const emergeConfigRoutes = allRoutes.filter(route => {
     // Only show routes that:
@@ -22,7 +20,6 @@ const EmergeConfigHeader: React.FC = () => {
     const hasValidPath = route.path && route.path !== '/admin/emerge-config' && route.path !== '/admin/emerge-config/';
     const isVisible = !route.hideFromSidebar;
     const isNotSpecial = !route.id?.includes('-root') && !route.id?.includes('-landing');
-    
     console.log('Filtering route:', {
       path: route.path,
       isEmergeConfigRoute,
@@ -31,17 +28,13 @@ const EmergeConfigHeader: React.FC = () => {
       isNotSpecial,
       included: isEmergeConfigRoute && hasValidPath && isVisible && isNotSpecial
     });
-    
     return isEmergeConfigRoute && hasValidPath && isVisible && isNotSpecial;
   });
-
   console.log('EmergeConfigHeader - Filtered routes:', emergeConfigRoutes);
-
   React.useEffect(() => {
     console.log('EmergeConfigHeader - Mounted');
     return () => console.log('EmergeConfigHeader - Unmounted');
   }, []);
-
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 4 }}>
@@ -52,7 +45,6 @@ const EmergeConfigHeader: React.FC = () => {
           Configure and manage all aspects of the Emerge platform, from settings to specific feature configurations.
         </Typography>
       </Box>
-      
       {/* Only show navigation grid on root path */}
       {isRootPath && (
         <Grid container spacing={3}>
@@ -84,7 +76,6 @@ const EmergeConfigHeader: React.FC = () => {
           ))}
         </Grid>
       )}
-
       {/* Always render the Outlet for child routes */}
       <Box sx={{ mt: 4 }}>
         <Outlet />
@@ -92,5 +83,4 @@ const EmergeConfigHeader: React.FC = () => {
     </Box>
   );
 };
-
 export default EmergeConfigHeader;

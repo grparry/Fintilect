@@ -7,23 +7,19 @@ import logger from '../../utils/logger';
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   private auditService = ServiceFactory.getInstance().getAuditService();
-
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
   }
-
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
-
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     logger.error({
       message: 'Error caught by boundary',
       error,
       errorInfo
     });
-
     // Log to audit service
     this.auditService.logEvent({
       eventType: 'ERROR_BOUNDARY',
@@ -44,20 +40,16 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
         error: err
       });
     });
-
     // Call onError callback if provided
     this.props.onError?.(error, errorInfo);
   }
-
   render(): React.ReactNode {
     const { hasError, error } = this.state;
     const { children, fallback, className, style } = this.props;
-
     if (hasError) {
       if (fallback) {
         return fallback;
       }
-
       return (
         <Box
           sx={{
@@ -89,9 +81,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
         </Box>
       );
     }
-
     return children;
   }
 }
-
 export default ErrorBoundary;

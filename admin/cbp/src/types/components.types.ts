@@ -7,7 +7,6 @@ export interface BaseComponentProps {
   style?: CSSProperties;
   children?: ReactNode;
 }
-
 // DashboardCard props
 export interface DashboardCardProps extends BaseComponentProps {
   title: string;
@@ -17,7 +16,6 @@ export interface DashboardCardProps extends BaseComponentProps {
   action?: ReactNode;
   footerContent?: ReactNode;
 }
-
 // DataTable props
 export interface Column<T = any> {
   field: keyof T;
@@ -27,7 +25,6 @@ export interface Column<T = any> {
   renderCell?: (params: { row: T }) => ReactNode;
   align?: 'left' | 'center' | 'right';
 }
-
 export interface DataTableProps<T = any> extends BaseComponentProps {
   columns: Column<T>[];
   rows: T[];
@@ -42,18 +39,15 @@ export interface DataTableProps<T = any> extends BaseComponentProps {
   selectedRows?: T[];
   onSelectionChange?: (selectedRows: T[]) => void;
 }
-
 // ErrorBoundary props and state
 export interface ErrorBoundaryProps extends BaseComponentProps {
   fallback?: ReactNode;
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
-
 export interface ErrorBoundaryState {
   hasError: boolean;
   error?: Error;
 }
-
 // GlobalProfiler props
 export interface GlobalProfilerProps extends BaseComponentProps {
   id: string;
@@ -65,10 +59,8 @@ export interface GlobalProfilerProps extends BaseComponentProps {
     timestamp: number;
   }) => void;
 }
-
 // Re-export FormField from Form component
-export type { FormField } from '../components/common/Form';
-
+export type { FormField } from '@/components/common/Form';
 // Table props
 export interface TableColumn<T> {
   field: keyof T;
@@ -77,7 +69,6 @@ export interface TableColumn<T> {
   sortable?: boolean;
   renderCell?: (row: T) => React.ReactNode;
 }
-
 export interface TableProps<T> {
   data: T[];
   columns: TableColumn<T>[];
@@ -86,7 +77,6 @@ export interface TableProps<T> {
   onPageChange?: (page: number) => void;
   onSortChange?: (field: keyof T, direction: 'asc' | 'desc') => void;
 }
-
 // Button props
 export interface ButtonProps {
   onClick: () => void;

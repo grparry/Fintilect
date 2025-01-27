@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Guid } from './Guid';
+import { Guid } from '@infrastructure/Guid';
 export interface SymmetryBillPayConfig {
     Enabled: boolean;
     MinVersion: number;

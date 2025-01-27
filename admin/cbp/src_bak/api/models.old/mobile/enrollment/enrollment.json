@@ -1,0 +1,40 @@
+{
+  "EnrollmentSettings": {
+    "type": "object",
+    "description": "Settings for mobile enrollment functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Enrollment",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether mobile enrollment is enabled",
+        "x-setting-key": "Mobile.Enrollment.Enabled"
+      },
+      "minimumVersion": {
+        "type": "string",
+        "description": "Minimum required version for enrollment",
+        "x-setting-key": "Mobile.Enrollment.MinimumVersion"
+      },
+      "minimumIosVersion": {
+        "type": "string",
+        "description": "Minimum required iOS version for enrollment",
+        "x-setting-key": "Mobile.Enrollment.MinimumIosVersion"
+      },
+      "minimumAndroidVersion": {
+        "type": "string",
+        "description": "Minimum required Android version for enrollment",
+        "x-setting-key": "Mobile.Enrollment.MinimumAndroidVersion"
+      },
+      "isPinRequired": {
+        "type": "boolean",
+        "description": "Whether PIN is required during enrollment",
+        "x-setting-key": "Mobile.Enrollment.IsPinRequired"
+      },
+      "isZipCodeRequired": {
+        "type": "boolean",
+        "description": "Whether ZIP code is required during enrollment",
+        "x-setting-key": "Mobile.Enrollment.IsZipCodeRequired"
+      }
+    },
+    "required": ["enabled"]
+  }
+}

@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { ServiceSettingsModel } from './ServiceSettingsModel';
+import { ServiceSettingsModel } from '@infrastructure/ServiceSettingsModel';
 export interface SavvyMoneySettingsConfig {
     ServiceSettings: ServiceSettingsModel;
     ServiceSettingsIframe: ServiceSettingsModel;

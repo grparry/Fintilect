@@ -1,7 +1,7 @@
-import { ISettingsService } from '../../interfaces/ISettingsService';
-import { Setting, SettingGroup } from '../../../types/settings.types';
-import { BaseService } from './BaseService';
-import { ApiSuccessResponse } from '../../../types/api.types';
+import { ISettingsService } from '@/../interfaces/ISettingsService';
+import { Setting, SettingGroup } from '@/../../types/settings.types';
+import { BaseService } from '@/BaseService';
+import { ApiSuccessResponse } from '@/../../types/api.types';
 
 export class SettingsService extends BaseService implements ISettingsService {
   constructor(baseUrl: string = '/api/v1/settings') {

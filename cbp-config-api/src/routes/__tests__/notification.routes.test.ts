@@ -1,9 +1,9 @@
 import request from 'supertest';
 import express, { Request, Response, NextFunction } from 'express';
-import { Database } from '../../config/db';
-import { createNotificationRouter } from '../notification.routes';
-import { NotificationType, NotificationTemplate } from '../../types/notification';
-import { JwtUser } from '../../types/auth';
+import { Database } from '@/../config/db';
+import { createNotificationRouter } from '@/notification.routes';
+import { NotificationType, NotificationTemplate } from '@/../types/notification';
+import { JwtUser } from '@/../types/auth';
 
 // Mock authentication middleware
 const mockAuthMiddleware = jest.fn((req: Request, res: Response, next: NextFunction) => {

@@ -1,4 +1,4 @@
-import { IBaseService } from './IBaseService';
+import { IBaseService } from '@/IBaseService';
 import {
     Member,
     MemberSearchFilters,
@@ -8,8 +8,8 @@ import {
     MemberStatus,
     SecuritySettings,
     Device
-} from '../../types/member-center.types';
-import { PaginatedResponse } from '../../types/common.types';
+} from '@/../types/member-center.types';
+import { PaginatedResponse } from '@/../types/common.types';
 
 /**
  * Interface for member management operations

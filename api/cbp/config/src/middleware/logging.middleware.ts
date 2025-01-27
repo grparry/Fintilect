@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { logger } from '../config/logger';
+import { logger } from '@cbp-config-api/config/logger';
 
 export const requestLogger = (
   req: Request,

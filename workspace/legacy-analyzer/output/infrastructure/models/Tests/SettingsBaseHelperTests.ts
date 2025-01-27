@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { TestSettingsModel } from './TestSettingsModel';
+import { TestSettingsModel } from '@infrastructure/TestSettingsModel';
 export interface SettingsBaseHelperTestsConfig {
     CotsSettings: TestSettingsModel;
     ThisIsMyValue: string;

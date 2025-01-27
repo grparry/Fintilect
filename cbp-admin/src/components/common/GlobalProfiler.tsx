@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { GlobalProfilerProps } from '../../types/components.types';
+import { GlobalProfilerProps } from '@/../types/components.types';
 
 const GlobalProfiler = ({
   children,

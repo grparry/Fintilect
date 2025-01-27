@@ -7,7 +7,6 @@ import logger from '../../utils/logger';
 const NotFound: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   useEffect(() => {
     // Log the 404 occurrence for diagnostics
     logger.warn({
@@ -18,7 +17,6 @@ const NotFound: React.FC = () => {
       timestamp: new Date().toISOString()
     });
   }, [location.pathname]);
-
   const handleNavigateBack = () => {
     logger.info({
       message: 'Navigation: Redirect from 404',
@@ -28,7 +26,6 @@ const NotFound: React.FC = () => {
     });
     navigate(-1);
   };
-
   const handleNavigateTo = (to: To) => {
     logger.info({
       message: 'Navigation: Redirect from 404',
@@ -38,7 +35,6 @@ const NotFound: React.FC = () => {
     });
     navigate(to);
   };
-
   return (
     <Container 
       maxWidth="sm" 
@@ -86,5 +82,4 @@ const NotFound: React.FC = () => {
     </Container>
   );
 };
-
 export default NotFound;

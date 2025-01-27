@@ -1,0 +1,37 @@
+{
+  "LoanOriginationSettings": {
+    "type": "object",
+    "properties": {
+      "applicationTypeSerial": {
+        "type": "string"
+      },
+      "applicationChannel": {
+        "type": "string"
+      },
+      "applicationBranch": {
+        "type": "string"
+      },
+      "defaultCreditLimit": {
+        "type": "string"
+      },
+      "defaultPaymentAmount": {
+        "type": "string"
+      },
+      "workFlowSerial": {
+        "type": "string"
+      },
+      "loanPurposeCodes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "collateralCodes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

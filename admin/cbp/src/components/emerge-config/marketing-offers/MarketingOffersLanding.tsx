@@ -12,7 +12,6 @@ interface NavigationCard {
   icon: React.ElementType;
   description: string;
 }
-
 const navigationCards: NavigationCard[] = [
   {
     id: 'marketing',
@@ -36,11 +35,9 @@ const navigationCards: NavigationCard[] = [
     description: 'Configure Cardlytics integration and offer settings'
   }
 ];
-
 const MarketingOffersLanding: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -49,11 +46,9 @@ const MarketingOffersLanding: React.FC = () => {
       <Typography variant="body1" sx={{ mb: 4 }}>
         Configure marketing campaigns, promotional offers, and related features for the Emerge platform.
       </Typography>
-
       <Grid container spacing={3}>
         {navigationCards.map((card) => {
           const Icon = card.icon;
-          
           return (
             <Grid item xs={12} sm={6} md={4} key={card.id}>
               <Card 
@@ -102,5 +97,4 @@ const MarketingOffersLanding: React.FC = () => {
     </Box>
   );
 };
-
 export default MarketingOffersLanding;

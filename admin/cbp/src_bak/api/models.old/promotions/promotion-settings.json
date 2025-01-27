@@ -1,0 +1,16 @@
+{
+  "PromotionSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "deepTarget": {
+        "$ref": "./deep-target.json#/DeepTargetSettings"
+      },
+      "skipPay": {
+        "$ref": "./skip-pay.json#/SkipPaySettings"
+      }
+    }
+  }
+}

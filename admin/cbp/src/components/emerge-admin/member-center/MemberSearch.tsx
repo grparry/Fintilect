@@ -15,7 +15,6 @@ import { PaginatedResponse } from '../../../types/common.types';
 interface MemberSearchProps {
   onViewMember?: (member: Member) => void;
 }
-
 interface MemberSearchState {
   searchResult: MemberSearchResult | null;
   loading: boolean;
@@ -23,7 +22,6 @@ interface MemberSearchState {
   success: string | null;
   currentFilters: MemberSearchFilters | null;
 }
-
 const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
   const memberService = useService<IMemberService>('memberService');
   const [state, setState] = useState<MemberSearchState>({
@@ -33,30 +31,24 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
     success: null,
     currentFilters: null
   });
-
   const setLoading = (loading: boolean) => {
     setState(prev => ({ ...prev, loading }));
   };
-
   const setSearchResults = (response: PaginatedResponse<MemberSearchResult>) => {
     setState(prev => ({ 
       ...prev, 
       searchResult: response.items[0]
     }));
   };
-
   const setError = (error: string | null) => {
     setState(prev => ({ ...prev, error }));
   };
-
   const setSuccess = (success: string | null) => {
     setState(prev => ({ ...prev, success }));
   };
-
   const setCurrentFilters = (filters: MemberSearchFilters) => {
     setState(prev => ({ ...prev, currentFilters: filters }));
   };
-
   const handleSearch = async (filters: MemberSearchFilters) => {
     try {
       setLoading(true);
@@ -71,7 +63,6 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
       setLoading(false);
     }
   };
-
   const handleUpdateStatus = async (member: Member, newStatus: MemberStatus) => {
     try {
       setLoading(true);
@@ -88,13 +79,11 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
       setLoading(false);
     }
   };
-
   const handleSelect = (member: Member) => {
     if (onViewMember) {
       onViewMember(member);
     }
   };
-
   return (
     <Box>
       {state.error && (
@@ -115,15 +104,12 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
           {state.success}
         </Alert>
       )}
-
       <MemberSearchForm onSearch={handleSearch} />
-      
       {state.loading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
           <CircularProgress />
         </Box>
       )}
-
       {state.searchResult && (
         <SearchResults
           results={state.searchResult}
@@ -134,5 +120,4 @@ const MemberSearch: React.FC<MemberSearchProps> = ({ onViewMember }) => {
     </Box>
   );
 };
-
 export default MemberSearch;

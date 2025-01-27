@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { FontColor } from './FontColor';
+import { FontColor } from '@infrastructure/FontColor';
 export interface FontConfig {
     FontFamily: string;
     FontColors: FontColor;

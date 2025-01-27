@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { MultipleAddressesPage } from './MultipleAddressesPage';
+import { MultipleAddressesPage } from '@infrastructure/MultipleAddressesPage';
 export interface MultipleAddressesSettingsConfig {
     Enabled: boolean;
     AddressTypes: string[];

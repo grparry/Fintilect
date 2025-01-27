@@ -6,9 +6,7 @@ import { decodeId } from '../../../utils/idEncoder';
 
 const AuditSearchWrapper: React.FC = () => {
   const { clientId } = useParams<{ clientId: string }>();
-
   console.log('AuditSearchWrapper - encoded clientId:', clientId);
-
   if (!clientId) {
     return (
       <Alert severity="error">
@@ -16,7 +14,6 @@ const AuditSearchWrapper: React.FC = () => {
       </Alert>
     );
   }
-
   try {
     const decodedClientId = decodeId(clientId);
     console.log('AuditSearchWrapper - decoded clientId:', decodedClientId);
@@ -30,5 +27,4 @@ const AuditSearchWrapper: React.FC = () => {
     );
   }
 };
-
 export default AuditSearchWrapper;

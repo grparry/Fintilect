@@ -21,21 +21,18 @@ export interface INotificationService extends IBaseService {
      * @returns Paginated list of notification templates
      */
     getTemplates(filters: NotificationTemplateFilters): Promise<PaginatedResponse<NotificationTemplate>>;
-
     /**
      * Get specific notification template
      * @param templateId Template identifier
      * @returns Template details
      */
     getTemplate(templateId: number): Promise<NotificationTemplate>;
-
     /**
      * Create notification template
      * @param template Template to create
      * @returns Created template
      */
     createTemplate(template: NotificationTemplateInput): Promise<NotificationTemplate>;
-
     /**
      * Update notification template
      * @param templateId Template identifier
@@ -43,13 +40,11 @@ export interface INotificationService extends IBaseService {
      * @returns Updated template
      */
     updateTemplate(templateId: number, template: Partial<NotificationTemplateInput>): Promise<NotificationTemplate>;
-
     /**
      * Delete notification template
      * @param templateId Template identifier
      */
     deleteTemplate(templateId: number): Promise<void>;
-
     /**
      * Preview notification with sample data
      * @param templateId Template identifier
@@ -57,26 +52,22 @@ export interface INotificationService extends IBaseService {
      * @returns Preview with rendered content
      */
     previewTemplate(templateId: number, sampleData: Record<string, string>): Promise<NotificationPreview>;
-
     /**
      * Get available notification types
      * @returns List of notification types
      */
     getNotificationTypes(): Promise<NotificationType[]>;
-
     /**
      * Get available notification categories
      * @returns List of notification categories
      */
     getNotificationCategories(): Promise<NotificationCategory[]>;
-
     /**
      * Get template variables
      * @param type Notification type
      * @returns List of available variables for the type
      */
     getTemplateVariables(type: NotificationType): Promise<NotificationVariable[]>;
-
     /**
      * Send test notification
      * @param templateId Template identifier
@@ -89,7 +80,6 @@ export interface INotificationService extends IBaseService {
         testData: Record<string, string>,
         recipients: string[]
     ): Promise<boolean>;
-
     /**
      * Validate template content
      * @param content Template content to validate
@@ -100,7 +90,6 @@ export interface INotificationService extends IBaseService {
         content: string,
         type: NotificationType
     ): Promise<{ valid: boolean; errors: string[] }>;
-
     /**
      * Get notification delivery settings
      * @returns Current delivery settings
@@ -112,7 +101,6 @@ export interface INotificationService extends IBaseService {
         retryAttempts: number;
         retryInterval: number;
     }>;
-
     /**
      * Update notification delivery settings
      * @param settings Updated delivery settings
@@ -131,7 +119,6 @@ export interface INotificationService extends IBaseService {
         retryAttempts: number;
         retryInterval: number;
     }>;
-
     /**
      * Get notification delivery status
      * @param notificationId Notification identifier
@@ -143,7 +130,6 @@ export interface INotificationService extends IBaseService {
         lastAttempt?: string;
         error?: string;
     }>;
-
     /**
      * Retry failed notification
      * @param notificationId Notification identifier

@@ -1,11 +1,10 @@
-import Parser = require('web-tree-sitter');
-import logger from '../utils/logger';
-import path from 'path';
-import { readFile } from 'fs/promises';
-import { FileService } from '../services/fileService';
-import { ParsedClass } from './types';
-import { ClassParser } from './classParser';
-import { EnumParser } from './enumParser';
+import logger from '@legacy-analyzer/utils/logger';
+import * as Parser from 'tree-sitter';
+import * as CSharp from 'tree-sitter-c-sharp';
+import { FileService } from '@legacy-analyzer/services/fileService';
+import { ParsedClass } from '@legacy-analyzer/parser/types';
+import { ClassParser } from '@legacy-analyzer/parser/classParser';
+import { EnumParser } from '@legacy-analyzer/parser/enumParser';
 
 const logger2 = logger;
 
@@ -26,7 +25,7 @@ export class CSharpParser {
 
     await Parser.init();
     this.parser = new Parser();
-    const Lang = await Parser.Language.load(path.join(__dirname, '../../public/tree-sitter-c-sharp.wasm'));
+    const Lang = await CSharp();
     this.parser.setLanguage(Lang);
     this.initialized = true;
   }

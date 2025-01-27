@@ -1,5 +1,6 @@
-// Notification system types
 
+
+// Notification system types
 export interface DeliverySettings {
     emailEnabled: boolean;
     smsEnabled: boolean;
@@ -7,7 +8,6 @@ export interface DeliverySettings {
     retryAttempts: number;
     retryInterval: number;
 }
-
 export interface NotificationTemplate {
     id: number;
     name: string;
@@ -20,7 +20,6 @@ export interface NotificationTemplate {
     createdAt: string;
     updatedAt: string;
 }
-
 export interface NotificationEvent {
     id: string;
     templateId: string;
@@ -32,7 +31,6 @@ export interface NotificationEvent {
     error?: string;
     createdAt: string;
 }
-
 export interface NotificationStats {
     totalSent: number;
     totalFailed: number;

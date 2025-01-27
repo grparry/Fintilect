@@ -1,5 +1,5 @@
 import sql from 'mssql';
-import { logger } from './logger';
+import { logger } from '@cbp-config-api/logger';
 
 export interface Database {
   executeProc<T = any>(procName: string, params?: any): Promise<sql.IProcedureResult<T>>;

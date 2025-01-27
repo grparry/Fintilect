@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { JwtUser } from '../types/user';
+import { HttpError } from '@/utils/errors';
+import { logger } from '@/config/logger';
+import { JwtUser } from '@/types/user';
 
 declare module 'express' {
   interface Request {

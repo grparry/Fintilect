@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { AuthenticationMethod } from './AuthenticationMethod';
+import { AuthenticationMethod } from '@infrastructure/AuthenticationMethod';
 export interface AuthenticationRuleConfig {
     AuthenticationMethods: AuthenticationMethod[];
     NumberOfRequiredMethods: number;

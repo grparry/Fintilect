@@ -1,0 +1,16 @@
+{
+  "ErrorMessagesSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/ErrorMessagesSettings"
+      },
+      "customMessages": {
+        "$ref": "./custom-messages.json#/CustomErrorMessages"
+      }
+    }
+  }
+}

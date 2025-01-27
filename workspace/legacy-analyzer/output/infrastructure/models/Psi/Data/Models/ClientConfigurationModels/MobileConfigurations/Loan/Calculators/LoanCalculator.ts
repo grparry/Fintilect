@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { AutoLoan } from './AutoLoan';
+import { AutoLoan } from '@infrastructure/AutoLoan';
 export interface LoanCalculatorConfig {
     AutoLoan: AutoLoan;
 }

@@ -14,19 +14,16 @@ interface DashboardCard {
   icon: ElementType;
   formatter?: (value: number) => string;
 }
-
 interface TimeRange {
   value: string;
   label: string;
   days: number;
 }
-
 interface ChartView {
   value: 'payments' | 'amount';
   label: string;
   formatter?: (value: number) => string;
 }
-
 export const DASHBOARD_CARDS: DashboardCard[] = [
   {
     id: 'total-transactions',
@@ -61,7 +58,6 @@ export const DASHBOARD_CARDS: DashboardCard[] = [
     formatter: (value) => value.toLocaleString(),
   },
 ];
-
 export const TIME_RANGES: TimeRange[] = [
   { value: 'day', label: 'Last 24 Hours', days: 1 },
   { value: 'week', label: 'Last 7 Days', days: 7 },
@@ -69,7 +65,6 @@ export const TIME_RANGES: TimeRange[] = [
   { value: 'quarter', label: 'Last 90 Days', days: 90 },
   { value: 'year', label: 'Last Year', days: 365 }
 ];
-
 export const CHART_VIEWS: ChartView[] = [
   {
     value: 'payments',
@@ -82,7 +77,6 @@ export const CHART_VIEWS: ChartView[] = [
     formatter: (value) => `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
   }
 ];
-
 export const DEFAULT_CHART_OPTIONS = {
   responsive: true,
   maintainAspectRatio: false,

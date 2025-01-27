@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { RequiredPhoneNumberField } from './RequiredPhoneNumberField';
+import { RequiredPhoneNumberField } from '@infrastructure/RequiredPhoneNumberField';
 export interface ChangePhoneNumbersConfig {
     RequiredField: RequiredPhoneNumberField;
     AllowForeignPhoneNumbers: boolean;

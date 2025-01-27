@@ -31,14 +31,12 @@ export const DASHBOARD_CARDS = [
     icon: WarningIcon,
   },
 ];
-
 export const TIME_RANGES = [
   { value: '7d', label: 'Last 7 Days' },
   { value: '30d', label: 'Last 30 Days' },
   { value: '90d', label: 'Last 90 Days' },
   { value: '1y', label: 'Last Year' },
 ];
-
 export const CHART_VIEWS = [
   { value: 'payments', label: 'Number of Payments' },
   { value: 'amount', label: 'Payment Amount' },

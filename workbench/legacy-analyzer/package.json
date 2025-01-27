@@ -8,14 +8,16 @@
     "dev": "tsc -b -w",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "analyze": "ts-node src/cli/analyze.ts"
+    "analyze": "ts-node src/index.ts",
+    "generate-models": "ts-node src/index.ts --output ../../infrastructure/models"
   },
   "dependencies": {
     "@fintilect/infrastructure": "0.1.0",
     "@fintilect/logs": "0.1.0",
     "typescript": "^4.9.0",
     "ts-morph": "^18.0.0",
-    "commander": "^10.0.0"
+    "commander": "^10.0.0",
+    "fs-extra": "^11.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",

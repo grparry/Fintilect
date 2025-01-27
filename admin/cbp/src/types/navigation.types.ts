@@ -9,19 +9,16 @@ export interface NavigationItem {
   children?: NavigationItem[];
   permissions?: NavigationPermissionRequirement;
 }
-
 export interface NavigationPermissionRequirement {
   anyOf?: string[];
   allOf?: string[];
 }
-
 export interface NavigationSection {
   id: string;
   title: string;
   items: NavigationItem[];
   permissions?: NavigationPermissionRequirement;
 }
-
 export interface NavigationConfig {
   sections: NavigationSection[];
 }

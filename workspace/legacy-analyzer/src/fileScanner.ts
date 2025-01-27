@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { isCSharpFile } from './utils/fileUtils';
+import { isCSharpFile } from '@/utils/fileUtils';
 import winston from 'winston';
 
 // Configure logger

@@ -16,11 +16,9 @@ export const paymentMethodOptions: PaymentMethod[] = [
   'RTP',
   'Check'
 ];
-
 export const environmentOptions: Environment[] = [
   Environment.Production,
   Environment.Staging,
   Environment.Development
 ];
-
 export const mockClients = mockClientData;

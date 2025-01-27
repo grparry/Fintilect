@@ -11,7 +11,6 @@ interface MenuItemProps {
   sx?: SxProps<Theme>;
   itemId?: string;
 }
-
 export const MenuItem: React.FC<MenuItemProps> = ({ 
   to, 
   icon, 
@@ -23,11 +22,9 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   const location = useLocation();
   const navigate = useNavigate();
   const isSelected = location.pathname === to;
-
   const handleNavigation = useCallback((event: React.MouseEvent) => {
     // Prevent default Link behavior
     event.preventDefault();
-
     logger.info({
       message: 'Navigation: Menu item clicked',
       itemId,
@@ -40,10 +37,8 @@ export const MenuItem: React.FC<MenuItemProps> = ({
       },
       timestamp: new Date().toISOString()
     });
-
     navigate(to);
   }, [to, location.pathname, primary, secondary, isSelected, itemId, navigate]);
-
   return (
     <ListItem
       button

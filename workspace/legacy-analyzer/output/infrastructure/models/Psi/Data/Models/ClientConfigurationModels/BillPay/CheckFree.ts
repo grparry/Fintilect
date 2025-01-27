@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { CheckFreeAdmin } from './CheckFreeAdmin';
+import { CheckFreeAdmin } from '@infrastructure/CheckFreeAdmin';
 export interface CheckFreeConfig {
     Enabled: boolean;
     MinVersion: number;

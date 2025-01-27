@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import SecuritySettings from '../security/SecuritySettings';
+import SecuritySettings from '@/security/SecuritySettings';
 
 const SecuritySettingsWrapper: React.FC = () => {
   const { clientId } = useParams<{ clientId: string }>();

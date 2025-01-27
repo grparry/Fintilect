@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { uint } from './uint';
+import { uint } from '@infrastructure/uint';
 export interface PlaceHoldsOnAchTransactionsConfig {
     MinVersion: number;
     Enabled: boolean;

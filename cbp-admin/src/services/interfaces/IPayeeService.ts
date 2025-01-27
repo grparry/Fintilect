@@ -1,4 +1,4 @@
-import { IBaseService } from './IBaseService';
+import { IBaseService } from '@/IBaseService';
 import {
     Payee,
     PayeeStatus,
@@ -13,8 +13,8 @@ import {
     PayeeConversionProgress,
     PayeeConversionRecord,
     PayeeConversionTemplate
-} from '../../types/bill-pay.types';
-import { PaginatedResponse } from '../../types/common.types';
+} from '@/../types/bill-pay.types';
+import { PaginatedResponse } from '@/../types/common.types';
 
 /**
  * Interface for payee management

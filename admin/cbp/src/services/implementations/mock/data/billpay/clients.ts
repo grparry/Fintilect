@@ -1,4 +1,4 @@
-import { Client, Payee } from '../../../../../types/bill-pay.types';
+import { Client, Payee } from '../../../../../../types/bill-pay.types';
 
 export const mockClients: Client[] = [
     {
@@ -16,7 +16,6 @@ export const mockClients: Client[] = [
         updatedAt: new Date().toISOString()
     }
 ];
-
 export const mockPayees: Payee[] = [
     {
         id: 'payee_1',

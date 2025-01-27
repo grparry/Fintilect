@@ -49,33 +49,31 @@ export const decodeId = (encoded: string): string => {
     // Add back padding if needed (always add enough to make length multiple of 4)
     const padded = encoded + '='.repeat((4 - encoded.length % 4) % 4);
     
-    // Replace URL-safe characters and decode
-    const base64 = padded.replace(/-/g, '+').replace(/_/g, '/');
-    let decoded;
-    try {
-      decoded = atob(base64);
-    } catch (e) {
-      throw new Error('Invalid ID format: not a valid base64 string');
-    }
+    // Restore standard base64 characters
+    const standard = padded
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
     
-    // Extract the original ID using our known prefix
+    // Decode and extract original ID
+    const decoded = atob(standard);
+    
+    // Validate prefix and extract ID
     if (!decoded.startsWith(ID_PREFIX)) {
       throw new Error('Invalid ID format: missing prefix');
     }
     
-    const parts = decoded.slice(ID_PREFIX.length).split('_');
-    if (parts.length !== 2) {
-      throw new Error('Invalid ID format: malformed structure');
+    // Extract original ID (remove prefix and timestamp)
+    const [rawId] = decoded.slice(ID_PREFIX.length).split('_');
+    
+    if (!rawId) {
+      throw new Error('Invalid ID format: could not extract ID');
     }
     
-    const id = parts[0];
-    if (!id) {
-      throw new Error('Invalid ID format: empty ID');
-    }
-    
-    return id;
+    return rawId;
   } catch (error) {
-    console.error('Error decoding ID:', error instanceof Error ? error.message : 'Unknown error');
-    throw error;
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Failed to decode ID: ' + String(error));
   }
 };

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Box, Typography, Grid, Card, CardContent, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useNavigation } from '../../context/NavigationContext';
+import { useNavigation } from '@/../context/NavigationContext';
 
 const NavigationLanding: React.FC = () => {
   const theme = useTheme();

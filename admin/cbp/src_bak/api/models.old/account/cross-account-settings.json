@@ -1,0 +1,103 @@
+{
+  "CrossAccountSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.CrossAccountSettings",
+    "properties": {
+      "shouldUseCrossAccountOwnerNameAsCrossAccountDescription": {
+        "type": "boolean",
+        "x-setting-key": "Account.CrossAccount.ShouldUseCrossAccountOwnerNameAsCrossAccountDescription",
+        "description": "Whether to use the name of the owner of a cross account as the description instead of the masked account number"
+      },
+      "houseHoldingCreditCardHistoryEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Account.CrossAccount.HouseHoldingCreditCardHistoryEnabled",
+        "description": "Whether householding credit card history is enabled"
+      },
+      "disclosure": {
+        "type": "object",
+        "properties": {
+          "acceptanceEnabled": {
+            "type": "boolean",
+            "x-setting-key": "Account.CrossAccount.DisclosureAcceptanceEnabled",
+            "description": "Whether cross accounts (householding) disclosure acceptance feature is enabled"
+          },
+          "acceptanceFlag": {
+            "type": "string",
+            "x-setting-key": "Account.CrossAccount.DisclosureAcceptanceFlag",
+            "description": "Cross accounts (householding) disclosure acceptance flag name on core"
+          }
+        }
+      },
+      "hideAbilityToRequestPermissionsForAnotherAccount": {
+        "type": "boolean",
+        "x-setting-key": "Account.CrossAccount.HideAbilityToRequestPermissionsForAnotherAccount",
+        "description": "Whether to hide the request permissions button/page for another account"
+      },
+      "shouldShowSsoLinkForCrossAccountLoans": {
+        "type": "boolean",
+        "x-setting-key": "Account.CrossAccount.ShouldShowSsoLinkForCrossAccountLoans",
+        "description": "Whether to show SSO link for cross account loans"
+      },
+      "disallowWithdrawalsFromCreditCards": {
+        "type": "boolean",
+        "x-setting-key": "Account.CrossAccount.DisallowWithdrawalsFromCreditCards",
+        "description": "Whether to disallow withdrawals from credit cards on cross-account access screens"
+      },
+      "disableCreditCardMoreDetailButton": {
+        "type": "boolean",
+        "x-setting-key": "Account.CrossAccount.DisableCreditCardMoreDetailButton",
+        "description": "Whether to disable the 'more details' button next to credit cards in the card summary section"
+      },
+      "getHouseholdingPermissionsFromCrossAccountNode": {
+        "type": "boolean",
+        "x-setting-key": "Account.CrossAccount.GetHouseholdingPermissionsFromCrossAccountNode",
+        "description": "Whether to use the CrossAccountNode that has already been mapped to set the HouseHoldingAccess"
+      },
+      "readCreditCardsFromCore": {
+        "type": "boolean",
+        "x-setting-key": "Account.CrossAccount.ReadCreditCardsFromCore",
+        "description": "Whether to read credit cards from core"
+      },
+      "isCrossAccountInquiryByTin": {
+        "type": "boolean",
+        "x-setting-key": "X.App.HBBOL.IsCrossAccountInquiryByTin",
+        "description": "Whether to use the TIN when performing account inquiry"
+      },
+      "permissionDelayTimes": {
+        "type": "object",
+        "properties": {
+          "inquiry": {
+            "type": "integer",
+            "x-setting-key": "Householding.GrantInquiryPermissionDelayTime",
+            "description": "Delay time for granting inquiry permission"
+          },
+          "deposit": {
+            "type": "integer",
+            "x-setting-key": "Householding.GrantDepositPermissionDelayTime",
+            "description": "Delay time for granting deposit permission"
+          },
+          "withdrawal": {
+            "type": "integer",
+            "x-setting-key": "Householding.GrantWithdrawalPermissionDelayTime",
+            "description": "Delay time for granting withdrawal permission"
+          }
+        }
+      },
+      "checkHouseHoldingValuesFromDatabase": {
+        "type": "boolean",
+        "x-setting-key": "Householding.CheckHouseHoldingValuesFromDatabase",
+        "description": "Whether to check householding values from database"
+      },
+      "householdingPermissionSource": {
+        "type": "string",
+        "x-setting-key": "X.App.HBBOL.HouseholdingPermissionSource",
+        "description": "Source for householding permissions"
+      },
+      "deleteSubAccountNoHouseholding": {
+        "type": "boolean",
+        "x-setting-key": "X.App.HBBOL.DeleteSubAccountNoHouseholding",
+        "description": "Whether to delete sub-account with no householding"
+      }
+    }
+  }
+}

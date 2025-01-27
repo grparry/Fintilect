@@ -7,7 +7,6 @@ export class AuditService extends BaseService implements IAuditService {
     constructor(basePath: string = '/api/v1/audit') {
         super(basePath);
     }
-
     async logEvent(event: AuditEvent): Promise<void> {
         try {
             await this.post<void>('/events', {
@@ -19,7 +18,6 @@ export class AuditService extends BaseService implements IAuditService {
             throw error;
         }
     }
-
     async getEvents(resourceId: string): Promise<AuditEvent[]> {
         try {
             return await this.get<AuditEvent[]>(`/events/${resourceId}`);
@@ -28,7 +26,6 @@ export class AuditService extends BaseService implements IAuditService {
             throw error;
         }
     }
-
     async searchLogs(filters: AuditLogFilters): Promise<PaginatedResponse<AuditEvent>> {
         try {
             return await this.get<PaginatedResponse<AuditEvent>>('/search', filters);
@@ -37,7 +34,6 @@ export class AuditService extends BaseService implements IAuditService {
             throw error;
         }
     }
-
     async getEventDetails(eventId: string): Promise<AuditEvent> {
         try {
             return await this.get<AuditEvent>(`/events/details/${eventId}`);
@@ -46,7 +42,6 @@ export class AuditService extends BaseService implements IAuditService {
             throw error;
         }
     }
-
     async exportLogs(filters: AuditLogFilters): Promise<string> {
         try {
             return await this.get<string>('/export', filters);

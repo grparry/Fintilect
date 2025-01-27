@@ -16,7 +16,6 @@ interface AdminRoute {
   title: string;
   description: string;
 }
-
 const getIconForRoute = (routeId: string) => {
   switch (routeId) {
     case 'billPay':
@@ -31,19 +30,16 @@ const getIconForRoute = (routeId: string) => {
       return <DashboardIcon fontSize="large" />;
   }
 };
-
 const getRouteDescription = (route: RouteSection): string => {
   if (route.routes && route.routes.length > 0) {
     return `Access and manage ${route.title.toLowerCase()} features and settings.`;
   }
   return 'No description available.';
 };
-
 const AdminLanding: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { toggleSection } = useNavigation();
-  
   // Get all main sections from routes object
   const adminRoutes: AdminRoute[] = [
     {
@@ -77,14 +73,12 @@ const AdminLanding: React.FC = () => {
       description: getRouteDescription(routes.development),
     },
   ];
-
   const handleCardClick = (route: AdminRoute) => {
     // Update navigation state first
     toggleSection(route.id);
     // Then navigate
     navigate(route.path);
   };
-
   return (
     <Box sx={{ 
       minHeight: '100vh',
@@ -105,7 +99,6 @@ const AdminLanding: React.FC = () => {
             Welcome to the CBP Admin Dashboard. Select a section below to manage different aspects of the system.
           </Typography>
         </Box>
-
         <Grid container spacing={3}>
           {adminRoutes.map((route) => (
             <Grid item xs={12} sm={6} md={4} key={route.id}>
@@ -174,5 +167,4 @@ const AdminLanding: React.FC = () => {
     </Box>
   );
 };
-
 export default AdminLanding;

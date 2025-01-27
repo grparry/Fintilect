@@ -1,11 +1,11 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { Logger } from '../utils/logger';
-import { ParsedClass } from '../parser/types';
-import { ClassDocWriter } from './classDocWriter';
-import { FileService } from '../services/fileService';
-import { TypeScriptWriter } from './typeScriptWriter';
-import { PathResolver } from './pathSystem/pathResolver';
+import { Logger } from '@/utils/logger';
+import { ParsedClass } from '@/parser/types';
+import { ClassDocWriter } from '@/classDocWriter';
+import { FileService } from '@/services/fileService';
+import { TypeScriptWriter } from '@/typeScriptWriter';
+import { PathResolver } from '@/pathSystem/pathResolver';
 
 export interface OutputOptions {
   outputDir: string;

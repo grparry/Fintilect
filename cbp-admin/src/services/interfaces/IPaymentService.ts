@@ -1,11 +1,11 @@
-import { IBaseService } from './IBaseService';
+import { IBaseService } from '@/IBaseService';
 import {
   PendingPayment,
   PendingPaymentSummary,
   PendingPaymentSearchRequest,
   PaginatedResponse,
   PaymentConfirmationResponse,
-} from '../../types/bill-pay.types';
+} from '@/../types/bill-pay.types';
 
 export interface IPaymentService extends IBaseService {
   /**

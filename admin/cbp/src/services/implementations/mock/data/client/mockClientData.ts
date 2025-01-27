@@ -93,7 +93,8 @@ export const mockUsers: User[] = [
     lastLogin: new Date().toISOString(),
     locked: false,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    groups: []  // Will be populated after groups are defined
   },
   {
     id: '2',
@@ -108,7 +109,8 @@ export const mockUsers: User[] = [
     lastLogin: new Date().toISOString(),
     locked: false,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    groups: []  // Will be populated after groups are defined
   },
   {
     id: '3',
@@ -123,7 +125,8 @@ export const mockUsers: User[] = [
     lastLogin: new Date().toISOString(),
     locked: false,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    groups: []  // Will be populated after groups are defined
   },
   {
     id: '4',
@@ -138,7 +141,8 @@ export const mockUsers: User[] = [
     lastLogin: new Date().toISOString(),
     locked: false,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    groups: []  // Will be populated after groups are defined
   }
 ];
 
@@ -202,32 +206,26 @@ export const mockGroups: UserGroup[] = [
     id: "group-1",
     name: "Administrators",
     description: "Admin group with full access",
-    clientId: "1", 
-    roles: [mockRoles[0]], 
+    clientId: "1",
+    roles: mockRoles,
     permissions: [
-      {
-        id: 'view_users',
-        name: 'View Users',
-        description: 'Can view users',
-        category: 'user',
-        actions: ['read']
-      },
       {
         id: 'manage_users',
         name: 'Manage Users',
         description: 'Can manage users',
         category: 'user',
-        actions: ['create', 'update', 'delete']
+        actions: ['create', 'read', 'update', 'delete']
       },
       {
-        id: 'view_reports',
-        name: 'View Reports',
-        description: 'Can view reports',
-        category: 'reports',
-        actions: ['read']
+        id: 'manage_system',
+        name: 'Manage System',
+        description: 'Can manage system settings',
+        category: 'system',
+        actions: ['read', 'update']
       }
     ],
-    members: ["1", "2"], 
+    members: ['1'],
+    users: [mockUsers[0]], // Reference to admin user
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
@@ -235,8 +233,8 @@ export const mockGroups: UserGroup[] = [
     id: "group-2",
     name: "Users",
     description: "Regular users group",
-    clientId: "1", 
-    roles: [mockRoles[1]], 
+    clientId: "1",
+    roles: [mockRoles[1]],
     permissions: [
       {
         id: 'view_users',
@@ -246,11 +244,18 @@ export const mockGroups: UserGroup[] = [
         actions: ['read']
       }
     ],
-    members: ["3", "4"], 
+    members: ['2', '3', '4'],
+    users: [mockUsers[1], mockUsers[2], mockUsers[3]], // Reference to regular users
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   }
 ];
+
+// Update user groups after groups are defined
+mockUsers[0].groups = [mockGroups[0]];
+mockUsers[1].groups = [mockGroups[1]];
+mockUsers[2].groups = [mockGroups[1]];
+mockUsers[3].groups = [mockGroups[1]];
 
 // Mock Permissions
 export const mockPermissions: Permission[] = [

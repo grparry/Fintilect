@@ -16,7 +16,6 @@ export interface PaymentHistory {
   timestamp: string;
   details: Record<string, any>;
 }
-
 export const mockPayments: Payment[] = [
   {
     id: 'pmt_1',
@@ -179,7 +178,6 @@ export const mockPayments: Payment[] = [
     updatedAt: '2024-12-28T11:15:00-07:00'
   }
 ];
-
 // Using PendingPayment type for detailed payment information
 export const mockPendingPayments = [
   {
@@ -413,7 +411,6 @@ export const mockPendingPayments = [
     updatedAt: '2024-12-28T11:15:00-07:00'
   }
 ];
-
 export const mockPaymentHistory: IPaymentHistory[] = [
   {
     paymentId: 'pmt_1',
@@ -430,7 +427,6 @@ export const mockPaymentHistory: IPaymentHistory[] = [
     details: { status: 'COMPLETED' }
   }
 ];
-
 export const mockPaymentActions: PaymentAction[] = [
   {
     action: 'CREATED',

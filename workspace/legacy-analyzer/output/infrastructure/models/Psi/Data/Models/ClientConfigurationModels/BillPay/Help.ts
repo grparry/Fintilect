@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { MessageTypeEnum } from './MessageTypeEnum';
+import { MessageTypeEnum } from '@infrastructure/MessageTypeEnum';
 export interface HelpConfig {
     MessageType: MessageTypeEnum;
     EmailAddress: string;

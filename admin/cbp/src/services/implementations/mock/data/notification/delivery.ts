@@ -1,10 +1,11 @@
+
+
 interface DeliveryStatus {
     status: 'pending' | 'sent' | 'failed';
     attempts: number;
     lastAttempt?: string;
     error?: string;
 }
-
 export const mockDeliverySettings = {
     emailEnabled: true,
     smsEnabled: false,
@@ -12,7 +13,6 @@ export const mockDeliverySettings = {
     retryAttempts: 3,
     retryInterval: 300 // 5 minutes in seconds
 };
-
 export const mockDeliveryMethods = [
   {
     id: 'email',
@@ -35,7 +35,6 @@ export const mockDeliveryMethods = [
     }
   }
 ];
-
 export const mockDeliveryPreferences = {
   email: {
     enabled: true,
@@ -48,7 +47,6 @@ export const mockDeliveryPreferences = {
     frequency: 'daily'
   }
 };
-
 export const mockDeliveryStats = {
   totalSent: 1250,
   totalFailed: 23,
@@ -63,7 +61,6 @@ export const mockDeliveryStats = {
     }
   }
 };
-
 export const mockDeliveryStatuses: Record<string, DeliveryStatus> = {
     'notification_1': {
         status: 'sent',

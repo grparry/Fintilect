@@ -1,5 +1,5 @@
-import { NotificationTemplate, NotificationTemplateData } from '../types/notification';
-import { HttpError } from '../utils/errors';
+import { NotificationTemplate, NotificationTemplateData } from '@cbp-config-api/types/notification';
+import { HttpError } from '@cbp-config-api/utils/errors';
 
 interface NotificationContent {
   subject: string;

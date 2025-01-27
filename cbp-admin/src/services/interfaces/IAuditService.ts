@@ -1,5 +1,5 @@
-import { IBaseService } from './IBaseService';
-import { PaginatedResponse } from '../../types/common.types';
+import { IBaseService } from '@/IBaseService';
+import { PaginatedResponse } from '@/../types/common.types';
 
 export interface AuditEvent {
     eventType: string;

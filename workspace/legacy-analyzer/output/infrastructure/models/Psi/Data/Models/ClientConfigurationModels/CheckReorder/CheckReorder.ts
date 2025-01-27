@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { HarlandCheckReorder } from './HarlandCheckReorder';
-import { MainStreetCheckReorder } from './MainStreetCheckReorder';
+import { HarlandCheckReorder } from '@infrastructure/HarlandCheckReorder';
+import { MainStreetCheckReorder } from '@infrastructure/MainStreetCheckReorder';
 export interface CheckReorderConfig {
     HarlandCheckReorder: HarlandCheckReorder;
     MainStreetCheckReorder: MainStreetCheckReorder;

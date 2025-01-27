@@ -1,5 +1,5 @@
-import { Database } from './db';
-import { HttpError } from '../utils/errors';
+import { Database } from '@/db';
+import { HttpError } from '@/utils/errors';
 import * as sql from 'mssql';
 import { QueryResult } from 'pg';
 

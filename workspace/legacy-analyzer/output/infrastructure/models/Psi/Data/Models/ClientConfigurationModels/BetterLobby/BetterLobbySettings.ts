@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Uri } from './Uri';
-import { Authentication } from './MobileConfigurations.Authentication.Authentication';
+import { Uri } from '@infrastructure/Uri';
+import { Authentication } from '@infrastructure/MobileConfigurations.Authentication.Authentication';
 export interface BetterLobbySettingsConfig {
     Enabled: boolean;
     SsoBaseUrl: Uri;

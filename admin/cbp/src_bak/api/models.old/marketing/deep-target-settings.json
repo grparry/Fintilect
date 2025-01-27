@@ -1,0 +1,81 @@
+{
+  "DeepTargetSettings": {
+    "type": "object",
+    "description": "Configuration settings for Deep Target marketing integration",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Promotions.DeepTargetSettings",
+    "required": ["enabled", "versionRequirements", "endpoints"],
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether Deep Target integration is enabled",
+        "default": false,
+        "x-setting-key": "Promotions.DeepTarget.Enabled"
+      },
+      "versionRequirements": {
+        "type": "object",
+        "description": "Version requirements for different platforms",
+        "required": ["minimum", "platforms"],
+        "properties": {
+          "minimum": {
+            "type": "number",
+            "description": "Minimum version required for Deep Target",
+            "minimum": 0,
+            "x-setting-key": "Promotions.DeepTarget.MinVersion"
+          },
+          "platforms": {
+            "type": "object",
+            "description": "Platform-specific version requirements",
+            "required": ["ios", "android"],
+            "properties": {
+              "ios": {
+                "type": "string",
+                "description": "Minimum iOS version required",
+                "x-setting-key": "Promotions.DeepTarget.MinIosVersion"
+              },
+              "android": {
+                "type": "string",
+                "description": "Minimum Android version required",
+                "x-setting-key": "Promotions.DeepTarget.MinAndroidVersion"
+              }
+            }
+          }
+        }
+      },
+      "endpoints": {
+        "type": "object",
+        "description": "Endpoint configurations for Deep Target",
+        "required": ["loginUrl", "baseUrl"],
+        "properties": {
+          "loginUrl": {
+            "type": "string",
+            "description": "URL for Deep Target login",
+            "format": "uri",
+            "x-setting-key": "Promotions.DeepTarget.LoginUrl"
+          },
+          "baseUrl": {
+            "type": "string",
+            "description": "Base URL for Deep Target API",
+            "format": "uri",
+            "x-setting-key": "Promotions.DeepTarget.Url"
+          }
+        }
+      },
+      "configuration": {
+        "type": "object",
+        "description": "Deep Target configuration settings",
+        "properties": {
+          "jsonConfig": {
+            "type": "string",
+            "description": "JSON configuration for Deep Target",
+            "x-setting-key": "Promotions.DeepTarget.JsonConfig"
+          },
+          "javascript": {
+            "type": "string",
+            "description": "Custom JavaScript configuration",
+            "x-setting-key": "Promotions.DeepTarget.Javascript"
+          }
+        }
+      }
+    }
+  }
+}

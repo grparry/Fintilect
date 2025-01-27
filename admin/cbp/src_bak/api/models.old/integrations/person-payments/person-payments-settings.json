@@ -1,0 +1,14 @@
+{
+  "PersonPaymentsSettings": {
+    "type": "object",
+    "description": "Person payments settings",
+    "properties": {
+      "payzur": {
+        "$ref": "./payzur.json#/PayzurSettings"
+      },
+      "zelle": {
+        "$ref": "./zelle.json#/ZelleSettings"
+      }
+    }
+  }
+}

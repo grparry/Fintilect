@@ -24,13 +24,11 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
     private transactions: Map<string, PaymentTransaction> = new Map();
     private batches: Map<string, TransactionBatch> = new Map();
     private errors: Map<string, ProcessingError[]> = new Map();
-
     constructor(
         basePath: string = '/api/v1/payment-processor'
     ) {
         super(basePath);
     }
-
     async processPayment(transaction: PaymentTransaction): Promise<PaymentTransaction> {
         const processedTransaction: PaymentTransaction = {
             ...transaction,
@@ -40,17 +38,14 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             createdAt: transaction.createdAt || new Date(),
             processedAt: new Date()
         };
-        
         this.transactions.set(processedTransaction.id, processedTransaction);
         return processedTransaction;
     }
-
     async processBatch(transactions: PaymentTransaction[]): Promise<TransactionBatch> {
         const batchId = uuidv4();
         const processedTransactions = await Promise.all(
             transactions.map(t => this.processPayment(t))
         );
-        
         const batch: TransactionBatch = {
             id: batchId,
             transactions: processedTransactions,
@@ -60,11 +55,9 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             successCount: processedTransactions.filter(t => t.status === PaymentStatus.COMPLETED).length,
             failureCount: processedTransactions.filter(t => t.status === PaymentStatus.FAILED).length
         };
-        
         this.batches.set(batchId, batch);
         return batch;
     }
-
     async getTransaction(transactionId: string): Promise<PaymentTransaction> {
         const transaction = this.transactions.get(transactionId);
         if (!transaction) {
@@ -72,7 +65,6 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
         }
         return transaction;
     }
-
     async searchTransactions(params: {
         status?: PaymentStatus[];
         method?: PaymentMethod;
@@ -85,7 +77,6 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
     }): Promise<PaginatedResponse<PaymentTransaction>> {
         const { page = 1, limit = 10 } = params;
         let filteredTransactions = Array.from(this.transactions.values());
-
         if (params.status?.length) {
             filteredTransactions = filteredTransactions.filter(t => params.status?.includes(t.status));
         }
@@ -109,11 +100,9 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
         if (params.clientId) {
             filteredTransactions = filteredTransactions.filter(t => t.clientId === params.clientId);
         }
-
         const startIndex = (page - 1) * limit;
         const endIndex = startIndex + limit;
         const paginatedTransactions = filteredTransactions.slice(startIndex, endIndex);
-
         return {
             items: paginatedTransactions,
             total: filteredTransactions.length,
@@ -122,7 +111,6 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             totalPages: Math.ceil(filteredTransactions.length / limit)
         };
     }
-
     async getBatch(batchId: string): Promise<TransactionBatch> {
         const batch = this.batches.get(batchId);
         if (!batch) {
@@ -130,7 +118,6 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
         }
         return batch;
     }
-
     async getBatches(params: {
         status?: BatchStatus[];
         dateRange?: DateRange;
@@ -140,7 +127,6 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
     }): Promise<PaginatedResponse<TransactionBatch>> {
         const { page = 1, limit = 10 } = params;
         let filteredBatches = Array.from(this.batches.values());
-
         if (params.status?.length) {
             filteredBatches = filteredBatches.filter(b => params.status?.includes(b.status));
         }
@@ -157,11 +143,9 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
                 return date >= start && date <= end;
             });
         }
-
         const startIndex = (page - 1) * limit;
         const endIndex = startIndex + limit;
         const paginatedBatches = filteredBatches.slice(startIndex, endIndex);
-
         return {
             items: paginatedBatches,
             total: filteredBatches.length,
@@ -170,23 +154,19 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             totalPages: Math.ceil(filteredBatches.length / limit)
         };
     }
-
     async cancelTransaction(transactionId: string): Promise<PaymentTransaction> {
         const transaction = await this.getTransaction(transactionId);
         if (![PaymentStatus.PENDING, PaymentStatus.PROCESSING].includes(transaction.status)) {
             throw new Error('Only pending or processing transactions can be cancelled');
         }
-        
         const cancelledTransaction: PaymentTransaction = {
             ...transaction,
             status: PaymentStatus.CANCELLED,
             updatedAt: new Date()
         };
-        
         this.transactions.set(transactionId, cancelledTransaction);
         return cancelledTransaction;
     }
-
     async retryTransaction(transactionId: string): Promise<PaymentTransaction> {
         const transaction = await this.getTransaction(transactionId);
         if (transaction.status !== PaymentStatus.FAILED) {
@@ -197,7 +177,6 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             status: PaymentStatus.PENDING
         });
     }
-
     async schedulePayment(transaction: PaymentTransaction, schedule: PaymentSchedule): Promise<PaymentTransaction> {
         const scheduledTransaction: PaymentTransaction = {
             ...transaction,
@@ -207,14 +186,11 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             updatedAt: new Date(),
             scheduledAt: schedule.scheduledDate
         };
-        
         this.transactions.set(scheduledTransaction.id, scheduledTransaction);
         return scheduledTransaction;
     }
-
     async validatePayment(transaction: PaymentTransaction): Promise<PaymentValidation> {
         const errors: ProcessingError[] = [];
-        
         if (!transaction.amount || transaction.amount <= 0) {
             errors.push({
                 code: 'INVALID_AMOUNT',
@@ -236,14 +212,12 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
                 timestamp: new Date()
             });
         }
-        
         return {
             isValid: errors.length === 0,
             errors: errors.map(e => ({ code: e.code, message: e.message })),
             requiresApproval: false
         };
     }
-
     async getPaymentReceipt(transactionId: string): Promise<PaymentReceipt> {
         const transaction = await this.getTransaction(transactionId);
         return {
@@ -256,7 +230,6 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             method: transaction.method
         };
     }
-
     async getProcessorConfig(): Promise<ProcessorConfig> {
         return {
             maxBatchSize: 1000,
@@ -271,18 +244,15 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             }
         };
     }
-
     async updateProcessorConfig(config: Partial<ProcessorConfig>): Promise<ProcessorConfig> {
         return {
             ...(await this.getProcessorConfig()),
             ...config
         };
     }
-
     async getProcessingErrors(transactionId: string): Promise<ProcessingError[]> {
         return this.errors.get(transactionId) || [];
     }
-
     async getTransactionSummary(params: {
         dateRange: DateRange;
         clientId?: string;
@@ -290,7 +260,6 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
     }): Promise<TransactionSummary> {
         const transactions = Array.from(this.transactions.values());
         const filteredTransactions = this.filterTransactionsByParams(transactions, params);
-
         return {
             totalCount: filteredTransactions.length,
             totalAmount: filteredTransactions.reduce((sum, t) => sum + t.amount, 0),
@@ -301,18 +270,15 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             byStatus: this.groupTransactionsByStatus(filteredTransactions)
         };
     }
-
     async getProcessorMetrics(params: {
         dateRange: DateRange;
         clientId?: string;
     }): Promise<ProcessorMetrics> {
         const transactions = Array.from(this.transactions.values());
         const filteredTransactions = this.filterTransactionsByParams(transactions, params);
-
         const processingTimes = this.calculateProcessingTimes(filteredTransactions);
         const throughputStats = this.calculateThroughput(filteredTransactions);
         const errorStats = this.calculateErrorRates(filteredTransactions);
-
         return {
             processingTime: {
                 average: processingTimes.average,
@@ -332,14 +298,12 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             }
         };
     }
-
     private simulateProcessingResult(): PaymentStatus {
         const random = Math.random();
         if (random < 0.8) return PaymentStatus.COMPLETED;
         if (random < 0.95) return PaymentStatus.FAILED;
         return PaymentStatus.PROCESSING;
     }
-
     private filterTransactionsByParams(transactions: PaymentTransaction[], params: {
         dateRange: DateRange;
         clientId?: string;
@@ -355,65 +319,53 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             return dateInRange && clientMatches && typeMatches;
         });
     }
-
     private calculateSuccessRate(transactions: PaymentTransaction[]): number {
         const completed = transactions.filter(t => t.status === PaymentStatus.COMPLETED).length;
         return transactions.length > 0 ? (completed / transactions.length) * 100 : 0;
     }
-
     private calculateProcessingTimes(transactions: PaymentTransaction[]): { average: number; min: number; max: number } {
         const processedTransactions = transactions.filter(t => 
             t.status === PaymentStatus.COMPLETED || t.status === PaymentStatus.FAILED
         );
-        
         if (processedTransactions.length === 0) {
             return { average: 0, min: 0, max: 0 };
         }
-        
         const times = processedTransactions.map(t => {
             const start = t.createdAt.getTime();
             const end = (t.processedAt || t.updatedAt).getTime();
             return end - start;
         });
-        
         return {
             average: times.reduce((sum, t) => sum + t, 0) / times.length,
             min: Math.min(...times),
             max: Math.max(...times)
         };
     }
-
     private calculateThroughput(transactions: PaymentTransaction[]): { daily: number; hourly: number } {
         if (transactions.length === 0) {
             return { daily: 0, hourly: 0 };
         }
-        
         const timestamps = transactions.map(t => t.createdAt.getTime());
         const start = Math.min(...timestamps);
         const end = Math.max(...timestamps);
         const hours = (end - start) / (1000 * 60 * 60);
         const days = hours / 24;
-        
         return {
             daily: days > 0 ? transactions.length / days : transactions.length,
             hourly: hours > 0 ? transactions.length / hours : transactions.length
         };
     }
-
     private calculateErrorRates(transactions: PaymentTransaction[]): { validation: number; processing: number; network: number } {
         const failedTransactions = transactions.filter(t => t.status === PaymentStatus.FAILED);
         const total = transactions.length;
-
         if (total === 0) {
             return { validation: 0, processing: 0, network: 0 };
         }
-
         const errorCounts = {
             validation: 0,
             processing: 0,
             network: 0
         };
-
         failedTransactions.forEach(t => {
             const errors = this.errors.get(t.id) || [];
             errors.forEach(error => {
@@ -426,28 +378,24 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
                 }
             });
         });
-
         return {
             validation: (errorCounts.validation / total) * 100,
             processing: (errorCounts.processing / total) * 100,
             network: (errorCounts.network / total) * 100
         };
     }
-
     private groupTransactionsByMethod(transactions: PaymentTransaction[]): Record<PaymentMethod, number> {
         return transactions.reduce((acc, t) => {
             acc[t.method] = (acc[t.method] || 0) + 1;
             return acc;
         }, {} as Record<PaymentMethod, number>);
     }
-
     private groupTransactionsByType(transactions: PaymentTransaction[]): Record<PaymentType, number> {
         return transactions.reduce((acc, t) => {
             acc[t.type] = (acc[t.type] || 0) + 1;
             return acc;
         }, {} as Record<PaymentType, number>);
     }
-
     private groupTransactionsByStatus(transactions: PaymentTransaction[]): Record<PaymentStatus, number> {
         return transactions.reduce((acc, t) => {
             acc[t.status] = (acc[t.status] || 0) + 1;

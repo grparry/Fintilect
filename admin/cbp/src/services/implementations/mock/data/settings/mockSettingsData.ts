@@ -1,4 +1,4 @@
-import { Setting, SettingGroup } from '../../../../../types/settings.types';
+import { Setting, SettingGroup } from '../../../../types/settings.types';
 
 export const mockSettings: Setting[] = [
     {
@@ -81,7 +81,6 @@ export const mockSettings: Setting[] = [
         }
     }
 ];
-
 export const mockSettingGroups: SettingGroup[] = [
     {
         key: 'general',

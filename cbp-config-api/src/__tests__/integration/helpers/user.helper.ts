@@ -1,8 +1,8 @@
-import { TestDb } from '../../../config/test.db';
-import { mockUsers } from '../fixtures/mockData';
-import { ResponseValidator } from './ResponseValidator';
-import { UserDetails, UserPreferences, PayeeOptions, HostInfo } from '../../../services/user.service';
-import { PaginatedResponse } from '../../../types/common';
+import { TestDb } from '@/../../config/test.db';
+import { mockUsers } from '@/fixtures/mockData';
+import { ResponseValidator } from '@/ResponseValidator';
+import { UserDetails, UserPreferences, PayeeOptions, HostInfo } from '@/../../services/user.service';
+import { PaginatedResponse } from '@/../../types/common';
 
 export class UserTestHelper {
   static setupUserMocks(testDb: TestDb) {

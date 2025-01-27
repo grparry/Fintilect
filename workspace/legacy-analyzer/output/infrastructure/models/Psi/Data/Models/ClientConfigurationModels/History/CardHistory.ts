@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Security } from './System.Security.Cryptography.X509Certificates.StoreName';
-import { FiservCardHistoryCycleTypes } from './FiservCardHistoryCycleTypes';
+import { Security } from '@infrastructure/System.Security.Cryptography.X509Certificates.StoreName';
+import { FiservCardHistoryCycleTypes } from '@infrastructure/FiservCardHistoryCycleTypes';
 export interface CardHistoryConfig {
     ShowPendingTransactionsFirst: boolean;
     EnableCardHistoryDateRangeSearch: boolean;

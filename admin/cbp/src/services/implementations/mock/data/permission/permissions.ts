@@ -35,7 +35,6 @@ export const mockPermissions: Permission[] = [
     actions: ['view', 'export', 'create']
   }
 ];
-
 export const mockRoles: SecurityRole[] = [
   {
     id: '1',
@@ -65,7 +64,6 @@ export const mockRoles: SecurityRole[] = [
     updatedAt: new Date().toISOString()
   }
 ];
-
 export const mockPermissionGroups: UserGroup[] = [
   {
     id: '1',
@@ -101,13 +99,11 @@ export const mockPermissionGroups: UserGroup[] = [
     updatedAt: '2024-01-01T00:00:00Z'
   }
 ];
-
 // Mock user-permission group assignments
 export const mockUserPermissionGroups: Record<string, string[]> = {
   'user1': ['1'], // Administrator
   'user2': ['2'], // Bill Pay Operator
   'user3': ['2', '3'] // Bill Pay Operator + Report Viewer
 };
-
 export const mockUserPermissions = mockPermissions;
 export const mockGroupPermissions = mockPermissionGroups;

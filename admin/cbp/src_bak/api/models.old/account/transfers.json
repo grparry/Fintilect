@@ -1,0 +1,185 @@
+{
+  "Transfers": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.Transfers",
+    "properties": {
+      "customTransferLimitMessagesEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.CustomTransferLimitMessagesEnabled",
+        "description": "Whether to enable custom messages for transfer limits"
+      },
+      "displayTransferLimitOnError": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.DisplayTransferLimitOnError",
+        "description": "Whether to display transfer limits when an error occurs"
+      },
+      "showShareLoanIds": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.ShowShareLoanIds",
+        "description": "Whether to show share and loan IDs"
+      },
+      "limtInExcessTransferToCards": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.LimtInExcessTransferToCards",
+        "description": "Whether to limit excess transfers to cards"
+      },
+      "scheduledTransferIsOpenEndDateDisabledForDaily": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.ScheduledTransferIsOpenEndDateDisabledForDaily",
+        "description": "Whether the no end date option is disabled for daily scheduled transfers"
+      },
+      "allowLoanToLoanTransfers": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.AllowLoanToLoanTransfers",
+        "description": "Whether to allow transfers between loans"
+      },
+      "mortgageLoanCategories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "Transfers.MortgageLoanCategories",
+        "description": "List of loan categories that should be treated as mortgage loans"
+      },
+      "hideEndDateOption": {
+        "type": "boolean",
+        "x-setting-key": "Admin.ScheduledTransfers.HideEndDateOption",
+        "description": "Whether to hide the end date option for scheduled transfers"
+      },
+      "allowPaymentsGreaterThanPayoffAmount": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.AllowPaymentsGreaterThanPayoffAmount",
+        "description": "Whether to allow scheduled payments greater than the payoff amount"
+      },
+      "shouldHidePreviousBalanceAndPreviousAvailable": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.HidePreviousBalanceAndPreviousAvailable",
+        "description": "Whether to hide previous balance and available amount on transfer result screen"
+      },
+      "groupAdditionalTransferOptions": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.GroupAdditionalTransferOptions",
+        "description": "Whether to group additional transfer options in an expandable area"
+      },
+      "allowBalanceTransferBetweenCreditCards": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.AllowBalanceTransferBetweenCreditCards",
+        "description": "Whether to allow balance transfers between credit cards"
+      },
+      "creditCardBalanceTransfersSendAsSecureMessage": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.CreditCardBalanceTransfersSendAsSecureMessage",
+        "description": "Whether to send credit card balance transfers as secure messages"
+      },
+      "creditCardBalanceTransfersRecipientEmailAddress": {
+        "type": "string",
+        "format": "email",
+        "x-setting-key": "Transfers.CreditCardBalanceTransfersRecipientEmailAddress",
+        "description": "Recipient email address for credit card balance transfers"
+      },
+      "allowEBalconTransfersBetweenCreditCards": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.AllowEBalconTransfersBetweenCreditCards",
+        "description": "Whether to allow credit card balance transfers using PSCU E-Balcon"
+      },
+      "allowAdjustedToBalanceOnMortgageTransfersEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.AllowAdjustedToBalanceForMortgageTransfersEnabled",
+        "description": "Whether to allow adjusted 'ToBalance' calculation for mortgages by subtracting interest due"
+      },
+      "mortgageTransfersCategoriesForAdjustedToBalance": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "Transfers.AdjustedToBalanceForMortgageTransfersCategories",
+        "description": "Categories of mortgages to consider when calculating adjusted 'ToBalance'"
+      },
+      "suffixLabelEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.SuffixLabelEnabled",
+        "description": "Whether to show suffix for each account in transfers"
+      },
+      "postTransferNavigationOptionsEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.PostTransferNavigationOptionsEnabled",
+        "description": "Whether to show navigation options after a transfer"
+      },
+      "transLoanCollateralForBal": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.HomeBanking.TransLoanCollateralForBal",
+        "description": "Categories of mortgages for calculating 'ToBalance' considering interest due"
+      },
+      "transExternalLoan": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.HomeBanking.TransExternalLoan",
+        "description": "Categories for external loans"
+      },
+      "mortgageCategories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.HomeBanking.obsMortgages",
+        "description": "Categories for mortgages"
+      },
+      "showTodaysDateOnTransferReceipt": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.ShowTodaysDateOnTransferReceipt",
+        "description": "Whether to show today's date on transfer receipts"
+      },
+      "showTransferDescriptionOnTransferReceipt": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.ShowTransferDescriptionOnTransferReceipt",
+        "description": "Whether to show transfer description on transfer receipts"
+      },
+      "getHouseholdingAccountsEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Admin.ScheduledTransfers.GetHouseholdingAccounts.Enabled",
+        "description": "Whether to enable getting household accounts"
+      },
+      "allowCreditCardTransfer": {
+        "type": "boolean",
+        "x-setting-key": "X.App.HomeBanking.AllowCreditCardTransfer",
+        "description": "Whether to allow credit card transfers"
+      },
+      "allowedTransferToAccountCategories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.Homebanking.obsTransferToAccounts",
+        "description": "Categories of accounts that can receive transfers"
+      },
+      "allowedTransferFromAccountCategories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.HomeBanking.obsTransferFromAccounts",
+        "description": "Categories of accounts that can send transfers"
+      },
+      "nonOlbMemberEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Admin.ScheduledTransfers.NonOlbMember.Enabled",
+        "description": "Whether to enable scheduled transfers for non-OLB members"
+      },
+      "quickActionEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.QuickAction.Enabled",
+        "description": "Whether to enable quick action transfers"
+      },
+      "quickActionToAndFromEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.QuickAction.ToAndFromEnabled",
+        "description": "Whether to enable separate To/From options for quick action transfers"
+      }
+    }
+  }
+}

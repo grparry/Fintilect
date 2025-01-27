@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { TrackingService } from '../services/tracking.service';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
+import { TrackingService } from '@/services/tracking.service';
+import { HttpError } from '@/utils/errors';
+import { logger } from '@/config/logger';
 
 interface BaseQueryParams {
   page: number;

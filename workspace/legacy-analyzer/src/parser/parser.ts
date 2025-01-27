@@ -1,11 +1,11 @@
 import Parser = require('web-tree-sitter');
-import logger from '../utils/logger';
+import logger from '@/utils/logger';
 import path from 'path';
 import { readFile } from 'fs/promises';
-import { FileService } from '../services/fileService';
-import { ParsedClass } from './types';
-import { ClassParser } from './classParser';
-import { EnumParser } from './enumParser';
+import { FileService } from '@/services/fileService';
+import { ParsedClass } from '@/types';
+import { ClassParser } from '@/classParser';
+import { EnumParser } from '@/enumParser';
 
 const logger2 = logger;
 

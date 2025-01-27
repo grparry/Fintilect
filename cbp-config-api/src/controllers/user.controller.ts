@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { Database } from '../config/db';
+import { HttpError } from '@/utils/errors';
+import { logger } from '@/config/logger';
+import { Database } from '@/config/db';
 import bcrypt from 'bcrypt';
-import { generateToken } from '../utils/auth';
-import { UserService } from '../services/user.service';
+import { generateToken } from '@/utils/auth';
+import { UserService } from '@/services/user.service';
 
 export class UserController {
   private db: Database;

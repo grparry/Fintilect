@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { Database } from '../config/db';
-import { ExceptionHistoryService } from '../services/exception-history.service';
-import { ExceptionHistorySearchRequest, ExceptionHistoryCreateRequest, ExceptionHistoryType } from '../types/exception-history';
+import { Database } from '@cbp-config-api/config/db';
+import { ExceptionHistoryService } from '@cbp-config-api/services/exception-history.service';
+import { ExceptionHistorySearchRequest, ExceptionHistoryCreateRequest, ExceptionHistoryType } from '@cbp-config-api/types/exception-history';
 
 export class ExceptionHistoryController {
   private service: ExceptionHistoryService;

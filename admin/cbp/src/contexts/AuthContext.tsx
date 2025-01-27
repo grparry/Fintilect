@@ -8,9 +8,7 @@ interface AuthContextType {
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
 }
-
 const AuthContext = createContext<AuthContextType | null>(null);
-
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -18,7 +16,6 @@ export const useAuth = () => {
   }
   return context;
 };
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AuthState>({
     isAuthenticated: false,
@@ -27,7 +24,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     error: null,
     permissions: []
   });
-
   const login = useCallback(async (credentials: LoginCredentials) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
     try {
@@ -47,7 +43,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }));
     }
   }, []);
-
   const logout = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true }));
     try {
@@ -67,7 +62,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }));
     }
   }, []);
-
   return (
     <AuthContext.Provider value={{ state, login, logout }}>
       {children}

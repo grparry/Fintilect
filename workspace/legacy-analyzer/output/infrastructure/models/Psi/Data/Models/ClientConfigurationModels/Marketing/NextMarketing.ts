@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { OffersRequestSetting } from './OffersRequestSetting';
+import { OffersRequestSetting } from '@infrastructure/OffersRequestSetting';
 export interface NextMarketingConfig {
     SlotIdMappings: Record<string, number>;
     MaxOffersToReturn: number;

@@ -1,6 +1,6 @@
-import { API_BASE_URL } from '../config/api.config';
-import { ApiRequestOptions, ApiSuccessResponse, ApiErrorResponse } from '../types/api.types';
-import logger from '../utils/logger';
+import { API_BASE_URL } from '@/config/api.config';
+import { ApiRequestOptions, ApiSuccessResponse, ApiErrorResponse } from '@/types/api.types';
+import logger from '@/utils/logger';
 
 const DEFAULT_TIMEOUT = 30000;
 const MAX_RETRIES = 3;

@@ -1,9 +1,9 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import logger from '../utils/logger';
-import { ParsedClass } from '../parser/types';
-import { ClassDocWriter } from '../output/classDocWriter';
-import { TypeScriptWriter } from '../output/typeScriptWriter';
+import logger from '@/utils/logger';
+import { ParsedClass } from '@/parser/types';
+import { ClassDocWriter } from '@/output/classDocWriter';
+import { TypeScriptWriter } from '@/output/typeScriptWriter';
 
 const logger2 = logger;
 

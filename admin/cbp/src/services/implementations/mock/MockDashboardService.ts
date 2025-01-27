@@ -3,11 +3,11 @@ import {
   DashboardMetrics,
   DashboardFilters,
   ChartData,
-  ChartDataPoint,
   TransactionStats,
-  UserActivityData
+  UserActivityData,
+  ChartDataPoint
 } from '../../../types/dashboard.types';
-import { TimeRange } from '../../../types'; 
+import { TimeRange } from '../../../types/index';
 import { BaseMockService } from './BaseMockService';
 import {
   mockDashboardStats,
@@ -20,12 +20,10 @@ import {
 export class MockDashboardService extends BaseMockService implements IDashboardService {
   private subscriptions: Map<string, (updates: Partial<DashboardMetrics>) => void> = new Map();
   private updateInterval: NodeJS.Timeout | null = null;
-
   constructor(private readonly url: string, basePath: string = '/api/v1/dashboard') {
     super(basePath);
     this.startUpdateLoop();
   }
-
   private startUpdateLoop(): void {
     this.updateInterval = setInterval(() => {
       const updates: Partial<DashboardMetrics> = {
@@ -44,11 +42,9 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       this.notifySubscribers(updates);
     }, 60000); // Update every minute
   }
-
   private notifySubscribers(updates: Partial<DashboardMetrics>): void {
     this.subscriptions.forEach(callback => callback(updates));
   }
-
   private cleanup(): void {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
@@ -56,10 +52,8 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
     }
     this.subscriptions.clear();
   }
-
   async getDashboardMetrics(filters: DashboardFilters): Promise<DashboardMetrics> {
     const timeRange = filters.timeRange || TimeRange.DAY;
-    
     return {
       transactions: await this.getTransactionStats(timeRange),
       userActivity: await this.getUserActivityData(timeRange),
@@ -70,12 +64,10 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       }
     };
   }
-
   async getTransactionStats(timeRange: TimeRange): Promise<TransactionStats> {
     const multiplier = timeRange === TimeRange.DAY ? 1 :
                       timeRange === TimeRange.WEEK ? 7 :
                       timeRange === TimeRange.MONTH ? 30 : 365;
-                      
     return {
       total: Math.floor(Math.random() * 10000) * multiplier,
       successful: Math.floor(Math.random() * 8000) * multiplier,
@@ -88,12 +80,10 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       }
     };
   }
-
   async getUserActivityData(timeRange: TimeRange): Promise<UserActivityData> {
     const multiplier = timeRange === TimeRange.DAY ? 1 :
                       timeRange === TimeRange.WEEK ? 7 :
                       timeRange === TimeRange.MONTH ? 30 : 365;
-                      
     return {
       activeUsers: Math.floor(Math.random() * 200 + 750) * multiplier,
       newUsers: Math.floor(Math.random() * 50 + 100) * multiplier,
@@ -101,7 +91,6 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       averageSessionDuration: Math.floor(Math.random() * 300 + 600)
     };
   }
-
   async getTransactionVolumeChart(
     timeRange: TimeRange,
     interval: 'hour' | 'day' | 'week' | 'month'
@@ -110,7 +99,6 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
                   timeRange === TimeRange.WEEK ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] :
                   timeRange === TimeRange.MONTH ? Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`) :
                   Array.from({ length: 12 }, (_, i) => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i]);
-
     return {
       labels,
       datasets: [{
@@ -121,13 +109,11 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       }]
     };
   }
-
   async getUserGrowthChart(timeRange: TimeRange): Promise<ChartData> {
     const labels = timeRange === TimeRange.DAY ? Array.from({ length: 24 }, (_, i) => `${i}:00`) :
                   timeRange === TimeRange.WEEK ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] :
                   timeRange === TimeRange.MONTH ? Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`) :
                   Array.from({ length: 12 }, (_, i) => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i]);
-
     return {
       labels,
       datasets: [{
@@ -138,7 +124,6 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       }]
     };
   }
-
   async getActivityBreakdownChart(timeRange: TimeRange): Promise<ChartData> {
     return {
       labels: ['Logins', 'Transactions', 'Reports', 'Settings'],
@@ -149,7 +134,6 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       }]
     };
   }
-
   async getMetricTrend(
     metric: 'transactions' | 'users' | 'errors' | 'response_time',
     timeRange: TimeRange
@@ -159,7 +143,6 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
     const pointCount = timeRange === TimeRange.DAY ? 24 : 
                       timeRange === TimeRange.WEEK ? 7 : 
                       timeRange === TimeRange.MONTH ? 30 : 365;
-
     for (let i = pointCount - 1; i >= 0; i--) {
       const date = new Date(now);
       if (timeRange === TimeRange.DAY) {
@@ -171,7 +154,6 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       } else {
         date.setDate(date.getDate() - i);
       }
-
       let value: number;
       switch (metric) {
         case 'transactions':
@@ -187,7 +169,6 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
           value = Math.floor(Math.random() * 100) + 200;
           break;
       }
-
       points.push({
         date: date.toISOString(),
         value
@@ -195,7 +176,6 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
     }
     return points;
   }
-
   async getPerformanceInsights(): Promise<Array<{
     category: 'performance' | 'security' | 'usage' | 'errors';
     severity: 'low' | 'medium' | 'high';
@@ -211,11 +191,9 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       timestamp: alert.timestamp
     }));
   }
-
   async exportDashboardData(metrics: string[], format: 'csv' | 'json' | 'pdf'): Promise<string> {
     const timeRange: TimeRange = TimeRange.DAY;
     const data = await this.getDashboardMetrics({ timeRange });
-    
     switch (format) {
       case 'json':
         return JSON.stringify(data);
@@ -227,7 +205,6 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
         throw this.createError('Unsupported export format');
     }
   }
-
   async getRealTimeMetrics(): Promise<{
     activeTransactions: number;
     transactionsPerMinute: number;
@@ -241,7 +218,6 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       averageResponseTime: Math.floor(Math.random() * 200) + 100
     };
   }
-
   async getSystemHealth(): Promise<{
     status: 'healthy' | 'degraded' | 'down';
     components: {
@@ -258,17 +234,14 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       cache: Math.random() > 0.1,
       queue: Math.random() > 0.1
     };
-
     const allHealthy = Object.values(components).every(status => status);
     const anyDown = Object.values(components).some(status => !status);
-
     return {
       status: allHealthy ? 'healthy' : anyDown ? 'down' : 'degraded',
       components,
       lastChecked: new Date().toISOString()
     };
   }
-
   async getCustomMetric(
     metricKey: string,
     timeRange: TimeRange,
@@ -285,12 +258,10 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       change > 10 ? 'up' : 
       change < -10 ? 'down' : 
       'stable';
-
     const history = await this.getMetricTrend(
       'transactions',
       timeRange
     );
-
     return {
       value: baseValue,
       change,
@@ -298,11 +269,9 @@ export class MockDashboardService extends BaseMockService implements IDashboardS
       history
     };
   }
-
   subscribeToUpdates(callback: (updates: Partial<DashboardMetrics>) => void): () => void {
     const id = Math.random().toString(36).substring(7);
     this.subscriptions.set(id, callback);
-    
     return () => {
       this.subscriptions.delete(id);
       if (this.subscriptions.size === 0) {

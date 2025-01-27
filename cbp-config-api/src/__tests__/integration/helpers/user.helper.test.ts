@@ -1,6 +1,6 @@
-import { TestDatabase } from '../../../config/test.db';
-import { UserTestHelper } from './user.helper';
-import { mockUsers } from '../fixtures/mockData';
+import { TestDatabase } from '@/../../config/test.db';
+import { UserTestHelper } from '@/user.helper';
+import { mockUsers } from '@/fixtures/mockData';
 
 describe('UserTestHelper', () => {
   let testDb: TestDatabase;

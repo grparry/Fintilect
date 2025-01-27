@@ -1,8 +1,8 @@
 import { describe, it, expect } from '@jest/globals';
-import { TypeScriptWriter } from '../../../src/output/typeScriptWriter';
-import { FileService } from '../../../src/services/fileService';
-import { ParsedClass, ParsedField, ParsedEnum } from '../../../src/parser/types';
-import { PathResolver } from '../../../src/output/pathSystem/pathResolver';
+import { TypeScriptWriter } from '@/../../src/output/typeScriptWriter';
+import { FileService } from '@/../../src/services/fileService';
+import { ParsedClass, ParsedField, ParsedEnum } from '@/../../src/parser/types';
+import { PathResolver } from '@/../../src/output/pathSystem/pathResolver';
 import path from 'path';
 
 jest.mock('../../../src/services/fileService');
@@ -570,7 +570,7 @@ describe('TypeScriptWriter', () => {
 
       expect(fileService.writeFile).toHaveBeenCalled();
       const writtenContent = fileService.writeFile.mock.calls[0][1];
-      expect(writtenContent).toContain("import { MobileConfiguration } from './MobileConfigurations/MobileConfiguration';");
+      expect(writtenContent).toContain("import { MobileConfiguration } from '@/MobileConfigurations/MobileConfiguration';");
     });
   });
 
@@ -618,7 +618,7 @@ describe('TypeScriptWriter', () => {
 
       expect(fileService.writeFile).toHaveBeenCalled();
       const writtenContent = fileService.writeFile.mock.calls[0][1];
-      expect(writtenContent).toContain("import { MobileConfiguration } from './MobileConfigurations/MobileConfiguration';");
+      expect(writtenContent).toContain("import { MobileConfiguration } from '@/MobileConfigurations/MobileConfiguration';");
       expect(writtenContent).toContain('private _mobileConfig: MobileConfiguration;');
       expect(writtenContent).toContain('get mobileConfig(): MobileConfiguration');
       expect(writtenContent).toContain('set mobileConfig(value: MobileConfiguration)');
@@ -664,7 +664,7 @@ describe('TypeScriptWriter', () => {
 
       expect(fileService.writeFile).toHaveBeenCalled();
       const writtenContent = fileService.writeFile.mock.calls[0][1];
-      expect(writtenContent).toContain("import { JointOwners } from './JointOwners';");
+      expect(writtenContent).toContain("import { JointOwners } from '@/JointOwners';");
       expect(writtenContent).toContain('private _jointOwners: JointOwners;');
       expect(writtenContent).toContain('get jointOwners(): JointOwners');
       expect(writtenContent).toContain('set jointOwners(value: JointOwners)');
@@ -710,7 +710,7 @@ describe('TypeScriptWriter', () => {
 
       expect(fileService.writeFile).toHaveBeenCalled();
       const writtenContent = fileService.writeFile.mock.calls[0][1];
-      expect(writtenContent).toContain("import { MobileConfiguration } from '../MobileConfigurations/MobileConfiguration';");
+      expect(writtenContent).toContain("import { MobileConfiguration } from '@/MobileConfigurations/MobileConfiguration';");
       expect(writtenContent).toContain('private _mobileConfig: MobileConfiguration;');
       expect(writtenContent).toContain('get mobileConfig(): MobileConfiguration');
       expect(writtenContent).toContain('set mobileConfig(value: MobileConfiguration)');

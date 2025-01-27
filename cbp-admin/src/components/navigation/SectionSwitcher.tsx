@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, ToggleButton, ToggleButtonGroup, useTheme, alpha } from '@mui/material';
-import { NavigationSection } from '../../types/section-navigation.types';
+import { NavigationSection } from '@/../types/section-navigation.types';
 
 interface SectionSwitcherProps {
   sections: NavigationSection[];

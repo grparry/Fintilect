@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { CreditCardSsoProvider } from './CreditCardSsoProvider';
+import { CreditCardSsoProvider } from '@infrastructure/CreditCardSsoProvider';
 export interface CardsConfig {
     PscuRightTimeEnabled: boolean;
     ShouldShowPaymentDueDateForCreditCards: boolean;

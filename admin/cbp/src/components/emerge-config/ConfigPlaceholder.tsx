@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 
 const ConfigPlaceholder: React.FC = () => {
   const location = useLocation();
-  
   return (
     <Box sx={{ p: 3 }}>
       <Paper sx={{ p: 4 }}>
@@ -18,5 +17,4 @@ const ConfigPlaceholder: React.FC = () => {
     </Box>
   );
 };
-
 export default ConfigPlaceholder;

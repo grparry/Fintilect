@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import Users from '../Users';
+import Users from '@/Users';
 import { Box, CircularProgress, Alert } from '@mui/material';
-import { clientService } from '../../../services/factory/ServiceFactory';
-import { User } from '../../../types/client.types';
-import { decodeId } from '../../../utils/idEncoder';
-import UserEditWrapper from './UserEditWrapper';
-import logger from '../../../utils/logger';
+import { clientService } from '@/../../services/factory/ServiceFactory';
+import { User } from '@/../../types/client.types';
+import { decodeId } from '@/../../utils/idEncoder';
+import UserEditWrapper from '@/UserEditWrapper';
+import logger from '@/../../utils/logger';
 
 const UsersWrapper: React.FC = () => {
   console.log('🔄 UsersWrapper mounted');

@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { AccountDetailsByAccountCategorySetting } from './AccountDetailsByAccountCategorySetting';
+import { AccountDetailsByAccountCategorySetting } from '@infrastructure/AccountDetailsByAccountCategorySetting';
 export interface ConnectNativeAccountHistoryConfig {
     AccountDetailsByAccountCategory: AccountDetailsByAccountCategorySetting[];
 }

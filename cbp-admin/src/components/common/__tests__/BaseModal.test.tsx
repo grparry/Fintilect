@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import BaseModal from '../BaseModal';
+import BaseModal from '@/BaseModal';
 
 describe('BaseModal', () => {
   const mockOnClose = jest.fn();

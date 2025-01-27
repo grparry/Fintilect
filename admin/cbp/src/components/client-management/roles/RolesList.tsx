@@ -39,11 +39,9 @@ import { shouldUseMockData } from '../../../config/api.config';
 // Get service instances
 const clientService = ServiceFactory.getInstance().getClientService();
 const permissionService = ServiceFactory.getInstance().getPermissionService();
-
 interface RolesListProps {
   clientId: string;
 }
-
 interface RolesListState {
   roles: SecurityRole[];
   loading: boolean;
@@ -54,7 +52,6 @@ interface RolesListState {
   sortDirection: 'asc' | 'desc';
   filterText: string;
 }
-
 const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
   const navigate = useNavigate();
   const [state, setState] = useState<RolesListState>({
@@ -67,11 +64,9 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
     sortDirection: 'asc',
     filterText: ''
   });
-
   useEffect(() => {
     fetchRoles();
   }, [clientId]);
-
   const fetchRoles = async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
@@ -85,10 +80,8 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
       }));
     }
   };
-
   const handleDeleteRole = async () => {
     if (!state.roleToDelete) return;
-
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
       await permissionService.deletePermissionGroup(Number(state.roleToDelete.id));
@@ -107,7 +100,6 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
       }));
     }
   };
-
   const handleSort = (field: RolesListState['sortBy']) => {
     setState(prev => ({
       ...prev,
@@ -115,14 +107,11 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
       sortDirection: prev.sortBy === field && prev.sortDirection === 'asc' ? 'desc' : 'asc'
     }));
   };
-
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState(prev => ({ ...prev, filterText: event.target.value }));
   };
-
   const filteredAndSortedRoles = useMemo(() => {
     let result = [...state.roles];
-
     // Filter
     if (state.filterText) {
       const searchText = state.filterText.toLowerCase();
@@ -131,7 +120,6 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
         role.description?.toLowerCase().includes(searchText)
       );
     }
-
     // Sort
     result.sort((a, b) => {
       let compareResult = 0;
@@ -148,10 +136,8 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
       }
       return state.sortDirection === 'asc' ? compareResult : -compareResult;
     });
-
     return result;
   }, [state.roles, state.filterText, state.sortBy, state.sortDirection]);
-
   if (state.loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
@@ -159,7 +145,6 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
       </Box>
     );
   }
-
   return (
     <Box>
       <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -177,13 +162,11 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
           }}
         />
       </Box>
-
       {state.error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {state.error}
         </Alert>
       )}
-
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -229,7 +212,6 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
           </TableBody>
         </Table>
       </TableContainer>
-
       <Dialog
         open={state.deleteDialogOpen}
         onClose={() => setState(prev => ({ ...prev, deleteDialogOpen: false, roleToDelete: null }))}
@@ -251,5 +233,4 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
     </Box>
   );
 };
-
 export default RolesList;

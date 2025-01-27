@@ -1,4 +1,4 @@
-import { Setting } from '../settings/types';
+import { Setting } from '@infrastructure/settings/types';
 
 export abstract class JsonSetting<T> {
     protected abstract settingKey: string;

@@ -1,8 +1,8 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Nicknames } from './Nicknames';
-import { AccountHistoryQuickActions } from './AccountHistoryQuickActions';
-import { Authentication } from './Authentication.Authentication';
-import { Cards } from './Cards';
+import { Nicknames } from '@infrastructure/Nicknames';
+import { AccountHistoryQuickActions } from '@infrastructure/AccountHistoryQuickActions';
+import { Authentication } from '@infrastructure/Authentication.Authentication';
+import { Cards } from '@infrastructure/Cards';
 export interface AccountsConfig {
     DisplayBalanceAndAvailable: boolean;
     CanHideClosedAccounts: boolean;

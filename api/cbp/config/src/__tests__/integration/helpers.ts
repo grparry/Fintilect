@@ -1,10 +1,10 @@
 import request from 'supertest';
 import { Express } from 'express';
 import jwt from 'jsonwebtoken';
-import app from '../../app';
-import { Database } from '../../config/db';
-import { TestDatabase, testDb } from '../../config/test.db';
-import { HttpError } from '../../utils/errors';
+import app from '@/../app';
+import { Database } from '@/../config/db';
+import { TestDatabase, testDb } from '@/../config/test.db';
+import { HttpError } from '@/../utils/errors';
 
 const testDatabase = testDb;
 

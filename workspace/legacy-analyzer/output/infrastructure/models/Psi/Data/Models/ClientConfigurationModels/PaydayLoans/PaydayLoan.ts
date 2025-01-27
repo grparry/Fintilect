@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { AdvancePay } from './AdvancePay';
+import { AdvancePay } from '@infrastructure/AdvancePay';
 export interface PaydayLoanConfig {
     AdvancePay: AdvancePay;
 }

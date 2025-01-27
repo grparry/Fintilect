@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { ResourceWrapper } from '../ResourceWrapper';
-import type { Resource } from '../ResourceWrapper';
+import { ResourceWrapper } from '@/ResourceWrapper';
+import type { Resource } from '@/ResourceWrapper';
 
 /**
  * Test Suite: ResourceWrapper Navigation Flow

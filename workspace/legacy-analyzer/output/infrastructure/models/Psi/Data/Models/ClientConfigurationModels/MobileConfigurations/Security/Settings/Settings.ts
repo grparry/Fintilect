@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { AppShieldResponseType } from './AppShieldResponseType';
+import { AppShieldResponseType } from '@infrastructure/AppShieldResponseType';
 export interface SettingsConfig {
     AdbResponse: AppShieldResponseType;
     BluetoothControlResponse: AppShieldResponseType;

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { PayeeService } from '../services/payee.service';
-import type { PayeeQueryResult } from '../services/payee.service';
-import { HttpError } from '../utils/errors';
-import { validatePayeeData } from '../utils/validation';
-import { CreatePayeeRequest, UpdatePayeeRequest } from '../types/payee';
+import { PayeeService } from '@cbp-config-api/services/payee.service';
+import type { PayeeQueryResult } from '@cbp-config-api/services/payee.service';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { validatePayeeData } from '@cbp-config-api/utils/validation';
+import { CreatePayeeRequest, UpdatePayeeRequest } from '@cbp-config-api/types/payee';
 
 export class PayeeController {
   constructor(private payeeService: PayeeService) {}

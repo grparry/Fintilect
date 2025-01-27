@@ -9,7 +9,7 @@ import {
   Box,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import logger from '../../utils/logger';
+import logger from '@/../utils/logger';
 
 export interface BaseModalProps {
   open: boolean;

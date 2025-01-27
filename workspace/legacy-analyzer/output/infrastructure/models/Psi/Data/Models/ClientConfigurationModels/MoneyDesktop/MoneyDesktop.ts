@@ -1,7 +1,7 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Dashboard } from './Dashboard';
-import { Summary } from './Summary';
-import { Enrollment } from './Enrollment';
+import { Dashboard } from '@infrastructure/Dashboard';
+import { Summary } from '@infrastructure/Summary';
+import { Enrollment } from '@infrastructure/Enrollment';
 export interface MoneyDesktopConfig {
     AutoEnrollEnabled: boolean;
     DashboardConfiguration: Dashboard;

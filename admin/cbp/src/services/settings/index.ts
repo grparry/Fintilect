@@ -1,5 +1,5 @@
 import { ValidationResult, ValidationError } from './types';
-import ApiClient from '@services/api';
+import ApiClient from '../api';
 import Ajv from 'ajv';
 import { ISettingsService } from '../interfaces/ISettingsService';
 import { ApiSuccessResponse, ApiErrorResponse } from '../../types/api.types';
@@ -22,7 +22,6 @@ export interface Setting<T = any> {
         lastModified?: string;
     };
 }
-
 export interface ValidationRules {
     type: string;
     properties?: Record<string, ValidationRules>;
@@ -33,7 +32,6 @@ export interface ValidationRules {
     items?: ValidationRules;
     [key: string]: any;
 }
-
 export class SettingsService implements ISettingsService {
     readonly basePath = '/api/settings';
     private ajv = new Ajv({ 
@@ -42,19 +40,15 @@ export class SettingsService implements ISettingsService {
     });
     private apiClient;
     private cache = new Map<string, Setting<any>>();
-
     constructor() {
         this.apiClient = ApiClient;
     }
-
     private generateRequestId(): string {
         return Math.random().toString(36).substring(2) + Date.now().toString(36);
     }
-
     async getSettingsGroup(groupName: string): Promise<ApiSuccessResponse<SettingGroup>> {
         throw new Error('Not implemented');
     }
-
     async getSetting(key: string): Promise<ApiSuccessResponse<Setting<any>>> {
         if (this.cache.has(key)) {
             const cachedSetting = this.cache.get(key)!;
@@ -67,7 +61,6 @@ export class SettingsService implements ISettingsService {
                 }
             };
         }
-
         const response = await this.apiClient.get<Setting<any>>(`${this.basePath}/${key}`);
         if (!response.success || !response.data) {
             throw new Error('Failed to get setting');
@@ -83,7 +76,6 @@ export class SettingsService implements ISettingsService {
             }
         };
     }
-
     async updateSetting(key: string, value: string | number | boolean): Promise<ApiSuccessResponse<Setting<any>>> {
         const response = await this.apiClient.put<Setting<any>>(`${this.basePath}/${key}`, { value });
         if (!response.success || !response.data) {
@@ -100,7 +92,6 @@ export class SettingsService implements ISettingsService {
             }
         };
     }
-
     async updateSettings(settings: Setting[]): Promise<ApiSuccessResponse<Setting<any>[]>> {
         const response = await this.apiClient.put<Setting<any>[]>(`${this.basePath}/batch`, { settings });
         if (!response.success || !response.data) {
@@ -119,7 +110,6 @@ export class SettingsService implements ISettingsService {
             }
         };
     }
-
     async getSettingsByPrefix(prefix: string): Promise<ApiSuccessResponse<Setting<any>[]>> {
         const response = await this.apiClient.get<Setting<any>[]>(`${this.basePath}/prefix/${prefix}`);
         if (!response.success || !response.data) {
@@ -138,18 +128,15 @@ export class SettingsService implements ISettingsService {
             }
         };
     }
-
     async validateSetting(key: string, value: any): Promise<ApiSuccessResponse<ValidationResult>> {
         const setting = await this.getSetting(key);
         if (!setting.success || !setting.data) {
             throw new Error('Setting not found');
         }
-
         const validationResult = this.validateValue(value, {
             type: setting.data.type,
             ...setting.data.validationRules
         });
-
         return {
             success: true,
             data: validationResult,
@@ -159,7 +146,6 @@ export class SettingsService implements ISettingsService {
             }
         };
     }
-
     private validateValue(value: any, rules: ValidationRules): ValidationResult {
         const schema = {
             ...(rules.min !== undefined && { minimum: rules.min }),
@@ -167,14 +153,12 @@ export class SettingsService implements ISettingsService {
             ...(rules.pattern && { pattern: rules.pattern }),
             ...(rules.options && { enum: rules.options.map((o: { value: string | number | boolean; label: string }) => o.value) })
         };
-
         const valid = this.ajv.validate(schema, value);
         if (valid) {
             return {
                 valid: true
             };
         }
-
         return {
             valid: false,
             errors: (this.ajv.errors || []).map(error => ({
@@ -183,7 +167,6 @@ export class SettingsService implements ISettingsService {
             }))
         };
     }
-
     private convertFromApiSetting(setting: Setting): Setting {
         return {
             key: setting.key,
@@ -198,7 +181,6 @@ export class SettingsService implements ISettingsService {
             } : undefined
         };
     }
-
     private convertToApiSetting(setting: Setting): Setting {
         return {
             ...setting,

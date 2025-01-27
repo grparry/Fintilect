@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sidebar Mockup</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background-color: #1e1e1e;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(-100%);
+        }
+
+        .section.active {
+            transform: translateX(0);
+        }
+
+        .section-header {
+            background-color: #2196F3;
+            padding: 16px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .section-content {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+        }
+
+        .other-sections {
+            border-top: 1px solid #333;
+            padding: 8px;
+            background-color: #1e1e1e;
+            margin-top: auto;
+        }
+
+        .section-switch {
+            padding: 8px;
+            margin: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-switch:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            opacity: 1;
+        }
+
+        .section-switch.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            opacity: 1;
+        }
+
+        .section-switch.inactive {
+            color: #888;
+        }
+
+        .section-badge {
+            background-color: #333;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: auto;
+        }
+
+        /* Different colors for different sections */
+        .client-management .section-header { background-color: #1976D2; }
+        .emerge-admin .section-header { background-color: #2196F3; }
+        .emerge-config .section-header { background-color: #03A9F4; }
+        .bill-pay .section-header { background-color: #00BCD4; }
+        .development .section-header { background-color: #009688; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <!-- Client Management Section -->
+        <div class="section client-management">
+            <div class="section-header">
+                Client Management
+                <i class="material-icons">expand_more</i>
+            </div>
+            <div class="section-content">
+                <div class="nav-item">
+                    <i class="material-icons">people</i>
+                    Clients
+                </div>
+                <div class="nav-item">
+                    <i class="material-icons">add_circle</i>
+                    New Client
+                </div>
+                <div class="nav-item">
+                    <i class="material-icons">search</i>
+                    Search
+                </div>
+            </div>
+            <div class="other-sections"></div>
+        </div>
+
+        <!-- Emerge Admin Section -->
+        <div class="section emerge-admin">
+            <div class="section-header">
+                Emerge Admin
+                <i class="material-icons">expand_more</i>
+            </div>
+            <div class="section-content">
+                <div class="nav-item">
+                    <i class="material-icons">group</i>
+                    Member Center
+                </div>
+                <div class="nav-item">
+                    <i class="material-icons">account_balance</i>
+                    Money Desktop
+                </div>
+            </div>
+            <div class="other-sections"></div>
+        </div>
+
+        <!-- Emerge Config Section -->
+        <div class="section emerge-config">
+            <div class="section-header">
+                Emerge Config
+                <i class="material-icons">expand_more</i>
+            </div>
+            <div class="section-content">
+                <div class="nav-item">
+                    <i class="material-icons">settings</i>
+                    Configuration
+                </div>
+                <div class="nav-item">
+                    <i class="material-icons">build</i>
+                    System Settings
+                </div>
+                <div class="nav-item">
+                    <i class="material-icons">admin_panel_settings</i>
+                    Access Control
+                </div>
+                <div class="nav-item">
+                    <i class="material-icons">integration_instructions</i>
+                    API Configuration
+                </div>
+            </div>
+            <div class="other-sections"></div>
+        </div>
+
+        <!-- Bill Pay Section -->
+        <div class="section bill-pay">
+            <div class="section-header">
+                Bill Pay
+                <i class="material-icons">expand_more</i>
+            </div>
+            <div class="section-content">
+                <div class="nav-item">
+                    <i class="material-icons">dashboard</i>
+                    Dashboard
+                </div>
+                <div class="nav-item">
+                    <i class="material-icons">payment</i>
+                    Payment Management
+                </div>
+                <div class="nav-item">
+                    <i class="material-icons">assessment</i>
+                    Reports
+                </div>
+                <div class="nav-item">
+                    <i class="material-icons">sync</i>
+                    Data Conversion
+                </div>
+                <div class="nav-item">
+                    <i class="material-icons">settings</i>
+                    Settings
+                </div>
+            </div>
+            <div class="other-sections"></div>
+        </div>
+
+        <!-- Development Section -->
+        <div class="section development">
+            <div class="section-header">
+                Development
+                <i class="material-icons">expand_more</i>
+            </div>
+            <div class="section-content">
+                <div class="nav-item">
+                    <i class="material-icons">code</i>
+                    Development
+                </div>
+                <div class="nav-item">
+                    <i class="material-icons">api</i>
+                    API Testing
+                </div>
+            </div>
+            <div class="other-sections"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration for all sections
+        const sections = [
+            { id: 'client-management', title: 'Client Management', icon: 'business', items: 3 },
+            { id: 'emerge-admin', title: 'Emerge Admin', icon: 'group', items: 2 },
+            { id: 'emerge-config', title: 'Emerge Config', icon: 'settings', items: 4 },
+            { id: 'bill-pay', title: 'Bill Pay', icon: 'payments', items: 5 },
+            { id: 'development', title: 'Development', icon: 'code', items: 2 }
+        ];
+
+        // Initialize the sidebar
+        function initializeSidebar() {
+            // Create section switchers for each section
+            const sectionSwitcherTemplate = sections.map(section => `
+                <div class="section-switch" data-section="${section.id}">
+                    <i class="material-icons">${section.icon}</i>
+                    ${section.title}
+                    <span class="section-badge">${section.items}</span>
+                </div>
+            `).join('');
+
+            // Add section switchers to each section's other-sections div
+            document.querySelectorAll('.other-sections').forEach(el => {
+                el.innerHTML = sectionSwitcherTemplate;
+            });
+
+            // Add click handlers for section switching
+            document.querySelectorAll('.section-switch').forEach(switcher => {
+                switcher.addEventListener('click', () => {
+                    const sectionId = switcher.dataset.section;
+                    switchToSection(sectionId);
+                });
+            });
+
+            // Set initial active section
+            switchToSection('emerge-admin');
+        }
+
+        // Switch to a specific section
+        function switchToSection(sectionId) {
+            // Update sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+                if (section.classList.contains(sectionId)) {
+                    section.classList.add('active');
+                }
+            });
+
+            // Update section switchers
+            document.querySelectorAll('.section-switch').forEach(switcher => {
+                switcher.classList.remove('active');
+                if (switcher.dataset.section === sectionId) {
+                    switcher.classList.add('active');
+                }
+            });
+        }
+
+        // Initialize when the page loads
+        document.addEventListener('DOMContentLoaded', initializeSidebar);
+    </script>
+</body>
+</html>

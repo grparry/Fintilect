@@ -1,6 +1,6 @@
-import { SystemService } from '../../services/system.service';
-import { MockDatabase } from '../utils/testHelpers';
-import { HttpError } from '../../utils/errors';
+import { SystemService } from '@/../services/system.service';
+import { MockDatabase } from '@/utils/testHelpers';
+import { HttpError } from '@/../utils/errors';
 
 describe('SystemService', () => {
   let systemService: SystemService;

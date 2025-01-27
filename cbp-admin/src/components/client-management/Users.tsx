@@ -18,16 +18,16 @@ import {
   UserRole,
   PaginatedResponse,
   UserFilters
-} from '../../types/client.types';
-import { PaginationOptions, FilterOptions } from '../../types/common.types';
-import { clientService, userService } from '../../services/factory/ServiceFactory';
-import UserSearch from './users/UserSearch';
-import UserTable from './users/UserTable';
-import UserForm from './users/UserForm';
+} from '@/../types/client.types';
+import { PaginationOptions, FilterOptions } from '@/../types/common.types';
+import { clientService, userService } from '@/../services/factory/ServiceFactory';
+import UserSearch from '@/users/UserSearch';
+import UserTable from '@/users/UserTable';
+import UserForm from '@/users/UserForm';
 import { useNavigate } from 'react-router-dom';
-import { encodeId } from '../../utils/idEncoder';
-import logger from '../../utils/logger';
-import { UserFormData } from './users/UserForm';
+import { encodeId } from '@/../utils/idEncoder';
+import logger from '@/../utils/logger';
+import { UserFormData } from '@/users/UserForm';
 
 interface UsersState {
   users: User[];

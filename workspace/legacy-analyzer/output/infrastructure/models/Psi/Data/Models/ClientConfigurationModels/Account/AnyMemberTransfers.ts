@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { AnyMemberTransferField } from './AnyMemberTransferField';
+import { AnyMemberTransferField } from '@infrastructure/AnyMemberTransferField';
 export interface AnyMemberTransfersConfig {
     Enabled: boolean;
     MinVersion: number;

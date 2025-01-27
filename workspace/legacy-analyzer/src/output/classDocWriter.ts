@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import logger from '../utils/logger';
-import { ParsedClass, ParsedField, ParsedEnum } from '../parser/types';
-import { FileService } from '../services/fileService';
-import { TypeMapper } from './typeSystem/typeMapper';
-import { OutputWriter } from './writer';
+import logger from '@/utils/logger';
+import { ParsedClass, ParsedField, ParsedEnum } from '@/parser/types';
+import { FileService } from '@/services/fileService';
+import { TypeMapper } from '@/typeSystem/typeMapper';
+import { OutputWriter } from '@/writer';
 
 export class ClassDocWriter {
     constructor(private readonly fileService: FileService) {}

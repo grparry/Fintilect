@@ -5,14 +5,12 @@ import type { Permission, PermissionAction, PermissionCategoryType } from './per
 
 export type NavigationElement = ComponentType | LazyExoticComponent<any>;
 export type IconComponent = React.ComponentType<SvgIconProps>;
-
 export interface NavigationPermissionRequirement {
   roles?: string[];
   permissions?: string[];
   clientId?: string;
   customCheck?: () => Promise<boolean>;
 }
-
 export interface NavigationItem {
   id: string;
   title: string;
@@ -27,7 +25,6 @@ export interface NavigationItem {
   children?: NavigationItem[];
   items?: NavigationItem[];
 }
-
 export interface NavigationSection {
   id: string;
   title: string;
@@ -41,18 +38,15 @@ export interface NavigationSection {
   badge?: number;
   fallbackPath?: string;
 }
-
 export interface NavigationState {
   activeSection: string | null;
   activePath: string | null;
   permissionCache: Map<string, boolean>;
   expandedItems: string[];
 }
-
 export interface NavigationConfig {
   sections: NavigationSection[];
   defaultSection?: string;
 }
-
 export type { Permission, PermissionAction, PermissionCategoryType };
 export type { RouteConfig };

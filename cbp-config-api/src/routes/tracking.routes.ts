@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { TrackingController } from '../controllers/tracking.controller';
-import { db } from '../config/db';
-import { validateRequest } from '../middleware/validation.middleware';
+import { TrackingController } from '@/controllers/tracking.controller';
+import { db } from '@/config/db';
+import { validateRequest } from '@/middleware/validation.middleware';
 import { z } from 'zod';
-import { authMiddleware } from '../middleware/auth.middleware';
-import { cacheMiddleware } from '../middleware/cache.middleware';
+import { authMiddleware } from '@/middleware/auth.middleware';
+import { cacheMiddleware } from '@/middleware/cache.middleware';
 
 /**
  * @swagger

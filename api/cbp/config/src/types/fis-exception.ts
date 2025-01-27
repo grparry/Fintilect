@@ -1,4 +1,4 @@
-import { PaginatedResponse } from './common';
+import { PaginatedResponse } from '@cbp-config-api/common';
 
 export enum ExceptionErrorCodes {
   NOT_FOUND = 'EXCEPTION_NOT_FOUND',

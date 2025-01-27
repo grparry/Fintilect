@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { DigitalInsightsConfiguration } from './DigitalInsightsConfiguration';
+import { DigitalInsightsConfiguration } from '@infrastructure/DigitalInsightsConfiguration';
 export interface MessagePumpsConfig {
     DigitalInsightsConfiguration: DigitalInsightsConfiguration;
 }

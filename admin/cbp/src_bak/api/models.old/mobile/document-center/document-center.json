@@ -1,0 +1,15 @@
+{
+  "DocumentCenterSettings": {
+    "type": "object",
+    "description": "Configuration settings for Document Center in mobile",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.MobileConfigurations.DocumentCenter",
+    "required": ["enabled"],
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether Document Center is enabled in mobile",
+        "x-setting-key": "Mobile.DocumentCenter.Enabled"
+      }
+    }
+  }
+}

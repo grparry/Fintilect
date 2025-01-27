@@ -49,7 +49,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HistoryIcon from '@mui/icons-material/History';
 import LockIcon from '@mui/icons-material/Lock';
 import dayjs, { Dayjs } from 'dayjs';
-
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { useAuth } from '../../../hooks/useAuth';
 import {
@@ -71,7 +70,6 @@ interface PaymentDialogState {
   action: 'view' | 'approve' | 'reject' | 'history' | 'confirm' | null;
   history?: PaymentHistory[];
 }
-
 interface FilterState {
   startDate: Dayjs | null;
   endDate: Dayjs | null;
@@ -88,7 +86,6 @@ interface FilterState {
   minAmount?: number;
   maxAmount?: number;
 }
-
 interface ConfirmationState {
   method: ConfirmationMethod;
   code: string;
@@ -99,7 +96,6 @@ interface ConfirmationState {
   processing: boolean;
   confirmationStatus: string | null;
 }
-
 const initialConfirmationState: ConfirmationState = {
   method: ConfirmationMethod.OTP,
   code: '',
@@ -110,11 +106,9 @@ const initialConfirmationState: ConfirmationState = {
   processing: false,
   confirmationStatus: null
 };
-
 const PendingPayments: React.FC = () => {
   const { user } = useAuth();
   const paymentService = ServiceFactory.getInstance().getPaymentService();
-
   // State
   const [payments, setPayments] = useState<PendingPayment[]>([]);
   const [filteredPayments, setFilteredPayments] = useState<PendingPayment[] | null>(null);
@@ -153,12 +147,10 @@ const PendingPayments: React.FC = () => {
     method: false,
     priority: false
   });
-
   const handleError = (err: unknown, message?: string) => {
     console.error(message || 'An error occurred', err);
     setError(message || 'An error occurred');
   };
-
   // Helper function to get priority color
   const getPriorityColor = (priority: Priority): 'error' | 'warning' | 'info' | 'default' => {
     switch (priority) {
@@ -172,7 +164,6 @@ const PendingPayments: React.FC = () => {
         return 'default';
     }
   };
-
   // Helper function to get status color
   const getStatusColor = (status: PaymentStatus): 'warning' | 'success' | 'error' | 'info' => {
     switch (status) {
@@ -186,13 +177,11 @@ const PendingPayments: React.FC = () => {
         return 'info';
     }
   };
-
   // Fetch pending payments
   const fetchPayments = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      
       const searchRequest: PendingPaymentSearchRequest = {
         status: filters.status,
         method: filters.method,
@@ -208,7 +197,6 @@ const PendingPayments: React.FC = () => {
         minAmount: filters.minAmount,
         maxAmount: filters.maxAmount
       };
-      
       const response = await paymentService.getPendingPayments(searchRequest);
       setPayments(response.data || []);
       setFilteredPayments(response.data || []);
@@ -222,7 +210,6 @@ const PendingPayments: React.FC = () => {
       setLoading(false);
     }
   }, [filters, paymentService]);
-
   // Fetch payment summary
   const fetchSummary = useCallback(async () => {
     try {
@@ -247,19 +234,16 @@ const PendingPayments: React.FC = () => {
       setLoading(false);
     }
   }, [filters, paymentService]);
-
   useEffect(() => {
     fetchPayments();
     fetchSummary();
   }, [fetchPayments, fetchSummary]);
-
   // Apply client-side filtering whenever payments or searchTerm changes
   useEffect(() => {
     if (!filters.searchTerm) {
       setFilteredPayments(payments);
       return;
     }
-
     const searchTermLower = filters.searchTerm.toLowerCase();
     const filtered = payments.filter(payment => {
       return (
@@ -271,27 +255,22 @@ const PendingPayments: React.FC = () => {
         payment.method.toLowerCase().includes(searchTermLower)
       );
     });
-
     setFilteredPayments(filtered);
   }, [payments, filters.searchTerm]);
-
   // Update total payments when filtered results change
   useEffect(() => {
     setPagination(prev => ({ ...prev, total: filteredPayments?.length || 0 }));
   }, [filteredPayments]);
-
   // Handlers
   const handlePageChange = (event: unknown, newPage: number) => {
     setPagination(prev => ({ ...prev, page: newPage }));
     setFilters(prev => ({ ...prev, page: newPage + 1 }));
   };
-
   const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newLimit = parseInt(event.target.value, 10);
     setPagination(prev => ({ ...prev, limit: newLimit, page: 0 }));
     setFilters(prev => ({ ...prev, limit: newLimit, page: 1 }));
   };
-
   const handleFilterChange = <K extends keyof FilterState>(
     field: K,
     value: FilterState[K]
@@ -299,36 +278,30 @@ const PendingPayments: React.FC = () => {
     setFilters((prev) => ({ ...prev, [field]: value }));
     setPagination(prev => ({ ...prev, page: 0 }));
   };
-
   const handleDateChange = (field: 'startDate' | 'endDate') => (date: Dayjs | null) => {
     handleFilterChange(field, date);
   };
-
   const handleStatusChange = (event: SelectChangeEvent<PaymentStatus[]>) => {
     setFilters(prev => ({
       ...prev,
       status: event.target.value as PaymentStatus[]
     }));
   };
-
   const handlePriorityChange = (event: SelectChangeEvent<Priority[]>) => {
     setFilters(prev => ({
       ...prev,
       priority: event.target.value as Priority[]
     }));
   };
-
   const handleMethodChange = (event: SelectChangeEvent<PaymentMethod[]>) => {
     setFilters(prev => ({
       ...prev,
       method: event.target.value as PaymentMethod[]
     }));
   };
-
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleFilterChange('searchTerm', event.target.value);
   };
-
   const handleExport = async () => {
     try {
       const blob = await paymentService.exportPendingPayments({
@@ -348,7 +321,6 @@ const PendingPayments: React.FC = () => {
       handleError(err, 'Failed to export payments');
     }
   };
-
   const handleApprove = async (payment: PendingPayment) => {
     try {
       setProcessing((prev) => ({ ...prev, [payment.id]: true }));
@@ -360,13 +332,11 @@ const PendingPayments: React.FC = () => {
       setProcessing((prev) => ({ ...prev, [payment.id]: false }));
     }
   };
-
   const handleRejectPayment = useCallback(async (paymentId: string) => {
     if (!user?.id) {
       setError('User not authenticated');
       return;
     }
-
     try {
       setProcessing((prev) => ({ ...prev, [paymentId]: true }));
       await paymentService.rejectPayment(paymentId, rejectReason || 'Rejected by admin');
@@ -379,13 +349,11 @@ const PendingPayments: React.FC = () => {
       setProcessing((prev) => ({ ...prev, [paymentId]: false }));
     }
   }, [user?.id, fetchPayments, rejectReason]);
-
   const handleBulkApprove = async () => {
     if (!user?.id) {
       setError('User not authenticated');
       return;
     }
-    
     try {
       setProcessing(prev => ({ ...prev, bulk: true }));
       const success = await paymentService.bulkApprove(selectedPayments);
@@ -399,13 +367,11 @@ const PendingPayments: React.FC = () => {
       setProcessing(prev => ({ ...prev, bulk: false }));
     }
   };
-
   const handleBulkReject = async () => {
     if (!user?.id) {
       setError('User not authenticated');
       return;
     }
-
     try {
       setProcessing(prev => ({ ...prev, bulk: true }));
       const success = await paymentService.bulkReject(selectedPayments);
@@ -419,7 +385,6 @@ const PendingPayments: React.FC = () => {
       setProcessing(prev => ({ ...prev, bulk: false }));
     }
   };
-
   const handleViewHistory = async (payment: PendingPayment) => {
     try {
       setLoading(true);
@@ -443,7 +408,6 @@ const PendingPayments: React.FC = () => {
       setLoading(false);
     }
   };
-
   const handleConfirmationError = (error: string | undefined) => {
     setConfirmation(prev => ({
       ...prev,
@@ -451,7 +415,6 @@ const PendingPayments: React.FC = () => {
       attempts: prev.attempts + 1,
     }));
   };
-
   // Confirmation handlers
   const handleConfirmationMethodChange = (event: SelectChangeEvent<ConfirmationMethod>) => {
     setConfirmation(prev => ({
@@ -461,7 +424,6 @@ const PendingPayments: React.FC = () => {
       error: null
     }));
   };
-
   const handleConfirmPayment = async (confirmationData: PaymentConfirmationRequest) => {
     try {
       setLoading(true);
@@ -495,7 +457,6 @@ const PendingPayments: React.FC = () => {
       setLoading(false);
     }
   };
-
   const handlePaymentAction = async (paymentId: string, action: 'approve' | 'reject') => {
     try {
       setProcessing(prev => ({ ...prev, [paymentId]: true }));
@@ -504,7 +465,6 @@ const PendingPayments: React.FC = () => {
       } else {
         await paymentService.rejectPayment(paymentId, rejectReason);
       }
-      
       // Since the operation completed without throwing an error, we can proceed
       fetchPayments();
       setDialogState({ open: false, payment: null, action: null });
@@ -515,7 +475,6 @@ const PendingPayments: React.FC = () => {
       setProcessing(prev => ({ ...prev, [paymentId]: false }));
     }
   };
-
   const handleConfirmationRequest = async (paymentId: string) => {
     try {
       setConfirmation(prev => ({
@@ -524,7 +483,6 @@ const PendingPayments: React.FC = () => {
         error: null,
         method: ConfirmationMethod.OTP
       }));
-
       const request: any = {
         paymentId,
         method: PaymentMethod.ACH,
@@ -532,7 +490,6 @@ const PendingPayments: React.FC = () => {
         code: confirmation.code,
         userId: user?.id?.toString()
       };
-
       const response: PaymentConfirmationResponse = await paymentService.confirmPayment(paymentId, request);
       setConfirmation(prev => ({
         ...prev,
@@ -543,7 +500,6 @@ const PendingPayments: React.FC = () => {
         processing: false,
         confirmationStatus: response.confirmationStatus
       }));
-      
       if (response.success) {
         // Update the current dialog to show the confirmation status
         setDialogState(prev => ({
@@ -561,14 +517,12 @@ const PendingPayments: React.FC = () => {
       }));
     }
   };
-
   const handleClearFilter = (field: keyof Pick<FilterState, 'status' | 'method' | 'priority'>) => {
     setFilters(prev => ({
       ...prev,
       [field]: undefined
     }));
   };
-
   const handleDeleteFilterValue = (
     event: React.MouseEvent<HTMLElement>,
     field: keyof Pick<FilterState, 'status' | 'method' | 'priority'>,
@@ -579,7 +533,6 @@ const PendingPayments: React.FC = () => {
     setFilters(prev => {
       const currentValue = prev[field] || [];
       let newValue: (PaymentStatus | PaymentMethod | Priority)[] = [];
-      
       if (field === 'status') {
         newValue = (currentValue as PaymentStatus[]).filter(
           value => value !== valueToDelete
@@ -593,7 +546,6 @@ const PendingPayments: React.FC = () => {
           value => value !== valueToDelete
         );
       }
-
       return {
         ...prev,
         [field]: newValue
@@ -602,7 +554,6 @@ const PendingPayments: React.FC = () => {
     // Close the dropdown after deletion
     setOpenDropdowns(prev => ({ ...prev, [field]: false }));
   };
-
   // Render functions
   const renderFilters = () => (
     <Card sx={{ mb: 3 }}>
@@ -820,7 +771,6 @@ const PendingPayments: React.FC = () => {
       </CardContent>
     </Card>
   );
-
   const renderTable = () => {
     if (!filteredPayments) {
       return (
@@ -829,7 +779,6 @@ const PendingPayments: React.FC = () => {
         </Box>
       );
     }
-
     return (
       <TableContainer component={Paper}>
         <Table>
@@ -985,7 +934,6 @@ const PendingPayments: React.FC = () => {
       </TableContainer>
     );
   };
-
   const renderDialog = () => (
     <Dialog
       open={dialogState.open}
@@ -1156,10 +1104,8 @@ const PendingPayments: React.FC = () => {
       </DialogActions>
     </Dialog>
   );
-
   const renderRejectDialog = () => {
     if (!dialogState.payment || dialogState.action !== 'reject') return null;
-
     return (
       <Dialog
         open={dialogState.open}
@@ -1203,7 +1149,6 @@ const PendingPayments: React.FC = () => {
       </Dialog>
     );
   };
-
   return (
     <Box>
       {renderFilters()}
@@ -1239,5 +1184,4 @@ const PendingPayments: React.FC = () => {
     </Box>
   );
 };
-
 export default PendingPayments;

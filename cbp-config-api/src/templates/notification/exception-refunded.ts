@@ -1,4 +1,4 @@
-import { NotificationTemplateData } from '../../types/notification';
+import { NotificationTemplateData } from '@/../types/notification';
 
 export const getSubject = (data: NotificationTemplateData): string => {
   return `Exception ${data.exceptionId} Refund Status Update`;

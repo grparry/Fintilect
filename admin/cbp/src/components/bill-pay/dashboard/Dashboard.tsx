@@ -39,6 +39,7 @@ import {
   TimeRangeOption,
   ChartViewOption
 } from '../../../types/dashboard.types';
+import { TimeRange } from '../../../types/index';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { IBillPayService } from '../../../services/interfaces/IBillPayService';
 import { IPaymentProcessorService } from '../../../services/interfaces/IPaymentProcessorService';
@@ -81,7 +82,6 @@ const CustomTooltip = ({ active, payload, label, isAmount }: CustomTooltipProps)
   if (!active || !payload || !payload.length) {
     return null;
   }
-
   return (
     <Card>
       <CardContent>
@@ -98,7 +98,6 @@ const Dashboard: React.FC = () => {
   // Initialize services
   const billPayService = ServiceFactory.getInstance().getBillPayService();
   const processorService = ServiceFactory.getInstance().getPaymentProcessorService();
-
   const [state, setState] = useState<DashboardState>({
     billPayStats: null,
     processorMetrics: null,
@@ -112,7 +111,6 @@ const Dashboard: React.FC = () => {
   const loadDashboardData = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
-
       // Convert timeRange to service format
       const serviceTimeRange = (() => {
         switch (timeRange) {
@@ -123,11 +121,9 @@ const Dashboard: React.FC = () => {
           default: return 'week';
         }
       })();
-
       const getDateRange = (): DateRange => {
         const now = new Date();
         const start = new Date(now);
-        
         switch (timeRange) {
           case '7d':
             start.setDate(start.getDate() - 7);
@@ -142,26 +138,21 @@ const Dashboard: React.FC = () => {
             start.setFullYear(start.getFullYear() - 1);
             break;
         }
-        
         // Set to start of day
         start.setHours(0, 0, 0, 0);
         // Set end to end of day
         now.setHours(23, 59, 59, 999);
-        
         return {
           startDate: start.toISOString(),
           endDate: now.toISOString()
         };
       };
-
       const dateRange = getDateRange();
-
       const [billPayStats, processorMetrics, transactionSummary] = await Promise.all([
         billPayService.getStats(serviceTimeRange),
         processorService.getProcessorMetrics({ dateRange }),
         processorService.getTransactionSummary({ dateRange })
       ]);
-
       setState(prev => ({ 
         ...prev, 
         billPayStats: billPayStats,
@@ -209,7 +200,6 @@ const Dashboard: React.FC = () => {
     if (!state.billPayStats?.recentActivity) {
       return [];
     }
-
     // Filter based on the selected time range
     const cutoffDate = new Date();
     switch (timeRange) {
@@ -227,7 +217,6 @@ const Dashboard: React.FC = () => {
         break;
     }
     cutoffDate.setHours(0, 0, 0, 0);
-
     return state.billPayStats.recentActivity.filter(activity => 
       new Date(activity.timestamp) >= cutoffDate
     );
@@ -243,14 +232,11 @@ const Dashboard: React.FC = () => {
       PaymentStatus.SUBMITTED,
       PaymentStatus.SCHEDULED
     ];
-
     const pendingCounts = pendingStatuses.map(status => ({
       status,
       count: stats.transactionsByStatus[status] || 0
     }));
-
     const pendingCount = pendingCounts.reduce((total, { count }) => total + count, 0);
-
     console.log('Getting Pending Transactions:', {
       transactionsByStatus: stats.transactionsByStatus,
       pendingStatuses,
@@ -268,14 +254,11 @@ const Dashboard: React.FC = () => {
       PaymentStatus.CANCELLED,
       PaymentStatus.EXPIRED
     ];
-
     const failedCounts = failedStatuses.map(status => ({
       status,
       count: stats.transactionsByStatus[status] || 0
     }));
-
     const failedCount = failedCounts.reduce((total, { count }) => total + count, 0);
-
     console.log('Getting Failed Transactions:', {
       transactionsByStatus: stats.transactionsByStatus,
       failedStatuses,
@@ -287,11 +270,9 @@ const Dashboard: React.FC = () => {
 
   const getMetricValue = useCallback((key: string): number => {
     if (!state.billPayStats) return 0;
-
     let value = 0;
     // Normalize the key to match our internal keys
     const normalizedKey = key.replace(/[^a-zA-Z]/g, '').toLowerCase();
-    
     switch (normalizedKey) {
       case 'totaltransactions':
       case 'totalpayments':
@@ -313,7 +294,6 @@ const Dashboard: React.FC = () => {
         console.warn(`Unknown metric key: ${key}`);
         value = 0;
     }
-
     return value;
   }, [state.billPayStats, getPendingTransactions, getFailedTransactions]);
 
@@ -327,16 +307,13 @@ const Dashboard: React.FC = () => {
         latest: new Date(filteredActivity[0].timestamp)
       } : null
     });
-
     if (!filteredActivity.length) {
       return [];
     }
-
     // Group transactions by date or month depending on timeRange
     const groupedData = filteredActivity.reduce((acc, activity) => {
       const date = new Date(activity.timestamp);
       let dateKey;
-
       // For quarter and year views, group by month
       if (timeRange === '90d' || timeRange === '1y') {
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -349,7 +326,6 @@ const Dashboard: React.FC = () => {
         const day = date.getDate().toString().padStart(2, '0');
         dateKey = `${month}/${day}`;
       }
-      
       if (!acc[dateKey]) {
         acc[dateKey] = {
           date: dateKey,
@@ -362,16 +338,13 @@ const Dashboard: React.FC = () => {
         acc[dateKey].count += 1;
         acc[dateKey].amount += activity.amount;
       }
-      
       return acc;
     }, {} as Record<string, { date: string; value: number; count: number; amount: number }>);
-
     console.log('Grouped Data:', {
       timeRange,
       groupKeys: Object.keys(groupedData),
       totalGroups: Object.keys(groupedData).length
     });
-
     // Convert to array and sort by date
     return Object.values(groupedData).sort((a, b) => {
       if (timeRange === '90d' || timeRange === '1y') {
@@ -379,7 +352,6 @@ const Dashboard: React.FC = () => {
         const [aMonth, aYear] = a.date.split(' ');
         const [bMonth, bYear] = b.date.split(' ');
         const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        
         if (aYear !== bYear) {
           return parseInt(aYear) - parseInt(bYear);
         }
@@ -399,7 +371,6 @@ const Dashboard: React.FC = () => {
     if (state.loading || !state.billPayStats) {
       return <Skeleton variant="rectangular" height={400} />;
     }
-
     const chartData = getChartData();
     const dataInterval = (() => {
       switch (timeRange) {
@@ -412,7 +383,6 @@ const Dashboard: React.FC = () => {
           return chartData.length > 15 ? Math.ceil(chartData.length / 15) : 0;
       }
     })();
-
     return (
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={chartData}>
@@ -485,7 +455,6 @@ const Dashboard: React.FC = () => {
         </Grid>
       );
     });
-
     console.log('Rendering all metric cards:', {
       cardCount: cards.length,
       billPayStats: state.billPayStats ? {
@@ -494,7 +463,6 @@ const Dashboard: React.FC = () => {
         transactionsByStatus: state.billPayStats.transactionsByStatus
       } : null
     });
-
     return (
       <Grid container spacing={3}>
         {cards}
@@ -513,9 +481,7 @@ const Dashboard: React.FC = () => {
           <Typography>{state.error}</Typography>
         </Alert>
       )}
-
       {renderMetricCards()}
-
       <Card sx={{ mt: 3 }}>
         <CardContent>
           <Box

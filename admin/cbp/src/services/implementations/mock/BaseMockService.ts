@@ -1,5 +1,5 @@
 import { IBaseService } from '../../interfaces/IBaseService';
-import { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '../../../types/api.types';
+import { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '../../types/api.types';
 import { getConfig } from '../../../config/api.config';
 
 /**
@@ -7,7 +7,6 @@ import { getConfig } from '../../../config/api.config';
  */
 export class BaseMockService implements IBaseService {
   constructor(public readonly basePath: string) {}
-
   /**
    * Simulate API delay
    */
@@ -17,7 +16,6 @@ export class BaseMockService implements IBaseService {
       await new Promise(resolve => setTimeout(resolve, mockDelay));
     }
   }
-
   /**
    * Create success response
    */
@@ -32,7 +30,6 @@ export class BaseMockService implements IBaseService {
     };
     return response.data;
   }
-
   /**
    * Create error response
    */
@@ -48,7 +45,6 @@ export class BaseMockService implements IBaseService {
     };
     throw error;
   }
-
   /**
    * Validate required parameters
    */

@@ -14,28 +14,24 @@ export interface IPaymentService extends IBaseService {
    * @returns Paginated list of pending payments
    */
   getPendingPayments(request: PendingPaymentSearchRequest): Promise<PaginatedResponse<PendingPayment>>;
-
   /**
    * Get summary of pending payments
    * @param request Search request parameters
    * @returns Summary of pending payments
    */
   getPendingPaymentsSummary(request: PendingPaymentSearchRequest): Promise<PendingPaymentSummary>;
-
   /**
    * Export pending payments
    * @param request Search request parameters
    * @returns Blob containing exported data
    */
   exportPendingPayments(request: PendingPaymentSearchRequest): Promise<Blob>;
-
   /**
    * Approve a pending payment
    * @param paymentId Payment identifier
    * @returns Void promise
    */
   approvePayment(paymentId: string): Promise<void>;
-
   /**
    * Reject a pending payment
    * @param paymentId Payment identifier
@@ -43,21 +39,18 @@ export interface IPaymentService extends IBaseService {
    * @returns Void promise
    */
   rejectPayment(paymentId: string, reason: string): Promise<void>;
-
   /**
    * Bulk approve pending payments
    * @param paymentIds List of payment identifiers
    * @returns True if successful
    */
   bulkApprove(paymentIds: string[]): Promise<boolean>;
-
   /**
    * Bulk reject pending payments
    * @param paymentIds List of payment identifiers
    * @returns True if successful
    */
   bulkReject(paymentIds: string[]): Promise<boolean>;
-
   /**
    * Get payment history
    * @param paymentId Payment identifier
@@ -69,7 +62,6 @@ export interface IPaymentService extends IBaseService {
     timestamp: string;
     details: Record<string, any>;
   }>;
-
   /**
    * Confirm a payment
    * @param paymentId Payment identifier

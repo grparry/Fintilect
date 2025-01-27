@@ -1,13 +1,13 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { RecurringBillPay } from './RecurringBillPay';
-import { OutOfBand } from './OutOfBand';
-import { GoodFunds } from './GoodFunds';
-import { BillPay2 } from './BillPay2';
-import { CheckFree } from './CheckFree';
-import { Help } from './Help';
-import { Metavante } from './Metavante';
-import { BillMatrix } from './BillMatrix';
-import { SymmetryBillPay } from './SymmetryBillPay';
+import { RecurringBillPay } from '@infrastructure/RecurringBillPay';
+import { OutOfBand } from '@infrastructure/OutOfBand';
+import { GoodFunds } from '@infrastructure/GoodFunds';
+import { BillPay2 } from '@infrastructure/BillPay2';
+import { CheckFree } from '@infrastructure/CheckFree';
+import { Help } from '@infrastructure/Help';
+import { Metavante } from '@infrastructure/Metavante';
+import { BillMatrix } from '@infrastructure/BillMatrix';
+import { SymmetryBillPay } from '@infrastructure/SymmetryBillPay';
 export interface BillPaySettingsConfig {
     MinVersion: number;
     ShouldIgnoreLeadingZerosOnMicr: boolean;

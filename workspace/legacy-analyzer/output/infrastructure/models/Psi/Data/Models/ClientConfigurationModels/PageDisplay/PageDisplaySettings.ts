@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { jQuerySettings } from './jQuerySettings';
+import { jQuerySettings } from '@infrastructure/jQuerySettings';
 export interface PageDisplaySettingsConfig {
     ShowNcuaAsText: boolean;
     jQuerySettings: jQuerySettings;

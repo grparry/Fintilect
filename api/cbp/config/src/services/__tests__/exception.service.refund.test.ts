@@ -1,10 +1,10 @@
-import { Database } from '../../config/db';
-import { ExceptionService } from '../exception.service';
+import { Database } from '@cbp-config-api/../config/db';
+import { ExceptionService } from '@cbp-config-api/exception.service';
 import { 
   ExceptionRefundRequest,
   ExceptionError, 
   ExceptionErrorCodes 
-} from '../../types/fis-exception';
+} from '@cbp-config-api/../types/fis-exception';
 import { IRecordSet, IResult, IProcedureResult } from 'mssql';
 
 jest.mock('../../config/db');

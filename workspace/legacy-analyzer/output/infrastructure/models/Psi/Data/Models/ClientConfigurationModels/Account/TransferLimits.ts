@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { TransferLimitsSettings } from './TransferLimitsSettings';
+import { TransferLimitsSettings } from '@infrastructure/TransferLimitsSettings';
 export interface TransferLimitsConfig {
     Limits: TransferLimitsSettings;
     CustomTransferLimitMessagesEnabled: boolean;

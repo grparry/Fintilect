@@ -1,0 +1,12 @@
+
+Import Validation Summary
+======================
+
+Total imports processed: 381
+Valid imports: 381
+Missing files: 0
+Errors: 0
+
+
+Detailed error report:
+====================

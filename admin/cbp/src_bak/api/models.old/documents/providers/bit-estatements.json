@@ -1,0 +1,13 @@
+{
+  "BitEstatements": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Estatements.BitEstatements",
+    "properties": {
+      "shouldUseFirstStatementAccountForEnrollment": {
+        "type": "boolean",
+        "description": "Whether to use the first statement account for enrollment",
+        "x-setting-key": "Estatements.Bit.ShouldUseFirstStatementAccountForEnrollment"
+      }
+    }
+  }
+}

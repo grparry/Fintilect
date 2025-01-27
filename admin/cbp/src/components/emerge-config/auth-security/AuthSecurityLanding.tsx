@@ -14,7 +14,6 @@ interface NavigationCard {
   icon: React.ElementType;
   description: string;
 }
-
 const navigationCards: NavigationCard[] = [
   {
     id: 'authentication',
@@ -52,11 +51,9 @@ const navigationCards: NavigationCard[] = [
     description: 'Configure administrative security settings and permissions'
   }
 ];
-
 const AuthSecurityLanding: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -65,11 +62,9 @@ const AuthSecurityLanding: React.FC = () => {
       <Typography variant="body1" sx={{ mb: 4 }}>
         Configure authentication methods, security protocols, and administrative controls for the Emerge platform.
       </Typography>
-
       <Grid container spacing={3}>
         {navigationCards.map((card) => {
           const Icon = card.icon;
-          
           return (
             <Grid item xs={12} sm={6} md={4} key={card.id}>
               <Card 
@@ -118,5 +113,4 @@ const AuthSecurityLanding: React.FC = () => {
     </Box>
   );
 };
-
 export default AuthSecurityLanding;

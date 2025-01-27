@@ -8,7 +8,6 @@ const ExceptionTool = lazy(() => import('../components/bill-pay/payments/Excepti
 const Reports = lazy(() => import('../components/bill-pay/reports/Reports'));
 const PayeeConversion = lazy(() => import('../components/bill-pay/payments/PayeeConversion'));
 const Settings = lazy(() => import('../components/bill-pay/settings/Settings'));
-
 const billPayRoutes = [
   {
     path: '/dashboard',
@@ -49,5 +48,4 @@ const billPayRoutes = [
     description: 'Notifications, Templates, System Config',
   },
 ];
-
 export default billPayRoutes;

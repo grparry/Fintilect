@@ -12,7 +12,6 @@ const GlobalProfiler = ({ id, children }) => {
   ) => {
     // Performance threshold (16ms = 60fps)
     const PERFORMANCE_THRESHOLD = 16;
-    
     if (actualDuration > PERFORMANCE_THRESHOLD) {
       console.warn(`[Performance Warning] Slow render detected in ${profilerId}:`, {
         phase,
@@ -23,21 +22,17 @@ const GlobalProfiler = ({ id, children }) => {
         interactions
       });
     }
-
     // Log to performance monitoring service (if available)
     if (window.performance && window.performance.mark) {
       window.performance.mark(`${profilerId}-${phase}-end`);
-      
       // You can send this data to your analytics service
       // Example: sendToAnalytics({ profilerId, phase, actualDuration });
     }
   };
-
   return (
     <Profiler id={id} onRender={onRenderCallback}>
       {children}
     </Profiler>
   );
 };
-
 export default GlobalProfiler;

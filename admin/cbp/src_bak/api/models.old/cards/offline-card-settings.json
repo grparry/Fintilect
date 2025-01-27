@@ -1,0 +1,16 @@
+{
+  "OfflineCardSettings": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/OfflineCardSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/OfflineCardFeatures"
+      }
+    }
+  }
+}

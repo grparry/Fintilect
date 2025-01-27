@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { SettingsService } from '../services/settings.service';
-import { HttpError } from '../utils/errors';
+import { SettingsService } from '@/services/settings.service';
+import { HttpError } from '@/utils/errors';
 
 export class SettingsController {
   constructor(private settingsService: SettingsService) {}

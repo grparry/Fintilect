@@ -29,7 +29,6 @@ import { ServiceFactory } from '../../../../services/factory/ServiceFactory';
 
 const BillPaySecuritySettings: React.FC = () => {
   const billPayService = ServiceFactory.getInstance().getBillPayService();
-
   const [settings, setSettings] = useState<BillPaySecuritySettingsType>({
     passwordPolicy: {
       minLength: 8,
@@ -57,12 +56,10 @@ const BillPaySecuritySettings: React.FC = () => {
       phone: '',
     },
   });
-
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [otpSent, setOtpSent] = useState<boolean>(false);
-
   const loadSettings = useCallback(async () => {
     try {
       setLoading(true);
@@ -76,11 +73,9 @@ const BillPaySecuritySettings: React.FC = () => {
       setLoading(false);
     }
   }, []);
-
   useEffect(() => {
     loadSettings();
   }, [loadSettings]);
-
   const handlePasswordPolicyChange = (field: keyof BillPaySecuritySettingsType['passwordPolicy'], value: number | boolean) => {
     setSettings(prev => ({
       ...prev,
@@ -90,7 +85,6 @@ const BillPaySecuritySettings: React.FC = () => {
       },
     }));
   };
-
   const handleLoginPolicyChange = (field: keyof BillPaySecuritySettingsType['loginPolicy'], value: number | boolean) => {
     setSettings(prev => ({
       ...prev,
@@ -100,7 +94,6 @@ const BillPaySecuritySettings: React.FC = () => {
       },
     }));
   };
-
   const handleIPWhitelistChange = (field: keyof BillPaySecuritySettingsType['ipWhitelist'], value: boolean | string) => {
     setSettings(prev => ({
       ...prev,
@@ -110,7 +103,6 @@ const BillPaySecuritySettings: React.FC = () => {
       },
     }));
   };
-
   const handleOTPSettingsChange = (field: keyof BillPaySecuritySettingsType['otpSettings'], value: BillPayOTPMethod | string) => {
     setSettings(prev => ({
       ...prev,
@@ -120,13 +112,11 @@ const BillPaySecuritySettings: React.FC = () => {
       },
     }));
   };
-
   const handleSendOTP = async () => {
     try {
       const destination = settings.otpSettings.method === BillPayOTPMethod.EMAIL 
         ? settings.otpSettings.email 
         : settings.otpSettings.phone;
-      
       await billPayService.sendOTP(settings.otpSettings.method, destination);
       setSuccess('OTP sent successfully');
       setOtpSent(true);
@@ -139,7 +129,6 @@ const BillPaySecuritySettings: React.FC = () => {
       console.error('Error sending OTP:', err);
     }
   };
-
   const handleSave = async () => {
     try {
       const validation = await billPayService.validateSecuritySettings(settings);
@@ -147,7 +136,6 @@ const BillPaySecuritySettings: React.FC = () => {
         setError('Invalid settings: ' + Object.values(validation.errors).join(', '));
         return;
       }
-
       await billPayService.updateSecuritySettings(settings);
       setSuccess('Settings saved successfully');
       setTimeout(() => setSuccess(null), 3000);
@@ -156,7 +144,6 @@ const BillPaySecuritySettings: React.FC = () => {
       console.error('Error saving settings:', err);
     }
   };
-
   if (loading) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
@@ -164,7 +151,6 @@ const BillPaySecuritySettings: React.FC = () => {
       </Box>
     );
   }
-
   return (
     <Box sx={{ p: 3 }}>
       {error && (
@@ -172,13 +158,11 @@ const BillPaySecuritySettings: React.FC = () => {
           {error}
         </Alert>
       )}
-
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess(null)}>
           {success}
         </Alert>
       )}
-
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -195,7 +179,6 @@ const BillPaySecuritySettings: React.FC = () => {
             </Button>
           </Box>
         </Grid>
-
         {/* Password Policy Section */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3, height: '100%' }}>
@@ -278,7 +261,6 @@ const BillPaySecuritySettings: React.FC = () => {
             </Grid>
           </Paper>
         </Grid>
-
         {/* Login Policy Section */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3, height: '100%' }}>
@@ -351,7 +333,6 @@ const BillPaySecuritySettings: React.FC = () => {
             </Grid>
           </Paper>
         </Grid>
-
         {/* One-Time Passcode Section */}
         <Grid item xs={12} md={6}>
           <Card>
@@ -360,7 +341,6 @@ const BillPaySecuritySettings: React.FC = () => {
                 One-Time Passcode
               </Typography>
               <Divider sx={{ mb: 2 }} />
-              
               <FormControl component="fieldset" sx={{ mb: 2 }}>
                 <Typography variant="subtitle2" gutterBottom>
                   Send verification code via:
@@ -381,7 +361,6 @@ const BillPaySecuritySettings: React.FC = () => {
                   />
                 </RadioGroup>
               </FormControl>
-
               {settings.otpSettings.method === BillPayOTPMethod.EMAIL && (
                 <TextField
                   fullWidth
@@ -391,7 +370,6 @@ const BillPaySecuritySettings: React.FC = () => {
                   sx={{ mb: 2 }}
                 />
               )}
-
               {settings.otpSettings.method === BillPayOTPMethod.SMS && (
                 <TextField
                   fullWidth
@@ -401,7 +379,6 @@ const BillPaySecuritySettings: React.FC = () => {
                   sx={{ mb: 2 }}
                 />
               )}
-
               <Button
                 variant="contained"
                 color="primary"
@@ -415,7 +392,6 @@ const BillPaySecuritySettings: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-
         {/* IP Whitelist Section */}
         <Grid item xs={12}>
           <Paper sx={{ p: 3 }}>
@@ -454,5 +430,4 @@ const BillPaySecuritySettings: React.FC = () => {
     </Box>
   );
 };
-
 export default BillPaySecuritySettings;

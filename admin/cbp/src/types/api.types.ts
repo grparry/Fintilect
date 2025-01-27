@@ -1,8 +1,9 @@
+
+
 // Extend RequestInit with our custom properties
 export interface ApiHeaders {
   [key: string]: string;
 }
-
 export interface ApiRequestOptions {
   retry?: boolean;
   retryCount?: number;
@@ -14,19 +15,16 @@ export interface ApiRequestOptions {
   signal?: AbortSignal;
   responseType?: 'blob' | 'json';
 }
-
 export interface Pagination {
   total: number;
   page: number;
   limit: number;
   pages: number;
 }
-
 export interface PaginatedResponse<T> {
   items: T[];
   pagination: Pagination;
 }
-
 export interface ApiErrorResponse {
   success: false;
   status: number;
@@ -36,7 +34,6 @@ export interface ApiErrorResponse {
     timestamp: string;
   };
 }
-
 export interface ApiSuccessResponse<T> {
   success: true;
   data: T;
@@ -46,7 +43,6 @@ export interface ApiSuccessResponse<T> {
     requestId: string;
   };
 }
-
 export interface ApiPaginatedResponse<T> extends ApiSuccessResponse<PaginatedResponse<T>> {
   meta: {
     timestamp: string;
@@ -59,30 +55,24 @@ export interface ApiPaginatedResponse<T> extends ApiSuccessResponse<PaginatedRes
     };
   };
 }
-
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
-
 // Authentication related types
 export interface LoginRequest {
   username: string;
   password: string;
   rememberMe?: boolean;
 }
-
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
   expiresIn: number;
   tokenType: string;
 }
-
 export interface RefreshTokenRequest {
   refreshToken: string;
 }
-
 export interface RefreshTokenResponse {
   accessToken: string;
   expiresIn: number;
 }
-
 export type PaymentApiResponse<T> = ApiSuccessResponse<T>;

@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { PaymentController } from '../controllers/payment.controller';
-import { PaymentService } from '../services/payment.service';
-import { db } from '../config/db';
-import { validateRequest } from '../middleware/validation.middleware';
-import { paymentSchemas as paymentValidators } from '../validators/payment.validator';
-import { cacheMiddleware } from '../middleware/cache.middleware';
+import { PaymentController } from '@cbp-config-api/controllers/payment.controller';
+import { PaymentService } from '@cbp-config-api/services/payment.service';
+import { db } from '@cbp-config-api/config/db';
+import { validateRequest } from '@cbp-config-api/middleware/validation.middleware';
+import { paymentSchemas as paymentValidators } from '@cbp-config-api/validators/payment.validator';
+import { cacheMiddleware } from '@cbp-config-api/middleware/cache.middleware';
 import { z } from 'zod';
 
 /**

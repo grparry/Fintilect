@@ -7,7 +7,7 @@ import {
   Box,
   Alert,
 } from '@mui/material';
-import Form, { FormField } from '../common/Form';
+import Form, { FormField } from '../../components/common/Form';
 import { useAuth } from '../../context/AuthContext';
 import { LoginFormData, LoginCredentials } from '../../types/auth.types';
 import { ApiError } from '../../types/index';
@@ -18,7 +18,6 @@ const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
-
   const formFields: FormField<LoginFormData>[] = [
     {
       name: 'username',
@@ -45,22 +44,18 @@ const LoginPage: React.FC = () => {
       }
     }
   ];
-
   const handleSubmit = async (data: LoginFormData) => {
     console.log('LoginPage: Submitting form with data:', { ...data, password: '[REDACTED]' });
     setLoading(true);
     setError(null);
-
     try {
       const credentials: LoginCredentials = {
         username: data.username,
         password: data.password,
         clientId: '1' // Default clientId
       };
-
       console.log('LoginPage: Calling login with credentials:', { ...credentials, password: '[REDACTED]' });
       await login(credentials);
-      
       // Get the return URL from location state or default to home
       const from = location.state?.from?.pathname || '/';
       navigate(from);
@@ -71,7 +66,6 @@ const LoginPage: React.FC = () => {
       setLoading(false);
     }
   };
-
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 8 }}>
@@ -95,5 +89,4 @@ const LoginPage: React.FC = () => {
     </Container>
   );
 };
-
 export default LoginPage;

@@ -10,7 +10,6 @@ export const contactTypes: ContactType[] = [
   'Technical',
   'Billing'
 ];
-
 export const mockContacts: Contact[] = [
   {
     id: "contact-1",

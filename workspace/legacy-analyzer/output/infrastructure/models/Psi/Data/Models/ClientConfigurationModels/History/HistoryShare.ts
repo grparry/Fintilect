@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { HistoryOverLayConfig } from './HistoryOverLayConfig';
+import { HistoryOverLayConfig } from '@infrastructure/HistoryOverLayConfig';
 export interface HistoryShareConfig {
     ShowRates: boolean;
     DescriptionOverlayEnabled: boolean;

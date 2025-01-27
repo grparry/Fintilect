@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { JwtUser } from '../types/user';
+import { HttpError } from '@cbp-config-api/utils/errors';
+import { logger } from '@cbp-config-api/config/logger';
+import { JwtUser } from '@cbp-config-api/types/user';
 
 declare module 'express' {
   interface Request {

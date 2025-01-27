@@ -1,5 +1,5 @@
-import { INotificationService } from '../../interfaces/INotificationService';
-import { BaseService } from './BaseService';
+import { INotificationService } from '@/../interfaces/INotificationService';
+import { BaseService } from '@/BaseService';
 import {
     NotificationTemplate,
     NotificationTemplateInput,
@@ -8,8 +8,8 @@ import {
     NotificationType,
     NotificationVariable,
     NotificationCategory
-} from '../../../types/bill-pay.types';
-import { PaginatedResponse } from '../../../types/common.types';
+} from '@/../../types/bill-pay.types';
+import { PaginatedResponse } from '@/../../types/common.types';
 
 export class NotificationService extends BaseService implements INotificationService {
     constructor(basePath: string = '/api/notifications') {

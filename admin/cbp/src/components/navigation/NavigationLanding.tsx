@@ -7,21 +7,17 @@ const NavigationLanding: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { navigationConfig, state, setActiveSection } = useNavigation();
-
   useEffect(() => {
     if (!state.activeSection && navigationConfig.sections.length > 0) {
       setActiveSection(navigationConfig.sections[0].id);
     }
   }, [navigationConfig.sections, state.activeSection, setActiveSection]);
-
   const activeSection = navigationConfig.sections.find(
     section => section.id === state.activeSection
   );
-
   if (!activeSection) {
     return null;
   }
-
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -69,5 +65,4 @@ const NavigationLanding: React.FC = () => {
     </Box>
   );
 };
-
 export default NavigationLanding;

@@ -1,6 +1,6 @@
 import Parser = require('web-tree-sitter');
-import { ParsedAttribute, ParsedAttributeArgument } from './types';
-import { Logger } from '../utils/logger';
+import { ParsedAttribute, ParsedAttributeArgument } from '@/types';
+import { Logger } from '@/utils/logger';
 
 const logger2 = Logger;
 

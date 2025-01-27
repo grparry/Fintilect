@@ -25,7 +25,8 @@ import {
     BillPaySecurityValidation,
     BillPayOTPMethod
 } from '../../../types/security.types';
-import { PaginatedResponse, Pagination, PaginationOptions } from '../../../types/index';
+import { PaginatedResponse } from '../../../types/common.types';
+import { QueryOptions } from '../../../types/index';
 import { 
     mockPayments,
     mockPendingPayments,
@@ -43,7 +44,6 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
     constructor(basePath: string = '/api/v1/bill-pay') {
         super(basePath);
     }
-
     private config: BillPayConfig = {
         id: 'config-1',
         cutoffTime: '16:00',
@@ -100,18 +100,15 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
             phone: '+1234567890'
         }
     };
-
     async getConfiguration(): Promise<BillPayConfig> {
         return this.config;
     }
-
     async updateConfiguration(config: BillPayConfigUpdate): Promise<BillPayConfigValidation> {
         // Validate configuration
         const validation: BillPayConfigValidation = {
             valid: true,
             errors: []
         };
-
         if (config.maxDailyLimit > this.config.validationRules.maxDailyLimit) {
             validation.valid = false;
             validation.errors.push({
@@ -119,7 +116,6 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
                 message: `Cannot exceed maximum daily limit of ${this.config.validationRules.maxDailyLimit}`
             });
         }
-
         if (validation.valid) {
             this.config = {
                 ...this.config,
@@ -128,13 +124,10 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
                 lastUpdatedBy: 'mock-user'
             };
         }
-
         return validation;
     }
-
-    async getPayments(filters: PaymentFilters & PaginationOptions): Promise<PaginatedResponse<Payment>> {
+    async getPayments(filters: PaymentFilters & QueryOptions): Promise<PaginatedResponse<Payment>> {
         let filteredPayments = [...this.payments];
-
         // Apply filters
         if (filters.clientId) {
             filteredPayments = filteredPayments.filter(p => p.clientId === filters.clientId);
@@ -158,27 +151,21 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
                 new Date(p.effectiveDate) <= new Date(filters.endDate!)
             );
         }
-
         // Apply pagination
-        const page = filters.page || 1;
-        const limit = filters.limit || 10;
+        const page = filters.pagination?.page || 1;
+        const limit = filters.pagination?.limit || 10;
         const startIndex = (page - 1) * limit;
         const endIndex = startIndex + limit;
         const paginatedPayments = filteredPayments.slice(startIndex, endIndex);
 
-        const pagination: Pagination = {
+        return {
+            items: paginatedPayments,
             total: filteredPayments.length,
             page,
             limit,
-            pages: Math.ceil(filteredPayments.length / limit)
-        };
-
-        return {
-            items: paginatedPayments,
-            pagination
+            totalPages: Math.ceil(filteredPayments.length / limit)
         };
     }
-
     async getPayment(paymentId: string): Promise<Payment> {
         const payment = this.payments.find(p => p.id === paymentId);
         if (!payment) {
@@ -186,7 +173,6 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
         }
         return payment;
     }
-
     async createPayment(payment: Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>): Promise<Payment> {
         const newPayment: Payment = {
             ...payment,
@@ -194,38 +180,31 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
-
         this.payments.unshift(newPayment);
         return newPayment;
     }
-
     async updatePayment(paymentId: string, payment: Partial<Payment>): Promise<Payment> {
         const index = this.payments.findIndex(p => p.id === paymentId);
         if (index === -1) {
             throw new Error('Payment not found');
         }
-
         this.payments[index] = {
             ...this.payments[index],
             ...payment,
             updatedAt: new Date().toISOString()
         };
-
         return this.payments[index];
     }
-
     async cancelPayment(paymentId: string, reason: string): Promise<void> {
         const index = this.payments.findIndex(p => p.id === paymentId);
         if (index === -1) {
             throw new Error('Payment not found');
         }
-
         this.payments[index] = {
             ...this.payments[index],
             status: PaymentStatus.CANCELLED,
             updatedAt: new Date().toISOString()
         };
-
         this.paymentHistory.unshift({
             paymentId,
             action: 'cancelled',
@@ -234,14 +213,11 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
             details: { reason }
         });
     }
-
     async getPaymentHistory(paymentId: string): Promise<PaymentHistory[]> {
         return this.paymentHistory.filter(h => h.paymentId === paymentId);
     }
-
-    async getExceptions(filters: PaymentFilters & PaginationOptions): Promise<PaginatedResponse<PaymentException>> {
+    async getExceptions(filters: PaymentFilters & QueryOptions): Promise<PaginatedResponse<PaymentException>> {
         let filteredExceptions = [...this.exceptions];
-
         // Apply filters (similar to payments)
         if (filters.startDate) {
             filteredExceptions = filteredExceptions.filter(e => 
@@ -253,33 +229,26 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
                 new Date(e.createdAt) <= new Date(filters.endDate!)
             );
         }
-
         // Apply pagination
-        const page = filters.page || 1;
-        const limit = filters.limit || 10;
+        const page = filters.pagination?.page || 1;
+        const limit = filters.pagination?.limit || 10;
         const startIndex = (page - 1) * limit;
         const endIndex = startIndex + limit;
         const paginatedExceptions = filteredExceptions.slice(startIndex, endIndex);
 
-        const pagination: Pagination = {
+        return {
+            items: paginatedExceptions,
             total: filteredExceptions.length,
             page,
             limit,
-            pages: Math.ceil(filteredExceptions.length / limit)
-        };
-
-        return {
-            items: paginatedExceptions,
-            pagination
+            totalPages: Math.ceil(filteredExceptions.length / limit)
         };
     }
-
     async resolveException(exceptionId: string, resolution: ExceptionResolution): Promise<void> {
         const index = this.exceptions.findIndex(e => e.id === exceptionId);
         if (index === -1) {
             throw new Error('Exception not found');
         }
-
         this.exceptions[index] = {
             ...this.exceptions[index],
             status: ExceptionStatus.RESOLVED,
@@ -293,19 +262,15 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
             updatedAt: new Date().toISOString()
         };
     }
-
     async getClients(): Promise<Client[]> {
         return this.clients;
     }
-
     async getPayees(clientId: string): Promise<Payee[]> {
         return this.payees.filter(p => p.clientId === clientId);
     }
-
     async getStats(timeframe: 'day' | 'week' | 'month' | 'quarter' | 'year'): Promise<BillPayStats> {
         return mockDashboardStats(timeframe);
     }
-
     async getTransactionTrends(timeframe: 'day' | 'week' | 'month' | 'quarter' | 'year'): Promise<TransactionTrend[]> {
         const daysMap = {
             day: 1,
@@ -316,11 +281,9 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
         };
         return generateMockTrends(daysMap[timeframe]);
     }
-
     async getHolidays(): Promise<Holiday[]> {
         return this.holidays;
     }
-
     async addHoliday(holiday: HolidayInput): Promise<Holiday> {
         const newHoliday: Holiday = {
             ...holiday,
@@ -328,55 +291,44 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
-
         this.holidays.push(newHoliday);
         return newHoliday;
     }
-
     async getNotificationTemplates(): Promise<NotificationTemplate[]> {
         return this.notificationTemplates;
     }
-
     async updateNotificationTemplate(templateId: number, template: NotificationTemplateInput): Promise<NotificationTemplate> {
         const index = this.notificationTemplates.findIndex(t => t.id === templateId);
         if (index === -1) {
             throw new Error('Template not found');
         }
-
         this.notificationTemplates[index] = {
             ...this.notificationTemplates[index],
             ...template,
             lastModified: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
-
         return this.notificationTemplates[index];
     }
-
     async getPaymentActions(paymentId: string): Promise<PaymentAction[]> {
         return this.paymentActions.filter(a => 
             a.details && 'paymentId' in a.details && a.details.paymentId === paymentId
         );
     }
-
     async getSecuritySettings(): Promise<BillPaySecuritySettings> {
         return this.securitySettings;
     }
-
     async updateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecuritySettings> {
         this.securitySettings = { ...this.securitySettings, ...settings };
         return this.securitySettings;
     }
-
     async validateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecurityValidation> {
         const isValid = settings.passwordPolicy.minLength >= 8 && 
                        settings.passwordPolicy.expiryDays >= 30 &&
                        settings.loginPolicy.maxAttempts >= 1 &&
                        settings.loginPolicy.lockoutDuration >= 5 &&
                        settings.loginPolicy.sessionTimeout >= 5;
-
         const errors: Record<string, string> = {};
-        
         if (settings.passwordPolicy.minLength < 8) {
             errors['passwordPolicy.minLength'] = 'Minimum length must be at least 8';
         }
@@ -392,13 +344,11 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
         if (settings.loginPolicy.sessionTimeout < 5) {
             errors['loginPolicy.sessionTimeout'] = 'Session timeout must be at least 5 minutes';
         }
-
         return {
             isValid,
             errors
         };
     }
-
     async sendOTP(method: BillPayOTPMethod, destination: string): Promise<void> {
         // Mock implementation - in real world this would send an actual OTP
         console.log(`Mock: Sending OTP via ${method} to ${destination}`);

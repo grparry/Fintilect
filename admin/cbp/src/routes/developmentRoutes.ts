@@ -7,7 +7,6 @@ import ApiIcon from '@mui/icons-material/Api';
 // Lazy load components
 const DevelopmentHeader = lazy(() => import('../components/development/DevelopmentHeader'));
 const APITesting = lazy(() => import('../components/development/APITesting'));
-
 const developmentRoutes: RouteConfig[] = [
   {
     id: 'development',
@@ -27,5 +26,4 @@ const developmentRoutes: RouteConfig[] = [
     sectionId: 'development',
   }
 ];
-
 export default developmentRoutes;

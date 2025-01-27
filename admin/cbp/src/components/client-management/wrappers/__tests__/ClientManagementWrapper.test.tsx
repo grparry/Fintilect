@@ -9,7 +9,6 @@ import type { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '../../..
 jest.mock('../../../../utils/idEncoder', () => ({
   decodeId: jest.fn((id) => id === 'encoded123' ? '1' : null)
 }));
-
 describe('ClientManagementWrapper', () => {
   const mockClient: Client = {
     id: '1',
@@ -77,12 +76,10 @@ describe('ClientManagementWrapper', () => {
       }
     }
   };
-
   const mockSuccessResponse: ApiSuccessResponse<Client> = {
     success: true,
     data: mockClient
   };
-
   const mockErrorResponse: ApiErrorResponse = {
     success: false,
     status: 404,
@@ -92,11 +89,9 @@ describe('ClientManagementWrapper', () => {
       timestamp: new Date().toISOString()
     }
   };
-
   beforeEach(() => {
     (global.fetch as jest.Mock).mockClear();
   });
-
   it('renders without client ID', async () => {
     await act(async () => {
       renderWithRouter(<ClientManagementWrapper />, {
@@ -108,7 +103,6 @@ describe('ClientManagementWrapper', () => {
       expect(screen.getByText('No client ID provided. Please select a client from the list.')).toBeInTheDocument();
     });
   });
-
   it('renders with client ID', async () => {
     (global.fetch as jest.Mock).mockImplementationOnce(() =>
       Promise.resolve({
@@ -116,20 +110,17 @@ describe('ClientManagementWrapper', () => {
         json: () => Promise.resolve(mockSuccessResponse),
       })
     );
-
     await act(async () => {
       renderWithRouter(<ClientManagementWrapper />, {
         route: '/admin/client-management/encoded123',
         path: '/admin/client-management/:clientId/*'
       });
     });
-
     await waitFor(() => {
       expect(screen.queryByText('No client ID provided')).not.toBeInTheDocument();
       expect(screen.queryByText('Invalid client ID format')).not.toBeInTheDocument();
     });
   });
-
   it('handles invalid client ID', async () => {
     (global.fetch as jest.Mock).mockImplementationOnce(() =>
       Promise.resolve({
@@ -138,14 +129,12 @@ describe('ClientManagementWrapper', () => {
         json: () => Promise.resolve(mockErrorResponse)
       })
     );
-
     await act(async () => {
       renderWithRouter(<ClientManagementWrapper />, {
         route: '/admin/client-management/invalid-id',
         path: '/admin/client-management/:clientId/*'
       });
     });
-
     await waitFor(() => {
       expect(screen.getByText('Invalid client ID format. Please select a client from the list.')).toBeInTheDocument();
     });

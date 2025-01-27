@@ -1,8 +1,8 @@
 import * as sql from 'mssql';
-import { Database } from '../config/db';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
-import { PaginatedResponse, SqlResponse } from '../types/common';
+import { Database } from '@/config/db';
+import { HttpError } from '@/utils/errors';
+import { logger } from '@/config/logger';
+import { PaginatedResponse, SqlResponse } from '@/types/common';
 
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'system';

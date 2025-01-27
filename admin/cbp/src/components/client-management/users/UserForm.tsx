@@ -13,6 +13,7 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import { User, UserRole, UserStatus, UserGroup } from '../../../types/client.types';
+import { clientService, userService } from '../../../services/factory/ServiceFactory';
 
 export interface UserFormData {
   firstName: string;
@@ -24,7 +25,6 @@ export interface UserFormData {
   department: string;
   password: string;
 }
-
 interface UserFormProps {
   user?: User;
   groups: UserGroup[];
@@ -32,7 +32,6 @@ interface UserFormProps {
   onCancel: () => void;
   saving?: boolean;
 }
-
 const UserForm: React.FC<UserFormProps> = ({
   user,
   groups,
@@ -50,7 +49,6 @@ const UserForm: React.FC<UserFormProps> = ({
     department: '',
     password: '',
   });
-
   useEffect(() => {
     if (user) {
       setFormData({
@@ -77,7 +75,6 @@ const UserForm: React.FC<UserFormProps> = ({
       });
     }
   }, [user]);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
   ) => {
@@ -89,7 +86,6 @@ const UserForm: React.FC<UserFormProps> = ({
               value,
     }));
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -109,7 +105,6 @@ const UserForm: React.FC<UserFormProps> = ({
       console.error('Error saving user:', error);
     }
   };
-
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
       <Grid container spacing={2}>
@@ -227,5 +222,4 @@ const UserForm: React.FC<UserFormProps> = ({
     </Box>
   );
 };
-
 export default UserForm;

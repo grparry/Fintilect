@@ -29,7 +29,7 @@ import {
   Lock as LockIcon,
   QuestionAnswer as QuestionIcon,
 } from '@mui/icons-material';
-import { SecurityQuestion } from '../../../types/member-center.types';
+import { SecurityQuestion } from '@/../../types/member-center.types';
 
 interface MemberSecuritySettingsProps {
   open: boolean;

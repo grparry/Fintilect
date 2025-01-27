@@ -1,8 +1,8 @@
 import { SettingsService } from '../index';
-import ApiClient from '../../../services/api';
+import ApiClient from '../../api';
 import { ApiSuccessResponse, ApiErrorResponse } from '../../../types/api.types';
 import { Setting } from '../../../types/settings.types';
-import { ValidationResult } from '../types';
+import { ValidationResult } from '../../../types/validation.types';
 
 jest.mock('../../../services/api', () => ({
     __esModule: true,
@@ -14,20 +14,16 @@ jest.mock('../../../services/api', () => ({
         patch: jest.fn()
     }
 }));
-
 describe('SettingsService', () => {
     let service: SettingsService;
-
     beforeEach(() => {
         // Reset all mocks
         jest.clearAllMocks();
         service = new SettingsService();
     });
-
     afterEach(() => {
         jest.clearAllMocks();
     });
-
     describe('getSetting', () => {
         it('should return a setting when found', async () => {
             const mockApiResponse: ApiSuccessResponse<Setting> = {
@@ -49,9 +45,7 @@ describe('SettingsService', () => {
                     requestId: expect.any(String)
                 }
             };
-
             (ApiClient.get as jest.Mock).mockResolvedValue(mockApiResponse);
-
             const result = await service.getSetting('test.setting');
             expect(result.success).toBe(true);
             expect(result.data).toEqual(mockApiResponse.data);
@@ -61,7 +55,6 @@ describe('SettingsService', () => {
             }));
             expect(ApiClient.get).toHaveBeenCalledWith('/api/settings/test.setting');
         });
-
         it('should handle setting not found', async () => {
             const mockResponse = {
                 success: false,
@@ -72,9 +65,7 @@ describe('SettingsService', () => {
                     timestamp: new Date().toISOString()
                 }
             } as const;
-
             (ApiClient.get as jest.Mock).mockRejectedValueOnce(mockResponse);
-
             try {
                 await service.getSetting('nonexistent.setting');
                 fail('Expected error to be thrown');
@@ -83,7 +74,6 @@ describe('SettingsService', () => {
             }
         });
     });
-
     describe('updateSetting', () => {
         it('should update a setting successfully', async () => {
             const mockApiResponse: ApiSuccessResponse<Setting> = {
@@ -105,9 +95,7 @@ describe('SettingsService', () => {
                     requestId: expect.any(String)
                 }
             };
-
             (ApiClient.put as jest.Mock).mockResolvedValue(mockApiResponse);
-
             const result = await service.updateSetting('test.setting', 'new-value');
             expect(result.success).toBe(true);
             expect(result.data).toEqual(mockApiResponse.data);
@@ -117,7 +105,6 @@ describe('SettingsService', () => {
             }));
             expect(ApiClient.put).toHaveBeenCalledWith('/api/settings/test.setting', { value: 'new-value' });
         });
-
         it('should handle validation errors', async () => {
             const mockResponse = {
                 success: false,
@@ -128,9 +115,7 @@ describe('SettingsService', () => {
                     timestamp: new Date().toISOString()
                 }
             } as const;
-
             (ApiClient.put as jest.Mock).mockRejectedValueOnce(mockResponse);
-
             try {
                 await service.updateSetting('test.setting', 'invalid-value');
                 fail('Expected error to be thrown');
@@ -139,7 +124,6 @@ describe('SettingsService', () => {
             }
         });
     });
-
     describe('validateSetting', () => {
         it('should validate a setting successfully', async () => {
             const mockSetting: Setting = {
@@ -154,7 +138,6 @@ describe('SettingsService', () => {
                     options: undefined
                 }
             };
-
             const mockSettingResponse: ApiSuccessResponse<Setting> = {
                 success: true,
                 data: mockSetting,
@@ -163,16 +146,13 @@ describe('SettingsService', () => {
                     requestId: '123'
                 }
             };
-
             (ApiClient.get as jest.Mock).mockResolvedValue(mockSettingResponse);
-
             const result = await service.validateSetting('test.setting', 'test-value');
             expect(result.success).toBe(true);
             if (result.success) {
                 expect(result.data.valid).toBe(true);
             }
         });
-
         it('should handle setting not found during validation', async () => {
             const mockResponse = {
                 success: false,
@@ -183,9 +163,7 @@ describe('SettingsService', () => {
                     timestamp: new Date().toISOString()
                 }
             } as const;
-
             (ApiClient.get as jest.Mock).mockRejectedValueOnce(mockResponse);
-
             try {
                 await service.validateSetting('nonexistent.setting', 'test-value');
                 fail('Expected error to be thrown');
@@ -193,7 +171,6 @@ describe('SettingsService', () => {
                 expect(error).toEqual(mockResponse);
             }
         });
-
         it('should handle validation failures', async () => {
             const mockSetting: Setting = {
                 key: 'test.setting',
@@ -207,7 +184,6 @@ describe('SettingsService', () => {
                     options: undefined
                 }
             };
-
             const mockSettingResponse: ApiSuccessResponse<Setting> = {
                 success: true,
                 data: mockSetting,
@@ -216,9 +192,7 @@ describe('SettingsService', () => {
                     requestId: '123'
                 }
             };
-
             (ApiClient.get as jest.Mock).mockResolvedValue(mockSettingResponse);
-
             const result = await service.validateSetting('test.setting', 'invalid-value');
             expect(result.success).toBe(true);
             if (result.success) {

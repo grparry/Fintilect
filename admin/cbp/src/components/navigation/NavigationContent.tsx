@@ -8,7 +8,6 @@ import { useNavigation } from '../../context/NavigationContext';
 interface NavigationContentProps {
   items: NavigationItem[];
 }
-
 const ContentContainer = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   overflowY: 'auto',
@@ -23,7 +22,6 @@ const ContentContainer = styled(Box)(({ theme }) => ({
     borderRadius: '2px',
   },
 }));
-
 const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   borderRadius: '4px',
   margin: '4px 8px',
@@ -37,12 +35,10 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
     },
   },
 }));
-
 const NavigationContent: React.FC<NavigationContentProps> = ({ items }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state, toggleSection } = useNavigation();
-
   const handleItemClick = (item: NavigationItem) => {
     if (item.children) {
       toggleSection(item.id);
@@ -50,16 +46,13 @@ const NavigationContent: React.FC<NavigationContentProps> = ({ items }) => {
       navigate(item.path);
     }
   };
-
   const renderNavigationItem = (item: NavigationItem, depth = 0) => {
     const isSelected = location.pathname === item.path;
     const isExpanded = state.expandedItems.includes(item.id);
     const hasChildren = item.children && item.children.length > 0;
-
     if (item.hideFromSidebar) {
       return null;
     }
-
     return (
       <React.Fragment key={item.id}>
         <ListItem disablePadding>
@@ -89,7 +82,6 @@ const NavigationContent: React.FC<NavigationContentProps> = ({ items }) => {
       </React.Fragment>
     );
   };
-
   return (
     <ContentContainer>
       <List>
@@ -98,5 +90,4 @@ const NavigationContent: React.FC<NavigationContentProps> = ({ items }) => {
     </ContentContainer>
   );
 };
-
 export default NavigationContent;

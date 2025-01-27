@@ -4,7 +4,7 @@ export interface Settings2Config {
 }
 
 
-import { Setting, ISettingsGroup, ISettingsMetadata } from './interfaces';
+import { Setting, ISettingsGroup, ISettingsMetadata } from '@/interfaces';
 
 export class Settings2 implements ISettingsGroup {
     static readonly metadata: ISettingsMetadata = {

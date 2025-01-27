@@ -1,0 +1,55 @@
+{
+  "PageDisplaySettings": {
+    "type": "object",
+    "description": "Configuration settings for page display",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.PageDisplay.PageDisplaySettings",
+    "required": ["footer", "jquery"],
+    "properties": {
+      "footer": {
+        "type": "object",
+        "description": "Footer display settings",
+        "required": ["ncua"],
+        "properties": {
+          "ncua": {
+            "type": "object",
+            "description": "NCUA display settings",
+            "required": ["showAsText"],
+            "properties": {
+              "showAsText": {
+                "type": "boolean",
+                "description": "If true, show a string for the NCUA message instead of the logo image",
+                "default": false,
+                "x-setting-key": "PageDisplay.Footer.ShowNcuaAsText"
+              }
+            }
+          }
+        }
+      },
+      "jquery": {
+        "type": "object",
+        "description": "jQuery configuration settings",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.PageDisplay.jQuerySettings",
+        "required": ["version", "migratePlugin"],
+        "properties": {
+          "version": {
+            "type": "string",
+            "description": "jQuery version to use",
+            "x-setting-key": "HomeBanking.jQuery.Version"
+          },
+          "migratePlugin": {
+            "type": "object",
+            "description": "jQuery migrate plugin settings",
+            "required": ["enabled"],
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether the jQuery migrate plugin is enabled",
+                "x-setting-key": "HomeBanking.jQuery.MigratePluginEnabled"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

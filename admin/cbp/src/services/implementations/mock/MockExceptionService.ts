@@ -34,12 +34,10 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     createdBy: string;
     createdAt: string;
   }>> = new Map();
-
   constructor(basePath: string = '/api/v1/exceptions') {
     super(basePath);
     this.initializeMockData();
   }
-
   private initializeMockData(): void {
     // Initialize mock exceptions
     const mockException: ExceptionTool = {
@@ -56,7 +54,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       priority: 'High' as ExceptionToolPriority
     };
     this.exceptions.set(mockException.id.toString(), mockException);
-
     // Initialize mock FIS exceptions
     const mockFISException: FISException = {
       id: '1',
@@ -74,31 +71,25 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     };
     this.fisExceptions.set(mockFISException.id, mockFISException);
   }
-
   async getExceptions(filters: ExceptionFilters): Promise<PaginatedResponse<ExceptionTool>> {
     let filtered = Array.from(this.exceptions.values());
-
     if (filters) {
       filtered = filtered.filter(exc => {
         const matchesStatus = !filters.status || filters.status.includes(FISExceptionStatus.FAILED,);
-        
         let matchesDate = true;
         if (filters.startDate || filters.endDate) {
           const excDate = new Date(exc.timestamp);
           if (filters.startDate && excDate < new Date(filters.startDate)) matchesDate = false;
           if (filters.endDate && excDate > new Date(filters.endDate)) matchesDate = false;
         }
-
         return matchesStatus && matchesDate;
       });
     }
-
     const page = filters?.page || 1;
     const limit = filters?.limit || 20;
     const total = filtered.length;
     const start = (page - 1) * limit;
     const items = filtered.slice(start, start + limit);
-
     return {
       items,
       page,
@@ -107,7 +98,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       totalPages: Math.ceil(total / limit)
     };
   }
-
   async getException(exceptionId: string): Promise<ExceptionTool> {
     const exception = this.exceptions.get(exceptionId);
     if (!exception) {
@@ -115,7 +105,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     }
     return exception;
   }
-
   async updateExceptionStatus(exceptionId: string, status: ExceptionToolStatus, notes?: string): Promise<void> {
     const exception = await this.getException(exceptionId);
     const updated = {
@@ -124,12 +113,10 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       timestamp: new Date().toISOString()
     };
     this.exceptions.set(exceptionId, updated);
-
     if (notes) {
       await this.addExceptionNote(exceptionId, notes, 'system');
     }
   }
-
   async updateExceptionPriority(exceptionId: string, priority: ExceptionToolPriority): Promise<void> {
     const exception = await this.getException(exceptionId);
     const updated = {
@@ -139,22 +126,17 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     };
     this.exceptions.set(exceptionId, updated);
   }
-
   async getFISExceptions(filters: FISExceptionFilters): Promise<PaginatedResponse<FISException>> {
     await this.delay();
-
     let filteredExceptions = Array.from(this.fisExceptions.values());
-
     if (filters.status && filters.status.length > 0) {
       filteredExceptions = filteredExceptions.filter(exception => filters.status!.includes(exception.status));
     }
-
     const page = filters?.page || 1;
     const limit = filters?.limit || 20;
     const total = filteredExceptions.length;
     const start = (page - 1) * limit;
     const items = filteredExceptions.slice(start, start + limit);
-
     return {
       items,
       page,
@@ -163,7 +145,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       totalPages: Math.ceil(total / limit)
     };
   }
-
   async getFISException(exceptionId: string): Promise<FISException> {
     const exception = this.fisExceptions.get(exceptionId);
     if (!exception) {
@@ -171,7 +152,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     }
     return exception;
   }
-
   async getFISExceptionHistory(exceptionId: string): Promise<FISExceptionHistory[]> {
     const exception = await this.getFISException(exceptionId);
     return [
@@ -191,7 +171,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       }
     ];
   }
-
   async getFISResponseHistory(requestId: string): Promise<FISResponseHistory[]> {
     return [
       {
@@ -204,11 +183,9 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       }
     ];
   }
-
   async retryFISException(exceptionId: string): Promise<FISRetryResult> {
     const exception = await this.getFISException(exceptionId);
     const success = Math.random() > 0.3; // 70% success rate for mock
-
     const updated = {
       ...exception,
       status: success ? FISExceptionStatus.RESOLVED : FISExceptionStatus.FAILED,
@@ -216,7 +193,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       updatedAt: new Date().toISOString()
     };
     this.fisExceptions.set(exceptionId, updated);
-
     return {
       success,
       message: success ? 'Retry successful' : 'Retry failed',
@@ -225,7 +201,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       lastRetryAt: updated.updatedAt
     };
   }
-
   async requestFISRefund(exceptionId: string, request: FISRefundRequest): Promise<void> {
     const exception = await this.getFISException(exceptionId);
     const updated = {
@@ -234,7 +209,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       updatedAt: new Date().toISOString()
     };
     this.fisExceptions.set(exceptionId, updated);
-
     // Add to audit trail
     const auditEntry = {
       action: 'REFUND_REQUESTED',
@@ -246,7 +220,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     trail.push(auditEntry);
     this.auditTrails.set(exceptionId, trail);
   }
-
   async getExceptionSummary(): Promise<{
     total: number;
     byStatus: Record<ExceptionToolStatus, number>;
@@ -255,19 +228,16 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
   }> {
     const exceptions = Array.from(this.exceptions.values());
     const total = exceptions.length;
-
     // Calculate status breakdown
     const byStatus = exceptions.reduce((acc, exc) => {
       acc[exc.status] = (acc[exc.status] || 0) + 1;
       return acc;
     }, {} as Record<ExceptionToolStatus, number>);
-
     // Calculate priority breakdown
     const byPriority = exceptions.reduce((acc, exc) => {
       acc[exc.priority] = (acc[exc.priority] || 0) + 1;
       return acc;
     }, {} as Record<ExceptionToolPriority, number>);
-
     // Calculate average resolution time (for resolved exceptions)
     const resolvedExceptions = exceptions.filter(exc => exc.status === 'Resolved');
     const avgResolutionTime = resolvedExceptions.length > 0
@@ -276,7 +246,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
           return sum + resolutionTime;
         }, 0) / resolvedExceptions.length
       : 0;
-
     return {
       total,
       byStatus,
@@ -284,7 +253,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       avgResolutionTime
     };
   }
-
   async getFISExceptionSummary(): Promise<{
     total: number;
     byStatus: Record<FISExceptionStatus, number>;
@@ -293,22 +261,18 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
   }> {
     const exceptions = Array.from(this.fisExceptions.values());
     const total = exceptions.length;
-
     // Calculate status breakdown
     const byStatus = exceptions.reduce((acc, exc) => {
       acc[exc.status] = (acc[exc.status] || 0) + 1;
       return acc;
     }, {} as Record<FISExceptionStatus, number>);
-
     // Calculate average retry count
     const avgRetryCount = exceptions.length > 0
       ? exceptions.reduce((sum, exc) => sum + exc.retryCount, 0) / exceptions.length
       : 0;
-
     // Calculate success rate
     const resolvedCount = exceptions.filter(exc => exc.status === FISExceptionStatus.RESOLVED).length;
     const successRate = total > 0 ? (resolvedCount / total) * 100 : 0;
-
     return {
       total,
       byStatus,
@@ -316,7 +280,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       successRate
     };
   }
-
   async assignException(exceptionId: string, userId: string): Promise<void> {
     const exception = await this.getException(exceptionId);
     const updated = {
@@ -324,7 +287,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       timestamp: new Date().toISOString()
     };
     this.exceptions.set(exceptionId, updated);
-
     // Add audit trail entry
     const auditEntry = {
       action: 'ASSIGNED',
@@ -336,7 +298,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     trail.push(auditEntry);
     this.auditTrails.set(exceptionId, trail);
   }
-
   async bulkUpdateExceptions(
     exceptionIds: string[],
     updates: {
@@ -354,7 +315,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       this.exceptions.set(id, updated);
     }
   }
-
   async getExceptionAuditTrail(exceptionId: string): Promise<Array<{
     action: string;
     performedBy: string;
@@ -363,7 +323,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
   }>> {
     return this.auditTrails.get(exceptionId) || [];
   }
-
   async addExceptionNote(exceptionId: string, note: string, userId: string): Promise<void> {
     const noteEntry = {
       id: uuidv4(),
@@ -375,7 +334,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     existingNotes.push(noteEntry);
     this.notes.set(exceptionId, existingNotes);
   }
-
   async getExceptionNotes(exceptionId: string): Promise<Array<{
     id: string;
     content: string;

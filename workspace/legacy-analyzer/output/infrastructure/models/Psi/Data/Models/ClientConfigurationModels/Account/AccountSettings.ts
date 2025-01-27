@@ -1,12 +1,12 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Transfers } from './Transfers';
-import { ScheduledTransfers } from './ScheduledTransfers';
-import { AccountOpening } from './AccountOpening';
-import { CrossAccountSettings } from './CrossAccountSettings';
-import { DebitCards } from './DebitCards';
-import { JointOwners } from './JointOwners';
-import { Cards } from './Cards';
-import { Escheat } from './Escheat';
+import { Transfers } from '@infrastructure/Transfers';
+import { ScheduledTransfers } from '@infrastructure/ScheduledTransfers';
+import { AccountOpening } from '@infrastructure/AccountOpening';
+import { CrossAccountSettings } from '@infrastructure/CrossAccountSettings';
+import { DebitCards } from '@infrastructure/DebitCards';
+import { JointOwners } from '@infrastructure/JointOwners';
+import { Cards } from '@infrastructure/Cards';
+import { Escheat } from '@infrastructure/Escheat';
 export interface AccountSettingsConfig {
     GetDebitCardsDuringAccountInquiry: boolean;
     ShowClosedAccountsOnDashboard: boolean;

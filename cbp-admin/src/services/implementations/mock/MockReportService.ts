@@ -6,17 +6,17 @@ import {
     AuditRecord,
     TransactionRecord,
     UserRecord
-} from '../../../types/report.types';
+} from '@/../../types/report.types';
 import {
     BaseReportArguments,
     ExportReportArguments,
     ScheduleReportArguments,
     ReportRunRequest,
     ReportResponse
-} from '../../../types/report-api.types';
-import { PaginatedResponse } from '../../../types/common.types';
-import { BaseMockService } from './BaseMockService';
-import { mockReportData } from './data/report/reports';
+} from '@/../../types/report-api.types';
+import { PaginatedResponse } from '@/../../types/common.types';
+import { BaseMockService } from '@/BaseMockService';
+import { mockReportData } from '@/data/report/reports';
 
 export class MockReportService extends BaseMockService {
     private reports: Map<string, ReportData> = new Map();

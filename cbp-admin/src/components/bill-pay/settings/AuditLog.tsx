@@ -20,8 +20,8 @@ import {
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { auditService } from '../../../services/factory/ServiceFactory';
-import { AuditEvent, AuditLogFilters } from '../../../services/interfaces/IAuditService';
+import { auditService } from '@/../../services/factory/ServiceFactory';
+import { AuditEvent, AuditLogFilters } from '@/../../services/interfaces/IAuditService';
 
 const AuditLog: React.FC = () => {
   // State

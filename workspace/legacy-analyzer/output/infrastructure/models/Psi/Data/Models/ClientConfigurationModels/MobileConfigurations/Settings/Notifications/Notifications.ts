@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Travel } from './Travel';
+import { Travel } from '@infrastructure/Travel';
 export interface NotificationsConfig {
     Travel: Travel;
 }

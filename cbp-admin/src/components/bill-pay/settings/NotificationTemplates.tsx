@@ -40,7 +40,7 @@ import AddIcon from '@mui/icons-material/Add';
 import PreviewIcon from '@mui/icons-material/Preview';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { notificationService } from '../../../services/factory/ServiceFactory';
+import { notificationService } from '@/../../services/factory/ServiceFactory';
 import {
   NotificationTemplate,
   NotificationTemplateInput,
@@ -49,7 +49,7 @@ import {
   NotificationType,
   NotificationCategory,
   NotificationPreview
-} from '../../../types/bill-pay.types';
+} from '@/../../types/bill-pay.types';
 
 interface TemplateDialogState {
   open: boolean;

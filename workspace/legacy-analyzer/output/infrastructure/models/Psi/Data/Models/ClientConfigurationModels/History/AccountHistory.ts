@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { DisplayCheckHolds } from './DisplayCheckHolds';
-import { LinkedAccountHistory } from './LinkedAccountHistory';
+import { DisplayCheckHolds } from '@infrastructure/DisplayCheckHolds';
+import { LinkedAccountHistory } from '@infrastructure/LinkedAccountHistory';
 export interface AccountHistoryConfig {
     DisplayCheckHolds: DisplayCheckHolds;
     LinkedAccounts: LinkedAccountHistory;

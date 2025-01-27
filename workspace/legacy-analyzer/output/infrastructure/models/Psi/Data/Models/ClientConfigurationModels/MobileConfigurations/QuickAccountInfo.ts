@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { QuickAccountInfoDisplayInfoSettings } from './QuickAccountInfoDisplayInfoSettings';
+import { QuickAccountInfoDisplayInfoSettings } from '@infrastructure/QuickAccountInfoDisplayInfoSettings';
 export interface QuickAccountInfoConfig {
     Enabled: boolean;
     MaxNumberOfAccounts: number;

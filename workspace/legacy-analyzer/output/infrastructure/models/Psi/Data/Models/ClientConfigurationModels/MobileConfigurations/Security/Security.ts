@@ -1,11 +1,11 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { QuickAccess } from './QuickAccess.QuickAccess';
-import { Biometrics } from './Biometrics.Biometrics';
-import { PermissionLevel } from './PermissionLevel.PermissionLevel';
-import { Settings } from './Settings.Settings';
-import { AppShield } from './AppShield.AppShield';
-import { LayeredSecurity } from './LayeredSecurity.LayeredSecurity';
-import { SmsSecurityCode } from './Mfa.SmsSecurityCode';
+import { QuickAccess } from '@infrastructure/QuickAccess.QuickAccess';
+import { Biometrics } from '@infrastructure/Biometrics.Biometrics';
+import { PermissionLevel } from '@infrastructure/PermissionLevel.PermissionLevel';
+import { Settings } from '@infrastructure/Settings.Settings';
+import { AppShield } from '@infrastructure/AppShield.AppShield';
+import { LayeredSecurity } from '@infrastructure/LayeredSecurity.LayeredSecurity';
+import { SmsSecurityCode } from '@infrastructure/Mfa.SmsSecurityCode';
 export interface SecurityConfig {
     QuickAccess: QuickAccess;
     Biometrics: Biometrics;

@@ -1,7 +1,7 @@
-import api from './api';
-import { ApiSuccessResponse } from '../types/api.types';
-import { Account, Connection, MoneyDesktopFilters } from '../types/money-desktop.types';
-import { ServiceFactory } from './factory/ServiceFactory';
+import api from '@/api';
+import { ApiSuccessResponse } from '@/types/api.types';
+import { Account, Connection, MoneyDesktopFilters } from '@/types/money-desktop.types';
+import { ServiceFactory } from '@/factory/ServiceFactory';
 
 class MoneyDesktopService {
   private readonly baseUrl = '/api/money-desktop';

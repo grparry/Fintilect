@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { Version } from './Version';
+import { Version } from '@infrastructure/Version';
 export interface ThemeDeploymentConfig {
     LatestIosVersion: Version;
     LatestAndroidVersion: Version;

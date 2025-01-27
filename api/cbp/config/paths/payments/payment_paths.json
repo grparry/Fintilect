@@ -1,0 +1,164 @@
+{
+  "/payment": {
+    "post": {
+      "summary": "Create a new payment",
+      "description": "Creates a new one-time or recurring payment",
+      "operationId": "createPayment",
+      "tags": ["Payments"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                { "$ref": "../schemas/payments/payment_schemas.json#/OneTimePaymentRequest" },
+                { "$ref": "../schemas/payments/payment_schemas.json#/RecurringPaymentRequest" }
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Payment created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/payments/payment_schemas.json#/PaymentResponse"
+              }
+            }
+          }
+        },
+        "400": { "description": "Invalid request" },
+        "409": { "description": "Duplicate payment" }
+      }
+    }
+  },
+  "/payment/batch": {
+    "post": {
+      "summary": "Create multiple payments",
+      "description": "Creates multiple one-time or recurring payments in a single request",
+      "operationId": "createBatchPayment",
+      "tags": ["Payments"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/payments/payment_schemas.json#/BatchPaymentRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Payments created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "../schemas/payments/payment_schemas.json#/PaymentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/payment/{paymentId}": {
+    "get": {
+      "summary": "Get payment details",
+      "operationId": "getPayment",
+      "tags": ["Payments"],
+      "parameters": [
+        {
+          "name": "paymentId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Payment details retrieved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/payments/payment_schemas.json#/PaymentResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update payment",
+      "operationId": "updatePayment",
+      "tags": ["Payments"],
+      "parameters": [
+        {
+          "name": "paymentId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/payments/payment_schemas.json#/PaymentUpdateRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": { "description": "Payment updated" },
+        "400": { "description": "Invalid request" }
+      }
+    },
+    "delete": {
+      "summary": "Cancel payment",
+      "operationId": "cancelPayment",
+      "tags": ["Payments"],
+      "parameters": [
+        {
+          "name": "paymentId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "200": { "description": "Payment cancelled" },
+        "400": { "description": "Invalid request" }
+      }
+    }
+  },
+  "/payment/reprocess": {
+    "post": {
+      "summary": "Reprocess failed payment",
+      "operationId": "reprocessPayment",
+      "tags": ["Payments"],
+      "security": [{ "AdminAuth": [] }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/payments/payment_schemas.json#/PaymentReprocessRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": { "description": "Payment queued for reprocessing" },
+        "400": { "description": "Invalid request" },
+        "404": { "description": "Payment not found" }
+      }
+    }
+  }
+}

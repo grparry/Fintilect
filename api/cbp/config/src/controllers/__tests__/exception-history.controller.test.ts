@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { Database } from '../../config/db';
-import { ExceptionHistoryController } from '../exception-history.controller';
-import { ExceptionHistoryService } from '../../services/exception-history.service';
-import { ExceptionError, ExceptionErrorCodes } from '../../types/fis-exception';
-import { ExceptionHistoryType } from '../../types/exception-history';
-import { UserRole } from '../../types/auth'; // Import UserRole
+import { Database } from '@cbp-config-api/../config/db';
+import { ExceptionHistoryController } from '@cbp-config-api/exception-history.controller';
+import { ExceptionHistoryService } from '@cbp-config-api/../services/exception-history.service';
+import { ExceptionError, ExceptionErrorCodes } from '@cbp-config-api/../types/fis-exception';
+import { ExceptionHistoryType } from '@cbp-config-api/../types/exception-history';
+import { UserRole } from '@cbp-config-api/../types/auth'; // Import UserRole
 
 jest.mock('../../config/db');
 jest.mock('../../services/exception-history.service');

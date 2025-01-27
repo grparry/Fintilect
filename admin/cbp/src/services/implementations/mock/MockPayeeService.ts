@@ -42,7 +42,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       updatedAt: '2025-01-02T00:00:00Z'
     }
   ];
-
   private mockTemplates: PayeeConversionTemplate[] = [
     {
       id: 'template1',
@@ -59,13 +58,11 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       updatedAt: '2025-01-01T00:00:00Z'
     }
   ];
-
   constructor(
     basePath: string = '/api/v1/payees'
   ) {
     super(basePath);
   }
-
   async getPayees(filters: {
     clientId?: string;
     status?: PayeeStatus;
@@ -73,7 +70,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
     searchTerm?: string;
   }): Promise<PaginatedResponse<Payee>> {
     let filteredPayees = [...this.mockPayees];
-
     if (filters.clientId) {
       filteredPayees = filteredPayees.filter(p => p.clientId === filters.clientId);
     }
@@ -89,7 +85,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
         p.bankName.toLowerCase().includes(term)
       );
     }
-
     return {
       items: filteredPayees,
       total: filteredPayees.length,
@@ -98,7 +93,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       totalPages: 1
     };
   }
-
   async getPayee(payeeId: string): Promise<Payee> {
     const payee = this.mockPayees.find(p => p.id === payeeId);
     if (!payee) {
@@ -106,7 +100,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
     }
     return payee;
   }
-
   async createPayee(payee: Omit<Payee, 'id' | 'createdAt' | 'updatedAt'>): Promise<Payee> {
     const newPayee: Payee = {
       ...payee,
@@ -117,13 +110,11 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
     this.mockPayees.push(newPayee);
     return newPayee;
   }
-
   async updatePayee(payeeId: string, payee: Partial<Payee>): Promise<Payee> {
     const index = this.mockPayees.findIndex(p => p.id === payeeId);
     if (index === -1) {
       throw this.createError('Payee not found', 404);
     }
-    
     const updatedPayee = {
       ...this.mockPayees[index],
       ...payee,
@@ -132,7 +123,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
     this.mockPayees[index] = updatedPayee;
     return updatedPayee;
   }
-
   async deletePayee(payeeId: string): Promise<void> {
     const index = this.mockPayees.findIndex(p => p.id === payeeId);
     if (index === -1) {
@@ -140,7 +130,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
     }
     this.mockPayees.splice(index, 1);
   }
-
   async validatePayee(payee: Partial<Payee>): Promise<PayeeValidationResult> {
     const accountNumberValid = payee.accountNumber ? payee.accountNumber.length >= 8 : false;
     const isValid = Boolean(
@@ -148,7 +137,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       accountNumberValid &&
       payee.routingNumber?.length === 9
     );
-
     return {
       id: Math.random().toString(36).substring(7),
       payeeName: payee.name || '',
@@ -159,7 +147,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       validationMessage: isValid ? 'Validation successful' : 'Invalid payee details'
     };
   }
-
   async getConversionSummary(): Promise<PayeeConversionSummary> {
     return {
       totalPayees: 100,
@@ -169,7 +156,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       conversionId: 'conv123'
     };
   }
-
   async getConversions(filters: PayeeConversionFilters): Promise<PaginatedResponse<PayeeConversionRecord>> {
     const mockRecords: PayeeConversionRecord[] = [
       {
@@ -182,7 +168,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
         processedAt: new Date().toISOString()
       }
     ];
-
     return {
       items: mockRecords,
       total: mockRecords.length,
@@ -191,7 +176,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       totalPages: 1
     };
   }
-
   async getConversionFiles(): Promise<PayeeConversionFile[]> {
     return [
       {
@@ -203,7 +187,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       }
     ];
   }
-
   async uploadConversionFile(
     file: File,
     templateId: string
@@ -226,7 +209,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       createdAt: new Date().toISOString()
     };
   }
-
   async validateConversionFile(fileId: string): Promise<PayeeConversionValidation> {
     return {
       valid: true,
@@ -237,7 +219,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       invalidRecords: 2
     };
   }
-
   async startConversion(fileId: string): Promise<PayeeConversionProgressResponse> {
     return {
       id: fileId,
@@ -253,7 +234,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       createdAt: new Date().toISOString()
     };
   }
-
   async getConversionProgress(fileId: string): Promise<PayeeConversionProgress> {
     return {
       status: 'PROCESSING',
@@ -265,15 +245,12 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       errors: []
     };
   }
-
   async cancelConversion(fileId: string): Promise<void> {
     // Mock implementation - no action needed
   }
-
   async getConversionTemplates(): Promise<PayeeConversionTemplate[]> {
     return this.mockTemplates;
   }
-
   async createConversionTemplate(
     template: Omit<PayeeConversionTemplate, 'id' | 'createdAt' | 'updatedAt'>
   ): Promise<PayeeConversionTemplate> {
@@ -286,7 +263,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
     this.mockTemplates.push(newTemplate);
     return newTemplate;
   }
-
   async updateConversionTemplate(
     templateId: string,
     template: Partial<PayeeConversionTemplate>
@@ -295,7 +271,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
     if (index === -1) {
       throw this.createError('Template not found', 404);
     }
-    
     const updatedTemplate = {
       ...this.mockTemplates[index],
       ...template,
@@ -304,7 +279,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
     this.mockTemplates[index] = updatedTemplate;
     return updatedTemplate;
   }
-
   async deleteConversionTemplate(templateId: string): Promise<void> {
     const index = this.mockTemplates.findIndex(t => t.id === templateId);
     if (index === -1) {
@@ -312,7 +286,6 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
     }
     this.mockTemplates.splice(index, 1);
   }
-
   async getConversionHistory(conversionId: string): Promise<Array<{
     action: string;
     timestamp: string;
@@ -334,14 +307,12 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       }
     ];
   }
-
   async exportConversionResults(
     conversionId: string,
     format: 'csv' | 'excel'
   ): Promise<string> {
     return `mock-conversion-export.${format}`;
   }
-
   async retryFailedConversions(
     conversionId: string,
     recordIds?: string[]

@@ -1,8 +1,8 @@
 import Parser = require('web-tree-sitter');
-import logger from '../utils/logger';
-import { ParsedClass, ParsedField, ParsedGenericParameter } from './types';
-import { DocumentationParser } from './documentationParser';
-import { AttributeParser } from './attributeParser';
+import logger from '@legacy-analyzer/utils/logger';
+import { ParsedClass, ParsedField, ParsedGenericParameter } from '@legacy-analyzer/types';
+import { DocumentationParser } from '@legacy-analyzer/documentationParser';
+import { AttributeParser } from '@legacy-analyzer/attributeParser';
 
 export class ClassParser {
   public static async parseClass(node: Parser.SyntaxNode): Promise<ParsedClass> {

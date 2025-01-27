@@ -1,6 +1,6 @@
-import { IBaseService } from '../../interfaces/IBaseService';
-import { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '../../../types/api.types';
-import { getConfig } from '../../../config/api.config';
+import { IBaseService } from '@/../interfaces/IBaseService';
+import { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '@/../../types/api.types';
+import { getConfig } from '@/../../config/api.config';
 
 /**
  * Base class for mock service implementations

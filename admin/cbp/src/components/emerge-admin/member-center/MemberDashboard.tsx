@@ -80,17 +80,14 @@ interface TabPanelProps {
   index: number;
   value: number;
 }
-
 const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
   <div role="tabpanel" hidden={value !== index}>
     {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
   </div>
 );
-
 const MemberDashboard: React.FC = () => {
   const navigate = useNavigate();
   const memberService = useService<IMemberService>('memberService');
-  
   const [searchResults, setSearchResults] = useState<MemberSearchResult | null>(null);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -104,7 +101,6 @@ const MemberDashboard: React.FC = () => {
   const [manageDevicesOpen, setManageDevicesOpen] = useState(false);
   const [activities, setActivities] = useState<MemberActivity[]>([]);
   const [loadingActivities, setLoadingActivities] = useState<boolean>(false);
-
   const handleSearch = useCallback(async (filters: MemberSearchFilters) => {
     try {
       setSearching(true);
@@ -122,7 +118,6 @@ const MemberDashboard: React.FC = () => {
       setSearching(false);
     }
   }, [memberService]);
-
   const handleMemberSelect = async (member: Member) => {
     try {
       setLoading(true);
@@ -136,7 +131,6 @@ const MemberDashboard: React.FC = () => {
       setLoading(false);
     }
   };
-
   const handleUpdateStatus = async (member: Member, newStatus: MemberStatus) => {
     try {
       setLoading(true);
@@ -149,10 +143,8 @@ const MemberDashboard: React.FC = () => {
       setLoading(false);
     }
   };
-
   const handleRemoveDevice = async (deviceId: string) => {
     if (!selectedMember) return;
-    
     try {
       setLoading(true);
       await memberService.removeDevice(selectedMember.id, deviceId);
@@ -165,7 +157,6 @@ const MemberDashboard: React.FC = () => {
       setLoading(false);
     }
   };
-
   const loadMemberActivities = async (memberId: string) => {
     try {
       setLoadingActivities(true);
@@ -179,23 +170,19 @@ const MemberDashboard: React.FC = () => {
       setLoadingActivities(false);
     }
   };
-
   const formatCurrency = (value: number): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
     }).format(value);
   };
-
   useEffect(() => {
     if (selectedMember && activeTab === 4) {
       loadMemberActivities(selectedMember.id);
     }
   }, [selectedMember, activeTab]);
-
   const renderMemberDetails = () => {
     if (!selectedMember) return null;
-
     return (
       <Box sx={{ width: '100%' }}>
         <Paper sx={{ mb: 2 }}>
@@ -207,7 +194,6 @@ const MemberDashboard: React.FC = () => {
             <Tab label="Activity" icon={<DescriptionIcon />} />
           </Tabs>
         </Paper>
-
         <TabPanel value={activeTab} index={0}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
@@ -262,7 +248,6 @@ const MemberDashboard: React.FC = () => {
                 </CardContent>
               </Card>
             </Grid>
-
             <Grid item xs={12} md={6}>
               <Card>
                 <CardContent>
@@ -306,7 +291,6 @@ const MemberDashboard: React.FC = () => {
             </Grid>
           </Grid>
         </TabPanel>
-
         <TabPanel value={activeTab} index={1}>
           <Grid container spacing={3}>
             {selectedMember.accounts?.map((account: Account) => (
@@ -374,7 +358,6 @@ const MemberDashboard: React.FC = () => {
             )}
           </Grid>
         </TabPanel>
-
         <TabPanel value={activeTab} index={2}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -437,7 +420,6 @@ const MemberDashboard: React.FC = () => {
             </Grid>
           </Grid>
         </TabPanel>
-
         <TabPanel value={activeTab} index={3}>
           <Card>
             <CardContent>
@@ -487,7 +469,6 @@ const MemberDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </TabPanel>
-
         <TabPanel value={activeTab} index={4}>
           <Card>
             <CardContent>
@@ -553,7 +534,6 @@ const MemberDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </TabPanel>
-        
         {/* Add ManageDevicesDialog */}
         {selectedMember && (
           <ManageDevicesDialog
@@ -573,10 +553,8 @@ const MemberDashboard: React.FC = () => {
       </Box>
     );
   };
-
   const renderDevices = () => {
     if (!selectedMember?.devices) return null;
-
     return (
       <List>
         {selectedMember.devices.map((device: Device) => (
@@ -631,7 +609,6 @@ const MemberDashboard: React.FC = () => {
       </List>
     );
   };
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
@@ -639,19 +616,16 @@ const MemberDashboard: React.FC = () => {
       </Box>
     );
   }
-
   return (
     <Box sx={{ display: 'flex', flexGrow: 1, flexDirection: 'column' }}>
       <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
         Member Dashboard
       </Typography>
-
       {error && (
         <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
-
       {!selectedMember ? (
         <Card sx={{ mb: 3, width: '100%' }}>
           <CardContent>
@@ -674,7 +648,6 @@ const MemberDashboard: React.FC = () => {
       ) : (
         renderMemberDetails()
       )}
-
       <Dialog
         open={devicesDialogOpen}
         onClose={() => setDevicesDialogOpen(false)}
@@ -694,7 +667,6 @@ const MemberDashboard: React.FC = () => {
           {renderDevices()}
         </DialogContent>
       </Dialog>
-
       <Dialog
         open={securitySettingsOpen}
         onClose={() => setSecuritySettingsOpen(false)}
@@ -723,5 +695,4 @@ const MemberDashboard: React.FC = () => {
     </Box>
   );
 };
-
 export default MemberDashboard;

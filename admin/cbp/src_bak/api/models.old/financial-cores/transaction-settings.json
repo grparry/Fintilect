@@ -1,0 +1,101 @@
+{
+  "TransactionSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.AchTransfer",
+    "properties": {
+      "sameDayCutoffInLocalTime": {
+        "type": "string",
+        "x-setting-key": "Transfers.Ach.SameDayCutoffInLocalTime"
+      },
+      "nextDayCutoffInLocalTime": {
+        "type": "string",
+        "x-setting-key": "Transfers.Ach.NextDayCutoffInLocalTime"
+      },
+      "showCurrentAvailable": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.Messages.ShowCurrentAvailable"
+      },
+      "showCurrentBalance": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.Messages.ShowCurrentBalance"
+      },
+      "serviceIdentifier": {
+        "type": "string",
+        "format": "uuid",
+        "x-setting-key": "Transfers.Ach.TransactionServiceIdentifier"
+      },
+      "checkDepositPermissionEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.Ach.CheckDepositPermission.Enabled"
+      },
+      "checkDepositPermissionDisableTransfersWithoutPermission": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.Ach.CheckDepositPermission.DisableTransfersWithoutPermission"
+      },
+      "adminReadTransfersToProcessFromDatabase": {
+        "type": "boolean",
+        "x-setting-key": "Transfers.Ach.Admin.ReadTransfersToProcessFromDatabase"
+      },
+      "placeHoldsOnAchTransactions": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.PlaceHoldsOnAchTransactions",
+        "properties": {
+          "minVersion": {
+            "type": "number",
+            "x-setting-key": "Transfers.Ach.PlaceHoldsOnAchTransactions.MinVersion"
+          },
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "Transfers.Ach.PlaceHoldsOnAchTransactions.Enabled"
+          },
+          "startMemoNumber": {
+            "type": "string",
+            "x-setting-key": "Transfers.Ach.PlaceHoldsOnAchTransactions.StartMemoNumber"
+          },
+          "stopMemoNumber": {
+            "type": "string",
+            "x-setting-key": "Transfers.Ach.PlaceHoldsOnAchTransactions.StopMemoNumber"
+          },
+          "daysTillHoldExpires": {
+            "type": "integer",
+            "x-setting-key": "Transfers.Ach.PlaceHoldsOnAchTransactions.DaysTillHoldExpires"
+          }
+        }
+      },
+      "useInformationalNoteInsteadOfTransferForAchTransactions": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.UseInformationalNoteInsteadOfTransferForAchTransactions",
+        "properties": {
+          "minVersion": {
+            "type": "number",
+            "x-setting-key": "Transfers.Ach.UseInformationalNoteInsteadOfTransferForAchTransactions.MinVersion"
+          },
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "Transfers.Ach.UseInformationalNoteInsteadOfTransferForAchTransactions.Enabled"
+          },
+          "informationalNoteRangeMinimum": {
+            "type": "string",
+            "x-setting-key": "Transfers.Ach.UseInformationalNoteInsteadOfTransferForAchTransactions.InformationalNoteRangeMinimum"
+          },
+          "informationalNoteRangeMaximum": {
+            "type": "string",
+            "x-setting-key": "Transfers.Ach.UseInformationalNoteInsteadOfTransferForAchTransactions.InformationalNoteRangeMaximum"
+          },
+          "noteExpirationTimeInDays": {
+            "type": "number",
+            "x-setting-key": "Transfers.Ach.UseInformationalNoteInsteadOfTransferForAchTransactions.NoteExpirationTimeInDays"
+          },
+          "transactionDescription": {
+            "type": "string",
+            "x-setting-key": "Transfers.Ach.UseInformationalNoteInsteadOfTransferForAchTransactions.TransactionDescription"
+          },
+          "byPassNote": {
+            "type": "boolean",
+            "x-setting-key": "Transfers.Ach.UseInformationalNoteInsteadOfTransferForAchTransactions.ByPassNote"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "CorelationPullCreditSettings": {
+    "type": "object",
+    "description": "Settings for pulling credit reports in Corelation",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.FinancialCores.CorelationSettings.PullCreditSettings",
+    "properties": {
+      "productValue": {
+        "type": "string",
+        "description": "Product value for credit pull",
+        "x-setting-key": "FinacialCore.Corelation.PullCreditSettings.ProductValue"
+      },
+      "bureauValue": {
+        "type": "string",
+        "description": "Credit bureau value",
+        "x-setting-key": "FinacialCore.Corelation.PullCreditSettings.BureauValue"
+      },
+      "typeSerialValue": {
+        "type": "string",
+        "description": "Type serial value for credit pull",
+        "x-setting-key": "FinacialCore.Corelation.PullCreditSettings.TypeSerialValue"
+      }
+    },
+    "required": ["productValue", "bureauValue", "typeSerialValue"]
+  }
+}

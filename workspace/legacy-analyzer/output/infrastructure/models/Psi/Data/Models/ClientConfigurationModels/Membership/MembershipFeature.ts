@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { MemberProfile } from './MemberProfile';
-import { Flags } from './Flags';
+import { MemberProfile } from '@infrastructure/MemberProfile';
+import { Flags } from '@infrastructure/Flags';
 export interface MembershipFeatureConfig {
     MembershipEnabled: boolean;
     MinVersion: number;

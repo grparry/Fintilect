@@ -1,7 +1,7 @@
-import { NotificationTemplate, NotificationTemplateData } from '../../types/notification';
-import * as exceptionUpdated from './exception-updated';
-import * as exceptionRefunded from './exception-refunded';
-import * as exceptionCreated from './exception-created';
+import { NotificationTemplate, NotificationTemplateData } from '@/../types/notification';
+import * as exceptionUpdated from '@/exception-updated';
+import * as exceptionRefunded from '@/exception-refunded';
+import * as exceptionCreated from '@/exception-created';
 
 const templates = {
   [NotificationTemplate.EXCEPTION_UPDATED]: exceptionUpdated,

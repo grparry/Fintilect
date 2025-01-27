@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import { NavigationPermissionRequirement } from '../types/section-navigation.types';
+import { AuthContext } from '@/context/AuthContext';
+import { NavigationPermissionRequirement } from '@/types/section-navigation.types';
 
 export const useNavigationPermissions = () => {
   const { user, permissions } = useContext(AuthContext);

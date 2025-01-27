@@ -1,6 +1,6 @@
-import { PayeeCreateData, PayeeUpdateData, PayeeRecord } from '../types/payee';
-import { DatabaseService } from '../interfaces/database';
-import { HttpError } from '../utils/errors';
+import { PayeeCreateData, PayeeUpdateData, PayeeRecord } from '@cbp-config-api/types/payee';
+import { DatabaseService } from '@cbp-config-api/interfaces/database';
+import { HttpError } from '@cbp-config-api/utils/errors';
 
 export interface PayeeQueryResult {
   PayeeId: string;

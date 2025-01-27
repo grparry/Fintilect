@@ -1,0 +1,46 @@
+{
+  "RelevantSolutionsSettings": {
+    "type": "object",
+    "description": "Relevant solutions settings for deals",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Deals.RelevantSolutions.RelevantSolutions",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether relevant solutions are enabled",
+        "x-setting-key": "Mobile.Deals.RelevantSolutions.Enabled"
+      },
+      "minVersion": {
+        "type": "string",
+        "description": "Minimum version required for relevant solutions",
+        "x-setting-key": "Mobile.Deals.RelevantSolutions.MinimumVersion"
+      },
+      "minAndroidVersion": {
+        "type": "string",
+        "description": "Minimum Android version required for relevant solutions",
+        "x-setting-key": "Mobile.Deals.RelevantSolutions.MinimumAndroidVersion"
+      },
+      "minIosVersion": {
+        "type": "string",
+        "description": "Minimum iOS version required for relevant solutions",
+        "x-setting-key": "Mobile.Deals.RelevantSolutions.MinimumIosVersion"
+      },
+      "url": {
+        "type": "string",
+        "description": "URL for relevant solutions",
+        "x-setting-key": "Mobile.Deals.RelevantSolutions.Url"
+      },
+      "authentication": {
+        "type": "object",
+        "description": "Authentication settings for relevant solutions",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Deals.RelevantSolutions.Authentication",
+        "properties": {
+          "featureId": {
+            "type": "string",
+            "description": "Feature ID for authentication, matches Meta.LayeredSecurityFeature table",
+            "default": "834981D7-6B07-4361-B5F6-91AE8FD4EB3D"
+          }
+        }
+      }
+    }
+  }
+}

@@ -26,8 +26,8 @@ import {
   CheckCircle as CheckCircleIcon,
   Info as InfoIcon
 } from '@mui/icons-material';
-import { Device, DeviceStatus } from '../../../types/member-center.types';
-import { memberService } from '../../../services/factory/ServiceFactory';
+import { Device, DeviceStatus } from '@/../../types/member-center.types';
+import { memberService } from '@/../../services/factory/ServiceFactory';
 
 interface ManageDevicesDialogProps {
   open: boolean;

@@ -2,10 +2,17 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "paths": {
+      "@logs/*": ["./src/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
+      "@implementations/*": ["./src/implementations/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@tests/*": ["./src/__tests__/*"]
+    }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"],
+  "exclude": ["node_modules", "dist"],
   "references": [
     { "path": "../infrastructure" }
   ]

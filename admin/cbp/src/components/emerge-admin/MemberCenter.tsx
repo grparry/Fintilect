@@ -13,5 +13,4 @@ const MemberCenter: React.FC = () => {
     </Box>
   );
 };
-
 export default MemberCenter;

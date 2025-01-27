@@ -7,7 +7,7 @@ import {
   ConfirmationStatus,
   PaymentHistory as IPaymentHistory,
   PaymentAction
-} from '../../../../../types/bill-pay.types';
+} from '@/../../../../types/bill-pay.types';
 
 export interface PaymentHistory {
   paymentId: string;

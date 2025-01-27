@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { FeatureActionTypeEnum } from './ClientConfigurationRepository.FeatureActionTypeEnum';
-import { Money } from './Money';
+import { FeatureActionTypeEnum } from '@infrastructure/ClientConfigurationRepository.FeatureActionTypeEnum';
+import { Money } from '@infrastructure/Money';
 export interface OutOfBandActionSettingConfig {
     ActionType: FeatureActionTypeEnum;
     Enabled: boolean;

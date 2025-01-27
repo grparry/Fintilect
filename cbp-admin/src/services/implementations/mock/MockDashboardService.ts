@@ -1,4 +1,4 @@
-import { IDashboardService } from '../../interfaces/IDashboardService';
+import { IDashboardService } from '@/../interfaces/IDashboardService';
 import {
   DashboardMetrics,
   DashboardFilters,
@@ -6,16 +6,16 @@ import {
   ChartDataPoint,
   TransactionStats,
   UserActivityData
-} from '../../../types/dashboard.types';
-import { TimeRange } from '../../../types'; 
-import { BaseMockService } from './BaseMockService';
+} from '@/../../types/dashboard.types';
+import { TimeRange } from '@/../../types'; 
+import { BaseMockService } from '@/BaseMockService';
 import {
   mockDashboardStats,
   mockDashboardCharts,
   mockDashboardAlerts,
   mockDashboardTasks,
   mockDashboardNews
-} from './data/dashboard/dashboard';
+} from '@/data/dashboard/dashboard';
 
 export class MockDashboardService extends BaseMockService implements IDashboardService {
   private subscriptions: Map<string, (updates: Partial<DashboardMetrics>) => void> = new Map();

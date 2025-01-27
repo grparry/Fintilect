@@ -49,7 +49,6 @@ const initialCategories: Record<PermissionCategoryType, Permission[]> = {
   Settings: [],
   Reports: []
 };
-
 const PermissionGroups: React.FC = () => {
   // State
   const [groups, setGroups] = useState<PermissionGroup[]>([]);
@@ -67,9 +66,7 @@ const PermissionGroups: React.FC = () => {
     description: '',
     permissions: {},
   });
-
   const permissionService = ServiceFactory.getInstance().getPermissionService();
-
   // Load permission groups and available permissions
   useEffect(() => {
     const loadData = async () => {
@@ -79,10 +76,8 @@ const PermissionGroups: React.FC = () => {
           permissionService.getPermissionGroups(),
           permissionService.getPermissions()
         ]);
-
         setGroups(groupsResponse.items);
         setPermissions(permissionsResponse);
-
         // Organize permissions by category
         const categories = permissionsResponse.reduce((acc, permission) => {
           if (!acc[permission.category]) {
@@ -91,7 +86,6 @@ const PermissionGroups: React.FC = () => {
           acc[permission.category].push(permission);
           return acc;
         }, { ...initialCategories });
-
         setPermissionCategories(categories);
         setError(null);
       } catch (err: unknown) {
@@ -100,25 +94,20 @@ const PermissionGroups: React.FC = () => {
         setLoading(false);
       }
     };
-
     loadData();
   }, []);
-
   // Handle form submission
   const handleSubmit = async (formData: PermissionGroupInput) => {
     try {
       setValidationErrors({});
-
       if (selectedGroup) {
         await permissionService.updatePermissionGroup(selectedGroup.id, formData);
       } else {
         await permissionService.createPermissionGroup(formData);
       }
-
       // Refresh groups list
       const response = await permissionService.getPermissionGroups();
       setGroups(response.items);
-      
       handleCloseDialog();
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -128,16 +117,13 @@ const PermissionGroups: React.FC = () => {
       }
     }
   };
-
   // Handle group deletion
   const handleDelete = async (groupId: number) => {
     try {
       await permissionService.deletePermissionGroup(groupId);
-      
       // Refresh groups list
       const response = await permissionService.getPermissionGroups();
       setGroups(response.items);
-      
       setDeleteDialogOpen(false);
       setSelectedGroup(null);
       setError(null);
@@ -145,14 +131,12 @@ const PermissionGroups: React.FC = () => {
       setError(err instanceof Error ? err.message : 'Failed to delete permission group');
     }
   };
-
   // Handle search
   const handleSearch = async () => {
     try {
       const filters: PermissionGroupFilters = {
         searchTerm: searchTerm || undefined
       };
-      
       const response = await permissionService.getPermissionGroups(filters);
       setGroups(response.items);
       setError(null);
@@ -160,7 +144,6 @@ const PermissionGroups: React.FC = () => {
       setError(err instanceof Error ? err.message : 'Failed to search permission groups');
     }
   };
-
   // Handle permission change
   const handlePermissionChange = (category: PermissionCategoryType, action: PermissionAction) => {
     setFormData(prev => {
@@ -168,21 +151,18 @@ const PermissionGroups: React.FC = () => {
       if (!updatedPermissions[category]) {
         updatedPermissions[category] = [];
       }
-      
       const index = updatedPermissions[category].indexOf(action);
       if (index === -1) {
         updatedPermissions[category].push(action);
       } else {
         updatedPermissions[category].splice(index, 1);
       }
-      
       return {
         ...prev,
         permissions: updatedPermissions,
       };
     });
   };
-
   // Dialog handlers
   const handleOpenDialog = (group?: PermissionGroup) => {
     if (group) {
@@ -203,7 +183,6 @@ const PermissionGroups: React.FC = () => {
     setValidationErrors({});
     setDialogOpen(true);
   };
-
   const handleCloseDialog = () => {
     setDialogOpen(false);
     setSelectedGroup(null);
@@ -214,7 +193,6 @@ const PermissionGroups: React.FC = () => {
       permissions: {},
     });
   };
-
   return (
     <Box>
       {error && (
@@ -222,7 +200,6 @@ const PermissionGroups: React.FC = () => {
           {error}
         </Alert>
       )}
-
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Typography variant="h5">Permission Groups</Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
@@ -244,7 +221,6 @@ const PermissionGroups: React.FC = () => {
           </Button>
         </Box>
       </Box>
-
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -286,7 +262,6 @@ const PermissionGroups: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
       {/* Add/Edit Dialog */}
       <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth>
         <DialogTitle>
@@ -302,7 +277,6 @@ const PermissionGroups: React.FC = () => {
               helperText={validationErrors.name}
               fullWidth
             />
-
             <TextField
               label="Description"
               value={formData.description}
@@ -313,11 +287,9 @@ const PermissionGroups: React.FC = () => {
               multiline
               rows={2}
             />
-
             <Typography variant="subtitle1" sx={{ mt: 2 }}>
               Permissions
             </Typography>
-
             <Grid container spacing={2}>
               {Object.entries(permissionCategories).map(([category, permissions]) => (
                 <Grid item xs={12} key={category}>
@@ -357,7 +329,6 @@ const PermissionGroups: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DialogTitle>Delete Permission Group</DialogTitle>
@@ -377,5 +348,4 @@ const PermissionGroups: React.FC = () => {
     </Box>
   );
 };
-
 export default PermissionGroups;

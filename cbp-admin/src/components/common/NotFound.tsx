@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Typography, Button, Container, Paper, Stack } from '@mui/material';
 import { useNavigate, useLocation, To } from 'react-router-dom';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import logger from '../../utils/logger';
+import logger from '@/../utils/logger';
 
 const NotFound: React.FC = () => {
   const navigate = useNavigate();

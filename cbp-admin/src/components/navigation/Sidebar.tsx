@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, useTheme, IconButton } from '@mui/material';
-import { useNavigation } from '../../context/NavigationContext';
-import NavigationSection from './NavigationSection';
+import { useNavigation } from '@/../context/NavigationContext';
+import NavigationSection from '@/NavigationSection';
 import FolderIcon from '@mui/icons-material/Folder';
-import { NavigationSection as NavigationSectionType } from '../../types/section-navigation.types';
+import { NavigationSection as NavigationSectionType } from '@/../types/section-navigation.types';
 import { useNavigate } from 'react-router-dom';
 
 interface SidebarProps {

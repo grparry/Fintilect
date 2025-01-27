@@ -1,4 +1,6 @@
 import { IAuthService } from '../../interfaces/IAuthService';
+import { BaseService } from './BaseService';
+import logger from '../../../utils/logger';
 import { 
     AuthenticationResponse, 
     LoginCredentials,
@@ -6,14 +8,11 @@ import {
     TokenResponse,
     UserSession
 } from '../../../types/auth.types';
-import { BaseService } from './BaseService';
-import logger from '../../../utils/logger';
 
 export class AuthService extends BaseService implements IAuthService {
     constructor(basePath: string = '/api/v1/auth') {
         super(basePath);
     }
-
     async login(credentials: LoginCredentials): Promise<AuthenticationResponse> {
         try {
             return await this.post<AuthenticationResponse>('/login', credentials);
@@ -22,7 +21,6 @@ export class AuthService extends BaseService implements IAuthService {
             throw this.handleError(error, 'Login failed');
         }
     }
-
     async logout(): Promise<void> {
         try {
             await this.post<void>('/logout');
@@ -31,7 +29,6 @@ export class AuthService extends BaseService implements IAuthService {
             throw this.handleError(error, 'Logout failed');
         }
     }
-
     async refreshToken(): Promise<TokenResponse> {
         try {
             return await this.post<TokenResponse>('/refresh');
@@ -40,7 +37,6 @@ export class AuthService extends BaseService implements IAuthService {
             throw this.handleError(error, 'Token refresh failed');
         }
     }
-
     async getCurrentSession(): Promise<SessionInfo | null> {
         try {
             return await this.get<SessionInfo>('/session');
@@ -49,7 +45,6 @@ export class AuthService extends BaseService implements IAuthService {
             return null;
         }
     }
-
     async isAuthenticated(): Promise<boolean> {
         try {
             const session = await this.getCurrentSession();
@@ -58,7 +53,6 @@ export class AuthService extends BaseService implements IAuthService {
             return false;
         }
     }
-
     async getActiveSessions(): Promise<UserSession[]> {
         try {
             return await this.get<UserSession[]>('/sessions');
@@ -67,7 +61,6 @@ export class AuthService extends BaseService implements IAuthService {
             throw this.handleError(error, 'Failed to get active sessions');
         }
     }
-
     async terminateSession(sessionId: string): Promise<void> {
         try {
             await this.delete<void>(`/sessions/${sessionId}`);
@@ -76,7 +69,6 @@ export class AuthService extends BaseService implements IAuthService {
             throw this.handleError(error, 'Failed to terminate session');
         }
     }
-
     async terminateOtherSessions(): Promise<void> {
         try {
             await this.delete<void>('/sessions/others');
@@ -85,7 +77,6 @@ export class AuthService extends BaseService implements IAuthService {
             throw this.handleError(error, 'Failed to terminate other sessions');
         }
     }
-
     protected handleError(error: unknown, defaultMessage: string): Error {
         if (error instanceof Error) {
             return error;

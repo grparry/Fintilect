@@ -29,7 +29,6 @@ export const sectionConfig: Record<string, Partial<NavigationSection>> = {
     color: '#009688',  // Teal
   },
 };
-
 // Default section configuration
 export const defaultSectionConfig: Partial<NavigationSection> = {
   icon: FolderIcon,

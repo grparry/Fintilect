@@ -1,4 +1,4 @@
-import { MemberActivity } from '../../../../../types/member-center.types';
+import { MemberActivity } from '@/../../../../types/member-center.types';
 
 export const mockMemberActivity: { [key: string]: MemberActivity[] } = {
   // Activities for John Doe (id: '1')

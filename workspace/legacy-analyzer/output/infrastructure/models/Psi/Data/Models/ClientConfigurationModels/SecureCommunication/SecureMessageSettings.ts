@@ -1,7 +1,7 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { VirusScanningSettings } from './VirusScanningSettings';
-import { SecureCommunicationSettings } from './SecureCommunicationSettings';
-import { FormattedSecureMessagingCategories } from './FormattedSecureMessagingCategories';
+import { VirusScanningSettings } from '@infrastructure/VirusScanningSettings';
+import { SecureCommunicationSettings } from '@infrastructure/SecureCommunicationSettings';
+import { FormattedSecureMessagingCategories } from '@infrastructure/FormattedSecureMessagingCategories';
 export interface SecureMessageSettingsConfig {
     VirusScanningSettings: VirusScanningSettings;
     Enabled: boolean;

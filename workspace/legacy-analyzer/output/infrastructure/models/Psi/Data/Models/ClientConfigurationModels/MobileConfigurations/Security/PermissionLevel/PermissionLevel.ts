@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { AuthenticationMethodType } from './AuthenticationMethodType';
+import { AuthenticationMethodType } from '@infrastructure/AuthenticationMethodType';
 export interface PermissionLevelConfig {
     TransactionHistory: AuthenticationMethodType;
     AccountSummary: AuthenticationMethodType;

@@ -19,7 +19,9 @@ export enum ClientType {
   SMB = 'SMB',
   Startup = 'STARTUP',
   Business = 'business',
-  Personal = 'personal'
+  Personal = 'personal',
+  Standard = 'STANDARD',
+  Premium = 'PREMIUM'
 }
 
 export enum ClientStatus {
@@ -28,7 +30,8 @@ export enum ClientStatus {
   Suspended = 'SUSPENDED',
   active = 'active',
   inactive = 'inactive',
-  pending = 'pending'
+  pending = 'pending',
+  Pending = 'PENDING'
 }
 
 // Date and Time Format Types
@@ -133,7 +136,11 @@ export enum UserStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
   LOCKED = 'LOCKED',
-  PENDING = 'PENDING'
+  PENDING = 'PENDING',
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE',
+  Locked = 'LOCKED',
+  PendingActivation = 'PENDING_ACTIVATION'
 }
 
 export interface User {
@@ -151,6 +158,7 @@ export interface User {
   password?: string;
   createdAt: string;
   updatedAt: string;
+  groups: UserGroup[];
 }
 
 export interface UserFormData {
@@ -222,6 +230,7 @@ export interface UserGroup {
   roles: SecurityRole[];
   permissions: Permission[];
   members: string[];
+  users: User[];
   createdAt: string;
   updatedAt: string;
 }

@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { CreditCards } from './CreditCards';
+import { CreditCards } from '@infrastructure/CreditCards';
 export interface ControlsConfig {
     SummarySidePanelEnabled: boolean;
     PanelOrderString: string;

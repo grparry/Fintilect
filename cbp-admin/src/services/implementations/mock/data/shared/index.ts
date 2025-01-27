@@ -1,5 +1,5 @@
-export * from './mockValidation';
-export * from './generators/base';
+export * from '@/mockValidation';
+export * from '@/generators/base';
 
 /**
  * Common mock data generation utilities

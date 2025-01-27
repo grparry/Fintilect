@@ -43,9 +43,9 @@ import {
   PayeeConversionProgress,
   PayeeConversionFileUploadResponse,
   PayeeConversionProgressResponse,
-} from '../../../types/bill-pay.types';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
-import { useAuth } from '../../../hooks/useAuth';
+} from '@/../../types/bill-pay.types';
+import { ServiceFactory } from '@/../../services/factory/ServiceFactory';
+import { useAuth } from '@/../../hooks/useAuth';
 
 const PayeeConversion: React.FC = () => {
   const { user } = useAuth();

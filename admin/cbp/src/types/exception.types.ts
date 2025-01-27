@@ -1,7 +1,7 @@
+
+
 export type ExceptionSeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-
 export type ExceptionStatus = 'NEW' | 'ACKNOWLEDGED' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-
 export type ExceptionCategory = 
   | 'PAYMENT_PROCESSING' 
   | 'SECURITY' 
@@ -10,7 +10,6 @@ export type ExceptionCategory =
   | 'INTEGRATION'
   | 'RATE_LIMIT'
   | 'DATA_INTEGRITY';
-
 export interface ExceptionMetadata {
   userId?: string;
   resourceId?: string;
@@ -19,7 +18,6 @@ export interface ExceptionMetadata {
   stackTrace?: string;
   [key: string]: any;
 }
-
 export interface Exception {
   id: string;
   message: string;
@@ -33,21 +31,18 @@ export interface Exception {
   assignedTo?: string;
   resolution?: string;
 }
-
 export interface CreateExceptionRequest {
   message: string;
   category: ExceptionCategory;
   severity: ExceptionSeverity;
   metadata?: ExceptionMetadata;
 }
-
 export interface UpdateExceptionRequest {
   status?: ExceptionStatus;
   assignedTo?: string;
   resolution?: string;
   metadata?: ExceptionMetadata;
 }
-
 export interface ExceptionFilter {
   category?: ExceptionCategory[];
   severity?: ExceptionSeverity[];
@@ -56,7 +51,6 @@ export interface ExceptionFilter {
   endDate?: string;
   assignedTo?: string;
 }
-
 export interface ExceptionStats {
   totalCount: number;
   bySeverity: Record<ExceptionSeverity, number>;
@@ -64,12 +58,10 @@ export interface ExceptionStats {
   byStatus: Record<ExceptionStatus, number>;
   mttr: number; // Mean Time To Resolution (in minutes)
 }
-
 export interface Error {
   message: string;
   code: string;
 }
-
 export interface ApiError extends Error {
   status: number;
   timestamp: string;

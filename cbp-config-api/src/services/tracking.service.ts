@@ -1,8 +1,8 @@
 import * as sql from 'mssql';
-import { Database, db } from '../config/db';
-import { BaseRepository } from '../repositories/base.repository';
-import { HttpError } from '../utils/errors';
-import { logger } from '../config/logger';
+import { Database, db } from '@/config/db';
+import { BaseRepository } from '@/repositories/base.repository';
+import { HttpError } from '@/utils/errors';
+import { logger } from '@/config/logger';
 
 interface QueryParams {
   page: number;

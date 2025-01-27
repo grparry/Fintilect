@@ -1,7 +1,7 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { MarketingProvider } from './MarketingProvider';
-import { SegMintSettings } from './SegMintSettings';
-import { NextMarketing } from './NextMarketing';
+import { MarketingProvider } from '@infrastructure/MarketingProvider';
+import { SegMintSettings } from '@infrastructure/SegMintSettings';
+import { NextMarketing } from '@infrastructure/NextMarketing';
 export interface MarketingConfig {
     Provider: MarketingProvider;
     SegMintSettings: SegMintSettings;

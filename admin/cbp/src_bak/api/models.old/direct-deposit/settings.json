@@ -1,0 +1,92 @@
+{
+  "DirectDepositSettings": {
+    "type": "object",
+    "description": "Settings for direct deposit functionality",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.DirectDeposit.DirectDepositConfiguration",
+    "properties": {
+      "mobile": {
+        "type": "object",
+        "description": "Mobile-specific direct deposit settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.DirectDeposit",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether direct deposit is enabled in mobile",
+            "x-setting-key": "Mobile.DirectDepositInformation.Enabled"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL for direct deposit information",
+            "x-setting-key": "Mobile.DirectDepositInformation.Url"
+          },
+          "minimumVersions": {
+            "type": "object",
+            "description": "Minimum version requirements for different platforms",
+            "properties": {
+              "android": {
+                "type": "string",
+                "description": "Minimum Android version required",
+                "x-setting-key": "Mobile.DirectDepositInformation.MinimumAndroidVersion"
+              },
+              "ios": {
+                "type": "string",
+                "description": "Minimum iOS version required",
+                "x-setting-key": "Mobile.DirectDepositInformation.MinimumIosVersion"
+              }
+            }
+          },
+          "showMenuItem": {
+            "type": "boolean",
+            "description": "Whether to show the direct deposit menu item",
+            "x-setting-key": "Mobile.DirectDepositInformation.ShouldShowMenuItem"
+          }
+        }
+      },
+      "display": {
+        "type": "object",
+        "description": "Display settings for direct deposit",
+        "properties": {
+          "showAccountNickname": {
+            "type": "boolean",
+            "description": "Whether to show account nickname",
+            "x-setting-key": "DirectDeposit.ShowAccountNickname"
+          },
+          "showMICRText": {
+            "type": "boolean",
+            "description": "Whether to show MICR text",
+            "x-setting-key": "DirectDeposit.ShowMICRText"
+          },
+          "usePreviousMicr": {
+            "type": "boolean",
+            "description": "Whether to use previous MICR",
+            "x-setting-key": "DirectDeposit.ShouldUsePreviousMicr"
+          },
+          "showMemberName": {
+            "type": "boolean",
+            "description": "Whether to show member name on direct deposit information view",
+            "x-setting-key": "DirectDeposit.ShowMemberName"
+          }
+        }
+      },
+      "accounts": {
+        "type": "object",
+        "description": "Account-related settings for direct deposit",
+        "properties": {
+          "informationViewCategories": {
+            "type": "array",
+            "description": "Categories to show on the direct deposit information view besides checking accounts with MICR numbers (e.g., RSA, SDA, IRA)",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "DirectDeposit.InformationViewAccountCategories"
+          },
+          "showLimitsOnPage": {
+            "type": "boolean",
+            "description": "Whether to show account limits on direct deposit page",
+            "x-setting-key": "Account.ShowAccountLimitsOnDirectDepositPage"
+          }
+        }
+      }
+    }
+  }
+}

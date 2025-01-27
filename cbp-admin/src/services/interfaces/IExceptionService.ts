@@ -1,4 +1,4 @@
-import { IBaseService } from './IBaseService';
+import { IBaseService } from '@/IBaseService';
 import {
     ExceptionTool,
     ExceptionToolStatus,
@@ -11,8 +11,8 @@ import {
     FISRefundRequest,
     ExceptionFilters,
     FISExceptionFilters
-} from '../../types/bill-pay.types';
-import { PaginatedResponse } from '../../types/common.types';
+} from '@/../types/bill-pay.types';
+import { PaginatedResponse } from '@/../types/common.types';
 
 /**
  * Interface for exception management

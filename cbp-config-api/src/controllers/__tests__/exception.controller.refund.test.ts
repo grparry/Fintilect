@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { Database } from '../../config/db';
-import { ExceptionController } from '../exception.controller';
-import { ExceptionService } from '../../services/exception.service';
-import { ExceptionError, ExceptionErrorCodes } from '../../types/fis-exception';
+import { Database } from '@/../config/db';
+import { ExceptionController } from '@/exception.controller';
+import { ExceptionService } from '@/../services/exception.service';
+import { ExceptionError, ExceptionErrorCodes } from '@/../types/fis-exception';
 
 jest.mock('../../config/db');
 jest.mock('../../services/exception.service');

@@ -1,5 +1,5 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { RestrictedWordControlAreas } from './RestrictedWordControlAreas';
+import { RestrictedWordControlAreas } from '@infrastructure/RestrictedWordControlAreas';
 export interface RestrictedWordSettingsConfig {
     Enabled: boolean;
     MinVersion: number;

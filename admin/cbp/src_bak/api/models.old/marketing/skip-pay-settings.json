@@ -1,0 +1,37 @@
+{
+  "SkipPaySettings": {
+    "type": "object",
+    "description": "Configuration settings for Skip Pay loan promotion service",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Promotions.SkipPay",
+    "required": ["qualificationSettings"],
+    "properties": {
+      "qualificationSettings": {
+        "type": "object",
+        "description": "Settings for loan qualification process",
+        "required": ["source"],
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "Source for qualification data",
+            "enum": ["permissions"],
+            "default": "permissions",
+            "x-setting-key": "Promotions.SkipPay.ShouldGetQualifiedLoansFromPermissions"
+          },
+          "permissionSettings": {
+            "type": "object",
+            "description": "Settings for permission-based qualification",
+            "required": ["clearAfterSuccess"],
+            "properties": {
+              "clearAfterSuccess": {
+                "type": "boolean",
+                "description": "Whether to clear qualification flag after successful application",
+                "default": true,
+                "x-setting-key": "Promotions.SkipPay.ShouldClearSkipPayQualifyPermissionAfterSuccess"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

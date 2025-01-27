@@ -1,6 +1,6 @@
-import { Database } from '../config/db';
-import { logger } from '../config/logger';
-import { getNotificationContent } from '../templates/notification';
+import { Database } from '@/config/db';
+import { logger } from '@/config/logger';
+import { getNotificationContent } from '@/templates/notification';
 import {
   NotificationRequest,
   NotificationResponse,
@@ -8,9 +8,9 @@ import {
   NotificationHistorySearchRequest,
   NotificationHistorySearchResponse,
   NotificationType
-} from '../types/notification';
-import { ServiceResponse } from '../types/common';
-import { HttpError } from '../utils/errors';
+} from '@/types/notification';
+import { ServiceResponse } from '@/types/common';
+import { HttpError } from '@/utils/errors';
 
 export class NotificationService {
   constructor(private db: Database) {}

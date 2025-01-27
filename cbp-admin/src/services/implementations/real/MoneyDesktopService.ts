@@ -1,7 +1,7 @@
-import { BaseService } from './BaseService';
-import { IMoneyDesktopService } from '../../interfaces/IMoneyDesktopService';
-import { Account, Connection, MoneyDesktopFilters } from '../../../types/money-desktop.types';
-import { ApiSuccessResponse } from '../../../types/api.types';
+import { BaseService } from '@/BaseService';
+import { IMoneyDesktopService } from '@/../interfaces/IMoneyDesktopService';
+import { Account, Connection, MoneyDesktopFilters } from '@/../../types/money-desktop.types';
+import { ApiSuccessResponse } from '@/../../types/api.types';
 
 export class MoneyDesktopService extends BaseService implements IMoneyDesktopService {
   constructor(basePath: string = '/api/money-desktop') {

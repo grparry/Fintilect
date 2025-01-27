@@ -1,6 +1,6 @@
 import path from 'path';
-import { ParsedClass, ParsedEnum } from '../../parser/types';
-import logger from '../../utils/logger';
+import { ParsedClass, ParsedEnum } from '@/../parser/types';
+import logger from '@/../utils/logger';
 
 export interface PathResolverOptions {
     isTest?: boolean;

@@ -4,24 +4,24 @@ import helmet from 'helmet';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './docs/swagger';
-import { logger } from './config/logger';
-import { requestLogger } from './middleware/logging.middleware';
-import { authMiddleware } from './middleware/auth.middleware';
-import { errorMiddleware } from './middleware/error.middleware';
+import { swaggerSpec } from '@/docs/swagger';
+import { logger } from '@/config/logger';
+import { requestLogger } from '@/middleware/logging.middleware';
+import { authMiddleware } from '@/middleware/auth.middleware';
+import { errorMiddleware } from '@/middleware/error.middleware';
 
 // Import routes
-import clientRoutes from './routes/clients.routes';
-import hostRoutes from './routes/host.routes';
-import { createUserRouter } from './routes/user.routes';
-import payeeRoutes from './routes/payees.routes';
-import paymentRoutes from './routes/payments.routes';
-import systemRoutes from './routes/system.routes';
-import utilityRoutes from './routes/utility.routes';
-import trackingRoutes from './routes/tracking.routes';
-import exceptionRoutes from './routes/exception.routes';
-import exceptionHistoryRoutes from './routes/exception-history.routes';
-import { db } from './config/db';
+import clientRoutes from '@/routes/clients.routes';
+import hostRoutes from '@/routes/host.routes';
+import { createUserRouter } from '@/routes/user.routes';
+import payeeRoutes from '@/routes/payees.routes';
+import paymentRoutes from '@/routes/payments.routes';
+import systemRoutes from '@/routes/system.routes';
+import utilityRoutes from '@/routes/utility.routes';
+import trackingRoutes from '@/routes/tracking.routes';
+import exceptionRoutes from '@/routes/exception.routes';
+import exceptionHistoryRoutes from '@/routes/exception-history.routes';
+import { db } from '@/config/db';
 
 const app = express();
 

@@ -37,12 +37,10 @@ export class MockClientService extends BaseMockService implements IClientService
     private userGroups: Map<string, UserGroup[]> = new Map();
     private auditLogs: Map<string, AuditLog[]> = new Map();
     private addresses: Map<string, Address> = new Map();
-
     constructor(basePath: string = '/api/v1/clients') {
         super(basePath);
         this.initializeData();
     }
-
     private initializeData(): void {
         // Initialize mock data structures
         this.clients.forEach(client => {
@@ -60,12 +58,10 @@ export class MockClientService extends BaseMockService implements IClientService
                 country: 'USA'
             });
             this.users.set(client.id, mockUsers.filter(u => u.clientId === client.id));
-            
             // Debug log
             console.log(`Initialized audit logs for client ${client.id}:`, this.auditLogs.get(client.id));
         });
     }
-
     async getClients(params?: {
         type?: ClientType;
         status?: ClientStatus;
@@ -75,7 +71,6 @@ export class MockClientService extends BaseMockService implements IClientService
         limit?: number;
     }): Promise<PaginatedResponse<Client>> {
         let filteredClients = [...this.clients];
-
         if (params) {
             if (params.type) {
                 filteredClients = filteredClients.filter(c => c.type === params.type);
@@ -95,14 +90,12 @@ export class MockClientService extends BaseMockService implements IClientService
                 );
             }
         }
-
         const page = params?.page || 1;
         const limit = params?.limit || 10;
         const start = (page - 1) * limit;
         const end = start + limit;
         const items = filteredClients.slice(start, end);
         const total = filteredClients.length;
-
         return {
             items,
             pagination: {
@@ -113,18 +106,14 @@ export class MockClientService extends BaseMockService implements IClientService
             }
         };
     }
-
     async getClient(clientId: string): Promise<Client> {
         this.validateRequired({ clientId }, ['clientId']);
-
         const client = this.clients.find(c => c.id === clientId);
         if (!client) {
             this.createError(`Client not found: ${clientId}`, 404);
         }
-
         return client!;
     }
-
     async createClient(client: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>): Promise<Client> {
         const newClient: Client = {
             ...client,
@@ -133,38 +122,30 @@ export class MockClientService extends BaseMockService implements IClientService
             updatedAt: new Date().toISOString(),
             settings: defaultSettings
         };
-
         this.clients.push(newClient);
         this.initializeData();
         return newClient;
     }
-
     async updateClient(clientId: string, client: Partial<Client>): Promise<Client> {
         this.validateRequired({ clientId }, ['clientId']);
-
         const index = this.clients.findIndex(c => c.id === clientId);
         if (index === -1) {
             this.createError(`Client not found: ${clientId}`, 404);
         }
-
         const updatedClient = {
             ...this.clients[index],
             ...client,
             updatedAt: new Date().toISOString()
         };
-
         this.clients[index] = updatedClient;
         return updatedClient;
     }
-
     async deleteClient(clientId: string): Promise<void> {
         this.validateRequired({ clientId }, ['clientId']);
-
         const index = this.clients.findIndex(c => c.id === clientId);
         if (index === -1) {
             this.createError(`Client not found: ${clientId}`, 404);
         }
-
         this.clients.splice(index, 1);
         this.apiKeys.delete(clientId);
         this.contacts.delete(clientId);
@@ -174,21 +155,17 @@ export class MockClientService extends BaseMockService implements IClientService
         this.addresses.delete(clientId);
         this.users.delete(clientId);
     }
-
     async getClientSettings(clientId: string): Promise<ClientSettings> {
         this.validateRequired({ clientId }, ['clientId']);
-
         const client = await this.getClient(clientId);
         return client.settings;
     }
-
     async updateClientSettings(clientId: string, settings: {
         general?: Partial<ClientSettings['general']>;
         security?: Partial<ClientSettings['security']>;
         notifications?: Partial<ClientSettings['notifications']>;
     }): Promise<ClientSettings> {
         this.validateRequired({ clientId }, ['clientId']);
-
         const client = await this.getClient(clientId);
         const updatedSettings = {
             ...client.settings,
@@ -196,14 +173,11 @@ export class MockClientService extends BaseMockService implements IClientService
             security: { ...client.settings.security, ...settings.security },
             notifications: { ...client.settings.notifications, ...settings.notifications }
         };
-
         await this.updateClient(clientId, { settings: updatedSettings });
         return updatedSettings;
     }
-
     async getClientConfiguration(clientId: string): Promise<ClientConfiguration> {
         this.validateRequired({ clientId }, ['clientId']);
-
         return {
             id: parseInt(clientId),
             clientId: parseInt(clientId),
@@ -215,27 +189,21 @@ export class MockClientService extends BaseMockService implements IClientService
             lastModified: new Date().toISOString()
         };
     }
-
     async updateClientConfiguration(clientId: string, config: Partial<ClientConfiguration>): Promise<ClientConfiguration> {
         this.validateRequired({ clientId }, ['clientId']);
-
         const currentConfig = await this.getClientConfiguration(clientId);
         return { ...currentConfig, ...config, lastModified: new Date().toISOString() };
     }
-
     async getClientApiKeys(clientId: string): Promise<ClientApiKey[]> {
         this.validateRequired({ clientId }, ['clientId']);
-
         return this.apiKeys.get(clientId) || [];
     }
-
     async createClientApiKey(clientId: string, keyData: {
         keyName: string;
         environment: Environment;
         expiresAt?: string;
     }): Promise<ClientApiKey> {
         this.validateRequired({ clientId, keyData }, ['clientId', 'keyData']);
-
         const newKey: ClientApiKey = {
             id: parseInt(Math.random().toString().substr(2, 8)),
             clientId: parseInt(clientId),
@@ -246,50 +214,38 @@ export class MockClientService extends BaseMockService implements IClientService
             lastUsed: null,
             status: 'Active'
         };
-
         const keys = this.apiKeys.get(clientId) || [];
         keys.push(newKey);
         this.apiKeys.set(clientId, keys);
-
         return newKey;
     }
-
     async revokeClientApiKey(clientId: string, keyId: number): Promise<void> {
         this.validateRequired({ clientId, keyId }, ['clientId', 'keyId']);
-
         const keys = this.apiKeys.get(clientId);
         if (!keys) {
             this.createError(`Client not found: ${clientId}`, 404);
         }
-
         const keyIndex = keys!.findIndex(k => k.id === keyId);
         if (keyIndex === -1) {
             this.createError(`API key not found: ${keyId}`, 404);
         }
-
         keys![keyIndex].status = 'Revoked';
     }
-
     async getClientContacts(clientId: string): Promise<ClientContact[]> {
         this.validateRequired({ clientId }, ['clientId']);
-
         return this.contacts.get(clientId) || [];
     }
-
     async updateClientContacts(clientId: string, contacts: ContactInformation): Promise<ContactInformation> {
         this.validateRequired({ clientId }, ['clientId']);
-
         const clientContacts: ClientContact[] = [
             this.createClientContact(clientId, contacts.primaryContact, 'Primary'),
             this.createClientContact(clientId, contacts.technicalContact, 'Technical'),
             this.createClientContact(clientId, contacts.billingContact, 'Billing'),
             ...contacts.emergencyContacts.map(c => this.createClientContact(clientId, c, 'Emergency'))
         ];
-
         this.contacts.set(clientId, clientContacts);
         return contacts;
     }
-
     private createClientContact(clientId: string, contact: Contact, role: string): ClientContact {
         return {
             id: parseInt(Math.random().toString().substr(2, 8)),
@@ -302,40 +258,32 @@ export class MockClientService extends BaseMockService implements IClientService
             lastModified: new Date().toISOString()
         };
     }
-
     async getClientServices(clientId: string): Promise<ClientService[]> {
         this.validateRequired({ clientId }, ['clientId']);
-
         return this.services.get(clientId) || [];
     }
-
     async updateClientService(
         clientId: string,
         serviceId: number,
         service: Partial<ClientService>
     ): Promise<ClientService> {
         this.validateRequired({ clientId, serviceId }, ['clientId', 'serviceId']);
-
         const services = this.services.get(clientId);
         if (!services) {
             this.createError(`Client not found: ${clientId}`, 404);
         }
-
         const serviceIndex = services!.findIndex(s => s.id === serviceId);
         if (serviceIndex === -1) {
             this.createError(`Service not found: ${serviceId}`, 404);
         }
-
         const updatedService = {
             ...services![serviceIndex],
             ...service,
             clientId: parseInt(clientId)
         };
-
         services![serviceIndex] = updatedService;
         return updatedService;
     }
-
     async getClientUsers(clientId: string, params?: {
         role?: UserRole;
         searchTerm?: string;
@@ -343,9 +291,7 @@ export class MockClientService extends BaseMockService implements IClientService
         limit?: number;
     }): Promise<PaginatedResponse<User>> {
         this.validateRequired({ clientId }, ['clientId']);
-
         let filteredUsers = this.users.get(clientId) || [];
-
         if (params) {
             if (params.role) {
                 filteredUsers = filteredUsers.filter(u => u.roles.includes(params.role));
@@ -360,14 +306,12 @@ export class MockClientService extends BaseMockService implements IClientService
                 );
             }
         }
-
         const page = params?.page || 1;
         const limit = params?.limit || 10;
         const start = (page - 1) * limit;
         const end = start + limit;
         const items = filteredUsers.slice(start, end);
         const total = filteredUsers.length;
-
         return {
             items,
             pagination: {
@@ -378,16 +322,12 @@ export class MockClientService extends BaseMockService implements IClientService
             }
         };
     }
-
     async getClientUserGroups(clientId: string): Promise<UserGroup[]> {
         this.validateRequired({ clientId }, ['clientId']);
-
         return this.userGroups.get(clientId) || [];
     }
-
     async getClientRoles(clientId: string): Promise<SecurityRole[]> {
         this.validateRequired({ clientId }, ['clientId']);
-
         return [
             {
                 id: 'admin',
@@ -418,26 +358,19 @@ export class MockClientService extends BaseMockService implements IClientService
             }
         ];
     }
-
     async getClientPermissions(clientId: string): Promise<Permission[]> {
         this.validateRequired({ clientId }, ['clientId']);
-
         return mockPermissions;
     }
-
     async getPermissions(): Promise<Permission[]> {
         return mockPermissions;
     }
-
     async getClientAuditLogs(clientId: string, request: AuditSearchRequest): Promise<{ logs: AuditLog[], total: number }> {
         console.log('MockClientService.getClientAuditLogs - clientId:', clientId);
         console.log('MockClientService.getClientAuditLogs - request:', request);
-        
         this.validateRequired({ clientId }, ['clientId']);
-        
         let logs = this.auditLogs.get(clientId) || [];
         console.log('MockClientService.getClientAuditLogs - initial logs:', logs);
-        
         // Apply filters
         if (request) {
             if (request.startDate && typeof request.startDate === 'string') {
@@ -477,23 +410,19 @@ export class MockClientService extends BaseMockService implements IClientService
                 logs = logs.filter(log => log.status === request.status);
             }
         }
-
         // Store total before pagination
         const total = logs.length;
-
         // Apply sorting
         if (request.sortBy) {
             logs = [...logs].sort((a: any, b: any) => {
                 const aValue = a[request.sortBy!];
                 const bValue = b[request.sortBy!];
                 const order = request.sortOrder === 'desc' ? -1 : 1;
-                
                 if (aValue < bValue) return -1 * order;
                 if (aValue > bValue) return 1 * order;
                 return 0;
             });
         }
-
         // Apply pagination
         if (request.page !== undefined && request.limit !== undefined) {
             const start = (request.page - 1) * request.limit;
@@ -501,30 +430,23 @@ export class MockClientService extends BaseMockService implements IClientService
             logs = logs.slice(start, end);
             console.log('After pagination:', logs);
         }
-
         console.log('MockClientService.getClientAuditLogs - returning logs:', logs);
         console.log('MockClientService.getClientAuditLogs - total logs:', total);
         return { logs, total };
     }
-
     async getClientAddress(clientId: string): Promise<Address> {
         this.validateRequired({ clientId }, ['clientId']);
-
         const address = this.addresses.get(clientId);
         if (!address) {
             this.createError(`Address not found for client: ${clientId}`, 404);
         }
-
         return address!;
     }
-
     async updateClientAddress(clientId: string, address: Address): Promise<Address> {
         this.validateRequired({ clientId }, ['clientId']);
-
         this.addresses.set(clientId, address);
         return address;
     }
-
     async getClientStats(clientId: string): Promise<{
         userCount: number;
         activeUserCount: number;
@@ -533,10 +455,8 @@ export class MockClientService extends BaseMockService implements IClientService
         lastActivityDate: string;
     }> {
         this.validateRequired({ clientId }, ['clientId']);
-
         const clientUsers = this.users.get(clientId) || [];
         const activeUsers = clientUsers.filter(u => !u.locked);
-
         return {
             userCount: clientUsers.length,
             activeUserCount: activeUsers.length,
@@ -545,7 +465,6 @@ export class MockClientService extends BaseMockService implements IClientService
             lastActivityDate: new Date().toISOString()
         };
     }
-
     async getSecuritySettings(clientId: string): Promise<SecuritySettings> {
         this.validateRequired({ clientId }, ['clientId']);
         return {
@@ -596,13 +515,11 @@ export class MockClientService extends BaseMockService implements IClientService
             }
         };
     }
-
     async updateSecuritySettings(clientId: string, settings: Partial<SecuritySettings>): Promise<SecuritySettings> {
         this.validateRequired({ clientId }, ['clientId']);
         const currentSettings = await this.getSecuritySettings(clientId);
         return { ...currentSettings, ...settings };
     }
-
     async getGroup(clientId: string, groupId: string): Promise<UserGroup> {
         this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
         const groups = this.userGroups.get(clientId) || [];
@@ -612,7 +529,6 @@ export class MockClientService extends BaseMockService implements IClientService
         }
         return group!;
     }
-
     async createGroup(clientId: string, group: Omit<UserGroup, 'id'>): Promise<UserGroup> {
         this.validateRequired({ clientId, group }, ['clientId', 'group']);
         const groups = this.userGroups.get(clientId) || [];
@@ -627,7 +543,6 @@ export class MockClientService extends BaseMockService implements IClientService
         this.userGroups.set(clientId, groups);
         return newGroup;
     }
-
     async updateGroup(clientId: string, groupId: string, group: Partial<UserGroup>): Promise<UserGroup> {
         this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
         const groups = this.userGroups.get(clientId) || [];
@@ -644,7 +559,6 @@ export class MockClientService extends BaseMockService implements IClientService
         this.userGroups.set(clientId, groups);
         return updatedGroup;
     }
-
     async deleteGroup(clientId: string, groupId: string): Promise<void> {
         this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
         const groups = this.userGroups.get(clientId) || [];
@@ -655,12 +569,10 @@ export class MockClientService extends BaseMockService implements IClientService
         groups.splice(groupIndex, 1);
         this.userGroups.set(clientId, groups);
     }
-
     async getGroups(clientId: string): Promise<UserGroup[]> {
         this.validateRequired({ clientId }, ['clientId']);
         return this.userGroups.get(clientId) || [];
     }
-
     async getUser(clientId: string, userId: string): Promise<User> {
         this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
         const users = this.users.get(clientId) || [];
@@ -670,7 +582,6 @@ export class MockClientService extends BaseMockService implements IClientService
         }
         return user!;
     }
-
     async createUser(clientId: string, user: Omit<User, 'id'>): Promise<User> {
         this.validateRequired({ clientId, user }, ['clientId', 'user']);
         const users = this.users.get(clientId) || [];
@@ -687,7 +598,6 @@ export class MockClientService extends BaseMockService implements IClientService
         this.users.set(clientId, users);
         return newUser;
     }
-
     async updateUser(clientId: string, userId: string, user: Partial<User>): Promise<User> {
         this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
         const users = this.users.get(clientId) || [];
@@ -704,7 +614,6 @@ export class MockClientService extends BaseMockService implements IClientService
         this.users.set(clientId, users);
         return updatedUser;
     }
-
     async deleteUser(clientId: string, userId: string): Promise<void> {
         this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
         const users = this.users.get(clientId) || [];
@@ -715,7 +624,6 @@ export class MockClientService extends BaseMockService implements IClientService
         users.splice(userIndex, 1);
         this.users.set(clientId, users);
     }
-
     async setUserLockStatus(clientId: string, userId: string, locked: boolean): Promise<void> {
         this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
         const users = this.users.get(clientId) || [];

@@ -1,5 +1,5 @@
-import { IPayeeService } from '../../interfaces/IPayeeService';
-import { BaseMockService } from './BaseMockService';
+import { IPayeeService } from '@/../interfaces/IPayeeService';
+import { BaseMockService } from '@/BaseMockService';
 import {
   Payee,
   PayeeStatus,
@@ -14,8 +14,8 @@ import {
   PayeeConversionProgress,
   PayeeConversionRecord,
   PayeeConversionTemplate
-} from '../../../types/bill-pay.types';
-import { PaginatedResponse } from '../../../types/common.types';
+} from '@/../../types/bill-pay.types';
+import { PaginatedResponse } from '@/../../types/common.types';
 
 export class MockPayeeService extends BaseMockService implements IPayeeService {
   private mockPayees: Payee[] = [

@@ -10,15 +10,27 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
     "paths": {
-      "@fintilect/infrastructure": ["./infrastructure/src"],
-      "@fintilect/infrastructure/*": ["./infrastructure/src/*"],
-      "@fintilect/docs": ["./docs/src"],
-      "@fintilect/docs/*": ["./docs/src/*"],
-      "@fintilect/logs": ["./logs/src"],
-      "@fintilect/logs/*": ["./logs/src/*"]
-    }
+      "@infrastructure/*": ["infrastructure/src/*"],
+      "@models/*": ["infrastructure/src/models/*"],
+      "@logs/*": ["logs/src/*"],
+      "@workbench-shared/*": ["workbench/shared/src/*"],
+      "@legacy-analyzer/*": ["workbench/legacy-analyzer/src/*"],
+      "@config-gen/*": ["workbench/config-gen/src/*"],
+      "@cbp-config-api/*": ["api/cbp/config/src/*"]
+    },
+    "rootDir": ".",
+    "outDir": "dist"
   },
   "exclude": ["**/node_modules", "**/dist"],
-  "references": []
+  "references": [
+    { "path": "./infrastructure" },
+    { "path": "./logs" },
+    { "path": "./workbench/shared" },
+    { "path": "./workbench/legacy-analyzer" },
+    { "path": "./workbench/config-gen" },
+    { "path": "./admin/cbp" },
+    { "path": "./api/cbp/config" }
+  ]
 }

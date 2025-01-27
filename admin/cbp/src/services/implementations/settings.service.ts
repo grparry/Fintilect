@@ -8,7 +8,6 @@ export interface Setting {
   dataType: 'string' | 'number' | 'boolean' | 'json';
   validation?: Record<string, any>;
 }
-
 export interface SettingGroup {
   settings: Setting[];
   metadata: {
@@ -17,10 +16,8 @@ export interface SettingGroup {
     __display?: Record<string, any>;
   };
 }
-
 class SettingsService {
   private readonly baseUrl = '/v1/settings';
-
   /**
    * Get all settings for a specific settings group
    * @param groupName The settings group name (e.g., 'AccountSettings', 'TravelNotificationFeature')
@@ -28,7 +25,6 @@ class SettingsService {
   async getSettingsGroup(groupName: string): Promise<ApiSuccessResponse<SettingGroup>> {
     return api.get<SettingGroup>(`${this.baseUrl}/groups/${groupName}`);
   }
-
   /**
    * Get a single setting by its key
    * @param key The setting key (e.g., 'Features.TravelNotification.TravelNotificationEnabled')
@@ -36,7 +32,6 @@ class SettingsService {
   async getSetting(key: string): Promise<ApiSuccessResponse<Setting>> {
     return api.get<Setting>(`${this.baseUrl}/${encodeURIComponent(key)}`);
   }
-
   /**
    * Update a single setting
    * @param key The setting key
@@ -47,7 +42,6 @@ class SettingsService {
       value: this.serializeValue(value)
     });
   }
-
   /**
    * Update multiple settings at once
    * @param settings Array of settings to update
@@ -59,7 +53,6 @@ class SettingsService {
     }));
     return api.put<Setting[]>(`${this.baseUrl}/batch`, { settings: serializedSettings });
   }
-
   /**
    * Get settings by prefix
    * @param prefix The prefix to filter settings by (e.g., 'Features.TravelNotification')
@@ -67,7 +60,6 @@ class SettingsService {
   async getSettingsByPrefix(prefix: string): Promise<ApiSuccessResponse<Setting[]>> {
     return api.get<Setting[]>(`${this.baseUrl}/prefix/${encodeURIComponent(prefix)}`);
   }
-
   /**
    * Validate a setting value against its metadata
    * @param key The setting key
@@ -79,7 +71,6 @@ class SettingsService {
       value: this.serializeValue(value)
     });
   }
-
   private serializeValue(value: any): string {
     if (typeof value === 'object') {
       return JSON.stringify(value);
@@ -87,6 +78,5 @@ class SettingsService {
     return String(value);
   }
 }
-
 export const settingsService = new SettingsService();
 export default settingsService;

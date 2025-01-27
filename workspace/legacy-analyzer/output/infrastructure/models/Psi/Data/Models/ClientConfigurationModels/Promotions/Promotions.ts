@@ -1,6 +1,6 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { DeepTargetSettings } from './DeepTargetSettings';
-import { SkipPay } from './SkipPay';
+import { DeepTargetSettings } from '@infrastructure/DeepTargetSettings';
+import { SkipPay } from '@infrastructure/SkipPay';
 export interface PromotionsConfig {
     DeepTarget: DeepTargetSettings;
     SkipPay: SkipPay;

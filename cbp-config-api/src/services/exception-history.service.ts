@@ -1,13 +1,13 @@
-import { Database } from '../config/db';
-import { logger } from '../utils/logger';
-import { ExceptionError, ExceptionErrorCodes } from '../types/fis-exception';
-import { ServiceResponse } from '../types/common';
+import { Database } from '@/config/db';
+import { logger } from '@/utils/logger';
+import { ExceptionError, ExceptionErrorCodes } from '@/types/fis-exception';
+import { ServiceResponse } from '@/types/common';
 import {
   ExceptionHistory,
   ExceptionHistoryCreateRequest,
   ExceptionHistorySearchRequest,
   ExceptionHistorySearchResponse
-} from '../types/exception-history';
+} from '@/types/exception-history';
 
 export class ExceptionHistoryService {
   constructor(private db: Database) {}

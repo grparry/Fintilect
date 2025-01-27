@@ -1,10 +1,10 @@
 import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';
-import { EplEstatements } from './EplEstatements';
-import { DoximEstatements } from './DoximEstatements';
-import { BitEstatements } from './BitEstatements';
-import { NcpEstatements } from './NcpEstatements';
-import { InfoImageEstatementsSettings } from './InfoImageEstatementsSettings';
-import { WebApiEstatementsSettings } from './WebApiEstatementsSettings';
+import { EplEstatements } from '@infrastructure/EplEstatements';
+import { DoximEstatements } from '@infrastructure/DoximEstatements';
+import { BitEstatements } from '@infrastructure/BitEstatements';
+import { NcpEstatements } from '@infrastructure/NcpEstatements';
+import { InfoImageEstatementsSettings } from '@infrastructure/InfoImageEstatementsSettings';
+import { WebApiEstatementsSettings } from '@infrastructure/WebApiEstatementsSettings';
 export interface EstatementsConfig {
     Enabled: boolean;
     MinVersion: number;

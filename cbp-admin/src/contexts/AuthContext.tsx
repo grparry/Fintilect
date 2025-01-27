@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { authService } from '../services/factory/ServiceFactory';
-import { LoginCredentials, AuthState } from '../types/auth.types';
-import { User } from '../types/client.types';
+import { authService } from '@/services/factory/ServiceFactory';
+import { LoginCredentials, AuthState } from '@/types/auth.types';
+import { User } from '@/types/client.types';
 
 interface AuthContextType {
   state: AuthState;
