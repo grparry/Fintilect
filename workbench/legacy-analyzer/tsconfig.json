@@ -16,9 +16,5 @@
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist"],
-  "references": [
-    { "path": "../../infrastructure" },
-    { "path": "../../logs" }
-  ]
+  "exclude": ["node_modules", "dist"]
 }

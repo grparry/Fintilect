@@ -1,19 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { isCSharpFile } from '@/utils/fileUtils';
-import winston from 'winston';
-
-// Configure logger
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  transports: [
-    new winston.transports.File({ filename: 'logs/app.log' })
-  ]
-});
+import logger from './utils/logger';
+import { FileService } from './services/fileService';
 
 export interface ScannerOptions {
   singleFilePath?: string;  // For testing single file processing
@@ -22,7 +10,7 @@ export interface ScannerOptions {
 
 export interface ScanResult {
   filePath: string;
-  error?: string;
+  error?: Error;
 }
 
 export class FileScanner {
@@ -53,7 +41,7 @@ export class FileScanner {
         } else {
           results.push({ 
             filePath: fullPath, 
-            error: 'File is not a valid C# file or does not exist' 
+            error: new Error('File is not a valid C# file or does not exist') 
           });
         }
         return results;
@@ -68,7 +56,7 @@ export class FileScanner {
       logger.error(`Error scanning directory: ${errorMessage}`);
       results.push({
         filePath: this.basePath,
-        error: `Failed to scan directory: ${errorMessage}`
+        error: new Error(`Failed to scan directory: ${errorMessage}`)
       });
     }
 
@@ -99,7 +87,7 @@ export class FileScanner {
       logger.error(`Error scanning directory ${dirPath}: ${errorMessage}`);
       results.push({
         filePath: dirPath,
-        error: `Failed to scan directory: ${errorMessage}`
+        error: new Error(`Failed to scan directory: ${errorMessage}`)
       });
     }
   }
@@ -110,7 +98,7 @@ export class FileScanner {
   private async isValidFile(filePath: string): Promise<boolean> {
     try {
       const exists = await fs.pathExists(filePath);
-      return exists && isCSharpFile(filePath);
+      return exists && filePath.endsWith('.cs');
     } catch (error) {
       logger.error(`Error checking file ${filePath}: ${error}`);
       return false;

@@ -45,7 +45,7 @@ export class ClassDocWriter {
         parts.push(`${parsedClass.name}.md`);
         
         // Join with path separator and prepend classes directory
-        return path.join('classes', ...parts);
+        return path.join('doc', ...parts);
     }
 
     private formatAttributeValue(value: string | undefined): string {

@@ -9,9 +9,11 @@ import logger from './utils/logger';
 // Initialize logger
 logger.info('Starting legacy analyzer');
 
-// Hardcoded paths relative to this file's location
-const INPUT_DIR = path.resolve(__dirname, '../../api/cbp/config/src');
-const OUTPUT_DIR = path.resolve(__dirname, '../../infrastructure/models');
+// Configuration
+const config = {
+  inputDir: path.join(__dirname, '../../../legacy/legacy-apis/Psi.Models.ClientConfigurationModels'),
+  outputDir: path.join(__dirname, '../../../infrastructure/models')
+};
 
 async function analyzeDirectory(directoryPath: string, outputDir: string) {
     // Initialize services
@@ -72,12 +74,9 @@ async function analyzeDirectory(directoryPath: string, outputDir: string) {
 
 async function main() {
     try {
-        logger.info('Using configuration:', {
-            inputDir: INPUT_DIR,
-            outputDir: OUTPUT_DIR
-        });
+        logger.info('Using configuration:', config);
 
-        await analyzeDirectory(INPUT_DIR, OUTPUT_DIR);
+        await analyzeDirectory(config.inputDir, config.outputDir);
         logger.info('Legacy analyzer completed successfully');
     } catch (error) {
         logger.error('Legacy analyzer failed:', error);

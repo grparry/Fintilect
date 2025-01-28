@@ -82,7 +82,7 @@ export class FileService {
   async ensureOutputDirectory(): Promise<void> {
     try {
       await fs.mkdir(this.outputDir, { recursive: true });
-      await fs.mkdir(path.join(this.outputDir, 'classes'), { recursive: true });
+      await fs.mkdir(path.join(this.outputDir, 'doc'), { recursive: true });
       
       // Copy base templates after creating directories
       await this.copyBaseTemplates();
@@ -104,7 +104,7 @@ export class FileService {
       const namespaceComponents = parsedClass.namespace ? parsedClass.namespace.split('.') : [];
       
       // Create relative directory structure matching namespace
-      const outputDir = path.join(this.outputDir, 'classes', ...namespaceComponents);
+      const outputDir = path.join(this.outputDir, 'doc', ...namespaceComponents);
       await fs.mkdir(outputDir, { recursive: true });
 
       // Generate markdown content using ClassDocWriter

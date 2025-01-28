@@ -27,8 +27,9 @@ export class CSharpParser {
 
     await Parser.init();
     this.parser = new Parser();
-    const Lang = await CSharp();
-    await this.parser.setLanguage(Lang);
+    const wasmPath = path.join(__dirname, '../../public/tree-sitter-c-sharp.wasm');
+    const Lang = await Parser.Language.load(wasmPath);
+    this.parser.setLanguage(Lang);
     this.initialized = true;
   }
 

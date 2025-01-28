@@ -26,20 +26,22 @@ export class PathResolver {
             isTest: this.isTest
         });
         
-        const parts = this.isTest ? ['classes'] : [];
+        const parts = this.isTest ? ['doc'] : [];
         
         if (parsedClass.namespace) {
             const namespaceParts = parsedClass.namespace.split('.');
             
             if (!this.isTest) {
-                if (this.isInRootNamespace(namespaceParts) && !this.isInSubNamespace(namespaceParts)) {
-                    // Base namespace classes go directly in root directory
-                    // No additional parts needed
-                } else if (this.isInRootNamespace(namespaceParts)) {
-                    // For production with sub-namespaces, use specific subdirectory structure
-                    const subDir = this.getSubdirectoryFromNamespace(parsedClass.namespace);
-                    if (subDir) {
-                        parts.push(subDir);
+                if (this.isInRootNamespace(namespaceParts)) {
+                    // Find index of ClientConfigurationModels
+                    const configIndex = namespaceParts.indexOf('ClientConfigurationModels');
+                    
+                    // Add ClientConfigurationModels as base
+                    parts.push('ClientConfigurationModels');
+                    
+                    // Add any remaining parts after ClientConfigurationModels
+                    if (configIndex < namespaceParts.length - 1) {
+                        parts.push(...namespaceParts.slice(configIndex + 1));
                     }
                 } else {
                     // For non-root namespaces, use namespace hierarchy
@@ -62,19 +64,8 @@ export class PathResolver {
     }
 
     private isInRootNamespace(namespaceParts: string[]): boolean {
-        return (
-            // Handle Psi.Models.ClientConfigurationModels
-            (namespaceParts.length === 3 && 
-            namespaceParts[0] === 'Psi' && 
-            namespaceParts[1] === 'Models' && 
-            namespaceParts[2] === 'ClientConfigurationModels') ||
-            // Handle Psi.Data.Models.ClientConfigurationModels
-            (namespaceParts.length === 4 &&
-            namespaceParts[0] === 'Psi' &&
-            namespaceParts[1] === 'Data' &&
-            namespaceParts[2] === 'Models' &&
-            namespaceParts[3] === 'ClientConfigurationModels')
-        );
+        // Only check for ClientConfigurationModels, regardless of the prefix
+        return namespaceParts[namespaceParts.length - 1] === 'ClientConfigurationModels';
     }
 
     private isInSubNamespace(namespaceParts: string[]): boolean {

@@ -1,12 +1,12 @@
-import { OutputWriter } from '@/output/writer';
-import { ParsedClass, ParsedField, ParsedEnum } from '@/parser/types';
-import { FileService } from '@/services/fileService';
-import logger from '@/utils/logger';
-import { TypeMapper } from '@/output/typeSystem/typeMapper';
-import { PathResolver } from '@/output/pathSystem/pathResolver';
-import { JsonGenerator } from '@/output/generators/jsonGenerator';
-import { InterfaceGenerator } from '@/output/generators/interfaceGenerator';
-import { SettingsGenerator } from '@/output/generators/settingsGenerator';
+import { OutputWriter } from './writer';
+import { ParsedClass, ParsedField, ParsedEnum } from '../parser/types';
+import { FileService } from '../services/fileService';
+import logger from '../utils/logger';
+import { TypeMapper } from './typeSystem/typeMapper';
+import { PathResolver } from './pathSystem/pathResolver';
+import { JsonGenerator } from './generators/jsonGenerator';
+import { InterfaceGenerator } from './generators/interfaceGenerator';
+import { SettingsGenerator } from './generators/settingsGenerator';
 import path from 'path';
 
 export class TypeScriptWriter {
