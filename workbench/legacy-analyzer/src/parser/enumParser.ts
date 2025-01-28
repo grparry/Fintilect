@@ -1,10 +1,10 @@
 import Parser = require('web-tree-sitter');
-import { ParsedEnum, ParsedEnumValue } from '@legacy-analyzer/types';
-import { DocumentationParser } from '@legacy-analyzer/documentationParser';
-import { Logger } from '@legacy-analyzer/utils/logger';
+import { ParsedEnum, ParsedEnumValue } from './types';
+import { DocumentationParser } from './documentationParser';
+import logger from '../utils/logger';
 
 export class EnumParser {
-  private static logger = new Logger();
+  private static logger = logger;
 
   public static parseEnum(node: Parser.SyntaxNode): ParsedEnum {
     const nameNode = node.childForFieldName('name');

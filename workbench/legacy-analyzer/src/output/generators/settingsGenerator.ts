@@ -1,6 +1,6 @@
-import { ParsedClass, ParsedField, ParsedAttribute } from '@legacy-analyzer/../parser/types';
-import logger from '@legacy-analyzer/../utils/logger';
-import { TypeMapper } from '@legacy-analyzer/typeSystem/typeMapper'; 
+import { ParsedClass, ParsedField, ParsedAttribute } from '../../parser/types';
+import logger from '../../utils/logger';
+import { TypeMapper } from '../typeSystem/typeMapper'; 
 
 export class SettingsGenerator {
     private typeMapper: TypeMapper;
@@ -211,7 +211,7 @@ export class SettingsGenerator {
             settings[field.name] = {
                 key,
                 type: TypeMapper.mapCSharpTypeToTypeScript(field.type),
-                required: !field.isOptional
+                required: !field.isNullable
             };
         });
 
@@ -272,8 +272,9 @@ ${getterSetters}
 }`;
     }
 
-    private generateJsonSettingClass(classInfo: ParsedClass): string {
-        const jsonFields = classInfo.fields.filter(f => f.documentation?.includes('```json'));
+    private generateJsonSettingClass(classInfo: ParsedClass | (ParsedField & { fields?: ParsedField[] })): string {
+        const fields = 'fields' in classInfo ? classInfo.fields : [];
+        const jsonFields = fields.filter(f => f.documentation?.includes('```json'));
         if (jsonFields.length === 0) return '';
 
         // Create a combined config type for all JSON fields

@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import logger from '@legacy-analyzer/utils/logger';
-import { ParsedClass, ParsedField, ParsedEnum } from '@legacy-analyzer/parser/types';
-import { FileService } from '@legacy-analyzer/services/fileService';
-import { TypeMapper } from '@legacy-analyzer/typeSystem/typeMapper';
-import { OutputWriter } from '@legacy-analyzer/writer';
+import logger from '../utils/logger';
+import { ParsedClass, ParsedField, ParsedEnum } from '../parser/types';
+import { FileService } from '../services/fileService';
+import { TypeMapper } from './typeSystem/typeMapper';
+import { OutputWriter } from './writer';
 
 export class ClassDocWriter {
     constructor(private readonly fileService: FileService) {}

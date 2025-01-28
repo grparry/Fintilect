@@ -1,6 +1,6 @@
-import { ParsedField, ParsedEnum, ParsedEnumValue, ParsedClass } from '@legacy-analyzer/../parser/types';
-import { TypeMapper } from '@legacy-analyzer/typeSystem/typeMapper';
-import logger from '@legacy-analyzer/../utils/logger';
+import { ParsedField, ParsedEnum, ParsedEnumValue, ParsedClass } from '../../parser/types';
+import { TypeMapper } from '../typeSystem/typeMapper';
+import logger from '../../utils/logger';
 
 export class InterfaceGenerator {
     constructor(private typeMapper: TypeMapper) {}

@@ -1,16 +1,14 @@
 import Parser = require('web-tree-sitter');
-import { ParsedAttribute, ParsedAttributeArgument } from '@legacy-analyzer/types';
-import { Logger } from '@legacy-analyzer/utils/logger';
-
-const logger2 = Logger;
+import { ParsedAttribute, ParsedAttributeArgument } from './types';
+import logger from '../utils/logger';
 
 export class AttributeParser {
-  private static logger = new Logger();
+  private static logger = logger;
 
   public static parseAttributes(node: Parser.SyntaxNode): ParsedAttribute[] {
     const attributes: ParsedAttribute[] = [];
     
-    this.logger.debug('Parsing attributes for node:', {
+    AttributeParser.logger.debug('Parsing attributes for node:', {
       nodeType: node.type,
       nodeText: node.text
     });
@@ -21,7 +19,7 @@ export class AttributeParser {
     // Helper function to parse an attribute node
     const parseAttribute = (attrNode: Parser.SyntaxNode) => {
       if (attrNode.type === 'attribute') {
-        this.logger.debug('Found attribute node:', {
+        AttributeParser.logger.debug('Found attribute node:', {
           attrText: attrNode.text,
           children: attrNode.children.map(c => ({ type: c.type, text: c.text }))
         });
@@ -37,7 +35,7 @@ export class AttributeParser {
         // Look for arguments list
         const argumentList = attrNode.descendantsOfType('attribute_argument_list')[0];
         if (argumentList) {
-          this.logger.debug('Found argument list:', {
+          AttributeParser.logger.debug('Found argument list:', {
             argListText: argumentList.text,
             children: argumentList.namedChildren.map(c => ({ type: c.type, text: c.text }))
           });
@@ -54,18 +52,18 @@ export class AttributeParser {
               const stringLiteral = argNode.descendantsOfType('string_literal')[0];
               if (stringLiteral) {
                 arg.value = stringLiteral.text;
-                this.logger.debug('Found string literal:', { value: arg.value });
+                AttributeParser.logger.debug('Found string literal:', { value: arg.value });
               } else {
                 // If no string literal, use the entire argument text
                 arg.value = argNode.text.trim();
-                this.logger.debug('Using raw argument text:', { value: arg.value });
+                AttributeParser.logger.debug('Using raw argument text:', { value: arg.value });
               }
 
               // Look for argument name
               const nameNode = argNode.childForFieldName('name');
               if (nameNode) {
                 arg.name = nameNode.text;
-                this.logger.debug('Found argument name:', { name: arg.name });
+                AttributeParser.logger.debug('Found argument name:', { name: arg.name });
               }
 
               attribute.arguments.push(arg);
@@ -73,17 +71,17 @@ export class AttributeParser {
           }
         }
 
-        this.logger.debug('Parsed attribute:', attribute);
+        AttributeParser.logger.debug('Parsed attribute:', attribute);
         attributes.push(attribute);
       }
     };
 
     // If this is a property declaration, look for attributes in its children first
     if (currentNode.type === 'property_declaration') {
-      this.logger.debug('Searching property declaration children for attributes');
+      AttributeParser.logger.debug('Searching property declaration children for attributes');
       for (const child of currentNode.children) {
         if (child.type === 'attribute_list') {
-          this.logger.debug('Found attribute list in property declaration:', {
+          AttributeParser.logger.debug('Found attribute list in property declaration:', {
             text: child.text,
             children: child.namedChildren.map(c => ({ type: c.type, text: c.text }))
           });
@@ -98,7 +96,7 @@ export class AttributeParser {
     currentNode = currentNode.previousNamedSibling;
     while (currentNode) {
       if (currentNode.type === 'attribute_list') {
-        this.logger.debug('Found attribute list in previous sibling:', {
+        AttributeParser.logger.debug('Found attribute list in previous sibling:', {
           text: currentNode.text,
           children: currentNode.namedChildren.map(c => ({ type: c.type, text: c.text }))
         });
@@ -109,7 +107,7 @@ export class AttributeParser {
       currentNode = currentNode.previousNamedSibling;
     }
 
-    this.logger.debug('Final parsed attributes:', attributes);
+    AttributeParser.logger.debug('Final parsed attributes:', attributes);
     return attributes;
   }
 

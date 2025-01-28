@@ -1,9 +1,9 @@
-import { promises as fs } from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
-import logger from '@legacy-analyzer/utils/logger';
-import { ParsedClass } from '@legacy-analyzer/parser/types';
-import { ClassDocWriter } from '@legacy-analyzer/output/classDocWriter';
-import { TypeScriptWriter } from '@legacy-analyzer/output/typeScriptWriter';
+import logger from '../utils/logger';
+import { ParsedClass } from '../parser/types';
+import { ClassDocWriter } from '../output/classDocWriter';
+import { TypeScriptWriter } from '../output/typeScriptWriter';
 
 const logger2 = logger;
 

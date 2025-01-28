@@ -9,7 +9,8 @@
     "paths": {
       "@models/*": ["output/infrastructure/models/*"],
       "@services/*": ["output/infrastructure/services/*"],
-      "@base/*": ["output/infrastructure/base/*"]
+      "@base/*": ["output/infrastructure/base/*"],
+      "@/*": ["src/*"]
     },
     "sourceMap": true,
     "inlineSourceMap": false,

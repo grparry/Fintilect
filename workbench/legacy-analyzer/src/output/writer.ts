@@ -1,37 +1,36 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { Logger } from '@legacy-analyzer/utils/logger';
-import { ParsedClass } from '@legacy-analyzer/parser/types';
-import { ClassDocWriter } from '@legacy-analyzer/classDocWriter';
-import { FileService } from '@legacy-analyzer/services/fileService';
-import { TypeScriptWriter } from '@legacy-analyzer/typeScriptWriter';
-import { PathResolver } from '@legacy-analyzer/pathSystem/pathResolver';
+import logger from '../utils/logger';
+import { ParsedClass } from '../parser/types';
+import { ClassDocWriter } from './classDocWriter';
+import { FileService } from '../services/fileService';
+import { TypeScriptWriter } from './typeScriptWriter';
+import { PathResolver } from './pathSystem/pathResolver';
 
 export interface OutputOptions {
   outputDir: string;
-  errorFile?: string;
-  isTest?: boolean;
+  errorFile: string;
 }
 
 export class OutputWriter {
   private readonly outputDir: string;
   private readonly errorFile: string;
   private readonly lockFile: string;
-  private classDocWriter: ClassDocWriter;
-  private fileService: FileService;
   private readonly isTest: boolean;
-  private pathResolver: PathResolver;
-  private logger: Logger;
+  private readonly fileService: FileService;
+  private readonly classDocWriter: ClassDocWriter;
+  private readonly pathResolver: PathResolver;
+  private readonly logger: any;
 
   constructor(options: OutputOptions) {
     this.outputDir = options.outputDir;
-    this.errorFile = options.errorFile || 'legacy_file_errors.md';
+    this.errorFile = options.errorFile;
     this.lockFile = path.join(this.outputDir, '.lock');
-    this.isTest = options.isTest || false;
+    this.isTest = false;
     this.fileService = new FileService(this.outputDir);
     this.classDocWriter = new ClassDocWriter(this.fileService);
     this.pathResolver = new PathResolver({ isTest: this.isTest });
-    this.logger = new Logger();
+    this.logger = logger;
   }
 
   /**

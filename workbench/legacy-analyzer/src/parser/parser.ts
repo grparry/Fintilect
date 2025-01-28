@@ -1,32 +1,34 @@
-import logger from '@legacy-analyzer/utils/logger';
-import * as Parser from 'tree-sitter';
-import * as CSharp from 'tree-sitter-c-sharp';
-import { FileService } from '@legacy-analyzer/services/fileService';
-import { ParsedClass } from '@legacy-analyzer/parser/types';
-import { ClassParser } from '@legacy-analyzer/parser/classParser';
-import { EnumParser } from '@legacy-analyzer/parser/enumParser';
-
-const logger2 = logger;
+import { promises as fs } from 'fs';
+import path from 'path';
+import Parser from 'web-tree-sitter';
+import CSharp from 'tree-sitter-c-sharp';
+import { FileService } from '../services/fileService';
+import { EnumParser } from './enumParser';
+import { ClassParser } from './classParser';
+import { ParsedClass, ParsedEnum } from './types';
+import logger from '../utils/logger';
 
 export class CSharpParser {
-  private parser!: Parser;
-  private tree!: Parser.Tree;
+  private parser: Parser;
+  private tree: Parser.Tree;
   private initialized: boolean = false;
   private enumTypes: Set<string> = new Set();
   private typeRegistry: Map<string, { sourceFile: string }> = new Map();
-  sourceFile: string;
+  private sourceFile: string;
+  private readonly fileService: FileService;
 
-  constructor(private fileService: FileService) {
+  constructor(fileService: FileService) {
+    this.fileService = fileService;
     this.sourceFile = '';
   }
 
-  async init() {
+  public async init(): Promise<void> {
     if (this.initialized) return;
 
     await Parser.init();
     this.parser = new Parser();
     const Lang = await CSharp();
-    this.parser.setLanguage(Lang);
+    await this.parser.setLanguage(Lang);
     this.initialized = true;
   }
 
@@ -48,7 +50,7 @@ export class CSharpParser {
   }
 
   async parseFile(filePath: string): Promise<ParsedClass[]> {
-    const source = await readFile(filePath, 'utf8');
+    const source = await fs.readFile(filePath, 'utf8');
     return this.parseSource(source, filePath);
   }
 
@@ -73,7 +75,7 @@ export class CSharpParser {
         parsedClass.sourceFile = filePath;
         classes.push(parsedClass);
       } catch (error) {
-        logger2.error(`Error parsing class in ${filePath}:`, error);
+        logger.error(`Error parsing class in ${filePath}:`, error);
       }
     }
 
@@ -94,7 +96,7 @@ export class CSharpParser {
 
   private getNamespaceFromNode(node: Parser.SyntaxNode): string {
     const namespace = this.findNamespace(node);
-    logger2.debug('Namespace resolution:', {
+    logger.debug('Namespace resolution:', {
       node: node.type,
       foundNamespaces: namespace ? [namespace] : [],
       finalNamespace: namespace || ''

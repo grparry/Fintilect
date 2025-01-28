@@ -30,7 +30,6 @@
     { "path": "./workbench/shared" },
     { "path": "./workbench/legacy-analyzer" },
     { "path": "./workbench/config-gen" },
-    { "path": "./admin/cbp" },
     { "path": "./api/cbp/config" }
   ]
 }
