@@ -1,6 +1,6 @@
 import path from 'path';
-import { ParsedClass, ParsedEnum } from '@/parser/types';
-import logger from '@/utils/logger';
+import { ParsedClass, ParsedEnum } from '../../parser/types';
+import logger from '../../utils/logger';
 
 export interface PathResolverOptions {
     isTest?: boolean;
@@ -26,14 +26,14 @@ export class PathResolver {
             isTest: this.isTest
         });
         
-        const parts = this.isTest ? ['classes'] : ['infrastructure', 'models'];
+        const parts = this.isTest ? ['classes'] : [];
         
         if (parsedClass.namespace) {
             const namespaceParts = parsedClass.namespace.split('.');
             
             if (!this.isTest) {
                 if (this.isInRootNamespace(namespaceParts) && !this.isInSubNamespace(namespaceParts)) {
-                    // Base namespace classes go directly in models directory
+                    // Base namespace classes go directly in root directory
                     // No additional parts needed
                 } else if (this.isInRootNamespace(namespaceParts)) {
                     // For production with sub-namespaces, use specific subdirectory structure

@@ -63,13 +63,13 @@ export class FileService {
       // Copy base JsonSetting class
       await this.copyTemplateFile(
         'base/JsonSetting.ts.template',
-        'infrastructure/models/base/JsonSetting.ts'
+        'base/JsonSetting.ts'
       );
 
       // Copy settings types
       await this.copyTemplateFile(
         'base/settings.types.ts.template',
-        'infrastructure/models/base/types.ts'
+        'base/types.ts'
       );
 
       logger2.info('Successfully copied all base templates');
@@ -83,7 +83,6 @@ export class FileService {
     try {
       await fs.mkdir(this.outputDir, { recursive: true });
       await fs.mkdir(path.join(this.outputDir, 'classes'), { recursive: true });
-      await fs.mkdir(path.join(this.outputDir, 'infrastructure', 'models'), { recursive: true });
       
       // Copy base templates after creating directories
       await this.copyBaseTemplates();

@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "analyze": "ts-node src/index.ts",
-    "generate-models": "ts-node src/index.ts --output ../../infrastructure/models"
+    "generate-models": "ts-node src/index.ts"
   },
   "dependencies": {
     "@fintilect/infrastructure": "0.1.0",

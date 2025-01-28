@@ -1,15 +1,17 @@
 import path from 'path';
-import { FileScanner } from '@/fileScanner';
-import { FileService } from '@/services/fileService';
-import { CSharpParser } from '@/parser/parser';
-import { OutputWriter } from '@/output/writer';
-import logger from '@/utils/logger';
 import fs from 'fs-extra';
+import { FileScanner } from './fileScanner';
+import { FileService } from './services/fileService';
+import { CSharpParser } from './parser/parser';
+import { OutputWriter } from './output/writer';
+import logger from './utils/logger';
 
 // Initialize logger
 logger.info('Starting legacy analyzer');
 
-const logger2 = logger;
+// Hardcoded paths relative to this file's location
+const INPUT_DIR = path.resolve(__dirname, '../../api/cbp/config/src');
+const OUTPUT_DIR = path.resolve(__dirname, '../../infrastructure/models');
 
 async function analyzeDirectory(directoryPath: string, outputDir: string) {
     // Initialize services
@@ -35,7 +37,7 @@ async function analyzeDirectory(directoryPath: string, outputDir: string) {
     const results = await scanner.scanForFiles();
     const files = results.filter(r => !r.error).map(r => r.filePath);
     
-    logger2.info(`Found ${files.length} C# files to analyze`);
+    logger.info(`Found ${files.length} C# files to analyze`);
 
     // First pass to collect all enum types
     await parser.parseFiles(files);
@@ -43,7 +45,7 @@ async function analyzeDirectory(directoryPath: string, outputDir: string) {
     // Process each file
     for (const file of files) {
         try {
-            logger2.info(`Processing file: ${path.basename(file)}`);
+            logger.info(`Processing file: ${path.basename(file)}`);
             
             // Parse the file
             const parsedClasses = await parser.parseFile(file);
@@ -59,42 +61,26 @@ async function analyzeDirectory(directoryPath: string, outputDir: string) {
                 }
             }
             
-            logger2.info(`Successfully processed ${path.basename(file)}`);
+            logger.info(`Successfully processed ${path.basename(file)}`);
         } catch (error) {
-            logger2.error(`Error processing file ${file}:`, error);
+            logger.error(`Error processing file ${file}:`, error);
         }
     }
 
-    logger2.info('Analysis complete');
+    logger.info('Analysis complete');
 }
 
 async function main() {
     try {
-        const args = process.argv.slice(2);
-        console.log('Command line arguments:', args);
-        
-        const inputIndex = args.indexOf('--input');
-        console.log('Input index:', inputIndex);
-        const outputIndex = args.indexOf('--output');
-        console.log('Output index:', outputIndex);
+        logger.info('Using configuration:', {
+            inputDir: INPUT_DIR,
+            outputDir: OUTPUT_DIR
+        });
 
-        if (inputIndex === -1 || outputIndex === -1 || inputIndex + 1 >= args.length || outputIndex + 1 >= args.length) {
-            console.error('Usage: npm start -- --input <input_path> --output <output_path>');
-            process.exit(1);
-        }
-
-        const directoryPath = args[inputIndex + 1];
-        console.log('Directory path:', directoryPath);
-        const outputDir = args[outputIndex + 1];
-        console.log('Output directory:', outputDir);
-
-        // Clear previous logs
-        await fs.remove('logs');
-        await fs.ensureDir('logs');
-
-        await analyzeDirectory(directoryPath, outputDir);
+        await analyzeDirectory(INPUT_DIR, OUTPUT_DIR);
+        logger.info('Legacy analyzer completed successfully');
     } catch (error) {
-        logger2.error('Error:', error);
+        logger.error('Legacy analyzer failed:', error);
         process.exit(1);
     }
 }

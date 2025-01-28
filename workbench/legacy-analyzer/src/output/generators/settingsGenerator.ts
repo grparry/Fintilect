@@ -237,7 +237,7 @@ export class SettingsGenerator {
             // Add imports for complex types
             if (tsType.includes('.')) {
                 const [namespace, typeName] = tsType.split('.');
-                imports.add(`import { ${typeName} } from '../../infrastructure/models/${namespace}';`);
+                imports.add(`import { ${typeName} } from '../${namespace}';`);
             }
             
             return {
