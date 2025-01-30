@@ -6,6 +6,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import HomeIcon from '@mui/icons-material/Home';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import PasswordIcon from '@mui/icons-material/Password';
 
 interface NavigationCard {
   id: string;
@@ -21,6 +22,13 @@ const navigationCards: NavigationCard[] = [
     path: '/admin/emerge-config/auth-security/authentication',
     icon: FingerprintIcon,
     description: 'Configure authentication methods and security protocols'
+  },
+  {
+    id: 'password',
+    title: 'Password Settings',
+    path: '/admin/emerge-config/auth-security/password',
+    icon: PasswordIcon,
+    description: 'Configure password policies and login settings'
   },
   {
     id: 'login',
@@ -49,6 +57,13 @@ const navigationCards: NavigationCard[] = [
     path: '/admin/emerge-config/auth-security/admin',
     icon: AdminPanelSettingsIcon,
     description: 'Configure administrative security settings and permissions'
+  },
+  {
+    id: 'password-verification',
+    title: 'Password Verification',
+    path: '/admin/emerge-config/auth-security/password-verification',
+    icon: PasswordIcon,
+    description: 'Configure password verification and validation rules'
   }
 ];
 const AuthSecurityLanding: React.FC = () => {
@@ -56,11 +71,11 @@ const AuthSecurityLanding: React.FC = () => {
   const navigate = useNavigate();
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ color: 'text.primary' }}>
         Authentication & Security
       </Typography>
-      <Typography variant="body1" sx={{ mb: 4 }}>
-        Configure authentication methods, security protocols, and administrative controls for the Emerge platform.
+      <Typography variant="body1" sx={{ mb: 4, color: 'text.primary' }}>
+        Configure authentication and security settings for the Emerge platform.
       </Typography>
       <Grid container spacing={3}>
         {navigationCards.map((card) => {

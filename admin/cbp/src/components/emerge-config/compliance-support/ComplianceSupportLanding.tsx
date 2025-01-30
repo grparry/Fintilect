@@ -40,10 +40,10 @@ const ComplianceSupportLanding: React.FC = () => {
   const navigate = useNavigate();
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ color: 'text.primary' }}>
         Compliance & Support
       </Typography>
-      <Typography variant="body1" sx={{ mb: 4 }}>
+      <Typography variant="body1" sx={{ mb: 4, color: 'text.primary' }}>
         Configure compliance requirements and support features for the Emerge platform.
       </Typography>
       <Grid container spacing={3}>

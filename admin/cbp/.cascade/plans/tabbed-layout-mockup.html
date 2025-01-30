@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabbed Navigation with List View - Mockup</title>
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --background-dark: #1e1e1e;
+            --text-light: #ffffff;
+            --border-color: #444;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-dark);
+            color: var(--text-light);
+        }
+
+        .tab-container {
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: -1px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .tab.active {
+            background: #2d2d2d;
+            border-color: var(--border-color);
+            border-bottom: 1px solid #2d2d2d;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        input[type="search"] {
+            flex: 1;
+            max-width: 300px;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background: #333;
+            color: white;
+        }
+
+        .list-container {
+            background: #2d2d2d;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item:hover {
+            background: #333;
+        }
+
+        .item-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-color);
+            border-radius: 4px;
+            margin-right: 16px;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-title {
+            margin: 0 0 4px 0;
+            font-size: 1.1em;
+        }
+
+        .item-description {
+            margin: 0;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .item-meta {
+            color: #666;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="tab-container">
+        <div class="tabs">
+            <div class="tab active">Core Settings</div>
+            <div class="tab">Authentication</div>
+            <div class="tab">Features</div>
+            <div class="tab">Integration</div>
+            <div class="tab">Security</div>
+        </div>
+    </div>
+
+    <div class="search-container">
+        <input type="search" placeholder="Search in Core Settings...">
+        <button style="background: var(--primary-color); border: none; padding: 8px 16px; border-radius: 4px;">Search</button>
+    </div>
+
+    <div class="list-container">
+        <div class="list-item">
+            <div class="item-icon"></div>
+            <div class="item-content">
+                <h3 class="item-title">General Configuration</h3>
+                <p class="item-description">Basic system settings and global configurations</p>
+                <div class="item-meta">Last modified: 2 days ago</div>
+            </div>
+        </div>
+
+        <div class="list-item">
+            <div class="item-icon"></div>
+            <div class="item-content">
+                <h3 class="item-title">API Endpoints</h3>
+                <p class="item-description">Configure API endpoints and access controls</p>
+                <div class="item-meta">Last modified: 1 week ago</div>
+            </div>
+        </div>
+
+        <!-- More list items would follow -->
+    </div>
+</body>
+</html>

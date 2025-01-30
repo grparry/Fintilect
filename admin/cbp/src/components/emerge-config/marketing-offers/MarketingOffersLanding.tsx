@@ -40,10 +40,10 @@ const MarketingOffersLanding: React.FC = () => {
   const navigate = useNavigate();
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ color: 'text.primary' }}>
         Marketing & Offers
       </Typography>
-      <Typography variant="body1" sx={{ mb: 4 }}>
+      <Typography variant="body1" sx={{ mb: 4, color: 'text.primary' }}>
         Configure marketing campaigns, promotional offers, and related features for the Emerge platform.
       </Typography>
       <Grid container spacing={3}>

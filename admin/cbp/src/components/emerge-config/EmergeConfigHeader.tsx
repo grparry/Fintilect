@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, Link as RouterLink, useLocation } from 'react-router-dom';
 import { Box, Typography, Grid, Paper } from '@mui/material';
+import { RouteConfig } from '../../types/route.types';
 import emergeConfigRoutes from '../../routes/emergeConfigRoutes';
 
 const EmergeConfigHeader: React.FC = () => {
@@ -10,7 +11,7 @@ const EmergeConfigHeader: React.FC = () => {
   
   // Filter routes to only show direct children of emerge-config
   const emergeConfigChildren = emergeConfigRoutes[0]?.children || [];
-  const visibleRoutes = emergeConfigChildren.filter(route => 
+  const visibleRoutes = emergeConfigChildren.filter((route: RouteConfig) => 
     !route.hideFromSidebar && 
     route.path !== '' && // exclude root path
     !route.id?.includes('-root') && 
@@ -36,7 +37,7 @@ const EmergeConfigHeader: React.FC = () => {
       {/* Only show navigation grid on root path */}
       {isRootPath && (
         <Grid container spacing={3}>
-          {visibleRoutes.map((route) => (
+          {visibleRoutes.map((route: RouteConfig) => (
             <Grid item xs={12} sm={6} md={4} key={route.path}>
               <Paper 
                 component={RouterLink}

@@ -48,11 +48,11 @@ const CardsPaymentsLanding: React.FC = () => {
   const navigate = useNavigate();
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ color: 'text.primary' }}>
         Cards & Payments
       </Typography>
-      <Typography variant="body1" sx={{ mb: 4 }}>
-        Configure card services, payment methods, and related features for the Emerge platform.
+      <Typography variant="body1" sx={{ mb: 4, color: 'text.primary' }}>
+        Configure card and payment settings for the Emerge platform.
       </Typography>
       <Grid container spacing={3}>
         {navigationCards.map((card) => {

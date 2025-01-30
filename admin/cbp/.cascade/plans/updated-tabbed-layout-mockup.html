@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Settings Navigation - Mockup</title>
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --background-dark: #1e1e1e;
+            --text-light: #ffffff;
+            --border-color: #444;
+            --hover-color: #333;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-dark);
+            color: var(--text-light);
+        }
+
+        .breadcrumb {
+            color: #888;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .tab-container {
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: -1px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            transition: background-color 0.2s;
+        }
+
+        .tab:hover {
+            background: var(--hover-color);
+        }
+
+        .tab.active {
+            background: #2d2d2d;
+            border-color: var(--border-color);
+            border-bottom: 1px solid #2d2d2d;
+        }
+
+        .tab-icon {
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 4px;
+            opacity: 0.7;
+        }
+
+        .active .tab-icon {
+            opacity: 1;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        input[type="search"] {
+            flex: 1;
+            max-width: 300px;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background: #333;
+            color: white;
+        }
+
+        .list-container {
+            background: #2d2d2d;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .list-container.active {
+            display: block;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item:hover {
+            background: #333;
+        }
+
+        .item-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-color);
+            border-radius: 4px;
+            margin-right: 16px;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-title {
+            margin: 0 0 4px 0;
+            font-size: 1.1em;
+        }
+
+        .item-description {
+            margin: 0;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .item-meta {
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 4px;
+        }
+
+        /* Sidebar simulation for context */
+        .layout-container {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .sidebar-header {
+            margin-bottom: 16px;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .checkbox label {
+            color: #fff;
+        }
+
+        .sidebar-content {
+            padding: 0 16px;
+        }
+
+        .menu-item {
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: var(--hover-color);
+        }
+
+        .menu-item.active {
+            background: var(--primary-color);
+        }
+
+        .submenu {
+            margin-left: 16px;
+        }
+
+        .sub-nav {
+            margin: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .sub-nav.active {
+            display: block;
+        }
+
+        .sub-nav-items {
+            display: flex;
+            gap: 24px;
+            margin-bottom: -1px;
+        }
+
+        .sub-nav-item {
+            padding: 8px 0;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .sub-nav-item:hover {
+            color: #fff;
+        }
+
+        .sub-nav-item.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .content-section {
+            display: none;
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            background: #333;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-container">
+        <!-- Simulated sidebar for context -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="checkbox">
+                    <input type="checkbox" checked />
+                    <label>Emerge Config</label>
+                </div>
+            </div>
+            <div class="sidebar-content">
+                <div class="menu-item active">Core Settings</div>
+                <div class="submenu">
+                    <div class="menu-item active">ConnectNative</div>
+                    <div class="menu-item">Features</div>
+                    <div class="menu-item">FinancialCores</div>
+                    <div class="menu-item">Institution</div>
+                    <div class="menu-item">AppInfoSettings</div>
+                    <div class="menu-item">Deployment</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sub-nav active">
+                <div class="sub-nav-items">
+                    <div class="sub-nav-item active" data-section="general-settings">General Settings</div>
+                    <div class="sub-nav-item" data-section="account-history">Account History</div>
+                    <div class="sub-nav-item" data-section="transfers">Transfers</div>
+                </div>
+            </div>
+
+            <!-- General Settings Section -->
+            <div class="content-section active" id="general-settings">
+                <h2>ConnectNative Settings</h2>
+                <p style="color: #888; margin-bottom: 24px;">Configure core ConnectNative integration settings</p>
+                
+                <div class="form-group">
+                    <label>API Endpoint</label>
+                    <input type="text" value="https://api.connectnative.example.com" />
+                </div>
+
+                <div class="form-group">
+                    <label>Connection Timeout (seconds)</label>
+                    <input type="number" value="30" />
+                </div>
+
+                <div class="form-group">
+                    <label>Authentication Method</label>
+                    <select>
+                        <option>OAuth 2.0</option>
+                        <option>API Key</option>
+                        <option>JWT</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Account History Section -->
+            <div class="content-section" id="account-history">
+                <h2>Account History Settings</h2>
+                <p style="color: #888; margin-bottom: 24px;">Configure account history and transaction settings</p>
+                
+                <div class="form-group">
+                    <label>History Retention Period (days)</label>
+                    <input type="number" value="365" />
+                </div>
+
+                <div class="form-group">
+                    <label>Transaction Sync Interval (minutes)</label>
+                    <input type="number" value="15" />
+                </div>
+
+                <div class="form-group">
+                    <label>Include Pending Transactions</label>
+                    <select>
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Transfers Section -->
+            <div class="content-section" id="transfers">
+                <h2>Transfer Settings</h2>
+                <p style="color: #888; margin-bottom: 24px;">Configure transfer settings and limitations</p>
+                
+                <div class="form-group">
+                    <label>Maximum Transfer Amount</label>
+                    <input type="number" value="10000" />
+                </div>
+
+                <div class="form-group">
+                    <label>Daily Transfer Limit</label>
+                    <input type="number" value="25000" />
+                </div>
+
+                <div class="form-group">
+                    <label>Transfer Types</label>
+                    <select multiple style="height: 100px;">
+                        <option selected>Internal Transfer</option>
+                        <option selected>External Transfer</option>
+                        <option selected>Wire Transfer</option>
+                        <option>International Transfer</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Make tabs functional
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Update search placeholder
+                const searchInput = document.querySelector('input[type="search"]');
+                searchInput.placeholder = `Search in ${tab.textContent.trim()} settings...`;
+
+                // Show corresponding content
+                const tabId = tab.getAttribute('data-tab');
+                document.querySelectorAll('.list-container').forEach(container => {
+                    container.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+
+                // Show sub-nav only for ConnectNative
+                const subNav = document.querySelector('.sub-nav');
+                if (tabId === 'connect-native') {
+                    subNav.classList.add('active');
+                } else {
+                    subNav.classList.remove('active');
+                }
+            });
+        });
+
+        // Make sub-nav functional
+        document.querySelectorAll('.sub-nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // Update active sub-nav item
+                document.querySelectorAll('.sub-nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                // Show corresponding section
+                const sectionId = item.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

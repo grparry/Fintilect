@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hierarchical Tree with Quick Access - Mockup</title>
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --background-dark: #1e1e1e;
+            --text-light: #ffffff;
+            --border-color: #444;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-dark);
+            color: var(--text-light);
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        .quick-access {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .quick-access h2 {
+            margin: 0 0 12px 0;
+            font-size: 1.1em;
+            color: #888;
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .quick-link:hover {
+            background: #333;
+        }
+
+        .tree-container {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .tree-item {
+            margin-bottom: 8px;
+        }
+
+        .tree-parent {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .tree-parent:hover {
+            background: #333;
+        }
+
+        .tree-children {
+            margin-left: 24px;
+            border-left: 1px solid var(--border-color);
+            padding-left: 12px;
+        }
+
+        .main-content {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #888;
+        }
+
+        .content-header {
+            margin-bottom: 24px;
+        }
+
+        .content-body {
+            background: #333;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .expand-icon {
+            width: 16px;
+            height: 16px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="quick-access">
+            <h2>Quick Access</h2>
+            <div class="quick-link">
+                <div class="expand-icon"></div>
+                Recently Modified
+            </div>
+            <div class="quick-link">
+                <div class="expand-icon"></div>
+                Favorites
+            </div>
+            <div class="quick-link">
+                <div class="expand-icon"></div>
+                Most Used
+            </div>
+        </div>
+
+        <div class="tree-container">
+            <div class="tree-item">
+                <div class="tree-parent">
+                    <div class="expand-icon"></div>
+                    Core Settings
+                </div>
+                <div class="tree-children">
+                    <div class="tree-parent">
+                        <div class="expand-icon"></div>
+                        General
+                    </div>
+                    <div class="tree-parent">
+                        <div class="expand-icon"></div>
+                        Authentication
+                    </div>
+                </div>
+            </div>
+
+            <div class="tree-item">
+                <div class="tree-parent">
+                    <div class="expand-icon"></div>
+                    Features
+                </div>
+            </div>
+
+            <div class="tree-item">
+                <div class="tree-parent">
+                    <div class="expand-icon"></div>
+                    Security
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="breadcrumb">
+            Core Settings > General > System Configuration
+        </div>
+
+        <div class="content-header">
+            <h1 style="margin: 0">System Configuration</h1>
+            <p style="margin: 8px 0 0 0; color: #888;">Configure core system settings and behavior</p>
+        </div>
+
+        <div class="content-body">
+            <!-- Configuration form or content would go here -->
+            <p style="margin: 0; color: #888;">Configuration content would be displayed here</p>
+        </div>
+    </div>
+</body>
+</html>

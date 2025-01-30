@@ -28,7 +28,7 @@
       "@services/*": ["services/*"],
       "@utils/*": ["utils/*"],
       "@types/*": ["types/*"],
-      "@models/*": ["../../workspace/legacy-analyzer/output/infrastructure/models/*"]
+      "@models/*": ["types/configuration/*"]
     },
     "typeRoots": [
       "./node_modules/@types",

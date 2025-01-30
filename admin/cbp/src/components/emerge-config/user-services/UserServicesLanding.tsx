@@ -6,6 +6,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import EmailIcon from '@mui/icons-material/Email';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ChatIcon from '@mui/icons-material/Chat';
+import PasswordIcon from '@mui/icons-material/Password';
 
 interface NavigationCard {
   id: string;
@@ -56,10 +57,10 @@ const UserServicesLanding: React.FC = () => {
   const navigate = useNavigate();
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ color: 'text.primary' }}>
         User Services
       </Typography>
-      <Typography variant="body1" sx={{ mb: 4 }}>
+      <Typography variant="body1" sx={{ mb: 4, color: 'text.primary' }}>
         Configure user-related services and features for the Emerge platform.
       </Typography>
       <Grid container spacing={3}>

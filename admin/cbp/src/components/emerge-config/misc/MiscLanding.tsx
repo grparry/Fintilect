@@ -40,11 +40,11 @@ const MiscLanding: React.FC = () => {
   const navigate = useNavigate();
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Miscellaneous
+      <Typography variant="h4" gutterBottom sx={{ color: 'text.primary' }}>
+        Miscellaneous Settings
       </Typography>
-      <Typography variant="body1" sx={{ mb: 4 }}>
-        Configure additional services and integrations for the Emerge platform.
+      <Typography variant="body1" sx={{ mb: 4, color: 'text.primary' }}>
+        Configure miscellaneous settings for the Emerge platform.
       </Typography>
       <Grid container spacing={3}>
         {navigationCards.map((card) => {

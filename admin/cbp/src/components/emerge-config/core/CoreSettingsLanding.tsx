@@ -7,6 +7,7 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import BusinessIcon from '@mui/icons-material/Business';
 import InfoIcon from '@mui/icons-material/Info';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import TransformIcon from '@mui/icons-material/Transform';
 
 interface NavigationCard {
   id: string;
@@ -57,6 +58,13 @@ const navigationCards: NavigationCard[] = [
     path: '/admin/emerge-config/core/deployment',
     icon: CloudUploadIcon,
     description: 'Manage deployment configurations'
+  },
+  {
+    id: 'pscu-log-file-transform',
+    title: 'PSCU Log File Transform Service',
+    path: '/admin/emerge-config/core/pscu-log-file-transform',
+    icon: TransformIcon,
+    description: 'Configure settings for PSCU log file transformation, including filters, paths, and field mappings'
   }
 ];
 const CoreSettingsLanding: React.FC = () => {
@@ -64,10 +72,10 @@ const CoreSettingsLanding: React.FC = () => {
   const navigate = useNavigate();
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ color: 'text.primary' }}>
         Core Settings
       </Typography>
-      <Typography variant="body1" sx={{ mb: 4 }}>
+      <Typography variant="body1" sx={{ mb: 4, color: 'text.primary' }}>
         Configure core system settings and parameters for the Emerge platform.
       </Typography>
       <Grid container spacing={3}>

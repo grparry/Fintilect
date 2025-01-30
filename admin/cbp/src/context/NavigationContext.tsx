@@ -87,7 +87,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
   }, []);
 
   const toggleSection = useCallback((sectionId: string) => {
-    console.log('NavigationContext - toggleSection called with:', sectionId);
     setState(prev => {
       // If we're already processing this section, don't update
       if (prev.processingSection === sectionId) {
@@ -96,7 +95,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
 
       // First try to find it in the sections
       const section = config.sections.find(s => s.id === sectionId);
-      console.log('NavigationContext - Found section:', section);
 
       // If not found in sections, look through all items recursively
       const findInItems = (items: any[]): any => {
@@ -129,19 +127,36 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
 
       const parentSection = findParentSection();
       const isExpanded = prev.expandedItems.includes(sectionId);
+      
       let newExpandedItems: string[];
 
       if (isExpanded) {
-        // If we're collapsing, just remove this item
+        // If we're collapsing, just remove this item and its children
         newExpandedItems = prev.expandedItems.filter(id => id !== sectionId);
       } else {
         // If we're expanding:
-        // 1. Add this item to expanded items
-        // 2. Keep parent section expanded if it exists
-        newExpandedItems = [...prev.expandedItems, sectionId];
-        if (parentSection && !newExpandedItems.includes(parentSection.id)) {
-          newExpandedItems.push(parentSection.id);
-        }
+        // 1. Start with only the parent section expanded (if it exists)
+        newExpandedItems = parentSection ? [parentSection.id] : [];
+        
+        // 2. Add this item
+        newExpandedItems.push(sectionId);
+        
+        // 3. Keep any expanded items that are children of this section
+        const isChildOf = (childId: string, parentId: string): boolean => {
+          const parent = findInItems(config.sections.flatMap(s => s.items || []));
+          if (!parent?.children) return false;
+          return parent.children.some((child: any) => 
+            child.id === childId || (child.children && isChildOf(childId, child.id))
+          );
+        };
+        
+        // Keep items that are either children of this section or belong to a different parent section
+        const otherItems = prev.expandedItems.filter(id => {
+          if (id === sectionId || id === parentSection?.id) return false;
+          return isChildOf(id, sectionId);
+        });
+        
+        newExpandedItems.push(...otherItems);
       }
 
       // Only update activeSection if this is a top-level section
