@@ -100,8 +100,8 @@ export const navigationConfig: NavigationConfig = {
       description: 'Emerge configuration settings',
       items: [
         {
-          id: 'core-settings',
-          title: 'Core Settings',
+          id: 'core',
+          title: 'Core',
           path: '/admin/emerge-config/core',
           icon: SettingsApplicationsIcon,
           items: [
@@ -110,7 +110,14 @@ export const navigationConfig: NavigationConfig = {
             { id: 'financial-cores', title: 'FinancialCores', path: '/admin/emerge-config/core/financial-cores', icon: AccountBalanceIcon },
             { id: 'institution', title: 'Institution', path: '/admin/emerge-config/core/institution', icon: BusinessIcon },
             { id: 'app-info-settings', title: 'AppInfoSettings', path: '/admin/emerge-config/core/app-info', icon: InfoIcon },
-            { id: 'deployment', title: 'Deployment', path: '/admin/emerge-config/core/deployment', icon: CloudUploadIcon }
+            { id: 'deployment', title: 'Deployment', path: '/admin/emerge-config/core/deployment', icon: CloudUploadIcon },
+            {
+              id: 'system-services',
+              title: 'System Services',
+              path: '/admin/emerge-config/core/system-services',
+              icon: ApiIcon,
+              description: 'Configure system services and integrations'
+            }
           ]
         },
         {
@@ -122,8 +129,7 @@ export const navigationConfig: NavigationConfig = {
             { id: 'account', title: 'Account', path: '/admin/emerge-config/accounts/account', icon: AccountCircleIcon },
             { id: 'business-banking', title: 'BusinessBanking', path: '/admin/emerge-config/accounts/business-banking', icon: BusinessCenterIcon },
             { id: 'checking-rewards', title: 'CheckingRewards', path: '/admin/emerge-config/accounts/checking-rewards', icon: StarsIcon },
-            { id: 'direct-deposit', title: 'DirectDeposit', path: '/admin/emerge-config/accounts/direct-deposit', icon: AccountBalanceWalletIcon },
-            { id: 'estatements', title: 'Estatements', path: '/admin/emerge-config/accounts/estatements', icon: DescriptionIcon },
+            { id: 'direct-deposit', title: 'Direct Deposit', path: '/admin/emerge-config/accounts/direct-deposit', icon: AccountBalanceWalletIcon },
             { id: 'history', title: 'History', path: '/admin/emerge-config/accounts/history', icon: HistoryIcon }
           ]
         },
@@ -145,11 +151,27 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/emerge-config/auth-security',
           icon: SecurityIcon,
           items: [
-            { id: 'authentication', title: 'Authentication', path: '/admin/emerge-config/auth-security/authentication', icon: FingerprintIcon },
-            { id: 'login', title: 'Login', path: '/admin/emerge-config/auth-security/login', icon: LoginIcon },
-            { id: 'home-banking-login', title: 'HomeBankingLogin', path: '/admin/emerge-config/auth-security/home-banking-login', icon: HomeIcon },
-            { id: 'audit-logging', title: 'AuditLogging', path: '/admin/emerge-config/auth-security/audit-logging', icon: FactCheckIcon },
-            { id: 'admin', title: 'Admin', path: '/admin/emerge-config/auth-security/admin', icon: AdminPanelSettingsIcon }
+            {
+              id: 'login',
+              title: 'Login Settings',
+              path: '/admin/emerge-config/auth-security/login',
+              icon: LoginIcon,
+              description: 'Home banking login and password policies'
+            },
+            {
+              id: 'security-verification',
+              title: 'Security Verification',
+              path: '/admin/emerge-config/auth-security/security-verification',
+              icon: FingerprintIcon,
+              description: 'MFA and device verification settings'
+            },
+            {
+              id: 'admin-security',
+              title: 'Admin Security',
+              path: '/admin/emerge-config/auth-security/admin-security',
+              icon: AdminPanelSettingsIcon,
+              description: 'Admin access and audit logs'
+            }
           ]
         },
         {
@@ -197,7 +219,6 @@ export const navigationConfig: NavigationConfig = {
           icon: CampaignIcon,
           items: [
             { id: 'marketing', title: 'Marketing', path: '/admin/emerge-config/marketing-offers/marketing', icon: AdsClickIcon },
-            { id: 'loan-offers-marketing', title: 'LoanOffers', path: '/admin/emerge-config/marketing-offers/loan-offers', icon: LocalOfferIcon },
             { id: 'cardlytics', title: 'Cardlytics', path: '/admin/emerge-config/marketing-offers/cardlytics', icon: AnalyticsIcon }
           ]
         },

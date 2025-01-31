@@ -28,7 +28,7 @@
       "@services/*": ["services/*"],
       "@utils/*": ["utils/*"],
       "@types/*": ["types/*"],
-      "@models/*": ["types/configuration/*"]
+      "@models/*": ["types/ClientConfiguration/*"]
     },
     "typeRoots": [
       "./node_modules/@types",

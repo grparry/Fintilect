@@ -48,15 +48,41 @@ const Sidebar: React.FC<SidebarProps> = ({
           borderRight: `1px solid ${theme.palette.divider}`,
           height: 'calc(100vh - 64px)',
           position: 'fixed',
-          top: 64
+          top: 64,
+          color: theme.palette.mode === 'dark' ? 'inherit' : '#fff',
+          '& .MuiListItemIcon-root': {
+            color: theme.palette.mode === 'dark' ? 'inherit' : '#fff',
+          },
+          '& .MuiListItemText-root': {
+            color: theme.palette.mode === 'dark' ? 'inherit' : '#fff',
+          }
         }
       }}
     >
       <Drawer
-        variant="persistent"
+        variant="permanent"
         anchor="left"
         open={open}
         onClose={onClose}
+        sx={{
+          width: width,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: width,
+            boxSizing: 'border-box',
+            bgcolor: theme.palette.mode === 'dark' ? '#1e1e1e' : theme.palette.primary.main,
+            color: '#fff',
+            '& .MuiListItemIcon-root': {
+              color: '#fff'
+            },
+            '& .MuiListItemText-root': {
+              color: '#fff'
+            },
+            '& .MuiSvgIcon-root': {
+              color: '#fff'
+            }
+          },
+        }}
       >
         <Box
           sx={{
@@ -111,18 +137,21 @@ const Sidebar: React.FC<SidebarProps> = ({
                         '&:hover': {
                           backgroundColor: theme.palette.mode === 'dark' 
                             ? 'rgba(255, 255, 255, 0.08)' 
-                            : 'rgba(0, 0, 0, 0.08)'
+                            : 'rgba(255, 255, 255, 0.1)'
                         }
                       }}
                     >
-                      <ListItemIcon sx={{ minWidth: 40 }}>
+                      <ListItemIcon sx={{ 
+                        minWidth: 40,
+                        color: theme.palette.mode === 'dark' ? 'inherit' : '#fff'
+                      }}>
                         {React.createElement(section.icon || FolderIcon)}
                       </ListItemIcon>
                       <ListItemText
                         primary={section.title}
                         primaryTypographyProps={{
                           variant: 'body2',
-                          color: 'text.primary'
+                          color: theme.palette.mode === 'dark' ? 'text.primary' : '#fff'
                         }}
                       />
                     </ListItemButton>

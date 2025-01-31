@@ -15,7 +15,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { FilterConfig } from '../../../../types/configuration/configuration/models/PscuLogFileTransformServiceSettings';
+import { FilterConfig } from '../../../../types/ClientConfiguration/models/WindowsService/PscuLogFileTransformServiceSettings';
 
 interface FiltersSectionProps {
   expanded: boolean;

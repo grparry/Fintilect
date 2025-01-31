@@ -8,7 +8,7 @@ import {
   TextField
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { PathConfig } from '../../../../types/configuration/configuration/models/PscuLogFileTransformServiceSettings';
+import { PathConfig } from '../../../../types/ClientConfiguration/models/WindowsService/PscuLogFileTransformServiceSettings';
 
 interface PathConfigSectionProps {
   expanded: boolean;

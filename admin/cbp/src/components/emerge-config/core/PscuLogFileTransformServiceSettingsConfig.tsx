@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box,
-  Card,
-  CardContent,
-  CardHeader,
   Typography,
   Divider,
   Button
@@ -16,7 +13,7 @@ import {
   PathConfig,
   InputFieldConfig,
   OutputFieldConfig
-} from '../../../types/configuration/configuration/models/PscuLogFileTransformServiceSettings';
+} from '../../../types/ClientConfiguration/models/WindowsService/PscuLogFileTransformServiceSettings';
 import FiltersSection from './sections/FiltersSection';
 import PathConfigSection from './sections/PathConfigSection';
 import InputFieldsSection from './sections/InputFieldsSection';
@@ -110,45 +107,40 @@ const PscuLogFileTransformServiceSettingsConfig: React.FC = () => {
   }
 
   return (
-    <Card>
-      <CardHeader 
-        title="PSCU Log File Transform Service Settings" 
-        action={
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Save Changes
-          </Button>
-        }
-      />
-      <Divider />
-      <CardContent>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <FiltersSection
-            expanded={expanded === 'filters'}
-            filters={settings.filters}
-            onChange={handleAccordionChange('filters')}
-            onFiltersChange={handleFiltersChange}
-          />
-          <PathConfigSection
-            expanded={expanded === 'pathConfig'}
-            pathConfig={settings.pathConfiguration}
-            onChange={handleAccordionChange('pathConfig')}
-            onPathConfigChange={handlePathConfigChange}
-          />
-          <InputFieldsSection
-            expanded={expanded === 'inputFields'}
-            fields={settings.inputFileFields}
-            onChange={handleAccordionChange('inputFields')}
-            onFieldsChange={handleInputFieldsChange}
-          />
-          <OutputFieldsSection
-            expanded={expanded === 'outputFields'}
-            fields={settings.outputFileFields}
-            onChange={handleAccordionChange('outputFields')}
-            onFieldsChange={handleOutputFieldsChange}
-          />
-        </Box>
-      </CardContent>
-    </Card>
+    <Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Typography variant="h6">PSCU Log File Transform Service Settings</Typography>
+        <Button variant="contained" color="primary" onClick={handleSave}>
+          Save Changes
+        </Button>
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <FiltersSection
+          expanded={expanded === 'filters'}
+          filters={settings.filters}
+          onChange={handleAccordionChange('filters')}
+          onFiltersChange={handleFiltersChange}
+        />
+        <PathConfigSection
+          expanded={expanded === 'pathConfig'}
+          pathConfig={settings.pathConfiguration}
+          onChange={handleAccordionChange('pathConfig')}
+          onPathConfigChange={handlePathConfigChange}
+        />
+        <InputFieldsSection
+          expanded={expanded === 'inputFields'}
+          fields={settings.inputFileFields}
+          onChange={handleAccordionChange('inputFields')}
+          onFieldsChange={handleInputFieldsChange}
+        />
+        <OutputFieldsSection
+          expanded={expanded === 'outputFields'}
+          fields={settings.outputFileFields}
+          onChange={handleAccordionChange('outputFields')}
+          onFieldsChange={handleOutputFieldsChange}
+        />
+      </Box>
+    </Box>
   );
 };
 

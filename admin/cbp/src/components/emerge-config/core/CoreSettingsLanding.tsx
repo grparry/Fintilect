@@ -8,6 +8,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import InfoIcon from '@mui/icons-material/Info';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import TransformIcon from '@mui/icons-material/Transform';
+import ApiIcon from '@mui/icons-material/Api';
 
 interface NavigationCard {
   id: string;
@@ -60,11 +61,11 @@ const navigationCards: NavigationCard[] = [
     description: 'Manage deployment configurations'
   },
   {
-    id: 'pscu-log-file-transform',
-    title: 'PSCU Log File Transform Service',
-    path: '/admin/emerge-config/core/pscu-log-file-transform',
-    icon: TransformIcon,
-    description: 'Configure settings for PSCU log file transformation, including filters, paths, and field mappings'
+    id: 'system-services',
+    title: 'System Services',
+    path: '/admin/emerge-config/core/system-services',
+    icon: ApiIcon,
+    description: 'Configure system services and integrations'
   }
 ];
 const CoreSettingsLanding: React.FC = () => {

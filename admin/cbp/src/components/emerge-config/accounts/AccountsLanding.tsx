@@ -45,13 +45,6 @@ const navigationCards: NavigationCard[] = [
     description: 'Configure direct deposit settings and options'
   },
   {
-    id: 'estatements',
-    title: 'E Statements',
-    path: '/admin/emerge-config/accounts/estatements',
-    icon: DescriptionIcon,
-    description: 'Manage electronic statement settings'
-  },
-  {
     id: 'history',
     title: 'History',
     path: '/admin/emerge-config/accounts/history',

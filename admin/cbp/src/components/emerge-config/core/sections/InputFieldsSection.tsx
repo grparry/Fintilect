@@ -15,7 +15,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { InputFieldConfig } from '../../../../types/configuration/configuration/models/PscuLogFileTransformServiceSettings';
+import { InputFieldConfig } from '../../../../types/ClientConfiguration/models/WindowsService/PscuLogFileTransformServiceSettings';
 
 interface InputFieldsSectionProps {
   expanded: boolean;
