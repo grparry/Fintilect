@@ -94,7 +94,7 @@ export class PullCreditSettings implements ISettingsGroup {
     }
 
     /**
-     * Update settings from API format
+     * Load settings from API format
      */
     fromSettings(settings: Setting[]): void {
         this._settings = settings;

@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { Box, Tab, Tabs, Typography } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { BaseConfigurationSettings } from './BaseConfigurationSettings';
 import CorelationSettings from './CorelationSettings';
+import SymitarSettings from './SymitarSettings';
+import DNASettings from './DNASettings';
+import EplSettings from './EplSettings';
+import PsiCoreSettings from './PsiCoreSettings';
+import SummitSettings from './SummitSettings';
 
 interface TabPanelProps {
   children?: React.ReactNode;
-  index: number;
-  value: number;
+  index: string;
+  value: string;
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -26,104 +31,90 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function a11yProps(index: number) {
-  return {
-    id: `financial-cores-tab-${index}`,
-    'aria-controls': `financial-cores-tabpanel-${index}`,
-  };
-}
-
 export default function FinancialCoresLanding() {
-  const navigate = useNavigate();
   const location = useLocation();
   
-  // Determine active tab based on URL path
-  const getActiveTab = () => {
-    if (location.pathname.includes('corelation')) return 1;
-    if (location.pathname.includes('symitar')) return 2;
-    if (location.pathname.includes('summit')) return 3;
-    if (location.pathname.includes('psi')) return 4;
-    if (location.pathname.includes('dna')) return 5;
-    if (location.pathname.includes('epl')) return 6;
-    if (location.pathname.includes('loan-origination')) return 7;
-    return 0; // Base configuration
-  };
+  // Extract the current tab from the URL path, defaulting to 'base' if not found
+  const currentTab = location.pathname.split('/').filter(segment => 
+    ['base', 'corelation', 'symitar', 'summit', 'psi', 'dna', 'epl'].includes(segment)
+  )[0] || 'base';
 
-  const [value, setValue] = useState(getActiveTab());
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
-    switch (newValue) {
-      case 0:
-        navigate('base');
-        break;
-      case 1:
-        navigate('corelation');
-        break;
-      case 2:
-        navigate('symitar');
-        break;
-      case 3:
-        navigate('summit');
-        break;
-      case 4:
-        navigate('psi');
-        break;
-      case 5:
-        navigate('dna');
-        break;
-      case 6:
-        navigate('epl');
-        break;
-      case 7:
-        navigate('loan-origination');
-        break;
-    }
   };
+
+  const [value, setValue] = useState(currentTab);
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs 
-          value={value} 
-          onChange={handleChange}
-          aria-label="Financial Cores configuration tabs"
+      <Typography variant="h4" gutterBottom>
+        Financial Cores Settings
+      </Typography>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+        <Tabs
+          value={value}
+          onChange={handleTabChange}
+          aria-label="financial cores settings tabs"
           variant="scrollable"
           scrollButtons="auto"
         >
-          <Tab label="Base Configuration" {...a11yProps(0)} />
-          <Tab label="Corelation" {...a11yProps(1)} />
-          <Tab label="Symitar" {...a11yProps(2)} />
-          <Tab label="Summit" {...a11yProps(3)} />
-          <Tab label="PSI Core" {...a11yProps(4)} />
-          <Tab label="DNA" {...a11yProps(5)} />
-          <Tab label="EPL" {...a11yProps(6)} />
-          <Tab label="Loan Origination" {...a11yProps(7)} />
+          <Tab
+            label="Base Configuration"
+            value="base"
+            id="financial-cores-tab-base"
+          />
+          <Tab
+            label="Corelation"
+            value="corelation"
+            id="financial-cores-tab-corelation"
+          />
+          <Tab
+            label="Symitar"
+            value="symitar"
+            id="financial-cores-tab-symitar"
+          />
+          <Tab
+            label="Summit"
+            value="summit"
+            id="financial-cores-tab-summit"
+          />
+          <Tab
+            label="PSI Core"
+            value="psi"
+            id="financial-cores-tab-psi"
+          />
+          <Tab
+            label="DNA"
+            value="dna"
+            id="financial-cores-tab-dna"
+          />
+          <Tab
+            label="EPL"
+            value="epl"
+            id="financial-cores-tab-epl"
+          />
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
+      <TabPanel value={value} index="base">
         <BaseConfigurationSettings />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index="corelation">
         <CorelationSettings />
       </TabPanel>
-      <TabPanel value={value} index={2}>
-        <Typography>Symitar settings coming soon...</Typography>
+      <TabPanel value={value} index="symitar">
+        <SymitarSettings />
       </TabPanel>
-      <TabPanel value={value} index={3}>
-        <Typography>Summit settings coming soon...</Typography>
+      <TabPanel value={value} index="summit">
+        <SummitSettings />
       </TabPanel>
-      <TabPanel value={value} index={4}>
-        <Typography>PSI Core settings coming soon...</Typography>
+      <TabPanel value={value} index="psi">
+        <PsiCoreSettings />
       </TabPanel>
-      <TabPanel value={value} index={5}>
-        <Typography>DNA settings coming soon...</Typography>
+      <TabPanel value={value} index="dna">
+        <DNASettings />
       </TabPanel>
-      <TabPanel value={value} index={6}>
-        <Typography>EPL settings coming soon...</Typography>
-      </TabPanel>
-      <TabPanel value={value} index={7}>
-        <Typography>Loan Origination settings coming soon...</Typography>
+      <TabPanel value={value} index="epl">
+        <EplSettings />
       </TabPanel>
     </Box>
   );

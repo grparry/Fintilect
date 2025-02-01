@@ -11,6 +11,7 @@ import { ApplicationSettings } from './CorelationSettings/ApplicationSettings';
 import { AccountTypeSettings } from './CorelationSettings/AccountTypeSettings';
 import { CardTypeSettings } from './CorelationSettings/CardTypeSettings';
 import { PersonTypeSettings } from './CorelationSettings/PersonTypeSettings';
+import { LoanOriginationSettings } from './CorelationSettings/LoanOriginationSettings';
 
 /**
  * Configuration interface for Corelation settings
@@ -40,6 +41,7 @@ export interface CorelationConfig {
     AccountType: AccountTypeSettings;
     CardType: CardTypeSettings;
     PersonType: PersonTypeSettings;
+    LoanOriginationSettings: LoanOriginationSettings;
     OnlyAllowSsnForEnrollmentTin: boolean;
 }
 
@@ -72,6 +74,7 @@ export class Corelation implements ISettingsGroup {
     private _accountType: AccountTypeSettings = new AccountTypeSettings();
     private _cardType: CardTypeSettings = new CardTypeSettings();
     private _personType: PersonTypeSettings = new PersonTypeSettings();
+    private _loanOriginationSettings: LoanOriginationSettings = new LoanOriginationSettings();
     private _onlyAllowSsnForEnrollmentTin: boolean = false;
 
     /**
@@ -139,6 +142,11 @@ export class Corelation implements ISettingsGroup {
                 key: 'Corelation.ManualApprovalNoteJsonStringDictionary',
                 type: 'string',
                 required: false
+            },
+            loanOriginationSettings: {
+                key: 'Corelation.LoanOriginationSettings',
+                type: 'string',
+                required: true
             },
             onlyAllowSsnForEnrollmentTin: {
                 key: 'Corelation.OnlyAllowSsnForEnrollmentTin',
@@ -340,6 +348,14 @@ export class Corelation implements ISettingsGroup {
         this._personType = value;
     }
 
+    /** Loan origination settings */
+    get loanOriginationSettings(): LoanOriginationSettings {
+        return this._loanOriginationSettings;
+    }
+    set loanOriginationSettings(value: LoanOriginationSettings) {
+        this._loanOriginationSettings = value;
+    }
+
     /** Whether to only allow SSN for enrollment TIN */
     get onlyAllowSsnForEnrollmentTin(): boolean {
         return this._onlyAllowSsnForEnrollmentTin;
@@ -418,6 +434,11 @@ export class Corelation implements ISettingsGroup {
                 dataType: 'string'
             },
             {
+                key: Corelation.metadata.settings.loanOriginationSettings.key,
+                value: JSON.stringify(this._loanOriginationSettings),
+                dataType: 'string'
+            },
+            {
                 key: Corelation.metadata.settings.onlyAllowSsnForEnrollmentTin.key,
                 value: this._onlyAllowSsnForEnrollmentTin.toString(),
                 dataType: 'boolean'
@@ -437,6 +458,7 @@ export class Corelation implements ISettingsGroup {
         settings.push(...this._accountType.toSettings());
         settings.push(...this._cardType.toSettings());
         settings.push(...this._personType.toSettings());
+        settings.push(...this._loanOriginationSettings.toSettings());
 
         return settings;
     }
@@ -486,6 +508,9 @@ export class Corelation implements ISettingsGroup {
                 case Corelation.metadata.settings.manualApprovalNoteJsonStringDictionary.key:
                     this._manualApprovalNoteJsonStringDictionary = setting.value;
                     break;
+                case Corelation.metadata.settings.loanOriginationSettings.key:
+                    this._loanOriginationSettings = JSON.parse(setting.value);
+                    break;
                 case Corelation.metadata.settings.onlyAllowSsnForEnrollmentTin.key:
                     this._onlyAllowSsnForEnrollmentTin = setting.value.toLowerCase() === 'true';
                     break;
@@ -505,5 +530,6 @@ export class Corelation implements ISettingsGroup {
         this._accountType.fromSettings(settings);
         this._cardType.fromSettings(settings);
         this._personType.fromSettings(settings);
+        this._loanOriginationSettings.fromSettings(settings);
     }
 }

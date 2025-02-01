@@ -23,8 +23,7 @@ export class DraftLookup implements ISettingsGroup {
             accountNumberLength: {
                 key: 'DraftLookup.AccountNumberLength',
                 type: 'number',
-                required: false,
-                nullable: true
+                required: false
             }
         }
     };
@@ -55,7 +54,7 @@ export class DraftLookup implements ISettingsGroup {
     }
 
     /**
-     * Update settings from API format
+     * Load settings from API format
      */
     fromSettings(settings: Setting[]): void {
         this._settings = settings;

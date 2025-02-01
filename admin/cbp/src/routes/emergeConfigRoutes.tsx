@@ -89,6 +89,7 @@ import AchServiceLanding from '../components/emerge-config/cards-payments/ach-se
 import LoanSsoLanding from '../components/emerge-config/loans-credit/loan-sso/LoanSsoLanding';
 import FicoLanding from '../components/emerge-config/loans-credit/fico/FicoLanding';
 import CreditScoreHistoryLanding from '../components/emerge-config/loans-credit/credit-score-history/CreditScoreHistoryLanding';
+import LoanOriginationSettings from '../components/emerge-config/core/financial-cores/LoanOriginationSettings';
 
 const emergeConfigRoutes: RouteConfig[] = [
   {
@@ -145,7 +146,59 @@ const emergeConfigRoutes: RouteConfig[] = [
             id: 'financial-cores',
             path: 'financial-cores',
             element: FinancialCoresLanding,
-            title: 'Financial Cores'
+            title: 'Financial Cores',
+            children: [
+              {
+                id: 'base',
+                path: 'base',
+                element: null,
+                title: 'Base Configuration'
+              },
+              {
+                id: 'corelation',
+                path: 'corelation',
+                element: null,
+                title: 'Corelation',
+                children: [
+                  {
+                    id: 'loan-origination',
+                    path: 'loan-origination',
+                    element: LoanOriginationSettings,
+                    title: 'Loan Origination'
+                  }
+                ]
+              },
+              {
+                id: 'symitar',
+                path: 'symitar',
+                element: null,
+                title: 'Symitar'
+              },
+              {
+                id: 'summit',
+                path: 'summit',
+                element: null,
+                title: 'Summit'
+              },
+              {
+                id: 'psi',
+                path: 'psi',
+                element: null,
+                title: 'PSI Core'
+              },
+              {
+                id: 'dna',
+                path: 'dna',
+                element: null,
+                title: 'DNA'
+              },
+              {
+                id: 'epl',
+                path: 'epl',
+                element: null,
+                title: 'EPL'
+              }
+            ]
           },
           {
             id: 'institution',

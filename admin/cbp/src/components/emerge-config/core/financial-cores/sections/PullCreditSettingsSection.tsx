@@ -2,8 +2,6 @@ import React from 'react';
 import {
   Grid,
   TextField,
-  FormControlLabel,
-  Switch,
   Typography,
   Accordion,
   AccordionSummary,
@@ -42,111 +40,30 @@ const PullCreditSettingsSection: React.FC<PullCreditSettingsSectionProps> = ({
       </AccordionSummary>
       <AccordionDetails>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={settings.enabled}
-                  onChange={(e) => handleChange('enabled', e.target.checked)}
-                />
-              }
-              label="Enable Pull Credit"
-            />
-          </Grid>
-          
           <Grid item xs={12} md={6}>
             <TextField
               fullWidth
-              label="Credit Report Type"
-              value={settings.creditReportType}
-              onChange={(e) => handleChange('creditReportType', e.target.value)}
+              label="Product Value"
+              value={settings.productValue}
+              onChange={(e) => handleChange('productValue', e.target.value)}
             />
           </Grid>
 
           <Grid item xs={12} md={6}>
             <TextField
               fullWidth
-              label="Credit Report Format"
-              value={settings.creditReportFormat}
-              onChange={(e) => handleChange('creditReportFormat', e.target.value)}
+              label="Bureau Value"
+              value={settings.bureauValue}
+              onChange={(e) => handleChange('bureauValue', e.target.value)}
             />
           </Grid>
 
           <Grid item xs={12} md={6}>
             <TextField
               fullWidth
-              label="Credit Report Purpose"
-              value={settings.creditReportPurpose}
-              onChange={(e) => handleChange('creditReportPurpose', e.target.value)}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Credit Report Permission"
-              value={settings.creditReportPermission}
-              onChange={(e) => handleChange('creditReportPermission', e.target.value)}
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={settings.includeEmploymentInformation}
-                  onChange={(e) => handleChange('includeEmploymentInformation', e.target.checked)}
-                />
-              }
-              label="Include Employment Information"
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={settings.includeAddressInformation}
-                  onChange={(e) => handleChange('includeAddressInformation', e.target.checked)}
-                />
-              }
-              label="Include Address Information"
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={settings.includePhoneInformation}
-                  onChange={(e) => handleChange('includePhoneInformation', e.target.checked)}
-                />
-              }
-              label="Include Phone Information"
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={settings.includeNameInformation}
-                  onChange={(e) => handleChange('includeNameInformation', e.target.checked)}
-                />
-              }
-              label="Include Name Information"
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={settings.includeEmailInformation}
-                  onChange={(e) => handleChange('includeEmailInformation', e.target.checked)}
-                />
-              }
-              label="Include Email Information"
+              label="Type Serial Value"
+              value={settings.typeSerialValue}
+              onChange={(e) => handleChange('typeSerialValue', e.target.value)}
             />
           </Grid>
         </Grid>

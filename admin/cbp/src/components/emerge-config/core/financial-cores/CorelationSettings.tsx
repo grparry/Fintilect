@@ -24,6 +24,8 @@ import { ApplicationSettings } from '../../../../types/ClientConfiguration/model
 import { AccountTypeSettings } from '../../../../types/ClientConfiguration/models/FinancialCores/CorelationSettings/AccountTypeSettings';
 import { CardTypeSettings } from '../../../../types/ClientConfiguration/models/FinancialCores/CorelationSettings/CardTypeSettings';
 import { PersonTypeSettings } from '../../../../types/ClientConfiguration/models/FinancialCores/CorelationSettings/PersonTypeSettings';
+import { LoanOriginationSettings } from '../../../../types/ClientConfiguration/models/FinancialCores/CorelationSettings/LoanOriginationSettings';
+import LoanOriginationSettingsSection from './sections/LoanOriginationSettingsSection';
 import PullCreditSettingsSection from './sections/PullCreditSettingsSection';
 import LossScreeningSettingsSection from './sections/LossScreeningSettingsSection';
 import IdentificationSection from './sections/IdentificationSection';
@@ -55,7 +57,6 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.pullCreditSettings = pullCreditSettings;
-          // Trigger the parent component's update
           onStringChange('pullCreditSettings', JSON.stringify(pullCreditSettings));
         };
 
@@ -63,7 +64,6 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.lossScreeningSettings = lossScreeningSettings;
-          // Trigger the parent component's update
           onStringChange('lossScreeningSettings', JSON.stringify(lossScreeningSettings));
         };
 
@@ -71,7 +71,6 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.identification = identification;
-          // Trigger the parent component's update
           onStringChange('identification', JSON.stringify(identification));
         };
 
@@ -79,7 +78,6 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.notes = notes;
-          // Trigger the parent component's update
           onStringChange('notes', JSON.stringify(notes));
         };
 
@@ -87,7 +85,6 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.accountTypes = accountTypes;
-          // Trigger the parent component's update
           onStringChange('accountTypes', JSON.stringify(accountTypes));
         };
 
@@ -95,7 +92,6 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.draftLookup = draftLookup;
-          // Trigger the parent component's update
           onStringChange('draftLookup', JSON.stringify(draftLookup));
         };
 
@@ -103,7 +99,6 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.enrollment = enrollment;
-          // Trigger the parent component's update
           onStringChange('enrollment', JSON.stringify(enrollment));
         };
 
@@ -111,7 +106,6 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.funding = funding;
-          // Trigger the parent component's update
           onStringChange('funding', JSON.stringify(funding));
         };
 
@@ -119,7 +113,6 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.application = applicationSettings;
-          // Trigger the parent component's update
           onStringChange('application', JSON.stringify(applicationSettings));
         };
 
@@ -127,7 +120,6 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.accountType = accountTypeSettings;
-          // Trigger the parent component's update
           onStringChange('accountType', JSON.stringify(accountTypeSettings));
         };
 
@@ -135,7 +127,6 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.cardType = cardTypeSettings;
-          // Trigger the parent component's update
           onStringChange('cardType', JSON.stringify(cardTypeSettings));
         };
 
@@ -143,12 +134,56 @@ const CorelationSettings: React.FC = () => {
           const updatedSettings = new Corelation();
           Object.assign(updatedSettings, settings);
           updatedSettings.personType = personTypeSettings;
-          // Trigger the parent component's update
           onStringChange('personType', JSON.stringify(personTypeSettings));
+        };
+
+        const handleLoanOriginationSettingsChange = (loanOriginationSettings: LoanOriginationSettings) => {
+          const updatedSettings = new Corelation();
+          Object.assign(updatedSettings, settings);
+          updatedSettings.loanOriginationSettings = loanOriginationSettings;
+          onStringChange('loanOriginationSettings', JSON.stringify(loanOriginationSettings));
         };
 
         return (
           <Grid container spacing={3}>
+            {/* Account Type Settings Section */}
+            <Grid item xs={12}>
+              <AccountTypeSettingsSection
+                settings={settings.accountType}
+                expanded={expanded}
+                onExpand={handleAccordionChange}
+                onChange={handleAccountTypeSettingsChange}
+              />
+            </Grid>
+
+            {/* Allowed Person Link Categories */}
+            <Grid item xs={12}>
+              <Accordion expanded={expanded === 'categories'} onChange={handleAccordionChange('categories')}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>Allowed Person Link Categories</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TextField
+                    fullWidth
+                    label="Inquiry Allowed Person Link Categories"
+                    value={settings.inquiryAllowedPersonLinkCategories.join(', ')}
+                    onChange={(e) => onStringChange('inquiryAllowedPersonLinkCategories', e.target.value)}
+                    helperText="Enter categories separated by commas"
+                  />
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+
+            {/* Application Settings Section */}
+            <Grid item xs={12}>
+              <ApplicationSettingsSection
+                settings={settings.application}
+                expanded={expanded}
+                onExpand={handleAccordionChange}
+                onChange={handleApplicationSettingsChange}
+              />
+            </Grid>
+
             {/* Basic Settings */}
             <Grid item xs={12}>
               <Accordion expanded={expanded === 'basic'} onChange={handleAccordionChange('basic')}>
@@ -195,35 +230,14 @@ const CorelationSettings: React.FC = () => {
               </Accordion>
             </Grid>
 
-            {/* Search Limits */}
+            {/* Card Type Settings Section */}
             <Grid item xs={12}>
-              <Accordion expanded={expanded === 'searchLimits'} onChange={handleAccordionChange('searchLimits')}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Search Limits</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        type="number"
-                        label="Max Return Search Limit"
-                        value={settings.maxReturnSearchLimit}
-                        onChange={(e) => onNumberChange('maxReturnSearchLimit', e.target.value)}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        type="number"
-                        label="Existing Address Search Results Return Limit"
-                        value={settings.existingAddressSearchResultsReturnLimit}
-                        onChange={(e) => onNumberChange('existingAddressSearchResultsReturnLimit', e.target.value)}
-                      />
-                    </Grid>
-                  </Grid>
-                </AccordionDetails>
-              </Accordion>
+              <CardTypeSettingsSection
+                settings={settings.cardType}
+                expanded={expanded}
+                onExpand={handleAccordionChange}
+                onChange={handleCardTypeSettingsChange}
+              />
             </Grid>
 
             {/* Channel Settings */}
@@ -263,6 +277,26 @@ const CorelationSettings: React.FC = () => {
               </Accordion>
             </Grid>
 
+            {/* Draft Lookup Settings Section */}
+            <Grid item xs={12}>
+              <DraftLookupSection
+                settings={settings.draftLookup}
+                expanded={expanded}
+                onExpand={handleAccordionChange}
+                onChange={handleDraftLookupChange}
+              />
+            </Grid>
+
+            {/* Enrollment Settings Section */}
+            <Grid item xs={12}>
+              <EnrollmentSection
+                settings={settings.enrollment}
+                expanded={expanded}
+                onExpand={handleAccordionChange}
+                onChange={handleEnrollmentChange}
+              />
+            </Grid>
+
             {/* Feature Toggles */}
             <Grid item xs={12}>
               <Accordion expanded={expanded === 'features'} onChange={handleAccordionChange('features')}>
@@ -298,23 +332,13 @@ const CorelationSettings: React.FC = () => {
               </Accordion>
             </Grid>
 
-            {/* Pull Credit Settings Section */}
+            {/* Funding Settings Section */}
             <Grid item xs={12}>
-              <PullCreditSettingsSection
-                settings={settings.pullCreditSettings}
+              <FundingSection
+                settings={settings.funding}
                 expanded={expanded}
                 onExpand={handleAccordionChange}
-                onChange={handlePullCreditSettingsChange}
-              />
-            </Grid>
-
-            {/* Loss Screening Settings Section */}
-            <Grid item xs={12}>
-              <LossScreeningSettingsSection
-                settings={settings.lossScreeningSettings}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleLossScreeningSettingsChange}
+                onChange={handleFundingChange}
               />
             </Grid>
 
@@ -328,83 +352,28 @@ const CorelationSettings: React.FC = () => {
               />
             </Grid>
 
-            {/* Notes Settings Section */}
+            {/* Loan Origination Settings */}
             <Grid item xs={12}>
-              <NotesSection
-                settings={settings.notes}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleNotesChange}
-              />
+              <Accordion expanded={expanded === 'loan-origination'} onChange={handleAccordionChange('loan-origination')}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>Loan Origination Settings</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <LoanOriginationSettingsSection
+                    settings={settings.loanOriginationSettings}
+                    onChange={handleLoanOriginationSettingsChange}
+                  />
+                </AccordionDetails>
+              </Accordion>
             </Grid>
 
-            {/* Account Type Settings Section */}
+            {/* Loss Screening Settings Section */}
             <Grid item xs={12}>
-              <AccountTypeSettingsSection
-                settings={settings.accountType}
+              <LossScreeningSettingsSection
+                settings={settings.lossScreeningSettings}
                 expanded={expanded}
                 onExpand={handleAccordionChange}
-                onChange={handleAccountTypeSettingsChange}
-              />
-            </Grid>
-
-            {/* Card Type Settings Section */}
-            <Grid item xs={12}>
-              <CardTypeSettingsSection
-                settings={settings.cardType}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleCardTypeSettingsChange}
-              />
-            </Grid>
-
-            {/* Person Type Settings Section */}
-            <Grid item xs={12}>
-              <PersonTypeSettingsSection
-                settings={settings.personType}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handlePersonTypeSettingsChange}
-              />
-            </Grid>
-
-            {/* Draft Lookup Settings Section */}
-            <Grid item xs={12}>
-              <DraftLookupSection
-                settings={settings.draftLookup}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleDraftLookupChange}
-              />
-            </Grid>
-
-            {/* Enrollment Settings Section */}
-            <Grid item xs={12}>
-              <EnrollmentSection
-                settings={settings.enrollment}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleEnrollmentChange}
-              />
-            </Grid>
-
-            {/* Funding Settings Section */}
-            <Grid item xs={12}>
-              <FundingSection
-                settings={settings.funding}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleFundingChange}
-              />
-            </Grid>
-
-            {/* Application Settings Section */}
-            <Grid item xs={12}>
-              <ApplicationSettingsSection
-                settings={settings.application}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleApplicationSettingsChange}
+                onChange={handleLossScreeningSettingsChange}
               />
             </Grid>
 
@@ -427,20 +396,63 @@ const CorelationSettings: React.FC = () => {
               </Accordion>
             </Grid>
 
-            {/* Allowed Person Link Categories */}
+            {/* Notes Settings Section */}
             <Grid item xs={12}>
-              <Accordion expanded={expanded === 'categories'} onChange={handleAccordionChange('categories')}>
+              <NotesSection
+                settings={settings.notes}
+                expanded={expanded}
+                onExpand={handleAccordionChange}
+                onChange={handleNotesChange}
+              />
+            </Grid>
+
+            {/* Person Type Settings Section */}
+            <Grid item xs={12}>
+              <PersonTypeSettingsSection
+                settings={settings.personType}
+                expanded={expanded}
+                onExpand={handleAccordionChange}
+                onChange={handlePersonTypeSettingsChange}
+              />
+            </Grid>
+
+            {/* Pull Credit Settings Section */}
+            <Grid item xs={12}>
+              <PullCreditSettingsSection
+                settings={settings.pullCreditSettings}
+                expanded={expanded}
+                onExpand={handleAccordionChange}
+                onChange={handlePullCreditSettingsChange}
+              />
+            </Grid>
+
+            {/* Search Limits */}
+            <Grid item xs={12}>
+              <Accordion expanded={expanded === 'searchLimits'} onChange={handleAccordionChange('searchLimits')}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Allowed Person Link Categories</Typography>
+                  <Typography>Search Limits</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <TextField
-                    fullWidth
-                    label="Inquiry Allowed Person Link Categories"
-                    value={settings.inquiryAllowedPersonLinkCategories.join(', ')}
-                    onChange={(e) => onStringChange('inquiryAllowedPersonLinkCategories', e.target.value)}
-                    helperText="Enter categories separated by commas"
-                  />
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        type="number"
+                        label="Max Return Search Limit"
+                        value={settings.maxReturnSearchLimit}
+                        onChange={(e) => onNumberChange('maxReturnSearchLimit', e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        type="number"
+                        label="Existing Address Search Results Return Limit"
+                        value={settings.existingAddressSearchResultsReturnLimit}
+                        onChange={(e) => onNumberChange('existingAddressSearchResultsReturnLimit', e.target.value)}
+                      />
+                    </Grid>
+                  </Grid>
                 </AccordionDetails>
               </Accordion>
             </Grid>

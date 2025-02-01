@@ -1,140 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Box,
-  Card,
-  CardContent,
-  CardHeader,
   FormControlLabel,
   Switch,
   TextField,
-  Typography,
-  Divider,
   Grid,
-  Button
 } from '@mui/material';
-import { ServiceFactory } from '../../../../services/factory/ServiceFactory';
-import { SettingsManager } from '../../../../services/implementations/settings.manager';
 import { FinancialCore } from '../../../../types/ClientConfiguration/models/FinancialCores/FinancialCore';
 import { FinancialCoreTypes } from '../../../../types/ClientConfiguration/models/FinancialCores/FinancialCoreTypes';
-import { Setting as ApiSetting } from '../../../../types/settings.types';
-import { Setting as ModelSetting } from '../../../../types/ClientConfiguration/base/types';
+import { CoreSettingsComponent } from './CoreSettingsComponent';
 
 export const BaseConfigurationSettings: React.FC = () => {
-  const [settings, setSettings] = useState<FinancialCore>(new FinancialCore());
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    loadSettings();
-  }, []);
-
-  const convertApiToModelSettings = (apiSettings: ApiSetting[]): ModelSetting[] => {
-    return apiSettings.map(setting => ({
-      key: setting.key,
-      value: setting.value.toString(), // Model expects string
-      dataType: setting.type === 'string' ? 'string' :
-                setting.type === 'number' ? 'number' :
-                setting.type === 'boolean' ? 'boolean' : 'json',
-      description: setting.description
-    }));
-  };
-
-  const convertModelToApiSettings = (modelSettings: ModelSetting[]): ApiSetting[] => {
-    return modelSettings.map(setting => ({
-      key: setting.key,
-      value: setting.value,
-      type: setting.dataType === 'json' ? 'string' : setting.dataType,
-      label: setting.key, // Use key as label
-      description: setting.description,
-      isRequired: true // Default to required
-    }));
-  };
-
-  const loadSettings = async () => {
-    try {
-      setLoading(true);
-      const settingsService = ServiceFactory.getInstance().getSettingsService();
-      const manager = new SettingsManager(settingsService);
-      
-      await manager.loadGroup('FinancialCore');
-      const apiSettings = manager.getSettings() as ApiSetting[];
-      const modelSettings = convertApiToModelSettings(apiSettings);
-      
-      const loadedSettings = new FinancialCore();
-      loadedSettings.fromSettings(modelSettings);
-      setSettings(loadedSettings);
-      setError(null);
-    } catch (err) {
-      setError('Failed to load financial core settings');
-      console.error('Error loading settings:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSave = async () => {
-    try {
-      setLoading(true);
-      const settingsService = ServiceFactory.getInstance().getSettingsService();
-      const manager = new SettingsManager(settingsService);
-      
-      const modelSettings = settings.toSettings();
-      const apiSettings = convertModelToApiSettings(modelSettings);
-      await settingsService.updateSettings(apiSettings);
-      setError(null);
-    } catch (err) {
-      setError('Failed to save financial core settings');
-      console.error('Error saving settings:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleBooleanChange = (field: keyof FinancialCore, value: boolean) => {
-    setSettings(prev => {
-      const updated = new FinancialCore();
-      updated.fromSettings(prev.toSettings());
-      (updated[field] as boolean) = value;
-      return updated;
-    });
-  };
-
-  const handleNumberChange = (field: keyof FinancialCore, value: string) => {
-    const numValue = parseInt(value, 10);
-    if (!isNaN(numValue)) {
-      setSettings(prev => {
-        const updated = new FinancialCore();
-        updated.fromSettings(prev.toSettings());
-        (updated[field] as number) = numValue;
-        return updated;
-      });
-    }
-  };
-
-  const handleStringChange = (field: keyof FinancialCore, value: string) => {
-    setSettings(prev => {
-      const updated = new FinancialCore();
-      updated.fromSettings(prev.toSettings());
-      (updated[field] as string) = value;
-      return updated;
-    });
-  };
-
-  if (loading) {
-    return <Typography>Loading financial core settings...</Typography>;
-  }
-
-  if (error) {
-    return <Typography color="error">{error}</Typography>;
-  }
-
   return (
-    <Card>
-      <CardHeader title="Financial Core Base Configuration" />
-      <Divider />
-      <CardContent>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Grid container spacing={3}>
+    <CoreSettingsComponent<FinancialCore>
+      title="Financial Core Base Configuration"
+      settingsGroupName="FinancialCore"
+      ModelClass={FinancialCore}
+    >
+      {({ settings, onStringChange, onBooleanChange, onNumberChange }) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Grid container spacing={2}>
             {/* Core Type Selection */}
             <Grid item xs={12}>
               <TextField
@@ -142,7 +27,7 @@ export const BaseConfigurationSettings: React.FC = () => {
                 fullWidth
                 label="Core Type"
                 value={settings.coreType}
-                onChange={(e) => handleStringChange('coreType', e.target.value)}
+                onChange={(e) => onStringChange('coreType', e.target.value)}
                 SelectProps={{
                   native: true,
                 }}
@@ -161,7 +46,7 @@ export const BaseConfigurationSettings: React.FC = () => {
                 control={
                   <Switch
                     checked={settings.useClassicCore}
-                    onChange={(e) => handleBooleanChange('useClassicCore', e.target.checked)}
+                    onChange={(e) => onBooleanChange('useClassicCore', e.target.checked)}
                   />
                 }
                 label="Use Classic Core"
@@ -172,7 +57,7 @@ export const BaseConfigurationSettings: React.FC = () => {
                 control={
                   <Switch
                     checked={settings.shouldBypassICoreForAccountInquiry}
-                    onChange={(e) => handleBooleanChange('shouldBypassICoreForAccountInquiry', e.target.checked)}
+                    onChange={(e) => onBooleanChange('shouldBypassICoreForAccountInquiry', e.target.checked)}
                   />
                 }
                 label="Bypass ICore for Account Inquiry"
@@ -183,7 +68,7 @@ export const BaseConfigurationSettings: React.FC = () => {
                 control={
                   <Switch
                     checked={settings.shouldBypassICoreForScheduledTransfers}
-                    onChange={(e) => handleBooleanChange('shouldBypassICoreForScheduledTransfers', e.target.checked)}
+                    onChange={(e) => onBooleanChange('shouldBypassICoreForScheduledTransfers', e.target.checked)}
                   />
                 }
                 label="Bypass ICore for Scheduled Transfers"
@@ -194,7 +79,7 @@ export const BaseConfigurationSettings: React.FC = () => {
                 control={
                   <Switch
                     checked={settings.shouldMapPasswordDuringAccountInquiry}
-                    onChange={(e) => handleBooleanChange('shouldMapPasswordDuringAccountInquiry', e.target.checked)}
+                    onChange={(e) => onBooleanChange('shouldMapPasswordDuringAccountInquiry', e.target.checked)}
                   />
                 }
                 label="Map Password During Account Inquiry"
@@ -205,7 +90,7 @@ export const BaseConfigurationSettings: React.FC = () => {
                 control={
                   <Switch
                     checked={settings.cacheAccountInquiry}
-                    onChange={(e) => handleBooleanChange('cacheAccountInquiry', e.target.checked)}
+                    onChange={(e) => onBooleanChange('cacheAccountInquiry', e.target.checked)}
                   />
                 }
                 label="Cache Account Inquiry"
@@ -216,7 +101,7 @@ export const BaseConfigurationSettings: React.FC = () => {
                 control={
                   <Switch
                     checked={settings.cacheAccountInquiryForClassicCores}
-                    onChange={(e) => handleBooleanChange('cacheAccountInquiryForClassicCores', e.target.checked)}
+                    onChange={(e) => onBooleanChange('cacheAccountInquiryForClassicCores', e.target.checked)}
                   />
                 }
                 label="Cache Account Inquiry for Classic Cores"
@@ -229,7 +114,7 @@ export const BaseConfigurationSettings: React.FC = () => {
                 fullWidth
                 label="Core Connection String"
                 value={settings.coreConnectionString}
-                onChange={(e) => handleStringChange('coreConnectionString', e.target.value)}
+                onChange={(e) => onStringChange('coreConnectionString', e.target.value)}
               />
             </Grid>
             <Grid item xs={12} md={4}>
@@ -238,7 +123,7 @@ export const BaseConfigurationSettings: React.FC = () => {
                 type="number"
                 label="Cache Account Inquiry Wait (seconds)"
                 value={settings.cacheAccountInquiryWaitForSeconds}
-                onChange={(e) => handleNumberChange('cacheAccountInquiryWaitForSeconds', e.target.value)}
+                onChange={(e) => onNumberChange('cacheAccountInquiryWaitForSeconds', e.target.value)}
               />
             </Grid>
             <Grid item xs={12} md={4}>
@@ -247,7 +132,7 @@ export const BaseConfigurationSettings: React.FC = () => {
                 type="number"
                 label="Cache Expire (minutes)"
                 value={settings.cacheExpireInMinutes}
-                onChange={(e) => handleNumberChange('cacheExpireInMinutes', e.target.value)}
+                onChange={(e) => onNumberChange('cacheExpireInMinutes', e.target.value)}
               />
             </Grid>
             <Grid item xs={12} md={4}>
@@ -256,13 +141,14 @@ export const BaseConfigurationSettings: React.FC = () => {
                 type="number"
                 label="Throttle Account Inquiry"
                 value={settings.throttleAccoutInquiry}
-                onChange={(e) => handleNumberChange('throttleAccoutInquiry', e.target.value)}
+                onChange={(e) => onNumberChange('throttleAccoutInquiry', e.target.value)}
               />
             </Grid>
           </Grid>
-          <Button variant="contained" onClick={handleSave}>Save Changes</Button>
         </Box>
-      </CardContent>
-    </Card>
+      )}
+    </CoreSettingsComponent>
   );
 };
+
+export default BaseConfigurationSettings;
