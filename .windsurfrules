@@ -1,120 +1,23 @@
 # Cascade Workspace AI Rules
 
-# Core Configuration
-context:
-  core_rules: ".cascade/core/RULES.md"
-  drift_prevention: ".cascade/core/DRIFT.md"
-  shared_patterns: ".cascade/patterns/ESSENTIAL.md"
-  ai_context: ".cascade/AI_CONTEXT.md"
-  project_contexts:
-    - "*/cascade/CONTEXT.md"
-    - "*/cascade/context/*.md"
-  project_patterns:
-    - "cbp-admin/.cascade/patterns"
-    - "cbp-config-api/.cascade/patterns"
+This workspace is governed by the following Cascade memories:
 
-# Initialization Rules
-initialization:
-  WHEN: initializing_workspace
-  THEN:
-    - LOAD ".cascade/AI_CONTEXT.md"
-    - INITIALIZE pattern_registry
-    - INITIALIZE context_registry
-    - SETUP relationship_tracking
-    - ENABLE context_monitoring
-    - DISCOVER project_contexts
-    - DISCOVER project_patterns
-  END
+1. Core AI Behavior Guidelines
+   - Prevents unwanted improvements and suggestions
+   - Controls when changes can be proposed
+   - Prohibits lazy loading suggestions
 
-# Load Order Management
-optimization:
-  load_order:
-    - ".cascade/AI_CONTEXT.md"         # Load AI context first
-    - ".cascade/core/RULES.md"         # Then core rules
-    - ".cascade/core/DRIFT.md"         # Then drift prevention
-    - ".cascade/patterns/ESSENTIAL.md"  # Then shared patterns
-    - "*/cascade/CONTEXT.md"           # Project-specific context
-    - "*/cascade/context/*.md"         # Additional project context
-    - "*/patterns/core/*.md"           # Then project core patterns
-    - "*/patterns/**/*.md"             # Finally all other project patterns
+2. Required Technology Stack
+   - Enforces consistent technology choices
+   - Prevents introduction of alternative libraries
+   - Maintains framework consistency
 
-# Project Context Discovery
-project_context_management:
-  WHEN: discovering_project_context
-  THEN:
-    - SCAN "*/cascade" RECURSIVE
-    - FOR EACH project_dir:
-        - LOAD "CONTEXT.md" IF EXISTS
-        - SCAN "context" RECURSIVE
-        - VALIDATE context_structure
-        - UPDATE context_registry
-  END
+3. CBP Model Synchronization Rule
+   - Protects infrastructure models
+   - Ensures alignment with legacy system
+   - Prevents feature creep in infrastructure
 
-# Project Pattern Discovery
-project_pattern_management:
-  WHEN: discovering_project_patterns
-  THEN:
-    - SCAN "*/patterns" RECURSIVE
-    - FOR EACH project_pattern_dir:
-        - VALIDATE pattern_structure
-        - LOAD "patterns/core" FIRST
-        - LOAD remaining_patterns
-    - UPDATE pattern_registry
-  END
-
-# Pattern Management Rules
-pattern_management:
-  WHEN: modifying_pattern
-  IF: pattern.has_dependencies
-  THEN:
-    - CHECK compatibility_matrix
-    - LOAD dependent_patterns
-    - VALIDATE relationship_chain
-    - IF project_specific:
-        - CHECK project_overrides
-        - APPLY project_context
-  END
-
-# Context Management Rules
-context_management:
-  WHEN: modifying_context
-  IF: context.has_dependencies
-  THEN:
-    - CHECK context_compatibility
-    - LOAD dependent_contexts
-    - VALIDATE context_chain
-    - IF project_specific:
-        - CHECK context_overrides
-        - MERGE_WITH parent_context
-  END
-
-# Metrics and Tracking
-behaviors:
-  meta_tracking:
-    enabled: true
-    implementation: ".cascade/metrics/implementation.md"
-    target: ".cascade/metrics/tracker.jsonl"
-    auto_update: true
-    silent: true
-    events:
-      - type: "meta_load"
-        when: "Any meta layer file is loaded"
-      - type: "meta_ref"
-        when: "Any meta layer rule is referenced"
-      - type: "project_pattern_load"
-        when: "Project-specific pattern is loaded"
-      - type: "project_context_load"
-        when: "Project-specific context is loaded"
-
-# Implementation Notes
-notes:
-  - Always maintain pattern hierarchy
-  - Prioritize security validation
-  - Keep relationship documentation current
-  - Monitor context loading
-  - Load project-specific contexts before patterns
-  - Load project-specific patterns after core patterns
-  - Respect project pattern overrides
-  - Track project pattern usage
-  - Maintain context inheritance chain
-  - Validate context compatibility
+4. CBP Service Layer Integration Rules
+   - Maintains service factory pattern
+   - Prevents alternate API implementation patterns
+   - Ensures consistent service layer usage
