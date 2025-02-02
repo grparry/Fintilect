@@ -135,72 +135,70 @@ export class SettingsGenerator {
         // Add fromSettings method
         result += this.generateFromSettings(classInfo);
 
-        // Add toSettings method
-        result += '    toSettings(): Setting[] {\n';
-        result += '        return [\n';
-        
-        // Generate settings for each field
-        if (classInfo.fields) {
-            const jsonFields = classInfo.fields.filter(f => f.documentation?.includes('```json'));
-            if (jsonFields.length > 0) {
-                result += `            this._jsonSettings.toSetting(),\n`;
-            }
-
-            for (const field of classInfo.fields) {
-                if (!field.documentation?.includes('```json') && field.settingKey) {
-                    const settingName = field.name.charAt(0).toLowerCase() + field.name.slice(1);
-                    const dataType = field.type === 'string' ? 'string' : field.type === 'number' || field.type === 'int' ? 'number' : field.type === 'boolean' ? 'boolean' : 'json';
-                    result += `            { key: "${classInfo.name}.${field.name}", value: String(this._${settingName}), dataType: '${dataType}' },\n`;
-                }
-            }
-        }
-        
-        result += '        ];\n';
-        result += '    }\n';
-
-        // Add fromSettings method
-        result += '\n    fromSettings(settings: Setting[]): void {\n';
-        result += '        for (const setting of settings) {\n';
-        result += '            switch (setting.key) {\n';
-        
-        // Generate cases for each field
-        if (classInfo.fields) {
-            const jsonFields = classInfo.fields.filter(f => f.documentation?.includes('```json'));
-            if (jsonFields.length > 0) {
-                result += `                case '${classInfo.name}.JsonSettings':\n`;
-                result += '                    this._jsonSettings.fromSetting(setting);\n';
-                result += '                    break;\n';
-            }
-
-            for (const field of classInfo.fields) {
-                if (!field.documentation?.includes('```json')) {
-                    const settingName = field.name.charAt(0).toLowerCase() + field.name.slice(1);
-                    result += `                case '${classInfo.name}.${field.name}':\n`;
-                    
-                    if (field.documentation?.includes('```json')) {
-                        result += `                    this._${settingName}.fromSetting(setting);\n`;
-                    } else {
-                        const type = field.type;
-                        if (type === 'boolean') {
-                            result += `                    this._${settingName} = setting.value.toLowerCase() === 'true';\n`;
-                        } else if (type === 'number' || type === 'int' || type === 'float' || type === 'double') {
-                            result += `                    this._${settingName} = Number(setting.value);\n`;
-                        } else {
-                            result += `                    this._${settingName} = setting.value;\n`;
-                        }
-                    }
-                    result += '                    break;\n';
-                }
-            }
-        }
-        
-        result += '            }\n';
-        result += '        }\n';
-        result += '    }\n';
-        
         result += '}\n';
         
         return result;
+    }
+
+    public generateSettingsClass(parsedClass: ParsedClass): string {
+        const className = parsedClass.name;
+        const configName = `${className}Config`;
+        const fields = parsedClass.fields || [];
+        
+        // Generate interface
+        let output = `import { Setting, ISettingsGroup, ISettingsMetadata } from '@models/base/types';\n\n`;
+        output += `export interface ${configName} {\n`;
+        fields.forEach(field => {
+            const tsType = this.typeMapper.mapType(field.type);
+            output += `    ${field.name}: ${tsType};\n`;
+        });
+        output += `}\n\n`;
+
+        // Generate class
+        output += `export class ${className} implements ISettingsGroup {\n`;
+        
+        // Add metadata
+        output += `    static readonly metadata: ISettingsMetadata = {\n`;
+        output += `        groupName: '${className}',\n`;
+        output += `        settings: {\n`;
+        fields.forEach(field => {
+            const tsType = this.typeMapper.mapType(field.type);
+            output += `            ${field.name}: {\n`;
+            output += `                key: '${className}.${field.name}',\n`;
+            output += `                type: '${this.getSettingType(tsType)}',\n`;
+            output += `                required: ${!field.isNullable}\n`;
+            output += `            },\n`;
+        });
+        output += `        }\n`;
+        output += `    };\n\n`;
+
+        // Add private fields and getters/setters
+        fields.forEach(field => {
+            const tsType = this.typeMapper.mapType(field.type);
+            output += `\n            private _${field.name.charAt(0).toLowerCase() + field.name.slice(1)}: ${tsType};\n`;
+            output += `            get ${field.name.charAt(0).toLowerCase() + field.name.slice(1)}(): ${tsType} {\n`;
+            output += `                return this._${field.name.charAt(0).toLowerCase() + field.name.slice(1)};\n`;
+            output += `            }\n`;
+            output += `            set ${field.name.charAt(0).toLowerCase() + field.name.slice(1)}(value: ${tsType}) {\n`;
+            output += `                this._${field.name.charAt(0).toLowerCase() + field.name.slice(1)} = value;\n`;
+            output += `            }\n`;
+        });
+
+        // Add constructor with default values
+        output += `\n\n    constructor() {\n`;
+        fields.forEach(field => {
+            const settingName = field.name.charAt(0).toLowerCase() + field.name.slice(1);
+            const defaultValue = this.getDefaultValueForType(field.type);
+            output += `        this._${settingName} = ${defaultValue};\n`;
+        });
+        output += `    }\n\n`;
+
+        // Add fromSettings and toSettings methods
+        output += this.generateFromSettings(parsedClass);
+        output += this.generateToSettings(parsedClass);
+
+        output += `}\n`;
+        return output;
     }
 
     private generateSettingsMetadata(parsedClass: ParsedClass): string {
@@ -219,57 +217,6 @@ export class SettingsGenerator {
             groupName: '${parsedClass.name}',
             settings: ${JSON.stringify(settings, null, 4)}
         };`;
-    }
-
-    /**
-     * Generate settings class
-     */
-    public generateSettingsClass(className: string, fields: ParsedField[]): string {
-        const imports = new Set<string>();
-        imports.add('import { Setting } from \'@cbp/config-api-types\';');
-        imports.add('import { ISettingsGroup, ISettingsMetadata } from \'../../settings.types\';');
-
-        const settingFields = fields.map(field => {
-            const { name, type, settingKey } = field;
-            const cleanType = this.cleanTypeName(type);
-            const tsType = TypeMapper.mapCSharpTypeToTypeScript(cleanType);
-            
-            // Add imports for complex types
-            if (tsType.includes('.')) {
-                const [namespace, typeName] = tsType.split('.');
-                imports.add(`import { ${typeName} } from '../${namespace}';`);
-            }
-            
-            return {
-                fieldName: name.charAt(0).toLowerCase() + name.slice(1),
-                settingType: tsType,
-                defaultValue: this.getDefaultValueForType(tsType),
-                settingKey: settingKey
-            };
-        });
-
-        const importStatements = Array.from(imports).join('\n');
-        const fieldDeclarations = settingFields.map(field => 
-            `    private _${field.fieldName}: ${field.settingType} = ${field.defaultValue};`
-        ).join('\n');
-
-        const getterSetters = settingFields.map(field => `
-    get ${field.fieldName}(): ${field.settingType} {
-        return this._${field.fieldName};
-    }
-
-    set ${field.fieldName}(value: ${field.settingType}) {
-        this._${field.fieldName} = value;
-    }`
-        ).join('\n');
-
-        return `${importStatements}
-
-export class ${className} {
-${fieldDeclarations}
-
-${getterSetters}
-}`;
     }
 
     private generateJsonSettingClass(classInfo: ParsedClass | (ParsedField & { fields?: ParsedField[] })): string {
@@ -504,5 +451,48 @@ class JsonSettingsManager extends JsonSetting<${configType}> {
         }
 
         return typeMap[type] || 'object';
+    }
+
+    private getSettingType(tsType: string): string {
+        if (tsType.includes('[]')) return 'array';
+        if (tsType === 'boolean') return 'boolean';
+        if (tsType === 'number') return 'number';
+        return 'string';
+    }
+
+    private getSettingDataType(tsType: string): string {
+        if (tsType.includes('[]')) return 'json';
+        if (tsType === 'boolean') return 'boolean';
+        if (tsType === 'number') return 'number';
+        return 'string';
+    }
+
+    private getSettingValue(field: ParsedField): string {
+        const tsType = this.typeMapper.mapType(field.type);
+        const fieldName = `this._${field.name.charAt(0).toLowerCase() + field.name.slice(1)}`;
+        
+        if (tsType.includes('[]')) {
+            return `JSON.stringify(${fieldName})`;
+        }
+        if (tsType === 'boolean' || tsType === 'number') {
+            return `${fieldName}.toString()`;
+        }
+        return fieldName;
+    }
+
+    private getSettingParser(field: ParsedField): string {
+        const tsType = this.typeMapper.mapType(field.type);
+        const settingName = `${field.name}Setting`;
+        
+        if (tsType.includes('[]')) {
+            return `JSON.parse(${settingName}.value)`;
+        }
+        if (tsType === 'boolean') {
+            return `${settingName}.value === 'true'`;
+        }
+        if (tsType === 'number') {
+            return `parseFloat(${settingName}.value)`;
+        }
+        return `${settingName}.value`;
     }
 }

@@ -5,6 +5,7 @@ import {
   Switch,
   TextField,
   Grid,
+  Typography
 } from '@mui/material';
 import { FinancialCore } from '../../../../types/ClientConfiguration/models/FinancialCores/FinancialCore';
 import { FinancialCoreTypes } from '../../../../types/ClientConfiguration/models/FinancialCores/FinancialCoreTypes';
@@ -18,7 +19,17 @@ export const BaseConfigurationSettings: React.FC = () => {
       ModelClass={FinancialCore}
     >
       {({ settings, onStringChange, onBooleanChange, onNumberChange }) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Box sx={{ 
+          borderTop: 1,
+          borderColor: 'divider',
+          pt: 2,
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: 3 
+        }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Financial Core Base Configuration
+          </Typography>
           <Grid container spacing={2}>
             {/* Core Type Selection */}
             <Grid item xs={12}>

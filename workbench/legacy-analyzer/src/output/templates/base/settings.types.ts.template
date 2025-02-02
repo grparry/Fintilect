@@ -21,6 +21,35 @@ export interface SettingGroup {
 }
 
 /**
+ * Service prefix configuration for settings
+ */
+export interface ServicePrefixConfig {
+    prefix: string;            // e.g., 'PsiServices'
+    separator: string;         // e.g., '.'
+    includeGroupName: boolean; // Whether to include group name in key
+}
+
+/**
+ * Settings pattern configuration
+ */
+export interface SettingsPattern {
+    type: 'json' | 'primitive';
+    validation: 'strict' | 'lenient';
+    errorHandling: 'throw' | 'log';
+    prefixing: ServicePrefixConfig;
+}
+
+/**
+ * Settings dependency tracking
+ */
+export interface SettingsDependency {
+    source: string;           // Source setting
+    target: string;          // Target setting
+    type: 'requires' | 'configures' | 'validates';
+    validation?: string[];   // Validation rules
+}
+
+/**
  * Model Types
  * These types define the contract for our generated settings classes.
  * ISettingsGroup is implemented by the class, while ISettingsMetadata
@@ -45,18 +74,35 @@ export interface ISettingsGroup {
 
 /**
  * Type for the static metadata property on settings classes
- * Example usage:
- * class MySettings implements ISettingsGroup {
- *     static readonly metadata: ISettingsMetadata = { ... };
- * }
  */
 export interface ISettingsMetadata {
-    readonly groupName: string;
-    readonly settings: {
-        readonly [key: string]: {
-            readonly key: string;
-            readonly type: string;
-            readonly required: boolean;
-        };
-    };
+    /**
+     * The group name for this settings class
+     */
+    groupName: string;
+
+    /**
+     * Service prefix configuration
+     */
+    servicePrefix?: ServicePrefixConfig;
+
+    /**
+     * Settings pattern to follow
+     */
+    pattern?: SettingsPattern;
+
+    /**
+     * Dependencies between settings
+     */
+    dependencies?: SettingsDependency[];
+
+    /**
+     * Validation rules for settings
+     */
+    validation?: Record<string, any>;
+
+    /**
+     * Display configuration for UI
+     */
+    display?: Record<string, any>;
 }

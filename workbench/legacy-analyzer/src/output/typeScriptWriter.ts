@@ -33,8 +33,12 @@ export class TypeScriptWriter {
      * Write TypeScript type definition
      */
     public async writeTypeDefinition(parsedClass: ParsedClass, sourceFilePath: string): Promise<void> {
+        // First get the output directory for this class
+        const relativePath = this.pathResolver.getTypeOutputPath(parsedClass);
+        const outputDir = path.dirname(relativePath);
+        
         // Register the class and its fields
-        this.registerType(parsedClass.name, parsedClass.namespace);
+        this.registerType(parsedClass.name, parsedClass.namespace, outputDir);
         for (const field of parsedClass.fields) {
             if (!this.isPrimitiveType(field.type)) {
                 // Handle generic collections
@@ -42,15 +46,14 @@ export class TypeScriptWriter {
                 if (genericMatch) {
                     const [_, genericType, innerType] = genericMatch;
                     if (!this.isPrimitiveType(innerType)) {
-                        this.registerType(innerType, parsedClass.namespace);
+                        this.registerType(innerType, parsedClass.namespace, outputDir);
                     }
                 } else {
-                    this.registerType(field.type, parsedClass.namespace);
+                    this.registerType(field.type, parsedClass.namespace, outputDir);
                 }
             }
         }
         
-        const relativePath = this.pathResolver.getTypeOutputPath(parsedClass);
         const outputPath = path.join(this.fileService.getOutputDir(), relativePath);
         const imports = this.generateImports(parsedClass);
         const configInterface = this.generateInterface(parsedClass);
@@ -181,6 +184,54 @@ ${properties.map(prop => {
 }`;
     }
 
+    private createParsedClass(type: string, defaultNamespace: string): ParsedClass {
+        // Clean the type name and handle markdown-style links
+        type = type.replace(/\[(.*?)\](?:\(.*?\))?/g, '$1');
+        
+        // Split into namespace and name if present
+        const parts = type.split('.');
+        const name = parts[parts.length - 1];
+        const namespace = parts.length > 1 ? parts.slice(0, -1).join('.') : defaultNamespace;
+        
+        return {
+            name,
+            namespace,
+            type: 'class',
+            fields: [],
+            enums: []
+        };
+    }
+
+    private getImportPath(fromClass: ParsedClass, type: string): string | undefined {
+        // First check if we have type information in the registry
+        const typeInfo = this.typeMapper.findTypeInfo(type);
+        if (typeInfo) {
+            // Get the directory path ready for import
+            const outputDirectory = (typeInfo.directory || '')
+                .replace(/^ClientConfigurationModels\/?/, '')
+                .replace(/\./g, '/');
+
+            // Create a ParsedClass with all available information
+            const toClass: ParsedClass = {
+                name: typeInfo.typeName,
+                namespace: typeInfo.namespace,
+                type: 'class',
+                fields: [],
+                enums: [],
+                outputDirectory,
+                // Add any other available type information
+                ...typeInfo
+            };
+            return this.pathResolver.getRelativeImportPath(fromClass, toClass);
+        }
+
+        // Fallback to creating a minimal ParsedClass if type not found in registry
+        return this.pathResolver.getRelativeImportPath(
+            fromClass, 
+            this.createParsedClass(type, fromClass.namespace)
+        );
+    }
+
     private generateClassProperties(fields: ParsedField[]): string {
         let properties = '';
         for (const field of fields) {
@@ -248,7 +299,7 @@ ${properties.map(prop => {
                 const typeParams = this.extractTypeParameters(field.type);
                 for (const innerType of typeParams) {
                     if (!this.isPrimitiveType(innerType)) {
-                        const importPath = this.pathResolver.getRelativeImportPath(mockClass, innerType);
+                        const importPath = this.getImportPath(mockClass, innerType);
                         if (importPath) {
                             // Get the simple type name (without namespace)
                             const simpleType = innerType.split('.').pop() || innerType;
@@ -325,7 +376,7 @@ ${properties.map(prop => {
                 const [namespace, typeName] = type.split('.');
                 // Skip if the type name itself is primitive
                 if (!this.isPrimitiveType(typeName)) {
-                    const importPath = this.pathResolver.getRelativeImportPath(parsedClass, type);
+                    const importPath = this.getImportPath(parsedClass, type);
                     if (importPath) {
                         imports.add(`import { ${typeName} } from '${importPath}';`);
                     }
@@ -340,7 +391,7 @@ ${properties.map(prop => {
                 const typeParams = this.extractTypeParameters(type);
                 for (const innerType of typeParams) {
                     if (!this.isPrimitiveType(innerType)) {
-                        const importPath = this.pathResolver.getRelativeImportPath(parsedClass, innerType);
+                        const importPath = this.getImportPath(parsedClass, innerType);
                         if (importPath) {
                             // Get the simple type name (without namespace)
                             const simpleType = innerType.split('.').pop() || innerType;
@@ -356,7 +407,7 @@ ${properties.map(prop => {
             // Handle regular types (skip if primitive)
             const simpleType = type.split('.').pop() || type;
             if (!this.isPrimitiveType(simpleType)) {
-                const importPath = this.pathResolver.getRelativeImportPath(parsedClass, type);
+                const importPath = this.getImportPath(parsedClass, type);
                 if (importPath) {
                     imports.add(`import { ${simpleType} } from '${importPath}';`);
                 }

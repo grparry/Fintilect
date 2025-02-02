@@ -5,11 +5,13 @@ import {
   FormControlLabel,
   Switch,
   Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  Box,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemButton
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { CoreSettingsComponent } from './CoreSettingsComponent';
 import { Corelation } from '../../../../types/ClientConfiguration/models/FinancialCores/Corelation';
 import { PullCreditSettings } from '../../../../types/ClientConfiguration/models/FinancialCores/CorelationSettings/PullCreditSettings';
@@ -40,10 +42,10 @@ import CardTypeSettingsSection from './sections/CardTypeSettingsSection';
 import PersonTypeSettingsSection from './sections/PersonTypeSettingsSection';
 
 const CorelationSettings: React.FC = () => {
-  const [expanded, setExpanded] = useState<string | false>('basic');
+  const [selectedSection, setSelectedSection] = useState<string>('basic');
 
-  const handleAccordionChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
+  const handleListItemClick = (panel: string) => {
+    setSelectedSection(panel);
   };
 
   return (
@@ -145,52 +147,146 @@ const CorelationSettings: React.FC = () => {
         };
 
         return (
-          <Grid container spacing={3}>
-            {/* Account Type Settings Section */}
-            <Grid item xs={12}>
-              <AccountTypeSettingsSection
-                settings={settings.accountType}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleAccountTypeSettingsChange}
-              />
-            </Grid>
+          <Box sx={{ display: 'flex', height: '100%', mt: -1 }}>
+            {/* Left Sidebar */}
+            <Box sx={{ 
+              width: 240, 
+              flexShrink: 0,
+              bgcolor: 'background.paper',
+              borderRight: 1,
+              borderColor: 'divider',
+              overflowY: 'auto',
+              maxHeight: 'calc(100vh - 180px)'
+            }}>
+              <List component="nav" dense sx={{ p: 0 }}>
+                {[
+                  { id: 'account-type', label: 'Account Type Settings' },
+                  { id: 'allowed-categories', label: 'Allowed Person Link Categories' },
+                  { id: 'application', label: 'Application Settings' },
+                  { id: 'basic', label: 'Basic Settings' },
+                  { id: 'card-type', label: 'Card Type Settings' },
+                  { id: 'channel', label: 'Channel Settings' },
+                  { id: 'draft-lookup', label: 'Draft Lookup Settings' },
+                  { id: 'enrollment', label: 'Enrollment Settings' },
+                  { id: 'features', label: 'Feature Toggles' },
+                  { id: 'funding', label: 'Funding Settings' },
+                  { id: 'identification', label: 'Identification Settings' },
+                  { id: 'loan-origination', label: 'Loan Origination Settings' },
+                  { id: 'loss-screening', label: 'Loss Screening Settings' },
+                  { id: 'manual-approval', label: 'Manual Approval Notes' },
+                  { id: 'notes', label: 'Notes Settings' },
+                  { id: 'person-type', label: 'Person Type Settings' },
+                  { id: 'pull-credit', label: 'Pull Credit Settings' },
+                  { id: 'search-limits', label: 'Search Limits' }
+                ].map(({ id, label }) => (
+                  <ListItem 
+                    key={id}
+                    disablePadding
+                    sx={{
+                      borderBottom: '1px solid',
+                      borderColor: 'divider',
+                      '&:first-of-type': {
+                        borderTop: '1px solid',
+                        borderColor: 'divider',
+                      }
+                    }}
+                  >
+                    <ListItemButton
+                      selected={selectedSection === id}
+                      onClick={() => handleListItemClick(id)}
+                      sx={{
+                        py: 1,
+                        '&.Mui-selected': {
+                          bgcolor: 'primary.main',
+                          color: 'primary.contrastText',
+                          '&:hover': {
+                            bgcolor: 'primary.dark',
+                          }
+                        }
+                      }}
+                    >
+                      <ListItemText 
+                        primary={label}
+                        primaryTypographyProps={{
+                          variant: 'body2',
+                          sx: { 
+                            fontWeight: selectedSection === id ? 500 : 400
+                          }
+                        }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
 
-            {/* Allowed Person Link Categories */}
-            <Grid item xs={12}>
-              <Accordion expanded={expanded === 'categories'} onChange={handleAccordionChange('categories')}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Allowed Person Link Categories</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <TextField
-                    fullWidth
-                    label="Inquiry Allowed Person Link Categories"
-                    value={settings.inquiryAllowedPersonLinkCategories.join(', ')}
-                    onChange={(e) => onStringChange('inquiryAllowedPersonLinkCategories', e.target.value)}
-                    helperText="Enter categories separated by commas"
+            {/* Main Content Area */}
+            <Box sx={{ 
+              flexGrow: 1, 
+              display: 'flex', 
+              flexDirection: 'column',
+              maxHeight: 'calc(100vh - 180px)'
+            }}>
+              {selectedSection && (
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    py: 1,
+                    px: 2,
+                    mb: 0,
+                    borderBottom: 1,
+                    borderColor: 'divider',
+                    bgcolor: 'background.paper',
+                    flexShrink: 0
+                  }}
+                >
+                  {selectedSection === 'account-type' && 'Account Type Settings'}
+                  {selectedSection === 'allowed-categories' && 'Allowed Person Link Categories'}
+                  {selectedSection === 'application' && 'Application Settings'}
+                  {selectedSection === 'basic' && 'Basic Settings'}
+                  {selectedSection === 'card-type' && 'Card Type Settings'}
+                  {selectedSection === 'channel' && 'Channel Settings'}
+                  {selectedSection === 'draft-lookup' && 'Draft Lookup Settings'}
+                  {selectedSection === 'enrollment' && 'Enrollment Settings'}
+                  {selectedSection === 'features' && 'Feature Toggles'}
+                  {selectedSection === 'funding' && 'Funding Settings'}
+                  {selectedSection === 'identification' && 'Identification Settings'}
+                  {selectedSection === 'loan-origination' && 'Loan Origination Settings'}
+                  {selectedSection === 'loss-screening' && 'Loss Screening Settings'}
+                  {selectedSection === 'manual-approval' && 'Manual Approval Notes'}
+                  {selectedSection === 'notes' && 'Notes Settings'}
+                  {selectedSection === 'person-type' && 'Person Type Settings'}
+                  {selectedSection === 'pull-credit' && 'Pull Credit Settings'}
+                  {selectedSection === 'search-limits' && 'Search Limits'}
+                </Typography>
+              )}
+              <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 2 }}>
+                {selectedSection === 'account-type' && (
+                  <AccountTypeSettingsSection
+                    settings={settings.accountType}
+                    onChange={handleAccountTypeSettingsChange}
                   />
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-
-            {/* Application Settings Section */}
-            <Grid item xs={12}>
-              <ApplicationSettingsSection
-                settings={settings.application}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleApplicationSettingsChange}
-              />
-            </Grid>
-
-            {/* Basic Settings */}
-            <Grid item xs={12}>
-              <Accordion expanded={expanded === 'basic'} onChange={handleAccordionChange('basic')}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Basic Settings</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
+                )}
+                {selectedSection === 'allowed-categories' && (
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Inquiry Allowed Person Link Categories"
+                        value={settings.inquiryAllowedPersonLinkCategories.join(', ')}
+                        onChange={(e) => onStringChange('inquiryAllowedPersonLinkCategories', e.target.value)}
+                        helperText="Enter categories separated by commas"
+                      />
+                    </Grid>
+                  </Grid>
+                )}
+                {selectedSection === 'application' && (
+                  <ApplicationSettingsSection
+                    settings={settings.application}
+                    onChange={handleApplicationSettingsChange}
+                  />
+                )}
+                {selectedSection === 'basic' && (
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                       <TextField
@@ -226,27 +322,14 @@ const CorelationSettings: React.FC = () => {
                       />
                     </Grid>
                   </Grid>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-
-            {/* Card Type Settings Section */}
-            <Grid item xs={12}>
-              <CardTypeSettingsSection
-                settings={settings.cardType}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleCardTypeSettingsChange}
-              />
-            </Grid>
-
-            {/* Channel Settings */}
-            <Grid item xs={12}>
-              <Accordion expanded={expanded === 'channel'} onChange={handleAccordionChange('channel')}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Channel Settings</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
+                )}
+                {selectedSection === 'card-type' && (
+                  <CardTypeSettingsSection
+                    settings={settings.cardType}
+                    onChange={handleCardTypeSettingsChange}
+                  />
+                )}
+                {selectedSection === 'channel' && (
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                       <TextField
@@ -273,37 +356,20 @@ const CorelationSettings: React.FC = () => {
                       />
                     </Grid>
                   </Grid>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-
-            {/* Draft Lookup Settings Section */}
-            <Grid item xs={12}>
-              <DraftLookupSection
-                settings={settings.draftLookup}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleDraftLookupChange}
-              />
-            </Grid>
-
-            {/* Enrollment Settings Section */}
-            <Grid item xs={12}>
-              <EnrollmentSection
-                settings={settings.enrollment}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleEnrollmentChange}
-              />
-            </Grid>
-
-            {/* Feature Toggles */}
-            <Grid item xs={12}>
-              <Accordion expanded={expanded === 'features'} onChange={handleAccordionChange('features')}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Feature Toggles</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
+                )}
+                {selectedSection === 'draft-lookup' && (
+                  <DraftLookupSection
+                    settings={settings.draftLookup}
+                    onChange={handleDraftLookupChange}
+                  />
+                )}
+                {selectedSection === 'enrollment' && (
+                  <EnrollmentSection
+                    settings={settings.enrollment}
+                    onChange={handleEnrollmentChange}
+                  />
+                )}
+                {selectedSection === 'features' && (
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <FormControlLabel
@@ -328,135 +394,90 @@ const CorelationSettings: React.FC = () => {
                       />
                     </Grid>
                   </Grid>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-
-            {/* Funding Settings Section */}
-            <Grid item xs={12}>
-              <FundingSection
-                settings={settings.funding}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleFundingChange}
-              />
-            </Grid>
-
-            {/* Identification Settings Section */}
-            <Grid item xs={12}>
-              <IdentificationSection
-                settings={settings.identification}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleIdentificationChange}
-              />
-            </Grid>
-
-            {/* Loan Origination Settings */}
-            <Grid item xs={12}>
-              <Accordion expanded={expanded === 'loan-origination'} onChange={handleAccordionChange('loan-origination')}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Loan Origination Settings</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <LoanOriginationSettingsSection
-                    settings={settings.loanOriginationSettings}
-                    onChange={handleLoanOriginationSettingsChange}
+                )}
+                {selectedSection === 'funding' && (
+                  <FundingSection
+                    settings={settings.funding}
+                    onChange={handleFundingChange}
                   />
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-
-            {/* Loss Screening Settings Section */}
-            <Grid item xs={12}>
-              <LossScreeningSettingsSection
-                settings={settings.lossScreeningSettings}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleLossScreeningSettingsChange}
-              />
-            </Grid>
-
-            {/* Manual Approval Notes */}
-            <Grid item xs={12}>
-              <Accordion expanded={expanded === 'notes'} onChange={handleAccordionChange('notes')}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Manual Approval Notes</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <TextField
-                    fullWidth
-                    multiline
-                    rows={4}
-                    label="Manual Approval Note JSON Dictionary"
-                    value={settings.manualApprovalNoteJsonStringDictionary}
-                    onChange={(e) => onStringChange('manualApprovalNoteJsonStringDictionary', e.target.value)}
+                )}
+                {selectedSection === 'identification' && (
+                  <IdentificationSection
+                    settings={settings.identification}
+                    onChange={handleIdentificationChange}
                   />
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-
-            {/* Notes Settings Section */}
-            <Grid item xs={12}>
-              <NotesSection
-                settings={settings.notes}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handleNotesChange}
-              />
-            </Grid>
-
-            {/* Person Type Settings Section */}
-            <Grid item xs={12}>
-              <PersonTypeSettingsSection
-                settings={settings.personType}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handlePersonTypeSettingsChange}
-              />
-            </Grid>
-
-            {/* Pull Credit Settings Section */}
-            <Grid item xs={12}>
-              <PullCreditSettingsSection
-                settings={settings.pullCreditSettings}
-                expanded={expanded}
-                onExpand={handleAccordionChange}
-                onChange={handlePullCreditSettingsChange}
-              />
-            </Grid>
-
-            {/* Search Limits */}
-            <Grid item xs={12}>
-              <Accordion expanded={expanded === 'searchLimits'} onChange={handleAccordionChange('searchLimits')}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Search Limits</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        type="number"
-                        label="Max Return Search Limit"
-                        value={settings.maxReturnSearchLimit}
-                        onChange={(e) => onNumberChange('maxReturnSearchLimit', e.target.value)}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        type="number"
-                        label="Existing Address Search Results Return Limit"
-                        value={settings.existingAddressSearchResultsReturnLimit}
-                        onChange={(e) => onNumberChange('existingAddressSearchResultsReturnLimit', e.target.value)}
-                      />
+                )}
+                {selectedSection === 'loan-origination' && (
+                  <Grid item xs={12}>
+                    <LoanOriginationSettingsSection
+                      settings={settings.loanOriginationSettings}
+                      onChange={handleLoanOriginationSettingsChange}
+                    />
+                  </Grid>
+                )}
+                {selectedSection === 'loss-screening' && (
+                  <LossScreeningSettingsSection
+                    settings={settings.lossScreeningSettings}
+                    onChange={handleLossScreeningSettingsChange}
+                  />
+                )}
+                {selectedSection === 'manual-approval' && (
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={4}
+                      label="Manual Approval Note JSON Dictionary"
+                      value={settings.manualApprovalNoteJsonStringDictionary}
+                      onChange={(e) => onStringChange('manualApprovalNoteJsonStringDictionary', e.target.value)}
+                    />
+                  </Grid>
+                )}
+                {selectedSection === 'notes' && (
+                  <NotesSection
+                    settings={settings.notes}
+                    onChange={handleNotesChange}
+                  />
+                )}
+                {selectedSection === 'person-type' && (
+                  <PersonTypeSettingsSection
+                    settings={settings.personType}
+                    onChange={handlePersonTypeSettingsChange}
+                  />
+                )}
+                {selectedSection === 'pull-credit' && (
+                  <PullCreditSettingsSection
+                    settings={settings.pullCreditSettings}
+                    onChange={handlePullCreditSettingsChange}
+                  />
+                )}
+                {selectedSection === 'search-limits' && (
+                  <Grid item xs={12}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          type="number"
+                          label="Max Return Search Limit"
+                          value={settings.maxReturnSearchLimit}
+                          onChange={(e) => onNumberChange('maxReturnSearchLimit', e.target.value)}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          type="number"
+                          label="Existing Address Search Results Return Limit"
+                          value={settings.existingAddressSearchResultsReturnLimit}
+                          onChange={(e) => onNumberChange('existingAddressSearchResultsReturnLimit', e.target.value)}
+                        />
+                      </Grid>
                     </Grid>
                   </Grid>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-          </Grid>
+                )}
+              </Box>
+            </Box>
+          </Box>
         );
       }}
     </CoreSettingsComponent>

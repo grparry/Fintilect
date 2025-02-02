@@ -26,7 +26,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`financial-cores-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
     </div>
   );
 }
@@ -47,53 +47,53 @@ export default function FinancialCoresLanding() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Typography variant="h4" gutterBottom>
-        Financial Cores Settings
-      </Typography>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs
-          value={value}
-          onChange={handleTabChange}
-          aria-label="financial cores settings tabs"
-          variant="scrollable"
-          scrollButtons="auto"
-        >
-          <Tab
-            label="Base Configuration"
-            value="base"
-            id="financial-cores-tab-base"
-          />
-          <Tab
-            label="Corelation"
-            value="corelation"
-            id="financial-cores-tab-corelation"
-          />
-          <Tab
-            label="Symitar"
-            value="symitar"
-            id="financial-cores-tab-symitar"
-          />
-          <Tab
-            label="Summit"
-            value="summit"
-            id="financial-cores-tab-summit"
-          />
-          <Tab
-            label="PSI Core"
-            value="psi"
-            id="financial-cores-tab-psi"
-          />
-          <Tab
-            label="DNA"
-            value="dna"
-            id="financial-cores-tab-dna"
-          />
-          <Tab
-            label="EPL"
-            value="epl"
-            id="financial-cores-tab-epl"
-          />
-        </Tabs>
+      <Box>
+        <Typography variant="h5" sx={{ mb: 1 }}>Financial Cores Settings</Typography>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+          <Tabs
+            value={value}
+            onChange={handleTabChange}
+            aria-label="financial cores settings tabs"
+            variant="scrollable"
+            scrollButtons="auto"
+          >
+            <Tab
+              label="BASE CONFIGURATION"
+              value="base"
+              id="financial-cores-tab-base"
+            />
+            <Tab
+              label="CORELATION"
+              value="corelation"
+              id="financial-cores-tab-corelation"
+            />
+            <Tab
+              label="SYMITAR"
+              value="symitar"
+              id="financial-cores-tab-symitar"
+            />
+            <Tab
+              label="SUMMIT"
+              value="summit"
+              id="financial-cores-tab-summit"
+            />
+            <Tab
+              label="PSI CORE"
+              value="psi"
+              id="financial-cores-tab-psi"
+            />
+            <Tab
+              label="DNA"
+              value="dna"
+              id="financial-cores-tab-dna"
+            />
+            <Tab
+              label="EPL"
+              value="epl"
+              id="financial-cores-tab-epl"
+            />
+          </Tabs>
+        </Box>
       </Box>
       <TabPanel value={value} index="base">
         <BaseConfigurationSettings />

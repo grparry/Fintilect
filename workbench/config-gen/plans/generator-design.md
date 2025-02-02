@@ -134,8 +134,6 @@ export class {{className}} extends EmergeConfigSection<{{type.name}}> {
 }
 ```
 
-For details on the registration flow and navigation integration, see `component-registration-flow.md`.
-
 #### Metadata Template
 ```typescript
 // templates/metadata.hbs

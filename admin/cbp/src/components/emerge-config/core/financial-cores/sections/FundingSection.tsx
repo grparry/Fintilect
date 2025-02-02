@@ -3,27 +3,19 @@ import {
   Grid,
   TextField,
   Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  Paper,
   FormControlLabel,
   Switch,
-  Paper,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Funding } from '../../../../../types/ClientConfiguration/models/FinancialCores/CorelationSettings/Funding';
 
 interface FundingSectionProps {
   settings: Funding;
-  expanded: string | false;
-  onExpand: (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
   onChange: (settings: Funding) => void;
 }
 
 const FundingSection: React.FC<FundingSectionProps> = ({
   settings,
-  expanded,
-  onExpand,
   onChange
 }) => {
   const handleChange = (field: keyof Funding, value: string | boolean) => {
@@ -34,18 +26,18 @@ const FundingSection: React.FC<FundingSectionProps> = ({
   };
 
   return (
-    <Accordion 
-      expanded={expanded === 'funding'} 
-      onChange={onExpand('funding')}
-    >
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Funding Settings</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Grid container spacing={2}>
-          {/* Enable/Disable Funding */}
-          <Grid item xs={12}>
-            <Paper elevation={0} sx={{ p: 2, bgcolor: 'background.default' }}>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Paper elevation={0} sx={{ p: 2, bgcolor: 'background.default' }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="subtitle2" gutterBottom>
+                Funding Settings
+              </Typography>
+            </Grid>
+
+            {/* Enable/Disable Funding */}
+            <Grid item xs={12}>
               <FormControlLabel
                 control={
                   <Switch
@@ -58,12 +50,10 @@ const FundingSection: React.FC<FundingSectionProps> = ({
               <Typography variant="caption" display="block" color="textSecondary" sx={{ ml: 2 }}>
                 Enable or disable funding functionality
               </Typography>
-            </Paper>
-          </Grid>
+            </Grid>
 
-          {/* Account Information */}
-          <Grid item xs={12}>
-            <Paper elevation={0} sx={{ p: 2, bgcolor: 'background.default' }}>
+            {/* Account Information */}
+            <Grid item xs={12}>
               <Typography variant="subtitle2" gutterBottom>
                 Account Information
               </Typography>
@@ -105,11 +95,11 @@ const FundingSection: React.FC<FundingSectionProps> = ({
                   />
                 </Grid>
               </Grid>
-            </Paper>
+            </Grid>
           </Grid>
-        </Grid>
-      </AccordionDetails>
-    </Accordion>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -3,27 +3,20 @@ import {
   Grid,
   TextField,
   Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   IconButton,
   Tooltip,
+  Paper,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ClearIcon from '@mui/icons-material/Clear';
 import { DraftLookup } from '../../../../../types/ClientConfiguration/models/FinancialCores/CorelationSettings/DraftLookup';
 
 interface DraftLookupSectionProps {
   settings: DraftLookup;
-  expanded: string | false;
-  onExpand: (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
   onChange: (settings: DraftLookup) => void;
 }
 
 const DraftLookupSection: React.FC<DraftLookupSectionProps> = ({
   settings,
-  expanded,
-  onExpand,
   onChange
 }) => {
   const handleChange = (value: string) => {
@@ -45,52 +38,46 @@ const DraftLookupSection: React.FC<DraftLookupSectionProps> = ({
   };
 
   return (
-    <Accordion 
-      expanded={expanded === 'draftLookup'} 
-      onChange={onExpand('draftLookup')}
-    >
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Draft Lookup Settings</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Typography variant="subtitle2" gutterBottom>
-              Account Number Configuration
-            </Typography>
-          </Grid>
-
-          {/* Account Number Length */}
-          <Grid item xs={12} md={6}>
-            <Grid container spacing={1} alignItems="center">
-              <Grid item xs>
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Account Number Length"
-                  value={settings.accountNumberLength ?? ''}
-                  onChange={(e) => handleChange(e.target.value)}
-                  helperText="Length of account numbers for draft lookup (optional)"
-                  InputProps={{
-                    endAdornment: settings.accountNumberLength !== null && (
-                      <Tooltip title="Clear value">
-                        <IconButton
-                          size="small"
-                          onClick={handleClear}
-                          sx={{ mr: 1 }}
-                        >
-                          <ClearIcon />
-                        </IconButton>
-                      </Tooltip>
-                    )
-                  }}
-                />
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Paper elevation={0} sx={{ p: 2, bgcolor: 'background.default' }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="subtitle2" gutterBottom>
+                Account Number Configuration
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Grid container spacing={1} alignItems="center">
+                <Grid item xs>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Account Number Length"
+                    value={settings.accountNumberLength ?? ''}
+                    onChange={(e) => handleChange(e.target.value)}
+                    helperText="Length of account numbers for draft lookup (optional)"
+                    InputProps={{
+                      endAdornment: settings.accountNumberLength !== null && (
+                        <Tooltip title="Clear value">
+                          <IconButton
+                            size="small"
+                            onClick={handleClear}
+                            sx={{ mr: 1 }}
+                          >
+                            <ClearIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )
+                    }}
+                  />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </AccordionDetails>
-    </Accordion>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 };
 

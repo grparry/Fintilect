@@ -3,24 +3,24 @@ import logger from '../utils/logger';
 import { ParsedClass, ParsedField, ParsedGenericParameter } from './types';
 import { DocumentationParser } from './documentationParser';
 import { AttributeParser } from './attributeParser';
+import { PathResolver } from '../output/pathSystem/pathResolver';
+import path from 'path';
 
 export class ClassParser {
-  public static async parseClass(node: Parser.SyntaxNode): Promise<ParsedClass> {
-    const parsedClass = await this.createEmptyClass(node);
+  public static async parseClass(node: Parser.SyntaxNode, filePath: string, pathResolver: PathResolver): Promise<ParsedClass> {
+    const parsedClass = await this.createEmptyClass(node, filePath, pathResolver);
     
     // Parse fields
     const propertyNodes = node.descendantsOfType('property_declaration');
     for (const propertyNode of propertyNodes) {
-      const field = await this.parseField(propertyNode);
-      if (field) {
-        parsedClass.fields.push(field);
-      }
+      parsedClass.fields.push(this.parseField(propertyNode));
     }
 
     return parsedClass;
   }
 
-  public static async createEmptyClass(node: Parser.SyntaxNode): Promise<ParsedClass> {
+  public static async createEmptyClass(node: Parser.SyntaxNode, filePath: string, pathResolver: PathResolver): Promise<ParsedClass> {
+    logger.debug(`Creating empty class for node: ${node.text}`);
     const nameNode = node.childForFieldName('name');
     if (!nameNode) {
       throw new Error('Class declaration missing name');
@@ -76,8 +76,38 @@ export class ClassParser {
       baseClass,
       interfaces,
       genericParameters,
-      namespace
+      namespace,
+      outputDirectory: namespace ? this.getOutputDirectory(namespace, filePath) : undefined
     };
+  }
+
+  private static getOutputDirectory(namespace: string, filePath: string): string {
+    // First try to get directory from namespace
+    const parts = namespace.split('.');
+    const configIndex = parts.findIndex(part => 
+      part === 'ClientConfigurationModels'
+    );
+    
+    if (configIndex !== -1 && configIndex < parts.length - 1) {
+      // Get subdirectory parts after ClientConfigurationModels from namespace
+      const subDirParts = parts.slice(configIndex + 1);
+      return subDirParts.join('/');
+    }
+    
+    // If no subdirectory in namespace, try to get it from file path
+    const filePathParts = filePath.split('/');
+    const modelsDirIndex = filePathParts.findIndex(part => 
+      part === 'Psi.Models.ClientConfigurationModels'
+    );
+    
+    if (modelsDirIndex !== -1 && modelsDirIndex < filePathParts.length - 2) {
+      // Get subdirectory parts after Psi.Models.ClientConfigurationModels from file path
+      // -2 because we want to exclude the filename itself
+      const subDirParts = filePathParts.slice(modelsDirIndex + 1, -1);
+      return subDirParts.join('/');
+    }
+    
+    return '';
   }
 
   private static async parseGenericParameters(node: Parser.SyntaxNode): Promise<ParsedGenericParameter[]> {

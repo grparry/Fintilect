@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "../dist/models",
+    "rootDir": ".",
+    "tsBuildInfoFile": "../dist/models/.tsbuildinfo"
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}

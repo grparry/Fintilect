@@ -159,35 +159,39 @@ export function CoreSettingsComponent<T extends ISettingsGroup>({
     });
   };
 
-  if (loading) {
-    return <Typography>Loading {title.toLowerCase()} settings...</Typography>;
-  }
-
-  if (error) {
-    return <Typography color="error">{error}</Typography>;
-  }
-
   return (
-    <Card>
-      <CardHeader title={title} />
-      <Divider />
-      <CardContent>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {children({
-            settings,
-            onBooleanChange: handleBooleanChange,
-            onNumberChange: handleNumberChange,
-            onStringChange: handleStringChange
-          })}
+    <Box sx={{ height: 'calc(100vh - 240px)', display: 'flex', flexDirection: 'column' }}>
+      <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <CardHeader
+          title={title}
+          sx={{ flexShrink: 0 }}
+        />
+        <Divider />
+        <CardContent sx={{ flex: 1, overflowY: 'auto', p: 0 }}>
+          {loading ? (
+            <Typography>Loading settings...</Typography>
+          ) : error ? (
+            <Typography color="error">{error}</Typography>
+          ) : (
+            children({
+              settings,
+              onBooleanChange: handleBooleanChange,
+              onNumberChange: handleNumberChange,
+              onStringChange: handleStringChange,
+            })
+          )}
+        </CardContent>
+        <Divider />
+        <Box sx={{ p: 2, bgcolor: 'background.paper' }}>
           <Button 
             variant="contained" 
-            onClick={handleSave} 
-            sx={{ mt: 2 }}
+            onClick={handleSave}
+            fullWidth
           >
             Save Changes
           </Button>
         </Box>
-      </CardContent>
-    </Card>
+      </Card>
+    </Box>
   );
 }

@@ -7,6 +7,7 @@ import { EnumParser } from './enumParser';
 import { ClassParser } from './classParser';
 import { ParsedClass, ParsedEnum } from './types';
 import logger from '../utils/logger';
+import { PathResolver } from '../output/pathSystem/pathResolver';
 
 export class CSharpParser {
   private parser: Parser;
@@ -16,10 +17,12 @@ export class CSharpParser {
   private typeRegistry: Map<string, { sourceFile: string }> = new Map();
   private sourceFile: string;
   private readonly fileService: FileService;
+  private readonly pathResolver: PathResolver;
 
   constructor(fileService: FileService) {
     this.fileService = fileService;
     this.sourceFile = '';
+    this.pathResolver = new PathResolver();
   }
 
   public async init(): Promise<void> {
@@ -38,16 +41,29 @@ export class CSharpParser {
   }
 
   // Parse C# source code and extract class information
-  async parseSource(source: string, filePath: string): Promise<ParsedClass[]> {
-    await this.init();
+  public async parseSource(source: string, filePath: string): Promise<ParsedClass[]> {
+    logger.debug(`Parsing source file: ${filePath}`);
     this.sourceFile = filePath;
+    
+    // Parse the source code
     this.tree = this.parser.parse(source);
-
-    // First pass: collect all enum types
-    await this.parseTopLevelEnums(this.tree.rootNode, filePath);
-
-    // Second pass: parse class declarations
-    return this.parseClassDeclarations(this.tree.rootNode, filePath);
+    const root = this.tree.rootNode;
+    
+    // Find all class declarations
+    const classNodes = root.descendantsOfType('class_declaration');
+    const parsedClasses: ParsedClass[] = [];
+    
+    // Parse each class
+    for (const node of classNodes) {
+      try {
+        const parsedClass = await ClassParser.parseClass(node, filePath, this.pathResolver);
+        parsedClasses.push(parsedClass);
+      } catch (error) {
+        logger.error(`Error parsing class: ${error}`);
+      }
+    }
+    
+    return parsedClasses;
   }
 
   async parseFile(filePath: string): Promise<ParsedClass[]> {
@@ -66,21 +82,19 @@ export class CSharpParser {
   }
 
   async parseClassDeclarations(node: Parser.SyntaxNode, filePath: string): Promise<ParsedClass[]> {
-    const classes: ParsedClass[] = [];
-    const classNodes = this.findNodes(node, 'class_declaration');
+    const classNodes = node.descendantsOfType('class_declaration');
+    const parsedClasses: ParsedClass[] = [];
 
     for (const classNode of classNodes) {
       try {
-        const parsedClass = await ClassParser.parseClass(classNode);
-        parsedClass.namespace = this.getNamespaceFromNode(classNode);
-        parsedClass.sourceFile = filePath;
-        classes.push(parsedClass);
+        const parsedClass = await ClassParser.parseClass(classNode, filePath, this.pathResolver);
+        parsedClasses.push(parsedClass);
       } catch (error) {
-        logger.error(`Error parsing class in ${filePath}:`, error);
+        logger.error(`Error parsing class: ${error}`);
       }
     }
 
-    return classes;
+    return parsedClasses;
   }
 
   // Find nodes of a specific type in the syntax tree

@@ -8,6 +8,10 @@ module.exports = {
       tsconfig: 'tsconfig.test.json'
     }],
   },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@legacy-analyzer/(.*)$': '<rootDir>/src/$1'
+  },
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   collectCoverage: true,
   coverageDirectory: 'coverage',

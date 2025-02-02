@@ -1,8 +1,14 @@
 import { Setting } from '../settings/types';
 
+/**
+ * Base class for JSON-structured settings that provides type-safe JSON handling,
+ * validation, and error management.
+ */
 export abstract class JsonSetting<T> {
     protected abstract settingKey: string;
     protected abstract defaultValue: T;
+    protected abstract validate(value: T): void;
+    protected abstract servicePrefix?: string;
     private _value: T;
 
     constructor() {
@@ -14,25 +20,73 @@ export abstract class JsonSetting<T> {
     }
 
     set value(val: T) {
+        this.validate(val);
         this._value = val;
     }
 
+    protected getFullKey(): string {
+        return this.servicePrefix ? `${this.servicePrefix}.${this.settingKey}` : this.settingKey;
+    }
+
     toSetting(): Setting {
-        return {
-            key: this.settingKey,
-            value: JSON.stringify(this._value),
-            dataType: 'json'
-        };
+        try {
+            return {
+                key: this.getFullKey(),
+                value: JSON.stringify(this._value),
+                dataType: 'json',
+                validation: this.getValidationRules()
+            };
+        } catch (e) {
+            throw new SettingsError(
+                `Failed to serialize setting ${this.getFullKey()}`,
+                this.getFullKey(),
+                'serialize',
+                e
+            );
+        }
     }
 
     fromSetting(setting: Setting): void {
-        if (setting.key !== this.settingKey) {
-            throw new Error(`Invalid setting key. Expected ${this.settingKey}, got ${setting.key}`);
+        if (setting.key !== this.getFullKey()) {
+            throw new SettingsError(
+                `Invalid setting key. Expected ${this.getFullKey()}, got ${setting.key}`,
+                setting.key,
+                'key'
+            );
         }
         try {
-            this._value = JSON.parse(setting.value);
+            const parsed = JSON.parse(setting.value);
+            this.validate(parsed);
+            this._value = parsed;
         } catch (e) {
-            throw new Error(`Failed to parse JSON for setting ${this.settingKey}: ${e.message}`);
+            if (e instanceof SyntaxError) {
+                throw new SettingsError(
+                    `Failed to parse JSON for setting ${this.getFullKey()}`,
+                    this.getFullKey(),
+                    'parse',
+                    e
+                );
+            }
+            throw e; // Re-throw validation errors
         }
+    }
+
+    protected getValidationRules(): Record<string, any> {
+        return {};
+    }
+}
+
+/**
+ * Custom error class for settings-related errors
+ */
+export class SettingsError extends Error {
+    constructor(
+        message: string,
+        public readonly settingKey: string,
+        public readonly errorType: 'parse' | 'serialize' | 'validation' | 'key',
+        public readonly originalError?: Error
+    ) {
+        super(message);
+        this.name = 'SettingsError';
     }
 }

@@ -1,8 +1,0 @@
-[2025-01-28T00:54:39.091Z] ERROR: Legacy analyzer failed: {
-  "code": "MODULE_NOT_FOUND",
-  "requireStack": [
-    "/Users/grantparry/Documents/Fintilect/Fintilect/workbench/legacy-analyzer/src/parser/parser.ts",
-    "/Users/grantparry/Documents/Fintilect/Fintilect/workbench/legacy-analyzer/src/index.ts"
-  ]
-}
-[2025-01-28T00:55:23.781Z] ERROR: Error scanning directory /Users/grantparry/Documents/Fintilect/Fintilect/workbench/api/cbp/config/src: ENOENT: no such file or directory, scandir '/Users/grantparry/Documents/Fintilect/Fintilect/workbench/api/cbp/config/src'

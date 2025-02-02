@@ -27,9 +27,16 @@ export class OutputWriter {
     this.errorFile = options.errorFile;
     this.lockFile = path.join(this.outputDir, '.lock');
     this.isTest = false;
-    this.fileService = new FileService(this.outputDir);
+    this.fileService = new FileService(
+      this.outputDir,
+      path.join(this.outputDir, 'models'),
+      path.join(this.outputDir, 'doc')
+    );
     this.classDocWriter = new ClassDocWriter(this.fileService);
-    this.pathResolver = new PathResolver({ isTest: this.isTest });
+    this.pathResolver = new PathResolver({ 
+      isTest: this.isTest,
+      outputDirectory: path.join(this.outputDir, 'models')
+    });
     this.logger = logger;
   }
 

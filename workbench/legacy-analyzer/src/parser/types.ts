@@ -15,6 +15,7 @@ export interface ParsedClass {
   sourceFile?: string;
   baseClass?: string;
   genericParameters?: ParsedGenericParameter[];
+  outputDirectory?: string;
 }
 
 export interface ParsedField {

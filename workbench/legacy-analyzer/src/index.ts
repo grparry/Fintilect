@@ -12,12 +12,14 @@ logger.info('Starting legacy analyzer');
 // Configuration
 const config = {
   inputDir: path.join(__dirname, '../../../legacy/legacy-apis/Psi.Models.ClientConfigurationModels'),
-  outputDir: path.join(__dirname, '../../../infrastructure/models')
+  outputDir: path.join(__dirname, '../../../infrastructure'),
+  modelsDir: path.join(__dirname, '../../../infrastructure/models'),
+  docsDir: path.join(__dirname, '../../../infrastructure/doc')
 };
 
 async function analyzeDirectory(directoryPath: string, outputDir: string) {
     // Initialize services
-    const fileService = new FileService(outputDir);
+    const fileService = new FileService(outputDir, config.modelsDir, config.docsDir);
     const parser = new CSharpParser(fileService);
     const writer = new OutputWriter({
         outputDir,

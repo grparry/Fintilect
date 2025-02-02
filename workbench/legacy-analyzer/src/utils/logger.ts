@@ -26,19 +26,10 @@ class Logger {
                 console.log(`Created logs directory at: ${this.logDir}`);
             }
 
-            // Create log files if they don't exist
-            if (!fs.existsSync(this.logFile)) {
-                fs.writeFileSync(this.logFile, '', { flag: 'w' });
-                console.log(`Created combined log file at: ${this.logFile}`);
-            }
-            if (!fs.existsSync(this.errorFile)) {
-                fs.writeFileSync(this.errorFile, '', { flag: 'w' });
-                console.log(`Created error log file at: ${this.errorFile}`);
-            }
-
-            // Test write access to both files
-            fs.appendFileSync(this.logFile, '');
-            fs.appendFileSync(this.errorFile, '');
+            // Always clear and recreate log files
+            fs.writeFileSync(this.logFile, '', { flag: 'w' });
+            fs.writeFileSync(this.errorFile, '', { flag: 'w' });
+            console.log(`Cleared and initialized log files at: ${this.logDir}`);
 
             this.initialized = true;
             this.info('Logger initialized successfully');

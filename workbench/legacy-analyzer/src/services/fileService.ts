@@ -10,7 +10,11 @@ const logger2 = logger;
 export class FileService {
   public typeScriptWriter?: TypeScriptWriter;
 
-  constructor(private outputDir: string) {
+  constructor(
+    private outputDir: string,
+    private modelsDir: string,
+    private docsDir: string
+  ) {
     this.typeScriptWriter = new TypeScriptWriter(
       this,
       '',
@@ -19,16 +23,16 @@ export class FileService {
   }
 
   get outputDirectory(): string {
-    return this.outputDir;
+    return this.modelsDir;
   }
 
   public getOutputDir(): string {
-    return this.outputDir;
+    return this.modelsDir;
   }
 
   async writeMarkdown(relativePath: string, content: string): Promise<void> {
     try {
-      const fullPath = path.join(this.outputDir, relativePath);
+      const fullPath = path.join(this.docsDir, relativePath);
       await fs.mkdir(path.dirname(fullPath), { recursive: true });
       await fs.writeFile(fullPath, content);
       logger2.info(`Generated documentation: ${fullPath}`);
@@ -41,7 +45,7 @@ export class FileService {
   private async copyTemplateFile(templatePath: string, targetPath: string): Promise<void> {
     try {
       const fullTemplatePath = path.join(__dirname, '..', 'output', 'templates', templatePath);
-      const fullTargetPath = path.join(this.outputDir, targetPath);
+      const fullTargetPath = path.join(this.modelsDir, targetPath);
       
       // Ensure target directory exists
       await fs.mkdir(path.dirname(fullTargetPath), { recursive: true });
@@ -72,6 +76,12 @@ export class FileService {
         'base/types.ts'
       );
 
+      // Copy tsconfig.json template
+      await this.copyTemplateFile(
+        'tsconfig.json.template',
+        'tsconfig.json'
+      );
+
       logger2.info('Successfully copied all base templates');
     } catch (error) {
       logger2.error(`Error copying base templates: ${error}`);
@@ -81,13 +91,13 @@ export class FileService {
 
   async ensureOutputDirectory(): Promise<void> {
     try {
-      await fs.mkdir(this.outputDir, { recursive: true });
-      await fs.mkdir(path.join(this.outputDir, 'doc'), { recursive: true });
+      await fs.mkdir(this.modelsDir, { recursive: true });
+      await fs.mkdir(this.docsDir, { recursive: true });
       
       // Copy base templates after creating directories
       await this.copyBaseTemplates();
       
-      logger2.info(`Output directory initialized: ${this.outputDir}`);
+      logger2.info(`Output directory initialized: ${this.modelsDir}`);
     } catch (error) {
       logger2.error(`Error initializing output directory: ${error}`);
       throw error;
@@ -104,7 +114,7 @@ export class FileService {
       const namespaceComponents = parsedClass.namespace ? parsedClass.namespace.split('.') : [];
       
       // Create relative directory structure matching namespace
-      const outputDir = path.join(this.outputDir, 'doc', ...namespaceComponents);
+      const outputDir = path.join(this.docsDir, ...namespaceComponents);
       await fs.mkdir(outputDir, { recursive: true });
 
       // Generate markdown content using ClassDocWriter
@@ -173,7 +183,7 @@ export class FileService {
     try {
       if (typeof classOrPath === 'string' && content !== undefined) {
         // Handle the case where we pass path and content
-        const fullPath = path.join(this.outputDir, classOrPath);
+        const fullPath = path.join(this.modelsDir, classOrPath);
         await fs.mkdir(path.dirname(fullPath), { recursive: true });
         await fs.writeFile(fullPath, content);
         logger2.info(`Generated TypeScript file: ${fullPath}`);
@@ -205,7 +215,7 @@ export class FileService {
     }
 
     // Check in source directory
-    const srcPath = path.join(this.outputDir, scriptName);
+    const srcPath = path.join(this.modelsDir, scriptName);
     if (await this.fileExists(srcPath)) {
       return srcPath;
     }
