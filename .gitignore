@@ -1,2 +1,10 @@
 workspace/legacy-analyzer/logs/
 node_modules
+
+# Log files
+**/logs/
+*.log
+
+# macOS system files
+.DS_Store
+**/.DS_Store
