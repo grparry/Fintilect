@@ -1,8 +1,8 @@
 import { describe, it, expect } from '@jest/globals';
-import { TypeScriptWriter } from '@/../../src/output/typeScriptWriter';
-import { FileService } from '@/../../src/services/fileService';
-import { ParsedClass, ParsedField, ParsedEnum } from '@/../../src/parser/types';
-import { PathResolver } from '@/../../src/output/pathSystem/pathResolver';
+import { TypeScriptWriter } from 'workspace/legacy-analyzer/src/output/typeScriptWriter';
+import { FileService } from 'workspace/legacy-analyzer/src/services/fileService';
+import { ParsedClass, ParsedField, ParsedEnum } from 'workspace/legacy-analyzer/src/parser/types';
+import { PathResolver } from 'workspace/legacy-analyzer/src/output/pathSystem/pathResolver';
 import path from 'path';
 
 jest.mock('../../../src/services/fileService');

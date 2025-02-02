@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["tests/**/*", "**/*-bak.ts"],
+  "compilerOptions": {
+    "rootDir": "./src"
+  }
+}

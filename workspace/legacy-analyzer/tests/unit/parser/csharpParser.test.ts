@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeAll, afterAll, jest, beforeEach } from '@jest/globals';
 import { readFileSync } from 'fs';
-import { CSharpParser } from '@/../../src/parser/parser';
-import { FileService } from '@/../../src/services/fileService';
-import { ParsedClass, ParsedEnum } from '@/../../src/parser/types';
-import { TypeScriptWriter } from '@/../../src/output/typeScriptWriter';
+import { CSharpParser } from 'workspace/legacy-analyzer/src/parser/parser';
+import { FileService } from 'workspace/legacy-analyzer/src/services/fileService';
+import { ParsedClass, ParsedEnum } from 'workspace/legacy-analyzer/src/parser/types';
+import { TypeScriptWriter } from 'workspace/legacy-analyzer/src/output/typeScriptWriter';
 import winston from 'winston';
 import path from 'path';
 

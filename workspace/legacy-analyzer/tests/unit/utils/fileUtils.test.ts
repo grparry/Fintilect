@@ -1,4 +1,4 @@
-import { isCSharpFile, getRelativePath } from '@/../../src/utils/fileUtils';
+import { isCSharpFile, getRelativePath } from 'workspace/legacy-analyzer/src/utils/fileUtils';
 import path from 'path';
 
 describe('fileUtils', () => {
