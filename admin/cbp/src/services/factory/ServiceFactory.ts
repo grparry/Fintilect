@@ -14,9 +14,6 @@ import { IHolidayService } from '../interfaces/IHolidayService';
 import { IPermissionService } from '../interfaces/IPermissionService';
 import { IDashboardService } from '../interfaces/IDashboardService';
 import { IAuditService } from '../interfaces/IAuditService';
-import { IMemberService } from '../interfaces/IMemberService';
-import { ISettingsService } from '../interfaces/ISettingsService';
-import { IMoneyDesktopService } from '../interfaces/IMoneyDesktopService';
 import { UserService } from '../implementations/real/UserService';
 import { ClientService } from '../implementations/real/ClientService';
 import { BillPayService } from '../implementations/real/BillPayService';
@@ -32,9 +29,6 @@ import { HolidayService } from '../implementations/real/HolidayService';
 import { PermissionService } from '../implementations/real/PermissionService';
 import { DashboardService } from '../implementations/real/DashboardService';
 import { AuditService } from '../implementations/real/AuditService';
-import { MemberService } from '../implementations/real/MemberService';
-import { SettingsService } from '../implementations/real/SettingsService';
-import { MoneyDesktopService } from '../implementations/real/MoneyDesktopService';
 import { MockUserService } from '../implementations/mock/MockUserService';
 import { MockClientService } from '../implementations/mock/MockClientService';
 import { MockBillPayService } from '../implementations/mock/MockBillPayService';
@@ -50,9 +44,6 @@ import { MockHolidayService } from '../implementations/mock/MockHolidayService';
 import { MockPermissionService } from '../implementations/mock/MockPermissionService';
 import { MockDashboardService } from '../implementations/mock/MockDashboardService';
 import { MockAuditService } from '../implementations/mock/MockAuditService';
-import { MockMemberService } from '../implementations/mock/MockMemberService';
-import { MockSettingsService } from '../implementations/mock/MockSettingsService';
-import { MockMoneyDesktopService } from '../implementations/mock/MockMoneyDesktopService';
 import { getConfig, shouldUseMockService } from '../../config/api.config';
 
 // Import real service implementations
@@ -64,8 +55,7 @@ export class ServiceFactory {
   private static instance: ServiceFactory;
   private services: Map<string, IUserService | IClientService | IBillPayService | IAuthService | ISecurityService | 
     INotificationService | IExceptionService | IPayeeService | IPaymentProcessorService | IPaymentService | 
-    IReportService | IHolidayService | IPermissionService | IDashboardService | IAuditService | IMemberService |
-    ISettingsService | IMoneyDesktopService> = new Map();
+    IReportService | IHolidayService | IPermissionService | IDashboardService | IAuditService > = new Map();
   private constructor() {
     // Initialize services
     this.initializeServices();
@@ -151,21 +141,6 @@ export class ServiceFactory {
       this.services.set('audit', new MockAuditService('/api/v1/audit'));
     } else {
       this.services.set('audit', new AuditService('/api/v1/audit'));
-    }
-    if (shouldUseMockService('member')) {
-      this.services.set('member', new MockMemberService('/api/v1/members'));
-    } else {
-      this.services.set('member', new MemberService('/api/v1/members'));
-    }
-    if (shouldUseMockService('moneyDesktop')) {
-      this.services.set('moneyDesktop', new MockMoneyDesktopService('/api/money-desktop'));
-    } else {
-      this.services.set('moneyDesktop', new MoneyDesktopService('/api/money-desktop'));
-    }
-    if (shouldUseMockService('settings')) {
-      this.services.set('settings', new MockSettingsService('/api/v1/settings'));
-    } else {
-      this.services.set('settings', new SettingsService('/api/v1/settings'));
     }
   }
   getUserService(): IUserService {
@@ -273,27 +248,6 @@ export class ServiceFactory {
     }
     return service as IAuditService;
   }
-  getMemberService(): IMemberService {
-    const service = this.services.get('member');
-    if (!service) {
-      throw new Error('MemberService not initialized');
-    }
-    return service as IMemberService;
-  }
-  getMoneyDesktopService(): IMoneyDesktopService {
-    const service = this.services.get('moneyDesktop');
-    if (!service) {
-      throw new Error('MoneyDesktopService not initialized');
-    }
-    return service as IMoneyDesktopService;
-  }
-  getSettingsService(): ISettingsService {
-    const service = this.services.get('settings');
-    if (!service) {
-      throw new Error('SettingsService not initialized');
-    }
-    return service as ISettingsService;
-  }
 }
 // Export service instances
 export const userService = ServiceFactory.getInstance().getUserService();
@@ -311,6 +265,3 @@ export const holidayService = ServiceFactory.getInstance().getHolidayService();
 export const permissionService = ServiceFactory.getInstance().getPermissionService();
 export const dashboardService = ServiceFactory.getInstance().getDashboardService();
 export const auditService = ServiceFactory.getInstance().getAuditService();
-export const memberService = ServiceFactory.getInstance().getMemberService();
-export const moneyDesktopService = ServiceFactory.getInstance().getMoneyDesktopService();
-export const settingsService = ServiceFactory.getInstance().getSettingsService();

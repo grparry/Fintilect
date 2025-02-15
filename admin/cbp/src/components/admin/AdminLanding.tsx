@@ -8,7 +8,6 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PaymentIcon from '@mui/icons-material/Payment';
 import GroupIcon from '@mui/icons-material/Group';
 import SettingsIcon from '@mui/icons-material/Settings';
-import AppsIcon from '@mui/icons-material/Apps';
 
 interface AdminRoute {
   id: string;
@@ -22,8 +21,6 @@ const getIconForRoute = (routeId: string) => {
       return <PaymentIcon fontSize="large" />;
     case 'clientManagement':
       return <GroupIcon fontSize="large" />;
-    case 'emerge':
-      return <AppsIcon fontSize="large" />;
     case 'development':
       return <SettingsIcon fontSize="large" />;
     default:
@@ -47,18 +44,6 @@ const AdminLanding: React.FC = () => {
       path: routes.clientManagement.basePath,
       title: routes.clientManagement.title,
       description: getRouteDescription(routes.clientManagement),
-    },
-    {
-      id: 'emergeAdmin',
-      path: routes.emergeAdmin.basePath,
-      title: routes.emergeAdmin.title,
-      description: getRouteDescription(routes.emergeAdmin),
-    },
-    {
-      id: 'emergeConfig',
-      path: routes.emergeConfig.basePath,
-      title: routes.emergeConfig.title,
-      description: getRouteDescription(routes.emergeConfig),
     },
     {
       id: 'billPay',

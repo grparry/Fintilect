@@ -1,22 +1,16 @@
 import billPayRoutes from './billPayRoutes';
 import clientManagementRoutes from './ClientManagementRoutes';
-import emergeAdminRoutes from './emergeAdminRoutes';
-import emergeConfigRoutes from './emergeConfigRoutes';
 import developmentRoutes from './developmentRoutes';
 import { NavigationConfig, NavigationSection, NavigationItem, RouteConfig, NavigationElement, NavigationPermissionRequirement } from '../types/section-navigation.types';
 import { sectionConfig, defaultSectionConfig } from '../config/section.config';
 import { lazy } from 'react';
 import BusinessIcon from '@mui/icons-material/Business';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import SettingsIcon from '@mui/icons-material/Settings';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CodeIcon from '@mui/icons-material/Code';
 
 // Lazy load components
 const AdminLanding = lazy(() => import('../components/admin/AdminLanding'));
 const ClientManagementHeader = lazy(() => import('../components/client-management/ClientManagementHeader'));
-const EmergeAdminHeader = lazy(() => import('../components/emerge-admin/EmergeAdminHeader'));
-const EmergeConfigHeader = lazy(() => import('../components/emerge-config/EmergeConfigHeader'));
 const DevelopmentHeader = lazy(() => import('../components/development/DevelopmentHeader'));
 const BillPayHeader = lazy(() => import('../components/bill-pay/BillPayHeader'));
 
@@ -28,22 +22,6 @@ const routes = {
     basePath: '/admin/client-management',
     routes: clientManagementRoutes,
     icon: BusinessIcon,
-    permissions: undefined as NavigationPermissionRequirement | undefined,
-  },
-  emergeAdmin: {
-    id: 'emergeAdmin',
-    title: 'Emerge Admin',
-    basePath: '/admin/emerge',
-    routes: emergeAdminRoutes,
-    icon: AdminPanelSettingsIcon,
-    permissions: undefined as NavigationPermissionRequirement | undefined,
-  },
-  emergeConfig: {
-    id: 'emergeConfig',
-    title: 'Emerge Config',
-    basePath: '/admin/emerge-config',
-    routes: emergeConfigRoutes,
-    icon: SettingsIcon,
     permissions: undefined as NavigationPermissionRequirement | undefined,
   },
   billPay: {
@@ -125,10 +103,6 @@ export const getAllRoutes = () => {
           switch(sectionId) {
             case 'clientManagement':
               return ClientManagementHeader;
-            case 'emergeAdmin':
-              return EmergeAdminHeader;
-            case 'emergeConfig':
-              return EmergeConfigHeader;
             case 'billPay':
               return BillPayHeader;
             case 'development':

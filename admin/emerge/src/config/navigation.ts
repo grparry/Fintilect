@@ -250,47 +250,6 @@ export const navigationConfig: NavigationConfig = {
       }
     },
     {
-      id: 'clientManagement',
-      title: 'Client Management',
-      icon: BusinessIcon,
-      color: '#2e7d32',  // Green
-      basePath: '/admin/client-management',
-      path: '/admin/client-management',
-      description: 'Manage client settings and configurations',
-      items: [
-        {
-          id: 'client-settings',
-          title: 'Client Settings',
-          path: '/admin/client-management/settings',
-          icon: BusinessCenterIcon,
-          permissions: {
-            permissions: ['view-client-settings', 'read']
-          }
-        },
-        {
-          id: 'client-features',
-          title: 'Client Features',
-          path: '/admin/client-management/features',
-          icon: StarsIcon,
-          permissions: {
-            permissions: ['view-client-features', 'read']
-          }
-        },
-        {
-          id: 'client-branding',
-          title: 'Client Branding',
-          path: '/admin/client-management/branding',
-          icon: ImageIcon,
-          permissions: {
-            permissions: ['view-client-branding', 'read']
-          }
-        }
-      ],
-      permissions: {
-        permissions: ['view-emerge-config', 'read']
-      }
-    },
-    {
       id: 'development',
       title: 'Development',
       icon: CodeIcon,

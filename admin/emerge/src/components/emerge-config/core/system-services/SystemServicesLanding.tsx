@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Tab, Tabs, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
+import PscuLogFileTransformServiceSettingsConfig from './PscuLogFileTransformServiceSettingsConfig';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -68,7 +69,8 @@ export default function SystemServicesLanding() {
         {/* Verafin File Batch content will go here */}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {/* PSCU Log File Transform content will go here */}
+        <Typography variant="h6" gutterBottom>PSCU Log File Transform Settings</Typography>
+        <PscuLogFileTransformServiceSettingsConfig />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Typography variant="h6" gutterBottom>PSI Services Settings</Typography>

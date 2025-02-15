@@ -83,8 +83,6 @@ const createElementWrapper = (element: JSX.Element): FC => {
 // Pre-load components to ensure proper initialization
 const BillPayHeader = lazy(() => import('./components/bill-pay/BillPayHeader'));
 const ClientManagementHeader = lazy(() => import('./components/client-management/ClientManagementHeader'));
-const EmergeAdminHeader = lazy(() => import('./components/emerge-admin/EmergeAdminHeader'));
-const EmergeConfigHeader = lazy(() => import('./components/emerge-config/EmergeConfigHeader'));
 const DevelopmentHeader = lazy(() => import('./components/development/DevelopmentHeader'));
 const renderRoutes = (routes: RouteConfig[]) => {
   console.log('=== Route Rendering Debug Start ===');
