@@ -1,0 +1,52 @@
+
+
+{
+  "OndotDxSettings": {
+    "type": "object",
+    "description": "Settings for Ondot DX integration",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.OndotDxSettings",
+    "properties": {
+      "clientId": {
+        "type": "integer",
+        "description": "Client ID for Ondot DX",
+        "x-setting-key": "Mobile.CardControl.OndotDx.ClientId"
+      },
+      "url": {
+        "type": "string",
+        "description": "URL for Ondot DX service",
+        "format": "uri",
+        "x-setting-key": "Mobile.CardControl.OndotDx.Url"
+      },
+      "isMockDataEnabled": {
+        "type": "boolean",
+        "description": "Whether mock data is enabled",
+        "x-setting-key": "Mobile.CardControl.OndotDx.IsMockDataEnabled"
+      },
+      "mockGetPreferencesData": {
+        "type": "string",
+        "description": "Mock data for get preferences",
+        "x-setting-key": "Mobile.CardControl.OndotDx.MockGetPreferencesData"
+      },
+      "enableAllMerchantTypesOnRegistration": {
+        "type": "boolean",
+        "description": "Whether to enable all merchant types on registration",
+        "x-setting-key": "Mobile.CardControl.OndotDx.EnableAllMerchantTypesOnRegistration"
+      },
+      "enableAllTransactionTypesOnRegistration": {
+        "type": "boolean",
+        "description": "Whether to enable all transaction types on registration",
+        "x-setting-key": "Mobile.CardControl.OndotDx.EnableAllTransactionTypesOnRegistration"
+      },
+      "alertsDeliveryDeclinedTransactionEnabled": {
+        "type": "boolean",
+        "description": "Whether alerts for declined transactions are enabled",
+        "x-setting-key": "Mobile.CardControl.OndotDx.AlertsDeliveryDeclinedTransactionEnabled"
+      },
+      "sendAmountAsDollars": {
+        "type": "boolean",
+        "description": "Whether to send amounts as dollars",
+        "x-setting-key": "Moblie.CardControl.OnDotDx.SendAmountAsDollars"
+      }
+    }
+  }
+}

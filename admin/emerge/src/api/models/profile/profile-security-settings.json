@@ -1,0 +1,52 @@
+
+
+{
+  "ChangePhoneSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.PhoneNumber.ChangePhone",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/ChangePhoneSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/ChangePhoneFeatures"
+      },
+      "zelleUpdatePhoneEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ChangePhone.Zelle.UpdatePhoneEnabled",
+        "description": "Whether Zelle phone update is enabled"
+      },
+      "mobile": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Settings.ChangeUserInformation.ChangePhoneNumbers",
+        "properties": {
+          "requiredField": {
+            "type": "string",
+            "enum": ["None", "Home", "Mobile", "Work", "Any"],
+            "x-setting-key": "Mobile.Settings.ChangePhoneNumbers.RequiredField",
+            "x-legacy-enum": "RequiredPhoneNumberField",
+            "description": "Specifies which phone number field is required"
+          },
+          "allowForeignPhoneNumbers": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.Settings.ChangePhoneNumbers.AllowForeignPhoneNumbers",
+            "description": "Whether foreign phone numbers are allowed"
+          },
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.Settings.ChangePhoneNumbers.Enabled",
+            "description": "Whether mobile phone number change is enabled"
+          },
+          "foreignPhoneNumbersEnabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.Settings.ChangePhoneNumbers.ForeignPhoneNumbersEnabled",
+            "description": "Whether foreign phone numbers feature is enabled"
+          }
+        }
+      }
+    }
+  }
+}

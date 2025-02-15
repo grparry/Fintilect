@@ -1,0 +1,56 @@
+
+
+{
+  "InfoImageEstatements": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.InfoImageEstatements.InfoImageEstatementsSettings",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether Info Image Estatements is enabled",
+        "x-setting-key": "Estatements.InfoImage.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "description": "Minimum version required",
+        "x-setting-key": "Estatements.InfoImage.MinVersion"
+      },
+      "minAndroidVersion": {
+        "type": "string",
+        "description": "Minimum Android version required",
+        "x-setting-key": "Estatements.InfoImage.MinAndroidVersion"
+      },
+      "minIosVersion": {
+        "type": "string",
+        "description": "Minimum iOS version required",
+        "x-setting-key": "Estatements.InfoImage.MinIosVersion"
+      },
+      "sso": {
+        "type": "object",
+        "description": "SSO settings for Info Image Estatements",
+        "properties": {
+          "clientCodeId": {
+            "type": "string",
+            "description": "SSO client code ID",
+            "x-setting-key": "Estatements.InfoImage.Sso.ClientCodeId"
+          },
+          "password": {
+            "type": "string",
+            "description": "SSO password",
+            "x-setting-key": "Estatements.InfoImage.Sso.Password"
+          },
+          "url": {
+            "type": "string",
+            "description": "SSO URL",
+            "x-setting-key": "Estatements.InfoImage.Sso.Url"
+          },
+          "redirectUrl": {
+            "type": "string",
+            "description": "SSO redirect URL",
+            "x-setting-key": "Estatements.InfoImage.Sso.RedirectUrl"
+          }
+        }
+      }
+    }
+  }
+}

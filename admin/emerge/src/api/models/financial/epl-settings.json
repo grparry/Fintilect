@@ -1,0 +1,96 @@
+
+
+{
+  "EplSettings": {
+    "type": "object",
+    "description": "Settings for EPL financial core integration",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.FinancialCores.Epl",
+    "properties": {
+      "crossAccounts": {
+        "type": "object",
+        "description": "Configuration for cross-account functionality",
+        "properties": {
+          "addInquiryReplies": {
+            "type": "boolean",
+            "description": "Whether to add account inquiry notes for each cross account",
+            "default": true,
+            "x-setting-key": "FinancialCore.Epl.ShouldAddAccountInquiryRepliesForCrossAccounts"
+          }
+        },
+        "required": ["addInquiryReplies"]
+      },
+      "creditCardPermissions": {
+        "type": "object",
+        "description": "Permissions for credit card operations",
+        "properties": {
+          "depositPermitted": {
+            "type": "boolean",
+            "description": "Whether cross accounts can make deposits to a credit card",
+            "x-setting-key": "FinancialCore.Epl.CreditCardDepositPermitted"
+          },
+          "inquiryPermitted": {
+            "type": "boolean",
+            "description": "Whether cross accounts can make inquiries to a credit card",
+            "x-setting-key": "FinancialCore.Epl.CreditCardInquiryPermitted"
+          },
+          "withdrawalPermitted": {
+            "type": "boolean",
+            "description": "Whether cross accounts can make withdrawals from a credit card",
+            "x-setting-key": "FinancialCore.Epl.CreditCardWithdrawalPermitted"
+          }
+        },
+        "required": ["depositPermitted", "inquiryPermitted", "withdrawalPermitted"]
+      },
+      "estatements": {
+        "type": "object",
+        "description": "Configuration for EPL eStatements",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Estatements.EplEstatements",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether EPL eStatements are enabled",
+            "x-setting-key": "Estatements.EplEstatements.Enabled"
+          },
+          "endpoint": {
+            "type": "string",
+            "format": "uri",
+            "description": "EPL eStatements endpoint address",
+            "x-setting-key": "Estatements.EplEstatements.EndpointAddress"
+          },
+          "groupName": {
+            "type": "string",
+            "description": "EPL eStatements group name",
+            "x-setting-key": "Estatements.EplEstatements.GroupName"
+          },
+          "identifier": {
+            "type": "string",
+            "format": "uuid",
+            "description": "EPL eStatements identifier",
+            "x-setting-key": "Estatements.EplEstatements.Identifier"
+          },
+          "encryption": {
+            "type": "object",
+            "description": "Encryption settings for EPL eStatements",
+            "properties": {
+              "privateKey": {
+                "type": "string",
+                "format": "password",
+                "description": "Private key used for request encryption",
+                "x-setting-key": "Estatements.EplEstatements.PrivateKey"
+              },
+              "initializationVector": {
+                "type": "string",
+                "format": "password",
+                "description": "Initialization vector used for request encryption",
+                "x-setting-key": "Estatements.EplEstatements.EncryptionInitializationVector"
+              }
+            },
+            "required": ["privateKey", "initializationVector"]
+          }
+        },
+        "required": ["enabled", "endpoint", "groupName", "identifier", "encryption"]
+      }
+    },
+    "required": ["crossAccounts", "creditCardPermissions", "estatements"]
+  }
+}

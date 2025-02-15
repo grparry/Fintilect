@@ -1,0 +1,237 @@
+
+
+{
+  "MembershipSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Membership.MembershipFeature",
+    "description": "Settings for membership features",
+    "properties": {
+      "membershipEnabled": {
+        "type": "boolean",
+        "x-setting-key": "Membership.MembershipEnabled",
+        "description": "Whether membership features are enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "Membership.MinVersion",
+        "description": "Minimum version required for membership features"
+      },
+      "getMyCUClubSettingsFromDatabase": {
+        "type": "boolean",
+        "x-setting-key": "Membership.GetMyCUClubSettingsFromDatabase",
+        "description": "Whether to get MyCU Club settings from database"
+      },
+      "shouldAllowForeignAddressUpdate": {
+        "type": "boolean",
+        "x-setting-key": "X.App.HomeBanking.AllowForeignAddressUpdate",
+        "description": "Whether to allow foreign address updates"
+      },
+      "memberProfile": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Membership.MemberProfile",
+        "description": "Member profile settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "MemberProfile.Enabled",
+            "description": "Whether member profile features are enabled"
+          },
+          "usPhoneRegex": {
+            "type": "string",
+            "x-setting-key": "MemberProfile.UsPhoneRegex",
+            "description": "Regex pattern for US phone numbers"
+          },
+          "shouldGetBeneficiaryFields": {
+            "type": "boolean",
+            "x-setting-key": "MemberProfile.GetBeneficiaryFields",
+            "description": "Whether to get BEN1 and BEN2 UserFields"
+          },
+          "shouldHideAddressLineThree": {
+            "type": "boolean",
+            "x-setting-key": "X.App.HomeBanking.HideAddressLineThreeOnChangeAddressControl",
+            "description": "Whether to hide address line three in the member profile view"
+          }
+        }
+      },
+      "flags": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Membership.Flags",
+        "description": "Member flag settings",
+        "properties": {
+          "hbFlagNumber": {
+            "type": "string",
+            "x-setting-key": "X.App.HBBol.HBFlagNumber",
+            "description": "Home banking flag number"
+          },
+          "billPayFlagNumber": {
+            "type": "string",
+            "x-setting-key": "X.App.HBBOL.BillPayFlagNumber",
+            "description": "Bill pay flag number"
+          },
+          "businessAccountFlag": {
+            "type": "string",
+            "x-setting-key": "X.App.HomeBanking.BusinessAccountFlag",
+            "description": "Business account flag"
+          },
+          "eStatementFlagNumber": {
+            "type": "string",
+            "x-setting-key": "X.App.HBBOL.EStatementFlagNumber",
+            "description": "eStatement flag number"
+          },
+          "shareRestrictedCheckWithdraw": {
+            "type": "array",
+            "x-setting-key": "X.App.HomeBanking.ShareRestrictedCheckWithdraw",
+            "description": "Share restricted check withdraw flags",
+            "items": {
+              "type": "string"
+            }
+          },
+          "eDocumentsFlagNumber": {
+            "type": "string",
+            "x-setting-key": "X.App.HBBOL.EDocumentsFlagNumber",
+            "description": "eDocuments flag number"
+          },
+          "escheatDateFlag": {
+            "type": "string",
+            "x-setting-key": "Escheat.UpdateEscheatDate.FlagNumber",
+            "description": "Escheat date flag number"
+          },
+          "freeCheckReorderFlag": {
+            "type": "string",
+            "x-setting-key": "X.App.HomeBanking.FreeCheckReorderFlag",
+            "description": "Free check reorder flag"
+          },
+          "hasCCFlagNumber": {
+            "type": "string",
+            "x-setting-key": "X.App.HBBOL.HasCCFlagNumber",
+            "description": "Has credit card flag number"
+          },
+          "isDebitCardFlagNumber": {
+            "type": "string",
+            "x-setting-key": "X.App.HBBOL.IsDebitCardFlagNumber",
+            "description": "Is debit card flag number"
+          },
+          "isEmployeeFlagNumber": {
+            "type": "string",
+            "x-setting-key": "X.App.HomeBanking.IsEmployeeFlagNumber",
+            "description": "Is employee flag number"
+          },
+          "loanClosedFlags": {
+            "type": "array",
+            "x-setting-key": "X.App.HomeBanking.LoanClosedFlags",
+            "description": "Loan closed flags",
+            "items": {
+              "type": "string"
+            }
+          },
+          "loanRestrictedAlerts": {
+            "type": "array",
+            "x-setting-key": "X.App.HomeBanking.LoanRestrictedAlerts",
+            "description": "Loan restricted alerts flags",
+            "items": {
+              "type": "string"
+            }
+          },
+          "loanRestrictedInquire": {
+            "type": "array",
+            "x-setting-key": "X.App.HBBOL.LoanRestrictedInquire",
+            "description": "Loan restricted inquire flags",
+            "items": {
+              "type": "string"
+            }
+          },
+          "midwestLoansFlag": {
+            "type": "string",
+            "x-setting-key": "X.App.HomeBanking.MidwestLoansFlag",
+            "description": "Midwest loans flag"
+          },
+          "mobileDepositAllowedFlag": {
+            "type": "string",
+            "x-setting-key": "X.App.HBBOL.MobileDepositAllowedFlag",
+            "description": "Mobile deposit allowed flag"
+          },
+          "mobileDepositRestrictedFlag": {
+            "type": "string",
+            "x-setting-key": "X.App.HBBOL.MobileDepositRestrictedFlag",
+            "description": "Mobile deposit restricted flag"
+          },
+          "mobileDepositDisclosureFlag": {
+            "type": "string",
+            "x-setting-key": "X.App.HBBOL.MobileDepositDisclosureFlag",
+            "description": "Mobile deposit disclosure flag"
+          },
+          "obsMemberRestrictedAllTrans": {
+            "type": "array",
+            "x-setting-key": "X.App.HBBOL.obsMemberRestrictedAllTrans",
+            "description": "Member restricted all transactions flags",
+            "items": {
+              "type": "string"
+            }
+          },
+          "obsMemberRestrictedDeposit": {
+            "type": "array",
+            "x-setting-key": "X.App.HomeBanking.obsMemberRestrictedDeposit",
+            "description": "Member restricted deposit flags",
+            "items": {
+              "type": "string"
+            }
+          },
+          "obsMemberRestrictedInquire": {
+            "type": "array",
+            "x-setting-key": "X.App.HomeBanking.obsMemberRestrictedInquire",
+            "description": "Member restricted inquire flags",
+            "items": {
+              "type": "string"
+            }
+          },
+          "obsShareRestrictedDeposit": {
+            "type": "array",
+            "x-setting-key": "X.App.HBBOL.obsShareRestrictedDeposit",
+            "description": "Share restricted deposit flags",
+            "items": {
+              "type": "string"
+            }
+          },
+          "loanRestrictedDepositFlags": {
+            "type": "array",
+            "x-setting-key": "X.App.HomeBanking.obsLoanRestrictedDeposit",
+            "description": "Loan restricted deposit flags",
+            "items": {
+              "type": "string"
+            }
+          },
+          "obsShareRestrictedInquire": {
+            "type": "array",
+            "x-setting-key": "X.App.HBBOL.obsShareRestrictedInquire",
+            "description": "Share restricted inquire flags",
+            "items": {
+              "type": "string"
+            }
+          },
+          "obsShareRestrictedWithdraw": {
+            "type": "array",
+            "x-setting-key": "X.App.HomeBanking.obsShareRestrictedWithdraw",
+            "description": "Share restricted withdraw flags",
+            "items": {
+              "type": "string"
+            }
+          },
+          "restrictViewingCardFlagNumber": {
+            "type": "string",
+            "x-setting-key": "X.App.HBBOL.RestrictViewingCardFlagNumber",
+            "description": "Restrict viewing card flag number"
+          },
+          "shareClosedFlags": {
+            "type": "array",
+            "x-setting-key": "X.App.HomeBanking.ShareClosedFlags",
+            "description": "Share closed flags",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+
+
+{
+  "SynergyEstatements": {
+    "type": "object",
+    "description": "Configuration settings for Synergy Estatements",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.SynergyEstatements.SynergyEstatementsSettings",
+    "required": ["enabled", "versionRequirements", "organization", "authentication"],
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether Synergy Estatements is enabled",
+        "x-setting-key": "Estatements.Synergy.Enabled"
+      },
+      "versionRequirements": {
+        "type": "object",
+        "description": "Version requirements for different platforms",
+        "required": ["minimum", "android", "ios"],
+        "properties": {
+          "minimum": {
+            "type": "number",
+            "description": "Minimum version required",
+            "x-setting-key": "Estatements.Synergy.MinVersion"
+          },
+          "android": {
+            "type": "string",
+            "description": "Minimum Android version required",
+            "x-setting-key": "Estatements.Synergy.MinAndroidVersion"
+          },
+          "ios": {
+            "type": "string",
+            "description": "Minimum iOS version required",
+            "x-setting-key": "Estatements.Synergy.MinIosVersion"
+          }
+        }
+      },
+      "organization": {
+        "type": "object",
+        "description": "Organization settings",
+        "required": ["alias", "validationCode"],
+        "properties": {
+          "alias": {
+            "type": "string",
+            "description": "Organization alias",
+            "x-setting-key": "Estatements.Synergy.OrgAlias"
+          },
+          "validationCode": {
+            "type": "string",
+            "description": "Organization validation code",
+            "x-setting-key": "Estatements.Synergy.ValidationCode"
+          }
+        }
+      },
+      "authentication": {
+        "type": "object",
+        "description": "Authentication settings",
+        "x-legacy-model": "Psi.Models.ClientConfigurationModels.MobileConfigurations.Authentication.Authentication",
+        "x-legacy-feature-id": "A7A7A997-7441-42BC-A85F-5B434652D18E",
+        "$ref": "../../mobile/authentication/authentication.json#/Authentication"
+      }
+    }
+  }
+}

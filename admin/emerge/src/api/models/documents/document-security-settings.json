@@ -1,0 +1,45 @@
+
+
+{
+  "SynergyEstatements": {
+    "type": "object",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.SynergyEstatements.SynergyEstatementsSettings",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether Synergy Estatements is enabled",
+        "x-setting-key": "Estatements.Synergy.Enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "description": "Minimum version required",
+        "x-setting-key": "Estatements.Synergy.MinVersion"
+      },
+      "minAndroidVersion": {
+        "type": "string",
+        "description": "Minimum Android version required",
+        "x-setting-key": "Estatements.Synergy.MinAndroidVersion"
+      },
+      "minIosVersion": {
+        "type": "string",
+        "description": "Minimum iOS version required",
+        "x-setting-key": "Estatements.Synergy.MinIosVersion"
+      },
+      "orgAlias": {
+        "type": "string",
+        "description": "Organization alias for Synergy",
+        "x-setting-key": "Estatements.Synergy.OrgAlias"
+      },
+      "validationCode": {
+        "type": "string",
+        "description": "Validation code for Synergy",
+        "x-setting-key": "Estatements.Synergy.ValidationCode"
+      },
+      "authentication": {
+        "type": "object",
+        "description": "Authentication settings with hardcoded feature ID: A7A7A997-7441-42BC-A85F-5B434652D18E",
+        "$ref": "../../mobile/authentication/authentication.json#/Authentication"
+      }
+    }
+  }
+}

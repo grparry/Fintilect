@@ -1,0 +1,43 @@
+
+
+{
+  "CardLimitsSettings": {
+    "type": "object",
+    "properties": {
+      "creditCard": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.CreditCardSettings",
+        "properties": {
+          "spendingLimitsEnabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.CardControl.CreditCard.SpendingLimitsEnabled"
+          }
+        }
+      },
+      "debitCard": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.DebitCardSettings",
+        "properties": {
+          "largeTransactionControlEnabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.CardControl.DebitCard.LargeTransactionControlEnabled"
+          }
+        }
+      },
+      "transferLimits": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Account.TransferLimits",
+        "properties": {
+          "transferLimits": {
+            "type": "object",
+            "x-setting-key": "Transfers.TransferLimits"
+          },
+          "customTransferLimitMessagesEnabled": {
+            "type": "boolean",
+            "x-setting-key": "Transfers.CustomTransferLimitMessagesEnabled"
+          }
+        }
+      }
+    }
+  }
+}

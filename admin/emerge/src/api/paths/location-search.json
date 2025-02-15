@@ -1,0 +1,182 @@
+
+
+{
+  "/location-search": {
+    "get": {
+      "tags": ["location-search"],
+      "summary": "List all location search configurations",
+      "operationId": "listLocationSearchConfigs",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 20
+          }
+        },
+        {
+          "name": "provider",
+          "in": "query",
+          "schema": {
+            "type": "string",
+            "enum": ["Google", "MapQuest", "Here", "Custom"]
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Location search configurations retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../models/location-search.json#/LocationSearchSettings"
+                    }
+                  },
+                  "total": {
+                    "type": "integer"
+                  },
+                  "page": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["location-search"],
+      "summary": "Create a new location search configuration",
+      "operationId": "createLocationSearchConfig",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/location-search.json#/LocationSearchSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Location search configuration created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/location-search.json#/LocationSearchSettings"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/location-search/{id}": {
+    "get": {
+      "tags": ["location-search"],
+      "summary": "Get a specific location search configuration",
+      "operationId": "getLocationSearchConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Location search configuration retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/location-search.json#/LocationSearchSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["location-search"],
+      "summary": "Update a location search configuration",
+      "operationId": "updateLocationSearchConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/location-search.json#/LocationSearchSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Location search configuration updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/location-search.json#/LocationSearchSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["location-search"],
+      "summary": "Delete a location search configuration",
+      "operationId": "deleteLocationSearchConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Location search configuration deleted successfully"
+        }
+      }
+    }
+  }
+}

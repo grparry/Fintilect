@@ -1,0 +1,125 @@
+
+
+{
+  "CardlyticsSettings": {
+    "type": "object",
+    "description": "Configuration settings for Cardlytics integration",
+    "x-legacy-model": "Psi.Models.ClientConfigurationModels.Cardlytics.CardlyticsSettings",
+    "required": ["enabled", "accountTypes", "admin", "domInjection"],
+    "properties": {
+      "enabled": {
+        "type": "object",
+        "description": "Enabled settings for different components",
+        "required": ["homeBanking", "admin"],
+        "properties": {
+          "homeBanking": {
+            "type": "boolean",
+            "description": "Whether Cardlytics is enabled in home banking",
+            "x-setting-key": "X.App.HomeBanking.CardlyticsEnabled"
+          },
+          "admin": {
+            "type": "boolean",
+            "description": "Whether Cardlytics is enabled in admin",
+            "x-setting-key": "X.App.HBAdminBOL.CardlyticsEnabled"
+          }
+        }
+      },
+      "accountTypes": {
+        "type": "array",
+        "description": "Account types that support Cardlytics",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "X.App.HomeBanking.CardlyticsAccountTypes"
+      },
+      "admin": {
+        "type": "object",
+        "description": "Admin interface settings",
+        "properties": {
+          "showSuffixUpdateRow": {
+            "type": "boolean",
+            "description": "Whether to show the suffix update row in admin",
+            "x-setting-key": "Cardlytics.Admin.ShowSuffixUpdateRowInAdmin"
+          }
+        }
+      },
+      "jquery": {
+        "type": "object",
+        "description": "jQuery settings",
+        "properties": {
+          "version": {
+            "type": "string",
+            "description": "jQuery version to use with Cardlytics",
+            "x-setting-key": "Cardlytics.jQuery.Version"
+          }
+        }
+      },
+      "domInjection": {
+        "type": "object",
+        "description": "DOM injection version settings",
+        "required": ["enabled", "scripts", "server"],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether DOM injection version is enabled",
+            "x-setting-key": "Cardlytics.DomInjectionVersion.Enabled"
+          },
+          "scripts": {
+            "type": "object",
+            "description": "Script configuration",
+            "properties": {
+              "main": {
+                "type": "string",
+                "description": "Main script name",
+                "x-setting-key": "Cardlytics.DomInjectionVersion.MainScriptName"
+              },
+              "config": {
+                "type": "string",
+                "description": "Config script name",
+                "x-setting-key": "Cardlytics.DomInjectionVersion.ConfigScriptName"
+              },
+              "init": {
+                "type": "string",
+                "description": "Init script name",
+                "x-setting-key": "Cardlytics.DomInjectionVersion.InitScriptName"
+              }
+            }
+          },
+          "server": {
+            "type": "object",
+            "description": "Server configuration",
+            "properties": {
+              "fiFolder": {
+                "type": "string",
+                "description": "Financial institution folder",
+                "x-setting-key": "Cardlytics.DomInjectionVersion.FiFolder"
+              },
+              "opsUrl": {
+                "type": "string",
+                "description": "Operations server URL",
+                "format": "uri",
+                "x-setting-key": "Cardlytics.DomInjectionVersion.OpsServerUrl"
+              }
+            }
+          },
+          "dependencies": {
+            "type": "object",
+            "description": "External dependencies",
+            "properties": {
+              "jquery": {
+                "type": "string",
+                "description": "jQuery version for DOM injection",
+                "x-setting-key": "Cardlytics.DomInjectionVersion.JQueryVersion"
+              },
+              "vue": {
+                "type": "string",
+                "description": "Vue.js version",
+                "x-setting-key": "Cardlytics.DomInjectionVersion.VueVersion"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

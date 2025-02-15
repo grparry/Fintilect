@@ -1,0 +1,102 @@
+
+
+{
+  "MiniOaoSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MiniOao.MiniOaoSettings",
+    "description": "Settings for Mini Online Account Opening",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.Enabled",
+        "description": "Whether Mini OAO is enabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "format": "double",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.MinimumVersion",
+        "description": "Minimum version required for Mini OAO"
+      },
+      "shouldShowJointOwners": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.ShouldShowJointOwners",
+        "description": "If true, show the 'add joint owners' view in the new account opening wizard"
+      },
+      "addNewJointOwnerEnabled": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.AddNewJointOwner.Enabled",
+        "description": "If true, allow the creation of a new Joint Owner"
+      },
+      "shouldSelectAllJointAccountsByDefaultOnNewAccountCreation": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.ShouldSelectAllJointAccountsByDefaultOnNewAccountCreation",
+        "description": "If true, pre-check all Joint Owners during the new account creation process"
+      },
+      "allowCreateNewJointOwnerDuringAccountCreation": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.AllowCreateNewJointOwnerDuringAccountCreation",
+        "description": "If true, allow the ability to create a new Joint-Owner during the account creation process"
+      },
+      "allowNewAccountFunding": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.AllowNewAccountFunding",
+        "description": "If true, allow the ability to fund a new account during the account creation process"
+      },
+      "shouldWarnUserIfNoDebitCardSelected": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.ShouldWarnUserIfNoDebitCardSelected",
+        "description": "If true, warn the user that they have not selected any debit cards for any of the Joint-Owners"
+      },
+      "promoCodesEnabled": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.PromoCodesEnabled",
+        "description": "If true, enable the use of Promo Codes during the new account creation process"
+      },
+      "forceNewAccountOpeningDisclosure": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.ForceNewAccountOpeningDisclosure",
+        "description": "If true, the user must accept a disclosure when creating a new Account"
+      },
+      "forceAddNewJointOwnerDisclosure": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.ForceAddNewJointOwnerDisclosure",
+        "description": "If true, the user must accept a disclosure when creating a new Joint Owner"
+      },
+      "adapiUrl": {
+        "type": "string",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.AdapiUrl",
+        "description": "URL for the ADAPI service"
+      },
+      "shouldUseMockData": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.ShouldUseMockData",
+        "description": "If true, will use Mock Data instead of reaching out to OAO"
+      },
+      "canFundFromCrossAccount": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.CanFundFromCrossAccounts",
+        "description": "If true, will return Cross accounts when retrieving FundingAccounts"
+      },
+      "debitCardProductId": {
+        "type": "integer",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.DebitCardProductId",
+        "description": "Product ID for debit cards"
+      },
+      "requireIdInfoOnAddJointOwner": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.RequireIdInfoOnAddJointOwner",
+        "description": "If true, require ID info to be filled out on the 'add joint owner' form"
+      },
+      "requireEmployerInfoOnAddJointOwner": {
+        "type": "boolean",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.RequireEmployerInfoOnAddJointOwner",
+        "description": "If true, require employer info to be filled out on the 'add joint owner' form"
+      },
+      "secureMessageCategory": {
+        "type": "string",
+        "x-setting-key": "MiniOao.ConnectAccountOpening.SecureMessageCategory",
+        "description": "Category for secure messages"
+      }
+    }
+  }
+}

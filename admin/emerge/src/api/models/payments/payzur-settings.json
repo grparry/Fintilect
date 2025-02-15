@@ -1,0 +1,62 @@
+
+
+{
+  "PayzurSettings": {
+    "type": "object",
+    "description": "Payzur person payments settings",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.PersonPayments.Payzur",
+    "properties": {
+      "syncCards": {
+        "type": "object",
+        "description": "Card synchronization settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether card synchronization is enabled",
+            "x-setting-key": "PersonPayments.Payzur.SyncCardsEnabled"
+          },
+          "minVersion": {
+            "type": "number",
+            "description": "Minimum version required for card synchronization",
+            "x-setting-key": "PersonPayments.Payzur.SyncCardsMinVersion"
+          },
+          "syncDuplicatesEnabled": {
+            "type": "boolean",
+            "description": "Whether to sync duplicate cards",
+            "x-setting-key": "PersonPayments.Payzur.SyncDuplicateCardsEnabled"
+          },
+          "syncAddedCardsEnabled": {
+            "type": "boolean",
+            "description": "Whether to sync newly added cards",
+            "x-setting-key": "PersonPayments.Payzur.SyncAddedCardsEnabled"
+          },
+          "skipWhenCoreIsDown": {
+            "type": "boolean",
+            "description": "Whether to skip card sync when core is down",
+            "x-setting-key": "PersonPayments.Payzur.ShouldSkipCardSyncWhenCoreIsDown"
+          }
+        }
+      },
+      "publicKey": {
+        "type": "string",
+        "description": "Public key for Payzur integration",
+        "x-setting-key": "PersonPayments.Payzur.PublicKey"
+      },
+      "accountTypes": {
+        "type": "string",
+        "description": "Account types configuration",
+        "x-setting-key": "PersonPayments.Payzur.AccountTypes"
+      },
+      "openInIframe": {
+        "type": "boolean",
+        "description": "Whether to open person payments in an iFrame instead of a new tab",
+        "x-setting-key": "PersonPayments.Payzur.OpenInIframe"
+      },
+      "useOAEP": {
+        "type": "boolean",
+        "description": "Whether to use OAEP padding",
+        "x-setting-key": "PersonPayments.Payzur.UseOAEP"
+      }
+    }
+  }
+}

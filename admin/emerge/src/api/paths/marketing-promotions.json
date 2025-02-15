@@ -1,0 +1,189 @@
+
+
+{
+  "/marketing-promotions": {
+    "get": {
+      "tags": ["marketing-promotions"],
+      "summary": "List all marketing and promotions configurations",
+      "operationId": "listMarketingConfigs",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 20
+          }
+        },
+        {
+          "name": "feature",
+          "in": "query",
+          "schema": {
+            "type": "string",
+            "enum": [
+              "cardlytics",
+              "relevantSolutions",
+              "appMessages",
+              "promotions",
+              "analytics",
+              "personalization"
+            ]
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Marketing configurations retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../models/marketing-promotions.json#/MarketingPromotionsSettings"
+                    }
+                  },
+                  "total": {
+                    "type": "integer"
+                  },
+                  "page": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["marketing-promotions"],
+      "summary": "Create a new marketing configuration",
+      "operationId": "createMarketingConfig",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/marketing-promotions.json#/MarketingPromotionsSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Marketing configuration created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/marketing-promotions.json#/MarketingPromotionsSettings"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/marketing-promotions/{id}": {
+    "get": {
+      "tags": ["marketing-promotions"],
+      "summary": "Get a specific marketing configuration",
+      "operationId": "getMarketingConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Marketing configuration retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/marketing-promotions.json#/MarketingPromotionsSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["marketing-promotions"],
+      "summary": "Update a marketing configuration",
+      "operationId": "updateMarketingConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/marketing-promotions.json#/MarketingPromotionsSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Marketing configuration updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/marketing-promotions.json#/MarketingPromotionsSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["marketing-promotions"],
+      "summary": "Delete a marketing configuration",
+      "operationId": "deleteMarketingConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Marketing configuration deleted successfully"
+        }
+      }
+    }
+  }
+}

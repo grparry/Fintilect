@@ -1,0 +1,174 @@
+
+
+{
+  "/services": {
+    "get": {
+      "tags": ["services"],
+      "summary": "List all service configurations",
+      "operationId": "listServiceConfigs",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "schema": {
+            "type": "integer",
+            "default": 20
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Service configurations retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../models/services.json#/ServicesSettings"
+                    }
+                  },
+                  "total": {
+                    "type": "integer"
+                  },
+                  "page": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["services"],
+      "summary": "Create a new service configuration",
+      "operationId": "createServiceConfig",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/services.json#/ServicesSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Service configuration created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/services.json#/ServicesSettings"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/services/{id}": {
+    "get": {
+      "tags": ["services"],
+      "summary": "Get a specific service configuration",
+      "operationId": "getServiceConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Service configuration retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/services.json#/ServicesSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["services"],
+      "summary": "Update a service configuration",
+      "operationId": "updateServiceConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../models/services.json#/ServicesSettings"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Service configuration updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/services.json#/ServicesSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["services"],
+      "summary": "Delete a service configuration",
+      "operationId": "deleteServiceConfig",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Service configuration deleted successfully"
+        }
+      }
+    }
+  }
+}

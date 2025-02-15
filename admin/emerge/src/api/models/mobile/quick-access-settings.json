@@ -1,0 +1,68 @@
+
+
+{
+  "QuickBalanceSettings": {
+    "type": "object",
+    "description": "Quick balance settings",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.QuickBalance.QuickBalance",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether quick balance is enabled",
+        "x-setting-key": "Mobile.QuickBalance.Enabled"
+      },
+      "minVersion": {
+        "type": "string",
+        "description": "Minimum version required for quick balance",
+        "x-setting-key": "Mobile.QuickBalance.MinimumVersion"
+      },
+      "minAndroidVersion": {
+        "type": "string",
+        "description": "Minimum Android version required for quick balance",
+        "x-setting-key": "Mobile.QuickBalance.MinimumAndroidVersion"
+      },
+      "minIosVersion": {
+        "type": "string",
+        "description": "Minimum iOS version required for quick balance",
+        "x-setting-key": "Mobile.QuickBalance.MinimumIosVersion"
+      },
+      "refreshTime": {
+        "type": "integer",
+        "description": "Time in seconds between balance refreshes",
+        "x-setting-key": "Mobile.QuickBalance.RefreshTime"
+      },
+      "maxNumberOfAccounts": {
+        "type": "integer",
+        "description": "Maximum number of accounts that can be shown in quick balance",
+        "x-setting-key": "Mobile.QuickBalance.MaxNumberOfAccounts"
+      },
+      "preferences": {
+        "type": "object",
+        "description": "Quick balance preferences settings",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.QuickBalance.Preferences",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether quick balance preferences are enabled",
+            "x-setting-key": "Mobile.QuickBalance.Preferences.Enabled"
+          },
+          "minVersion": {
+            "type": "string",
+            "description": "Minimum version required for quick balance preferences",
+            "x-setting-key": "Mobile.QuickBalance.Preferences.MinimumVersion"
+          },
+          "minAndroidVersion": {
+            "type": "string",
+            "description": "Minimum Android version required for quick balance preferences",
+            "x-setting-key": "Mobile.QuickBalance.Preferences.MinimumAndroidVersion"
+          },
+          "minIosVersion": {
+            "type": "string",
+            "description": "Minimum iOS version required for quick balance preferences",
+            "x-setting-key": "Mobile.QuickBalance.Preferences.MinimumIosVersion"
+          }
+        }
+      }
+    }
+  }
+}

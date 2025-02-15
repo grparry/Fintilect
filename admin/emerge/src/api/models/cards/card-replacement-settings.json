@@ -1,0 +1,76 @@
+
+
+{
+  "CardReplacementSettings": {
+    "type": "object",
+    "properties": {
+      "lostOrStolen": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.CardControl.LostOrStolenCardSettings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.CardControl.LostOrStolen.Enabled"
+          },
+          "sendSecureMessageEnabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.CardControl.LostOrStolen.SendSecureMessageEnabled"
+          },
+          "eligibleCardTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "Mobile.CardControl.LostOrStolen.EligibleCardTypes"
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "Mobile.CardControl.LostOrStolen.Locations"
+          }
+        }
+      },
+      "cardManagement": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.CardManagement.CardManagementSettings",
+        "properties": {
+          "cots": {
+            "type": "object",
+            "x-setting-key": "CardManagement.COTS"
+          },
+          "supportedCardTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "CardManagement.PinChange.SupportedCardTypes"
+          },
+          "removeCvvValidationForTheseCardTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "CardManagement.PinChange.RemoveCvvValidationForTheseCardTypes"
+          },
+          "unacceptablePins": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "CardManagement.PinChange.UnacceptablePins"
+          },
+          "dnaShouldCallCoreForCardNumbers": {
+            "type": "boolean",
+            "x-setting-key": "CardManagement.Dna.ShouldCallCoreForCardNumbers"
+          },
+          "transactionDisputeEnabled": {
+            "type": "boolean",
+            "x-setting-key": "CardManagement.TransactionDispute.Enabled"
+          }
+        }
+      }
+    }
+  }
+}

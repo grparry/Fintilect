@@ -1,0 +1,205 @@
+
+
+{
+  "AchFileServiceSettings": {
+    "type": "object",
+    "description": "Settings for ACH file service configuration",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.AchService.AchFileService",
+    "required": ["enabled", "minVersion"],
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether the ACH file service is enabled",
+        "x-setting-key": "AchFileService.IsEnabled"
+      },
+      "minVersion": {
+        "type": "number",
+        "description": "Minimum version required for ACH file service",
+        "x-setting-key": "AchFileService.MinVersion"
+      },
+      "logging": {
+        "type": "object",
+        "description": "Logging configuration",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether logging is enabled",
+            "x-setting-key": "AchFileService.IsLoggingEnabled"
+          },
+          "directory": {
+            "type": "string",
+            "description": "Directory for log files",
+            "x-setting-key": "AchFileService.LoggingDirectory"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "Name of the log file",
+            "x-setting-key": "AchFileService.LoggingFileName"
+          }
+        }
+      },
+      "database": {
+        "type": "object",
+        "description": "Database connection settings",
+        "properties": {
+          "dataSource": {
+            "type": "string",
+            "description": "Database data source",
+            "x-setting-key": "AchFileService.DataSource"
+          },
+          "initialCatalog": {
+            "type": "string",
+            "description": "Initial catalog name",
+            "x-setting-key": "AchFileService.InitialCatalog"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Database user ID",
+            "x-setting-key": "AchFileService.DatabaseUserId"
+          },
+          "password": {
+            "type": "string",
+            "description": "Database password",
+            "format": "password",
+            "x-setting-key": "AchFileService.DatabasePassword"
+          }
+        }
+      },
+      "processing": {
+        "type": "object",
+        "description": "Processing configuration",
+        "properties": {
+          "recordTerminator": {
+            "type": "string",
+            "description": "Record terminator character",
+            "x-setting-key": "AchFileService.RecordTerminator"
+          },
+          "runOnDemand": {
+            "type": "boolean",
+            "description": "Whether to run on demand",
+            "x-setting-key": "AchFileService.RunOnDemand"
+          },
+          "processWorkDays": {
+            "type": "integer",
+            "description": "Number of work days to process",
+            "x-setting-key": "AchFileService.ProcessWorkDays"
+          },
+          "cutoffTime": {
+            "type": "string",
+            "description": "Processing cutoff time",
+            "x-setting-key": "AchFileService.CutoffTime"
+          },
+          "achFileConfigId": {
+            "type": "integer",
+            "description": "ACH file configuration ID",
+            "x-setting-key": "AchFileService.ACHFileConfigId"
+          },
+          "skipGlAccountRecords": {
+            "type": "boolean",
+            "description": "Whether to skip GL account records",
+            "x-setting-key": "AchFileService.SkipGLAccountRecords"
+          },
+          "padFileWithExtraLines": {
+            "type": "boolean",
+            "description": "Whether to pad file with extra lines",
+            "x-setting-key": "AchFileService.PadFileWithExtraLines"
+          }
+        }
+      },
+      "service": {
+        "type": "object",
+        "description": "Service configuration",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Service name",
+            "x-setting-key": "AchFileService.ServiceName"
+          },
+          "runTime": {
+            "type": "string",
+            "description": "Service run time",
+            "x-setting-key": "AchFileService.RunTime"
+          },
+          "monitorJobStatus": {
+            "type": "boolean",
+            "description": "Whether to monitor job status",
+            "x-setting-key": "AchFileService.MonitorJobStatus"
+          }
+        }
+      },
+      "security": {
+        "type": "object",
+        "description": "Security configuration",
+        "properties": {
+          "decryptKey": {
+            "type": "string",
+            "description": "Key for decryption",
+            "format": "password",
+            "x-setting-key": "AchFileService.DecryptKey"
+          },
+          "validCharsForName": {
+            "type": "string",
+            "description": "Valid characters for names",
+            "x-setting-key": "AchFileService.ValidCharsForName"
+          }
+        }
+      },
+      "fileHeader": {
+        "type": "object",
+        "description": "File header configuration",
+        "properties": {
+          "useCuCompanyId": {
+            "type": "boolean",
+            "description": "Whether to use CU company ID in file header",
+            "x-setting-key": "AchFileService.UseCuCompanyIdForFileHeader"
+          },
+          "useWebCode": {
+            "type": "boolean",
+            "description": "Whether to use WEB code instead of PPD code",
+            "x-setting-key": "AchFileService.UseWEBcodeInsteadOfPPDcode"
+          }
+        }
+      },
+      "externalTransfers": {
+        "type": "object",
+        "description": "External transfers configuration",
+        "properties": {
+          "bypassSettlementAccountForLoans": {
+            "type": "boolean",
+            "description": "Whether to bypass settlement account for loans",
+            "x-setting-key": "AchFileService.ExternalTransfers.BypassSettlementAccountForLoansEnabled"
+          },
+          "bypassSettlementAccountLoanTypes": {
+            "type": "array",
+            "description": "Loan types that bypass settlement account",
+            "items": {
+              "type": "string"
+            },
+            "x-setting-key": "AchFileService.ExternalTransfers.BypassSettlementAccountLoanTypes"
+          }
+        }
+      },
+      "settlementAccount": {
+        "type": "object",
+        "description": "Settlement account configuration",
+        "properties": {
+          "useSeparateInboundAccount": {
+            "type": "boolean",
+            "description": "Whether to use separate inbound settlement account",
+            "x-setting-key": "AchFileService.UseSeparateInboundSettlementAccountEnabled"
+          },
+          "inboundAccount": {
+            "type": "string",
+            "description": "Inbound settlement account",
+            "x-setting-key": "AchFileService.InboundSettlementAccount"
+          },
+          "inboundAccountSuffix": {
+            "type": "string",
+            "description": "Inbound settlement account suffix",
+            "x-setting-key": "AchFileService.InboundSettlementAccountSuffix"
+          }
+        }
+      }
+    }
+  }
+}

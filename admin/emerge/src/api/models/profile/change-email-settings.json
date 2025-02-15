@@ -1,0 +1,98 @@
+
+
+{
+  "ChangeEmailSettings": {
+    "type": "object",
+    "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.Email.ChangeEmail",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "settings": {
+        "$ref": "./settings.json#/ChangeEmailSettings"
+      },
+      "features": {
+        "$ref": "./features.json#/ChangeEmailFeatures"
+      },
+      "primaryMemberCanUpdateJointOwnersEmail": {
+        "type": "boolean",
+        "x-setting-key": "ChangeEmail.PrimaryMemberCanUpdateJointOwnersEmail",
+        "description": "Whether the primary member can update the email of joint owners"
+      },
+      "sendSecurityCodeToNewEmailOnlyOnEmailChange": {
+        "type": "boolean",
+        "x-setting-key": "ChangeEmail.SendSecurityCodeToNewEmailOnlyOnEmailChange",
+        "description": "Whether to send security code only to the new email address when changing email"
+      },
+      "updateBitEmailForPrimaryStatementAccountNumbers": {
+        "type": "boolean",
+        "x-setting-key": "ChangeEmail.UpdateBitEmailForPrimaryStatementAccountNumbers",
+        "description": "Whether to update bit email for primary statement account numbers"
+      },
+      "emailDomainRegistrationCheckEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ChangeEmail.EmailDomainRegistrationCheckEnabled",
+        "description": "Enables Admin email domain checking in order to refuse certain email domains when HomeBanking users attempt to change their email to domains on the not included list"
+      },
+      "restrictedEmailDomainRegistrationList": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "x-setting-key": "ChangeEmail.RestrictedEmailDomainRegistrationList",
+        "description": "List of restricted email domains that users can NOT change their email to in HomeBanking. eg: mac.com (like mikeb@mac.com). This must be a comma-delimited string."
+      },
+      "shouldUpdateCoreWhenNoChanges": {
+        "type": "boolean",
+        "x-setting-key": "ChangeEmail.ShouldUpdateCoreWhenNoChanges",
+        "description": "If true, update the core regardless of whether there are updates or not"
+      },
+      "shouldReturnSuccessWithNoChanges": {
+        "type": "boolean",
+        "x-setting-key": "ChangeEmail.ShouldReturnSuccessWithNoChanges",
+        "description": "Whether to return success when there are no changes"
+      },
+      "verifyEmailEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ChangeEmail.VerifyEmailEnabled",
+        "description": "Whether email verification is enabled"
+      },
+      "zelleUpdateEmailEnabled": {
+        "type": "boolean",
+        "x-setting-key": "ChangeEmail.Zelle.UpdateEmailEnabled",
+        "description": "Whether Zelle email update is enabled"
+      },
+      "mobile": {
+        "type": "object",
+        "x-legacy-model": "Psi.Data.Models.ClientConfigurationModels.MobileConfigurations.Settings.ChangeUserInformation.ChangeEmail",
+        "properties": {
+          "minimumVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.Settings.ChangeEmail.MinimumVersion",
+            "description": "Minimum version required for mobile email change"
+          },
+          "minimumAndroidVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.Settings.ChangeEmail.MinimumAndroidVersion",
+            "description": "Minimum Android version required for mobile email change"
+          },
+          "minimumIosVersion": {
+            "type": "string",
+            "x-setting-key": "Mobile.Settings.ChangeEmail.MinimumIosVersion",
+            "description": "Minimum iOS version required for mobile email change"
+          },
+          "enabled": {
+            "type": "boolean",
+            "x-setting-key": "Mobile.Settings.ChangeEmail.Enabled",
+            "description": "Whether mobile email change is enabled"
+          },
+          "emailType": {
+            "type": "string",
+            "x-setting-key": "X.App.HomeBanking.EmailType",
+            "description": "Type of email for mobile email change"
+          }
+        }
+      }
+    }
+  }
+}
