@@ -1,9 +1,9 @@
 import React from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, Outlet } from 'react-router-dom';
 import Dashboard from './dashboard/Dashboard';
 import ExceptionTool from './payments/ExceptionTool';
 import FISExceptionHandling from './payments/FISExceptionHandling';
-import PendingPayments from './payments/PendingPayments';
+import ManagePayments from './payments/ManagePayments';
 import ManualProcessing from './payments/ManualProcessing';
 import PayeeConversion from './payments/PayeeConversion';
 import Holidays from './settings/Holidays';
@@ -268,24 +268,27 @@ const BillPay: React.FC = () => {
     navigate('/payments');
   };
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="dashboard" replace />} />
-      <Route path="dashboard" element={<Dashboard />} />
-      <Route path="exceptions" element={<ExceptionTool onClose={handleClose} />} />
-      <Route path="fis-exceptions" element={<FISExceptionHandling api={fisExceptionAdapter} onClose={handleClose} />} />
-      <Route path="pending" element={<PendingPayments />} />
-      <Route path="manual" element={<ManualProcessing />} />
-      <Route path="payee-conversion" element={<PayeeConversion />} />
-      <Route path="settings">
-        <Route index element={<Settings />} />
-        <Route path="holidays" element={<Holidays />} />
-        <Route path="config" element={<BillPayConfig />} />
-        <Route path="notifications" element={<NotificationTemplates />} />
-        <Route path="permissions" element={<PermissionGroups />} />
-        <Route path="security" element={<BillPaySecuritySettings />} />
-      </Route>
-      <Route path="reports" element={<Reports />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="exceptions" element={<ExceptionTool onClose={handleClose} />} />
+        <Route path="fis-exceptions" element={<FISExceptionHandling />} />
+        <Route path="manage" element={<ManagePayments />} />
+        <Route path="manual" element={<ManualProcessing />} />
+        <Route path="payee-conversion" element={<PayeeConversion />} />
+        <Route path="settings">
+          <Route index element={<Settings />} />
+          <Route path="holidays" element={<Holidays />} />
+          <Route path="config" element={<BillPayConfig />} />
+          <Route path="notifications" element={<NotificationTemplates />} />
+          <Route path="permissions" element={<PermissionGroups />} />
+          <Route path="security" element={<BillPaySecuritySettings />} />
+        </Route>
+        <Route path="reports" element={<Reports />} />
+      </Routes>
+      <Outlet />
+    </>
   );
 };
 export default BillPay;

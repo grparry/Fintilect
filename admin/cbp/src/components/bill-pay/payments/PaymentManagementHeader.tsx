@@ -1,21 +1,21 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Typography, Grid, Paper, Link } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import PaymentIcon from '@mui/icons-material/Payment';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import TransformIcon from '@mui/icons-material/Transform';
-import SettingsIcon from '@mui/icons-material/Settings';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import ErrorIcon from '@mui/icons-material/Error';
+import BuildIcon from '@mui/icons-material/Build';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
-const BillPayHeader: React.FC = () => {
+const PaymentManagementHeader: React.FC = () => {
   return (
     <Box>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom color="text.primary">
-          Bill Pay
+          Payment Management
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
-          Welcome to Bill Pay. Manage payments, view reports, and configure system settings.
+          Manage payments, handle exceptions, and process transactions.
         </Typography>
       </Box>
 
@@ -34,17 +34,17 @@ const BillPayHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="dashboard"
+              to="manage"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
-              <DashboardIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
+              <ScheduleIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
               <Typography variant="h6" gutterBottom>
-                Dashboard
+                Manage Payments
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                View payment statistics and system status
+                View and manage all payments
               </Typography>
             </Link>
           </Paper>
@@ -64,17 +64,17 @@ const BillPayHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="payments"
+              to="fis-exceptions"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
-              <PaymentIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
+              <ErrorIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
               <Typography variant="h6" gutterBottom>
-                Payment Management
+                FIS Exception Handling
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Manage payments and handle exceptions
+                Handle FIS payment exceptions
               </Typography>
             </Link>
           </Paper>
@@ -94,17 +94,17 @@ const BillPayHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="reports"
+              to="manual"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
-              <AssessmentIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
+              <BuildIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
               <Typography variant="h6" gutterBottom>
-                Reports
+                Manual Processing
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Generate and view payment reports
+                Process payments manually
               </Typography>
             </Link>
           </Paper>
@@ -124,47 +124,17 @@ const BillPayHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="payee-conversion"
+              to="fis-payee-check"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
-              <TransformIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
+              <AccountBalanceIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
               <Typography variant="h6" gutterBottom>
-                Data Conversion
+                FIS Payee Check
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Convert and manage payee data
-              </Typography>
-            </Link>
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <Paper 
-            sx={{ 
-              p: 3, 
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              '&:hover': {
-                bgcolor: 'action.hover'
-              }
-            }}
-          >
-            <Link
-              component={RouterLink}
-              to="settings"
-              color="inherit"
-              underline="none"
-              sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
-            >
-              <SettingsIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" gutterBottom>
-                Settings
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Configure system settings and permissions
+                Verify FIS payee information
               </Typography>
             </Link>
           </Paper>
@@ -174,4 +144,4 @@ const BillPayHeader: React.FC = () => {
   );
 };
 
-export default BillPayHeader;
+export default PaymentManagementHeader;

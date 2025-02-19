@@ -23,12 +23,14 @@ interface RouteParams {
 // Route configuration
 const clientManagementRoutes: RouteConfig[] = [
   {
-    id: 'client-management',
-    path: '',  // Empty path for the base route
-    title: 'Client Management',
+    id: 'client-management-root',
+    path: '',
     element: ClientManagementHeader,
     icon: BusinessIcon,
-    sectionId: 'clientManagement',
+    title: 'Client Management',
+    permissions: {
+      permissions: ['client-management:read']
+    }
   },
   {
     id: 'client-list',

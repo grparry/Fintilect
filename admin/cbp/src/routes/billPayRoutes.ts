@@ -20,9 +20,11 @@ const BillPayHeader = lazy(() => import('../components/bill-pay/BillPayHeader'))
 const Dashboard = lazy(() => import('../components/bill-pay/dashboard/Dashboard'));
 const ExceptionTool = lazy(() => import('../components/bill-pay/payments/ExceptionTool'));
 const FISExceptionHandling = lazy(() => import('../components/bill-pay/payments/FISExceptionHandling'));
-const PendingPayments = lazy(() => import('../components/bill-pay/payments/PendingPayments'));
+const PendingPayments = lazy(() => import('../components/bill-pay/payments/ManagePayments'));
+const PaymentManagementHeader = lazy(() => import('../components/bill-pay/payments/PaymentManagementHeader'));
 const ManualProcessing = lazy(() => import('../components/bill-pay/payments/ManualProcessing'));
 const PayeeConversion = lazy(() => import('../components/bill-pay/payments/PayeeConversion'));
+const FisPayeeCheck = lazy(() => import('../components/bill-pay/payments/FisPayeeCheck'));
 const Reports = lazy(() => import('../components/bill-pay/reports/Reports'));
 const Settings = lazy(() => import('../components/bill-pay/settings/Settings'));
 const Holidays = lazy(() => import('../components/bill-pay/settings/Holidays'));
@@ -31,142 +33,178 @@ const NotificationTemplates = lazy(() => import('../components/bill-pay/settings
 const PermissionGroups = lazy(() => import('../components/bill-pay/settings/PermissionGroups'));
 const BillPaySecuritySettings = lazy(() => import('../components/bill-pay/settings/security/BillPaySecuritySettings'));
 const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
+
 const billPayRoutes: RouteConfig[] = [
   {
-    id: 'bill-pay',
-    path: '/admin/bill-pay',
-    title: 'Bill Pay',
-    element: BillPayHeader,
-    icon: PaymentIcon,
-    sectionId: 'billPay',
-  },
-  {
     id: 'dashboard',
-    path: '/admin/bill-pay/dashboard',
+    path: 'dashboard',
     title: 'Dashboard',
     element: Dashboard,
     icon: DashboardIcon,
     sectionId: 'billPay',
+    permissions: {
+      permissions: ['bill-pay:read']
+    }
   },
   {
-    id: 'billPay',
-    path: '/admin/bill-pay/payments',
-    title: 'Payments',
+    id: 'payments',
+    path: 'payments',
+    title: 'Payment Management',
+    element: PaymentManagementHeader,
     icon: PaymentIcon,
-    element: BillPay,
     sectionId: 'billPay',
+    permissions: {
+      permissions: ['bill-pay:read']
+    },
     children: [
       {
-        id: 'payments',
-        path: '/admin/bill-pay/payments',
-        title: 'Payments',
+        id: 'manage-payments',
+        path: 'manage',
+        title: 'Manage Payments',
         element: PendingPayments,
+        icon: ScheduleIcon,
+        sectionId: 'billPay',
+        permissions: {
+          permissions: ['bill-pay:read']
+        }
       },
       {
         id: 'exceptions',
-        path: '/admin/bill-pay/exceptions',
+        path: 'exceptions',
         title: 'Exceptions',
-        element: ExceptionTool,
-      },
-      {
-        id: 'exceptions-tool',
-        path: '/admin/bill-pay/payments/exceptions',
-        title: 'Exception Tool',
         element: ExceptionTool,
         icon: WarningIcon,
         sectionId: 'billPay',
+        hideFromSidebar: true,
+        permissions: {
+          permissions: ['bill-pay:read']
+        }
       },
       {
-        id: 'fis-exceptions',
-        path: '/admin/bill-pay/payments/fis-exceptions',
+        id: 'fis-exception-handling',
+        path: 'fis-exceptions',
         title: 'FIS Exception Handling',
         element: FISExceptionHandling,
         icon: ErrorIcon,
         sectionId: 'billPay',
-      },
-      {
-        id: 'pending-payments',
-        path: '/admin/bill-pay/payments/pending',
-        title: 'Pending Payments',
-        element: PendingPayments,
-        icon: ScheduleIcon,
-        sectionId: 'billPay',
+        permissions: {
+          permissions: ['bill-pay:read']
+        }
       },
       {
         id: 'manual-processing',
-        path: '/admin/bill-pay/payments/manual',
+        path: 'manual',
         title: 'Manual Processing',
         element: ManualProcessing,
         icon: BuildIcon,
         sectionId: 'billPay',
+        permissions: {
+          permissions: ['bill-pay:read']
+        }
       },
       {
-        id: 'payee-conversion',
-        path: '/admin/bill-pay/payments/payee-conversion',
-        title: 'Payee Conversion',
-        element: PayeeConversion,
-        icon: TransformIcon,
+        id: 'fis-payee-check',
+        path: 'fis-payee',
+        title: 'FIS Payee Check',
+        element: FisPayeeCheck,
+        icon: BuildIcon,
         sectionId: 'billPay',
+        permissions: {
+          permissions: ['bill-pay:read']
+        }
       }
     ]
   },
   {
     id: 'reports',
-    path: '/admin/bill-pay/reports',
+    path: 'reports',
     title: 'Reports',
     element: Reports,
     icon: AssessmentIcon,
     sectionId: 'billPay',
+    permissions: {
+      permissions: ['bill-pay:read']
+    }
+  },
+  {
+    id: 'data-conversion',
+    path: 'data-conversion',
+    title: 'Data Conversion',
+    element: PayeeConversion,
+    icon: TransformIcon,
+    sectionId: 'billPay',
+    permissions: {
+      permissions: ['bill-pay:read']
+    }
   },
   {
     id: 'settings',
-    path: '/admin/bill-pay/settings',
+    path: 'settings',
     title: 'Settings',
     icon: SettingsIcon,
     element: Settings,
     sectionId: 'billPay',
+    permissions: {
+      permissions: ['bill-pay:read']
+    },
     children: [
       {
         id: 'holidays',
-        path: '/admin/bill-pay/settings/holidays',
+        path: 'holidays',
         title: 'Holidays',
         element: Holidays,
         icon: EventIcon,
         sectionId: 'billPay',
+        permissions: {
+          permissions: ['bill-pay:read']
+        }
       },
       {
         id: 'bill-pay-config',
-        path: '/admin/bill-pay/settings/config',
+        path: 'config',
         title: 'Bill Pay Config',
         element: BillPayConfig,
         icon: TuneIcon,
         sectionId: 'billPay',
+        permissions: {
+          permissions: ['bill-pay:read']
+        }
       },
       {
         id: 'notification-templates',
-        path: '/admin/bill-pay/settings/notifications',
+        path: 'notifications',
         title: 'Notification Templates',
         element: NotificationTemplates,
         icon: NotificationsIcon,
         sectionId: 'billPay',
+        permissions: {
+          permissions: ['bill-pay:read']
+        }
       },
       {
         id: 'permission-groups',
-        path: '/admin/bill-pay/settings/permissions',
+        path: 'permissions',
         title: 'Permission Groups',
         element: PermissionGroups,
         icon: SecurityIcon,
         sectionId: 'billPay',
+        permissions: {
+          permissions: ['bill-pay:read']
+        }
       },
       {
         id: 'security-settings',
-        path: '/admin/bill-pay/settings/security',
+        path: 'security',
         title: 'Security Settings',
         element: BillPaySecuritySettings,
         icon: LockIcon,
         sectionId: 'billPay',
+        permissions: {
+          permissions: ['bill-pay:read']
+        }
       }
     ]
   }
 ];
+
 export default billPayRoutes;

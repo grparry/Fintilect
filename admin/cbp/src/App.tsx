@@ -1,6 +1,6 @@
-import React, { Suspense, ReactNode, lazy, FC } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
+import React, { Suspense, ReactNode, lazy, FC, memo, useCallback, useMemo } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { CircularProgress, Box } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -14,7 +14,6 @@ import NotFound from './components/common/NotFound';
 import { getAllRoutes } from './routes';
 import { RouteConfig } from './types/route.types';
 import { navigationConfig } from './config/navigation';
-import { Box } from '@mui/material';
 import './App.css';
 
 interface ProtectedRouteProps {
@@ -51,29 +50,45 @@ const LoadingFallback: React.FC = () => (
     <CircularProgress />
   </div>
 );
-const AppWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { isDarkMode, toggleTheme } = useTheme();
-  console.log('AppWrapper - Rendering with children');
-  return <MainLayout toggleTheme={toggleTheme}>{children}</MainLayout>;
-};
-type RouteElementComponent = React.ComponentType<any>;
-interface RouteElementProps {
-  Component: RouteElementComponent | React.LazyExoticComponent<RouteElementComponent>;
-  path: string;
-}
-const RouteElement: React.FC<RouteElementProps> = ({ Component, path }) => {
-  const { toggleTheme } = useTheme();
-  console.log('Rendering route element for path:', path);
+// Protected route wrapper that doesn't include MainLayout
+const ProtectedRouteWrapper: React.FC<{ Component: React.ComponentType<any> }> = memo(({ Component }) => {
   return (
     <ProtectedRoute>
       <Suspense fallback={<LoadingFallback />}>
         <ErrorBoundary>
-          <MainLayout toggleTheme={toggleTheme}>
-            <Component />
-          </MainLayout>
+          <Component />
         </ErrorBoundary>
       </Suspense>
     </ProtectedRoute>
+  );
+});
+
+ProtectedRouteWrapper.displayName = 'ProtectedRouteWrapper';
+
+// Admin section wrapper that includes MainLayout
+const AdminWrapper: React.FC = () => {
+  const { toggleTheme } = useTheme();
+  
+  return (
+    <ProtectedRoute>
+      <MainLayout toggleTheme={toggleTheme}>
+        <Outlet />
+      </MainLayout>
+    </ProtectedRoute>
+  );
+};
+
+interface RouteElementProps {
+  Component: React.ComponentType<any> | React.LazyExoticComponent<React.ComponentType<any>>;
+  path: string;
+}
+const RouteElement: React.FC<RouteElementProps> = ({ Component, path }) => {
+  return (
+    <Route
+      key={path}
+      path={path}
+      element={<ProtectedRouteWrapper Component={Component} />}
+    />
   );
 };
 const createElementWrapper = (element: JSX.Element): FC => {
@@ -84,46 +99,39 @@ const createElementWrapper = (element: JSX.Element): FC => {
 const BillPayHeader = lazy(() => import('./components/bill-pay/BillPayHeader'));
 const ClientManagementHeader = lazy(() => import('./components/client-management/ClientManagementHeader'));
 const DevelopmentHeader = lazy(() => import('./components/development/DevelopmentHeader'));
-const renderRoutes = (routes: RouteConfig[]) => {
-  console.log('=== Route Rendering Debug Start ===');
-  console.log('All routes:', routes.map(r => ({
-    id: r.id,
-    path: r.path,
-    elementType: typeof r.element,
-    hasChildren: !!r.children,
-    isLazy: r.element?.constructor?.name === 'LazyExoticComponent',
-    elementName: typeof r.element === 'function' ? r.element.name : 'Unknown'
-  })));
-  return routes.map((route) => {
-    console.log(`Processing route:`, {
-      id: route.id,
-      path: route.path,
-      elementType: typeof route.element,
-      hasChildren: !!route.children,
-      isLazy: route.element?.constructor?.name === 'LazyExoticComponent',
-      elementName: typeof route.element === 'function' ? route.element.name : 'Unknown'
-    });
-    const Component = route.element as React.ComponentType<any> | React.LazyExoticComponent<React.ComponentType<any>>;
-    console.log(`Creating route element for ${route.id} with path ${route.path}`);
-    return (
-      <Route
-        key={route.id}
-        path={route.path}
-        element={
-          <RouteElement
-            Component={Component}
-            path={route.path}
-          />
-        }
-      >
-        {route.children && renderRoutes(route.children)}
-      </Route>
-    );
-  });
-};
+
 const App: React.FC = () => {
-  const routes = getAllRoutes();
-  console.log('Generated Routes:', JSON.stringify(routes, null, 2));
+  const routes = useMemo(() => getAllRoutes(), []);
+  
+  const renderRoutes = useCallback((routes: RouteConfig[]) => {
+    if (!routes?.length) return null;
+
+    return routes.map((route) => {
+      if (!route?.path) return null;
+
+      const Component = route.element as React.ComponentType<any> | React.LazyExoticComponent<React.ComponentType<any>>;
+      if (!Component) return null;
+      
+      // Handle path transformation
+      let relativePath = route.path;
+      if (route.path === '/admin') {
+        relativePath = '';
+      } else if (route.path.startsWith('/admin/')) {
+        relativePath = route.path.replace(/^\/admin\//, '');
+      }
+      
+      return (
+        <Route
+          key={route.id}
+          path={relativePath}
+          element={<ProtectedRouteWrapper Component={Component} />}
+        >
+          {route.children && renderRoutes(route.children)}
+        </Route>
+      );
+    });
+  }, []);
+  
   return (
     <ErrorBoundary>
       <ThemeProvider>
@@ -140,15 +148,21 @@ const App: React.FC = () => {
                   }}>
                     <Suspense fallback={<LoadingFallback />}>
                       <Routes>
-                        <Route key="login" path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-                        <Route key="root" path="/" element={<Navigate to="/admin" replace />} />
-                        <Route key="admin" path="/admin">
-                          <Route key="old-clients" path="clients" element={<Navigate to="/admin/client-management" replace />} />
-                          <Route key="old-clients-list" path="clients/list" element={<Navigate to="/admin/client-management/list" replace />} />
-                          <Route key="old-client-details" path="clients/:clientId/*" element={<Navigate to="/admin/client-management/edit/:clientId/*" replace />} />
+                        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+                        <Route path="/" element={<Navigate to="/admin" replace />} />
+                        
+                        {/* Admin section with MainLayout */}
+                        <Route path="/admin/*" element={<AdminWrapper />}>
+                          {/* Legacy route redirects */}
+                          <Route path="clients" element={<Navigate to="/admin/client-management" replace />} />
+                          <Route path="clients/list" element={<Navigate to="/admin/client-management/list" replace />} />
+                          <Route path="clients/:clientId/*" element={<Navigate to="/admin/client-management/edit/:clientId/*" replace />} />
+                          
+                          {/* Dynamic routes */}
                           {renderRoutes(routes)}
                         </Route>
-                        <Route key="not-found" path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
+
+                        <Route path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
                       </Routes>
                     </Suspense>
                   </Box>

@@ -12,7 +12,9 @@ import {
     PayeeConversionProgressResponse,
     PayeeConversionProgress,
     PayeeConversionRecord,
-    PayeeConversionTemplate
+    PayeeConversionTemplate,
+    FisPayeeRequest,
+    FisPayeeResponse
 } from '../../types/bill-pay.types';
 import { PaginatedResponse } from '../../types/common.types';
 
@@ -21,6 +23,13 @@ import { PaginatedResponse } from '../../types/common.types';
  * Handles payee operations, validation, and conversion
  */
 export interface IPayeeService extends IBaseService {
+    /**
+     * Get a global payee from FIS Web Service
+     * @param request FIS payee request parameters
+     * @returns FIS payee response
+     */
+    getFisPayee(request: FisPayeeRequest): Promise<FisPayeeResponse>;
+
     /**
      * Get payees with pagination and filtering
      * @param filters Payee filters

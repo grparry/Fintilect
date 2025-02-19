@@ -56,6 +56,11 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import CodeIcon from '@mui/icons-material/Code';
 import ApiIcon from '@mui/icons-material/Api';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import ErrorIcon from '@mui/icons-material/Error';
+import BuildIcon from '@mui/icons-material/Build';
+import TransformIcon from '@mui/icons-material/Transform';
+import PaymentIcon from '@mui/icons-material/Payment';
 
 export const navigationConfig: NavigationConfig = {
   sections: [
@@ -95,17 +100,55 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/bill-pay/dashboard',
           icon: DashboardIcon,
           permissions: {
-            permissions: ['view-dashboard', 'read']
+            permissions: ['bill-pay:read']
           }
         },
         {
-          id: 'payment-management',
+          id: 'payments',
           title: 'Payment Management',
           path: '/admin/bill-pay/payments',
-          icon: AccountBalanceIcon,
+          icon: PaymentIcon,
           permissions: {
-            permissions: ['manage-payments', 'read', 'write']
-          }
+            permissions: ['bill-pay:read']
+          },
+          items: [
+            {
+              id: 'manage-payments',
+              title: 'Manage Payments',
+              path: '/admin/bill-pay/payments/manage',
+              icon: ScheduleIcon,
+              permissions: {
+                permissions: ['bill-pay:read']
+              }
+            },
+            {
+              id: 'fis-exceptions',
+              title: 'FIS Exception Handling',
+              path: '/admin/bill-pay/payments/fis-exceptions',
+              icon: ErrorIcon,
+              permissions: {
+                permissions: ['bill-pay:read']
+              }
+            },
+            {
+              id: 'manual-processing',
+              title: 'Manual Processing',
+              path: '/admin/bill-pay/payments/manual',
+              icon: BuildIcon,
+              permissions: {
+                permissions: ['bill-pay:read']
+              }
+            },
+            {
+              id: 'fis-payee-check',
+              title: 'FIS Payee Check',
+              path: '/admin/bill-pay/payments/fis-payee-check',
+              icon: AccountBalanceIcon,
+              permissions: {
+                permissions: ['bill-pay:read']
+              }
+            }
+          ]
         },
         {
           id: 'reports',
@@ -113,16 +156,16 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/bill-pay/reports',
           icon: AssessmentIcon,
           permissions: {
-            permissions: ['view-reports', 'read']
+            permissions: ['bill-pay:read']
           }
         },
         {
-          id: 'data-conversion',
+          id: 'payee-conversion',
           title: 'Data Conversion',
-          path: '/admin/bill-pay/data-conversion',
-          icon: SyncAltIcon,
+          path: '/admin/bill-pay/payee-conversion',
+          icon: TransformIcon,
           permissions: {
-            permissions: ['manage-data-conversion', 'read', 'write']
+            permissions: ['bill-pay:read']
           }
         },
         {
@@ -131,12 +174,12 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/bill-pay/settings',
           icon: SettingsIcon,
           permissions: {
-            permissions: ['manage-settings', 'read', 'write']
+            permissions: ['bill-pay:read']
           }
         }
       ],
       permissions: {
-        permissions: ['view-bill-pay', 'read']
+        permissions: ['bill-pay:read']
       }
     },
     {

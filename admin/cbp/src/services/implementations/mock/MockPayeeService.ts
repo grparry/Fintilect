@@ -13,7 +13,9 @@ import {
   PayeeConversionProgressResponse,
   PayeeConversionProgress,
   PayeeConversionRecord,
-  PayeeConversionTemplate
+  PayeeConversionTemplate,
+  FisPayeeRequest,
+  FisPayeeResponse
 } from '../../../types/bill-pay.types';
 import { PaginatedResponse } from '../../../types/common.types';
 
@@ -326,5 +328,12 @@ export class MockPayeeService extends BaseMockService implements IPayeeService {
       failed: 0,
       errors: {}
     };
+  }
+  async getFisPayee(request: FisPayeeRequest): Promise<FisPayeeResponse> {
+    // Simulate FIS payee lookup with mock response
+    return Promise.resolve({
+      payeeId: 'FIS_' + Math.random().toString(36).substring(7),
+      message: `Successfully found payee: ${request.name}`
+    });
   }
 }

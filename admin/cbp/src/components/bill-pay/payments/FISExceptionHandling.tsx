@@ -1,4 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+import { IFISExceptionService } from '../../../services/interfaces/IFISExceptionService';
+import {
+  FISException,
+  FISExceptionStatus,
+  FISExceptionHistory,
+  FISResponseHistory,
+  FISExceptionFilters,
+  ExceptionStats,
+} from '../../../types/bill-pay.types';
+import { useAuth } from '../../../hooks/useAuth';
 import {
   Box,
   Card,
@@ -40,75 +51,18 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import SearchIcon from '@mui/icons-material/Search';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import dayjs from 'dayjs';
-import { ApiResponse } from '../../../types/api.types';
-import {
-  FISException,
-  FISExceptionFilters,
-  FISResponseHistory,
-  FISRetryResult,
-  ExceptionStats,
-  FISExceptionStatus,
-  FISErrorCode,
-} from '../../../types/bill-pay.types';
-import { useAuth } from '../../../hooks/useAuth';
+
+const defaultByStatus = Object.values(FISExceptionStatus).reduce((acc, status) => {
+  acc[status] = 0;
+  return acc;
+}, {} as Record<FISExceptionStatus, number>);
 
 interface FISDialogState {
   open: boolean;
   exception: FISException | null;
   action: 'view' | 'retry' | 'delete' | null;
 }
-interface FilterState {
-  startDate: string | null;
-  endDate: string | null;
-  status: FISExceptionStatus[];
-  errorCodes: FISErrorCode[];
-  searchTerm: string;
-}
-interface FISExceptionHandlingProps {
-  api: {
-    getExceptions: (filters: FISExceptionFilters) => Promise<ApiResponse<FISException[]>>;
-    getResponseHistory: (requestId: string) => Promise<ApiResponse<FISResponseHistory[]>>;
-    retryException: (id: string) => Promise<ApiResponse<FISRetryResult>>;
-    ignoreException: (id: string, notes: string) => Promise<ApiResponse<void>>;
-    bulkRetry: (ids: string[]) => Promise<ApiResponse<FISRetryResult[]>>;
-    bulkDelete: (ids: string[]) => Promise<ApiResponse<void>>;
-    exportExceptions: (filters: FISExceptionFilters) => Promise<Blob>;
-    getExceptionStats: () => Promise<ApiResponse<ExceptionStats>>;
-  };
-  onClose: () => void;
-}
-interface ExceptionSummary {
-  total: number;
-  byStatus: Record<FISExceptionStatus, number>;
-}
-const getExceptionSummary = (exceptions: FISException[]): ExceptionSummary => {
-  const summary: ExceptionSummary = {
-    total: exceptions.length,
-    byStatus: {
-      [FISExceptionStatus.PENDING]: 0,
-      [FISExceptionStatus.IN_PROGRESS]: 0,
-      [FISExceptionStatus.RESOLVED]: 0,
-      [FISExceptionStatus.FAILED]: 0,
-      [FISExceptionStatus.REFUNDED]: 0,
-      [FISExceptionStatus.RETRYING]: 0,
-      [FISExceptionStatus.REVERSED]: 0,
-      [FISExceptionStatus.STOPPED]: 0,
-      [FISExceptionStatus.RETURNED]: 0,
-      [FISExceptionStatus.RESENT]: 0,
-      [FISExceptionStatus.REINITIATED]: 0,
-      [FISExceptionStatus.PENDING_REVERSAL]: 0,
-      [FISExceptionStatus.PENDING_REFUND]: 0,
-      [FISExceptionStatus.PENDING_RETURN]: 0,
-      [FISExceptionStatus.PENDING_STOP_PAYMENT]: 0,
-      [FISExceptionStatus.PENDING_RESEND]: 0,
-      [FISExceptionStatus.PENDING_REINITIATE]: 0,
-    },
-  };
-  exceptions.forEach((exception) => {
-    summary.byStatus[exception.status]++;
-  });
-  return summary;
-};
+
 const ExceptionStatusChip: React.FC<{ status: FISExceptionStatus }> = ({ status }) => {
   const getColor = () => {
     switch (status) {
@@ -132,7 +86,13 @@ const ExceptionStatusChip: React.FC<{ status: FISExceptionStatus }> = ({ status 
     />
   );
 };
-const ExceptionSummaryDisplay: React.FC<{ summary: ExceptionSummary }> = ({ summary }) => {
+
+const ExceptionSummaryDisplay: React.FC<{ summary: {
+  total: number;
+  byStatus: Record<FISExceptionStatus, number>;
+  successRate: number;
+  avgRetryCount: number;
+} }> = ({ summary }) => {
   return (
     <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
       <Typography variant="body2">
@@ -140,9 +100,6 @@ const ExceptionSummaryDisplay: React.FC<{ summary: ExceptionSummary }> = ({ summ
       </Typography>
       <Typography variant="body2">
         Pending: {summary.byStatus[FISExceptionStatus.PENDING]}
-      </Typography>
-      <Typography variant="body2">
-        In Progress: {summary.byStatus[FISExceptionStatus.IN_PROGRESS]}
       </Typography>
       <Typography variant="body2">
         Resolved: {summary.byStatus[FISExceptionStatus.RESOLVED]}
@@ -153,142 +110,127 @@ const ExceptionSummaryDisplay: React.FC<{ summary: ExceptionSummary }> = ({ summ
     </Box>
   );
 };
-const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClose }) => {
+
+const FISExceptionHandling: React.FC = () => {
   const { user } = useAuth();
+  const fisExceptionService = ServiceFactory.getInstance().getFISExceptionService();
+
   // State
   const [exceptions, setExceptions] = useState<FISException[]>([]);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectedIds, setSelectedIds] = useState<FISException['id'][]>([]);
   const [dialogState, setDialogState] = useState<FISDialogState>({
     open: false,
     exception: null,
     action: null,
   });
-  const [filters, setFilters] = useState<FilterState>({
-    startDate: null,
-    endDate: null,
-    status: [],
-    errorCodes: [],
-    searchTerm: '',
+  const [filters, setFilters] = useState<FISExceptionFilters>({
+    requestId: '',
+    status: []
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState<ExceptionStats | null>(null);
+  const [stats, setStats] = useState<{
+    total: number;
+    byStatus: Record<FISExceptionStatus, number>;
+    successRate: number;
+    avgRetryCount: number;
+  }>({
+    total: 0,
+    byStatus: defaultByStatus,
+    successRate: 0,
+    avgRetryCount: 0
+  });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [responseHistory, setResponseHistory] = useState<FISResponseHistory[]>([]);
-  const [retryResult, setRetryResult] = useState<FISRetryResult | null>(null);
+  const [retryResult, setRetryResult] = useState<any | null>(null);
+
   const loadExceptions = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await api.getExceptions({
-        requestId: filters.searchTerm,
-        status: filters.status,
-      });
-      if (response.success) {
-        setExceptions(response.data);
-        setError(null);
-      } else {
-        setError('Failed to fetch exceptions');
-      }
+      const response = await fisExceptionService.getFISExceptions(filters);
+      setExceptions(response.items);
+      setError(null);
     } catch (err) {
       setError('An error occurred while fetching exceptions');
       console.error('Error fetching exceptions:', err);
     } finally {
       setLoading(false);
     }
-  }, [api, filters]);
-  const handleRetry = async (exception: FISException | null) => {
-    if (!exception) return;
+  }, [fisExceptionService, filters]);
+
+  const loadExceptionStats = useCallback(async () => {
     try {
-      setLoading(true);
-      const response = await api.retryException(exception.id);
-      if ('error' in response) {
-        setError(response.error.message || 'Failed to retry exception');
-        return;
-      }
-      if (!response.success) {
-        setError('Failed to retry exception');
-        return;
-      }
-      setRetryResult(response.data);
-      if (response.data.success) {
-        await loadExceptions();
-        setDialogState({ open: false, exception: null, action: null });
-      }
+      const summary = await fisExceptionService.getFISExceptionSummary();
+      setStats(summary);
     } catch (err) {
-      setError('Failed to retry exception');
-      console.error(err);
-    } finally {
-      setLoading(false);
+      console.error('Error fetching exception stats:', err);
     }
-  };
-  const handleBulkRetry = async () => {
-    if (!selectedIds.length) return;
+  }, [fisExceptionService]);
+
+  const loadResponseHistory = useCallback(async (requestId: FISException['requestId']) => {
     try {
-      setLoading(true);
-      const response = await api.bulkRetry(selectedIds);
-      if ('error' in response) {
-        setError(response.error.message || 'Failed to retry selected exceptions');
-        return;
-      }
-      if (!response.success) {
-        setError('Failed to retry selected exceptions');
-        return;
-      }
-      await loadExceptions();
+      const history = await fisExceptionService.getFISResponseHistory(requestId);
+      setResponseHistory(history);
+    } catch (err) {
+      console.error('Error fetching response history:', err);
+    }
+  }, [fisExceptionService]);
+
+  const handleRetry = useCallback(async (exceptionId: FISException['id']) => {
+    try {
+      await fisExceptionService.retryFISException(exceptionId);
+      // Refresh exceptions after retry
+      loadExceptions();
+    } catch (error) {
+      console.error('Failed to retry exception:', error);
+    }
+  }, [fisExceptionService, loadExceptions]);
+
+  const handleBulkRetry = useCallback(async () => {
+    try {
+      await Promise.all(selectedIds.map(id => fisExceptionService.retryFISException(id)));
       setSelectedIds([]);
-    } catch (err) {
-      setError('Failed to retry selected exceptions');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-  const handleBulkDelete = async () => {
-    if (!selectedIds.length) return;
-    try {
-      setLoading(true);
-      await api.bulkDelete(selectedIds);
       await loadExceptions();
-      setSelectedIds([]);
     } catch (err) {
-      setError('Failed to delete selected exceptions');
-      console.error(err);
-    } finally {
-      setLoading(false);
+      console.error('Error bulk retrying exceptions:', err);
     }
-  };
-  const handleExport = async () => {
+  }, [fisExceptionService, selectedIds, loadExceptions]);
+
+  const handleBulkDelete = useCallback(async () => {
     try {
-      setLoading(true);
-      const blob = await api.exportExceptions({
-        requestId: filters.searchTerm,
-        status: filters.status,
-      });
+      await Promise.all(selectedIds.map(id => fisExceptionService.updateFISExceptionStatus(id, FISExceptionStatus.FAILED)));
+      setSelectedIds([]);
+      await loadExceptions();
+    } catch (err) {
+      console.error('Error bulk deleting exceptions:', err);
+    }
+  }, [fisExceptionService, selectedIds, loadExceptions]);
+
+  const handleExport = useCallback(async () => {
+    try {
+      const summary = await fisExceptionService.getFISExceptionSummary();
+      const blob = new Blob([JSON.stringify(summary)], { type: 'application/json' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `fis-exceptions-${dayjs().format('YYYY-MM-DD')}.csv`;
+      a.download = `fis-exceptions-${dayjs().format('YYYY-MM-DD')}.json`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (err) {
-      setError('Failed to export exceptions');
-      console.error(err);
-    } finally {
-      setLoading(false);
+      console.error('Error exporting exceptions:', err);
     }
-  };
-  const handleFilterChange = <K extends keyof FilterState>(
+  }, [fisExceptionService]);
+
+  const handleFilterChange = <K extends keyof FISExceptionFilters>(
     field: K,
-    value: FilterState[K]
+    value: FISExceptionFilters[K]
   ) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
   };
-  const handleDateChange = (field: 'startDate' | 'endDate') => (date: string | null) => {
-    handleFilterChange(field, date);
-  };
+
   const handleStatusChange = (event: SelectChangeEvent<FISExceptionStatus[]>) => {
     const {
       target: { value },
@@ -298,80 +240,63 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       status: typeof value === 'string' ? [value as FISExceptionStatus] : value as FISExceptionStatus[],
     }));
   };
-  const handleErrorCodeChange = (event: SelectChangeEvent<FISErrorCode[]>) => {
-    const {
-      target: { value },
-    } = event;
-    setFilters((prev) => ({
-      ...prev,
-      errorCodes: typeof value === 'string' ? [value as FISErrorCode] : value as FISErrorCode[],
-    }));
-  };
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleFilterChange('searchTerm', event.target.value);
+    handleFilterChange('requestId', event.target.value);
   };
+
   const renderStats = () => (
-    <Grid container spacing={2} sx={{ mb: 3 }}>
-      <Grid item xs={12} md={3}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6">Total Exceptions</Typography>
-            <Typography variant="h4">{stats?.total || 0}</Typography>
-          </CardContent>
-        </Card>
+    <Box sx={{ mb: 3 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Total Exceptions</Typography>
+              <Typography variant="h4">{stats.total}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Success Rate</Typography>
+              <Typography variant="h4">
+                {(stats.successRate * 100).toFixed(1)}%
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Average Retry Count</Typography>
+              <Typography>
+                {stats.avgRetryCount.toFixed(1)}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Pending Exceptions</Typography>
+              <Typography>{stats.byStatus[FISExceptionStatus.PENDING]}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={3}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6">Resolution Rate</Typography>
-            <Typography variant="h4">
-              {((stats?.resolutionRate || 0) * 100).toFixed(1)}%
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} md={3}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6">Avg Retry Count</Typography>
-            <Typography>
-              {stats?.averageRetryCount.toFixed(1) || 0}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} md={3}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6">Pending Exceptions</Typography>
-            <Typography>{stats?.byStatus[FISExceptionStatus.PENDING] || 0}</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid>
+    </Box>
   );
+
   const renderFilters = () => (
     <Card sx={{ mb: 3 }}>
       <CardContent>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} sm={6} md={3}>
             <TextField
-              label="Start Date"
-              type="date"
-              value={filters.startDate || ''}
-              onChange={(e) => handleDateChange('startDate')(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              fullWidth
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="End Date"
-              type="date"
-              value={filters.endDate || ''}
-              onChange={(e) => handleDateChange('endDate')(e.target.value)}
-              InputLabelProps={{ shrink: true }}
+              label="Request ID"
+              value={filters.requestId}
+              onChange={handleSearchChange}
               fullWidth
               size="small"
             />
@@ -393,39 +318,11 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <FormControl fullWidth size="small">
-              <InputLabel>Error Code</InputLabel>
-              <Select
-                multiple
-                value={filters.errorCodes}
-                onChange={handleErrorCodeChange}
-                label="Error Code"
-              >
-                {Object.values(FISErrorCode).map((code) => (
-                  <MenuItem key={code} value={code}>
-                    {code}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Search"
-              value={filters.searchTerm}
-              onChange={handleSearchChange}
-              InputProps={{
-                endAdornment: <SearchIcon />,
-              }}
-            />
-          </Grid>
         </Grid>
       </CardContent>
     </Card>
   );
+
   const renderExceptionList = () => (
     <TableContainer component={Paper}>
       <Table>
@@ -525,6 +422,7 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       />
     </TableContainer>
   );
+
   const renderDialog = () => (
     <Dialog
       open={dialogState.open}
@@ -577,7 +475,7 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
           <Button
             variant="contained"
             color="primary"
-            onClick={() => handleRetry(dialogState.exception)}
+            onClick={() => handleRetry(dialogState.exception.id)}
           >
             Retry Exception
           </Button>
@@ -585,9 +483,12 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
       </DialogActions>
     </Dialog>
   );
+
   useEffect(() => {
     loadExceptions();
-  }, [loadExceptions]);
+    loadExceptionStats();
+  }, [loadExceptions, loadExceptionStats]);
+
   return (
     <Box>
       {error && (
@@ -646,28 +547,7 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
         </Stack>
       </Box>
       {stats && (
-        <ExceptionSummaryDisplay summary={{
-          total: stats.total,
-          byStatus: {
-            [FISExceptionStatus.PENDING]: stats.byStatus[FISExceptionStatus.PENDING],
-            [FISExceptionStatus.IN_PROGRESS]: stats.byStatus[FISExceptionStatus.IN_PROGRESS],
-            [FISExceptionStatus.RESOLVED]: stats.byStatus[FISExceptionStatus.RESOLVED],
-            [FISExceptionStatus.FAILED]: stats.byStatus[FISExceptionStatus.FAILED],
-            [FISExceptionStatus.REFUNDED]: stats.byStatus[FISExceptionStatus.REFUNDED],
-            [FISExceptionStatus.RETRYING]: stats.byStatus[FISExceptionStatus.RETRYING],
-            [FISExceptionStatus.REVERSED]: stats.byStatus[FISExceptionStatus.REVERSED],
-            [FISExceptionStatus.STOPPED]: stats.byStatus[FISExceptionStatus.STOPPED],
-            [FISExceptionStatus.RETURNED]: stats.byStatus[FISExceptionStatus.RETURNED],
-            [FISExceptionStatus.RESENT]: stats.byStatus[FISExceptionStatus.RESENT],
-            [FISExceptionStatus.REINITIATED]: stats.byStatus[FISExceptionStatus.REINITIATED],
-            [FISExceptionStatus.PENDING_REVERSAL]: stats.byStatus[FISExceptionStatus.PENDING_REVERSAL],
-            [FISExceptionStatus.PENDING_REFUND]: stats.byStatus[FISExceptionStatus.PENDING_REFUND],
-            [FISExceptionStatus.PENDING_RETURN]: stats.byStatus[FISExceptionStatus.PENDING_RETURN],
-            [FISExceptionStatus.PENDING_STOP_PAYMENT]: stats.byStatus[FISExceptionStatus.PENDING_STOP_PAYMENT],
-            [FISExceptionStatus.PENDING_RESEND]: stats.byStatus[FISExceptionStatus.PENDING_RESEND],
-            [FISExceptionStatus.PENDING_REINITIATE]: stats.byStatus[FISExceptionStatus.PENDING_REINITIATE]
-          }
-        }} />
+        <ExceptionSummaryDisplay summary={stats} />
       )}
       {renderFilters()}
       {renderExceptionList()}
@@ -675,4 +555,5 @@ const FISExceptionHandling: React.FC<FISExceptionHandlingProps> = ({ api, onClos
     </Box>
   );
 };
+
 export default FISExceptionHandling;

@@ -106,7 +106,7 @@ const initialConfirmationState: ConfirmationState = {
   processing: false,
   confirmationStatus: null
 };
-const PendingPayments: React.FC = () => {
+const ManagePayments: React.FC = () => {
   const { user } = useAuth();
   const paymentService = ServiceFactory.getInstance().getPaymentService();
   // State
@@ -1184,4 +1184,4 @@ const PendingPayments: React.FC = () => {
     </Box>
   );
 };
-export default PendingPayments;
+export default ManagePayments;

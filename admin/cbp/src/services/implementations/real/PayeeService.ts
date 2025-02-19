@@ -14,12 +14,17 @@ import {
   PayeeConversionProgressResponse,
   PayeeConversionProgress,
   PayeeConversionRecord,
-  PayeeConversionTemplate
+  PayeeConversionTemplate,
+  FisPayeeRequest,
+  FisPayeeResponse
 } from '../../../types/bill-pay.types';
 
 export class PayeeService extends BaseService implements IPayeeService {
   constructor(basePath: string = '/api/v1/payees') {
     super(basePath);
+  }
+  async getFisPayee(request: FisPayeeRequest): Promise<FisPayeeResponse> {
+    return this.post<FisPayeeResponse>('/fis-payee', request);
   }
   async getPayees(filters?: Record<string, any>): Promise<PaginatedResponse<Payee>> {
     return this.get<PaginatedResponse<Payee>>('', { params: filters });

@@ -952,3 +952,17 @@ export interface NotificationResponse {
   deliveredAt?: string;
   error?: string;
 }
+
+export interface FisPayeeRequest {
+  name?: string;
+  address1?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  usersAccountAtPayee?: string;
+}
+
+export interface FisPayeeResponse {
+  payeeId?: string;
+  message?: string;
+}

@@ -43,7 +43,7 @@ export type RouteSectionKey =
 export interface RouteSections {
   [key: string]: RouteSection;
   clientManagement: RouteSection;
-  emerge: RouteSection;
+  emerge?: RouteSection;
   billPay: RouteSection;
   development: RouteSection;
 }
