@@ -124,7 +124,7 @@ const AuditSearch: React.FC<AuditSearchProps> = ({ clientId }) => {
   };
   return (
     <Box>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h5" gutterBottom color="text.primary">
         Audit Log Search
       </Typography>
       <Paper sx={{ p: 2, mb: 2 }}>

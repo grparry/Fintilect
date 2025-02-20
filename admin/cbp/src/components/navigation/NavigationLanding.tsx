@@ -24,7 +24,7 @@ const NavigationLanding: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" color="text.primary" gutterBottom>
         {activeSection.title}
       </Typography>
       {activeSection.description && (
@@ -53,7 +53,7 @@ const NavigationLanding: React.FC = () => {
                     {React.createElement(item.icon)}
                   </Box>
                 )}
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" color="text.primary" gutterBottom>
                   {item.title}
                 </Typography>
                 {item.description && (

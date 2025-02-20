@@ -319,7 +319,7 @@ const PayeeConversion: React.FC = () => {
     if (!progress) return null;
     return (
       <Box sx={{ mb: 3 }}>
-        <Typography variant="subtitle1" gutterBottom>
+        <Typography variant="subtitle1" gutterBottom color="text.primary">
           Conversion Progress: {progress.currentStep} ({Math.round(progress.progress * 100)}%)
         </Typography>
         <LinearProgress
@@ -327,7 +327,7 @@ const PayeeConversion: React.FC = () => {
           value={progress.progress * 100}
           sx={{ mb: 1 }}
         />
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.primary">
           Processed {progress.processedRecords} of {progress.totalRecords} records
         </Typography>
         {progress.errors.length > 0 && (
@@ -343,7 +343,9 @@ const PayeeConversion: React.FC = () => {
       <Box sx={{ mb: 3 }}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs>
-            <Typography variant="h5">Payee Conversion</Typography>
+            <Typography variant="h5" color="text.primary">
+              Payee Conversion
+            </Typography>
           </Grid>
           <Grid item>
             <Button
@@ -370,7 +372,7 @@ const PayeeConversion: React.FC = () => {
       {progress && renderProgress()}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom color="text.primary">
             Conversion Files
           </Typography>
           {loading ? (
@@ -383,7 +385,7 @@ const PayeeConversion: React.FC = () => {
       {selectedFile && (
         <Card>
           <CardContent>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom color="text.primary">
               Records for {selectedFile.name}
             </Typography>
             {renderRecordList()}
@@ -400,13 +402,13 @@ const PayeeConversion: React.FC = () => {
         <DialogContent>
           {validation && (
             <Stack spacing={2} sx={{ mt: 2 }}>
-              <Typography>
+              <Typography color="text.primary">
                 Total Records: {validation.totalRecords}
               </Typography>
-              <Typography>
+              <Typography color="text.primary">
                 Valid Records: {validation.validRecords}
               </Typography>
-              <Typography>
+              <Typography color="text.primary">
                 Invalid Records: {validation.invalidRecords}
               </Typography>
               {validation.errors.length > 0 && (

@@ -166,7 +166,7 @@ const BillPaySecuritySettings: React.FC = () => {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-            <Typography variant="h5" component="h1">
+            <Typography variant="h5" component="h1" color="text.primary">
               Security Settings
             </Typography>
             <Button
@@ -182,7 +182,7 @@ const BillPaySecuritySettings: React.FC = () => {
         {/* Password Policy Section */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3, height: '100%' }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom color="text.primary">
               Password Policy
             </Typography>
             <Divider sx={{ mb: 2 }} />
@@ -264,7 +264,7 @@ const BillPaySecuritySettings: React.FC = () => {
         {/* Login Policy Section */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3, height: '100%' }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom color="text.primary">
               Login Policy
             </Typography>
             <Divider sx={{ mb: 2 }} />
@@ -337,12 +337,12 @@ const BillPaySecuritySettings: React.FC = () => {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom color="text.primary">
                 One-Time Passcode
               </Typography>
               <Divider sx={{ mb: 2 }} />
               <FormControl component="fieldset" sx={{ mb: 2 }}>
-                <Typography variant="subtitle2" gutterBottom>
+                <Typography variant="subtitle2" gutterBottom color="text.primary">
                   Send verification code via:
                 </Typography>
                 <RadioGroup
@@ -395,7 +395,7 @@ const BillPaySecuritySettings: React.FC = () => {
         {/* IP Whitelist Section */}
         <Grid item xs={12}>
           <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom color="text.primary">
               IP Whitelist
             </Typography>
             <Divider sx={{ mb: 2 }} />

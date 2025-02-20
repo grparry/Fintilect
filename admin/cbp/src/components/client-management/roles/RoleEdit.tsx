@@ -107,7 +107,7 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
   }
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 800, mx: 'auto', p: 2 }}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h5" gutterBottom color="text.primary">
         {roleId ? 'Edit Role' : 'Create New Role'}
       </Typography>
       {error && (
@@ -138,7 +138,7 @@ export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
           rows={3}
           sx={{ mb: 2 }}
         />
-        <Typography variant="subtitle1" gutterBottom>
+        <Typography variant="subtitle1" gutterBottom color="text.primary">
           Permissions
         </Typography>
         <PermissionTreeView

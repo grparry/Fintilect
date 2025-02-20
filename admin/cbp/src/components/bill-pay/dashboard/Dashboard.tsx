@@ -85,7 +85,7 @@ const CustomTooltip = ({ active, payload, label, isAmount }: CustomTooltipProps)
   return (
     <Card>
       <CardContent>
-        <Typography variant="body2">{label}</Typography>
+        <Typography variant="body2" color="text.primary">{label}</Typography>
         <Typography variant="body2" color="textSecondary">
           {formatValue(payload[0].value, isAmount)}
         </Typography>
@@ -442,12 +442,12 @@ const Dashboard: React.FC = () => {
                   mb: 2
                 }}
               >
-                <Typography variant="h6" component="div">
+                <Typography variant="h6" color="text.primary" component="div">
                   {card.title}
                 </Typography>
                 <card.icon />
               </Box>
-              <Typography variant="h4" component="div">
+              <Typography variant="h4" color="text.primary" component="div">
                 {card.formatter ? card.formatter(value) : value}
               </Typography>
             </CardContent>
@@ -478,7 +478,7 @@ const Dashboard: React.FC = () => {
     <Box sx={{ p: 3 }}>
       {state.error && (
         <Alert severity="error" sx={{ mb: 3 }}>
-          <Typography>{state.error}</Typography>
+          <Typography color="text.primary">{state.error}</Typography>
         </Alert>
       )}
       {renderMetricCards()}
@@ -492,7 +492,7 @@ const Dashboard: React.FC = () => {
               mb: 3,
             }}
           >
-            <Typography variant="h6">Transaction Trends</Typography>
+            <Typography variant="h6" color="text.primary">Transaction Trends</Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <FormControl size="small">
                 <InputLabel>Time Range</InputLabel>

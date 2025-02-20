@@ -25,7 +25,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon, onC
         <CardContent>
           <Box display="flex" alignItems="center" mb={2}>
             {icon}
-            <Typography variant="h6" component="div" ml={1}>
+            <Typography variant="h6" color="text.primary" component="div" ml={1}>
               {title}
             </Typography>
           </Box>
@@ -72,7 +72,7 @@ const Dashboard: React.FC = () => {
       backgroundColor: theme.palette.mode === 'dark' ? 'background.default' : 'background.paper',
       minHeight: '100%'
     }}>
-      <Typography variant="h4" gutterBottom color="text.primary">
+      <Typography variant="h4" color="text.primary" gutterBottom>
         Admin Dashboard
       </Typography>
       <Typography variant="body1" color="text.secondary" mb={4}>

@@ -40,7 +40,7 @@ const PaymentManagementHeader: React.FC = () => {
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
               <ScheduleIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 Manage Payments
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -70,7 +70,7 @@ const PaymentManagementHeader: React.FC = () => {
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
               <ErrorIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 FIS Exception Handling
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -100,7 +100,7 @@ const PaymentManagementHeader: React.FC = () => {
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
               <BuildIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 Manual Processing
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -130,7 +130,7 @@ const PaymentManagementHeader: React.FC = () => {
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
               <AccountBalanceIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 FIS Payee Check
               </Typography>
               <Typography variant="body2" color="text.secondary">

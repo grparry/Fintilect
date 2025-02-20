@@ -345,7 +345,7 @@ const NotificationTemplates: React.FC = () => {
         </Alert>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant="h5">Notification Templates</Typography>
+        <Typography variant="h5" color="text.primary">Notification Templates</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -582,7 +582,7 @@ const NotificationTemplates: React.FC = () => {
                 }}
               />
               {formErrors.content && (
-                <Typography color="error" variant="caption">
+                <Typography color="text.primary" variant="caption">
                   {formErrors.content}
                 </Typography>
               )}
@@ -618,7 +618,7 @@ const NotificationTemplates: React.FC = () => {
         <DialogContent>
           {previewDialog.subject && previewDialog.content && (
             <Box>
-              <Typography variant="subtitle1" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom color="text.primary">
                 Subject: {previewDialog.subject}
               </Typography>
               <Box

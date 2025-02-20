@@ -11,10 +11,10 @@ export const mockPaymentStatusDistribution: Record<PaymentStatus, number> = {
   [PaymentStatus.CANCELLED]: 5,
   [PaymentStatus.EXPIRED]: 2,
   [PaymentStatus.PENDING_APPROVAL]: 20,
-  [PaymentStatus.DRAFT]: 30,
-  [PaymentStatus.SUBMITTED]: 15,
   [PaymentStatus.SCHEDULED]: 10,
   [PaymentStatus.RETURNED]: 8,
+  [PaymentStatus.DRAFT]: 30,
+  [PaymentStatus.SUBMITTED]: 15,
   [PaymentStatus.STOP_PAYMENT]: 3,
   [PaymentStatus.VOID]: 5,
   [PaymentStatus.HOLD]: 4,
@@ -23,6 +23,7 @@ export const mockPaymentStatusDistribution: Record<PaymentStatus, number> = {
   [PaymentStatus.PARTIALLY_REFUNDED]: 1,
   [PaymentStatus.CHARGEBACK]: 1
 };
+
 // Regular payments
 export const mockPayments: Payment[] = [
   {
@@ -39,7 +40,15 @@ export const mockPayments: Payment[] = [
     description: 'Electric bill payment',
     priority: Priority.HIGH,
     createdAt: '2024-12-16T00:00:00Z',
-    updatedAt: '2024-12-16T00:00:00Z'
+    updatedAt: '2024-12-16T00:00:00Z',
+    userPayeeListId: 'upl_1',
+    memberId: 'mem_1',
+    fundingAccount: {
+      accountId: 'acc_1',
+      accountType: 'CHECKING',
+      accountNumber: '1234567890',
+      routingNumber: '123456789'
+    }
   },
   {
     id: 'pmt_2',
@@ -55,9 +64,18 @@ export const mockPayments: Payment[] = [
     description: 'Water utility payment',
     priority: Priority.MEDIUM,
     createdAt: '2024-12-14T00:00:00Z',
-    updatedAt: '2024-12-15T00:00:00Z'
+    updatedAt: '2024-12-15T00:00:00Z',
+    userPayeeListId: 'upl_2',
+    memberId: 'mem_1',
+    fundingAccount: {
+      accountId: 'acc_1',
+      accountType: 'CHECKING',
+      accountNumber: '1234567890',
+      routingNumber: '123456789'
+    }
   }
 ];
+
 // Pending payments with more detailed information
 export const mockPendingPayments: PendingPayment[] = [
   {
@@ -74,6 +92,14 @@ export const mockPendingPayments: PendingPayment[] = [
     effectiveDate: '2024-12-30',
     createdAt: '2024-12-30T09:00:00Z',
     updatedAt: '2024-12-30T09:00:00Z',
+    userPayeeListId: 'upl_2',
+    memberId: 'mem_1',
+    fundingAccount: {
+      accountId: 'acc_1',
+      accountType: 'CHECKING',
+      accountNumber: '1234567890',
+      routingNumber: '123456789'
+    },
     recipient: {
       name: 'John Doe',
       accountNumber: '1234567890',
@@ -93,12 +119,20 @@ export const mockPendingPayments: PendingPayment[] = [
     payeeName: 'Jane Smith',
     amount: 2500.00,
     currency: 'USD',
-    method: PaymentMethod.WIRE,
-    status: PaymentStatus.PENDING,
+    method: PaymentMethod.ACH,
+    status: PaymentStatus.APPROVED,
     priority: Priority.MEDIUM,
     effectiveDate: '2024-12-30',
     createdAt: '2024-12-30T09:15:00Z',
     updatedAt: '2024-12-30T09:15:00Z',
+    userPayeeListId: 'upl_3',
+    memberId: 'mem_1',
+    fundingAccount: {
+      accountId: 'acc_1',
+      accountType: 'CHECKING',
+      accountNumber: '1234567890',
+      routingNumber: '123456789'
+    },
     recipient: {
       name: 'Jane Smith',
       accountNumber: '0987654321',
@@ -124,6 +158,14 @@ export const mockPendingPayments: PendingPayment[] = [
     effectiveDate: '2024-12-30',
     createdAt: '2024-12-30T09:30:00Z',
     updatedAt: '2024-12-30T09:35:00Z',
+    userPayeeListId: 'upl_4',
+    memberId: 'mem_2',
+    fundingAccount: {
+      accountId: 'acc_2',
+      accountType: 'CHECKING',
+      accountNumber: '5678901234',
+      routingNumber: '567890123'
+    },
     recipient: {
       name: 'Bob Wilson',
       accountNumber: '5678901234',
@@ -136,6 +178,7 @@ export const mockPendingPayments: PendingPayment[] = [
     }
   }
 ];
+
 // Additional mock payment data
 export const mockAdditionalPayments: PendingPayment[] = [
   {
@@ -158,6 +201,14 @@ export const mockAdditionalPayments: PendingPayment[] = [
     priority: Priority.HIGH,
     createdAt: '2024-12-28T17:02:57-07:00',
     updatedAt: '2024-12-28T17:02:57-07:00',
+    userPayeeListId: 'upl_3',
+    memberId: 'mem_1',
+    fundingAccount: {
+      accountId: 'acc_1',
+      accountType: 'CHECKING',
+      accountNumber: '1234567890',
+      routingNumber: '123456789'
+    },
     recipient: {
       name: 'John Doe',
       accountNumber: '1234567890',
@@ -173,7 +224,7 @@ export const mockAdditionalPayments: PendingPayment[] = [
     payeeName: 'Jane Smith',
     amount: 2500.00,
     currency: 'USD',
-    method: PaymentMethod.WIRE,
+    method: PaymentMethod.ACH,
     effectiveDate: '2024-12-29',
     description: 'Equipment purchase',
     reference: 'PO-002',
@@ -185,6 +236,14 @@ export const mockAdditionalPayments: PendingPayment[] = [
     priority: Priority.MEDIUM,
     createdAt: '2024-12-28T17:02:57-07:00',
     updatedAt: '2024-12-28T17:02:57-07:00',
+    userPayeeListId: 'upl_4',
+    memberId: 'mem_2',
+    fundingAccount: {
+      accountId: 'acc_2',
+      accountType: 'CHECKING',
+      accountNumber: '9876543210',
+      routingNumber: '987654321'
+    },
     recipient: {
       name: 'Jane Smith',
       accountNumber: '0987654321',
@@ -200,26 +259,35 @@ export const mockAdditionalPayments: PendingPayment[] = [
     payeeName: 'Bob Wilson',
     amount: 500.00,
     currency: 'USD',
-    method: PaymentMethod.RTP,
+    method: PaymentMethod.ACH,
     effectiveDate: '2024-12-29',
     description: 'Consulting fees',
     reference: 'CONS-003',
     metadata: {
-      department: 'Consulting',
-      category: 'Professional Services'
+      department: 'Research',
+      category: 'Consulting'
     },
     status: PaymentStatus.PENDING,
     priority: Priority.LOW,
     createdAt: '2024-12-28T17:02:57-07:00',
     updatedAt: '2024-12-28T17:02:57-07:00',
+    userPayeeListId: 'upl_5',
+    memberId: 'mem_3',
+    fundingAccount: {
+      accountId: 'acc_3',
+      accountType: 'CHECKING',
+      accountNumber: '5555666677',
+      routingNumber: '444433322'
+    },
     recipient: {
       name: 'Bob Wilson',
-      accountNumber: '5432109876',
-      routingNumber: '678901234',
+      accountNumber: '5678901234',
+      routingNumber: '567890123',
       bankName: 'Third Bank'
     }
   }
 ];
+
 // Mock payee conversion files
 export const mockPayeeConversionFiles = {
   success: true,
@@ -252,6 +320,7 @@ export const mockPayeeConversionFiles = {
     }
   ]
 };
+
 // Payment history for audit trails
 export const mockPaymentHistory = [
   {

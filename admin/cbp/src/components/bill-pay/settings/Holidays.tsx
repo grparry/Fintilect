@@ -189,7 +189,7 @@ const Holidays: React.FC = () => {
         </Alert>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant="h5">Holidays</Typography>
+        <Typography variant="h5" color="text.primary">Holidays</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}

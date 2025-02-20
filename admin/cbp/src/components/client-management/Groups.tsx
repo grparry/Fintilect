@@ -266,7 +266,7 @@ export default function Groups({ clientId }: GroupsProps) {
   return (
     <Box>
       <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6">Groups</Typography>
+        <Typography variant="h6" color="text.primary">Groups</Typography>
         <Button
           variant="contained"
           color="primary"
@@ -291,7 +291,7 @@ export default function Groups({ clientId }: GroupsProps) {
           <Grid item xs={12} sm={6} md={4} key={group.id}>
             <Card>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" color="text.primary" gutterBottom>
                   {group.name}
                 </Typography>
                 {group.description && (

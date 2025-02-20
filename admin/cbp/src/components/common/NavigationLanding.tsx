@@ -19,7 +19,7 @@ const NavigationLanding: React.FC<NavigationLandingProps> = ({ title, routes, ba
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom color="text.primary">
         {title}
       </Typography>
       <List>

@@ -36,7 +36,7 @@ const FisPayeeCheck: React.FC = () => {
 
   return (
     <FormContainer>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" color="text.primary" gutterBottom>
         FIS Payee Check
       </Typography>
       
@@ -95,7 +95,7 @@ const FisPayeeCheck: React.FC = () => {
             {searchResult.message}
           </Typography>
           {searchResult.payeeId && (
-            <Typography variant="body1">
+            <Typography variant="body1" color="text.primary">
               Payee ID: {searchResult.payeeId}
             </Typography>
           )}

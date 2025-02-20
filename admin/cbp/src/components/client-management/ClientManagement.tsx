@@ -183,7 +183,7 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
   return (
     <Box>
       <Box display="flex" alignItems="center" mb={3}>
-        <Typography variant="h5" component="h1">
+        <Typography variant="h5" component="h1" color="text.primary">
           {client.name}
         </Typography>
         <Chip

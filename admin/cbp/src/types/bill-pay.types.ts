@@ -149,6 +149,20 @@ export interface Payment {
   priority: Priority;
   createdAt: string;
   updatedAt: string;
+  userPayeeListId: string;
+  memberId: string;
+  fundingAccount: {
+    accountId: string;
+    accountType: string;
+    accountNumber: string;
+    routingNumber: string;
+  };
+  recipient?: {
+    name: string;
+    accountNumber: string;
+    routingNumber: string;
+    bankName: string;
+  };
 }
 export interface PendingPayment extends Omit<Payment, 'recipient'> {
   recipient: {
@@ -247,7 +261,7 @@ export interface PaymentException {
   id: string;
   paymentId: string;
   type: string;
-  status: ExceptionStatus;
+  status: FISExceptionStatus;
   message: string;
   details: Record<string, any>;
   createdAt: string;
@@ -965,4 +979,36 @@ export interface FisPayeeRequest {
 export interface FisPayeeResponse {
   payeeId?: string;
   message?: string;
+}
+
+// Payment Activity Types from admin-cu-api
+export interface PaymentActivity {
+  memberId: string;
+  paymentId: string;
+  payeeName: string;
+  amount: number;
+  activityDate: string;
+  activityType: string;
+  status: PaymentStatus;
+  details: Record<string, any>;
+  batchId?: string;
+  errorCode?: string;
+  errorMessage?: string;
+}
+
+export interface PaymentActivityListResponse {
+  items: PaymentActivity[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface PaymentActivityRequest {
+  startDate: string;
+  endDate: string;
+  memberId?: string;
+  paymentId?: string;
+  status?: PaymentStatus[];
+  page?: number;
+  limit?: number;
 }

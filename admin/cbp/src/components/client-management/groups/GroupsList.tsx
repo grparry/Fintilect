@@ -165,7 +165,7 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
   return (
     <Box>
       <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography variant="h6">Groups</Typography>
+        <Typography variant="h6" color="text.primary">Groups</Typography>
         <TextField
           label="Search"
           value={state.filterText}

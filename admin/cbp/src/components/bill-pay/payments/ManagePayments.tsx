@@ -63,6 +63,7 @@ import {
   PaymentConfirmationRequest,
   PaymentConfirmationResponse,
 } from '../../../types/bill-pay.types';
+import PaymentDetails from './PaymentDetails';
 
 interface PaymentDialogState {
   open: boolean;
@@ -600,12 +601,12 @@ const ManagePayments: React.FC = () => {
                 sx={{
                   '& .MuiSelect-select': {
                     position: 'relative',
-                    zIndex: 1400
+                    zIndex: 1
                   }
                 }}
                 MenuProps={{
                   sx: {
-                    zIndex: 1300
+                    zIndex: 1500
                   }
                 }}
                 renderValue={(selected) => (
@@ -615,7 +616,7 @@ const ManagePayments: React.FC = () => {
                       flexWrap: 'wrap', 
                       gap: 0.5,
                       position: 'relative',
-                      zIndex: 1500
+                      zIndex: 1
                     }}
                   >
                     {selected.map((value) => (
@@ -634,10 +635,10 @@ const ManagePayments: React.FC = () => {
                         size="small"
                         sx={{
                           position: 'relative',
-                          zIndex: 1600,
+                          zIndex: 1,
                           '& .MuiChip-deleteIcon': {
-                            zIndex: 1700,
-                            position: 'relative'
+                            position: 'relative',
+                            zIndex: 1
                           }
                         }}
                       />
@@ -849,11 +850,12 @@ const ManagePayments: React.FC = () => {
                     }).format(payment.amount)}
                   </TableCell>
                   <TableCell>{payment.method}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ position: 'relative', zIndex: 0 }}>
                     <Chip
                       label={payment.status}
                       size="small"
                       color={getStatusColor(payment.status)}
+                      sx={{ position: 'relative', zIndex: 0 }}
                     />
                   </TableCell>
                   <TableCell>
@@ -934,176 +936,206 @@ const ManagePayments: React.FC = () => {
       </TableContainer>
     );
   };
-  const renderDialog = () => (
-    <Dialog
-      open={dialogState.open}
-      onClose={() => setDialogState({ open: false, payment: null, action: null })}
-      maxWidth="md"
-      fullWidth
-    >
-      <DialogTitle>
-        {dialogState.action === 'view'
-          ? 'Payment Details'
-          : dialogState.action === 'approve'
-          ? 'Approve Payment'
-          : dialogState.action === 'reject'
-          ? 'Reject Payment'
-          : 'Payment History'}
-      </DialogTitle>
-      <DialogContent>
-        {dialogState.payment && (
-          <Box sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Payment Details
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <Typography variant="subtitle2" color="textSecondary">
-                  Payment ID
-                </Typography>
-                <Typography>{dialogState.payment.id}</Typography>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography variant="subtitle2" color="textSecondary">
-                  Amount
-                </Typography>
-                <Typography>
-                  {new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: dialogState.payment.currency,
-                  }).format(dialogState.payment.amount)}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography variant="subtitle2" color="textSecondary">
-                  Status
-                </Typography>
-                <Typography>{dialogState.payment.status}</Typography>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography variant="subtitle2" color="textSecondary">
-                  Method
-                </Typography>
-                <Typography>{dialogState.payment.method}</Typography>
-              </Grid>
-              {confirmation.code && (
-                <Grid item xs={12}>
-                  <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', borderRadius: 1, border: 1, borderColor: 'divider' }}>
-                    <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                      Confirmation Code
-                    </Typography>
-                    <Typography variant="h6" sx={{ fontFamily: 'monospace', letterSpacing: 1 }}>
-                      {confirmation.code}
-                    </Typography>
-                  </Box>
-                </Grid>
-              )}
-              {confirmation.confirmationStatus && (
-                <Grid item xs={12}>
-                  <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
-                    <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                      Confirmation Status
-                    </Typography>
-                    <Typography variant="body1">
-                      {confirmation.confirmationStatus}
-                    </Typography>
-                    {confirmation.error && (
-                      <Typography color="error" sx={{ mt: 1 }}>
-                        {confirmation.error}
-                      </Typography>
-                    )}
-                    <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-                      Attempts: {confirmation.attempts} / {confirmation.maxAttempts}
-                    </Typography>
-                    {confirmation.expiresAt && (
-                      <Typography variant="caption" display="block">
-                        Expires at: {new Date(confirmation.expiresAt).toLocaleString()}
-                      </Typography>
-                    )}
-                  </Box>
-                </Grid>
-              )}
-            </Grid>
-          </Box>
-        )}
-        {dialogState.action === 'history' && dialogState.history && (
-          <Box sx={{ mt: 2 }}>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Action</TableCell>
-                    <TableCell>Details</TableCell>
-                    <TableCell>Performed By</TableCell>
-                    <TableCell>Timestamp</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {dialogState.history.map((entry, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <Typography variant="body2">
-                          {entry.action}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2">
-                          {entry.details && typeof entry.details === 'object' ? (
-                            <>
-                              {entry.details.previousStatus && entry.details.newStatus && (
-                                `Status changed from ${entry.details.previousStatus} to ${entry.details.newStatus}`
-                              )}
-                              {entry.details.description && entry.details.description}
-                              {entry.details.notes && (
-                                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                                  Note: {entry.details.notes}
-                                </Typography>
-                              )}
-                              {entry.details.confirmationCode && (
-                                <Box sx={{ mt: 1 }}>
-                                  <Typography variant="body2" color="text.secondary">
-                                    Confirmation Code:
-                                  </Typography>
-                                  <Typography variant="body2" sx={{ fontFamily: 'monospace', letterSpacing: 1 }}>
-                                    {entry.details.confirmationCode}
-                                  </Typography>
-                                </Box>
-                              )}
-                            </>
-                          ) : (
-                            String(entry.details || '')
-                          )}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2">
-                          {entry.performedBy}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2">
-                          {dayjs(entry.timestamp).format('MM/DD/YYYY HH:mm:ss')}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={() =>
-            setDialogState({ open: false, payment: null, action: null })
+  const renderDialog = () => {
+    if (dialogState.action === 'view' && dialogState.payment) {
+      return (
+        <PaymentDetails
+          open={dialogState.open}
+          onClose={() => setDialogState({ open: false, payment: null, action: null })}
+          payment={{
+            ...dialogState.payment,
+            recipient: {
+              name: dialogState.payment.payeeName,
+              accountNumber: dialogState.payment.recipient?.accountNumber || '',
+              routingNumber: dialogState.payment.recipient?.routingNumber || '',
+              bankName: dialogState.payment.recipient?.bankName || ''
+            }
+          }}
+        />
+      );
+    }
+
+    return (
+      <Dialog
+        open={dialogState.open}
+        onClose={() => setDialogState({ open: false, payment: null, action: null })}
+        maxWidth="md"
+        fullWidth
+        sx={{ 
+          zIndex: 1400,
+          position: 'relative',
+          '& .MuiBackdrop-root': {
+            zIndex: 1399
+          },
+          '& .MuiDialog-paper': {
+            zIndex: 1400
           }
-        >
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
+        }}
+      >
+        <DialogTitle>
+          {dialogState.action === 'approve'
+            ? 'Approve Payment'
+            : dialogState.action === 'reject'
+            ? 'Reject Payment'
+            : 'Payment History'}
+        </DialogTitle>
+        <DialogContent>
+          {dialogState.payment && (
+            <Box sx={{ p: 2 }}>
+              <Typography variant="h6" color="text.primary" gutterBottom>
+                Payment Details
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    Payment ID
+                  </Typography>
+                  <Typography variant="h6" color="text.primary" sx={{ fontFamily: 'monospace', letterSpacing: 1 }}>
+                    {dialogState.payment.id}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    Amount
+                  </Typography>
+                  <Typography>
+                    {new Intl.NumberFormat('en-US', {
+                      style: 'currency',
+                      currency: dialogState.payment.currency,
+                    }).format(dialogState.payment.amount)}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    Status
+                  </Typography>
+                  <Typography>{dialogState.payment.status}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    Method
+                  </Typography>
+                  <Typography>{dialogState.payment.method}</Typography>
+                </Grid>
+                {confirmation.code && (
+                  <Grid item xs={12}>
+                    <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', borderRadius: 1, border: 1, borderColor: 'divider' }}>
+                      <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                        Confirmation Code
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontFamily: 'monospace', letterSpacing: 1 }}>
+                        {confirmation.code}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                )}
+                {confirmation.confirmationStatus && (
+                  <Grid item xs={12}>
+                    <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+                      <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                        Confirmation Status
+                      </Typography>
+                      <Typography variant="body1">
+                        {confirmation.confirmationStatus}
+                      </Typography>
+                      {confirmation.error && (
+                        <Typography color="error" sx={{ mt: 1 }}>
+                          {confirmation.error}
+                        </Typography>
+                      )}
+                      <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+                        Attempts: {confirmation.attempts} / {confirmation.maxAttempts}
+                      </Typography>
+                      {confirmation.expiresAt && (
+                        <Typography variant="caption" display="block">
+                          Expires at: {new Date(confirmation.expiresAt).toLocaleString()}
+                        </Typography>
+                      )}
+                    </Box>
+                  </Grid>
+                )}
+              </Grid>
+            </Box>
+          )}
+          {dialogState.action === 'history' && dialogState.history && (
+            <Box sx={{ mt: 2 }}>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Action</TableCell>
+                      <TableCell>Details</TableCell>
+                      <TableCell>Performed By</TableCell>
+                      <TableCell>Timestamp</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {dialogState.history.map((entry, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Typography variant="body2">
+                            {entry.action}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">
+                            {entry.details && typeof entry.details === 'object' ? (
+                              <>
+                                {entry.details.previousStatus && entry.details.newStatus && (
+                                  `Status changed from ${entry.details.previousStatus} to ${entry.details.newStatus}`
+                                )}
+                                {entry.details.description && entry.details.description}
+                                {entry.details.notes && (
+                                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                    Note: {entry.details.notes}
+                                  </Typography>
+                                )}
+                                {entry.details.confirmationCode && (
+                                  <Box sx={{ mt: 1 }}>
+                                    <Typography variant="body2" color="text.secondary">
+                                      Confirmation Code:
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ fontFamily: 'monospace', letterSpacing: 1 }}>
+                                      {entry.details.confirmationCode}
+                                    </Typography>
+                                  </Box>
+                                )}
+                              </>
+                            ) : (
+                              String(entry.details || '')
+                            )}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">
+                            {entry.performedBy}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">
+                            {dayjs(entry.timestamp).format('MM/DD/YYYY HH:mm:ss')}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() =>
+              setDialogState({ open: false, payment: null, action: null })
+            }
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
   const renderRejectDialog = () => {
     if (!dialogState.payment || dialogState.action !== 'reject') return null;
     return (

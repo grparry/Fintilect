@@ -208,7 +208,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
   return (
     <Box>
       <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography variant="h6">Security Settings</Typography>
+        <Typography variant="h6" color="text.primary">Security Settings</Typography>
         {isMockMode && (
           <Chip
             label="Mock Mode"
@@ -227,7 +227,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
         <Box sx={{ p: 3 }}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 Password Policy
               </Typography>
               <Grid container spacing={2}>
@@ -298,7 +298,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 Login Policy
               </Typography>
               <Grid container spacing={2}>
@@ -349,7 +349,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 General Security
               </Typography>
               <Grid container spacing={2}>

@@ -183,7 +183,7 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h5">Member Security Settings</Typography>
+        <Typography variant="h5" color="text.primary">Member Security Settings</Typography>
         <Button
           variant="contained"
           color="primary"
@@ -201,7 +201,7 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
       )}
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" color="text.primary" gutterBottom>
             Password Policy
           </Typography>
           <Grid container spacing={2}>
@@ -230,7 +230,7 @@ const MemberSecuritySettings: React.FC<MemberSecuritySettingsProps> = ({ clientI
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" color="text.primary" gutterBottom>
             Login Policy
           </Typography>
           <Grid container spacing={2}>

@@ -148,7 +148,7 @@ const GroupEdit: React.FC<GroupEditProps> = ({
         )}
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <Typography variant="h6">
+            <Typography variant="h6" color="text.primary">
               {groupId ? 'Edit Group' : 'Create New Group'}
             </Typography>
           </Grid>
@@ -180,7 +180,7 @@ const GroupEdit: React.FC<GroupEditProps> = ({
             />
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            <Typography variant="subtitle1" color="text.primary" sx={{ mb: 2 }}>
               Permissions
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>

@@ -35,18 +35,18 @@ const DashboardCard: React.FC<ExtendedDashboardCardProps> = ({
           }}
         >
           <Box>
-            <Typography variant="subtitle2" color="textSecondary">
+            <Typography variant="subtitle2" color="text.primary">
               {title}
             </Typography>
             {subtitle && (
-              <Typography variant="body2" color="textSecondary">
+              <Typography variant="body2" color="text.primary">
                 {subtitle}
               </Typography>
             )}
             {loading ? (
               <CircularProgress size={20} />
             ) : (
-              <Typography variant="h4" component="div">
+              <Typography variant="h4" component="div" color="text.primary">
                 {value}
               </Typography>
             )}

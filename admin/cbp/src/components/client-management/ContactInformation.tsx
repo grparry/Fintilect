@@ -21,12 +21,18 @@ interface ContactInfo {
   name: string;
   email: string;
   phone: string;
+  sponsorId: string;
+  sponsorName: string;
+  routingId: string;
 }
 const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => {
   const [contactInfo, setContactInfo] = useState<ContactInfo>({
     name: '',
     email: '',
     phone: '',
+    sponsorId: '',
+    sponsorName: '',
+    routingId: '',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -44,6 +50,9 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
         name: client.name || '',
         email: client.contactEmail || '',
         phone: client.contactPhone || '',
+        sponsorId: client.sponsorId || '',
+        sponsorName: client.sponsorName || '',
+        routingId: client.routingId || '',
       });
       logger.info(`Contact information loaded for client ${clientId}`);
     } catch (err) {
@@ -75,6 +84,9 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
         contactEmail: contactInfo.email,
         contactPhone: contactInfo.phone,
         name: contactInfo.name,
+        sponsorId: contactInfo.sponsorId,
+        sponsorName: contactInfo.sponsorName,
+        routingId: contactInfo.routingId,
       });
       setSuccess('Contact information updated successfully');
       logger.info(`Contact information updated for client ${clientId}`);
@@ -95,7 +107,7 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
   }
   return (
     <Paper sx={{ p: 3 }}>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom color="text.primary">
         Contact Information
       </Typography>
       {error && (
@@ -116,7 +128,7 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Contact Name"
+              label="Name"
               value={contactInfo.name}
               onChange={handleInputChange('name')}
               disabled={saving}
@@ -138,6 +150,43 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
               label="Phone"
               value={contactInfo.phone}
               onChange={handleInputChange('phone')}
+              disabled={saving}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6" gutterBottom sx={{ mt: 2 }} color="text.primary">
+              Sponsor Information
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Sponsor ID"
+              value={contactInfo.sponsorId}
+              onChange={handleInputChange('sponsorId')}
+              disabled={saving}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Sponsor Name"
+              value={contactInfo.sponsorName}
+              onChange={handleInputChange('sponsorName')}
+              disabled={saving}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6" gutterBottom sx={{ mt: 2 }} color="text.primary">
+              Routing Information
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Routing ID"
+              value={contactInfo.routingId}
+              onChange={handleInputChange('routingId')}
               disabled={saving}
             />
           </Grid>

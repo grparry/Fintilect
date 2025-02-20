@@ -56,6 +56,7 @@ import { Client, ClientStatus } from '../../../types/client.types';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { useAuth } from '../../../hooks/useAuth';
 import { AuthContextType } from '../../../types/auth.types';
+import PaymentDetails from './PaymentDetails';
 
 interface PaymentForm {
   clientId: string;
@@ -119,6 +120,18 @@ const ManualProcessing: React.FC = () => {
     [PaymentMethod.CARD]: 0
   });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [paymentDetailsOpen, setPaymentDetailsOpen] = useState(false);
+
+  const handleViewPaymentDetails = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setPaymentDetailsOpen(true);
+  };
+
+  const handleClosePaymentDetails = () => {
+    setPaymentDetailsOpen(false);
+    setSelectedPayment(null);
+  };
   // Fetch initial data
   const fetchInitialData = useCallback(async () => {
     try {
@@ -486,31 +499,31 @@ const ManualProcessing: React.FC = () => {
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
           <Grid item xs={6}>
-            <Typography variant="subtitle2">Client</Typography>
-            <Typography>{selectedClient?.name}</Typography>
+            <Typography variant="subtitle2" color="text.primary">Client</Typography>
+            <Typography color="text.primary">{selectedClient?.name}</Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="subtitle2">Payee</Typography>
-            <Typography>{selectedPayee?.name}</Typography>
+            <Typography variant="subtitle2" color="text.primary">Payee</Typography>
+            <Typography color="text.primary">{selectedPayee?.name}</Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="subtitle2">Amount</Typography>
-            <Typography>
+            <Typography variant="subtitle2" color="text.primary">Amount</Typography>
+            <Typography color="text.primary">
               ${parseFloat(form.amount).toFixed(2)}
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="subtitle2">Payment Type</Typography>
-            <Typography>{form.paymentType}</Typography>
+            <Typography variant="subtitle2" color="text.primary">Payment Type</Typography>
+            <Typography color="text.primary">{form.paymentType}</Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="subtitle2">Effective Date</Typography>
-            <Typography>{form.effectiveDate.format('YYYY-MM-DD')}</Typography>
+            <Typography variant="subtitle2" color="text.primary">Effective Date</Typography>
+            <Typography color="text.primary">{form.effectiveDate.format('YYYY-MM-DD')}</Typography>
           </Grid>
           {form.memo && (
             <Grid item xs={12}>
-              <Typography variant="subtitle2">Memo</Typography>
-              <Typography>{form.memo}</Typography>
+              <Typography variant="subtitle2" color="text.primary">Memo</Typography>
+              <Typography color="text.primary">{form.memo}</Typography>
             </Grid>
           )}
         </Grid>
@@ -529,9 +542,17 @@ const ManualProcessing: React.FC = () => {
       </DialogActions>
     </Dialog>
   );
+  // Payment Details Dialog
+  const renderPaymentDetails = () => (
+    <PaymentDetails
+      open={paymentDetailsOpen}
+      onClose={handleClosePaymentDetails}
+      payment={selectedPayment}
+    />
+  );
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h5" sx={{ mb: 3 }}>
+      <Typography variant="h5" sx={{ mb: 3 }} color="text.primary">
         Manual Payment Processing
       </Typography>
       {error && (
@@ -644,6 +665,7 @@ const ManualProcessing: React.FC = () => {
         </Grid>
       </Paper>
       {renderConfirmDialog()}
+      {selectedPayment && renderPaymentDetails()}
     </Box>
   );
 };

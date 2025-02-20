@@ -129,7 +129,7 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
   return (
     <Box sx={{ p: 3 }}>
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
-        <Typography variant="h5">Exception Tool</Typography>
+        <Typography variant="h5" color="text.primary">Exception Tool</Typography>
         <IconButton onClick={loadExceptions} disabled={loading}>
           <RefreshIcon />
         </IconButton>
@@ -198,19 +198,19 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
             <DialogContent>
               <Grid container spacing={2} sx={{ mt: 1 }}>
                 <Grid item xs={12}>
-                  <Typography variant="subtitle1">Payment ID</Typography>
+                  <Typography variant="subtitle1" color="text.primary">Payment ID</Typography>
                   <Typography>{selectedException.paymentId}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="subtitle1">Client</Typography>
+                  <Typography variant="subtitle1" color="text.primary">Client</Typography>
                   <Typography>{selectedException.clientName}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="subtitle1">Error Message</Typography>
+                  <Typography variant="subtitle1" color="text.primary">Error Message</Typography>
                   <Typography>{selectedException.errorMessage}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="subtitle1">Status</Typography>
+                  <Typography variant="subtitle1" color="text.primary">Status</Typography>
                   <Chip
                     label={selectedException.status}
                     color={getStatusColor(selectedException.status)}

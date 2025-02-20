@@ -71,7 +71,7 @@ const ClientManagementHeader: React.FC = () => {
         <Typography variant="h4" gutterBottom color="text.primary">
           Client Management
         </Typography>
-        <Typography variant="body1" color="text.secondary" paragraph>
+        <Typography variant="body1" color="text.primary" paragraph>
           Welcome to Client Management. Here you can manage client accounts, users, and access settings.
         </Typography>
       </Box>
@@ -102,10 +102,10 @@ const ClientManagementHeader: React.FC = () => {
                 sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
               >
                 <PeopleIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" gutterBottom color="text.primary">
                   Client List
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.primary">
                   View and manage all client accounts
                 </Typography>
               </Link>

@@ -251,7 +251,7 @@ const FISExceptionHandling: React.FC = () => {
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
-              <Typography variant="h6">Total Exceptions</Typography>
+              <Typography variant="h6" color="text.primary">Total Exceptions</Typography>
               <Typography variant="h4">{stats.total}</Typography>
             </CardContent>
           </Card>
@@ -259,7 +259,7 @@ const FISExceptionHandling: React.FC = () => {
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
-              <Typography variant="h6">Success Rate</Typography>
+              <Typography variant="h6" color="text.primary">Success Rate</Typography>
               <Typography variant="h4">
                 {(stats.successRate * 100).toFixed(1)}%
               </Typography>
@@ -269,7 +269,7 @@ const FISExceptionHandling: React.FC = () => {
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
-              <Typography variant="h6">Average Retry Count</Typography>
+              <Typography variant="h6" color="text.primary">Average Retry Count</Typography>
               <Typography>
                 {stats.avgRetryCount.toFixed(1)}
               </Typography>
@@ -279,7 +279,7 @@ const FISExceptionHandling: React.FC = () => {
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
-              <Typography variant="h6">Pending Exceptions</Typography>
+              <Typography variant="h6" color="text.primary">Pending Exceptions</Typography>
               <Typography>{stats.byStatus[FISExceptionStatus.PENDING]}</Typography>
             </CardContent>
           </Card>

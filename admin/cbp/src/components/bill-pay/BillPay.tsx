@@ -70,7 +70,7 @@ const BillPay: React.FC = () => {
         id: item.id.toString(),
         paymentId: item.paymentId,
         type: item.paymentType,
-        status: ExceptionStatus.PENDING,
+        status: FISExceptionStatus.PENDING,
         message: item.errorMessage,
         details: { errorCode: item.errorCode },
         createdAt: item.timestamp,

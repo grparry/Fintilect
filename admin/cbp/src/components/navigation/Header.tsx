@@ -80,7 +80,7 @@ const Header: React.FC<HeaderProps> = ({
           underline="none"
           sx={{ flexGrow: 1 }}
         >
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" color="text.primary" noWrap component="div">
             Admin Portal
           </Typography>
         </Link>
@@ -88,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({
           <IconButton sx={{ ml: 1 }} onClick={toggleTheme} color="inherit">
             {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
-          <Typography variant="body2" sx={{ ml: 2, mr: 2 }}>
+          <Typography variant="body2" color="text.primary" sx={{ ml: 2, mr: 2 }}>
             {user?.email || 'Guest'}
           </Typography>
           <Tooltip title="Logout">

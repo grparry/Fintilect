@@ -201,7 +201,7 @@ const PermissionGroups: React.FC = () => {
         </Alert>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant="h5">Permission Groups</Typography>
+        <Typography variant="h5" color="text.primary">Permission Groups</Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <TextField
             size="small"
@@ -287,7 +287,7 @@ const PermissionGroups: React.FC = () => {
               multiline
               rows={2}
             />
-            <Typography variant="subtitle1" sx={{ mt: 2 }}>
+            <Typography variant="subtitle1" color="text.primary" sx={{ mt: 2 }}>
               Permissions
             </Typography>
             <Grid container spacing={2}>
@@ -295,7 +295,7 @@ const PermissionGroups: React.FC = () => {
                 <Grid item xs={12} key={category}>
                   <Card>
                     <CardContent>
-                      <Typography variant="subtitle2" gutterBottom>
+                      <Typography variant="subtitle2" color="text.primary" gutterBottom>
                         {category}
                       </Typography>
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
@@ -333,7 +333,7 @@ const PermissionGroups: React.FC = () => {
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DialogTitle>Delete Permission Group</DialogTitle>
         <DialogContent>
-          <Typography>
+          <Typography color="text.primary">
             Are you sure you want to delete the permission group "{selectedGroup?.name}"?
             This action cannot be undone.
           </Typography>

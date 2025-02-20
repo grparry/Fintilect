@@ -29,11 +29,10 @@ import { useAuth } from '../../../hooks/useAuth';
 import {
   PaymentException,
   ExceptionResolution,
-  ExceptionStatus,
   ResolutionHistory,
   FISRetryResult,
   FISExceptionHistory,
-  ExceptionToolStatus,
+  FISExceptionStatus,
 } from '../../../types/bill-pay.types';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import dayjs from 'dayjs';
@@ -43,6 +42,7 @@ interface ExceptionDetailsProps {
   onClose: () => void;
   onResolutionComplete: () => void;
 }
+
 const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
   exception,
   onClose,
@@ -61,7 +61,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
   const [history, setHistory] = useState<ResolutionHistory[]>([]);
   const [historyDialogOpen, setHistoryDialogOpen] = useState(false);
   const [retryResult, setRetryResult] = useState<FISRetryResult | null>(null);
-  const exceptionService = ServiceFactory.getInstance().getExceptionService();
+  const exceptionService = ServiceFactory.getInstance().getFISExceptionService();
   useEffect(() => {
     loadResolutionHistory();
   }, [exception.id]);
@@ -93,18 +93,13 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
     }
     try {
       setLoading(true);
-      await exceptionService.updateExceptionStatus(
+      await exceptionService.updateFISExceptionStatus(
         exception.id,
-        'Resolved' as ExceptionToolStatus,
-        resolution.notes
+        FISExceptionStatus.RESOLVED
       );
       onResolutionComplete();
     } catch (err) {
-      if (err instanceof Error) {
-        setError(`Failed to resolve exception: ${err.message}`);
-      } else {
-        setError('Failed to resolve exception. Please try again later.');
-      }
+      setError('Failed to resolve exception. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -118,11 +113,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
         onResolutionComplete();
       }
     } catch (err) {
-      if (err instanceof Error) {
-        setError(`Failed to retry exception: ${err.message}`);
-      } else {
-        setError('Failed to retry exception. Please try again later.');
-      }
+      setError('Failed to retry exception. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -181,14 +172,14 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
             </Alert>
           )}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h6">Exception Details</Typography>
+            <Typography variant="h6" color="text.primary">Exception Details</Typography>
             <Stack direction="row" spacing={1}>
               <Tooltip title="View History">
                 <IconButton size="small" onClick={() => setHistoryDialogOpen(true)}>
                   <HistoryIcon />
                 </IconButton>
               </Tooltip>
-              {exception.status === ExceptionStatus.PENDING && (
+              {exception.status === FISExceptionStatus.PENDING && (
                 <Tooltip title="Retry">
                   <IconButton size="small" onClick={handleRetry} disabled={loading}>
                     <RefreshIcon />
@@ -204,9 +195,9 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
                 label={exception.status}
                 size="small"
                 color={
-                  exception.status === ExceptionStatus.RESOLVED
+                  exception.status === FISExceptionStatus.RESOLVED
                     ? 'success'
-                    : exception.status === ExceptionStatus.PENDING
+                    : exception.status === FISExceptionStatus.PENDING
                     ? 'warning'
                     : 'error'
                 }
@@ -229,10 +220,10 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
               </Grid>
             )}
           </Grid>
-          {exception.status === ExceptionStatus.PENDING && (
+          {exception.status === FISExceptionStatus.PENDING && (
             <>
               <Divider sx={{ my: 2 }} />
-              <Typography variant="h6">Resolution</Typography>
+              <Typography variant="h6" color="text.primary">Resolution</Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <FormControl fullWidth>

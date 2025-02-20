@@ -148,7 +148,7 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
   return (
     <Box>
       <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography variant="h6">Roles</Typography>
+        <Typography variant="h6" color="text.primary">Roles</Typography>
         <TextField
           label="Search"
           value={state.filterText}

@@ -52,7 +52,7 @@ const DevelopmentHeader: React.FC = () => {
                 sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
               >
                 {getRouteIcon(route.title)}
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" color="text.primary" gutterBottom>
                   {route.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">

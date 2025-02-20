@@ -210,7 +210,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h5" component="h1">
+        <Typography variant="h5" component="h1" color="text.primary">
           Users
         </Typography>
         <Button

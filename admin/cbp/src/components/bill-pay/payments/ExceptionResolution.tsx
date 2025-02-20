@@ -77,7 +77,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
             </Alert>
           )}
           <Box>
-            <Typography variant="h6">Exception Details</Typography>
+            <Typography variant="h6" color="text.primary">Exception Details</Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
               <Grid item xs={12} md={6}>
                 <Typography variant="subtitle2">Status</Typography>
@@ -101,7 +101,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
           </Box>
           <Divider />
           <Box>
-            <Typography variant="h6">Resolution</Typography>
+            <Typography variant="h6" color="text.primary">Resolution</Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
               <Grid item xs={12}>
                 <FormControl fullWidth>

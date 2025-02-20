@@ -40,7 +40,7 @@ const BillPayHeader: React.FC = () => {
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
               <DashboardIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 Dashboard
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -70,7 +70,7 @@ const BillPayHeader: React.FC = () => {
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
               <PaymentIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 Payment Management
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -100,7 +100,7 @@ const BillPayHeader: React.FC = () => {
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
               <AssessmentIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 Reports
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -130,7 +130,7 @@ const BillPayHeader: React.FC = () => {
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
               <TransformIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 Data Conversion
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -160,7 +160,7 @@ const BillPayHeader: React.FC = () => {
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
               <SettingsIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" color="text.primary" gutterBottom>
                 Settings
               </Typography>
               <Typography variant="body2" color="text.secondary">

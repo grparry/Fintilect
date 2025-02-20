@@ -80,7 +80,7 @@ export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
     <Box>
       {/* Roles Section */}
       <Box mb={3}>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom color="text.primary">
           Roles
         </Typography>
         {roles.map((role) => (
@@ -89,7 +89,7 @@ export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
               checked={selectedRoles.some((r) => r.id === role.id)}
               onChange={() => onRoleToggle(role)}
             />
-            <Typography>{role.name}</Typography>
+            <Typography color="text.primary">{role.name}</Typography>
             <Tooltip title={role.description}>
               <IconButton size="small">
                 <InfoIcon fontSize="small" />
@@ -99,7 +99,7 @@ export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
         ))}
       </Box>
       {/* Permissions Tree */}
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom color="text.primary">
         Additional Permissions
       </Typography>
       {Object.entries(permissionTree).map(([category, categoryPermissions]) => (
@@ -115,7 +115,7 @@ export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
                 <ExpandMoreIcon />
               )}
             </IconButton>
-            <Typography variant="subtitle1">{category}</Typography>
+            <Typography variant="subtitle1" color="text.primary">{category}</Typography>
           </Box>
           <Collapse in={expandedNodes[category]}>
             <Box ml={4}>
@@ -137,6 +137,7 @@ export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
                         ? 'text.disabled'
                         : 'inherit',
                     }}
+                    color="text.primary"
                   >
                     {permission.name}
                   </Typography>

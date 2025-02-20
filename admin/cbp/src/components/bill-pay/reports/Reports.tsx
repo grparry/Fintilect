@@ -208,7 +208,7 @@ const Reports: React.FC = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom color="text.primary">
           Reports
         </Typography>
         {error && (

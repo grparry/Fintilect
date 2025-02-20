@@ -65,7 +65,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
           style={style}
         >
           <WarningIcon color="error" sx={{ fontSize: 48, mb: 2 }} />
-          <Typography variant="h6" color="error" gutterBottom>
+          <Typography variant="h6" gutterBottom color="text.primary">
             Something went wrong
           </Typography>
           <Typography color="textSecondary" sx={{ mb: 2 }}>

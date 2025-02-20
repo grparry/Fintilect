@@ -18,7 +18,7 @@ import {
     NotificationTemplate,
     NotificationTemplateInput,
     PaymentStatus,
-    ExceptionStatus
+    FISExceptionStatus
 } from '../../../types/bill-pay.types';
 import {
     BillPaySecuritySettings,
@@ -251,13 +251,13 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
         }
         this.exceptions[index] = {
             ...this.exceptions[index],
-            status: ExceptionStatus.RESOLVED,
+            status: FISExceptionStatus.RESOLVED,
             resolutions: [
                 ...(this.exceptions[index].resolutions || []),
                 {
                     ...resolution,
-                    timestamp: new Date().toISOString()
-                }
+                    timestamp: new Date().toISOString(),
+                },
             ],
             updatedAt: new Date().toISOString()
         };

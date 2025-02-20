@@ -54,13 +54,13 @@ const NotFound: React.FC = () => {
         }}
       >
         <ErrorOutlineIcon sx={{ fontSize: 64, color: 'error.main', mb: 2 }} />
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom color="text.primary">
           Page Not Found
         </Typography>
-        <Typography variant="body1" color="textSecondary" paragraph>
+        <Typography variant="body1" color="text.primary" paragraph>
           The page you're looking for doesn't exist or you don't have permission to access it.
         </Typography>
-        <Typography variant="body2" color="textSecondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" color="text.primary" sx={{ mb: 3 }}>
           Attempted path: {location.pathname}
         </Typography>
         <Stack direction="row" spacing={2} justifyContent="center">

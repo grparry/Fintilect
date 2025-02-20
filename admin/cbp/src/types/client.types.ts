@@ -50,6 +50,9 @@ export interface Client {
   contactName?: string;
   contactEmail?: string;
   contactPhone?: string;
+  sponsorId?: string;
+  sponsorName?: string;
+  routingId?: string;
   settings: ClientSettings;
   createdAt?: string;
   updatedAt?: string;

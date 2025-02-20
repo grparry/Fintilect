@@ -88,7 +88,7 @@ const Settings: React.FC = () => {
         </Link>
         <Typography color="text.primary">Settings</Typography>
       </Breadcrumbs>
-      <Typography variant="h4" sx={{ mb: 3 }}>
+      <Typography variant="h4" sx={{ mb: 3 }} color="text.primary">
         Bill Pay Settings
       </Typography>
       <Paper sx={{ width: '100%', mb: 2 }}>

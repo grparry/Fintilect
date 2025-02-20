@@ -84,7 +84,7 @@ const AuditLog: React.FC = () => {
         </Alert>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant="h5">Audit Log</Typography>
+        <Typography variant="h5" color="text.primary">Audit Log</Typography>
         <Tooltip title="Refresh">
           <IconButton onClick={loadAuditLogs} disabled={loading}>
             <RefreshIcon />

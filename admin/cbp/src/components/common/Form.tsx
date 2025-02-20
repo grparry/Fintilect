@@ -85,7 +85,7 @@ const Form = <T extends FieldValues>({
   return (
     <form id={formId || 'dynamic-form'} onSubmit={handleSubmit(onSubmitWrapper)}>
       {title && (
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" color="text.primary" gutterBottom>
           {title}
         </Typography>
       )}
@@ -128,7 +128,7 @@ const Form = <T extends FieldValues>({
                         ))}
                       </Select>
                       {errors[field.name] && (
-                        <Typography color="error" variant="caption">
+                        <Typography color="text.primary" variant="caption">
                           {String(errors[field.name]?.message)}
                         </Typography>
                       )}
