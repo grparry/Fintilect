@@ -160,15 +160,6 @@ export const navigationConfig: NavigationConfig = {
           }
         },
         {
-          id: 'payee-conversion',
-          title: 'Data Conversion',
-          path: '/admin/bill-pay/payee-conversion',
-          icon: TransformIcon,
-          permissions: {
-            permissions: ['bill-pay:read']
-          }
-        },
-        {
           id: 'settings',
           title: 'Settings',
           path: '/admin/bill-pay/settings',

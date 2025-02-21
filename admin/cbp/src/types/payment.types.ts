@@ -1,4 +1,5 @@
 import { PaginatedResponse } from './common.types';
+import { FISException } from './bill-pay.types';
 
 export enum PaymentStatus {
     PENDING = 'PENDING',
@@ -6,7 +7,10 @@ export enum PaymentStatus {
     COMPLETED = 'COMPLETED',
     FAILED = 'FAILED',
     CANCELLED = 'CANCELLED',
-    SCHEDULED = 'SCHEDULED'
+    PENDING_APPROVAL = 'PENDING_APPROVAL',
+    ON_HOLD = 'ON_HOLD',
+    REJECTED = 'REJECTED',
+    EXPIRED = 'EXPIRED'
 }
 export enum PaymentMethod {
     ACH = 'ACH',
@@ -31,104 +35,306 @@ export enum BatchStatus {
     FAILED = 'FAILED',
     PARTIALLY_COMPLETED = 'PARTIALLY_COMPLETED'
 }
+export enum SearchType {
+  UserPayeeListId = 'UserPayeeListId',
+  MemberId = 'MemberId',
+  PaymentId = 'PaymentId',
+  PayeeId = 'PayeeId',
+  RecurringPaymentId = 'RecurringPaymentId',
+  MemberIdAndDate = 'MemberIdAndDate',
+  MemberIdAndPayeeName = 'MemberIdAndPayeeName',
+  MemberIdAndDateAndPayeeName = 'MemberIdAndDateAndPayeeName',
+  Date = 'Date',
+  PayeeName = 'PayeeName',
+  FisPayeeId = 'FisPayeeId'
+}
 export interface DateRange {
-    startDate: string;
-    endDate: string;
+    StartDate: string;
+    EndDate: string;
 }
 export interface PaymentTransaction {
-    id: string;
-    clientId: string;
-    amount: number;
-    currency: string;
-    method: PaymentMethod;
-    type: PaymentType;
-    status: PaymentStatus;
-    priority: PaymentPriority;
-    metadata?: Record<string, unknown>;
-    createdAt: Date;
-    updatedAt: Date;
-    processedAt?: Date;
-    scheduledAt?: Date;
+    Id: string;
+    ClientId: string;
+    Amount: number;
+    Currency: string;
+    Method: PaymentMethod;
+    Type: PaymentType;
+    Status: PaymentStatus;
+    Priority: PaymentPriority;
+    Metadata?: Record<string, unknown>;
+    CreatedAt: Date;
+    UpdatedAt: Date;
+    ProcessedAt?: Date;
+    ScheduledAt?: Date;
 }
 export interface PaymentSchedule {
-    scheduledDate: Date;
-    recurrence?: {
-        frequency: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
-        interval: number;
-        endDate?: Date;
-    };
+    WillProcessDate: string;
+    Frequency: 'once' | 'daily' | 'weekly' | 'monthly';
+    NumPayments?: number;
 }
 export interface TransactionBatch {
-    id: string;
-    status: BatchStatus;
-    totalCount: number;
-    successCount: number;
-    failureCount: number;
-    transactions: PaymentTransaction[];
-    createdAt: Date;
-    completedAt?: Date;
+    Id: string;
+    Status: BatchStatus;
+    TotalCount: number;
+    SuccessCount: number;
+    FailureCount: number;
+    Transactions: PaymentTransaction[];
+    CreatedAt: Date;
+    CompletedAt?: Date;
 }
 export interface ProcessorConfig {
-    maxBatchSize: number;
-    retryAttempts: number;
-    processingDelay: number;
-    supportedMethods: PaymentMethod[];
-    supportedTypes: PaymentType[];
-    validationRules: {
-        minAmount: number;
-        maxAmount: number;
-        requiresApproval: number;
+    MaxBatchSize: number;
+    RetryAttempts: number;
+    ProcessingDelay: number;
+    SupportedMethods: PaymentMethod[];
+    SupportedTypes: PaymentType[];
+    ValidationRules: {
+        MinAmount: number;
+        MaxAmount: number;
+        RequiresApproval: number;
     };
 }
 export interface ProcessingError {
-    code: string;
-    message: string;
-    timestamp: Date;
-    details?: Record<string, unknown>;
+    Code: string;
+    Message: string;
+    Timestamp: Date;
+    Details?: Record<string, unknown>;
 }
 export interface PaymentValidation {
-    isValid: boolean;
-    requiresApproval: boolean;
-    errors: Array<{
-        code: string;
-        message: string;
+    IsValid: boolean;
+    RequiresApproval: boolean;
+    Errors: Array<{
+        Code: string;
+        Message: string;
     }>;
 }
 export interface PaymentReceipt {
-    transactionId: string;
-    receiptNumber: string;
-    timestamp: Date;
-    amount: number;
-    currency: string;
-    status: PaymentStatus;
-    method: PaymentMethod;
-    metadata?: Record<string, unknown>;
+    TransactionId: string;
+    ReceiptNumber: string;
+    Timestamp: Date;
+    Amount: number;
+    Currency: string;
+    Status: PaymentStatus;
+    Method: PaymentMethod;
+    Metadata?: Record<string, unknown>;
 }
 export interface TransactionSummary {
-    totalCount: number;
-    totalAmount: number;
-    successfulCount: number;
-    failedCount: number;
-    byMethod: Record<PaymentMethod, number>;
-    byType: Record<PaymentType, number>;
-    byStatus: Record<PaymentStatus, number>;
+    TotalCount: number;
+    TotalAmount: number;
+    SuccessfulCount: number;
+    FailedCount: number;
+    ByMethod: Record<PaymentMethod, number>;
+    ByType: Record<PaymentType, number>;
+    ByStatus: Record<PaymentStatus, number>;
 }
 export interface ProcessorMetrics {
-    processingTime: {
-        average: number;
-        min: number;
-        max: number;
-    };
-    successRate: number;
-    failureRate: number;
-    throughput: {
-        daily: number;
-        hourly: number;
-    };
-    errorRates: {
-        validation: number;
-        processing: number;
-        network: number;
-    };
+    TotalPayments: number;
+    TotalAmount: number;
+    FailedPayments: number;
+    FailedAmount: number;
+    CompletedPayments: number;
+    CompletedAmount: number;
+    InProcessPayments: number;
+    InProcessAmount: number;
+    CancelledPayments: number;
+    CancelledAmount: number;
 }
+export interface PaymentHistory {
+  Id: number;
+  PaymentId: string;
+  UserPayeeListId: string;
+  MemberId: string;
+  FundingAccount: string;
+  Amount: number;
+  CheckNum?: string;
+  WillProcessDate: string;
+  ProcessedDate?: string;
+  FailedDate?: string;
+  CancelledDate?: string;
+  RecurringPaymentId?: string;
+  StatusCode: number;
+  Memo: string;
+  EntryDate?: string;
+  DeliveryDate?: string;
+  SourceApplication?: string;
+  PayeeId?: string;
+  UsersAccountAtPayee?: string;
+  NameOnAccount?: string;
+  PayeeType?: string;
+  PaymentMethod?: string;
+  RunId?: number;
+  LastUpdate?: string;
+  ConfirmationNumber?: string;
+  FisPayeeId?: string;
+}
+
+export interface Payment {
+  Id: string;
+  WillProcessDate: string;
+  Memo: string;
+  BillReference: string;
+  FundingAccount: string;
+  UserPayeeListId: string;
+  MemberId: string;
+  Amount: number;
+  SourceApplication?: string;
+  DeliveryDate?: string;
+  Status: string;
+  Frequency?: string;
+  NumPayments?: number;
+  ProcessDate?: string;
+  PaymentMethod?: string;
+}
+
+export interface PaymentFilters {
+  ClientId?: string;
+  PayeeId?: string;
+  Method?: string[];
+  Status?: PaymentStatus[];
+  Priority?: PaymentPriority[];
+  StartDate?: string;
+  EndDate?: string;
+  MinAmount?: number;
+  MaxAmount?: number;
+}
+
+export interface PaymentActivityRequest {
+  StartDate: string;
+  EndDate: string;
+  SearchType: string;
+  SearchValue: string;
+  PayeeName: string;
+}
+
+export interface PaymentUpdateStatusRequest {
+  PaymentId: string;
+  StatusCode: number;
+}
+
+export interface PaymentEditRequest {
+  Account: string;
+  Amount: number;
+  WillProcessDate: string;
+  MemberId: string;
+  Frequency: number;
+  NumPayments: number;
+}
+
+export interface PaymentAction {
+  Action: string;
+  PerformedBy: string;
+  Timestamp: string;
+  Details: Record<string, unknown>;
+}
+
+export interface PaymentActivity {
+    MemberID: string;
+    PaymentID: string;
+    PayeeID: string;
+    FisPayeeId: string;
+    PayeeName: string;
+    DateProcessed?: string;  
+    DueDate?: string;        
+    StatusCode: number;
+    StatusName: string;
+    PaymentMethod: string;
+    Amount: number;
+}
+
+export interface PaymentActivityListResponse {
+    PaymentActivities: PaymentActivity[];
+}
+
+export interface PendingPayment {
+  Id: string;
+  UserPayeeListId: string;
+  FundingAccount: string;
+  Amount: number;
+  WillProcessDate: string;
+  StatusCode: number;
+  Memo: string;
+  FriendlyName: string;
+  LastUpdate: string;
+  SourceApplication: string;
+  EntryDate: string;
+  DeliveryDate?: string;
+  PayeeId: string;
+  UsersAccountAtPayee: string;
+  NameOnAccount: string;
+  PayeeType: string;
+  PaymentMethod: string;
+  RunId?: number;
+  ConfirmationNumber?: string;
+  FisPayeeId?: string;
+}
+
+export interface PendingPaymentResponse extends PendingPayment {
+  MemberId: string;
+  Source: string;
+  DeliveryDate?: string;
+}
+
+/** Core model for payment exceptions with details about the customer, payee, and transaction */
+export interface PaymentException {
+    Id: number;
+    RecordType: string;
+    SponsorTransactionId: string;
+    SponsorId: string;
+    SponsorName: string;
+    CustomerId: string;
+    CustomerChangeIndicator: string;
+    PrimaryCustomerFirstName: string;
+    PrimaryCustomerLastName: string;
+    PrimaryCustomerSsn: string;
+    SecondaryCustomerFirstName: string;
+    SecondaryCustomerLastName: string;
+    SecondaryCustomerSsn: string;
+    BusinessName: string;
+    FederalTaxId: string;
+    CustomerAddress1: string;
+    CustomerAddress2: string;
+    CustomerCity: string;
+    CustomerState: string;
+    CustomerZip: string;
+    CustomerCountry: string;
+    CustomerTelephone: string;
+    InternalPayeeId: string;
+    PayeeChangeIndicator: string;
+    PayeeName: string;
+    PayeeAttentionLine: string;
+    PayeeTelephoneNumber: string;
+    PayeeAddress1: string;
+    PayeeAddress2: string;
+    PayeeCity: string;
+    PayeeState: string;
+    PayeeZip: string;
+    PayeeCountry: string;
+    PayeeNickname: string;
+    CustomerPayeeId: string;
+    CustomerPayeeAccountNumber: string;
+    ConfirmationNumber: string;
+    TransactionAmount: string;
+    MemoLineInfo: string;
+    ServiceRequestNumber: string;
+    ServiceRequestDate: string;
+    ServiceRequestTime: string;
+}
+
+/** Represents an adjustment made to a payment exception */
+export interface PaymentExceptionAdjustment {
+    Id: number;
+    PaymentExceptionId: number;
+    PaymentHistoryId: number;
+    Successful: boolean;
+    Amount: number;
+    Created: string;
+    Type: string;
+}
+
+/** Represents a correction made to a payment exception */
+export interface PaymentExceptionCorrection {
+    Exception: PaymentException;
+    Correction: FISException;
+}
+
 export type { PaginatedResponse } from './common.types';

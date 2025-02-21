@@ -1,130 +1,106 @@
 import { IPaymentService } from '../../interfaces/IPaymentService';
-import {
-  PendingPayment,
-  PendingPaymentSummary,
-  PendingPaymentSearchRequest,
-  PaymentStatus,
-  PaymentMethod,
-  Priority,
-  PaymentHistory,
-  PaginatedResponse,
-  PaymentConfirmationResponse,
-  ConfirmationStatus
-} from '../../../types/bill-pay.types';
+import { Payment, PaymentFilters, PaymentHistory, PaymentStatus, PaymentActivityRequest, PaymentActivity, PaymentActivityListResponse } from '../../../types/payment.types';
+import { PaginatedResponse } from '../../../types/common.types';
 import { BaseMockService } from './BaseMockService';
-import { mockPayments, mockPendingPayments } from './data/billpay/payments';
+import { mockPayments, mockPaymentHistory, mockPendingPayments } from './data/processor/mockPaymentData';
 
 export class MockPaymentService extends BaseMockService implements IPaymentService {
-  constructor(basePath: string = '/api/v1/payments') {
+  constructor(basePath: string = '/api/v1/payment') {
     super(basePath);
   }
 
-  async getPendingPayments(request: PendingPaymentSearchRequest): Promise<PaginatedResponse<PendingPayment>> {
+  async getPayments(filters: PaymentFilters): Promise<PaginatedResponse<Payment>> {
     await this.delay();
-    const startIndex = ((request.page || 1) - 1) * (request.limit || 10);
-    const endIndex = startIndex + (request.limit || 10);
-    const filteredPayments = mockPendingPayments.filter(payment => {
-      const matchesStatus = !request.status?.length || request.status.includes(payment.status);
-      const matchesMethod = !request.method?.length || request.method.includes(payment.method);
-      const matchesPriority = !request.priority?.length || request.priority.includes(payment.priority);
-      const matchesStartDate = !request.startDate || new Date(payment.effectiveDate) >= new Date(request.startDate);
-      const matchesEndDate = !request.endDate || new Date(payment.effectiveDate) <= new Date(request.endDate);
-      return matchesStatus && matchesMethod && matchesPriority && matchesStartDate && matchesEndDate;
+    const filteredPayments = mockPayments.filter(payment => {
+      const matchesDate = !filters.StartDate || new Date(payment.ProcessDate) >= new Date(filters.StartDate);
+      const matchesEndDate = !filters.EndDate || new Date(payment.ProcessDate) <= new Date(filters.EndDate);
+      const matchesStatus = !filters.Status || filters.Status.includes(payment.Status as PaymentStatus);
+      return matchesDate && matchesEndDate && matchesStatus;
     });
+
     return {
-      data: filteredPayments.slice(startIndex, endIndex),
+      items: filteredPayments,
       total: filteredPayments.length,
-      page: request.page || 1,
-      limit: request.limit || 10
+      page: 1,
+      limit: 10,
+      totalPages: Math.ceil(filteredPayments.length / 10)
     };
   }
 
-  async getPendingPaymentsSummary(request: PendingPaymentSearchRequest): Promise<PendingPaymentSummary> {
+  async getPayment(paymentId: string): Promise<Payment> {
     await this.delay();
-    const filteredPayments = mockPendingPayments.filter(payment => {
-      const matchesStatus = !request.status?.length || request.status.includes(payment.status);
-      const matchesMethod = !request.method?.length || request.method.includes(payment.method);
-      const matchesPriority = !request.priority?.length || request.priority.includes(payment.priority);
-      const matchesStartDate = !request.startDate || new Date(payment.effectiveDate) >= new Date(request.startDate);
-      const matchesEndDate = !request.endDate || new Date(payment.effectiveDate) <= new Date(request.endDate);
-      return matchesStatus && matchesMethod && matchesPriority && matchesStartDate && matchesEndDate;
-    });
-
-    const byMethod = Object.values(PaymentMethod).reduce((acc, method) => {
-      const payments = filteredPayments.filter(p => p.method === method);
-      acc[method] = {
-        count: payments.length,
-        amount: payments.reduce((sum, p) => sum + p.amount, 0)
-      };
-      return acc;
-    }, {} as Record<PaymentMethod, { count: number; amount: number }>);
-
-    const byStatus = Object.values(PaymentStatus).reduce((acc, status) => {
-      acc[status] = filteredPayments.filter(p => p.status === status).length;
-      return acc;
-    }, {} as Record<PaymentStatus, number>);
-
-    const byPriority = Object.values(Priority).reduce((acc, priority) => {
-      acc[priority] = filteredPayments.filter(p => p.priority === priority).length;
-      return acc;
-    }, {} as Record<Priority, number>);
-
-    return {
-      byMethod,
-      byStatus,
-      byPriority
-    };
+    const payment = mockPayments.find(p => p.Id === paymentId);
+    if (!payment) {
+      throw new Error(`Payment ${paymentId} not found`);
+    }
+    return payment;
   }
 
-  async exportPendingPayments(request: PendingPaymentSearchRequest): Promise<Blob> {
+  async createPayment(payment: Omit<Payment, 'Id' | 'CreatedAt' | 'UpdatedAt'>): Promise<Payment> {
     await this.delay();
-    const mockData = 'id,amount,status\n1,1000,pending';
-    return new Blob([mockData], { type: 'text/csv' });
+    const newPayment: Payment = {
+      ...payment,
+      Id: `pmt_${Date.now()}`,
+      ProcessDate: new Date().toISOString()
+    };
+    mockPayments.push(newPayment);
+    return newPayment;
+  }
+
+  async updatePayment(paymentId: string, payment: Partial<Payment>): Promise<Payment> {
+    await this.delay();
+    const existingPayment = mockPayments.find(p => p.Id === paymentId);
+    if (!existingPayment) {
+      throw new Error(`Payment ${paymentId} not found`);
+    }
+    const updatedPayment = {
+      ...existingPayment,
+      ...payment,
+      ProcessDate: new Date().toISOString()
+    };
+    const index = mockPayments.findIndex(p => p.Id === paymentId);
+    if (index !== -1) {
+      mockPayments[index] = updatedPayment;
+    }
+    return updatedPayment;
+  }
+
+  async cancelPayment(paymentId: string, reason: string): Promise<void> {
+    await this.delay();
+    const payment = mockPayments.find(p => p.Id === paymentId);
+    if (!payment) {
+      throw new Error(`Payment ${paymentId} not found`);
+    }
+    payment.Status = PaymentStatus.CANCELLED;
+  }
+
+  async getPaymentHistory(paymentId: string): Promise<PaymentHistory[]> {
+    await this.delay();
+    return mockPaymentHistory.filter(h => h.PaymentId === paymentId);
   }
 
   async approvePayment(paymentId: string): Promise<void> {
     await this.delay();
-    return Promise.resolve();
+    const payment = mockPayments.find(p => p.Id === paymentId);
+    if (!payment) {
+      throw new Error(`Payment ${paymentId} not found`);
+    }
+    payment.Status = PaymentStatus.COMPLETED;
   }
 
   async rejectPayment(paymentId: string, reason: string): Promise<void> {
     await this.delay();
-    return Promise.resolve();
+    const payment = mockPayments.find(p => p.Id === paymentId);
+    if (!payment) {
+      throw new Error(`Payment ${paymentId} not found`);
+    }
+    payment.Status = PaymentStatus.REJECTED;
   }
 
-  async bulkApprove(paymentIds: string[]): Promise<boolean> {
-    await this.delay();
-    return Promise.resolve(true);
-  }
-
-  async bulkReject(paymentIds: string[]): Promise<boolean> {
-    await this.delay();
-    return Promise.resolve(true);
-  }
-
-  async getPaymentHistory(paymentId: string): Promise<PaymentHistory> {
+  async getPendingPayments(request: PaymentActivityRequest): Promise<PaymentActivityListResponse> {
     await this.delay();
     return {
-      paymentId,
-      action: 'CREATED',
-      performedBy: 'Test User',
-      timestamp: new Date().toISOString(),
-      details: {
-        status: PaymentStatus.PENDING,
-        method: PaymentMethod.ACH
-      }
-    };
-  }
-
-  async confirmPayment(paymentId: string, request: any): Promise<PaymentConfirmationResponse> {
-    await this.delay();
-    return {
-      success: true,
-      confirmationStatus: ConfirmationStatus.VERIFIED,
-      message: 'Payment confirmed successfully',
-      attempts: 1,
-      maxAttempts: 3,
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+      PaymentActivities: mockPendingPayments
     };
   }
 }

@@ -37,20 +37,19 @@ import {
   ManualPayment,
   ManualPaymentFormData,
   ManualPaymentValidation,
-  PaymentMethod as BillPayPaymentMethod,
-  PendingPayment,
-  Payment,
+  PaymentMethodType,
   Priority
 } from '../../../types/bill-pay.types';
 import {
   PaymentTransaction,
+  PaymentValidation,
+  PaymentSchedule,
+  Payment,
+  PendingPayment,
+  PaymentMethod,
   PaymentType,
   PaymentStatus,
-  PaymentPriority,
-  PaymentValidation,
-  ProcessorConfig,
-  PaymentMethod,
-  PaymentSchedule
+  PaymentPriority
 } from '../../../types/payment.types';
 import { Client, ClientStatus } from '../../../types/client.types';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
@@ -93,7 +92,6 @@ const initialPaymentForm: PaymentForm = {
 };
 const paymentTypes = [
   { value: PaymentMethod.ACH, label: 'ACH' },
-  { value: PaymentMethod.WIRE, label: 'Wire' },
   { value: PaymentMethod.CHECK, label: 'Check' },
   { value: PaymentMethod.CARD, label: 'Card' }
 ];
@@ -113,9 +111,20 @@ const ManualProcessing: React.FC = () => {
     errors: {},
     warnings: {},
   });
-  const [paymentLimits, setPaymentLimits] = useState<Record<PaymentMethod, number>>({
+  // Define type for payment limits to include only valid methods
+  type ValidPaymentMethods = {
+    [PaymentMethod.ACH]: number;
+    [PaymentMethod.CHECK]: number;
+    [PaymentMethod.CARD]: number;
+  };
+
+  const [paymentLimits, setPaymentLimits] = useState<ValidPaymentMethods>({
     [PaymentMethod.ACH]: 0,
-    [PaymentMethod.WIRE]: 0,
+    [PaymentMethod.CHECK]: 0,
+    [PaymentMethod.CARD]: 0
+  });
+  const [methodCounts, setMethodCounts] = useState<ValidPaymentMethods>({
+    [PaymentMethod.ACH]: 0,
     [PaymentMethod.CHECK]: 0,
     [PaymentMethod.CARD]: 0
   });
@@ -183,12 +192,14 @@ const ManualProcessing: React.FC = () => {
     try {
       setError(null);
       const config = await paymentProcessorService.getProcessorConfig();
-      setPaymentLimits({
-        [PaymentMethod.ACH]: config.validationRules.maxAmount || 0,
-        [PaymentMethod.WIRE]: config.validationRules.maxAmount || 0,
-        [PaymentMethod.CHECK]: config.validationRules.maxAmount || 0,
-        [PaymentMethod.CARD]: config.validationRules.maxAmount || 0
-      });
+      const validationConfig = {
+        maxAmounts: {
+          [PaymentMethod.ACH]: config.ValidationRules.MaxAmount || 0,
+          [PaymentMethod.CHECK]: config.ValidationRules.MaxAmount || 0,
+          [PaymentMethod.CARD]: config.ValidationRules.MaxAmount || 0
+        } as ValidPaymentMethods
+      };
+      setPaymentLimits(validationConfig.maxAmounts);
     } catch (err) {
       setError('Failed to load payment limits');
       console.error('Error loading payment limits:', err);
@@ -264,12 +275,13 @@ const ManualProcessing: React.FC = () => {
       if (isNaN(numAmount)) {
         errors.amount = 'Invalid amount';
       } else if (paymentLimits) {
-        if (numAmount < paymentLimits[form.paymentType]) {
-          errors.amount = `Amount must be at least ${paymentLimits[form.paymentType]}`;
-        } else if (numAmount > paymentLimits[form.paymentType]) {
-          errors.amount = `Amount cannot exceed ${paymentLimits[form.paymentType]}`;
-        } else if (numAmount > paymentLimits[form.paymentType] * 0.8) {
-          warnings.amount = 'Amount is close to daily limit';
+        const limit = paymentLimits[form.paymentType as keyof ValidPaymentMethods];
+        if (numAmount < limit) {
+          errors.amount = `Amount must be at least ${limit}`;
+        } else if (numAmount > limit) {
+          errors.amount = `Amount cannot exceed ${limit}`;
+        } else if (numAmount > limit * 0.8) {
+          warnings.amount = 'Amount is approaching the limit';
         }
       }
     }
@@ -325,30 +337,30 @@ const ManualProcessing: React.FC = () => {
       setLoading(true);
       setError(null);
       const transaction: PaymentTransaction = {
-        id: '', // Will be assigned by service
-        clientId: form.clientId,
-        amount: parseFloat(form.amount),
-        currency: 'USD',
-        method: form.paymentType as PaymentMethod,
-        type: PaymentType.DEBIT,
-        status: PaymentStatus.PENDING,
-        scheduledAt: form.effectiveDate.toDate(),
-        priority: PaymentPriority.NORMAL,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        metadata: {
-          accountNumber: form.accountNumber,
-          routingNumber: form.routingNumber,
-          bankName: form.bankName,
-          memo: form.memo
+        Id: '', // Will be assigned by service
+        ClientId: form.clientId,
+        Amount: parseFloat(form.amount),
+        Currency: 'USD',
+        Method: form.paymentType as PaymentMethod,
+        Type: PaymentType.DEBIT,
+        Status: PaymentStatus.PENDING,
+        ScheduledAt: form.effectiveDate.toDate(),
+        Priority: PaymentPriority.NORMAL,
+        CreatedAt: new Date(),
+        UpdatedAt: new Date(),
+        Metadata: {
+          AccountNumber: form.accountNumber,
+          RoutingNumber: form.routingNumber,
+          BankName: form.bankName,
+          Memo: form.memo
         }
       };
       const validationResult = await paymentProcessorService.validatePayment(transaction);
-      if (!validationResult.isValid) {
+      if (!validationResult.IsValid) {
         setValidation({
-          errors: validationResult.errors.reduce((acc: Record<string, string>, err: { code: string; message: string }) => ({
+          errors: validationResult.Errors.reduce((acc: Record<string, string>, err: { Code: string; Message: string }) => ({
             ...acc,
-            [err.code]: err.message,
+            [err.Code]: err.Message,
           }), {}),
           warnings: {},
         });
@@ -375,26 +387,27 @@ const ManualProcessing: React.FC = () => {
     setError(null);
     try {
       const transaction: PaymentTransaction = {
-        id: '', // Will be assigned by service
-        clientId: form.clientId,
-        amount: parseFloat(form.amount || '0'),
-        currency: 'USD',
-        method: form.paymentType as PaymentMethod,
-        type: PaymentType.DEBIT,
-        status: PaymentStatus.PENDING,
-        scheduledAt: form.effectiveDate.toDate(),
-        priority: PaymentPriority.NORMAL,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        metadata: {
-          accountNumber: form.accountNumber,
-          routingNumber: form.routingNumber,
-          bankName: form.bankName,
-          memo: form.memo
+        Id: '', // Will be assigned by service
+        ClientId: form.clientId,
+        Amount: parseFloat(form.amount || '0'),
+        Currency: 'USD',
+        Method: form.paymentType as PaymentMethod,
+        Type: PaymentType.DEBIT,
+        Status: PaymentStatus.PENDING,
+        ScheduledAt: form.effectiveDate.toDate(),
+        Priority: PaymentPriority.NORMAL,
+        CreatedAt: new Date(),
+        UpdatedAt: new Date(),
+        Metadata: {
+          AccountNumber: form.accountNumber,
+          RoutingNumber: form.routingNumber,
+          BankName: form.bankName,
+          Memo: form.memo
         }
       };
       const schedule: PaymentSchedule = {
-        scheduledDate: form.effectiveDate.toDate()
+        WillProcessDate: form.effectiveDate.toISOString(),
+        Frequency: 'once'
       };
       const response = await paymentProcessorService.schedulePayment(transaction, schedule);
       if (response) {
@@ -461,7 +474,7 @@ const ManualProcessing: React.FC = () => {
         validation.errors.amount ||
         validation.warnings.amount ||
         (paymentLimits &&
-          `Limit: ${paymentLimits[form.paymentType]}`)
+          `Limit: ${paymentLimits[form.paymentType as keyof ValidPaymentMethods]}`)
       }
       InputProps={{
         startAdornment: <InputAdornment position="start">$</InputAdornment>,

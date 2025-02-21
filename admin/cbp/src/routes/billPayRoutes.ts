@@ -23,7 +23,6 @@ const FISExceptionHandling = lazy(() => import('../components/bill-pay/payments/
 const PendingPayments = lazy(() => import('../components/bill-pay/payments/ManagePayments'));
 const PaymentManagementHeader = lazy(() => import('../components/bill-pay/payments/PaymentManagementHeader'));
 const ManualProcessing = lazy(() => import('../components/bill-pay/payments/ManualProcessing'));
-const PayeeConversion = lazy(() => import('../components/bill-pay/payments/PayeeConversion'));
 const FisPayeeCheck = lazy(() => import('../components/bill-pay/payments/FisPayeeCheck'));
 const Reports = lazy(() => import('../components/bill-pay/reports/Reports'));
 const Settings = lazy(() => import('../components/bill-pay/settings/Settings'));
@@ -121,17 +120,6 @@ const billPayRoutes: RouteConfig[] = [
     title: 'Reports',
     element: Reports,
     icon: AssessmentIcon,
-    sectionId: 'billPay',
-    permissions: {
-      permissions: ['bill-pay:read']
-    }
-  },
-  {
-    id: 'data-conversion',
-    path: 'data-conversion',
-    title: 'Data Conversion',
-    element: PayeeConversion,
-    icon: TransformIcon,
     sectionId: 'billPay',
     permissions: {
       permissions: ['bill-pay:read']

@@ -30,217 +30,238 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
         super(basePath);
     }
     async processPayment(transaction: PaymentTransaction): Promise<PaymentTransaction> {
+        const mockDelay = Math.random() * 2000;
+        await new Promise(resolve => setTimeout(resolve, mockDelay));
+
+        const success = Math.random() > 0.2;
+        const newStatus = success ? PaymentStatus.COMPLETED : PaymentStatus.FAILED;
+
         const processedTransaction: PaymentTransaction = {
             ...transaction,
-            id: transaction.id || uuidv4(),
-            status: this.simulateProcessingResult(),
-            updatedAt: new Date(),
-            createdAt: transaction.createdAt || new Date(),
-            processedAt: new Date()
+            Id: transaction.Id || uuidv4(),
+            Status: newStatus,
+            UpdatedAt: new Date(),
+            CreatedAt: new Date(),
+            ProcessedAt: new Date()
         };
-        this.transactions.set(processedTransaction.id, processedTransaction);
+        this.transactions.set(processedTransaction.Id, processedTransaction);
         return processedTransaction;
     }
     async processBatch(transactions: PaymentTransaction[]): Promise<TransactionBatch> {
         const batchId = uuidv4();
-        const processedTransactions = await Promise.all(
-            transactions.map(t => this.processPayment(t))
-        );
         const batch: TransactionBatch = {
-            id: batchId,
-            transactions: processedTransactions,
-            status: BatchStatus.COMPLETED,
-            createdAt: new Date(),
-            totalCount: processedTransactions.length,
-            successCount: processedTransactions.filter(t => t.status === PaymentStatus.COMPLETED).length,
-            failureCount: processedTransactions.filter(t => t.status === PaymentStatus.FAILED).length
+            Id: batchId,
+            Status: BatchStatus.PROCESSING,
+            TotalCount: transactions.length,
+            SuccessCount: 0,
+            FailureCount: 0,
+            Transactions: [],
+            CreatedAt: new Date(),
+            CompletedAt: undefined
         };
+
         this.batches.set(batchId, batch);
+
+        for (const transaction of transactions) {
+            try {
+                const processedTransaction = await this.processPayment(transaction);
+                batch.Transactions.push(processedTransaction);
+                if (processedTransaction.Status === PaymentStatus.COMPLETED) {
+                    batch.SuccessCount++;
+                } else {
+                    batch.FailureCount++;
+                }
+            } catch (error) {
+                batch.FailureCount++;
+            }
+        }
+
+        batch.Status = batch.FailureCount === 0 ? BatchStatus.COMPLETED : BatchStatus.PARTIALLY_COMPLETED;
+        batch.CompletedAt = new Date();
+
         return batch;
     }
     async getTransaction(transactionId: string): Promise<PaymentTransaction> {
         const transaction = this.transactions.get(transactionId);
         if (!transaction) {
-            throw new Error(`Transaction not found: ${transactionId}`);
+            throw new Error(`Transaction ${transactionId} not found`);
         }
         return transaction;
     }
-    async searchTransactions(params: {
-        status?: PaymentStatus[];
-        method?: PaymentMethod;
-        type?: PaymentType;
-        priority?: PaymentPriority;
-        dateRange?: DateRange;
-        clientId?: string;
-        page?: number;
-        limit?: number;
+    async getTransactions(filters: {
+        Method?: PaymentMethod[];
+        Type?: PaymentType[];
+        Status?: PaymentStatus[];
+        Priority?: PaymentPriority[];
+        DateRange?: DateRange;
+        ClientId?: string;
+        PageSize?: number;
+        PageNumber?: number;
     }): Promise<PaginatedResponse<PaymentTransaction>> {
-        const { page = 1, limit = 10 } = params;
         let filteredTransactions = Array.from(this.transactions.values());
-        if (params.status?.length) {
-            filteredTransactions = filteredTransactions.filter(t => params.status?.includes(t.status));
+
+        if (filters.Method?.length) {
+            filteredTransactions = filteredTransactions.filter(t => filters.Method.includes(t.Method));
         }
-        if (params.method) {
-            filteredTransactions = filteredTransactions.filter(t => t.method === params.method);
+
+        if (filters.Type?.length) {
+            filteredTransactions = filteredTransactions.filter(t => filters.Type.includes(t.Type));
         }
-        if (params.type) {
-            filteredTransactions = filteredTransactions.filter(t => t.type === params.type);
+
+        if (filters.Status?.length) {
+            filteredTransactions = filteredTransactions.filter(t => filters.Status.includes(t.Status));
         }
-        if (params.priority) {
-            filteredTransactions = filteredTransactions.filter(t => t.priority === params.priority);
+
+        if (filters.Priority?.length) {
+            filteredTransactions = filteredTransactions.filter(t => filters.Priority.includes(t.Priority));
         }
-        if (params.dateRange) {
-            const start = new Date(params.dateRange.startDate);
-            const end = new Date(params.dateRange.endDate);
+
+        if (filters.DateRange) {
             filteredTransactions = filteredTransactions.filter(t => {
-                const date = new Date(t.createdAt);
-                return date >= start && date <= end;
+                const date = new Date(t.CreatedAt);
+                return date >= new Date(filters.DateRange.StartDate) && date <= new Date(filters.DateRange.EndDate);
             });
         }
-        if (params.clientId) {
-            filteredTransactions = filteredTransactions.filter(t => t.clientId === params.clientId);
+
+        if (filters.ClientId) {
+            filteredTransactions = filteredTransactions.filter(t => t.ClientId === filters.ClientId);
         }
-        const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit;
-        const paginatedTransactions = filteredTransactions.slice(startIndex, endIndex);
+
+        const pageSize = filters.PageSize || 10;
+        const pageNumber = filters.PageNumber || 1;
+        const start = (pageNumber - 1) * pageSize;
+        const end = start + pageSize;
+
         return {
-            items: paginatedTransactions,
+            items: filteredTransactions.slice(start, end),
             total: filteredTransactions.length,
-            page,
-            limit,
-            totalPages: Math.ceil(filteredTransactions.length / limit)
+            page: pageNumber,
+            limit: pageSize,
+            totalPages: Math.ceil(filteredTransactions.length / pageSize)
         };
     }
     async getBatch(batchId: string): Promise<TransactionBatch> {
         const batch = this.batches.get(batchId);
         if (!batch) {
-            throw new Error(`Batch not found: ${batchId}`);
+            throw new Error(`Batch ${batchId} not found`);
         }
         return batch;
     }
     async getBatches(params: {
         status?: BatchStatus[];
         dateRange?: DateRange;
-        clientId?: string;
         page?: number;
         limit?: number;
     }): Promise<PaginatedResponse<TransactionBatch>> {
-        const { page = 1, limit = 10 } = params;
         let filteredBatches = Array.from(this.batches.values());
+
         if (params.status?.length) {
-            filteredBatches = filteredBatches.filter(b => params.status?.includes(b.status));
+            filteredBatches = filteredBatches.filter(b => params.status.includes(b.Status));
         }
-        if (params.clientId) {
-            filteredBatches = filteredBatches.filter(b => 
-                b.transactions.some(t => t.clientId === params.clientId)
-            );
-        }
+
         if (params.dateRange) {
-            const start = new Date(params.dateRange.startDate);
-            const end = new Date(params.dateRange.endDate);
             filteredBatches = filteredBatches.filter(b => {
-                const date = new Date(b.createdAt);
-                return date >= start && date <= end;
+                const date = new Date(b.CreatedAt);
+                return date >= new Date(params.dateRange.StartDate) && date <= new Date(params.dateRange.EndDate);
             });
         }
-        const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit;
-        const paginatedBatches = filteredBatches.slice(startIndex, endIndex);
+
+        const limit = params.limit || 10;
+        const page = params.page || 1;
+        const start = (page - 1) * limit;
+        const end = start + limit;
+
         return {
-            items: paginatedBatches,
+            items: filteredBatches.slice(start, end),
             total: filteredBatches.length,
-            page,
-            limit,
+            page: page,
+            limit: limit,
             totalPages: Math.ceil(filteredBatches.length / limit)
         };
     }
     async cancelTransaction(transactionId: string): Promise<PaymentTransaction> {
         const transaction = await this.getTransaction(transactionId);
-        if (![PaymentStatus.PENDING, PaymentStatus.PROCESSING].includes(transaction.status)) {
+        if (![PaymentStatus.PENDING, PaymentStatus.PROCESSING].includes(transaction.Status)) {
             throw new Error('Only pending or processing transactions can be cancelled');
         }
         const cancelledTransaction: PaymentTransaction = {
             ...transaction,
-            status: PaymentStatus.CANCELLED,
-            updatedAt: new Date()
+            Status: PaymentStatus.CANCELLED,
+            UpdatedAt: new Date()
         };
         this.transactions.set(transactionId, cancelledTransaction);
         return cancelledTransaction;
     }
     async retryTransaction(transactionId: string): Promise<PaymentTransaction> {
         const transaction = await this.getTransaction(transactionId);
-        if (transaction.status !== PaymentStatus.FAILED) {
+        if (transaction.Status !== PaymentStatus.FAILED) {
             throw new Error('Only failed transactions can be retried');
         }
         return this.processPayment({
             ...transaction,
-            status: PaymentStatus.PENDING
+            Status: PaymentStatus.PENDING
         });
     }
     async schedulePayment(transaction: PaymentTransaction, schedule: PaymentSchedule): Promise<PaymentTransaction> {
-        const scheduledTransaction: PaymentTransaction = {
+        const scheduledTransaction = {
             ...transaction,
-            id: transaction.id || uuidv4(),
-            status: PaymentStatus.SCHEDULED,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            scheduledAt: schedule.scheduledDate
+            ScheduledAt: new Date(schedule.WillProcessDate),
+            Status: PaymentStatus.PENDING,
+            Metadata: {
+                Schedule: schedule
+            }
         };
-        this.transactions.set(scheduledTransaction.id, scheduledTransaction);
-        return scheduledTransaction;
+        return this.processPayment(scheduledTransaction);
     }
     async validatePayment(transaction: PaymentTransaction): Promise<PaymentValidation> {
-        const errors: ProcessingError[] = [];
-        if (!transaction.amount || transaction.amount <= 0) {
-            errors.push({
-                code: 'INVALID_AMOUNT',
-                message: 'Invalid amount',
-                timestamp: new Date()
-            });
-        }
-        if (!transaction.clientId) {
-            errors.push({
-                code: 'MISSING_CLIENT',
-                message: 'Client ID is required',
-                timestamp: new Date()
-            });
-        }
-        if (!transaction.method) {
-            errors.push({
-                code: 'MISSING_METHOD',
-                message: 'Payment method is required',
-                timestamp: new Date()
-            });
-        }
-        return {
-            isValid: errors.length === 0,
-            errors: errors.map(e => ({ code: e.code, message: e.message })),
-            requiresApproval: false
+        const validation: PaymentValidation = {
+            IsValid: true,
+            RequiresApproval: false,
+            Errors: []
         };
+
+        if (!transaction.Amount || transaction.Amount <= 0) {
+            validation.IsValid = false;
+            validation.Errors.push({
+                Code: 'INVALID_AMOUNT',
+                Message: 'Amount must be greater than 0'
+            });
+        }
+
+        if (transaction.ScheduledAt && transaction.ScheduledAt < new Date()) {
+            validation.IsValid = false;
+            validation.Errors.push({
+                Code: 'INVALID_SCHEDULE',
+                Message: 'Scheduled date is in the past'
+            });
+        }
+
+        validation.IsValid = validation.Errors.length === 0;
+        return validation;
     }
     async getPaymentReceipt(transactionId: string): Promise<PaymentReceipt> {
         const transaction = await this.getTransaction(transactionId);
         return {
-            transactionId,
-            receiptNumber: `RCPT-${transactionId}`,
-            timestamp: new Date(),
-            amount: transaction.amount,
-            currency: transaction.currency,
-            status: transaction.status,
-            method: transaction.method
+            TransactionId: transaction.Id,
+            ReceiptNumber: `RCPT-${transaction.Id}`,
+            Timestamp: new Date(),
+            Amount: transaction.Amount,
+            Currency: transaction.Currency,
+            Status: transaction.Status,
+            Method: transaction.Method
         };
     }
     async getProcessorConfig(): Promise<ProcessorConfig> {
         return {
-            maxBatchSize: 1000,
-            retryAttempts: 3,
-            processingDelay: 1000,
-            supportedMethods: [PaymentMethod.ACH, PaymentMethod.WIRE, PaymentMethod.CHECK],
-            supportedTypes: [PaymentType.DEBIT, PaymentType.CREDIT],
-            validationRules: {
-                minAmount: 0.01,
-                maxAmount: 1000000,
-                requiresApproval: 50000
+            MaxBatchSize: 1000,
+            RetryAttempts: 3,
+            ProcessingDelay: 1000,
+            SupportedMethods: [PaymentMethod.ACH, PaymentMethod.CARD],
+            SupportedTypes: [PaymentType.DEBIT, PaymentType.CREDIT],
+            ValidationRules: {
+                MinAmount: 0.01,
+                MaxAmount: 1000000,
+                RequiresApproval: 50000
             }
         };
     }
@@ -259,43 +280,102 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
         type?: PaymentType;
     }): Promise<TransactionSummary> {
         const transactions = Array.from(this.transactions.values());
-        const filteredTransactions = this.filterTransactionsByParams(transactions, params);
+        const filteredTransactions = transactions.filter(t => {
+            const date = new Date(t.CreatedAt);
+            return date >= new Date(params.dateRange.StartDate) && 
+                   date <= new Date(params.dateRange.EndDate) &&
+                   (!params.clientId || t.ClientId === params.clientId) &&
+                   (!params.type || t.Type === params.type);
+        });
+
         return {
-            totalCount: filteredTransactions.length,
-            totalAmount: filteredTransactions.reduce((sum, t) => sum + t.amount, 0),
-            successfulCount: filteredTransactions.filter(t => t.status === PaymentStatus.COMPLETED).length,
-            failedCount: filteredTransactions.filter(t => t.status === PaymentStatus.FAILED).length,
-            byMethod: this.groupTransactionsByMethod(filteredTransactions),
-            byType: this.groupTransactionsByType(filteredTransactions),
-            byStatus: this.groupTransactionsByStatus(filteredTransactions)
+            TotalCount: filteredTransactions.length,
+            TotalAmount: filteredTransactions.reduce((sum, t) => sum + t.Amount, 0),
+            SuccessfulCount: filteredTransactions.filter(t => t.Status === PaymentStatus.COMPLETED).length,
+            FailedCount: filteredTransactions.filter(t => t.Status === PaymentStatus.FAILED).length,
+            ByMethod: this.groupTransactionsByMethod(filteredTransactions),
+            ByType: this.groupTransactionsByType(filteredTransactions),
+            ByStatus: this.groupTransactionsByStatus(filteredTransactions)
         };
     }
     async getProcessorMetrics(params: {
         dateRange: DateRange;
         clientId?: string;
     }): Promise<ProcessorMetrics> {
-        const transactions = Array.from(this.transactions.values());
-        const filteredTransactions = this.filterTransactionsByParams(transactions, params);
-        const processingTimes = this.calculateProcessingTimes(filteredTransactions);
-        const throughputStats = this.calculateThroughput(filteredTransactions);
-        const errorStats = this.calculateErrorRates(filteredTransactions);
+        const transactions = Array.from(this.transactions.values()).filter(t => {
+            const date = new Date(t.CreatedAt);
+            return date >= new Date(params.dateRange.StartDate) && 
+                   date <= new Date(params.dateRange.EndDate) &&
+                   (!params.clientId || t.ClientId === params.clientId);
+        });
+
         return {
-            processingTime: {
-                average: processingTimes.average,
-                min: processingTimes.min,
-                max: processingTimes.max
-            },
-            successRate: this.calculateSuccessRate(filteredTransactions),
-            failureRate: 100 - this.calculateSuccessRate(filteredTransactions),
-            throughput: {
-                daily: throughputStats.daily,
-                hourly: throughputStats.hourly
-            },
-            errorRates: {
-                validation: errorStats.validation || 0,
-                processing: errorStats.processing || 0,
-                network: errorStats.network || 0
-            }
+            TotalPayments: transactions.length,
+            TotalAmount: transactions.reduce((sum, t) => sum + t.Amount, 0),
+            FailedPayments: transactions.filter(t => t.Status === PaymentStatus.FAILED).length,
+            FailedAmount: transactions.filter(t => t.Status === PaymentStatus.FAILED)
+                .reduce((sum, t) => sum + t.Amount, 0),
+            CompletedPayments: transactions.filter(t => t.Status === PaymentStatus.COMPLETED).length,
+            CompletedAmount: transactions.filter(t => t.Status === PaymentStatus.COMPLETED)
+                .reduce((sum, t) => sum + t.Amount, 0),
+            InProcessPayments: transactions.filter(t => t.Status === PaymentStatus.PROCESSING).length,
+            InProcessAmount: transactions.filter(t => t.Status === PaymentStatus.PROCESSING)
+                .reduce((sum, t) => sum + t.Amount, 0),
+            CancelledPayments: transactions.filter(t => t.Status === PaymentStatus.CANCELLED).length,
+            CancelledAmount: transactions.filter(t => t.Status === PaymentStatus.CANCELLED)
+                .reduce((sum, t) => sum + t.Amount, 0)
+        };
+    }
+    async searchTransactions(params: {
+        status?: PaymentStatus[];
+        method?: PaymentMethod;
+        type?: PaymentType;
+        priority?: PaymentPriority;
+        dateRange?: DateRange;
+        clientId?: string;
+        page?: number;
+        limit?: number;
+    }): Promise<PaginatedResponse<PaymentTransaction>> {
+        let filteredTransactions = Array.from(this.transactions.values());
+
+        if (params.status?.length) {
+            filteredTransactions = filteredTransactions.filter(t => params.status.includes(t.Status));
+        }
+
+        if (params.method) {
+            filteredTransactions = filteredTransactions.filter(t => t.Method === params.method);
+        }
+
+        if (params.type) {
+            filteredTransactions = filteredTransactions.filter(t => t.Type === params.type);
+        }
+
+        if (params.priority) {
+            filteredTransactions = filteredTransactions.filter(t => t.Priority === params.priority);
+        }
+
+        if (params.dateRange) {
+            filteredTransactions = filteredTransactions.filter(t => {
+                const date = new Date(t.CreatedAt);
+                return date >= new Date(params.dateRange.StartDate) && date <= new Date(params.dateRange.EndDate);
+            });
+        }
+
+        if (params.clientId) {
+            filteredTransactions = filteredTransactions.filter(t => t.ClientId === params.clientId);
+        }
+
+        const limit = params.limit || 10;
+        const page = params.page || 1;
+        const start = (page - 1) * limit;
+        const end = start + limit;
+
+        return {
+            items: filteredTransactions.slice(start, end),
+            total: filteredTransactions.length,
+            page: page,
+            limit: limit,
+            totalPages: Math.ceil(filteredTransactions.length / limit)
         };
     }
     private simulateProcessingResult(): PaymentStatus {
@@ -305,34 +385,34 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
         return PaymentStatus.PROCESSING;
     }
     private filterTransactionsByParams(transactions: PaymentTransaction[], params: {
-        dateRange: DateRange;
-        clientId?: string;
-        type?: PaymentType;
+        DateRange: DateRange;
+        ClientId?: string;
+        Type?: PaymentType;
     }): PaymentTransaction[] {
         return transactions.filter(t => {
-            const date = new Date(t.createdAt);
-            const start = new Date(params.dateRange.startDate);
-            const end = new Date(params.dateRange.endDate);
+            const date = new Date(t.CreatedAt);
+            const start = new Date(params.DateRange.StartDate);
+            const end = new Date(params.DateRange.EndDate);
             const dateInRange = date >= start && date <= end;
-            const clientMatches = !params.clientId || t.clientId === params.clientId;
-            const typeMatches = !params.type || t.type === params.type;
+            const clientMatches = !params.ClientId || t.ClientId === params.ClientId;
+            const typeMatches = !params.Type || t.Type === params.Type;
             return dateInRange && clientMatches && typeMatches;
         });
     }
     private calculateSuccessRate(transactions: PaymentTransaction[]): number {
-        const completed = transactions.filter(t => t.status === PaymentStatus.COMPLETED).length;
+        const completed = transactions.filter(t => t.Status === PaymentStatus.COMPLETED).length;
         return transactions.length > 0 ? (completed / transactions.length) * 100 : 0;
     }
     private calculateProcessingTimes(transactions: PaymentTransaction[]): { average: number; min: number; max: number } {
         const processedTransactions = transactions.filter(t => 
-            t.status === PaymentStatus.COMPLETED || t.status === PaymentStatus.FAILED
+            t.Status === PaymentStatus.COMPLETED || t.Status === PaymentStatus.FAILED
         );
         if (processedTransactions.length === 0) {
             return { average: 0, min: 0, max: 0 };
         }
         const times = processedTransactions.map(t => {
-            const start = t.createdAt.getTime();
-            const end = (t.processedAt || t.updatedAt).getTime();
+            const start = new Date(t.CreatedAt).getTime();
+            const end = new Date(t.ProcessedAt || t.UpdatedAt).getTime();
             return end - start;
         });
         return {
@@ -345,7 +425,7 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
         if (transactions.length === 0) {
             return { daily: 0, hourly: 0 };
         }
-        const timestamps = transactions.map(t => t.createdAt.getTime());
+        const timestamps = transactions.map(t => new Date(t.CreatedAt).getTime());
         const start = Math.min(...timestamps);
         const end = Math.max(...timestamps);
         const hours = (end - start) / (1000 * 60 * 60);
@@ -356,7 +436,7 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
         };
     }
     private calculateErrorRates(transactions: PaymentTransaction[]): { validation: number; processing: number; network: number } {
-        const failedTransactions = transactions.filter(t => t.status === PaymentStatus.FAILED);
+        const failedTransactions = transactions.filter(t => t.Status === PaymentStatus.FAILED);
         const total = transactions.length;
         if (total === 0) {
             return { validation: 0, processing: 0, network: 0 };
@@ -367,13 +447,13 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
             network: 0
         };
         failedTransactions.forEach(t => {
-            const errors = this.errors.get(t.id) || [];
+            const errors = this.errors.get(t.Id) || [];
             errors.forEach(error => {
-                if (error.code.startsWith('VAL_')) {
+                if (error.Code.startsWith('VAL_')) {
                     errorCounts.validation++;
-                } else if (error.code.startsWith('PROC_')) {
+                } else if (error.Code.startsWith('PROC_')) {
                     errorCounts.processing++;
-                } else if (error.code.startsWith('NET_')) {
+                } else if (error.Code.startsWith('NET_')) {
                     errorCounts.network++;
                 }
             });
@@ -386,19 +466,19 @@ export class MockPaymentProcessorService extends BaseMockService implements IPay
     }
     private groupTransactionsByMethod(transactions: PaymentTransaction[]): Record<PaymentMethod, number> {
         return transactions.reduce((acc, t) => {
-            acc[t.method] = (acc[t.method] || 0) + 1;
+            acc[t.Method] = (acc[t.Method] || 0) + 1;
             return acc;
         }, {} as Record<PaymentMethod, number>);
     }
     private groupTransactionsByType(transactions: PaymentTransaction[]): Record<PaymentType, number> {
         return transactions.reduce((acc, t) => {
-            acc[t.type] = (acc[t.type] || 0) + 1;
+            acc[t.Type] = (acc[t.Type] || 0) + 1;
             return acc;
         }, {} as Record<PaymentType, number>);
     }
     private groupTransactionsByStatus(transactions: PaymentTransaction[]): Record<PaymentStatus, number> {
         return transactions.reduce((acc, t) => {
-            acc[t.status] = (acc[t.status] || 0) + 1;
+            acc[t.Status] = (acc[t.Status] || 0) + 1;
             return acc;
         }, {} as Record<PaymentStatus, number>);
     }

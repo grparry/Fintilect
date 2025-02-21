@@ -3,12 +3,6 @@ import {
     BillPayConfig,
     BillPayConfigUpdate,
     BillPayConfigValidation,
-    Payment,
-    PaymentFilters,
-    PaymentHistory,
-    PaymentException,
-    ExceptionResolution,
-    PaymentAction,
     Client,
     Payee,
     BillPayStats,
@@ -16,13 +10,24 @@ import {
     Holiday,
     HolidayInput,
     NotificationTemplate,
-    NotificationTemplateInput
+    NotificationTemplateInput,
+    ExceptionResolution,
+    HolidayStatus
 } from '../../../types/bill-pay.types';
 import {
     BillPaySecuritySettings,
-    BillPaySecurityValidation,
-    BillPayOTPMethod
+    BillPayOTPMethod,
+    BillPaySecurityValidation
 } from '../../../types/security.types';
+import {
+    Payment,
+    PaymentFilters,
+    PaymentHistory,
+    PaymentException,
+    PaymentExceptionAdjustment,
+    PaymentExceptionCorrection,
+    PaymentAction
+} from '../../../types/payment.types';
 import { PaginatedResponse } from '../../../types/common.types';
 import { QueryOptions } from '../../../types/index';
 import { ApiResponse } from '../../../types/api.types';

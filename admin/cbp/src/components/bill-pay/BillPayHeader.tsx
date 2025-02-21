@@ -124,36 +124,6 @@ const BillPayHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="payee-conversion"
-              color="inherit"
-              underline="none"
-              sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
-            >
-              <TransformIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" color="text.primary" gutterBottom>
-                Data Conversion
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Convert and manage payee data
-              </Typography>
-            </Link>
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <Paper 
-            sx={{ 
-              p: 3, 
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              '&:hover': {
-                bgcolor: 'action.hover'
-              }
-            }}
-          >
-            <Link
-              component={RouterLink}
               to="settings"
               color="inherit"
               underline="none"

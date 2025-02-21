@@ -37,7 +37,6 @@ import WarningIcon from '@mui/icons-material/Warning';
 import dayjs from 'dayjs';
 import { useAuth } from '../../../hooks/useAuth';
 import {
-  PaymentException,
   ExceptionResolution,
   ResolutionHistory,
   ExceptionTool as IExceptionTool,
@@ -45,11 +44,13 @@ import {
   ExceptionFilters,
   PaginatedResponse
 } from '../../../types/bill-pay.types';
+import { PaymentException } from '../../../types/payment.types';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 
 interface ExceptionToolProps {
   onClose?: () => void;
 }
+
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
     case 'resolved':
@@ -61,6 +62,7 @@ const getStatusColor = (status: string) => {
       return 'warning';
   }
 };
+
 const getPriorityColor = (priority: string) => {
   switch (priority) {
     case 'high':
@@ -72,65 +74,71 @@ const getPriorityColor = (priority: string) => {
       return 'info';
   }
 };
+
 const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
-  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [exceptions, setExceptions] = useState<IExceptionTool[]>([]);
   const [selectedException, setSelectedException] = useState<IExceptionTool | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [resolutionDialogOpen, setResolutionDialogOpen] = useState(false);
+  const [resolutionNotes, setResolutionNotes] = useState('');
+  const { user } = useAuth();
+
   const exceptionService = ServiceFactory.getInstance().getExceptionService();
-  const loadExceptions = async () => {
+
+  const fetchExceptions = async () => {
     try {
       setLoading(true);
       setError(null);
-      const filters: ExceptionFilters = {
-        page: 1,
-        limit: 50,
-        sortBy: 'createdAt',
-        sortOrder: 'desc'
-      };
-      const response = await exceptionService.getExceptions(filters);
+      const response = await exceptionService.getExceptions({});
       setExceptions(response.items);
     } catch (err) {
-      setError('An error occurred while loading exceptions');
-      console.error('Error loading exceptions:', err);
+      setError('Failed to fetch exceptions');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    loadExceptions();
-  }, []);
-  const handleExceptionClick = (exception: IExceptionTool) => {
-    setSelectedException(exception);
-    setDialogOpen(true);
-  };
-  const handleResolution = async (status: string, notes: string = '') => {
+
+  const handleResolveException = async () => {
     if (!selectedException) return;
+
     try {
       setLoading(true);
       setError(null);
-      await exceptionService.updateExceptionStatus(
-        selectedException.id.toString(),
-        status as ExceptionToolStatus,
-        notes
-      );
-      await loadExceptions();
-      setDialogOpen(false);
+      await exceptionService.resolveException(selectedException.id, {
+        type: 'manual',
+        action: 'resolve',
+        notes: resolutionNotes,
+        userId: user?.id,
+        timestamp: new Date().toISOString()
+      });
+      await fetchExceptions();
+      setResolutionDialogOpen(false);
+      setResolutionNotes('');
       setSelectedException(null);
     } catch (err) {
-      setError('An error occurred while resolving the exception');
-      console.error('Error resolving exception:', err);
+      setError('Failed to resolve exception');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchExceptions();
+  }, []);
+
+  const handleExceptionClick = (exception: IExceptionTool) => {
+    setSelectedException(exception);
+    setResolutionDialogOpen(true);
+  };
+
   return (
     <Box sx={{ p: 3 }}>
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
         <Typography variant="h5" color="text.primary">Exception Tool</Typography>
-        <IconButton onClick={loadExceptions} disabled={loading}>
+        <IconButton onClick={fetchExceptions} disabled={loading}>
           <RefreshIcon />
         </IconButton>
         {onClose && (
@@ -191,7 +199,7 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
           </Table>
         </TableContainer>
       )}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>
+      <Dialog open={resolutionDialogOpen} onClose={() => setResolutionDialogOpen(false)} maxWidth="md" fullWidth>
         {selectedException && (
           <>
             <DialogTitle>Exception Details</DialogTitle>
@@ -216,26 +224,21 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
                     color={getStatusColor(selectedException.status)}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1" color="text.primary">Resolution Notes</Typography>
+                  <TextField
+                    fullWidth
+                    value={resolutionNotes}
+                    onChange={(e) => setResolutionNotes(e.target.value)}
+                  />
+                </Grid>
               </Grid>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setDialogOpen(false)}>Close</Button>
-              {selectedException.status.toLowerCase() === 'pending' && (
-                <>
-                  <Button
-                    onClick={() => handleResolution('resolved', 'Resolved manually')}
-                    color="success"
-                  >
-                    Resolve
-                  </Button>
-                  <Button
-                    onClick={() => handleResolution('ignored', 'Ignored by user')}
-                    color="error"
-                  >
-                    Ignore
-                  </Button>
-                </>
-              )}
+              <Button onClick={() => setResolutionDialogOpen(false)}>Close</Button>
+              <Button onClick={handleResolveException} color="success">
+                Resolve
+              </Button>
             </DialogActions>
           </>
         )}
@@ -243,4 +246,5 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
     </Box>
   );
 };
+
 export default ExceptionTool;

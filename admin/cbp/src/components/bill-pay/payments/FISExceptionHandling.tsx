@@ -7,7 +7,8 @@ import {
   FISExceptionHistory,
   FISResponseHistory,
   FISExceptionFilters,
-  ExceptionStats,
+  FISExceptionStats,
+  FISErrorCode,
 } from '../../../types/bill-pay.types';
 import { useAuth } from '../../../hooks/useAuth';
 import {
@@ -57,6 +58,14 @@ const defaultByStatus = Object.values(FISExceptionStatus).reduce((acc, status) =
   return acc;
 }, {} as Record<FISExceptionStatus, number>);
 
+const defaultByErrorCode: Record<FISErrorCode, number> = {
+  INVALID_ACCOUNT: 0,
+  INSUFFICIENT_FUNDS: 0,
+  ACCOUNT_CLOSED: 0,
+  TECHNICAL_ERROR: 0,
+  VALIDATION_ERROR: 0
+};
+
 interface FISDialogState {
   open: boolean;
   exception: FISException | null;
@@ -87,12 +96,7 @@ const ExceptionStatusChip: React.FC<{ status: FISExceptionStatus }> = ({ status 
   );
 };
 
-const ExceptionSummaryDisplay: React.FC<{ summary: {
-  total: number;
-  byStatus: Record<FISExceptionStatus, number>;
-  successRate: number;
-  avgRetryCount: number;
-} }> = ({ summary }) => {
+const ExceptionSummaryDisplay: React.FC<{ summary: FISExceptionStats }> = ({ summary }) => {
   return (
     <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
       <Typography variant="body2">
@@ -129,14 +133,13 @@ const FISExceptionHandling: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState<{
-    total: number;
-    byStatus: Record<FISExceptionStatus, number>;
-    successRate: number;
-    avgRetryCount: number;
-  }>({
+  const [stats, setStats] = useState<FISExceptionStats>({
     total: 0,
     byStatus: defaultByStatus,
+    byType: {},
+    byErrorCode: defaultByErrorCode,
+    avgResolutionTime: 0,
+    resolutionRate: 0,
     successRate: 0,
     avgRetryCount: 0
   });
@@ -162,11 +165,20 @@ const FISExceptionHandling: React.FC = () => {
   const loadExceptionStats = useCallback(async () => {
     try {
       const summary = await fisExceptionService.getFISExceptionSummary();
-      setStats(summary);
+      setStats({
+        total: exceptions.length,
+        byStatus: defaultByStatus,
+        byType: {},
+        byErrorCode: defaultByErrorCode,
+        avgResolutionTime: 0,
+        resolutionRate: 0,
+        successRate: 0,
+        avgRetryCount: 0
+      });
     } catch (err) {
       console.error('Error fetching exception stats:', err);
     }
-  }, [fisExceptionService]);
+  }, [fisExceptionService, exceptions]);
 
   const loadResponseHistory = useCallback(async (requestId: FISException['requestId']) => {
     try {

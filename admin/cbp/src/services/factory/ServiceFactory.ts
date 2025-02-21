@@ -53,56 +53,76 @@ import { MockAuditService } from '../implementations/mock/MockAuditService';
  */
 export class ServiceFactory {
   private static instance: ServiceFactory;
+  private static readonly adminBaseUrl = '/api/admin';
+  private static readonly adminCuBaseUrl = '/api/admin-cu';
+  private static readonly cbpBaseUrl = '/api/cbp';
+
   private services: Map<string, IUserService | IClientService | IBillPayService | IAuthService | ISecurityService | 
     INotificationService | IExceptionService | IFISExceptionService | IPayeeService | IPaymentProcessorService | IPaymentService | 
     IReportService | IHolidayService | IPermissionService | IDashboardService | IAuditService > = new Map();
+
   private constructor() {
     // Initialize services
     this.initializeServices();
   }
+
   static getInstance(): ServiceFactory {
     if (!ServiceFactory.instance) {
       ServiceFactory.instance = new ServiceFactory();
     }
     return ServiceFactory.instance;
   }
+
+  static getAdminEndpoint(path: string): string {
+    return `${this.adminBaseUrl}${path}`;
+  }
+
+  static getAdminCuEndpoint(path: string): string {
+    return `${this.adminCuBaseUrl}${path}`;
+  }
+
+  static getCbpEndpoint(path: string): string {
+    return `${this.cbpBaseUrl}${path}`;
+  }
+
   private initializeServices(): void {
     if (process.env.REACT_APP_USE_MOCK_SERVICES === 'true') {
-      this.services.set('user', new MockUserService('/api/v1/users'));
-      this.services.set('client', new MockClientService('/api/v1/clients'));
-      this.services.set('billPay', new MockBillPayService('/api/v1/bill-pay'));
-      this.services.set('auth', new MockAuthService('/api/v1/auth'));
-      this.services.set('security', new MockSecurityService('/api/v1/security'));
-      this.services.set('notification', new MockNotificationService('/api/v1/notifications'));
-      this.services.set('exceptionService', new MockExceptionService('/api/v1/exceptions'));
-      this.services.set('fisExceptionService', new MockFISExceptionService('/api/v1/fis-exceptions'));
-      this.services.set('payee', new MockPayeeService('/api/v1/payees'));
-      this.services.set('paymentProcessor', new MockPaymentProcessorService('/api/v1/payment-processor'));
-      this.services.set('payment', new MockPaymentService('/api/v1/payments'));
-      this.services.set('report', new MockReportService('/api/v1/reports'));
-      this.services.set('holiday', new MockHolidayService('/api/v1/holidays'));
-      this.services.set('permission', new MockPermissionService('/api/v1/permissions'));
-      this.services.set('dashboard', new MockDashboardService('/api/v1/dashboard'));
-      this.services.set('audit', new MockAuditService('/api/v1/audit'));
+      this.services.set('user', new MockUserService(ServiceFactory.getAdminEndpoint('/users')));
+      this.services.set('client', new MockClientService(ServiceFactory.getAdminEndpoint('/clients')));
+      this.services.set('billPay', new MockBillPayService(ServiceFactory.getAdminEndpoint('/bill-pay')));
+      this.services.set('auth', new MockAuthService(ServiceFactory.getAdminEndpoint('/auth')));
+      this.services.set('security', new MockSecurityService(ServiceFactory.getAdminEndpoint('/security')));
+      this.services.set('notification', new MockNotificationService(ServiceFactory.getAdminEndpoint('/notifications')));
+      this.services.set('exceptionService', new MockExceptionService(ServiceFactory.getAdminEndpoint('/exceptions')));
+      this.services.set('fisExceptionService', new MockFISExceptionService(ServiceFactory.getAdminEndpoint('/fis-exceptions')));
+      this.services.set('payee', new MockPayeeService(ServiceFactory.getAdminEndpoint('/payees')));
+      this.services.set('paymentProcessor', new MockPaymentProcessorService(ServiceFactory.getAdminEndpoint('/payment-processor')));
+      this.services.set('payment', new MockPaymentService(ServiceFactory.getAdminEndpoint('/payments')));
+      this.services.set('report', new MockReportService(ServiceFactory.getAdminEndpoint('/reports')));
+      this.services.set('holiday', new MockHolidayService(ServiceFactory.getAdminEndpoint('/holidays')));
+      this.services.set('permission', new MockPermissionService(ServiceFactory.getAdminEndpoint('/permissions')));
+      this.services.set('dashboard', new MockDashboardService(ServiceFactory.getAdminEndpoint('/dashboard')));
+      this.services.set('audit', new MockAuditService(ServiceFactory.getAdminEndpoint('/audit')));
     } else {
-      this.services.set('user', new UserService('/api/v1/users'));
-      this.services.set('client', new ClientService('/api/v1/clients'));
-      this.services.set('billPay', new BillPayService('/api/v1/bill-pay'));
-      this.services.set('auth', new AuthService('/api/v1/auth'));
-      this.services.set('security', new SecurityService('/api/v1/security'));
-      this.services.set('notification', new NotificationService('/api/v1/notifications'));
-      this.services.set('exceptionService', new ExceptionService('/api/v1/exceptions'));
-      this.services.set('fisExceptionService', new FISExceptionService('/api/v1/fis-exceptions'));
-      this.services.set('payee', new PayeeService('/api/v1/payees'));
-      this.services.set('paymentProcessor', new PaymentProcessorService('/api/v1/payment-processor'));
-      this.services.set('payment', new PaymentService('/api/v1/payments'));
-      this.services.set('report', new ReportService('/api/v1/reports'));
-      this.services.set('holiday', new HolidayService('/api/v1/holidays'));
-      this.services.set('permission', new PermissionService('/api/v1/permissions'));
-      this.services.set('dashboard', new DashboardService('/api/v1/dashboard'));
-      this.services.set('audit', new AuditService('/api/v1/audit'));
+      this.services.set('user', new UserService(ServiceFactory.getAdminEndpoint('/users')));
+      this.services.set('client', new ClientService(ServiceFactory.getAdminEndpoint('/clients')));
+      this.services.set('billPay', new BillPayService(ServiceFactory.getAdminEndpoint('/bill-pay')));
+      this.services.set('auth', new AuthService(ServiceFactory.getAdminEndpoint('/auth')));
+      this.services.set('security', new SecurityService(ServiceFactory.getAdminEndpoint('/security')));
+      this.services.set('notification', new NotificationService(ServiceFactory.getAdminEndpoint('/notifications')));
+      this.services.set('exceptionService', new ExceptionService(ServiceFactory.getAdminEndpoint('/exceptions')));
+      this.services.set('fisExceptionService', new FISExceptionService(ServiceFactory.getAdminEndpoint('/fis-exceptions')));
+      this.services.set('payee', new PayeeService(ServiceFactory.getAdminEndpoint('/payees')));
+      this.services.set('paymentProcessor', new PaymentProcessorService(ServiceFactory.getAdminEndpoint('/payment-processor')));
+      this.services.set('payment', new PaymentService(ServiceFactory.getAdminEndpoint('/payments')));
+      this.services.set('report', new ReportService(ServiceFactory.getAdminEndpoint('/reports')));
+      this.services.set('holiday', new HolidayService(ServiceFactory.getAdminEndpoint('/holidays')));
+      this.services.set('permission', new PermissionService(ServiceFactory.getAdminEndpoint('/permissions')));
+      this.services.set('dashboard', new DashboardService(ServiceFactory.getAdminEndpoint('/dashboard')));
+      this.services.set('audit', new AuditService(ServiceFactory.getAdminEndpoint('/audit')));
     }
   }
+
   getUserService(): IUserService {
     const service = this.services.get('user');
     if (!service) {
@@ -110,6 +130,7 @@ export class ServiceFactory {
     }
     return service as IUserService;
   }
+
   getClientService(): IClientService {
     const service = this.services.get('client');
     if (!service) {
@@ -117,6 +138,7 @@ export class ServiceFactory {
     }
     return service as IClientService;
   }
+
   getBillPayService(): IBillPayService {
     const service = this.services.get('billPay');
     if (!service) {
@@ -124,6 +146,7 @@ export class ServiceFactory {
     }
     return service as IBillPayService;
   }
+
   getAuthService(): IAuthService {
     const service = this.services.get('auth');
     if (!service) {
@@ -131,6 +154,7 @@ export class ServiceFactory {
     }
     return service as IAuthService;
   }
+
   getSecurityService(): ISecurityService {
     const service = this.services.get('security');
     if (!service) {
@@ -138,6 +162,7 @@ export class ServiceFactory {
     }
     return service as ISecurityService;
   }
+
   getNotificationService(): INotificationService {
     const service = this.services.get('notification');
     if (!service) {
@@ -145,6 +170,7 @@ export class ServiceFactory {
     }
     return service as INotificationService;
   }
+
   getExceptionService(): IExceptionService {
     const service = this.services.get('exceptionService');
     if (!service) {
@@ -152,6 +178,7 @@ export class ServiceFactory {
     }
     return service as IExceptionService;
   }
+
   getFISExceptionService(): IFISExceptionService {
     const service = this.services.get('fisExceptionService');
     if (!service) {
@@ -159,6 +186,7 @@ export class ServiceFactory {
     }
     return service as IFISExceptionService;
   }
+
   getPayeeService(): IPayeeService {
     const service = this.services.get('payee');
     if (!service) {
@@ -166,6 +194,7 @@ export class ServiceFactory {
     }
     return service as IPayeeService;
   }
+
   getPaymentProcessorService(): IPaymentProcessorService {
     const service = this.services.get('paymentProcessor');
     if (!service) {
@@ -173,6 +202,7 @@ export class ServiceFactory {
     }
     return service as IPaymentProcessorService;
   }
+
   getPaymentService(): IPaymentService {
     const service = this.services.get('payment');
     if (!service) {
@@ -180,6 +210,7 @@ export class ServiceFactory {
     }
     return service as IPaymentService;
   }
+
   getReportService(): IReportService {
     const service = this.services.get('report');
     if (!service) {
@@ -187,6 +218,7 @@ export class ServiceFactory {
     }
     return service as IReportService;
   }
+
   getHolidayService(): IHolidayService {
     const service = this.services.get('holiday');
     if (!service) {
@@ -194,6 +226,7 @@ export class ServiceFactory {
     }
     return service as IHolidayService;
   }
+
   getPermissionService(): IPermissionService {
     const service = this.services.get('permission');
     if (!service) {
@@ -201,6 +234,7 @@ export class ServiceFactory {
     }
     return service as IPermissionService;
   }
+
   getDashboardService(): IDashboardService {
     const service = this.services.get('dashboard');
     if (!service) {
@@ -208,6 +242,7 @@ export class ServiceFactory {
     }
     return service as IDashboardService;
   }
+
   getAuditService(): IAuditService {
     const service = this.services.get('audit');
     if (!service) {
@@ -216,6 +251,7 @@ export class ServiceFactory {
     return service as IAuditService;
   }
 }
+
 // Export service instances
 export const userService = ServiceFactory.getInstance().getUserService();
 export const clientService = ServiceFactory.getInstance().getClientService();

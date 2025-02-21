@@ -1,452 +1,290 @@
 import {
   Payment,
-  PaymentMethod,
   PaymentStatus,
-  Priority,
-  ConfirmationMethod,
-  ConfirmationStatus,
-  PaymentHistory as IPaymentHistory,
-  PaymentAction
+  PaymentMethod,
+  PendingPayment,
+  PendingPaymentResponse,
+  SearchType,
+  PaymentHistory
+} from '../../../../../types/payment.types';
+import {
+  Priority
 } from '../../../../../types/bill-pay.types';
-
-export interface PaymentHistory {
-  paymentId: string;
-  action: string;
-  performedBy: string;
-  timestamp: string;
-  details: Record<string, any>;
-}
 
 export const mockPayments: Payment[] = [
   {
-    id: 'pmt_1',
-    clientId: 'client_1',
-    clientName: 'ACME Corp',
-    payeeId: 'payee_1',
-    payeeName: 'Electric Company',
-    amount: 500.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    status: PaymentStatus.PENDING,
-    effectiveDate: '2025-02-18T00:00:00Z',
-    description: 'Electric bill payment',
-    priority: Priority.HIGH,
-    createdAt: '2025-02-16T21:43:09-07:00',
-    updatedAt: '2025-02-16T21:43:09-07:00',
-    userPayeeListId: 'upl_1',
-    memberId: 'mem_1',
-    fundingAccount: {
-      accountId: 'acc_1',
-      accountType: 'CHECKING',
-      accountNumber: '1234567890',
-      routingNumber: '123456789'
-    }
+    Id: 'pmt_1',
+    WillProcessDate: '2025-02-18T00:00:00Z',
+    Memo: 'Electric bill payment',
+    BillReference: 'ELEC-2025-02',
+    FundingAccount: 'acc_1',
+    UserPayeeListId: 'upl_1',
+    MemberId: 'mem_1',
+    Amount: 100.00,
+    SourceApplication: 'WEB',
+    DeliveryDate: '2025-02-20T00:00:00Z',
+    Status: PaymentStatus.COMPLETED,
+    Frequency: 'once',
+    NumPayments: 1,
+    ProcessDate: '2025-02-18T00:00:00Z'
   },
   {
-    id: 'pmt_2',
-    clientId: 'client_1',
-    clientName: 'ACME Corp',
-    payeeId: 'payee_2',
-    payeeName: 'Water Utility',
-    amount: 100.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    status: PaymentStatus.COMPLETED,
-    effectiveDate: '2025-02-15T00:00:00Z',
-    description: 'Water utility payment',
-    priority: Priority.MEDIUM,
-    createdAt: '2025-02-15T10:00:00-07:00',
-    updatedAt: '2025-02-15T12:00:00-07:00',
-    userPayeeListId: 'upl_2',
-    memberId: 'mem_1',
-    fundingAccount: {
-      accountId: 'acc_1',
-      accountType: 'CHECKING',
-      accountNumber: '1234567890',
-      routingNumber: '123456789'
-    }
+    Id: 'pmt_2',
+    WillProcessDate: '2025-02-15T00:00:00Z',
+    Memo: 'Water utility payment',
+    BillReference: 'WATER-2025-02',
+    FundingAccount: 'acc_1',
+    UserPayeeListId: 'upl_2',
+    MemberId: 'mem_1',
+    Amount: 75.50,
+    SourceApplication: 'WEB',
+    DeliveryDate: '2025-02-17T00:00:00Z',
+    Status: PaymentStatus.COMPLETED,
+    Frequency: 'once',
+    NumPayments: 1,
+    ProcessDate: '2025-02-15T00:00:00Z'
   },
   {
-    id: 'pmt_3',
-    clientId: 'client_2',
-    clientName: 'TechStart Inc',
-    payeeId: 'payee_3',
-    payeeName: 'Office Supplies Co',
-    amount: 2500.00,
-    currency: 'USD',
-    method: PaymentMethod.WIRE,
-    status: PaymentStatus.PENDING_APPROVAL,
-    effectiveDate: '2025-02-18T00:00:00Z',
-    description: 'Office supplies quarterly payment',
-    priority: Priority.LOW,
-    createdAt: '2025-02-17T09:15:00-07:00',
-    updatedAt: '2025-02-17T09:15:00-07:00',
-    userPayeeListId: 'upl_3',
-    memberId: 'mem_2',
-    fundingAccount: {
-      accountId: 'acc_2',
-      accountType: 'CHECKING',
-      accountNumber: '9876543210',
-      routingNumber: '987654321'
-    }
+    Id: 'pmt_3',
+    WillProcessDate: '2025-02-17T00:00:00Z',
+    Memo: 'Office supplies',
+    BillReference: 'OFF-2025-02',
+    FundingAccount: 'acc_2',
+    UserPayeeListId: 'upl_3',
+    MemberId: 'mem_2',
+    Amount: 250.00,
+    SourceApplication: 'WEB',
+    DeliveryDate: '2025-02-19T00:00:00Z',
+    Status: PaymentStatus.PENDING,
+    Frequency: 'once',
+    NumPayments: 1,
+    ProcessDate: '2025-02-17T00:00:00Z'
   },
   {
-    id: 'pmt_4',
-    clientId: 'client_2',
-    clientName: 'TechStart Inc',
-    payeeId: 'payee_4',
-    payeeName: 'Cloud Services Provider',
-    amount: 5000.00,
-    currency: 'USD',
-    method: PaymentMethod.WIRE,
-    status: PaymentStatus.FAILED,
-    effectiveDate: '2025-02-14T00:00:00Z',
-    description: 'Cloud services monthly subscription',
-    priority: Priority.HIGH,
-    createdAt: '2025-02-14T08:00:00-07:00',
-    updatedAt: '2025-02-14T08:30:00-07:00',
-    userPayeeListId: 'upl_4',
-    memberId: 'mem_2',
-    fundingAccount: {
-      accountId: 'acc_2',
-      accountType: 'CHECKING',
-      accountNumber: '9876543210',
-      routingNumber: '987654321'
-    }
+    Id: 'pmt_4',
+    WillProcessDate: '2025-02-14T00:00:00Z',
+    Memo: 'Cloud services',
+    BillReference: 'CLOUD-2025-02',
+    FundingAccount: 'acc_2',
+    UserPayeeListId: 'upl_4',
+    MemberId: 'mem_2',
+    Amount: 500.00,
+    SourceApplication: 'WEB',
+    DeliveryDate: '2025-02-16T00:00:00Z',
+    Status: PaymentStatus.PENDING,
+    Frequency: 'monthly',
+    NumPayments: 12,
+    ProcessDate: '2025-02-14T00:00:00Z'
   },
   {
-    id: 'pmt_5',
-    clientId: 'client_3',
-    clientName: 'Global Logistics LLC',
-    payeeId: 'payee_5',
-    payeeName: 'Insurance Provider',
-    amount: 1200.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    status: PaymentStatus.PROCESSING,
-    effectiveDate: '2025-02-17T00:00:00Z',
-    description: 'Monthly insurance premium',
-    priority: Priority.MEDIUM,
-    createdAt: '2025-02-16T14:20:00-07:00',
-    updatedAt: '2025-02-16T14:20:00-07:00',
-    userPayeeListId: 'upl_5',
-    memberId: 'mem_3',
-    fundingAccount: {
-      accountId: 'acc_3',
-      accountType: 'CHECKING',
-      accountNumber: '1111222233',
-      routingNumber: '111122223'
-    }
+    Id: 'pmt_5',
+    WillProcessDate: '2025-02-16T00:00:00Z',
+    Memo: 'Insurance premium',
+    BillReference: 'INS-2025-02',
+    FundingAccount: 'acc_3',
+    UserPayeeListId: 'upl_5',
+    MemberId: 'mem_3',
+    Amount: 1000.00,
+    SourceApplication: 'WEB',
+    DeliveryDate: '2025-02-18T00:00:00Z',
+    Status: PaymentStatus.PENDING,
+    Frequency: 'monthly',
+    NumPayments: 12,
+    ProcessDate: '2025-02-16T00:00:00Z'
   },
   {
-    id: 'pmt_6',
-    clientId: 'client_3',
-    clientName: 'Global Logistics LLC',
-    payeeId: 'payee_6',
-    payeeName: 'Fleet Maintenance Co',
-    amount: 7500.00,
-    currency: 'USD',
-    method: PaymentMethod.WIRE,
-    status: PaymentStatus.PENDING_APPROVAL,
-    effectiveDate: '2025-02-18T00:00:00Z',
-    description: 'Fleet maintenance services',
-    priority: Priority.HIGH,
-    createdAt: '2025-02-16T16:45:00-07:00',
-    updatedAt: '2025-02-16T16:45:00-07:00',
-    userPayeeListId: 'upl_6',
-    memberId: 'mem_3',
-    fundingAccount: {
-      accountId: 'acc_3',
-      accountType: 'CHECKING',
-      accountNumber: '1111222233',
-      routingNumber: '111122223'
-    }
+    Id: 'pmt_6',
+    WillProcessDate: '2025-02-16T00:00:00Z',
+    Memo: 'Fleet maintenance',
+    BillReference: 'FLEET-2025-02',
+    FundingAccount: 'acc_3',
+    UserPayeeListId: 'upl_6',
+    MemberId: 'mem_3',
+    Amount: 750.00,
+    SourceApplication: 'WEB',
+    DeliveryDate: '2025-02-18T00:00:00Z',
+    Status: PaymentStatus.PENDING,
+    Frequency: 'once',
+    NumPayments: 1,
+    ProcessDate: '2025-02-16T00:00:00Z'
   },
   {
-    id: 'pmt_7',
-    clientId: 'client_2',
-    clientName: 'TechStart Inc',
-    payeeId: 'payee_7',
-    payeeName: 'Cloud Services Provider',
-    amount: 2500.00,
-    currency: 'USD',
-    method: PaymentMethod.WIRE,
-    status: PaymentStatus.PROCESSING,
-    effectiveDate: '2025-02-17T00:00:00Z',
-    description: 'Monthly cloud services',
-    priority: Priority.HIGH,
-    createdAt: '2025-02-16T14:30:00-07:00',
-    updatedAt: '2025-02-16T14:30:00-07:00',
-    userPayeeListId: 'upl_7',
-    memberId: 'mem_2',
-    fundingAccount: {
-      accountId: 'acc_2',
-      accountType: 'CHECKING',
-      accountNumber: '9876543210',
-      routingNumber: '987654321'
-    }
+    Id: 'pmt_7',
+    WillProcessDate: '2025-02-16T00:00:00Z',
+    Memo: 'Cloud storage',
+    BillReference: 'STORAGE-2025-02',
+    FundingAccount: 'acc_2',
+    UserPayeeListId: 'upl_7',
+    MemberId: 'mem_2',
+    Amount: 300.00,
+    SourceApplication: 'WEB',
+    DeliveryDate: '2025-02-18T00:00:00Z',
+    Status: PaymentStatus.PENDING,
+    Frequency: 'monthly',
+    NumPayments: 12,
+    ProcessDate: '2025-02-16T00:00:00Z'
   },
   {
-    id: 'pmt_8',
-    clientId: 'client_3',
-    clientName: 'Global Logistics LLC',
-    payeeId: 'payee_8',
-    payeeName: 'Insurance Provider',
-    amount: 5000.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    status: PaymentStatus.PENDING,
-    effectiveDate: '2025-02-18T00:00:00Z',
-    description: 'Annual insurance premium',
-    priority: Priority.MEDIUM,
-    createdAt: '2025-02-16T15:00:00-07:00',
-    updatedAt: '2025-02-16T15:00:00-07:00',
-    userPayeeListId: 'upl_8',
-    memberId: 'mem_3',
-    fundingAccount: {
-      accountId: 'acc_3',
-      accountType: 'CHECKING',
-      accountNumber: '1111222233',
-      routingNumber: '111122223'
-    }
+    Id: 'pmt_8',
+    WillProcessDate: '2025-02-16T00:00:00Z',
+    Memo: 'Liability insurance',
+    BillReference: 'LIAB-2025-02',
+    FundingAccount: 'acc_3',
+    UserPayeeListId: 'upl_8',
+    MemberId: 'mem_3',
+    Amount: 2000.00,
+    SourceApplication: 'WEB',
+    DeliveryDate: '2025-02-18T00:00:00Z',
+    Status: PaymentStatus.PENDING,
+    Frequency: 'monthly',
+    NumPayments: 12,
+    ProcessDate: '2025-02-16T00:00:00Z'
   },
   {
-    id: 'pmt_9',
-    clientId: 'client_2',
-    clientName: 'TechStart Inc',
-    payeeId: 'payee_9',
-    payeeName: 'Office Supplies Co',
-    amount: 750.00,
-    currency: 'USD',
-    method: PaymentMethod.CHECK,
-    status: PaymentStatus.REJECTED,
-    effectiveDate: '2025-02-16T00:00:00Z',
-    description: 'Office supplies and equipment',
-    priority: Priority.LOW,
-    createdAt: '2025-02-15T09:00:00-07:00',
-    updatedAt: '2025-02-15T09:00:00-07:00',
-    userPayeeListId: 'upl_9',
-    memberId: 'mem_2',
-    fundingAccount: {
-      accountId: 'acc_2',
-      accountType: 'CHECKING',
-      accountNumber: '9876543210',
-      routingNumber: '987654321'
-    }
+    Id: 'pmt_9',
+    WillProcessDate: '2025-02-15T00:00:00Z',
+    Memo: 'Office supplies',
+    BillReference: 'OFF2-2025-02',
+    FundingAccount: 'acc_2',
+    UserPayeeListId: 'upl_9',
+    MemberId: 'mem_2',
+    Amount: 150.00,
+    SourceApplication: 'WEB',
+    DeliveryDate: '2025-02-17T00:00:00Z',
+    Status: PaymentStatus.PENDING,
+    Frequency: 'once',
+    NumPayments: 1,
+    ProcessDate: '2025-02-15T00:00:00Z'
   },
   {
-    id: 'pmt_10',
-    clientId: 'client_1',
-    clientName: 'ACME Corp',
-    payeeId: 'payee_10',
-    payeeName: 'Marketing Agency',
-    amount: 3000.00,
-    currency: 'USD',
-    method: PaymentMethod.RTP,
-    status: PaymentStatus.FAILED,
-    effectiveDate: '2025-02-17T00:00:00Z',
-    description: 'Q4 marketing campaign',
-    priority: Priority.HIGH,
-    createdAt: '2025-02-16T11:15:00-07:00',
-    updatedAt: '2025-02-16T11:15:00-07:00',
-    userPayeeListId: 'upl_10',
-    memberId: 'mem_1',
-    fundingAccount: {
-      accountId: 'acc_1',
-      accountType: 'CHECKING',
-      accountNumber: '1234567890',
-      routingNumber: '123456789'
-    }
+    Id: 'pmt_10',
+    WillProcessDate: '2025-02-16T00:00:00Z',
+    Memo: 'Marketing services',
+    BillReference: 'MKT-2025-02',
+    FundingAccount: 'acc_1',
+    UserPayeeListId: 'upl_10',
+    MemberId: 'mem_1',
+    Amount: 5000.00,
+    SourceApplication: 'WEB',
+    DeliveryDate: '2025-02-18T00:00:00Z',
+    Status: PaymentStatus.PENDING,
+    Frequency: 'once',
+    NumPayments: 1,
+    ProcessDate: '2025-02-16T00:00:00Z'
   }
 ];
 
-// Using PendingPayment type for detailed payment information
-export const mockPendingPayments = [
+export const mockPendingPayments: PendingPaymentResponse[] = [
   {
-    id: 'pending_1',
-    paymentId: 'pmt_1',
-    clientId: 'client_1',
-    clientName: 'ACME Corp',
-    payeeId: 'payee_1',
-    payeeName: 'Electric Company',
-    amount: 500.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    effectiveDate: '2025-02-18T00:00:00Z',
-    status: PaymentStatus.PENDING,
-    priority: Priority.HIGH,
-    description: 'Electric bill payment',
-    recipient: {
-      name: 'Electric Company',
-      accountNumber: '1234567890',
-      routingNumber: '987654321',
-      bankName: 'First National Bank'
-    },
-    createdAt: '2025-02-16T21:42:13-07:00',
-    updatedAt: '2025-02-16T21:42:13-07:00',
-    userPayeeListId: 'upl_1',
-    memberId: 'mem_1',
-    fundingAccount: {
-      accountId: 'acc_1',
-      accountType: 'CHECKING',
-      accountNumber: '1234567890',
-      routingNumber: '123456789'
-    }
+    Id: 'pmt_1',
+    UserPayeeListId: 'upl_1',
+    FundingAccount: 'acc_1',
+    Amount: 100.00,
+    StatusCode: 1, // PENDING
+    FriendlyName: 'Electric Company',
+    Memo: 'Electric bill payment',
+    WillProcessDate: '2025-02-18T00:00:00Z',
+    LastUpdate: new Date().toISOString(),
+    SourceApplication: 'WEB',
+    EntryDate: new Date().toISOString(),
+    UsersAccountAtPayee: '987654321',
+    NameOnAccount: 'John Doe',
+    PayeeId: 'payee_1',
+    FisPayeeId: 'fis_payee_1',
+    PayeeType: 'UTILITY',
+    PaymentMethod: PaymentMethod.ACH,
+    MemberId: 'member_1',
+    Source: 'WEB',
+    DeliveryDate: '2025-02-20T00:00:00Z'
   },
   {
-    id: 'pending_2',
-    paymentId: 'pmt_2',
-    clientId: 'client_1',
-    clientName: 'ACME Corp',
-    payeeId: 'payee_2',
-    payeeName: 'Water Utility',
-    amount: 100.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    effectiveDate: '2025-02-15T00:00:00Z',
-    status: PaymentStatus.COMPLETED,
-    priority: Priority.MEDIUM,
-    description: 'Water utility payment',
-    recipient: {
-      name: 'Water Utility',
-      accountNumber: '0987654321',
-      routingNumber: '123456789',
-      bankName: 'Second Bank'
-    },
-    createdAt: '2025-02-15T10:00:00-07:00',
-    updatedAt: '2025-02-15T12:00:00-07:00',
-    userPayeeListId: 'upl_2',
-    memberId: 'mem_1',
-    fundingAccount: {
-      accountId: 'acc_1',
-      accountType: 'CHECKING',
-      accountNumber: '1234567890',
-      routingNumber: '123456789'
-    }
-  },
-  {
-    id: 'pending_3',
-    paymentId: 'pmt_3',
-    clientId: 'client_2',
-    clientName: 'TechStart Inc',
-    payeeId: 'payee_3',
-    payeeName: 'Office Supplies Co',
-    amount: 2500.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    effectiveDate: '2025-02-18T00:00:00Z',
-    status: PaymentStatus.PENDING_APPROVAL,
-    priority: Priority.LOW,
-    description: 'Office supplies quarterly payment',
-    recipient: {
-      name: 'Office Supplies Co',
-      accountNumber: '5555666677',
-      routingNumber: '444433322',
-      bankName: 'Third Bank'
-    },
-    createdAt: '2025-02-17T09:15:00-07:00',
-    updatedAt: '2025-02-17T09:15:00-07:00',
-    userPayeeListId: 'upl_3',
-    memberId: 'mem_2',
-    fundingAccount: {
-      accountId: 'acc_2',
-      accountType: 'CHECKING',
-      accountNumber: '9876543210',
-      routingNumber: '987654321'
-    }
-  },
-  {
-    id: 'pending_4',
-    paymentId: 'pmt_4',
-    clientId: 'client_2',
-    clientName: 'TechStart Inc',
-    payeeId: 'payee_4',
-    payeeName: 'Cloud Services Provider',
-    amount: 5000.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    effectiveDate: '2025-02-14T00:00:00Z',
-    status: PaymentStatus.FAILED,
-    priority: Priority.HIGH,
-    description: 'Cloud services monthly subscription',
-    recipient: {
-      name: 'Cloud Services Provider',
-      accountNumber: '9999888877',
-      routingNumber: '666655544',
-      bankName: 'Fourth Bank'
-    },
-    createdAt: '2025-02-14T08:00:00-07:00',
-    updatedAt: '2025-02-14T08:30:00-07:00',
-    userPayeeListId: 'upl_4',
-    memberId: 'mem_2',
-    fundingAccount: {
-      accountId: 'acc_2',
-      accountType: 'CHECKING',
-      accountNumber: '9876543210',
-      routingNumber: '987654321'
-    }
-  },
-  {
-    id: 'pending_5',
-    paymentId: 'pmt_5',
-    clientId: 'client_3',
-    clientName: 'Global Logistics LLC',
-    payeeId: 'payee_5',
-    payeeName: 'Insurance Provider',
-    amount: 1200.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    effectiveDate: '2025-02-17T00:00:00Z',
-    status: PaymentStatus.PROCESSING,
-    priority: Priority.MEDIUM,
-    description: 'Monthly insurance premium',
-    recipient: {
-      name: 'Insurance Provider',
-      accountNumber: '1111222233',
-      routingNumber: '888877766',
-      bankName: 'Fifth Bank'
-    },
-    createdAt: '2025-02-16T14:20:00-07:00',
-    updatedAt: '2025-02-16T14:20:00-07:00',
-    userPayeeListId: 'upl_5',
-    memberId: 'mem_3',
-    fundingAccount: {
-      accountId: 'acc_3',
-      accountType: 'CHECKING',
-      accountNumber: '1111222233',
-      routingNumber: '111122223'
-    }
+    Id: 'pmt_2',
+    UserPayeeListId: 'upl_2',
+    FundingAccount: 'acc_1',
+    Amount: 100.00,
+    StatusCode: 2, // COMPLETED
+    FriendlyName: 'Water Utility',
+    Memo: 'Water utility payment',
+    WillProcessDate: '2025-02-15T00:00:00Z',
+    LastUpdate: new Date().toISOString(),
+    SourceApplication: 'WEB',
+    EntryDate: new Date().toISOString(),
+    UsersAccountAtPayee: '123456789',
+    NameOnAccount: 'John Doe',
+    PayeeId: 'payee_2',
+    FisPayeeId: 'fis_payee_2',
+    PayeeType: 'UTILITY',
+    PaymentMethod: PaymentMethod.ACH,
+    MemberId: 'member_1',
+    Source: 'WEB',
+    DeliveryDate: '2025-02-17T00:00:00Z'
   }
 ];
 
-export const mockPaymentHistory = mockPayments.map(p => ({
-  paymentId: p.id,
-  action: 'CREATED',
-  performedBy: 'Test User',
-  timestamp: p.createdAt,
-  details: {
-    status: p.status,
-    method: p.method
-  }
-}));
-
-export const mockPaymentActions: PaymentAction[] = [
+export const mockPaymentHistory: PaymentHistory[] = [
   {
-    action: 'CREATED',
-    performedBy: 'Test User',
-    timestamp: '2025-02-16T21:43:09-07:00',
-    details: {
-      status: PaymentStatus.PENDING,
-      method: PaymentMethod.ACH
+    Id: 1,
+    PaymentId: 'pmt_1',
+    UserPayeeListId: 'upl_1',
+    MemberId: 'mem_1',
+    FundingAccount: 'acc_1',
+    Amount: 100.00,
+    WillProcessDate: '2025-02-18T00:00:00Z',
+    ProcessedDate: '2025-02-18T00:00:00Z',
+    StatusCode: 3, // Completed
+    Memo: 'Electric bill payment',
+    LastUpdate: '2025-02-18T00:00:00Z',
+    SourceApplication: 'WEB',
+    EntryDate: '2025-02-18T00:00:00Z',
+    DeliveryDate: '2025-02-20T00:00:00Z',
+    PayeeId: 'payee_1',
+    UsersAccountAtPayee: '987654321',
+    NameOnAccount: 'John Doe',
+    PayeeType: 'UTILITY',
+    PaymentMethod: PaymentMethod.ACH,
+    ConfirmationNumber: 'CONF123'
+  },
+  {
+    Id: 2,
+    PaymentId: 'pmt_2',
+    UserPayeeListId: 'upl_2',
+    MemberId: 'mem_1',
+    FundingAccount: 'acc_1',
+    Amount: 75.50,
+    WillProcessDate: '2025-02-15T00:00:00Z',
+    ProcessedDate: '2025-02-15T00:00:00Z',
+    StatusCode: 3, // Completed
+    Memo: 'Water utility payment',
+    LastUpdate: '2025-02-15T00:00:00Z',
+    SourceApplication: 'WEB',
+    EntryDate: '2025-02-15T00:00:00Z',
+    DeliveryDate: '2025-02-17T00:00:00Z',
+    PayeeId: 'payee_2',
+    UsersAccountAtPayee: '123456789',
+    NameOnAccount: 'John Doe',
+    PayeeType: 'UTILITY',
+    PaymentMethod: PaymentMethod.ACH,
+    ConfirmationNumber: 'CONF456'
+  }
+];
+
+export const mockPaymentActions = [
+  {
+    Action: 'CREATED',
+    PerformedBy: 'Test User',
+    Timestamp: '2025-02-16T21:43:09-07:00',
+    Details: {
+      Status: PaymentStatus.PENDING,
+      Method: PaymentMethod.ACH
     }
   },
   {
-    action: 'COMPLETED',
-    performedBy: 'Test User',
-    timestamp: '2025-02-15T12:00:00-07:00',
-    details: {
-      status: PaymentStatus.COMPLETED,
-      method: PaymentMethod.ACH
+    Action: 'COMPLETED',
+    PerformedBy: 'Test User',
+    Timestamp: '2025-02-15T12:00:00-07:00',
+    Details: {
+      Status: PaymentStatus.COMPLETED,
+      Method: PaymentMethod.ACH
     }
   }
 ];

@@ -8,15 +8,16 @@ import {
   FISResponseHistory,
   FISRetryResult,
   FISRefundRequest,
-  ExceptionFilters,
+  ExceptionToolFilters,
   FISExceptionFilters,
   FISErrorCode,
-  PaymentType,
-  PaymentStatus
+  ExceptionResolution,
+  FISExceptionStats,
 } from '../../../types/bill-pay.types';
 import { IExceptionService } from '../../interfaces/IExceptionService';
 import { PaginatedResponse } from '../../../types/common.types';
 import { BaseMockService } from './BaseMockService';
+import { PaymentMethod, PaymentStatus } from '../../../types/payment.types';
 import { v4 as uuidv4 } from 'uuid';
 
 export class MockExceptionService extends BaseMockService implements IExceptionService {
@@ -41,7 +42,7 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
   private initializeMockData(): void {
     // Initialize mock exceptions
     const mockException: ExceptionTool = {
-      id: 1,
+      id: '1',
       clientName: 'Test Client',
       paymentId: 'pmt_123',
       amount: 1000,
@@ -49,53 +50,59 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
       errorCode: 'ERR_001',
       errorMessage: 'Payment processing timeout',
       timestamp: new Date(Date.now() - 3600000).toISOString(),
-      paymentType: 'ACH' as PaymentType,
+      paymentType: PaymentMethod.ACH,
       retryCount: 0,
       priority: 'High' as ExceptionToolPriority
     };
-    this.exceptions.set(mockException.id.toString(), mockException);
-    // Initialize mock FIS exceptions
-    const mockFISException: FISException = {
+    this.exceptions.set(mockException.id, mockException);
+
+    // Initialize mock FIS exception
+    const mockFisException: FISException = {
       id: '1',
       requestId: 'req_123',
       status: FISExceptionStatus.FAILED,
-      errorCode: FISErrorCode.INVALID_ACCOUNT,
-      errorMessage: 'Invalid account information',
-      metadata: {
-        paymentId: 'pmt_123',
-        amount: 1000,
-      },
-      createdAt: new Date(Date.now() - 7200000).toISOString(),
-      updatedAt: new Date(Date.now() - 3600000).toISOString(),
-      retryCount: 2
+      errorCode: FISErrorCode.TECHNICAL_ERROR,
+      errorMessage: 'Technical error occurred',
+      metadata: {},
+      createdAt: new Date(Date.now() - 3600000).toISOString(),
+      updatedAt: new Date(Date.now() - 1800000).toISOString(),
+      retryCount: 0
     };
-    this.fisExceptions.set(mockFISException.id, mockFISException);
+    this.fisExceptions.set(mockFisException.id, mockFisException);
   }
-  async getExceptions(filters: ExceptionFilters): Promise<PaginatedResponse<ExceptionTool>> {
+  async getExceptions(filters: ExceptionToolFilters): Promise<PaginatedResponse<ExceptionTool>> {
     let filtered = Array.from(this.exceptions.values());
-    if (filters) {
-      filtered = filtered.filter(exc => {
-        const matchesStatus = !filters.status || filters.status.includes(FISExceptionStatus.FAILED,);
-        let matchesDate = true;
-        if (filters.startDate || filters.endDate) {
-          const excDate = new Date(exc.timestamp);
-          if (filters.startDate && excDate < new Date(filters.startDate)) matchesDate = false;
-          if (filters.endDate && excDate > new Date(filters.endDate)) matchesDate = false;
-        }
-        return matchesStatus && matchesDate;
-      });
-    }
-    const page = filters?.page || 1;
-    const limit = filters?.limit || 20;
-    const total = filtered.length;
+
+    filtered = filtered.filter(exc => {
+      const matchesStatus = !filters.status || exc.status === filters.status;
+      const matchesPriority = !filters.priority || exc.priority === filters.priority;
+      const matchesPaymentType = !filters.paymentType || exc.paymentType === filters.paymentType;
+      const matchesSearch = !filters.searchTerm || 
+        exc.clientName.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+        exc.errorMessage.toLowerCase().includes(filters.searchTerm.toLowerCase());
+
+      let matchesDate = true;
+      if (filters.startDate || filters.endDate) {
+        const excDate = new Date(exc.timestamp);
+        if (filters.startDate && excDate < new Date(filters.startDate)) matchesDate = false;
+        if (filters.endDate && excDate > new Date(filters.endDate)) matchesDate = false;
+      }
+
+      return matchesStatus && matchesPriority && matchesPaymentType && matchesSearch && matchesDate;
+    });
+
+    // Handle pagination
+    const page = filters.page || 1;
+    const limit = filters.limit || 10;
     const start = (page - 1) * limit;
-    const items = filtered.slice(start, start + limit);
+    const end = start + limit;
+
     return {
-      items,
+      items: filtered.slice(start, end),
+      total: filtered.length,
       page,
-      total,
       limit,
-      totalPages: Math.ceil(total / limit)
+      totalPages: Math.ceil(filtered.length / limit)
     };
   }
   async getException(exceptionId: string): Promise<ExceptionTool> {
@@ -114,7 +121,7 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     };
     this.exceptions.set(exceptionId, updated);
     if (notes) {
-      await this.addExceptionNote(exceptionId, notes, 'system');
+      // Add to audit trail
     }
   }
   async updateExceptionPriority(exceptionId: string, priority: ExceptionToolPriority): Promise<void> {
@@ -126,193 +133,71 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     };
     this.exceptions.set(exceptionId, updated);
   }
-  async getFISExceptions(filters: FISExceptionFilters): Promise<PaginatedResponse<FISException>> {
-    await this.delay();
-    let filteredExceptions = Array.from(this.fisExceptions.values());
-    if (filters.status && filters.status.length > 0) {
-      filteredExceptions = filteredExceptions.filter(exception => filters.status!.includes(exception.status));
+  async getFISExceptions(filters?: FISExceptionFilters): Promise<FISException[]> {
+    let filtered = Array.from(this.fisExceptions.values());
+    if (filters?.requestId) {
+      filtered = filtered.filter(exc => exc.requestId === filters.requestId);
     }
-    const page = filters?.page || 1;
-    const limit = filters?.limit || 20;
-    const total = filteredExceptions.length;
-    const start = (page - 1) * limit;
-    const items = filteredExceptions.slice(start, start + limit);
-    return {
-      items,
-      page,
-      total,
-      limit,
-      totalPages: Math.ceil(total / limit)
-    };
+    return filtered;
   }
-  async getFISException(exceptionId: string): Promise<FISException> {
-    const exception = this.fisExceptions.get(exceptionId);
+  async getFISException(id: string): Promise<FISException> {
+    const exception = this.fisExceptions.get(id);
     if (!exception) {
-      throw new Error(`FIS Exception not found: ${exceptionId}`);
+      throw new Error(`FIS Exception with id ${id} not found`);
     }
     return exception;
   }
-  async getFISExceptionHistory(exceptionId: string): Promise<FISExceptionHistory[]> {
-    const exception = await this.getFISException(exceptionId);
-    return [
-      {
-        id: uuidv4(),
-        exceptionId,
-        type: 'CREATE',
-        details: {
-          metadata: {
-            errorCode: exception.errorCode,
-            errorMessage: exception.errorMessage
-          }
-        },
-        userId: 'system',
-        userName: 'System',
-        timestamp: exception.createdAt
-      }
-    ];
-  }
-  async getFISResponseHistory(requestId: string): Promise<FISResponseHistory[]> {
-    return [
-      {
-        id: uuidv4(),
-        requestId,
-        status: FISExceptionStatus.FAILED,
-        response: { error: 'Internal Server Error' },
-        timestamp: new Date().toISOString(),
-        retryCount: 0
-      }
-    ];
-  }
-  async retryFISException(exceptionId: string): Promise<FISRetryResult> {
-    const exception = await this.getFISException(exceptionId);
-    const success = Math.random() > 0.3; // 70% success rate for mock
-    const updated = {
-      ...exception,
-      status: success ? FISExceptionStatus.RESOLVED : FISExceptionStatus.FAILED,
-      retryCount: exception.retryCount + 1,
-      updatedAt: new Date().toISOString()
-    };
-    this.fisExceptions.set(exceptionId, updated);
-    return {
-      success,
-      message: success ? 'Retry successful' : 'Retry failed',
-      newStatus: updated.status,
-      retryCount: updated.retryCount,
-      lastRetryAt: updated.updatedAt
-    };
-  }
-  async requestFISRefund(exceptionId: string, request: FISRefundRequest): Promise<void> {
-    const exception = await this.getFISException(exceptionId);
-    const updated = {
-      ...exception,
-      status: FISExceptionStatus.REFUNDED,
-      updatedAt: new Date().toISOString()
-    };
-    this.fisExceptions.set(exceptionId, updated);
-    // Add to audit trail
-    const auditEntry = {
-      action: 'REFUND_REQUESTED',
-      performedBy: 'system',
-      timestamp: new Date().toISOString(),
-      details: { request }
-    };
-    const trail = this.auditTrails.get(exceptionId) || [];
-    trail.push(auditEntry);
-    this.auditTrails.set(exceptionId, trail);
-  }
-  async getExceptionSummary(): Promise<{
-    total: number;
-    byStatus: Record<ExceptionToolStatus, number>;
-    byPriority: Record<ExceptionToolPriority, number>;
-    avgResolutionTime: number;
-  }> {
-    const exceptions = Array.from(this.exceptions.values());
-    const total = exceptions.length;
-    // Calculate status breakdown
-    const byStatus = exceptions.reduce((acc, exc) => {
-      acc[exc.status] = (acc[exc.status] || 0) + 1;
-      return acc;
-    }, {} as Record<ExceptionToolStatus, number>);
-    // Calculate priority breakdown
-    const byPriority = exceptions.reduce((acc, exc) => {
-      acc[exc.priority] = (acc[exc.priority] || 0) + 1;
-      return acc;
-    }, {} as Record<ExceptionToolPriority, number>);
-    // Calculate average resolution time (for resolved exceptions)
-    const resolvedExceptions = exceptions.filter(exc => exc.status === 'Resolved');
-    const avgResolutionTime = resolvedExceptions.length > 0
-      ? resolvedExceptions.reduce((sum, exc) => {
-          const resolutionTime = new Date(exc.timestamp).getTime() - new Date(exc.timestamp).getTime();
-          return sum + resolutionTime;
-        }, 0) / resolvedExceptions.length
-      : 0;
-    return {
-      total,
-      byStatus,
-      byPriority,
-      avgResolutionTime
-    };
-  }
-  async getFISExceptionSummary(): Promise<{
-    total: number;
-    byStatus: Record<FISExceptionStatus, number>;
-    avgRetryCount: number;
-    successRate: number;
-  }> {
-    const exceptions = Array.from(this.fisExceptions.values());
-    const total = exceptions.length;
-    // Calculate status breakdown
-    const byStatus = exceptions.reduce((acc, exc) => {
-      acc[exc.status] = (acc[exc.status] || 0) + 1;
-      return acc;
-    }, {} as Record<FISExceptionStatus, number>);
-    // Calculate average retry count
-    const avgRetryCount = exceptions.length > 0
-      ? exceptions.reduce((sum, exc) => sum + exc.retryCount, 0) / exceptions.length
-      : 0;
-    // Calculate success rate
-    const resolvedCount = exceptions.filter(exc => exc.status === FISExceptionStatus.RESOLVED).length;
-    const successRate = total > 0 ? (resolvedCount / total) * 100 : 0;
-    return {
-      total,
-      byStatus,
-      avgRetryCount,
-      successRate
-    };
-  }
-  async assignException(exceptionId: string, userId: string): Promise<void> {
-    const exception = await this.getException(exceptionId);
-    const updated = {
-      ...exception,
+  async getFISExceptionHistory(id: string): Promise<FISExceptionHistory[]> {
+    return [{
+      id: uuidv4(),
+      exceptionId: id,
+      type: 'UPDATE',
+      details: {},
+      userId: 'system',
+      userName: 'System',
       timestamp: new Date().toISOString()
+    }];
+  }
+  async getExceptionStats(): Promise<Record<string, number>> {
+    const exceptions = Array.from(this.exceptions.values());
+    return {
+      total: exceptions.length,
+      pending: exceptions.filter(e => e.status === 'Pending').length,
+      resolved: exceptions.filter(e => e.status === 'Resolved').length,
+      failed: exceptions.filter(e => e.status === 'Failed').length
     };
-    this.exceptions.set(exceptionId, updated);
-    // Add audit trail entry
-    const auditEntry = {
-      action: 'ASSIGNED',
-      performedBy: userId,
-      timestamp: new Date().toISOString(),
-      details: { userId }
+  }
+  async getResolutionMetrics(): Promise<{ avgResolutionTime: number; resolutionRate: number }> {
+    const exceptions = Array.from(this.exceptions.values());
+    const resolved = exceptions.filter(e => e.status === 'Resolved');
+    return {
+      avgResolutionTime: 24, // Mock 24 hour average resolution time
+      resolutionRate: resolved.length / exceptions.length
     };
-    const trail = this.auditTrails.get(exceptionId) || [];
-    trail.push(auditEntry);
-    this.auditTrails.set(exceptionId, trail);
+  }
+  async addExceptionNote(exceptionId: string, note: string): Promise<void> {
+    const existingNotes = this.notes.get(exceptionId) || [];
+    existingNotes.push({
+      id: uuidv4(),
+      content: note,
+      createdBy: 'system',
+      createdAt: new Date().toISOString()
+    });
+    this.notes.set(exceptionId, existingNotes);
   }
   async bulkUpdateExceptions(
     exceptionIds: string[],
     updates: {
       status?: ExceptionToolStatus;
       priority?: ExceptionToolPriority;
+      assignedTo?: string;
     }
   ): Promise<void> {
     for (const id of exceptionIds) {
-      const exception = await this.getException(id);
-      const updated = {
-        ...exception,
-        ...updates,
-        timestamp: new Date().toISOString()
-      };
-      this.exceptions.set(id, updated);
+      const exception = this.exceptions.get(id);
+      if (exception) {
+        this.exceptions.set(id, { ...exception, ...updates });
+      }
     }
   }
   async getExceptionAuditTrail(exceptionId: string): Promise<Array<{
@@ -323,17 +208,6 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
   }>> {
     return this.auditTrails.get(exceptionId) || [];
   }
-  async addExceptionNote(exceptionId: string, note: string, userId: string): Promise<void> {
-    const noteEntry = {
-      id: uuidv4(),
-      content: note,
-      createdBy: userId,
-      createdAt: new Date().toISOString()
-    };
-    const existingNotes = this.notes.get(exceptionId) || [];
-    existingNotes.push(noteEntry);
-    this.notes.set(exceptionId, existingNotes);
-  }
   async getExceptionNotes(exceptionId: string): Promise<Array<{
     id: string;
     content: string;
@@ -341,5 +215,148 @@ export class MockExceptionService extends BaseMockService implements IExceptionS
     createdAt: string;
   }>> {
     return this.notes.get(exceptionId) || [];
+  }
+  async getExceptionSummary(): Promise<{
+    total: number;
+    byStatus: Record<string, number>;
+    byPriority: Record<string, number>;
+    avgResolutionTime: number;
+  }> {
+    const exceptions = Array.from(this.exceptions.values());
+    return {
+      total: exceptions.length,
+      byStatus: exceptions.reduce((acc, curr) => {
+        acc[curr.status] = (acc[curr.status] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>),
+      byPriority: exceptions.reduce((acc, curr) => {
+        acc[curr.priority] = (acc[curr.priority] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>),
+      avgResolutionTime: 24 // Mock 24 hour average resolution time
+    };
+  }
+
+  async assignException(exceptionId: string, userId: string): Promise<void> {
+    const exception = this.exceptions.get(exceptionId);
+    if (!exception) {
+      throw new Error('Exception not found');
+    }
+    // Add to audit trail
+    const auditEntry = {
+      action: 'ASSIGN',
+      performedBy: userId,
+      timestamp: new Date().toISOString(),
+      details: { userId }
+    };
+    const existingAudit = this.auditTrails.get(exceptionId) || [];
+    existingAudit.push(auditEntry);
+    this.auditTrails.set(exceptionId, existingAudit);
+  }
+
+  async getExceptionUpdates(exceptionId: string): Promise<Array<{
+    id: string;
+    action: string;
+    performedBy: string;
+    timestamp: string;
+    details: Record<string, unknown>;
+  }>> {
+    const updates = this.auditTrails.get(exceptionId) || [];
+    return updates.map(update => ({
+      id: uuidv4(),
+      ...update
+    }));
+  }
+
+  async resolveException(exceptionId: string, resolution: ExceptionResolution): Promise<void> {
+    const exception = this.exceptions.get(exceptionId);
+    if (!exception) {
+      throw new Error('Exception not found');
+    }
+    exception.status = 'Resolved' as ExceptionToolStatus;
+    this.exceptions.set(exceptionId, exception);
+
+    // Add to audit trail
+    const auditEntry = {
+      action: 'RESOLVE',
+      performedBy: resolution.userId || 'system',
+      timestamp: resolution.timestamp || new Date().toISOString(),
+      details: { resolution }
+    };
+    const existingAudit = this.auditTrails.get(exceptionId) || [];
+    existingAudit.push(auditEntry);
+    this.auditTrails.set(exceptionId, existingAudit);
+  }
+
+  async getFISResponseHistory(requestId: string): Promise<FISResponseHistory[]> {
+    return [{
+      id: '1',
+      requestId,
+      status: FISExceptionStatus.FAILED,
+      response: {},
+      timestamp: new Date().toISOString(),
+      retryCount: 0
+    }];
+  }
+
+  async retryFISException(exceptionId: string): Promise<FISRetryResult> {
+    const exception = this.fisExceptions.get(exceptionId);
+    if (!exception) {
+      throw new Error('FIS Exception not found');
+    }
+    exception.status = FISExceptionStatus.RETRYING;
+    exception.retryCount++;
+    this.fisExceptions.set(exceptionId, exception);
+    return {
+      success: true,
+      message: 'Retry initiated',
+      retryCount: exception.retryCount,
+      lastRetryAt: new Date().toISOString(),
+      newStatus: PaymentStatus.PENDING
+    };
+  }
+
+  async ignoreFISException(exceptionId: string, notes: string): Promise<void> {
+    const exception = this.fisExceptions.get(exceptionId);
+    if (!exception) {
+      throw new Error('FIS Exception not found');
+    }
+    exception.status = FISExceptionStatus.RESOLVED;
+    exception.metadata = { ...exception.metadata, notes };
+    this.fisExceptions.set(exceptionId, exception);
+  }
+
+  async bulkRetryFISExceptions(exceptionIds: string[]): Promise<FISRetryResult[]> {
+    return Promise.all(exceptionIds.map(id => this.retryFISException(id)));
+  }
+
+  async bulkDeleteFISExceptions(exceptionIds: string[]): Promise<void> {
+    exceptionIds.forEach(id => {
+      const exception = this.fisExceptions.get(id);
+      if (exception) {
+        exception.status = FISExceptionStatus.RESOLVED;
+        this.fisExceptions.set(id, exception);
+      }
+    });
+  }
+
+  async getFISExceptionStats(): Promise<FISExceptionStats> {
+    const exceptions = Array.from(this.fisExceptions.values());
+    return {
+      total: exceptions.length,
+      byStatus: exceptions.reduce((acc, curr) => {
+        acc[curr.status] = (acc[curr.status] || 0) + 1;
+        return acc;
+      }, {} as Record<FISExceptionStatus, number>),
+      byType: { FIS: exceptions.length, ACH: 0, WIRE: 0 },
+      byErrorCode: exceptions.reduce((acc, curr) => {
+        acc[curr.errorCode] = (acc[curr.errorCode] || 0) + 1;
+        return acc;
+      }, {} as Record<FISErrorCode, number>),
+      avgResolutionTime: 0,
+      resolutionRate: exceptions.filter(e => e.status === FISExceptionStatus.RESOLVED).length / exceptions.length,
+      successRate: 0,
+      avgRetryCount: exceptions.reduce((acc, curr) => acc + curr.retryCount, 0) / exceptions.length
+    };
   }
 }

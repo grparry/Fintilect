@@ -1,37 +1,58 @@
 import { IBaseService } from './IBaseService';
-import {
-  PendingPayment,
-  PendingPaymentSummary,
-  PendingPaymentSearchRequest,
-  PaginatedResponse,
-  PaymentConfirmationResponse,
-} from '../../types/bill-pay.types';
+import { Payment, PaymentFilters, PaymentHistory, PaymentActivityRequest, PaymentActivityListResponse } from '../../types/payment.types';
+import { PaginatedResponse } from '../../types/common.types';
 
 export interface IPaymentService extends IBaseService {
   /**
-   * Get pending payments with filtering
-   * @param request Search request parameters
-   * @returns Paginated list of pending payments
+   * Get payments with pagination and filtering
+   * @param filters Payment filters
+   * @returns Paginated list of payments
    */
-  getPendingPayments(request: PendingPaymentSearchRequest): Promise<PaginatedResponse<PendingPayment>>;
+  getPayments(filters: PaymentFilters): Promise<PaginatedResponse<Payment>>;
+
   /**
-   * Get summary of pending payments
-   * @param request Search request parameters
-   * @returns Summary of pending payments
+   * Get specific payment
+   * @param paymentId Payment identifier
+   * @returns Payment details
    */
-  getPendingPaymentsSummary(request: PendingPaymentSearchRequest): Promise<PendingPaymentSummary>;
+  getPayment(paymentId: string): Promise<Payment>;
+
   /**
-   * Export pending payments
-   * @param request Search request parameters
-   * @returns Blob containing exported data
+   * Create new payment
+   * @param payment Payment to create
+   * @returns Created payment
    */
-  exportPendingPayments(request: PendingPaymentSearchRequest): Promise<Blob>;
+  createPayment(payment: Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>): Promise<Payment>;
+
+  /**
+   * Update existing payment
+   * @param paymentId Payment identifier
+   * @param payment Updated payment data
+   * @returns Updated payment
+   */
+  updatePayment(paymentId: string, payment: Partial<Payment>): Promise<Payment>;
+
+  /**
+   * Cancel payment
+   * @param paymentId Payment identifier
+   * @param reason Cancellation reason
+   */
+  cancelPayment(paymentId: string, reason: string): Promise<void>;
+
+  /**
+   * Get payment history
+   * @param paymentId Payment identifier
+   * @returns List of payment history entries
+   */
+  getPaymentHistory(paymentId: string): Promise<PaymentHistory[]>;
+
   /**
    * Approve a pending payment
    * @param paymentId Payment identifier
    * @returns Void promise
    */
   approvePayment(paymentId: string): Promise<void>;
+
   /**
    * Reject a pending payment
    * @param paymentId Payment identifier
@@ -39,34 +60,11 @@ export interface IPaymentService extends IBaseService {
    * @returns Void promise
    */
   rejectPayment(paymentId: string, reason: string): Promise<void>;
+
   /**
-   * Bulk approve pending payments
-   * @param paymentIds List of payment identifiers
-   * @returns True if successful
+   * Get pending payments with filtering
+   * @param request Search request parameters
+   * @returns List of pending payments
    */
-  bulkApprove(paymentIds: string[]): Promise<boolean>;
-  /**
-   * Bulk reject pending payments
-   * @param paymentIds List of payment identifiers
-   * @returns True if successful
-   */
-  bulkReject(paymentIds: string[]): Promise<boolean>;
-  /**
-   * Get payment history
-   * @param paymentId Payment identifier
-   * @returns Payment history
-   */
-  getPaymentHistory(paymentId: string): Promise<{
-    action: string;
-    performedBy: string;
-    timestamp: string;
-    details: Record<string, any>;
-  }>;
-  /**
-   * Confirm a payment
-   * @param paymentId Payment identifier
-   * @param request Confirmation request
-   * @returns Response with success status
-   */
-  confirmPayment(paymentId: string, request: any): Promise<PaymentConfirmationResponse>;
+  getPendingPayments(request: PaymentActivityRequest): Promise<PaymentActivityListResponse>;
 }

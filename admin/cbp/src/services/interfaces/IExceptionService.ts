@@ -3,7 +3,13 @@ import {
     ExceptionTool,
     ExceptionToolStatus,
     ExceptionToolPriority,
-    ExceptionFilters
+    ExceptionToolFilters,
+    ExceptionResolution,
+    FISException,
+    FISExceptionFilters,
+    FISResponseHistory,
+    FISRetryResult,
+    FISExceptionStats
 } from '../../types/bill-pay.types';
 import { PaginatedResponse } from '../../types/common.types';
 
@@ -17,7 +23,7 @@ export interface IExceptionService extends IBaseService {
      * @param filters Exception filters
      * @returns Paginated list of exceptions
      */
-    getExceptions(filters: ExceptionFilters): Promise<PaginatedResponse<ExceptionTool>>;
+    getExceptions(filters: ExceptionToolFilters): Promise<PaginatedResponse<ExceptionTool>>;
 
     /**
      * Get specific exception
@@ -115,4 +121,58 @@ export interface IExceptionService extends IBaseService {
         createdBy: string;
         createdAt: string;
     }>>;
+
+    /**
+     * Resolve a payment exception
+     * @param exceptionId Exception identifier
+     * @param resolution Resolution details
+     */
+    resolveException(exceptionId: string, resolution: ExceptionResolution): Promise<void>;
+
+    /**
+     * Get FIS exceptions with filtering
+     * @param filters Exception filters
+     * @returns List of FIS exceptions
+     */
+    getFISExceptions(filters: FISExceptionFilters): Promise<FISException[]>;
+
+    /**
+     * Get FIS exception response history
+     * @param requestId Request identifier
+     * @returns List of response history entries
+     */
+    getFISResponseHistory(requestId: string): Promise<FISResponseHistory[]>;
+
+    /**
+     * Retry a failed FIS exception
+     * @param exceptionId Exception identifier
+     * @returns Retry result
+     */
+    retryFISException(exceptionId: string): Promise<FISRetryResult>;
+
+    /**
+     * Ignore a FIS exception
+     * @param exceptionId Exception identifier
+     * @param notes Notes about why the exception was ignored
+     */
+    ignoreFISException(exceptionId: string, notes: string): Promise<void>;
+
+    /**
+     * Bulk retry FIS exceptions
+     * @param exceptionIds List of exception identifiers
+     * @returns List of retry results
+     */
+    bulkRetryFISExceptions(exceptionIds: string[]): Promise<FISRetryResult[]>;
+
+    /**
+     * Bulk delete FIS exceptions
+     * @param exceptionIds List of exception identifiers
+     */
+    bulkDeleteFISExceptions(exceptionIds: string[]): Promise<void>;
+
+    /**
+     * Get FIS exception statistics
+     * @returns Exception statistics
+     */
+    getFISExceptionStats(): Promise<FISExceptionStats>;
 }

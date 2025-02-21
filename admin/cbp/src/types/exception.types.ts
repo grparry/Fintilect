@@ -10,38 +10,34 @@ export type ExceptionCategory =
   | 'INTEGRATION'
   | 'RATE_LIMIT'
   | 'DATA_INTEGRITY';
-export interface ExceptionMetadata {
-  userId?: string;
-  resourceId?: string;
-  resourceType?: string;
-  correlationId?: string;
-  stackTrace?: string;
-  [key: string]: any;
-}
 export interface Exception {
   id: string;
-  message: string;
-  category: ExceptionCategory;
-  severity: ExceptionSeverity;
-  status: ExceptionStatus;
-  metadata: ExceptionMetadata;
-  createdAt: string;
-  updatedAt: string;
-  resolvedAt?: string;
-  assignedTo?: string;
-  resolution?: string;
+  payeeAttentionLine: string;
+  payeeTelephoneNumber: string;
+  payeeAddress1: string;
+  payeeAddress2: string;
+  payeeCity: string;
+  payeeState: string;
+  payeeZip: string;
+  payeeCountry: string;
+  payeeNickname: string;
+  customerPayeeId: string;
+  customerPayeeAccountNumber: string;
+  confirmationNumber: string;
+  transactionAmount: string;
+  memoLineInfo: string;
+  serviceRequestNumber: string;
 }
+
 export interface CreateExceptionRequest {
   message: string;
   category: ExceptionCategory;
   severity: ExceptionSeverity;
-  metadata?: ExceptionMetadata;
 }
 export interface UpdateExceptionRequest {
   status?: ExceptionStatus;
   assignedTo?: string;
   resolution?: string;
-  metadata?: ExceptionMetadata;
 }
 export interface ExceptionFilter {
   category?: ExceptionCategory[];

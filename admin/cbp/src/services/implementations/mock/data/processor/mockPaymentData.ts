@@ -1,338 +1,244 @@
-import { PaymentMethod, PaymentStatus, PendingPayment, Priority, Payment } from '../../../../../types/bill-pay.types';
+import { 
+  PaymentMethod, 
+  PaymentStatus,
+  PaymentPriority,
+  Payment, 
+  PaymentHistory,
+  PaymentActivity
+} from '../../../../../types/payment.types';
 
 // Payment status distribution for mock data
 export const mockPaymentStatusDistribution: Record<PaymentStatus, number> = {
-  [PaymentStatus.PENDING]: 50,
-  [PaymentStatus.APPROVED]: 25,
-  [PaymentStatus.REJECTED]: 10,
-  [PaymentStatus.PROCESSING]: 40,
-  [PaymentStatus.COMPLETED]: 200,
-  [PaymentStatus.FAILED]: 15,
+  [PaymentStatus.PENDING]: 45,
+  [PaymentStatus.PENDING_APPROVAL]: 12,
+  [PaymentStatus.PROCESSING]: 8,
+  [PaymentStatus.COMPLETED]: 156,
+  [PaymentStatus.FAILED]: 3,
   [PaymentStatus.CANCELLED]: 5,
-  [PaymentStatus.EXPIRED]: 2,
-  [PaymentStatus.PENDING_APPROVAL]: 20,
-  [PaymentStatus.SCHEDULED]: 10,
-  [PaymentStatus.RETURNED]: 8,
-  [PaymentStatus.DRAFT]: 30,
-  [PaymentStatus.SUBMITTED]: 15,
-  [PaymentStatus.STOP_PAYMENT]: 3,
-  [PaymentStatus.VOID]: 5,
-  [PaymentStatus.HOLD]: 4,
-  [PaymentStatus.SUSPENDED]: 3,
-  [PaymentStatus.REFUNDED]: 3,
-  [PaymentStatus.PARTIALLY_REFUNDED]: 1,
-  [PaymentStatus.CHARGEBACK]: 1
+  [PaymentStatus.REJECTED]: 2,
+  [PaymentStatus.ON_HOLD]: 4,
+  [PaymentStatus.EXPIRED]: 1
 };
 
 // Regular payments
 export const mockPayments: Payment[] = [
   {
-    id: 'pmt_1',
-    clientId: 'client_1',
-    clientName: 'Acme Corp',
-    payeeId: 'payee_1',
-    payeeName: 'Electric Company',
-    amount: 500.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    status: PaymentStatus.PENDING,
-    effectiveDate: '2024-12-20T00:00:00Z',
-    description: 'Electric bill payment',
-    priority: Priority.HIGH,
-    createdAt: '2024-12-16T00:00:00Z',
-    updatedAt: '2024-12-16T00:00:00Z',
-    userPayeeListId: 'upl_1',
-    memberId: 'mem_1',
-    fundingAccount: {
-      accountId: 'acc_1',
-      accountType: 'CHECKING',
-      accountNumber: '1234567890',
-      routingNumber: '123456789'
-    }
+    Id: 'pmt_1',
+    WillProcessDate: '2024-12-20T00:00:00Z',
+    Memo: 'Electric bill payment',
+    BillReference: 'ELEC-001',
+    FundingAccount: 'acc_1',
+    UserPayeeListId: 'upl_1',
+    MemberId: 'mem_1',
+    Amount: 500.00,
+    Status: PaymentStatus.PENDING,
+    ProcessDate: '2024-12-16T00:00:00Z',
+    DeliveryDate: '2024-12-20T00:00:00Z'
   },
   {
-    id: 'pmt_2',
-    clientId: 'client_1',
-    clientName: 'Acme Corp',
-    payeeId: 'payee_2',
-    payeeName: 'Water Utility',
-    amount: 100.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    status: PaymentStatus.COMPLETED,
-    effectiveDate: '2024-12-15T00:00:00Z',
-    description: 'Water utility payment',
-    priority: Priority.MEDIUM,
-    createdAt: '2024-12-14T00:00:00Z',
-    updatedAt: '2024-12-15T00:00:00Z',
-    userPayeeListId: 'upl_2',
-    memberId: 'mem_1',
-    fundingAccount: {
-      accountId: 'acc_1',
-      accountType: 'CHECKING',
-      accountNumber: '1234567890',
-      routingNumber: '123456789'
-    }
+    Id: 'pmt_2',
+    WillProcessDate: '2024-12-15T00:00:00Z',
+    Memo: 'Water utility payment',
+    BillReference: 'WATER-001',
+    FundingAccount: 'acc_1',
+    UserPayeeListId: 'upl_1',
+    MemberId: 'mem_1',
+    Amount: 100.00,
+    Status: PaymentStatus.COMPLETED,
+    ProcessDate: '2024-12-14T00:00:00Z',
+    DeliveryDate: '2024-12-15T00:00:00Z'
   }
 ];
 
-// Pending payments with more detailed information
-export const mockPendingPayments: PendingPayment[] = [
+// Pending payments
+export const mockPendingPayments: PaymentActivity[] = [
   {
-    id: 'payment_1',
-    clientId: 'client_1',
-    clientName: 'Acme Corp',
-    payeeId: 'payee_1',
-    payeeName: 'John Doe',
-    amount: 1000.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    status: PaymentStatus.PENDING,
-    priority: Priority.HIGH,
-    effectiveDate: '2024-12-30',
-    createdAt: '2024-12-30T09:00:00Z',
-    updatedAt: '2024-12-30T09:00:00Z',
-    userPayeeListId: 'upl_2',
-    memberId: 'mem_1',
-    fundingAccount: {
-      accountId: 'acc_1',
-      accountType: 'CHECKING',
-      accountNumber: '1234567890',
-      routingNumber: '123456789'
-    },
-    recipient: {
-      name: 'John Doe',
-      accountNumber: '1234567890',
-      routingNumber: '123456789',
-      bankName: 'First Bank'
-    },
-    metadata: {
-      invoiceNumber: 'INV-001',
-      department: 'Sales'
-    }
+    MemberID: 'mem_1',
+    PaymentID: 'payment_1',
+    PayeeID: 'payee_1',
+    FisPayeeId: 'fis_1',
+    PayeeName: 'John Doe',
+    DateProcessed: '2024-12-28T00:00:00Z',
+    DueDate: '2024-12-29T00:00:00Z',
+    StatusCode: 1,
+    StatusName: 'Pending',
+    PaymentMethod: 'ACH',
+    Amount: 2000.00
   },
   {
-    id: 'payment_2',
-    clientId: 'client_1',
-    clientName: 'Acme Corp',
-    payeeId: 'payee_2',
-    payeeName: 'Jane Smith',
-    amount: 2500.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    status: PaymentStatus.APPROVED,
-    priority: Priority.MEDIUM,
-    effectiveDate: '2024-12-30',
-    createdAt: '2024-12-30T09:15:00Z',
-    updatedAt: '2024-12-30T09:15:00Z',
-    userPayeeListId: 'upl_3',
-    memberId: 'mem_1',
-    fundingAccount: {
-      accountId: 'acc_1',
-      accountType: 'CHECKING',
-      accountNumber: '1234567890',
-      routingNumber: '123456789'
-    },
-    recipient: {
-      name: 'Jane Smith',
-      accountNumber: '0987654321',
-      routingNumber: '987654321',
-      bankName: 'Second Bank'
-    },
-    metadata: {
-      invoiceNumber: 'INV-002',
-      department: 'Marketing'
-    }
-  },
-  {
-    id: 'payment_3',
-    clientId: 'client_2',
-    clientName: 'Beta Inc',
-    payeeId: 'payee_3',
-    payeeName: 'Bob Wilson',
-    amount: 500.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    status: PaymentStatus.APPROVED,
-    priority: Priority.LOW,
-    effectiveDate: '2024-12-30',
-    createdAt: '2024-12-30T09:30:00Z',
-    updatedAt: '2024-12-30T09:35:00Z',
-    userPayeeListId: 'upl_4',
-    memberId: 'mem_2',
-    fundingAccount: {
-      accountId: 'acc_2',
-      accountType: 'CHECKING',
-      accountNumber: '5678901234',
-      routingNumber: '567890123'
-    },
-    recipient: {
-      name: 'Bob Wilson',
-      accountNumber: '5678901234',
-      routingNumber: '567890123',
-      bankName: 'Third Bank'
-    },
-    metadata: {
-      invoiceNumber: 'INV-003',
-      department: 'Engineering'
-    }
+    MemberID: 'mem_1',
+    PaymentID: 'payment_2',
+    PayeeID: 'payee_2',
+    FisPayeeId: 'fis_2',
+    PayeeName: 'Insurance Co',
+    DateProcessed: '2024-12-29T00:00:00Z',
+    DueDate: '2024-12-30T00:00:00Z',
+    StatusCode: 1,
+    StatusName: 'Pending',
+    PaymentMethod: 'ACH',
+    Amount: 150.00
   }
 ];
 
 // Additional mock payment data
-export const mockAdditionalPayments: PendingPayment[] = [
+export const mockAdditionalPayments: PaymentActivity[] = [
   {
-    id: 'pmt_001',
-    clientId: 'client_001',
-    clientName: 'Acme Corp',
-    payeeId: 'payee_001',
-    payeeName: 'John Doe',
-    amount: 1000.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    effectiveDate: '2024-12-29',
-    description: 'Monthly service payment',
-    reference: 'INV-001',
-    metadata: {
-      department: 'IT',
-      category: 'Services'
-    },
-    status: PaymentStatus.PENDING,
-    priority: Priority.HIGH,
-    createdAt: '2024-12-28T17:02:57-07:00',
-    updatedAt: '2024-12-28T17:02:57-07:00',
-    userPayeeListId: 'upl_3',
-    memberId: 'mem_1',
-    fundingAccount: {
-      accountId: 'acc_1',
-      accountType: 'CHECKING',
-      accountNumber: '1234567890',
-      routingNumber: '123456789'
-    },
-    recipient: {
-      name: 'John Doe',
-      accountNumber: '1234567890',
-      routingNumber: '987654321',
-      bankName: 'First Bank'
-    }
+    MemberID: 'mem_1',
+    PaymentID: 'pmt_001',
+    PayeeID: 'payee_3',
+    FisPayeeId: 'fis_3',
+    PayeeName: 'Water Company',
+    DateProcessed: '2024-12-30T00:00:00Z',
+    DueDate: '2024-12-31T00:00:00Z',
+    StatusCode: 2,
+    StatusName: 'Processing',
+    PaymentMethod: 'CHECK',
+    Amount: 75.00
   },
   {
-    id: 'pmt_002',
-    clientId: 'client_002',
-    clientName: 'Beta Inc',
-    payeeId: 'payee_002',
-    payeeName: 'Jane Smith',
-    amount: 2500.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    effectiveDate: '2024-12-29',
-    description: 'Equipment purchase',
-    reference: 'PO-002',
-    metadata: {
-      department: 'Operations',
-      category: 'Equipment'
-    },
-    status: PaymentStatus.PENDING,
-    priority: Priority.MEDIUM,
-    createdAt: '2024-12-28T17:02:57-07:00',
-    updatedAt: '2024-12-28T17:02:57-07:00',
-    userPayeeListId: 'upl_4',
-    memberId: 'mem_2',
-    fundingAccount: {
-      accountId: 'acc_2',
-      accountType: 'CHECKING',
-      accountNumber: '9876543210',
-      routingNumber: '987654321'
-    },
-    recipient: {
-      name: 'Jane Smith',
-      accountNumber: '0987654321',
-      routingNumber: '123456789',
-      bankName: 'Second Bank'
-    }
+    MemberID: 'mem_2',
+    PaymentID: 'pmt_002',
+    PayeeID: 'payee_4',
+    FisPayeeId: 'fis_4',
+    PayeeName: 'Electric Company',
+    DateProcessed: '2024-12-31T00:00:00Z',
+    DueDate: '2025-01-01T00:00:00Z',
+    StatusCode: 3,
+    StatusName: 'Completed',
+    PaymentMethod: 'ACH',
+    Amount: 120.00
   },
   {
-    id: 'pmt_003',
-    clientId: 'client_003',
-    clientName: 'Gamma LLC',
-    payeeId: 'payee_003',
-    payeeName: 'Bob Wilson',
-    amount: 500.00,
-    currency: 'USD',
-    method: PaymentMethod.ACH,
-    effectiveDate: '2024-12-29',
-    description: 'Consulting fees',
-    reference: 'CONS-003',
-    metadata: {
-      department: 'Research',
-      category: 'Consulting'
-    },
-    status: PaymentStatus.PENDING,
-    priority: Priority.LOW,
-    createdAt: '2024-12-28T17:02:57-07:00',
-    updatedAt: '2024-12-28T17:02:57-07:00',
-    userPayeeListId: 'upl_5',
-    memberId: 'mem_3',
-    fundingAccount: {
-      accountId: 'acc_3',
-      accountType: 'CHECKING',
-      accountNumber: '5555666677',
-      routingNumber: '444433322'
-    },
-    recipient: {
-      name: 'Bob Wilson',
-      accountNumber: '5678901234',
-      routingNumber: '567890123',
-      bankName: 'Third Bank'
-    }
+    MemberID: 'mem_2',
+    PaymentID: 'pmt_003',
+    PayeeID: 'payee_5',
+    FisPayeeId: 'fis_5',
+    PayeeName: 'Gas Company',
+    DateProcessed: '2024-12-31T00:00:00Z',
+    DueDate: '2025-01-01T00:00:00Z',
+    StatusCode: 1,
+    StatusName: 'Pending',
+    PaymentMethod: 'ACH',
+    Amount: 85.00
+  },
+  {
+    MemberID: 'mem_3',
+    PaymentID: 'pmt_004',
+    PayeeID: 'payee_6',
+    FisPayeeId: 'fis_6',
+    PayeeName: 'Phone Company',
+    DateProcessed: '2025-01-01T00:00:00Z',
+    DueDate: '2025-01-02T00:00:00Z',
+    StatusCode: 1,
+    StatusName: 'Pending',
+    PaymentMethod: 'ACH',
+    Amount: 95.00
   }
 ];
 
-// Mock payee conversion files
-export const mockPayeeConversionFiles = {
-  success: true,
-  data: [
-    {
-      id: 'file_001',
-      name: 'payees_batch1.csv',
-      status: 'PENDING',
-      createdAt: '2024-12-28T17:02:57-07:00',
-      validation: {
-        totalRecords: 100,
-        validRecords: 0,
-        invalidRecords: 0,
-        errors: [] as Array<{ field: string; message: string }>,
-        warnings: [] as Array<{ field: string; message: string }>
-      }
-    },
-    {
-      id: 'file_002',
-      name: 'payees_batch2.csv',
-      status: 'COMPLETED',
-      createdAt: '2024-12-27T15:30:00-07:00',
-      validation: {
-        totalRecords: 50,
-        validRecords: 45,
-        invalidRecords: 5,
-        errors: [] as Array<{ field: string; message: string }>,
-        warnings: [] as Array<{ field: string; message: string }>
-      }
-    }
-  ]
-};
+// Additional mock payment data for recurring payments
+export const mockRecurringPayments: Payment[] = [
+  {
+    Id: 'rec_001',
+    WillProcessDate: '2024-12-29T00:00:00Z',
+    Memo: 'Monthly rent',
+    BillReference: 'RENT-001',
+    FundingAccount: 'acc_1',
+    UserPayeeListId: 'upl_1',
+    MemberId: 'mem_1',
+    Amount: 1500.00,
+    Status: PaymentStatus.PENDING,
+    ProcessDate: '2024-12-28T00:00:00Z',
+    DeliveryDate: '2024-12-29T00:00:00Z',
+    Frequency: 'monthly',
+    NumPayments: 12
+  },
+  {
+    Id: 'rec_002',
+    WillProcessDate: '2024-12-29T00:00:00Z',
+    Memo: 'Weekly cleaning service',
+    BillReference: 'CLEAN-001',
+    FundingAccount: 'acc_2',
+    UserPayeeListId: 'upl_2',
+    MemberId: 'mem_2',
+    Amount: 100.00,
+    Status: PaymentStatus.PENDING,
+    ProcessDate: '2024-12-28T00:00:00Z',
+    DeliveryDate: '2024-12-29T00:00:00Z',
+    Frequency: 'weekly',
+    NumPayments: 52
+  }
+];
 
 // Payment history for audit trails
-export const mockPaymentHistory = [
+export const mockPaymentHistory: PaymentHistory[] = [
   {
-    id: 'hist_001',
-    paymentId: 'pmt_001',
-    actions: [
-      {
-        action: 'payment_created',
-        performedBy: 'user_001',
-        timestamp: '2024-12-28T17:02:57-07:00',
-        details: {}
-      }
-    ]
+    Id: 1,
+    PaymentId: 'pmt_001',
+    UserPayeeListId: 'upl_001',
+    MemberId: 'user_001',
+    FundingAccount: 'acc_001',
+    Amount: 1000.00,
+    WillProcessDate: '2024-12-28T00:00:00Z',
+    StatusCode: 1, // Pending
+    Memo: 'Monthly rent payment',
+    LastUpdate: '2024-12-28T17:02:57-07:00',
+    SourceApplication: 'WEB',
+    EntryDate: '2024-12-28T17:02:57-07:00',
+    DeliveryDate: '2024-12-28T00:00:00Z',
+    PayeeId: 'payee_001',
+    UsersAccountAtPayee: '1234567890',
+    NameOnAccount: 'John Doe',
+    PayeeType: 'RENT',
+    PaymentMethod: PaymentMethod.ACH,
+    RunId: 12345,
+    ConfirmationNumber: 'CONF001',
+    FisPayeeId: 'fis_001'
+  },
+  {
+    Id: 2,
+    PaymentId: 'pmt_001',
+    UserPayeeListId: 'upl_001',
+    MemberId: 'user_001',
+    FundingAccount: 'acc_001',
+    Amount: 1000.00,
+    WillProcessDate: '2024-12-28T00:00:00Z',
+    StatusCode: 2, // Processing
+    Memo: 'Monthly rent payment',
+    LastUpdate: '2024-12-28T17:03:00-07:00',
+    SourceApplication: 'SYSTEM',
+    EntryDate: '2024-12-28T17:02:57-07:00',
+    DeliveryDate: '2024-12-28T00:00:00Z',
+    PayeeId: 'payee_001',
+    UsersAccountAtPayee: '1234567890',
+    NameOnAccount: 'John Doe',
+    PayeeType: 'RENT',
+    PaymentMethod: PaymentMethod.ACH,
+    RunId: 12345,
+    ConfirmationNumber: 'CONF001',
+    FisPayeeId: 'fis_001'
+  },
+  {
+    Id: 3,
+    PaymentId: 'pmt_001',
+    UserPayeeListId: 'upl_001',
+    MemberId: 'user_001',
+    FundingAccount: 'acc_001',
+    Amount: 1000.00,
+    WillProcessDate: '2024-12-28T00:00:00Z',
+    StatusCode: 3, // Completed
+    Memo: 'Monthly rent payment',
+    LastUpdate: '2024-12-28T17:05:00-07:00',
+    SourceApplication: 'SYSTEM',
+    EntryDate: '2024-12-28T17:02:57-07:00',
+    DeliveryDate: '2024-12-28T00:00:00Z',
+    PayeeId: 'payee_001',
+    UsersAccountAtPayee: '1234567890',
+    NameOnAccount: 'John Doe',
+    PayeeType: 'RENT',
+    PaymentMethod: PaymentMethod.ACH,
+    RunId: 12345,
+    ConfirmationNumber: 'CONF001',
+    FisPayeeId: 'fis_001'
   }
 ];

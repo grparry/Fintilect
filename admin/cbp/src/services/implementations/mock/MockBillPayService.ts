@@ -1,14 +1,22 @@
 import { IBillPayService } from '../../interfaces/IBillPayService';
 import {
-    BillPayConfig,
-    BillPayConfigUpdate,
-    BillPayConfigValidation,
     Payment,
     PaymentFilters,
     PaymentHistory,
-    PaymentException,
-    ExceptionResolution,
+    ProcessingError,
     PaymentAction,
+    PaymentException,
+    PaymentExceptionAdjustment,
+    PaymentExceptionCorrection,
+    PaymentMethod,
+    PaymentType,
+    PaymentPriority,
+    PaymentStatus
+} from '../../../types/payment.types';
+import {
+    BillPayConfig,
+    BillPayConfigUpdate,
+    BillPayConfigValidation,
     Client,
     Payee,
     BillPayStats,
@@ -17,13 +25,15 @@ import {
     HolidayInput,
     NotificationTemplate,
     NotificationTemplateInput,
-    PaymentStatus,
+    ExceptionResolution,
+    HolidayStatus,
+    FISException,
     FISExceptionStatus
 } from '../../../types/bill-pay.types';
 import {
     BillPaySecuritySettings,
-    BillPaySecurityValidation,
-    BillPayOTPMethod
+    BillPayOTPMethod,
+    BillPaySecurityValidation
 } from '../../../types/security.types';
 import { PaginatedResponse } from '../../../types/common.types';
 import { QueryOptions } from '../../../types/index';
@@ -67,7 +77,7 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
     };
     private payments: Payment[] = [...mockPayments];
     private paymentHistory: PaymentHistory[] = [...mockPaymentHistory];
-    private exceptions: PaymentException[] = [...mockExceptions];
+    private exceptions: FISException[] = [...mockExceptions];
     private holidays: Holiday[] = [...initialHolidays];
     private notificationTemplates: NotificationTemplate[] = [...mockTemplates];
     private clients: Client[] = [...mockClients];
@@ -128,137 +138,194 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
     }
     async getPayments(filters: PaymentFilters & QueryOptions): Promise<PaginatedResponse<Payment>> {
         let filteredPayments = [...this.payments];
-        // Apply filters
-        if (filters.clientId) {
-            filteredPayments = filteredPayments.filter(p => p.clientId === filters.clientId);
-        }
-        if (filters.payeeId) {
-            filteredPayments = filteredPayments.filter(p => p.payeeId === filters.payeeId);
-        }
-        if (filters.method?.length) {
-            filteredPayments = filteredPayments.filter(p => filters.method!.includes(p.method));
-        }
-        if (filters.status?.length) {
-            filteredPayments = filteredPayments.filter(p => filters.status!.includes(p.status));
-        }
-        if (filters.startDate) {
-            filteredPayments = filteredPayments.filter(p => 
-                new Date(p.effectiveDate) >= new Date(filters.startDate!)
+
+        // Filter by client ID
+        if (filters.ClientId) {
+            filteredPayments = filteredPayments.filter(payment => 
+                payment.Id === filters.ClientId
             );
         }
-        if (filters.endDate) {
-            filteredPayments = filteredPayments.filter(p => 
-                new Date(p.effectiveDate) <= new Date(filters.endDate!)
+
+        // Filter by payee ID
+        if (filters.PayeeId) {
+            filteredPayments = filteredPayments.filter(payment => 
+                payment.UserPayeeListId === filters.PayeeId
             );
         }
-        // Apply pagination
-        const page = filters.pagination?.page || 1;
-        const limit = filters.pagination?.limit || 10;
-        const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit;
+
+        // Filter by payment method
+        if (filters.Method && filters.Method.length > 0) {
+            filteredPayments = filteredPayments.filter(payment => 
+                filters.Method!.includes(payment.PaymentMethod as PaymentMethod)
+            );
+        }
+
+        // Filter by status
+        if (filters.Status && filters.Status.length > 0) {
+            filteredPayments = filteredPayments.filter(payment => 
+                filters.Status!.includes(payment.Status as PaymentStatus)
+            );
+        }
+
+        // Filter by date range
+        if (filters.StartDate) {
+            filteredPayments = filteredPayments.filter(payment => 
+                new Date(payment.WillProcessDate) >= new Date(filters.StartDate!)
+            );
+        }
+
+        if (filters.EndDate) {
+            filteredPayments = filteredPayments.filter(payment => 
+                new Date(payment.WillProcessDate) <= new Date(filters.EndDate!)
+            );
+        }
+
+        // Apply default pagination since C# APIs don't support it
+        const startIndex = 0;
+        const endIndex = filteredPayments.length;
         const paginatedPayments = filteredPayments.slice(startIndex, endIndex);
 
         return {
             items: paginatedPayments,
             total: filteredPayments.length,
-            page,
-            limit,
-            totalPages: Math.ceil(filteredPayments.length / limit)
+            page: 1,
+            limit: filteredPayments.length,
+            totalPages: 1
         };
     }
     async getPayment(paymentId: string): Promise<Payment> {
-        const payment = this.payments.find(p => p.id === paymentId);
+        const payment = this.payments.find(p => p.Id === paymentId);
         if (!payment) {
-            throw new Error('Payment not found');
+            throw new Error(`Payment with ID ${paymentId} not found`);
         }
         return payment;
     }
-    async createPayment(payment: Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>): Promise<Payment> {
+    async createPayment(payment: Omit<Payment, 'Id'>): Promise<Payment> {
         const newPayment: Payment = {
             ...payment,
-            id: uuidv4(),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+            Id: uuidv4(),
+            Status: PaymentStatus.PENDING
         };
-        this.payments.unshift(newPayment);
+        this.payments.push(newPayment);
         return newPayment;
     }
-    async updatePayment(paymentId: string, payment: Partial<Payment>): Promise<Payment> {
-        const index = this.payments.findIndex(p => p.id === paymentId);
+    async updatePayment(paymentId: string, updates: Partial<Payment>): Promise<Payment> {
+        const index = this.payments.findIndex(p => p.Id === paymentId);
         if (index === -1) {
-            throw new Error('Payment not found');
+            throw new Error(`Payment with ID ${paymentId} not found`);
         }
+
         this.payments[index] = {
             ...this.payments[index],
-            ...payment,
-            updatedAt: new Date().toISOString()
+            ...updates,
+            Status: updates.Status || this.payments[index].Status
         };
+
         return this.payments[index];
     }
     async cancelPayment(paymentId: string, reason: string): Promise<void> {
-        const index = this.payments.findIndex(p => p.id === paymentId);
-        if (index === -1) {
-            throw new Error('Payment not found');
-        }
-        this.payments[index] = {
-            ...this.payments[index],
-            status: PaymentStatus.CANCELLED,
-            updatedAt: new Date().toISOString()
-        };
-        this.paymentHistory.unshift({
-            paymentId,
-            action: 'cancelled',
-            performedBy: 'mock-user',
-            timestamp: new Date().toISOString(),
-            details: { reason }
+        const payment = await this.getPayment(paymentId);
+        await this.updatePayment(paymentId, { Status: PaymentStatus.CANCELLED });
+
+        // Add to payment history
+        this.paymentHistory.push({
+            Id: this.paymentHistory.length + 1,
+            PaymentId: paymentId,
+            UserPayeeListId: payment.UserPayeeListId,
+            MemberId: payment.MemberId,
+            FundingAccount: payment.FundingAccount,
+            Amount: payment.Amount,
+            WillProcessDate: payment.WillProcessDate,
+            StatusCode: 0, // Cancelled
+            Memo: reason
         });
     }
     async getPaymentHistory(paymentId: string): Promise<PaymentHistory[]> {
-        return this.paymentHistory.filter(h => h.paymentId === paymentId);
+        await this.delay();
+        return this.paymentHistory.filter(p => p.PaymentId === paymentId);
     }
-    async getExceptions(filters: PaymentFilters & QueryOptions): Promise<PaginatedResponse<PaymentException>> {
-        let filteredExceptions = [...this.exceptions];
-        // Apply filters (similar to payments)
-        if (filters.startDate) {
+    async getExceptions(filters: PaymentFilters): Promise<PaginatedResponse<PaymentException>> {
+        let filteredExceptions = [...this.exceptions].map(exception => ({
+            Id: parseInt(exception.id),
+            RecordType: 'EXCEPTION',
+            SponsorTransactionId: exception.requestId,
+            SponsorId: '',
+            SponsorName: '',
+            CustomerId: '',
+            CustomerChangeIndicator: '',
+            PrimaryCustomerFirstName: '',
+            PrimaryCustomerLastName: '',
+            PrimaryCustomerSsn: '',
+            SecondaryCustomerFirstName: '',
+            SecondaryCustomerLastName: '',
+            SecondaryCustomerSsn: '',
+            BusinessName: '',
+            FederalTaxId: '',
+            CustomerAddress1: '',
+            CustomerAddress2: '',
+            CustomerCity: '',
+            CustomerState: '',
+            CustomerZip: '',
+            CustomerCountry: '',
+            CustomerTelephone: '',
+            InternalPayeeId: '',
+            PayeeChangeIndicator: '',
+            PayeeName: '',
+            PayeeAttentionLine: '',
+            PayeeTelephoneNumber: '',
+            PayeeAddress1: '',
+            PayeeAddress2: '',
+            PayeeCity: '',
+            PayeeState: '',
+            PayeeZip: '',
+            PayeeCountry: '',
+            PayeeNickname: '',
+            CustomerPayeeId: '',
+            CustomerPayeeAccountNumber: '',
+            ConfirmationNumber: '',
+            TransactionAmount: '0',
+            MemoLineInfo: exception.errorMessage,
+            ServiceRequestNumber: exception.requestId,
+            ServiceRequestDate: exception.createdAt,
+            ServiceRequestTime: new Date(exception.createdAt).toLocaleTimeString()
+        }));
+
+        // Filter by date range
+        if (filters.StartDate) {
             filteredExceptions = filteredExceptions.filter(e => 
-                new Date(e.createdAt) >= new Date(filters.startDate!)
+                new Date(e.ServiceRequestDate) >= new Date(filters.StartDate!)
             );
         }
-        if (filters.endDate) {
+
+        if (filters.EndDate) {
             filteredExceptions = filteredExceptions.filter(e => 
-                new Date(e.createdAt) <= new Date(filters.endDate!)
+                new Date(e.ServiceRequestDate) <= new Date(filters.EndDate!)
             );
         }
-        // Apply pagination
-        const page = filters.pagination?.page || 1;
-        const limit = filters.pagination?.limit || 10;
-        const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit;
+
+        // Apply default pagination since C# APIs don't support it
+        const startIndex = 0;
+        const endIndex = filteredExceptions.length;
         const paginatedExceptions = filteredExceptions.slice(startIndex, endIndex);
 
         return {
             items: paginatedExceptions,
             total: filteredExceptions.length,
-            page,
-            limit,
-            totalPages: Math.ceil(filteredExceptions.length / limit)
+            page: 1,
+            limit: filteredExceptions.length,
+            totalPages: 1
         };
     }
     async resolveException(exceptionId: string, resolution: ExceptionResolution): Promise<void> {
         const index = this.exceptions.findIndex(e => e.id === exceptionId);
         if (index === -1) {
-            throw new Error('Exception not found');
+            throw new Error(`Exception with ID ${exceptionId} not found`);
         }
+
         this.exceptions[index] = {
             ...this.exceptions[index],
             status: FISExceptionStatus.RESOLVED,
-            resolutions: [
-                ...(this.exceptions[index].resolutions || []),
-                {
-                    ...resolution,
-                    timestamp: new Date().toISOString(),
-                },
-            ],
+            errorMessage: resolution.notes || '',
             updatedAt: new Date().toISOString()
         };
     }
@@ -312,7 +379,7 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
     }
     async getPaymentActions(paymentId: string): Promise<PaymentAction[]> {
         return this.paymentActions.filter(a => 
-            a.details && 'paymentId' in a.details && a.details.paymentId === paymentId
+            a.Details && 'PaymentId' in a.Details && a.Details.PaymentId === paymentId
         );
     }
     async getSecuritySettings(): Promise<BillPaySecuritySettings> {
@@ -345,7 +412,7 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
             errors['loginPolicy.sessionTimeout'] = 'Session timeout must be at least 5 minutes';
         }
         return {
-            isValid,
+            isValid: isValid,
             errors
         };
     }
