@@ -1,10 +1,22 @@
 import { API_BASE_URL } from '../config/api.config';
-import { ApiRequestOptions, ApiSuccessResponse, ApiErrorResponse } from '../types/api.types';
+import { ApiRequestOptions, ApiSuccessResponse, ApiErrorResponse } from './types';
 import logger from '../utils/logger';
 
 const DEFAULT_TIMEOUT = 30000;
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
+
+/**
+ * Core API client for the service layer.
+ * This is the single source of truth for API communication and should only be used through the service layer.
+ * Features:
+ * - Automatic retry with configurable delay
+ * - Request timeouts
+ * - Error handling with typed responses
+ * - Query parameter handling
+ * - Content type handling
+ * - Request ID tracking
+ */
 class ApiClient {
   private static instance: ApiClient;
   private baseUrl: string;

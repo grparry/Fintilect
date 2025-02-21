@@ -290,6 +290,14 @@ interface BillPaySecurityValidation {
 }
 ```
 
+### Authentication Interface
+No corresponding C# interfaces or classes were found for the TypeScript authentication types defined in `api.types.ts` and `auth.types.ts`. This includes:
+- Login request/response types
+- Token refresh types
+- Authentication state types
+
+This suggests authentication may be handled by a separate service or through middleware rather than the core API.
+
 **Note**: These security settings may be part of the `/configuration/all` endpoint's response. Need to verify the actual shape of the security configuration data returned by this endpoint.
 
 **Action Items**:

@@ -1,7 +1,6 @@
-import { Dayjs } from 'dayjs';
-import type { ApiResponse } from './api.types';
-import { PaginationOptions } from './common.types';
-import { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';
+import type { Dayjs } from 'dayjs';
+import type { PaginationOptions, PaginatedResponse } from './common.types';
+import type { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';
 
 // Payment Types
 export type PaymentMethod = 'ACH' | 'Wire' | 'RTP' | 'Check';
@@ -294,16 +293,6 @@ export interface Contact {
 }
 
 // List Response Types
-export interface PaginatedResponse<T> {
-  items: T[];
-  pagination: {
-    total: number;
-    page: number;
-    limit: number;
-    pages: number;
-  };
-}
-
 export type ClientListResponse = PaginatedResponse<Client>;
 export type UserListResponse = PaginatedResponse<User>;
 export type GroupListResponse = PaginatedResponse<UserGroup>;
@@ -354,9 +343,6 @@ export interface AuditSearchRequest {
   page?: number;
   limit?: number;
 }
-
-// Re-export ApiResponse type for backwards compatibility
-export type { ApiResponse } from './api.types';
 
 // Re-export security types
 export type { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';

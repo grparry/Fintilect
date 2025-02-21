@@ -1,6 +1,4 @@
-import { ApiResponse } from '../../types/api.types';
-import { PaginatedResponse } from '../../types/client.types';
-
+import { ApiResponse } from '../types';
 /**
  * Base interface for all services
  */

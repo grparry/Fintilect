@@ -1,5 +1,4 @@
 import { User } from './index';
-import { PaymentApiResponse } from './api.types';
 import { PaymentStatus, PaymentPriority, PaymentAction, PaymentActivity, PaymentActivityListResponse } from './payment.types';
 
 // Component Props Types
@@ -608,12 +607,7 @@ export interface ReportData {
 }
 
 // Generic Types
-export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-}
+export type { PaginatedResponse } from './common.types';
 
 // Data Conversion Types
 export interface ConversionJob {

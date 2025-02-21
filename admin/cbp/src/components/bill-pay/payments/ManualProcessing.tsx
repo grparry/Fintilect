@@ -51,7 +51,10 @@ import {
   PaymentStatus,
   PaymentPriority
 } from '../../../types/payment.types';
-import { Client, ClientStatus } from '../../../types/client.types';
+import {
+  Client,
+  ClientStatus
+} from '../../../types/client.types';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { useAuth } from '../../../hooks/useAuth';
 import { AuthContextType } from '../../../types/auth.types';
@@ -147,8 +150,8 @@ const ManualProcessing: React.FC = () => {
       setError(null);
       const clientsResponse = await clientService.getClients();
       const filteredClients = clientsResponse.items
-        .filter((client) => client.status === ClientStatus.Active)
-        .map(client => ({
+        .filter((client: Client) => client.status === ClientStatus.Active)
+        .map((client: Client) => ({
           id: client.id,
           name: client.name,
           status: client.status === ClientStatus.Active ? 'active' : 'inactive',

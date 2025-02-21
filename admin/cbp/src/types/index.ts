@@ -1,4 +1,4 @@
-import { PaginationOptions } from './common.types';
+import type { PaginationOptions, PaginatedResponse } from './common.types';
 
 // Common type definitions used across the application
 // User related types
@@ -71,17 +71,6 @@ export interface PendingPayment {
   userId: string;
 }
 export type PaymentStatus = 'pending' | 'completed' | 'failed';
-// API related types
-export interface ApiResponse<T> {
-  data: T;
-  status: number;
-  message?: string;
-}
-export interface ApiError {
-  message: string;
-  code?: string;
-  status?: number;
-}
 // Common utility types
 export type SortDirection = 'asc' | 'desc';
 export interface SortOptions {
@@ -103,10 +92,6 @@ export interface Pagination {
   limit: number;
   pages: number;
 }
-export interface PaginatedResponse<T> {
-  items: T[];
-  pagination: Pagination;
-}
 // Form related types
 export interface SelectOption {
   value: string | number;
@@ -120,4 +105,4 @@ export interface DateRange {
 }
 // Settings validation types
 
-export type { PaginationOptions } from './common.types';
+export type { PaginationOptions, PaginatedResponse } from './common.types';

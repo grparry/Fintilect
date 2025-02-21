@@ -30,7 +30,7 @@ import {
 } from '../../../types/payment.types';
 import { PaginatedResponse } from '../../../types/common.types';
 import { QueryOptions } from '../../../types/index';
-import { ApiResponse } from '../../../types/api.types';
+import { ApiResponse } from '../../types';
 import api from '../../api';
 import { BaseService } from './BaseService';
 import logger from '../../../utils/logger';
