@@ -78,12 +78,12 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/client-management/list',
           icon: ListIcon,
           permissions: {
-            permissions: ['view-clients', 'read']
+            requiredPermissions: ['SecurityUsers_Read']
           }
         }
       ],
       permissions: {
-        permissions: ['view-clients', 'read']
+        requiredPermissions: ['SecurityUsers_Read']
       }
     },
     {
@@ -100,7 +100,7 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/bill-pay/dashboard',
           icon: DashboardIcon,
           permissions: {
-            permissions: ['bill-pay:read']
+            requiredPermissions: ['SecurityUsers_Read']
           }
         },
         {
@@ -109,7 +109,7 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/bill-pay/payments',
           icon: PaymentIcon,
           permissions: {
-            permissions: ['bill-pay:read']
+            requiredPermissions: ['SecurityUsers_Read']
           },
           items: [
             {
@@ -118,7 +118,7 @@ export const navigationConfig: NavigationConfig = {
               path: '/admin/bill-pay/payments/manage',
               icon: ScheduleIcon,
               permissions: {
-                permissions: ['bill-pay:read']
+                requiredPermissions: ['SecurityUsers_Read']
               }
             },
             {
@@ -127,7 +127,7 @@ export const navigationConfig: NavigationConfig = {
               path: '/admin/bill-pay/payments/fis-exceptions',
               icon: ErrorIcon,
               permissions: {
-                permissions: ['bill-pay:read']
+                requiredPermissions: ['SecurityUsers_Read']
               }
             },
             {
@@ -136,7 +136,7 @@ export const navigationConfig: NavigationConfig = {
               path: '/admin/bill-pay/payments/manual',
               icon: BuildIcon,
               permissions: {
-                permissions: ['bill-pay:read']
+                requiredPermissions: ['SecurityUsers_Read']
               }
             },
             {
@@ -145,7 +145,7 @@ export const navigationConfig: NavigationConfig = {
               path: '/admin/bill-pay/payments/fis-payee-check',
               icon: AccountBalanceIcon,
               permissions: {
-                permissions: ['bill-pay:read']
+                requiredPermissions: ['SecurityUsers_Read']
               }
             }
           ]
@@ -156,7 +156,7 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/bill-pay/reports',
           icon: AssessmentIcon,
           permissions: {
-            permissions: ['bill-pay:read']
+            requiredPermissions: ['SecurityUsers_Read']
           }
         },
         {
@@ -165,12 +165,12 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/bill-pay/settings',
           icon: SettingsIcon,
           permissions: {
-            permissions: ['bill-pay:read']
+            requiredPermissions: ['SecurityUsers_Read']
           }
         }
       ],
       permissions: {
-        permissions: ['bill-pay:read']
+        requiredPermissions: ['SecurityUsers_Read']
       }
     },
     {
@@ -187,7 +187,7 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/development',
           icon: CodeIcon,
           permissions: {
-            permissions: ['use-development', 'read']
+            requiredPermissions: ['SecurityUsers_Read']
           }
         },
         {
@@ -196,12 +196,12 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/development/api-testing',
           icon: ApiIcon,
           permissions: {
-            permissions: ['use-api-testing', 'read']
+            requiredPermissions: ['SecurityUsers_Read']
           }
         }
       ],
       permissions: {
-        permissions: ['access-development', 'read']
+        requiredPermissions: ['SecurityUsers_Read']
       }
     }
   ],

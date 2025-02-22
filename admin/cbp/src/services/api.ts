@@ -1,5 +1,6 @@
+import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
 import { API_BASE_URL } from '../config/api.config';
-import { ApiRequestOptions, ApiSuccessResponse, ApiErrorResponse } from './types';
+import { ApiSuccessResponse, ApiErrorResponse } from './types';
 import logger from '../utils/logger';
 
 const DEFAULT_TIMEOUT = 30000;
@@ -7,9 +8,34 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 
 /**
+ * Transform object keys to PascalCase or camelCase
+ */
+function transformKeys(obj: any, toPascal: boolean): any {
+  if (!obj || typeof obj !== 'object') return obj;
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => transformKeys(item, toPascal));
+  }
+
+  return Object.entries(obj).reduce((acc, [key, value]) => {
+    // Handle nested objects and arrays
+    const transformedValue = transformKeys(value, toPascal);
+    
+    // Transform the key
+    const transformedKey = toPascal
+      ? key.charAt(0).toUpperCase() + key.slice(1)
+      : key.charAt(0).toLowerCase() + key.slice(1);
+    
+    acc[transformedKey] = transformedValue;
+    return acc;
+  }, {} as Record<string, any>);
+}
+
+/**
  * Core API client for the service layer.
  * This is the single source of truth for API communication and should only be used through the service layer.
  * Features:
+ * - Automatic case transformation (camelCase ↔ PascalCase)
  * - Automatic retry with configurable delay
  * - Request timeouts
  * - Error handling with typed responses
@@ -18,103 +44,97 @@ const RETRY_DELAY = 1000;
  * - Request ID tracking
  */
 class ApiClient {
-  private static instance: ApiClient;
-  private baseUrl: string;
+  private static instance: AxiosInstance;
+
   private constructor() {
-    this.baseUrl = API_BASE_URL;
-  }
-  static getInstance(): ApiClient {
-    if (!ApiClient.instance) {
-      ApiClient.instance = new ApiClient();
-    }
-    return ApiClient.instance;
-  }
-  private async handleResponse<T>(response: Response): Promise<ApiSuccessResponse<T>> {
-    const contentType = response.headers.get('content-type');
-    const isJson = contentType && contentType.includes('application/json');
-    const data = isJson ? await response.json() : await response.text();
-    if (!response.ok) {
-      const error: ApiErrorResponse = {
-        success: false,
-        status: response.status,
-        error: {
-          code: response.status.toString(),
-          message: data.message || response.statusText,
-          timestamp: new Date().toISOString()
+    // Create Axios instance with default config
+    ApiClient.instance = axios.create({
+      baseURL: API_BASE_URL,
+      timeout: DEFAULT_TIMEOUT,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    // Request interceptor: Transform to PascalCase for C# API
+    ApiClient.instance.interceptors.request.use(
+      config => {
+        if (config.data) {
+          config.data = transformKeys(config.data, true);
         }
-      };
-      throw error;
+        if (config.params) {
+          config.params = transformKeys(config.params, true);
+        }
+        return config;
+      },
+      error => Promise.reject(error)
+    );
+
+    // Response interceptor: Transform to camelCase for TypeScript
+    ApiClient.instance.interceptors.response.use(
+      response => {
+        if (response.data) {
+          response.data = transformKeys(response.data, false);
+        }
+        return response;
+      },
+      (error: AxiosError<ApiErrorResponse>) => {
+        // Log the error
+        logger.error({
+          message: 'API Error',
+          url: error.config?.url,
+          method: error.config?.method,
+          status: error.response?.status,
+          error: error.response?.data
+        });
+
+        // Transform error response to camelCase
+        if (error.response?.data) {
+          error.response.data = transformKeys(error.response.data, false);
+        }
+
+        return Promise.reject(error);
+      }
+    );
+
+    // Add retry logic
+    let retryCount = 0;
+    ApiClient.instance.interceptors.response.use(
+      response => response,
+      async error => {
+        const config = error.config;
+        
+        // Only retry on network errors or 5xx errors
+        if ((!error.response || (error.response.status >= 500 && error.response.status <= 599)) 
+            && retryCount < MAX_RETRIES) {
+          retryCount++;
+          
+          // Exponential backoff
+          const delay = RETRY_DELAY * Math.pow(2, retryCount - 1);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          
+          return ApiClient.instance(config);
+        }
+        
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  static getInstance(): { 
+    instance: AxiosInstance;
+    interceptors: typeof ApiClient.instance.interceptors;
+  } {
+    if (!ApiClient.instance) {
+      new ApiClient();
     }
     return {
-      success: true,
-      data: isJson ? data : { content: data },
-      meta: {
-        timestamp: new Date().toISOString(),
-        requestId: response.headers.get('x-request-id') || Math.random().toString(36).substring(7)
-      }
+      instance: ApiClient.instance,
+      interceptors: ApiClient.instance.interceptors
     };
   }
-  private createUrl(path: string, params?: Record<string, any>): string {
-    const url = new URL(path, this.baseUrl);
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          url.searchParams.append(key, value.toString());
-        }
-      });
-    }
-    return url.toString();
-  }
-  private async request<T>(method: string, path: string, options: ApiRequestOptions = {}): Promise<ApiSuccessResponse<T>> {
-    const { headers = {}, params, data, timeout = DEFAULT_TIMEOUT, signal } = options;
-    const url = this.createUrl(path, params);
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
-    try {
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          ...headers
-        },
-        body: data ? JSON.stringify(data) : undefined,
-        signal: signal || controller.signal
-      });
-      return await this.handleResponse<T>(response);
-    } catch (error) {
-      if ((error as ApiErrorResponse).success === false) {
-        throw error;
-      }
-      // Convert other errors to ApiErrorResponse
-      const apiError: ApiErrorResponse = {
-        success: false,
-        status: error instanceof Error && error.name === 'AbortError' ? 408 : 500,
-        error: {
-          code: error instanceof Error && error.name === 'AbortError' ? 'TIMEOUT' : 'UNKNOWN',
-          message: error instanceof Error ? error.message : 'An unknown error occurred',
-          timestamp: new Date().toISOString()
-        }
-      };
-      throw apiError;
-    } finally {
-      clearTimeout(timeoutId);
-    }
-  }
-  async get<T>(path: string, options?: ApiRequestOptions): Promise<ApiSuccessResponse<T>> {
-    return this.request<T>('GET', path, options);
-  }
-  async post<T>(path: string, data?: any, options?: ApiRequestOptions): Promise<ApiSuccessResponse<T>> {
-    return this.request<T>('POST', path, { ...options, data });
-  }
-  async put<T>(path: string, data?: any, options?: ApiRequestOptions): Promise<ApiSuccessResponse<T>> {
-    return this.request<T>('PUT', path, { ...options, data });
-  }
-  async delete<T>(path: string, options?: ApiRequestOptions): Promise<ApiSuccessResponse<T>> {
-    return this.request<T>('DELETE', path, options);
-  }
-  async patch<T>(path: string, data?: any, options?: ApiRequestOptions): Promise<ApiSuccessResponse<T>> {
-    return this.request<T>('PATCH', path, { ...options, data });
-  }
 }
-const api = ApiClient.getInstance();
-export default api;
+
+// Export the Axios instance and types
+export type { AxiosResponse, AxiosError } from 'axios';
+export default ApiClient.getInstance();

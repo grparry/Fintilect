@@ -110,7 +110,7 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
         type: 'manual',
         action: 'resolve',
         notes: resolutionNotes,
-        userId: user?.id,
+        userId: String(user?.id),
         timestamp: new Date().toISOString()
       });
       await fetchExceptions();

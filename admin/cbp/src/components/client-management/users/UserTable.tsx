@@ -30,19 +30,7 @@ interface UserTableProps {
   onToggleLock: (user: UIUser) => void;
   clientId: string;
 }
-const statusColors: Record<string, "success" | "error" | "warning"> = {
-  ACTIVE: 'success',
-  INACTIVE: 'error',
-  PENDING: 'warning',
-  LOCKED: 'error',
-};
-const roleColors: Record<string, "error" | "default" | "warning" | "info"> = {
-  Admin: 'error',
-  User: 'default',
-  Manager: 'warning',
-  Support: 'info',
-  ReadOnly: 'default',
-};
+
 const UserTable: React.FC<UserTableProps> = ({
   users,
   groups,
@@ -72,10 +60,8 @@ const UserTable: React.FC<UserTableProps> = ({
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Role</TableCell>
-            <TableCell>Status</TableCell>
             <TableCell>Department</TableCell>
+            <TableCell>Status</TableCell>
             <TableCell>Last Login</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
@@ -88,23 +74,14 @@ const UserTable: React.FC<UserTableProps> = ({
                   {user.firstName} {user.lastName}
                 </Typography>
               </TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>
-                <Chip
-                  label={user.roles[0] || 'User'}
-                  size="small"
-                  color={roleColors[user.roles[0] || 'User'] || 'default'}
-                  variant="outlined"
-                />
-              </TableCell>
-              <TableCell>
-                <Chip
-                  label={user.status}
-                  size="small"
-                  color={statusColors[user.status] || 'default'}
-                />
-              </TableCell>
               <TableCell>{user.department || '-'}</TableCell>
+              <TableCell>
+                <Chip
+                  label={user.isLocked ? 'Locked' : (user.isActive ? 'Active' : 'Inactive')}
+                  size="small"
+                  color={user.isLocked ? 'error' : (user.isActive ? 'success' : 'warning')}
+                />
+              </TableCell>
               <TableCell>
                 {user.lastLogin
                   ? dayjs(user.lastLogin).format('YYYY-MM-DD HH:mm:ss')
@@ -123,10 +100,10 @@ const UserTable: React.FC<UserTableProps> = ({
                     </IconButton>
                   </Tooltip>
                   <Tooltip
-                    title={user.status === UserStatus.LOCKED ? 'Unlock user' : 'Lock user'}
+                    title={user.isLocked ? 'Unlock user' : 'Lock user'}
                   >
                     <IconButton size="small" onClick={() => onToggleLock(user)}>
-                      {user.status === UserStatus.LOCKED ? (
+                      {user.isLocked ? (
                         <LockOpenIcon fontSize="small" />
                       ) : (
                         <LockIcon fontSize="small" />

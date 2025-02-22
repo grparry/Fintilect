@@ -9,7 +9,7 @@ import {
   Alert,
   Chip,
 } from '@mui/material';
-import { Client, Environment, ClientStatus, ClientType } from '../../types/client.types';
+import { Customer, Environment, ClientStatus, ClientType } from '../../types/client.types';
 import { IpAddress } from '../../types/security.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import ContactInformation from './ContactInformation';
@@ -78,7 +78,7 @@ const DEFAULT_SETTINGS = {
 const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [client, setClient] = useState<Client | null>(null);
+  const [client, setClient] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState(0);
@@ -91,7 +91,7 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
     try {
       setLoading(true);
       setError(null);
-      const clientData = await clientService.getClient(clientId);
+      const clientData = await clientService.getCustomer(Number(clientId));
       if (!clientData) {
         throw new Error('Client not found');
       }

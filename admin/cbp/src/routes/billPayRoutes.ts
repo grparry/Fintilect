@@ -29,7 +29,6 @@ const Settings = lazy(() => import('../components/bill-pay/settings/Settings'));
 const Holidays = lazy(() => import('../components/bill-pay/settings/Holidays'));
 const BillPayConfig = lazy(() => import('../components/bill-pay/settings/BillPayConfig'));
 const NotificationTemplates = lazy(() => import('../components/bill-pay/settings/NotificationTemplates'));
-const PermissionGroups = lazy(() => import('../components/bill-pay/settings/PermissionGroups'));
 const BillPaySecuritySettings = lazy(() => import('../components/bill-pay/settings/security/BillPaySecuritySettings'));
 const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
 
@@ -42,7 +41,7 @@ const billPayRoutes: RouteConfig[] = [
     icon: DashboardIcon,
     sectionId: 'billPay',
     permissions: {
-      permissions: ['bill-pay:read']
+      requiredPermissions: ['BillPayConfiguration_Read']
     }
   },
   {
@@ -53,7 +52,7 @@ const billPayRoutes: RouteConfig[] = [
     icon: PaymentIcon,
     sectionId: 'billPay',
     permissions: {
-      permissions: ['bill-pay:read']
+      requiredPermissions: ['BillPayConfiguration_Read']
     },
     children: [
       {
@@ -64,7 +63,7 @@ const billPayRoutes: RouteConfig[] = [
         icon: ScheduleIcon,
         sectionId: 'billPay',
         permissions: {
-          permissions: ['bill-pay:read']
+          requiredPermissions: ['BillPayConfiguration_Read']
         }
       },
       {
@@ -76,7 +75,7 @@ const billPayRoutes: RouteConfig[] = [
         sectionId: 'billPay',
         hideFromSidebar: true,
         permissions: {
-          permissions: ['bill-pay:read']
+          requiredPermissions: ['BillPayConfiguration_Read']
         }
       },
       {
@@ -87,7 +86,7 @@ const billPayRoutes: RouteConfig[] = [
         icon: ErrorIcon,
         sectionId: 'billPay',
         permissions: {
-          permissions: ['bill-pay:read']
+          requiredPermissions: ['BillPayConfiguration_Read']
         }
       },
       {
@@ -98,7 +97,7 @@ const billPayRoutes: RouteConfig[] = [
         icon: BuildIcon,
         sectionId: 'billPay',
         permissions: {
-          permissions: ['bill-pay:read']
+          requiredPermissions: ['BillPayConfiguration_Read']
         }
       },
       {
@@ -109,7 +108,7 @@ const billPayRoutes: RouteConfig[] = [
         icon: BuildIcon,
         sectionId: 'billPay',
         permissions: {
-          permissions: ['bill-pay:read']
+          requiredPermissions: ['BillPayConfiguration_Read']
         }
       }
     ]
@@ -122,7 +121,7 @@ const billPayRoutes: RouteConfig[] = [
     icon: AssessmentIcon,
     sectionId: 'billPay',
     permissions: {
-      permissions: ['bill-pay:read']
+      requiredPermissions: ['BillPayConfiguration_Read']
     }
   },
   {
@@ -133,7 +132,7 @@ const billPayRoutes: RouteConfig[] = [
     element: Settings,
     sectionId: 'billPay',
     permissions: {
-      permissions: ['bill-pay:read']
+      requiredPermissions: ['BillPayConfiguration_Read']
     },
     children: [
       {
@@ -144,7 +143,7 @@ const billPayRoutes: RouteConfig[] = [
         icon: EventIcon,
         sectionId: 'billPay',
         permissions: {
-          permissions: ['bill-pay:read']
+          requiredPermissions: ['BillPayConfiguration_Read']
         }
       },
       {
@@ -155,7 +154,7 @@ const billPayRoutes: RouteConfig[] = [
         icon: TuneIcon,
         sectionId: 'billPay',
         permissions: {
-          permissions: ['bill-pay:read']
+          requiredPermissions: ['BillPayConfiguration_Read']
         }
       },
       {
@@ -166,18 +165,7 @@ const billPayRoutes: RouteConfig[] = [
         icon: NotificationsIcon,
         sectionId: 'billPay',
         permissions: {
-          permissions: ['bill-pay:read']
-        }
-      },
-      {
-        id: 'permission-groups',
-        path: 'permissions',
-        title: 'Permission Groups',
-        element: PermissionGroups,
-        icon: SecurityIcon,
-        sectionId: 'billPay',
-        permissions: {
-          permissions: ['bill-pay:read']
+          requiredPermissions: ['BillPayConfiguration_Read']
         }
       },
       {
@@ -188,7 +176,7 @@ const billPayRoutes: RouteConfig[] = [
         icon: LockIcon,
         sectionId: 'billPay',
         permissions: {
-          permissions: ['bill-pay:read']
+          requiredPermissions: ['BillPayConfiguration_Read']
         }
       }
     ]

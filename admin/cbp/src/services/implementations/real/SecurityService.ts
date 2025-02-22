@@ -20,70 +20,70 @@ export class SecurityService extends BaseService implements ISecurityService {
         try {
             return await this.get<SecuritySettings>('/settings');
         } catch (error) {
-            throw this.handleError(error, 'Failed to get security settings');
+            throw error;
         }
     }
     async updateSecuritySettings(settings: Partial<SecuritySettings>): Promise<SecuritySettings> {
         try {
             return await this.patch<SecuritySettings>('/settings', settings);
         } catch (error) {
-            throw this.handleError(error, 'Failed to update security settings');
+            throw error;
         }
     }
     async getAuditLogs(filters: AuditLogFilters): Promise<PaginatedResponse<AuditLog>> {
         try {
             return await this.get<PaginatedResponse<AuditLog>>('/audit', { params: filters });
         } catch (error) {
-            throw this.handleError(error, 'Failed to get audit logs');
+            throw error;
         }
     }
     async getAuditLog(logId: string): Promise<AuditLog> {
         try {
             return await this.get<AuditLog>(`/audit/${logId}`);
         } catch (error) {
-            throw this.handleError(error, 'Failed to get audit log');
+            throw error;
         }
     }
     async createAuditLog(event: SecurityEvent): Promise<AuditLog> {
         try {
             return await this.post<AuditLog>('/audit', event);
         } catch (error) {
-            throw this.handleError(error, 'Failed to create audit log');
+            throw error;
         }
     }
     async getSecurityPolicies(): Promise<SecurityPolicy[]> {
         try {
             return await this.get<SecurityPolicy[]>('/policies');
         } catch (error) {
-            throw this.handleError(error, 'Failed to get security policies');
+            throw error;
         }
     }
     async updateSecurityPolicy(policyId: string, policy: Partial<SecurityPolicy>): Promise<SecurityPolicy> {
         try {
             return await this.patch<SecurityPolicy>(`/policies/${policyId}`, policy);
         } catch (error) {
-            throw this.handleError(error, 'Failed to update security policy');
+            throw error;
         }
     }
     async performRiskAssessment(context: Record<string, any>): Promise<RiskAssessment> {
         try {
             return await this.post<RiskAssessment>('/risk-assessment', context);
         } catch (error) {
-            throw this.handleError(error, 'Failed to perform risk assessment');
+            throw error;
         }
     }
     async recordAccessAttempt(attempt: Omit<AccessAttempt, 'id' | 'timestamp'>): Promise<void> {
         try {
             await this.post('/access-attempts', attempt);
         } catch (error) {
-            throw this.handleError(error, 'Failed to record access attempt');
+            throw error;
         }
     }
     async logAccessAttempt(attempt: AccessAttempt): Promise<void> {
         try {
             await this.post('/access-attempts', attempt);
         } catch (error) {
-            throw this.handleError(error, 'Failed to log access attempt');
+            throw error;
         }
     }
     async getRecentAccessAttempts(userId?: string): Promise<AccessAttempt[]> {
@@ -92,42 +92,42 @@ export class SecurityService extends BaseService implements ISecurityService {
                 params: { userId }
             });
         } catch (error) {
-            throw this.handleError(error, 'Failed to get recent access attempts');
+            throw error;
         }
     }
     async createSecurityAlert(alert: Omit<SecurityAlert, 'id' | 'timestamp'>): Promise<SecurityAlert> {
         try {
             return await this.post<SecurityAlert>('/alerts', alert);
         } catch (error) {
-            throw this.handleError(error, 'Failed to create security alert');
+            throw error;
         }
     }
     async getActiveAlerts(): Promise<SecurityAlert[]> {
         try {
             return await this.get<SecurityAlert[]>('/alerts/active');
         } catch (error) {
-            throw this.handleError(error, 'Failed to get active alerts');
+            throw error;
         }
     }
     async getActiveSecurityAlerts(): Promise<SecurityAlert[]> {
         try {
             return await this.get<SecurityAlert[]>('/alerts/active');
         } catch (error) {
-            throw this.handleError(error, 'Failed to get active security alerts');
+            throw error;
         }
     }
     async dismissAlert(alertId: string, resolution: string): Promise<void> {
         try {
             await this.patch(`/alerts/${alertId}/dismiss`, { resolution });
         } catch (error) {
-            throw this.handleError(error, 'Failed to dismiss alert');
+            throw error;
         }
     }
     async dismissSecurityAlert(alertId: string, resolution: string): Promise<void> {
         try {
             await this.post(`/alerts/${alertId}/dismiss`, { resolution });
         } catch (error) {
-            throw this.handleError(error, 'Failed to dismiss security alert');
+            throw error;
         }
     }
     async getSecurityMetrics(timeframe: 'day' | 'week' | 'month'): Promise<Record<string, number>> {
@@ -136,13 +136,7 @@ export class SecurityService extends BaseService implements ISecurityService {
                 params: { timeframe }
             });
         } catch (error) {
-            throw this.handleError(error, 'Failed to get security metrics');
+            throw error;
         }
-    }
-    private handleError(error: any, defaultMessage: string): Error {
-        if (error instanceof Error) {
-            return error;
-        }
-        return new Error(defaultMessage);
     }
 }

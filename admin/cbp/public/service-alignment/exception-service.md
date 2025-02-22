@@ -1,46 +1,84 @@
-#  Service API Alignment
+# Exception Service API Alignment
 
 ## Current TypeScript Implementation
+
 ### Base URL
 ```typescript
-// From AuditService.ts
+// From ExceptionService.ts
+api/v1/exception
 ```
 
 ### Endpoints Called
 ```typescript
-// List endpoints from TypeScript implementation
+// IExceptionService interface
+GET    /exception/{date}            - Get exceptions for a given date
+POST   /exception/refund           - Refund a payment
 ```
 
 ### TypeScript Types Used
 ```typescript
-// List types from types/*.types.ts
+interface PaymentException {
+  id: string;
+  paymentId: string;
+  date: string;
+  status: string;
+  errorCode: string;
+  errorMessage: string;
+}
+
+interface ExceptionRefundRequest {
+  paymentId: string;
+  exceptionId: string;
+}
+
+interface ExceptionRefundResponse {
+  success: boolean;
+  message?: string;
+}
 ```
 
 ## C# Implementation
+
 ### Controller Location
 ```csharp
-// Path to C# controller
+// ExceptionController found in:
+legacy/legacy-apis/cbp.admin-cu-api/ConnectBillPay.AdminCuApi/Controllers/ExceptionController.cs
 ```
 
 ### Available Endpoints
 ```csharp
-// List endpoints from C# controller
+GET    /api/v1/exception/{date}      - Get exceptions for a given date
+POST   /api/v1/exception/refund      - Refund a payment
 ```
 
 ### C# Types
 ```csharp
-// List request/response types
+// Request/Response types in:
+// - Requests.Exception.ExceptionRefundRequest
+// - Responses.Exception.ExceptionRefundResponse
+// - Responses.Exception.PaymentExceptionListResponse
 ```
 
-## Gaps and Actions Needed
-### Missing Endpoints
-- TBD
+## Type Alignment Needed
 
-### Type Mismatches
-- TBD
+1. Response Types
+   - Ensure PaymentExceptionListResponse matches TypeScript expectations
+   - Verify error code and status enums match
 
-### Suggested Changes
-- TBD
+2. Request Types
+   - Align ExceptionRefundRequest fields
+   - Validate date format handling
 
 ## Questions for Team Discussion
-- TBD
+
+1. Exception Management
+   - Confirm daily exception processing workflow
+   - Verify refund process requirements
+
+2. Data Requirements
+   - Required fields for exception records
+   - Date handling preferences (UTC/local)
+
+3. Integration Points
+   - Exception to payment relationship
+   - Refund processing flow

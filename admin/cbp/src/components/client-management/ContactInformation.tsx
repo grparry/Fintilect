@@ -10,7 +10,7 @@ import {
   Paper,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { Client } from '../../types/client.types';
+import { Customer } from '../../types/client.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import logger from '../../utils/logger';
 
@@ -22,7 +22,6 @@ interface ContactInfo {
   email: string;
   phone: string;
   sponsorId: string;
-  sponsorName: string;
   routingId: string;
 }
 const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => {
@@ -31,7 +30,6 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
     email: '',
     phone: '',
     sponsorId: '',
-    sponsorName: '',
     routingId: '',
   });
   const [loading, setLoading] = useState(true);
@@ -42,7 +40,7 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
     try {
       setLoading(true);
       setError(null);
-      const client = await clientService.getClient(clientId);
+      const client = await clientService.getCustomer(Number(clientId));
       if (!client) {
         throw new Error('Client not found');
       }
@@ -51,7 +49,6 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
         email: client.contactEmail || '',
         phone: client.contactPhone || '',
         sponsorId: client.sponsorId || '',
-        sponsorName: client.sponsorName || '',
         routingId: client.routingId || '',
       });
       logger.info(`Contact information loaded for client ${clientId}`);
@@ -80,12 +77,11 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
     try {
       setSaving(true);
       setError(null);
-      await clientService.updateClient(clientId, {
+      await clientService.updateCustomer(Number(clientId), {
         contactEmail: contactInfo.email,
         contactPhone: contactInfo.phone,
         name: contactInfo.name,
         sponsorId: contactInfo.sponsorId,
-        sponsorName: contactInfo.sponsorName,
         routingId: contactInfo.routingId,
       });
       setSuccess('Contact information updated successfully');
@@ -164,15 +160,6 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
               label="Sponsor ID"
               value={contactInfo.sponsorId}
               onChange={handleInputChange('sponsorId')}
-              disabled={saving}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Sponsor Name"
-              value={contactInfo.sponsorName}
-              onChange={handleInputChange('sponsorName')}
               disabled={saving}
             />
           </Grid>

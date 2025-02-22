@@ -1,16 +1,14 @@
 import { ComponentType, LazyExoticComponent } from 'react';
 import { SvgIconProps } from '@mui/material';
 import type { RouteConfig } from './route.types';
-import type { Permission, PermissionAction, PermissionCategoryType } from './permission.types';
 
 export type NavigationElement = ComponentType | LazyExoticComponent<any>;
 export type IconComponent = React.ComponentType<SvgIconProps>;
 
 export interface NavigationPermissionRequirement {
-  roles?: string[];
-  permissions?: string[];
   clientId?: string;
   customCheck?: () => Promise<boolean>;
+  requiredPermissions?: string[];
 }
 
 export interface NavigationItem {
@@ -54,5 +52,4 @@ export interface NavigationConfig {
   defaultSection?: string;
 }
 
-export type { Permission, PermissionAction, PermissionCategoryType };
 export type { RouteConfig };

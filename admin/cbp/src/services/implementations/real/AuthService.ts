@@ -18,7 +18,7 @@ export class AuthService extends BaseService implements IAuthService {
             return await this.post<AuthenticationResponse>('/login', credentials);
         } catch (error) {
             logger.error(`Login failed for user ${credentials.username}: ${error}`);
-            throw this.handleError(error, 'Login failed');
+            throw error;
         }
     }
     async logout(): Promise<void> {
@@ -26,7 +26,7 @@ export class AuthService extends BaseService implements IAuthService {
             await this.post<void>('/logout');
         } catch (error) {
             logger.error(`Logout failed: ${error}`);
-            throw this.handleError(error, 'Logout failed');
+            throw error;
         }
     }
     async refreshToken(): Promise<TokenResponse> {
@@ -34,7 +34,7 @@ export class AuthService extends BaseService implements IAuthService {
             return await this.post<TokenResponse>('/refresh');
         } catch (error) {
             logger.error(`Token refresh failed: ${error}`);
-            throw this.handleError(error, 'Token refresh failed');
+            throw error;
         }
     }
     async getCurrentSession(): Promise<SessionInfo | null> {
@@ -58,7 +58,7 @@ export class AuthService extends BaseService implements IAuthService {
             return await this.get<UserSession[]>('/sessions');
         } catch (error) {
             logger.error(`Failed to get active sessions: ${error}`);
-            throw this.handleError(error, 'Failed to get active sessions');
+            throw error;
         }
     }
     async terminateSession(sessionId: string): Promise<void> {
@@ -66,7 +66,7 @@ export class AuthService extends BaseService implements IAuthService {
             await this.delete<void>(`/sessions/${sessionId}`);
         } catch (error) {
             logger.error(`Failed to terminate session ${sessionId}: ${error}`);
-            throw this.handleError(error, 'Failed to terminate session');
+            throw error;
         }
     }
     async terminateOtherSessions(): Promise<void> {
@@ -74,13 +74,7 @@ export class AuthService extends BaseService implements IAuthService {
             await this.delete<void>('/sessions/others');
         } catch (error) {
             logger.error(`Failed to terminate other sessions: ${error}`);
-            throw this.handleError(error, 'Failed to terminate other sessions');
+            throw error;
         }
-    }
-    protected handleError(error: unknown, defaultMessage: string): Error {
-        if (error instanceof Error) {
-            return error;
-        }
-        return new Error(defaultMessage);
     }
 }

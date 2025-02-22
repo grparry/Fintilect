@@ -6,62 +6,89 @@ This service is used in the admin CBP application for managing payments, primari
 - Payment approvals and rejections
 - Payment history
 
-
 ## Current TypeScript Implementation vs Admin CU API
 
 ### TypeScript Endpoints vs C# Endpoints
 ```typescript
 // TypeScript Implementation                  // C# Admin CU API Equivalent
-GET /api/v1/payments/pending              -> POST /api/v1/payment/pending-payments
-GET /api/v1/payments/pending/summary      -> [Remove - compute client-side from pending-payments data]
-GET /api/v1/payments/pending/export       -> [Remove - handle export client-side from pending-payments data]
-POST /api/v1/payments/pending/{id}/approve -> POST /api/v1/payment/status (with status=APPROVED)
-POST /api/v1/payments/pending/{id}/reject  -> POST /api/v1/payment/status (with status=REJECTED)
-POST /api/v1/payments/pending/bulk-approve -> [Handle with multiple /status calls]
-POST /api/v1/payments/pending/bulk-reject  -> [Handle with multiple /status calls]
-GET /api/v1/payments/pending/{id}/history  -> POST /api/v1/payment/change-history
+POST /payment/change-history            -> POST /api/v1/payment/change-history
+POST /payment/recurring/change-history  -> POST /api/v1/payment/recurring/change-history
+POST /payment/pending                   -> POST /api/v1/payment/pending
+POST /payment/pending-payments          -> POST /api/v1/payment/pending-payments
+POST /payment/activity                  -> POST /api/v1/payment/activity
+POST /payment/reprocess                 -> POST /api/v1/payment/reprocess
 ```
 
 ### TypeScript Types vs C# Types
 ```typescript
 // Current TypeScript Types
+interface ScheduledPaymentChangeHistoryReportRequest {
+    paymentId: string;
+}
+
+interface RecurringPaymentChangeHistoryReportRequest {
+    paymentId: string;
+}
+
+interface PendingPaymentsRequest {
+    status: PaymentStatus[];
+    method: PaymentMethod;
+    startDate: string;
+    endDate: string;
+    pageNumber: number;
+    pageSize: number;
+}
+
 interface PendingPaymentSearchRequest {
-  status?: PaymentStatus[];
-  method?: PaymentMethod;
-  startDate?: string;
-  endDate?: string;
-  page?: number;
-  limit?: number;
+    status: PaymentStatus[];
+    method: PaymentMethod;
+    startDate: string;
+    endDate: string;
+    searchTerm: string;
 }
 
-interface PendingPaymentSummary {
-  byMethod: Record<PaymentMethod, { count: number; amount: number }>;
-  byStatus: Record<PaymentStatus, number>;
-  byPriority: Record<Priority, number>;
+interface PaymentActivityRequest {
+    clientId: string;
+    dateRange: DateRange;
 }
 
-interface PaymentHistory {
-  id: string;
-  changes: PaymentStatusChange[];
+interface PaymentReprocessRequest {
+    paymentId: string;
 }
 
 // C# API Types
-interface PendingPaymentsRequest {
-  status: PaymentStatus[];
-  method: PaymentMethod;
-  startDate: string;
-  endDate: string;
-  pageNumber: number;  // Note: renamed from page
-  pageSize: number;    // Note: renamed from limit
-}
-
-interface PaymentUpdateStatusRequest {
-  paymentId: string;
-  status: PaymentStatus;
-}
-
 interface ScheduledPaymentChangeHistoryReportRequest {
-  paymentId: string;
+    paymentId: string;
+}
+
+interface RecurringPaymentChangeHistoryReportRequest {
+    paymentId: string;
+}
+
+interface PendingPaymentsRequest {
+    status: PaymentStatus[];
+    method: PaymentMethod;
+    startDate: string;
+    endDate: string;
+    pageNumber: number;
+    pageSize: number;
+}
+
+interface PendingPaymentSearchRequest {
+    status: PaymentStatus[];
+    method: PaymentMethod;
+    startDate: string;
+    endDate: string;
+    searchTerm: string;
+}
+
+interface PaymentActivityRequest {
+    clientId: string;
+    dateRange: DateRange;
+}
+
+interface PaymentReprocessRequest {
+    paymentId: string;
 }
 ```
 
@@ -94,73 +121,153 @@ class PaymentService {
     return PaymentService.instance;
   }
 
-  // Current:  GET /api/v1/payments/pending
+  // Current:  POST /payment/change-history
+  async getPaymentHistory(request: ScheduledPaymentChangeHistoryReportRequest): Promise<PaymentHistory> {
+    const service = ServiceFactory.getAdminCuService(BaseService);
+    return service.post('/payment/change-history', request);
+  }
+
+  // Current:  POST /payment/recurring/change-history
+  async getRecurringPaymentHistory(request: RecurringPaymentChangeHistoryReportRequest): Promise<PaymentHistory> {
+    const service = ServiceFactory.getAdminCuService(BaseService);
+    return service.post('/payment/recurring/change-history', request);
+  }
+
+  // Current:  POST /payment/pending
   async getPendingPayments(request: PendingPaymentsRequest): Promise<PaginatedResponse<PendingPayment>> {
+    const service = ServiceFactory.getAdminCuService(BaseService);
+    return service.post('/payment/pending', request);
+  }
+
+  // Current:  POST /payment/pending-payments
+  async getPendingPaymentsList(request: PendingPaymentSearchRequest): Promise<PaginatedResponse<PendingPayment>> {
     const service = ServiceFactory.getAdminCuService(BaseService);
     return service.post('/payment/pending-payments', request);
   }
 
-  // Current:  GET /api/v1/payments/pending/summary
-  getPendingPaymentsSummary(payments: PendingPayment[]): PendingPaymentSummary {
-    return {
-      byMethod: groupBy(payments, 'method'),
-      byStatus: groupBy(payments, 'status'),
-      byPriority: groupBy(payments, 'priority')
-    };
-  }
-
-  // Current:  GET /api/v1/payments/pending/export
-  exportPendingPayments(payments: PendingPayment[]): void {
-    const csv = convertToCSV(payments);
-    downloadCSV(csv, 'pending-payments.csv');
-  }
-
-  // Current:  POST /api/v1/payments/pending/{id}/approve
-  async approvePayment(id: string): Promise<void> {
+  // Current:  POST /payment/activity
+  async getPaymentActivity(request: PaymentActivityRequest): Promise<PaymentActivityListResponse> {
     const service = ServiceFactory.getAdminCuService(BaseService);
-    return service.post('/payment/status', { 
-      paymentId: id, 
-      status: PaymentStatus.APPROVED 
-    });
+    return service.post('/payment/activity', request);
   }
 
-  // Current:  POST /api/v1/payments/pending/{id}/reject
-  async rejectPayment(id: string): Promise<void> {
+  // Current:  POST /payment/reprocess
+  async reprocessPayment(request: PaymentReprocessRequest): Promise<void> {
     const service = ServiceFactory.getAdminCuService(BaseService);
-    return service.post('/payment/status', { 
-      paymentId: id, 
-      status: PaymentStatus.REJECTED 
-    });
-  }
-
-  // Current:  POST /api/v1/payments/pending/bulk-approve
-  async bulkApprove(paymentIds: string[]): Promise<boolean> {
-    const service = ServiceFactory.getAdminCuService(BaseService);
-    const results = await Promise.all(
-      paymentIds.map(id => service.post('/payment/status', {
-        paymentId: id,
-        status: PaymentStatus.APPROVED
-      }))
-    );
-    return results.every(r => r);
-  }
-
-  // Current:  POST /api/v1/payments/pending/bulk-reject
-  async bulkReject(paymentIds: string[]): Promise<boolean> {
-    const service = ServiceFactory.getAdminCuService(BaseService);
-    const results = await Promise.all(
-      paymentIds.map(id => service.post('/payment/status', {
-        paymentId: id,
-        status: PaymentStatus.REJECTED
-      }))
-    );
-    return results.every(r => r);
-  }
-
-  // Current:  GET /api/v1/payments/pending/{id}/history
-  async getPaymentHistory(paymentId: string): Promise<PaymentHistory> {
-    const service = ServiceFactory.getAdminService(BaseService);
-    return service.post('/payment/change-history', { paymentId });
+    return service.post('/payment/reprocess', request);
   }
 }
 ```
+
+## New Service Alignment Document for Payment Service
+
+### C# Implementation (Source of Truth)
+
+### Controller Location
+```csharp
+// PaymentController found in:
+legacy/legacy-apis/cbp.admin-cu-api/ConnectBillPay.AdminCuApi/Controllers/PaymentController.cs
+```
+
+### Available Endpoints
+```csharp
+// Payment History
+POST   /api/v1/payment/change-history            - Get scheduled payment history
+POST   /api/v1/payment/recurring/change-history  - Get recurring payment history
+
+// Payment Management
+POST   /api/v1/payment/pending                   - Get pending payments by date
+POST   /api/v1/payment/pending-payments          - Get pending payments
+POST   /api/v1/payment/activity                  - Get payment activity
+POST   /api/v1/payment/reprocess                 - Reprocess payment
+```
+
+### C# Types
+```csharp
+// Request/Response types in:
+// - Requests.Payment.ScheduledPaymentChangeHistoryReportRequest
+// - Requests.Payment.RecurringPaymentChangeHistoryReportRequest
+// - Requests.Payment.PendingPaymentsRequest
+// - Requests.Payment.PendingPaymentSearchRequest
+// - Requests.Payment.PaymentActivityRequest
+// - Requests.Payment.PaymentReprocessRequest
+```
+
+## TypeScript Implementation Requirements
+
+### Required Types
+```typescript
+interface ScheduledPaymentChangeHistoryReportRequest {
+    paymentId: string;
+}
+
+interface RecurringPaymentChangeHistoryReportRequest {
+    paymentId: string;
+}
+
+interface PendingPaymentsRequest {
+    status: PaymentStatus[];
+    method: PaymentMethod;
+    startDate: string;
+    endDate: string;
+    pageNumber: number;
+    pageSize: number;
+}
+
+interface PendingPaymentSearchRequest {
+    status: PaymentStatus[];
+    method: PaymentMethod;
+    startDate: string;
+    endDate: string;
+    searchTerm: string;
+}
+
+interface PaymentActivityRequest {
+    clientId: string;
+    dateRange: DateRange;
+}
+
+interface PaymentReprocessRequest {
+    paymentId: string;
+}
+```
+
+### Required Service Methods
+```typescript
+interface IPaymentService {
+    // Get scheduled payment history
+    getPaymentHistory(request: ScheduledPaymentChangeHistoryReportRequest): Promise<PaymentHistory>;
+    
+    // Get recurring payment history
+    getRecurringPaymentHistory(request: RecurringPaymentChangeHistoryReportRequest): Promise<PaymentHistory>;
+    
+    // Get pending payments by date
+    getPendingPayments(request: PendingPaymentsRequest): Promise<PaginatedResponse<PendingPayment>>;
+    
+    // Get pending payments with search
+    getPendingPaymentsList(request: PendingPaymentSearchRequest): Promise<PaginatedResponse<PendingPayment>>;
+    
+    // Get payment activity
+    getPaymentActivity(request: PaymentActivityRequest): Promise<PaymentActivityListResponse>;
+    
+    // Reprocess payment
+    reprocessPayment(request: PaymentReprocessRequest): Promise<void>;
+}
+```
+
+## Implementation Notes
+
+1. API Structure
+   - Follow C# endpoint structure exactly
+   - Use POST for all endpoints as defined in C#
+   - Maintain consistent request/response patterns
+
+2. Type Alignment
+   - TypeScript types must match C# models
+   - Follow C# property names and types
+   - Ensure consistent validation rules
+
+3. Service Layer
+   - Implement all C# endpoints in TypeScript
+   - Match C# functionality exactly
+   - No additional endpoints or features

@@ -1,19 +1,5 @@
 import { IBillPayService } from '../../interfaces/IBillPayService';
 import {
-    Payment,
-    PaymentFilters,
-    PaymentHistory,
-    ProcessingError,
-    PaymentAction,
-    PaymentException,
-    PaymentExceptionAdjustment,
-    PaymentExceptionCorrection,
-    PaymentMethod,
-    PaymentType,
-    PaymentPriority,
-    PaymentStatus
-} from '../../../types/payment.types';
-import {
     BillPayConfig,
     BillPayConfigUpdate,
     BillPayConfigValidation,
@@ -35,19 +21,15 @@ import {
     BillPayOTPMethod,
     BillPaySecurityValidation
 } from '../../../types/security.types';
+import {
+    PaymentException,
+    PaymentFilters
+} from '../../../types/payment.types';
 import { PaginatedResponse } from '../../../types/common.types';
-import { QueryOptions } from '../../../types/index';
-import { 
-    mockPayments,
-    mockPendingPayments,
-    mockPaymentHistory
-} from './data/billpay/payments';
 import { mockExceptions } from './data/billpay/exceptions';
 import { mockDashboardStats, generateMockTrends } from './data/billpay/dashboard';
 import { mockTemplates, initialHolidays } from './data/billpay/settings';
 import { mockClients, mockPayees } from './data/billpay/clients';
-import { mockPaymentActions } from './data/billpay/payments';
-import { v4 as uuidv4 } from 'uuid';
 import { BaseMockService } from './BaseMockService';
 
 export class MockBillPayService extends BaseMockService implements IBillPayService {
@@ -75,14 +57,11 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
             maxRetryAttempts: 5
         }
     };
-    private payments: Payment[] = [...mockPayments];
-    private paymentHistory: PaymentHistory[] = [...mockPaymentHistory];
     private exceptions: FISException[] = [...mockExceptions];
     private holidays: Holiday[] = [...initialHolidays];
     private notificationTemplates: NotificationTemplate[] = [...mockTemplates];
     private clients: Client[] = [...mockClients];
     private payees: Payee[] = [...mockPayees];
-    private paymentActions: PaymentAction[] = [...mockPaymentActions];
     private securitySettings: BillPaySecuritySettings = {
         passwordPolicy: {
             minLength: 12,
@@ -110,9 +89,11 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
             phone: '+1234567890'
         }
     };
+
     async getConfiguration(): Promise<BillPayConfig> {
         return this.config;
     }
+
     async updateConfiguration(config: BillPayConfigUpdate): Promise<BillPayConfigValidation> {
         // Validate configuration
         const validation: BillPayConfigValidation = {
@@ -136,116 +117,10 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
         }
         return validation;
     }
-    async getPayments(filters: PaymentFilters & QueryOptions): Promise<PaginatedResponse<Payment>> {
-        let filteredPayments = [...this.payments];
 
-        // Filter by client ID
-        if (filters.ClientId) {
-            filteredPayments = filteredPayments.filter(payment => 
-                payment.Id === filters.ClientId
-            );
-        }
-
-        // Filter by payee ID
-        if (filters.PayeeId) {
-            filteredPayments = filteredPayments.filter(payment => 
-                payment.UserPayeeListId === filters.PayeeId
-            );
-        }
-
-        // Filter by payment method
-        if (filters.Method && filters.Method.length > 0) {
-            filteredPayments = filteredPayments.filter(payment => 
-                filters.Method!.includes(payment.PaymentMethod as PaymentMethod)
-            );
-        }
-
-        // Filter by status
-        if (filters.Status && filters.Status.length > 0) {
-            filteredPayments = filteredPayments.filter(payment => 
-                filters.Status!.includes(payment.Status as PaymentStatus)
-            );
-        }
-
-        // Filter by date range
-        if (filters.StartDate) {
-            filteredPayments = filteredPayments.filter(payment => 
-                new Date(payment.WillProcessDate) >= new Date(filters.StartDate!)
-            );
-        }
-
-        if (filters.EndDate) {
-            filteredPayments = filteredPayments.filter(payment => 
-                new Date(payment.WillProcessDate) <= new Date(filters.EndDate!)
-            );
-        }
-
-        // Apply default pagination since C# APIs don't support it
-        const startIndex = 0;
-        const endIndex = filteredPayments.length;
-        const paginatedPayments = filteredPayments.slice(startIndex, endIndex);
-
-        return {
-            items: paginatedPayments,
-            total: filteredPayments.length,
-            page: 1,
-            limit: filteredPayments.length,
-            totalPages: 1
-        };
-    }
-    async getPayment(paymentId: string): Promise<Payment> {
-        const payment = this.payments.find(p => p.Id === paymentId);
-        if (!payment) {
-            throw new Error(`Payment with ID ${paymentId} not found`);
-        }
-        return payment;
-    }
-    async createPayment(payment: Omit<Payment, 'Id'>): Promise<Payment> {
-        const newPayment: Payment = {
-            ...payment,
-            Id: uuidv4(),
-            Status: PaymentStatus.PENDING
-        };
-        this.payments.push(newPayment);
-        return newPayment;
-    }
-    async updatePayment(paymentId: string, updates: Partial<Payment>): Promise<Payment> {
-        const index = this.payments.findIndex(p => p.Id === paymentId);
-        if (index === -1) {
-            throw new Error(`Payment with ID ${paymentId} not found`);
-        }
-
-        this.payments[index] = {
-            ...this.payments[index],
-            ...updates,
-            Status: updates.Status || this.payments[index].Status
-        };
-
-        return this.payments[index];
-    }
-    async cancelPayment(paymentId: string, reason: string): Promise<void> {
-        const payment = await this.getPayment(paymentId);
-        await this.updatePayment(paymentId, { Status: PaymentStatus.CANCELLED });
-
-        // Add to payment history
-        this.paymentHistory.push({
-            Id: this.paymentHistory.length + 1,
-            PaymentId: paymentId,
-            UserPayeeListId: payment.UserPayeeListId,
-            MemberId: payment.MemberId,
-            FundingAccount: payment.FundingAccount,
-            Amount: payment.Amount,
-            WillProcessDate: payment.WillProcessDate,
-            StatusCode: 0, // Cancelled
-            Memo: reason
-        });
-    }
-    async getPaymentHistory(paymentId: string): Promise<PaymentHistory[]> {
-        await this.delay();
-        return this.paymentHistory.filter(p => p.PaymentId === paymentId);
-    }
     async getExceptions(filters: PaymentFilters): Promise<PaginatedResponse<PaymentException>> {
-        let filteredExceptions = [...this.exceptions].map(exception => ({
+        // Map FISExceptions to PaymentExceptions
+        let filteredExceptions = this.exceptions.map(exception => ({
             Id: parseInt(exception.id),
             RecordType: 'EXCEPTION',
             SponsorTransactionId: exception.requestId,
@@ -290,19 +165,6 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
             ServiceRequestTime: new Date(exception.createdAt).toLocaleTimeString()
         }));
 
-        // Filter by date range
-        if (filters.StartDate) {
-            filteredExceptions = filteredExceptions.filter(e => 
-                new Date(e.ServiceRequestDate) >= new Date(filters.StartDate!)
-            );
-        }
-
-        if (filters.EndDate) {
-            filteredExceptions = filteredExceptions.filter(e => 
-                new Date(e.ServiceRequestDate) <= new Date(filters.EndDate!)
-            );
-        }
-
         // Apply default pagination since C# APIs don't support it
         const startIndex = 0;
         const endIndex = filteredExceptions.length;
@@ -316,108 +178,115 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
             totalPages: 1
         };
     }
+
     async resolveException(exceptionId: string, resolution: ExceptionResolution): Promise<void> {
-        const index = this.exceptions.findIndex(e => e.id === exceptionId);
-        if (index === -1) {
+        const exceptionIndex = this.exceptions.findIndex(e => e.id === exceptionId);
+        if (exceptionIndex === -1) {
             throw new Error(`Exception with ID ${exceptionId} not found`);
         }
-
-        this.exceptions[index] = {
-            ...this.exceptions[index],
-            status: FISExceptionStatus.RESOLVED,
-            errorMessage: resolution.notes || '',
-            updatedAt: new Date().toISOString()
-        };
+        this.exceptions[exceptionIndex].status = FISExceptionStatus.RESOLVED;
+        // Store resolution data in a way that matches FISException structure
+        this.exceptions[exceptionIndex].errorMessage = resolution.notes || '';
+        this.exceptions[exceptionIndex].updatedAt = new Date().toISOString();
     }
+
     async getClients(): Promise<Client[]> {
         return this.clients;
     }
+
     async getPayees(clientId: string): Promise<Payee[]> {
         return this.payees.filter(p => p.clientId === clientId);
     }
+
     async getStats(timeframe: 'day' | 'week' | 'month' | 'quarter' | 'year'): Promise<BillPayStats> {
         return mockDashboardStats(timeframe);
     }
+
     async getTransactionTrends(timeframe: 'day' | 'week' | 'month' | 'quarter' | 'year'): Promise<TransactionTrend[]> {
         const daysMap = {
-            day: 1,
-            week: 7,
-            month: 30,
-            quarter: 90,
-            year: 365
+            'day': 1,
+            'week': 7,
+            'month': 30,
+            'quarter': 90,
+            'year': 365
         };
         return generateMockTrends(daysMap[timeframe]);
     }
+
     async getHolidays(): Promise<Holiday[]> {
         return this.holidays;
     }
+
     async addHoliday(holiday: HolidayInput): Promise<Holiday> {
         const newHoliday: Holiday = {
+            id: Date.now(),
             ...holiday,
-            id: this.holidays.length + 1,
+            status: HolidayStatus.ACTIVE,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
         this.holidays.push(newHoliday);
         return newHoliday;
     }
+
     async getNotificationTemplates(): Promise<NotificationTemplate[]> {
         return this.notificationTemplates;
     }
-    async updateNotificationTemplate(templateId: number, template: NotificationTemplateInput): Promise<NotificationTemplate> {
+
+    async updateNotificationTemplate(
+        templateId: number,
+        template: NotificationTemplateInput
+    ): Promise<NotificationTemplate> {
         const index = this.notificationTemplates.findIndex(t => t.id === templateId);
         if (index === -1) {
-            throw new Error('Template not found');
+            throw new Error(`Template with ID ${templateId} not found`);
         }
         this.notificationTemplates[index] = {
             ...this.notificationTemplates[index],
             ...template,
-            lastModified: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
         return this.notificationTemplates[index];
     }
-    async getPaymentActions(paymentId: string): Promise<PaymentAction[]> {
-        return this.paymentActions.filter(a => 
-            a.Details && 'PaymentId' in a.Details && a.Details.PaymentId === paymentId
-        );
-    }
+
     async getSecuritySettings(): Promise<BillPaySecuritySettings> {
         return this.securitySettings;
     }
+
     async updateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecuritySettings> {
-        this.securitySettings = { ...this.securitySettings, ...settings };
+        this.securitySettings = {
+            ...this.securitySettings,
+            ...settings
+        };
         return this.securitySettings;
     }
+
     async validateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecurityValidation> {
-        const isValid = settings.passwordPolicy.minLength >= 8 && 
-                       settings.passwordPolicy.expiryDays >= 30 &&
-                       settings.loginPolicy.maxAttempts >= 1 &&
-                       settings.loginPolicy.lockoutDuration >= 5 &&
-                       settings.loginPolicy.sessionTimeout >= 5;
         const errors: Record<string, string> = {};
+        
         if (settings.passwordPolicy.minLength < 8) {
-            errors['passwordPolicy.minLength'] = 'Minimum length must be at least 8';
+            errors['passwordPolicy.minLength'] = 'Password must be at least 8 characters';
         }
         if (settings.passwordPolicy.expiryDays < 30) {
             errors['passwordPolicy.expiryDays'] = 'Password must expire after at least 30 days';
         }
         if (settings.loginPolicy.maxAttempts < 1) {
-            errors['loginPolicy.maxAttempts'] = 'Max login attempts must be at least 1';
+            errors['loginPolicy.maxAttempts'] = 'Max attempts must be at least 1';
         }
-        if (settings.loginPolicy.lockoutDuration < 5) {
-            errors['loginPolicy.lockoutDuration'] = 'Lockout duration must be at least 5 minutes';
-        }
-        if (settings.loginPolicy.sessionTimeout < 5) {
-            errors['loginPolicy.sessionTimeout'] = 'Session timeout must be at least 5 minutes';
-        }
+
         return {
-            isValid: isValid,
+            isValid: Object.keys(errors).length === 0,
             errors
         };
     }
+
     async sendOTP(method: BillPayOTPMethod, destination: string): Promise<void> {
-        // Mock implementation - in real world this would send an actual OTP
-        console.log(`Mock: Sending OTP via ${method} to ${destination}`);
+        // Mock implementation - just validate the method and destination
+        if (!Object.values(BillPayOTPMethod).includes(method)) {
+            throw new Error(`Invalid OTP method: ${method}`);
+        }
+        if (!destination) {
+            throw new Error('Destination is required');
+        }
     }
 }

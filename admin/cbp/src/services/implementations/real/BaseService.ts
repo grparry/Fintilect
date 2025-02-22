@@ -1,61 +1,116 @@
 import { IBaseService } from '../../interfaces/IBaseService';
-import { ApiResponse, ApiSuccessResponse, ApiErrorResponse, ApiRequestOptions } from '../../types';
-import api from '../../api';
+import { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '../../types';
+import api, { AxiosError, AxiosResponse } from '../../api';
+import logger from '../../../utils/logger';
 
 /**
  * Base service implementation with common HTTP methods
  */
 export class BaseService implements IBaseService {
   constructor(public readonly basePath: string) {}
+
   /**
-   * Extract data from API response
+   * Extract data from API response and handle case transformation
    */
-  protected extractData<T>(response: ApiResponse<T>): T {
-    if ((response as ApiSuccessResponse<T>).success) {
-      return (response as ApiSuccessResponse<T>).data;
+  protected extractData<T>(response: AxiosResponse<ApiResponse<T>>): T {
+    const apiResponse = response.data;
+    if ((apiResponse as ApiSuccessResponse<T>).success) {
+      return (apiResponse as ApiSuccessResponse<T>).data;
     }
-    throw new Error((response as ApiErrorResponse).error.message);
+    throw this.handleError(apiResponse as ApiErrorResponse);
   }
+
+  /**
+   * Handle API errors consistently
+   */
+  protected handleError(error: AxiosError | ApiErrorResponse): Error {
+    // If it's an Axios error
+    if ((error as AxiosError).isAxiosError) {
+      const axiosError = error as AxiosError<ApiErrorResponse>;
+      logger.error({
+        message: 'API Error',
+        url: axiosError.config?.url,
+        method: axiosError.config?.method,
+        status: axiosError.response?.status,
+        error: axiosError.response?.data
+      });
+      
+      if (axiosError.response?.data) {
+        return new Error(axiosError.response.data.error.message);
+      }
+      return new Error(axiosError.message);
+    }
+    
+    // If it's our ApiErrorResponse
+    const apiError = error as ApiErrorResponse;
+    return new Error(apiError.error.message);
+  }
+
   /**
    * Make a GET request
    */
   protected async get<T>(path: string, params?: Record<string, any>): Promise<T> {
-    const url = `${this.basePath}${path}`;
-    const response = await api.get<T>(url, { params });
-    return this.extractData(response);
+    try {
+      const url = `${this.basePath}${path}`;
+      const response = await api.instance.get<ApiResponse<T>>(url, { params });
+      return this.extractData(response);
+    } catch (error) {
+      throw this.handleError(error as AxiosError);
+    }
   }
+
   /**
    * Make a POST request
    */
   protected async post<T>(path: string, data?: any): Promise<T> {
-    const url = `${this.basePath}${path}`;
-    const response = await api.post<T>(url, data);
-    return this.extractData(response);
+    try {
+      const url = `${this.basePath}${path}`;
+      const response = await api.instance.post<ApiResponse<T>>(url, data);
+      return this.extractData(response);
+    } catch (error) {
+      throw this.handleError(error as AxiosError);
+    }
   }
+
   /**
    * Make a PUT request
    */
   protected async put<T>(path: string, data?: any): Promise<T> {
-    const url = `${this.basePath}${path}`;
-    const response = await api.put<T>(url, data);
-    return this.extractData(response);
+    try {
+      const url = `${this.basePath}${path}`;
+      const response = await api.instance.put<ApiResponse<T>>(url, data);
+      return this.extractData(response);
+    } catch (error) {
+      throw this.handleError(error as AxiosError);
+    }
   }
+
   /**
    * Make a PATCH request
    */
   protected async patch<T>(path: string, data?: any): Promise<T> {
-    const url = `${this.basePath}${path}`;
-    const response = await api.patch<T>(url, data);
-    return this.extractData(response);
+    try {
+      const url = `${this.basePath}${path}`;
+      const response = await api.instance.patch<ApiResponse<T>>(url, data);
+      return this.extractData(response);
+    } catch (error) {
+      throw this.handleError(error as AxiosError);
+    }
   }
+
   /**
    * Make a DELETE request
    */
-  protected async delete<T>(path: string): Promise<T> {
-    const url = `${this.basePath}${path}`;
-    const response = await api.delete<T>(url);
-    return this.extractData(response);
+  protected async delete<T>(path: string, config?: { data?: any; params?: Record<string, any> }): Promise<T> {
+    try {
+      const url = `${this.basePath}${path}`;
+      const response = await api.instance.delete<ApiResponse<T>>(url, config);
+      return this.extractData(response);
+    } catch (error) {
+      throw this.handleError(error as AxiosError);
+    }
   }
+
   /**
    * Validate required parameters
    */

@@ -19,13 +19,13 @@ import {
 import { Edit as EditIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { Client, ClientStatus, ClientType, Environment } from '../../types/client.types';
+import { Customer, ClientStatus, ClientType, Environment } from '../../types/client.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import { encodeId } from '../../utils/idEncoder';
 import logger from '../../utils/logger';
 
 const ClientList: React.FC = () => {
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clients, setClients] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
@@ -33,11 +33,12 @@ const ClientList: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
   const loadClients = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await clientService.getClients({
+      const response = await clientService.getCustomers({
         page: page + 1,
         limit: rowsPerPage
       });
@@ -45,7 +46,7 @@ const ClientList: React.FC = () => {
         throw new Error('Failed to load clients');
       }
       setClients(response.items);
-      setTotalCount(response.pagination.total);
+      setTotalCount(response.total);
       logger.info('Clients loaded successfully');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load clients';
@@ -90,9 +91,9 @@ const ClientList: React.FC = () => {
         return 'default';
     }
   };
-  const handleEditClick = useCallback((clientId: string) => {
+  const handleEditClick = useCallback((clientId: number) => {
     try {
-      const encodedId = encodeId(clientId);
+      const encodedId = encodeId(clientId.toString());
       logger.info(`Navigating to edit client - ID: ${clientId}, Encoded: ${encodedId}`);
       navigate(`/admin/client-management/edit/${encodedId}`);
     } catch (error) {

@@ -48,12 +48,13 @@ import { useAuth } from '../../../hooks/useAuth';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import PaymentDetails from './PaymentDetails';
 import {
+  Payment,
+  PaymentAction,
   PaymentActivity,
-  PaymentActivityRequest,
   PaymentActivityListResponse,
+  PaymentActivityRequest,
   PaymentMethod,
   PaymentStatus,
-  PaymentAction,
   PaymentHistory
 } from '../../../types/payment.types';
 import dayjs, { Dayjs } from 'dayjs';
@@ -350,7 +351,7 @@ export const ManagePayments: React.FC = () => {
       const currentValue = prev[field] || [];
       return {
         ...prev,
-        [field]: currentValue.filter(value => value !== valueToDelete)
+        [field]: (currentValue as string[]).filter((value: string) => value !== valueToDelete)
       };
     });
     setOpenDropdowns(prev => ({ ...prev, [field]: false }));
@@ -683,11 +684,27 @@ export const ManagePayments: React.FC = () => {
 
   const renderDialog = () => {
     if (dialogState.action === 'view' && dialogState.payment) {
+      // Transform PaymentActivity to Payment
+      const payment: Payment = {
+        Id: dialogState.payment.PaymentID,
+        WillProcessDate: dialogState.payment.DueDate || '',
+        Memo: '',  // PaymentActivity doesn't have this field
+        BillReference: '',  // PaymentActivity doesn't have this field
+        FundingAccount: '',  // PaymentActivity doesn't have this field
+        UserPayeeListId: dialogState.payment.PayeeID,
+        MemberId: dialogState.payment.MemberID,
+        Amount: dialogState.payment.Amount,
+        SourceApplication: '',  // PaymentActivity doesn't have this field
+        DeliveryDate: dialogState.payment.DateProcessed,
+        Status: dialogState.payment.StatusName,
+        PaymentMethod: dialogState.payment.PaymentMethod
+      };
+
       return (
         <PaymentDetails
           open={dialogState.open}
           onClose={() => setDialogState({ open: false, payment: null, action: null })}
-          payment={dialogState.payment}
+          payment={payment}
         />
       );
     }

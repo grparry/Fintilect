@@ -33,15 +33,14 @@ export enum ClientStatus {
   Pending = 'PENDING'
 }
 
-// Date and Time Format Types
-export type DateFormat = 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD';
-export type TimeFormat = '12h' | '24h';
-export type NotificationFrequency = 'realtime' | 'daily' | 'weekly' | 'monthly';
-export type AlertType = 'payment' | 'security' | 'system';
-
-export interface Client {
-  id: string;
+export interface Customer {
+  id: number;
+  externalId?: string;
   name: string;
+  tenantId: number;
+  isActive: boolean;
+  createdOn: string;
+  updatedOn?: string;
   type: ClientType;
   status: ClientStatus;
   environment: Environment;
@@ -50,33 +49,30 @@ export interface Client {
   contactEmail?: string;
   contactPhone?: string;
   sponsorId?: string;
-  sponsorName?: string;
   routingId?: string;
-  settings: ClientSettings;
-  createdAt?: string;
-  updatedAt?: string;
+  require2fa: boolean;
+  logoUrl?: string;
 }
 
-export interface GeneralSettings {
-  timezone: string;
-  dateFormat: DateFormat;
-  timeFormat: TimeFormat;
-  currency: string;
-  language: string;
-}
-
-export interface ClientSettings {
-  general: GeneralSettings;
-  security: SecuritySettings;
-  notifications: NotificationSettings;
-}
-
-export interface NotificationSettings {
-  emailEnabled: boolean;
-  smsEnabled: boolean;
-  pushEnabled: boolean;
-  frequency: NotificationFrequency;
-  alertTypes: AlertType[];
+/**
+ * User model that maps to the database Users table
+ */
+export interface User {
+  id: number;
+  username: string;
+  email?: string;
+  mobilePhone?: string;
+  tenantId: number;
+  isActive: boolean;
+  creationDate: string;
+  lastLogin?: string;
+  externalId?: string;
+  customerId: number;
+  firstName?: string;
+  lastName?: string;
+  department?: string;
+  isLocked: boolean;
+  password?: string;
 }
 
 // Client Configuration Types
@@ -145,24 +141,6 @@ export enum UserStatus {
   PendingActivation = 'PENDING_ACTIVATION'
 }
 
-export interface User {
-  id: string;
-  clientId: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  roles: string[];
-  status: UserStatus;
-  department: string;
-  lastLogin: string | null;
-  locked: boolean;
-  password?: string;
-  createdAt: string;
-  updatedAt: string;
-  groups: UserGroup[];
-}
-
 export interface UserFormData {
   firstName: string;
   lastName: string;
@@ -177,85 +155,44 @@ export interface UserFormData {
 }
 
 export interface Role {
-  id: string;
+  id: number;
   name: string;
-  description: string;
-  permissions: string[];
+}
+
+export interface Group {
+  id: number;
+  name?: string;
+  customerId: number;
   createdAt: string;
   updatedAt: string;
 }
 
-export type PermissionCategoryType = 
-  | 'user'
-  | 'client'
-  | 'system'
-  | 'security'
-  | 'settings'
-  | 'reports'
-  | 'billpay'
-  | 'moneydesktop';
+export interface GroupRole {
+  groupId: number;
+  roleId: number;
+}
 
-export const PERMISSION_CATEGORIES: PermissionCategoryType[] = [
-  'user',
-  'client',
-  'system',
-  'security',
-  'settings',
-  'reports',
-  'billpay',
-  'moneydesktop'
-];
-
-export interface Permission {
-  id: string;
-  name: string;
-  description: string;
-  category: PermissionCategoryType;
-  actions: string[];
+export interface UserGroup {
+  userId: number;
+  groupId: number;
 }
 
 export interface SecurityRole {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   permissions: Permission[];
   isSystem?: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface UserGroup {
+export interface Permission {
   id: string;
   name: string;
-  description: string;
-  clientId: string;
-  roles: SecurityRole[];
-  permissions: Permission[];
-  members: string[];
-  users: User[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Group {
-  id: string;
-  name: string;
-  description: string;
-  clientId: string;
-  roles: SecurityRole[];
-  permissions: Permission[];
-  members: string[];
-  users: User[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface GroupInput {
-  name: string;
-  description: string;
-  roles: string[];
-  permissions: string[];
-  members: string[];
+  description?: string;
+  category?: string;
+  actions: string[];
 }
 
 export interface Address {
@@ -293,56 +230,36 @@ export interface Contact {
 }
 
 // List Response Types
-export type ClientListResponse = PaginatedResponse<Client>;
+export type ClientListResponse = PaginatedResponse<Customer>;
 export type UserListResponse = PaginatedResponse<User>;
 export type GroupListResponse = PaginatedResponse<UserGroup>;
 export type RoleListResponse = PaginatedResponse<SecurityRole>;
 
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'system';
-  notifications: {
-    email: boolean;
-    push: boolean;
-    sms: boolean;
-  };
-  language: string;
-  timezone: string;
-  dateFormat: string;
-  displayDensity: 'comfortable' | 'compact';
 }
 
-export interface UserFilters extends PaginationOptions {
-  status?: UserStatus;
-  role?: UserRole;
-  groupId?: string;
-  search?: string;
-  lastLoginAfter?: string;
-  lastLoginBefore?: string;
-}
-
-export interface UserStats {
-  totalLogins: number;
-  lastActiveDate: string;
-  failedLoginAttempts: number;
-  accountCreatedAt: string;
-  lastPasswordChange: string;
-  groupCount: number;
-  activeSessionCount: number;
-}
-
-export type UsersResponse = PaginatedResponse<User>;
-
-// Audit Log Types
-export interface AuditSearchRequest {
+export interface AuditSearchRequest extends PaginationOptions {
   startDate?: string;
   endDate?: string;
   userId?: string;
   action?: string;
-  resourceType?: string;
-  resourceId?: string;
-  page?: number;
-  limit?: number;
+  resource?: string;
 }
+
+// Re-export PaginatedResponse for backward compatibility
+export type { PaginatedResponse };
+
+// Audit Log Types
 
 // Re-export security types
 export type { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';
+
+/**
+ * Derived type that represents a flattened view of a user's roles and groups
+ * This is returned by the permission service but not stored in the database
+ */
+export type UserPermissions = {
+  groups: Group[];
+  roles: Role[];
+}

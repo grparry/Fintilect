@@ -1,9 +1,45 @@
 import { useCallback, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { NavigationPermissionRequirement } from '../types/section-navigation.types';
+import { Role } from '../types/client.types';
 
 export const useNavigationPermissions = () => {
-  const { user, permissions } = useContext(AuthContext);
+  const { user, userPermissions } = useContext(AuthContext);
+
+  const checkPermission = async (requirement: NavigationPermissionRequirement): Promise<boolean> => {
+    // If no user, only allow if no requirements
+    if (!user || !userPermissions) {
+      return !requirement.clientId && !requirement.requiredPermissions;
+    }
+
+    // Check client ID if required
+    if (requirement.clientId) {
+      const clientId = parseInt(requirement.clientId, 10);
+      const hasClientAccess = userPermissions.groups.some(g => g.customerId === clientId);
+      if (!hasClientAccess) return false;
+    }
+
+    // Check required permissions
+    if (requirement.requiredPermissions?.length) {
+      const hasRequiredPermissions = requirement.requiredPermissions.every(requiredPermission =>
+        userPermissions.roles.some((role: Role) => role.name === requiredPermission)
+      );
+      if (!hasRequiredPermissions) return false;
+    }
+
+    // Check custom validation if provided
+    if (requirement.customCheck) {
+      try {
+        const result = await requirement.customCheck();
+        if (!result) return false;
+      } catch (error) {
+        console.error('Error in custom permission check:', error);
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   const hasPermission = useCallback(async (requirement: NavigationPermissionRequirement): Promise<boolean> => {
     // If no requirements, allow access
@@ -11,63 +47,29 @@ export const useNavigationPermissions = () => {
       return true;
     }
 
-    // Check custom validation if provided
-    if (requirement.customCheck) {
-      try {
-        return await requirement.customCheck();
-      } catch (error) {
-        console.error('Error in custom permission check:', error);
-        return false;
-      }
+    // If no user, only allow if no requirements
+    if (!user || !userPermissions) {
+      return !requirement.clientId && !requirement.requiredPermissions;
     }
 
-    // Check client ID if specified
-    if (requirement.clientId && user?.clientId !== requirement.clientId) {
-      return false;
-    }
-
-    // Check roles if specified
-    if (requirement.roles && requirement.roles.length > 0) {
-      const hasRequiredRole = requirement.roles.some(role => 
-        user?.roles?.includes(role)
-      );
-      if (!hasRequiredRole) {
-        return false;
-      }
-    }
-
-    // Check permissions if specified
-    if (requirement.permissions && requirement.permissions.length > 0) {
-      const hasRequiredPermissions = requirement.permissions.every(permission =>
-        permissions?.includes(permission)
-      );
-      if (!hasRequiredPermissions) {
-        return false;
-      }
-    }
-
-    return true;
-  }, [user, permissions]);
+    return checkPermission(requirement);
+  }, [user, userPermissions]);
 
   const checkPermissions = useCallback(async (requirements: NavigationPermissionRequirement[]): Promise<boolean> => {
     if (!requirements || requirements.length === 0) {
       return true;
     }
 
-    try {
-      const results = await Promise.all(
-        requirements.map(requirement => hasPermission(requirement))
-      );
-
-      return results.every(result => result === true);
-    } catch (error) {
-      console.error('Error checking permissions:', error);
-      return false;
+    for (const requirement of requirements) {
+      const hasAccess = await hasPermission(requirement);
+      if (!hasAccess) return false;
     }
+
+    return true;
   }, [hasPermission]);
 
   return {
-    checkPermissions,
     hasPermission,
+    checkPermissions,
   };
 };

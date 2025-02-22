@@ -21,7 +21,6 @@ import {
   Chip,
   TextField,
   InputAdornment,
-  SvgIcon
 } from '@mui/material';
 import {
   Edit as EditIcon,
@@ -29,37 +28,25 @@ import {
   Search as SearchIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { UserGroup as Group } from '../../../types/client.types';
-import { clientService } from '../../../services/factory/ServiceFactory';
-import { shouldUseMockData } from '../../../config/api.config';
-import { decodeId } from '../../../utils/idEncoder';
-import { PermissionAction } from '../../../types/permission.types';
+import { Group } from '../../../types/client.types';
+import { permissionService } from '../../../services/factory/ServiceFactory';
+import logger from '../../../utils/logger';
 
 interface GroupsListProps {
   clientId: string;
 }
+
 interface GroupsListState {
   groups: Group[];
   loading: boolean;
   error: string | null;
   deleteDialogOpen: boolean;
   groupToDelete: Group | null;
-  sortBy: 'name' | 'description' | 'members';
+  sortBy: 'name';
   sortDirection: 'asc' | 'desc';
   filterText: string;
 }
-const serviceGroupToUIGroup = (group: any, clientId: string): Group => ({
-  id: group.id,
-  name: group.name,
-  description: group.description,
-  clientId: clientId,
-  roles: group.roles || [],
-  permissions: group.permissions,
-  members: group.members,
-  users: group.users || [],
-  createdAt: group.createdAt,
-  updatedAt: group.updatedAt
-});
+
 const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
   const navigate = useNavigate();
   const [state, setState] = useState<GroupsListState>({
@@ -72,27 +59,35 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
     sortDirection: 'asc',
     filterText: ''
   });
-  useEffect(() => {
-    fetchGroups();
-  }, [clientId]);
-  const fetchGroups = async () => {
+
+  const loadGroups = async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
-      const decodedClientId = decodeId(clientId);
-      const groups = await clientService.getGroups(decodedClientId);
+      const response = await permissionService.getGroups({
+        customerId: Number(clientId),
+        searchTerm: state.filterText
+      });
       setState(prev => ({
         ...prev,
-        groups: groups.map(group => serviceGroupToUIGroup(group, clientId)),
+        groups: response.items,
         loading: false
       }));
-    } catch (err: any) {
+      logger.info('Groups loaded successfully');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to load groups';
+      logger.error(`Error loading groups: ${message}`);
       setState(prev => ({
         ...prev,
         loading: false,
-        error: err.message || 'Failed to load groups'
+        error: message
       }));
     }
   };
+
+  useEffect(() => {
+    loadGroups();
+  }, [clientId]);
+
   const handleDeleteClick = (group: Group) => {
     setState(prev => ({
       ...prev,
@@ -100,27 +95,32 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
       groupToDelete: group
     }));
   };
+
   const handleDeleteConfirm = async () => {
+    const { groupToDelete } = state;
+    if (!groupToDelete) return;
+
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
-      const decodedClientId = decodeId(clientId);
-      const decodedGroupId = decodeId(state.groupToDelete!.id);
-      await clientService.deleteGroup(decodedClientId, decodedGroupId);
+      await permissionService.deleteGroup(groupToDelete.id);
+      logger.info('Group deleted successfully');
+      await loadGroups();
       setState(prev => ({
         ...prev,
-        loading: false,
         deleteDialogOpen: false,
         groupToDelete: null
       }));
-      fetchGroups(); // Refresh the list after deletion
-    } catch (err: any) {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to delete group';
+      logger.error(`Error deleting group: ${message}`);
       setState(prev => ({
         ...prev,
         loading: false,
-        error: err.message || 'Failed to delete group'
+        error: message
       }));
     }
   };
+
   const handleDeleteCancel = () => {
     setState(prev => ({
       ...prev,
@@ -128,89 +128,92 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
       groupToDelete: null
     }));
   };
-  const handleSort = (field: 'name' | 'description' | 'members') => {
+
+  const handleSort = (field: 'name') => {
     setState(prev => ({
       ...prev,
       sortBy: field,
-      sortDirection: prev.sortBy === field && prev.sortDirection === 'asc' ? 'desc' : 'asc'
+      sortDirection:
+        prev.sortBy === field && prev.sortDirection === 'asc' ? 'desc' : 'asc'
     }));
   };
-  const handleFilterChange = (value: string) => {
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState(prev => ({
       ...prev,
-      filterText: value
+      filterText: event.target.value
     }));
   };
-  const filteredAndSortedGroups = state.groups
-    .filter(group => 
-      group.name.toLowerCase().includes(state.filterText.toLowerCase()) ||
-      (group.description || '').toLowerCase().includes(state.filterText.toLowerCase())
-    )
-    .sort((a, b) => {
-      const direction = state.sortDirection === 'asc' ? 1 : -1;
-      if (state.sortBy === 'members') {
-        return direction * ((a.members?.length || 0) - (b.members?.length || 0));
-      }
-      const aValue = a[state.sortBy] || '';
-      const bValue = b[state.sortBy] || '';
-      return direction * aValue.localeCompare(bValue);
-    });
-  if (state.loading) {
+
+  const { groups, loading, error, deleteDialogOpen, sortBy, sortDirection, filterText } = state;
+
+  const sortedGroups = [...groups].sort((a, b) => {
+    const direction = sortDirection === 'asc' ? 1 : -1;
+    return a.name.localeCompare(b.name) * direction;
+  });
+
+  if (loading && groups.length === 0) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+      <Box display="flex" justifyContent="center" p={3}>
         <CircularProgress />
       </Box>
     );
   }
+
   return (
     <Box>
-      <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography variant="h6" color="text.primary">Groups</Typography>
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <TextField
-          label="Search"
-          value={state.filterText}
-          onChange={e => handleFilterChange(e.target.value)}
+          placeholder="Search groups..."
+          value={filterText}
+          onChange={handleFilterChange}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SvgIcon component={SearchIcon} />
+                <SearchIcon />
               </InputAdornment>
             )
           }}
+          size="small"
         />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate(`/admin/client-management/edit/${clientId}/groups/new`)}
+        >
+          Add Group
+        </Button>
       </Box>
-      {state.error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {state.error}
-        </Alert>
-      )}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell onClick={() => handleSort('name')}>Name</TableCell>
-              <TableCell onClick={() => handleSort('description')}>Description</TableCell>
-              <TableCell onClick={() => handleSort('members')}>Members</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell
+                onClick={() => handleSort('name')}
+                style={{ cursor: 'pointer' }}
+              >
+                Name {sortBy === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+              </TableCell>
+              <TableCell>Created At</TableCell>
+              <TableCell>Updated At</TableCell>
+              <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredAndSortedGroups.map(group => (
+            {sortedGroups.map((group) => (
               <TableRow key={group.id}>
                 <TableCell>{group.name}</TableCell>
-                <TableCell>{group.description}</TableCell>
-                <TableCell>
-                  <Chip 
-                    label={`${group.members?.length || 0} members`}
-                    size="small"
-                    variant="outlined"
-                  />
-                </TableCell>
-                <TableCell>
+                <TableCell>{new Date(group.createdAt).toLocaleDateString()}</TableCell>
+                <TableCell>{new Date(group.updatedAt).toLocaleDateString()}</TableCell>
+                <TableCell align="right">
                   <IconButton
-                    onClick={() => navigate(`/clients/${clientId}/groups/${group.id}`)}
+                    onClick={() => navigate(`/admin/client-management/edit/${clientId}/groups/${group.id}`)}
                     size="small"
-                    color="primary"
                   >
                     <EditIcon />
                   </IconButton>
@@ -227,20 +230,16 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Dialog
-        open={state.deleteDialogOpen}
-        onClose={handleDeleteCancel}
-      >
-        <DialogTitle>Confirm Delete</DialogTitle>
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Group</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete the group "{state.groupToDelete?.name}"?
-            This action cannot be undone.
+            Are you sure you want to delete the group "{state.groupToDelete?.name}"? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteCancel}>Cancel</Button>
-          <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+          <Button onClick={handleDeleteConfirm} color="error">
             Delete
           </Button>
         </DialogActions>
@@ -248,4 +247,5 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
     </Box>
   );
 };
+
 export default GroupsList;

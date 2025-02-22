@@ -1,218 +1,234 @@
 import { IPermissionService } from '../../interfaces/IPermissionService';
 import { 
-  Permission, 
-  PermissionGroup, 
-  PermissionGroupInput, 
-  PermissionGroupFilters, 
-  PermissionGroupValidation, 
-  PermissionCategoryType, 
-  PermissionAction,
-  PermissionCategory 
-} from '../../../types/permission.types';
-import { PaginatedResponse } from '../../../types/common.types';
+  Role,
+  Group,
+  GroupRole,
+  UserGroup,
+  PaginatedResponse,
+  UserPermissions
+} from '../../../types/client.types';
 import { BaseMockService } from './BaseMockService';
-import { mockPermissions, mockPermissionGroups } from './data/permissions/mockPermissionData';
+
+// Mock data
+const mockRoles: Role[] = [
+  { id: 1, name: 'Admin' },
+  { id: 2, name: 'Manager' },
+  { id: 3, name: 'User' }
+];
+
+const mockGroups: Group[] = [
+  { id: 1, name: 'System Admins', customerId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' },
+  { id: 2, name: 'Managers', customerId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' },
+  { id: 3, name: 'Users', customerId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' }
+];
+
+const mockGroupRoles: GroupRole[] = [
+  { groupId: 1, roleId: 1 },
+  { groupId: 2, roleId: 2 },
+  { groupId: 3, roleId: 3 }
+];
+
+const mockUserGroups: UserGroup[] = [
+  { userId: 1, groupId: 1 },
+  { userId: 2, groupId: 2 },
+  { userId: 3, groupId: 3 }
+];
 
 export class MockPermissionService extends BaseMockService implements IPermissionService {
-  private permissions: Map<string, Permission> = new Map();
-  private permissionGroups: Map<string, PermissionGroup> = new Map();
-  private userPermissionGroups: Map<string, string[]> = new Map();
-  private auditLog: Map<string, Array<{
-    timestamp: string;
-    action: string;
-    userId: string;
-    details: string;
-    changes: Record<string, any>;
-  }>> = new Map();
+  private roles: Map<number, Role> = new Map();
+  private groups: Map<number, Group> = new Map();
+  private groupRoles: Map<string, GroupRole> = new Map();
+  private userGroups: Map<string, UserGroup> = new Map();
+
   constructor(basePath: string = '/api/v1/permissions') {
     super(basePath);
     this.initializeData();
   }
+
   private initializeData(): void {
-    mockPermissions.forEach(permission => {
-      this.permissions.set(permission.id, permission);
-    });
-    mockPermissionGroups.forEach(group => {
-      this.permissionGroups.set(String(group.id), group);
-    });
+    mockRoles.forEach(role => this.roles.set(role.id, role));
+    mockGroups.forEach(group => this.groups.set(group.id, group));
+    mockGroupRoles.forEach(gr => this.groupRoles.set(`${gr.groupId}-${gr.roleId}`, gr));
+    mockUserGroups.forEach(ug => this.userGroups.set(`${ug.userId}-${ug.groupId}`, ug));
   }
-  async getPermissions(category?: PermissionCategoryType): Promise<Permission[]> {
-    const permissions = Array.from(this.permissions.values());
-    return category
-      ? permissions.filter(p => p.category === category)
-      : permissions;
+
+  async getRoles(): Promise<Role[]> {
+    return Array.from(this.roles.values());
   }
-  async getPermissionGroups(filters?: PermissionGroupFilters): Promise<PaginatedResponse<PermissionGroup>> {
-    let groups = Array.from(this.permissionGroups.values());
-    if (filters) {
-      if (filters.searchTerm) {
-        const term = filters.searchTerm.toLowerCase();
-        groups = groups.filter(g =>
-          g.name.toLowerCase().includes(term) ||
-          g.description.toLowerCase().includes(term)
-        );
-      }
-      if (filters.createdBy) {
-        groups = groups.filter(g => g.createdBy === filters.createdBy);
-      }
-      if (filters.updatedBy) {
-        groups = groups.filter(g => g.updatedBy === filters.updatedBy);
-      }
+
+  async getRole(roleId: number): Promise<Role> {
+    const role = this.roles.get(roleId);
+    if (!role) throw this.createError(`Role not found: ${roleId}`, 404);
+    return role;
+  }
+
+  async createRole(role: Omit<Role, 'id'>): Promise<Role> {
+    const newId = Math.max(...Array.from(this.roles.keys())) + 1;
+    const newRole: Role = { id: newId, ...role };
+    this.roles.set(newId, newRole);
+    return newRole;
+  }
+
+  async updateRole(roleId: number, role: Partial<Role>): Promise<Role> {
+    const existing = await this.getRole(roleId);
+    const updated = { ...existing, ...role };
+    this.roles.set(roleId, updated);
+    return updated;
+  }
+
+  async deleteRole(roleId: number): Promise<void> {
+    if (!this.roles.has(roleId)) throw this.createError(`Role not found: ${roleId}`, 404);
+    this.roles.delete(roleId);
+  }
+
+  async getGroups(params?: { customerId?: number; searchTerm?: string; page?: number; limit?: number; }): Promise<PaginatedResponse<Group>> {
+    let groups = Array.from(this.groups.values());
+    
+    if (params?.customerId) {
+      groups = groups.filter(g => g.customerId === params.customerId);
     }
-    // Default pagination values
-    const page = 1;
-    const limit = 10;
-    const start = (page - 1) * limit;
-    const end = start + limit;
+    
+    if (params?.searchTerm) {
+      const term = params.searchTerm.toLowerCase();
+      groups = groups.filter(g => g.name?.toLowerCase().includes(term));
+    }
+
+    const page = params?.page || 1;
+    const limit = params?.limit || 10;
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const filteredGroups = groups
+      .filter(group => {
+        if (params?.customerId && group.customerId !== params.customerId) return false;
+        if (params?.searchTerm && !group.name?.toLowerCase().includes(params.searchTerm.toLowerCase())) return false;
+        return true;
+      });
+
+    const paginatedGroups = filteredGroups.slice(startIndex, endIndex);
+    const total = filteredGroups.length;
+    const totalPages = Math.ceil(total / limit);
+
     return {
-      items: groups.slice(start, end),
-      total: groups.length,
+      items: paginatedGroups,
+      total,
       page,
       limit,
-      totalPages: Math.ceil(groups.length / limit)
+      totalPages
     };
   }
-  async getPermissionGroup(groupId: number): Promise<PermissionGroup> {
-    const group = this.permissionGroups.get(String(groupId));
-    if (!group) {
-      throw this.createError(`Permission group not found: ${groupId}`, 404);
-    }
+
+  async getGroup(groupId: number): Promise<Group> {
+    const group = this.groups.get(groupId);
+    if (!group) throw this.createError(`Group not found: ${groupId}`, 404);
     return group;
   }
-  async createPermissionGroup(group: PermissionGroupInput): Promise<PermissionGroup> {
-    const validation = await this.validatePermissionGroup(group);
-    if (!validation.isValid) {
-      throw this.createError('Invalid permission group data', 400);
-    }
-    const newId = Math.max(...Array.from(this.permissionGroups.keys()).map(Number)) + 1;
-    const newGroup: PermissionGroup = {
+
+  async createGroup(group: Omit<Group, 'id' | 'createdAt' | 'updatedAt'>): Promise<Group> {
+    const newId = Math.max(...Array.from(this.groups.keys())) + 1;
+    const now = new Date().toISOString();
+    const newGroup: Group = {
       id: newId,
-      name: group.name,
-      description: group.description,
-      permissions: group.permissions,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      createdBy: 'system',
-      updatedBy: 'system'
+      createdAt: now,
+      updatedAt: now,
+      ...group
     };
-    this.permissionGroups.set(String(newId), newGroup);
+    this.groups.set(newId, newGroup);
     return newGroup;
   }
-  async updatePermissionGroup(groupId: number, updates: Partial<PermissionGroupInput>): Promise<PermissionGroup> {
-    const group = await this.getPermissionGroup(groupId);
-    if (updates.name || updates.description || updates.permissions) {
-      const validation = await this.validatePermissionGroup({
-        name: updates.name || group.name,
-        description: updates.description || group.description,
-        permissions: updates.permissions || group.permissions
-      });
-      if (!validation.isValid) {
-        throw this.createError('Invalid permission group data', 400);
-      }
-    }
-    const updatedGroup = {
+
+  async updateGroup(groupId: number, group: Partial<Group>): Promise<Group> {
+    const existing = await this.getGroup(groupId);
+    const updated = {
+      ...existing,
       ...group,
-      ...updates,
-      updatedAt: new Date().toISOString(),
-      updatedBy: 'system'
+      updatedAt: new Date().toISOString()
     };
-    this.permissionGroups.set(String(groupId), updatedGroup);
-    return updatedGroup;
+    this.groups.set(groupId, updated);
+    return updated;
   }
-  async deletePermissionGroup(groupId: number): Promise<void> {
-    const exists = this.permissionGroups.has(String(groupId));
-    if (!exists) {
-      throw this.createError(`Permission group not found: ${groupId}`, 404);
-    }
-    this.permissionGroups.delete(String(groupId));
+
+  async deleteGroup(groupId: number): Promise<void> {
+    if (!this.groups.has(groupId)) throw this.createError(`Group not found: ${groupId}`, 404);
+    this.groups.delete(groupId);
   }
-  async validatePermissionGroup(group: PermissionGroupInput): Promise<PermissionGroupValidation> {
-    const errors: Record<string, string> = {};
-    if (!group.name || group.name.length < 3) {
-      errors.name = 'Name must be at least 3 characters long';
+
+  async getGroupUsers(groupId: number): Promise<UserGroup[]> {
+    return Array.from(this.userGroups.values())
+      .filter(ug => ug.groupId === groupId);
+  }
+
+  async getGroupRoles(groupId: number): Promise<GroupRole[]> {
+    return Array.from(this.groupRoles.values())
+      .filter(gr => gr.groupId === groupId);
+  }
+
+  async addGroupRoles(groupId: number, roleIds: number[]): Promise<void> {
+    // Validate group exists
+    if (!this.groups.has(groupId)) {
+      throw this.createError(`Group not found: ${groupId}`, 404);
     }
-    if (!group.description || group.description.length < 10) {
-      errors.description = 'Description must be at least 10 characters long';
+
+    // Validate roles exist
+    for (const roleId of roleIds) {
+      if (!this.roles.has(roleId)) {
+        throw this.createError(`Role not found: ${roleId}`, 404);
+      }
     }
-    if (!group.permissions || Object.keys(group.permissions).length === 0) {
-      errors.permissions = 'At least one permission must be specified';
+
+    // Add roles
+    for (const roleId of roleIds) {
+      this.groupRoles.set(`${groupId}-${roleId}`, { groupId, roleId });
     }
+  }
+
+  async removeGroupRoles(groupId: number, roleIds: number[]): Promise<void> {
+    // Validate group exists
+    if (!this.groups.has(groupId)) {
+      throw this.createError(`Group not found: ${groupId}`, 404);
+    }
+
+    // Remove roles
+    for (const roleId of roleIds) {
+      this.groupRoles.delete(`${groupId}-${roleId}`);
+    }
+  }
+
+  async assignUserGroups(userId: number, groupIds: number[]): Promise<void> {
+    for (const groupId of groupIds) {
+      await this.getGroup(groupId); // Verify group exists
+      this.userGroups.set(`${userId}-${groupId}`, { userId, groupId });
+    }
+  }
+
+  async removeUserGroups(userId: number, groupIds: number[]): Promise<void> {
+    for (const groupId of groupIds) {
+      this.userGroups.delete(`${userId}-${groupId}`);
+    }
+  }
+
+  async getUserGroups(userId: number): Promise<UserGroup[]> {
+    return Array.from(this.userGroups.values())
+      .filter(ug => ug.userId === userId);
+  }
+
+  async getUserPermissions(userId: number): Promise<UserPermissions> {
+    // Get user's groups
+    const userGroups = Array.from(this.userGroups.values())
+      .filter(ug => ug.userId === userId);
+    const groups = userGroups
+      .map(ug => this.groups.get(ug.groupId))
+      .filter((g): g is Group => g !== undefined);
+
+    // Get roles from those groups
+    const groupRoles = Array.from(this.groupRoles.values())
+      .filter(gr => userGroups.some(ug => ug.groupId === gr.groupId));
+    const roles = groupRoles
+      .map(gr => this.roles.get(gr.roleId))
+      .filter((r): r is Role => r !== undefined);
+
     return {
-      isValid: Object.keys(errors).length === 0,
-      errors
+      groups,
+      roles
     };
-  }
-  async getUserPermissions(userId: string): Promise<Record<PermissionCategoryType, PermissionAction[]>> {
-    const userGroups = this.userPermissionGroups.get(userId) || [];
-    const result: Partial<Record<PermissionCategoryType, PermissionAction[]>> = {};
-    for (const groupId of userGroups) {
-      const group = await this.getPermissionGroup(Number(groupId));
-      Object.entries(group.permissions).forEach(([category, actions]) => {
-        const categoryType = category as PermissionCategoryType;
-        if (!result[categoryType]) {
-          result[categoryType] = [];
-        }
-        result[categoryType]!.push(...actions);
-      });
-    }
-    // Initialize missing categories with empty arrays
-    const allCategories: PermissionCategoryType[] = ['System', 'BillPay', 'Client', 'MoneyDesktop', 'Users', 'Security', 'Settings', 'Reports'];
-    allCategories.forEach(category => {
-      if (!result[category]) {
-        result[category] = [];
-      }
-    });
-    return result as Record<PermissionCategoryType, PermissionAction[]>;
-  }
-  async checkUserPermissions(
-    userId: string,
-    category: PermissionCategoryType,
-    actions: PermissionAction[]
-  ): Promise<boolean> {
-    const userPermissions = await this.getUserPermissions(userId);
-    const categoryPermissions = userPermissions[category] || [];
-    return actions.every(action => categoryPermissions.includes(action));
-  }
-  async getPermissionGroupUsers(groupId: number): Promise<string[]> {
-    await this.getPermissionGroup(groupId); // Verify group exists
-    const users: string[] = [];
-    this.userPermissionGroups.forEach((groups, userId) => {
-      if (groups.includes(String(groupId))) {
-        users.push(userId);
-      }
-    });
-    return users;
-  }
-  async assignUserPermissionGroups(userId: string, groupIds: number[]): Promise<void> {
-    // Verify all groups exist
-    await Promise.all(groupIds.map(id => this.getPermissionGroup(id)));
-    const currentGroups = this.userPermissionGroups.get(userId) || [];
-    const newGroups = Array.from(new Set([...currentGroups, ...groupIds.map(String)]));
-    this.userPermissionGroups.set(userId, newGroups);
-  }
-  async removeUserPermissionGroups(userId: string, groupIds: number[]): Promise<void> {
-    const currentGroups = this.userPermissionGroups.get(userId) || [];
-    const groupIdsToRemove = groupIds.map(String);
-    const newGroups = currentGroups.filter(id => !groupIdsToRemove.includes(id));
-    this.userPermissionGroups.set(userId, newGroups);
-  }
-  async getPermissionGroupAuditLog(groupId: number): Promise<Array<{
-    timestamp: string;
-    action: string;
-    userId: string;
-    details: string;
-    changes: Record<string, any>;
-  }>> {
-    await this.getPermissionGroup(groupId); // Verify group exists
-    return this.auditLog.get(String(groupId)) || [];
-  }
-  async clonePermissionGroup(sourceGroupId: number, newGroupName: string): Promise<PermissionGroup> {
-    const sourceGroup = await this.getPermissionGroup(sourceGroupId);
-    const input: PermissionGroupInput = {
-      name: newGroupName,
-      description: `Clone of ${sourceGroup.name}`,
-      permissions: { ...sourceGroup.permissions }
-    };
-    return this.createPermissionGroup(input);
   }
 }

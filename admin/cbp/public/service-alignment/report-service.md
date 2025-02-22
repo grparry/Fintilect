@@ -1,46 +1,69 @@
-#  Service API Alignment
+# Report Service API Alignment
 
-## Current TypeScript Implementation
-### Base URL
-```typescript
-// From AuditService.ts
-```
+## C# Implementation (Source of Truth)
 
-### Endpoints Called
-```typescript
-// List endpoints from TypeScript implementation
-```
-
-### TypeScript Types Used
-```typescript
-// List types from types/*.types.ts
-```
-
-## C# Implementation
 ### Controller Location
 ```csharp
-// Path to C# controller
+// ReportController found in:
+legacy/legacy-apis/cbp.admin-cu-api/ConnectBillPay.AdminCuApi/Controllers/ReportController.cs
 ```
 
 ### Available Endpoints
 ```csharp
-// List endpoints from C# controller
+// Report Execution
+POST   /api/v1/report/run                 - Run report with arguments
 ```
 
 ### C# Types
 ```csharp
-// List request/response types
+// Request/Response types in:
+// - Requests.Report.ReportRunRequest
 ```
 
-## Gaps and Actions Needed
-### Missing Endpoints
-- TBD
+## TypeScript Implementation Requirements
 
-### Type Mismatches
-- TBD
+### Required Types
+```typescript
+interface ReportRunRequest {
+    name: string;
+    arguments: Record<string, any>;
+}
 
-### Suggested Changes
-- TBD
+interface ReportResponse<T> {
+    jsonResponse: T;
+}
+```
 
-## Questions for Team Discussion
-- TBD
+### Required Service Methods
+```typescript
+interface IReportService {
+    /**
+     * Run a report with specified arguments
+     * @param request Report request parameters
+     * @returns Report data
+     */
+    runReport(request: ReportRunRequest): Promise<ReportResponse<any>>;
+}
+```
+
+## Implementation Notes
+
+1. API Structure
+   - Follow C# endpoint structure exactly
+   - Use POST for report execution
+   - Maintain consistent request/response patterns
+
+2. Type Alignment
+   - TypeScript types must match C# models
+   - Follow C# property names and types
+   - Ensure consistent validation rules
+
+3. Service Layer
+   - Implement C# endpoints in TypeScript
+   - Match C# functionality exactly
+   - No additional endpoints or features
+
+4. Report Execution
+   - Reports are executed via stored procedures
+   - Arguments are passed as key-value pairs
+   - Response is dynamic JSON data

@@ -1,103 +1,134 @@
 import { IBaseService } from './IBaseService';
 import {
-  Permission,
-  PermissionGroup,
-  PermissionGroupInput,
-  PermissionGroupFilters,
-  PermissionGroupValidation,
-  PermissionCategoryType,
-  PermissionAction
-} from '../../types/permission.types';
-import { PaginatedResponse } from '../../types/common.types';
+  Role,
+  Group,
+  GroupRole,
+  UserGroup,
+  PaginatedResponse,
+  UserPermissions
+} from '../../types/client.types';
 
 /**
- * Interface for permission management
- * Handles permission groups, access control, and role management
+ * Interface for permission service
+ * Handles groups, roles, and their relationships
  */
 export interface IPermissionService extends IBaseService {
   /**
-   * Get all available permissions
-   * @param category Optional category filter
+   * Get all roles
    */
-  getPermissions(category?: PermissionCategoryType): Promise<Permission[]>;
+  getRoles(): Promise<Role[]>;
+
   /**
-   * Get all permission groups with optional filtering
-   * @param filters Optional filters for permission groups
+   * Get role by ID
+   * @param roleId Role identifier
    */
-  getPermissionGroups(filters?: PermissionGroupFilters): Promise<PaginatedResponse<PermissionGroup>>;
+  getRole(roleId: number): Promise<Role>;
+
   /**
-   * Get a permission group by ID
-   * @param groupId Permission group ID
+   * Create role
+   * @param role Role to create
    */
-  getPermissionGroup(groupId: number): Promise<PermissionGroup>;
+  createRole(role: Omit<Role, 'id'>): Promise<Role>;
+
   /**
-   * Create a new permission group
-   * @param group Permission group data
+   * Update role
+   * @param roleId Role identifier
+   * @param role Updated role data
    */
-  createPermissionGroup(group: PermissionGroupInput): Promise<PermissionGroup>;
+  updateRole(roleId: number, role: Partial<Role>): Promise<Role>;
+
   /**
-   * Update an existing permission group
-   * @param groupId Permission group ID
-   * @param group Updated permission group data
+   * Delete role
+   * @param roleId Role identifier
    */
-  updatePermissionGroup(groupId: number, group: Partial<PermissionGroupInput>): Promise<PermissionGroup>;
+  deleteRole(roleId: number): Promise<void>;
+
   /**
-   * Delete a permission group
-   * @param groupId Permission group ID
+   * Get groups with pagination and filtering
+   * @param params Filter and pagination parameters
    */
-  deletePermissionGroup(groupId: number): Promise<void>;
+  getGroups(params?: {
+    customerId?: number;
+    searchTerm?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<PaginatedResponse<Group>>;
+
   /**
-   * Validate permission group data
-   * @param group Permission group data to validate
+   * Get group by ID
+   * @param groupId Group identifier
    */
-  validatePermissionGroup(group: PermissionGroupInput): Promise<PermissionGroupValidation>;
+  getGroup(groupId: number): Promise<Group>;
+
   /**
-   * Check if a user has specific permissions
-   * @param userId User ID
-   * @param category Permission category
-   * @param actions Required actions
+   * Create group
+   * @param group Group to create
    */
-  checkUserPermissions(
-    userId: string,
-    category: PermissionCategoryType,
-    actions: PermissionAction[]
-  ): Promise<boolean>;
+  createGroup(group: Omit<Group, 'id' | 'createdAt' | 'updatedAt'>): Promise<Group>;
+
   /**
-   * Get all permissions for a user
-   * @param userId User ID
+   * Update group
+   * @param groupId Group identifier
+   * @param group Updated group data
    */
-  getUserPermissions(userId: string): Promise<Record<PermissionCategoryType, PermissionAction[]>>;
+  updateGroup(groupId: number, group: Partial<Group>): Promise<Group>;
+
   /**
-   * Assign permission groups to a user
-   * @param userId User ID
-   * @param groupIds Permission group IDs
+   * Delete group
+   * @param groupId Group identifier
    */
-  assignUserPermissionGroups(userId: string, groupIds: number[]): Promise<void>;
+  deleteGroup(groupId: number): Promise<void>;
+
   /**
-   * Remove permission groups from a user
-   * @param userId User ID
-   * @param groupIds Permission group IDs
+   * Get users in a group
+   * @param groupId Group identifier
    */
-  removeUserPermissionGroups(userId: string, groupIds: number[]): Promise<void>;
+  getGroupUsers(groupId: number): Promise<UserGroup[]>;
+
   /**
-   * Get all users in a permission group
-   * @param groupId Permission group ID
+   * Get roles assigned to a group
+   * @param groupId Group identifier
    */
-  getPermissionGroupUsers(groupId: number): Promise<string[]>;
+  getGroupRoles(groupId: number): Promise<GroupRole[]>;
+
   /**
-   * Clone a permission group
-   * @param sourceGroupId Source permission group ID
-   * @param newGroupName Name for the cloned group
+   * Add roles to a group
+   * @param groupId Group identifier
+   * @param roleIds Role IDs to add
    */
-  clonePermissionGroup(sourceGroupId: number, newGroupName: string): Promise<PermissionGroup>;
+  addGroupRoles(groupId: number, roleIds: number[]): Promise<void>;
+
   /**
-   * Get permission group audit log
-   * @param groupId Permission group ID
+   * Remove roles from a group
+   * @param groupId Group identifier
+   * @param roleIds Role IDs to remove
    */
-  getPermissionGroupAuditLog(groupId: number): Promise<Array<{
-    timestamp: string;
-    action: string;
-    userId: string;
-    changes: Record<string, any>;
-  }>>;
+  removeGroupRoles(groupId: number, roleIds: number[]): Promise<void>;
+
+  /**
+   * Assign user to groups
+   * @param userId User identifier
+   * @param groupIds Group IDs to assign
+   */
+  assignUserGroups(userId: number, groupIds: number[]): Promise<void>;
+
+  /**
+   * Remove user from groups
+   * @param userId User identifier
+   * @param groupIds Group IDs to remove
+   */
+  removeUserGroups(userId: number, groupIds: number[]): Promise<void>;
+
+  /**
+   * Get groups assigned to a user
+   * @param userId User identifier
+   */
+  getUserGroups(userId: number): Promise<UserGroup[]>;
+
+  /**
+   * Get user permissions
+   * Returns a flattened view of a user's groups and roles
+   * @param userId User identifier
+   */
+  getUserPermissions(userId: number): Promise<UserPermissions>;
 }

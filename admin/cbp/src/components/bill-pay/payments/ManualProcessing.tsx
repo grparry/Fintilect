@@ -32,7 +32,7 @@ import SendIcon from '@mui/icons-material/Send';
 import SaveIcon from '@mui/icons-material/Save';
 import dayjs, { Dayjs } from 'dayjs';
 import {
-  Client as BillPayClient,
+  Client,
   Payee,
   ManualPayment,
   ManualPaymentFormData,
@@ -52,7 +52,7 @@ import {
   PaymentPriority
 } from '../../../types/payment.types';
 import {
-  Client,
+  Customer,
   ClientStatus
 } from '../../../types/client.types';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
@@ -103,9 +103,9 @@ const ManualProcessing: React.FC = () => {
   const paymentProcessorService = ServiceFactory.getInstance().getPaymentProcessorService();
   const clientService = ServiceFactory.getInstance().getClientService();
   // State
-  const [clients, setClients] = useState<BillPayClient[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
   const [payees, setPayees] = useState<Payee[]>([]);
-  const [selectedClient, setSelectedClient] = useState<BillPayClient | null>(null);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [selectedPayee, setSelectedPayee] = useState<Payee | null>(null);
   const [form, setForm] = useState<PaymentForm>(initialPaymentForm);
   const [loading, setLoading] = useState(false);
@@ -148,16 +148,16 @@ const ManualProcessing: React.FC = () => {
   const fetchInitialData = useCallback(async () => {
     try {
       setError(null);
-      const clientsResponse = await clientService.getClients();
+      const clientsResponse = await clientService.getCustomers();
       const filteredClients = clientsResponse.items
-        .filter((client: Client) => client.status === ClientStatus.Active)
-        .map((client: Client) => ({
-          id: client.id,
+        .filter((client: Customer) => client.status === ClientStatus.Active)
+        .map((client: Customer) => ({
+          id: client.id.toString(),
           name: client.name,
           status: client.status === ClientStatus.Active ? 'active' : 'inactive',
-          createdAt: client.createdAt || '',
-          updatedAt: client.updatedAt || ''
-        } as BillPayClient));
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } as Client));
       setClients(filteredClients);
     } catch (err) {
       setError('Failed to load clients');
@@ -169,7 +169,7 @@ const ManualProcessing: React.FC = () => {
     if (!selectedClient) return;
     try {
       setError(null);
-      const payeesResponse = await clientService.getClientContacts(selectedClient.id);
+      const payeesResponse = await clientService.getCustomerContacts(Number(selectedClient.id));
       const filteredPayees = payeesResponse
         .filter(contact => contact.isPrimary)
         .map(contact => ({
@@ -220,7 +220,7 @@ const ManualProcessing: React.FC = () => {
   // Form handlers
   const handleClientChange = (
     _: React.SyntheticEvent,
-    client: BillPayClient | null
+    client: Client | null
   ) => {
     setSelectedClient(client);
     setSelectedPayee(null);

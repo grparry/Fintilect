@@ -1,250 +1,296 @@
-# Service API Alignment
+# Bill Pay Service API Alignment
 
-## Current TypeScript Implementation
-### Base URL
+## Service Layer Implementation
+
+### TypeScript Service Location
 ```typescript
-// From PaymentService.ts
-basePath: string = '/api/v1/payment'
+// admin/cbp/src/services/interfaces/IBillPayService.ts
 ```
 
-### Endpoints Called
+### Service Interface
 ```typescript
-// PaymentService.ts
-getPendingPayments(request: PendingPaymentSearchRequest): Promise<PendingPaymentListResponse>
-approvePayment(paymentId: string): Promise<void>
-rejectPayment(paymentId: string, reason: string): Promise<void>
-bulkApprove(paymentIds: string[]): Promise<boolean>
-bulkReject(paymentIds: string[]): Promise<boolean>
-getPaymentHistory(paymentId: string): Promise<PaymentHistory>
+interface IBillPayService extends IBaseService {
+  // Configuration
+  getConfiguration(): Promise<BillPayConfig>;
+  updateConfiguration(config: BillPayConfigUpdate): Promise<BillPayConfigValidation>;
+  
+  // Exception Management
+  getExceptions(filters: PaymentFilters): Promise<PaginatedResponse<PaymentException>>;
+  resolveException(exceptionId: string, resolution: ExceptionResolution): Promise<void>;
+  
+  // Client and Payee Management
+  getClients(): Promise<Client[]>;
+  getPayees(clientId: string): Promise<Payee[]>;
+  
+  // Analytics
+  getStats(timeframe: 'day' | 'week' | 'month' | 'quarter' | 'year'): Promise<BillPayStats>;
+  getTransactionTrends(timeframe: 'day' | 'week' | 'month' | 'quarter' | 'year'): Promise<TransactionTrend[]>;
+  
+  // Holiday Management
+  getHolidays(): Promise<Holiday[]>;
+  addHoliday(holiday: HolidayInput): Promise<Holiday>;
+  
+  // Notification Management
+  getNotificationTemplates(): Promise<NotificationTemplate[]>;
+  updateNotificationTemplate(templateId: number, template: NotificationTemplateInput): Promise<NotificationTemplate>;
+  
+  // Security
+  getSecuritySettings(): Promise<BillPaySecuritySettings>;
+  updateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecuritySettings>;
+  validateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecurityValidation>;
+  sendOTP(method: BillPayOTPMethod, destination: string): Promise<void>;
+}
 ```
 
-### TypeScript Types Used
+### TypeScript Types
 ```typescript
 // From bill-pay.types.ts
-interface PendingPaymentSearchRequest {
-  date?: string;
-  endDate?: string;
-  paymentId?: string;
-  memberId?: string;
+interface BillPayStats {
+  totalTransactions: number;
+  totalAmount: number;
+  successRate: number;
+  averageTransactionSize: number;
+  transactionsByMethod: Record<string, number>;
+  transactionsByStatus: Record<PaymentStatus, number>;
+  recentActivity: Array<{
+    id: string;
+    amount: number;
+    method: string;
+    status: PaymentStatus;
+    timestamp: string;
+  }>;
 }
 
-interface PendingPaymentResponse {
-  id: string;
-  userPayeeListId: string;
-  fundingAccount: string;
+interface TransactionTrend {
+  date: string;
   amount: number;
-  statusCode: number;
-  friendlyName?: string;
-  memo?: string;
-  willProcessDate: string;
-  recurringPaymentId?: string;
-  suspended: boolean;
-  usersAccountAtPayee?: string;
-  nameOnAccount?: string;
-  payeeId: string;
-  fisPayeeId?: string;
-  payeeName: string;
-  payeeType?: string;
-  paymentMethod?: string;
-  numPayments?: number;
-  paymentsProcessed?: number;
-  frequency?: number;
-  memberId: string;
-  source?: string;
-  deliveryDate?: string;
+  count: number;
 }
 
-interface PendingPaymentListResponse {
-  PendingPayments: PendingPaymentResponse[];
+interface Client {
+  id: string;
+  name: string;
+  status: 'active' | 'inactive';
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Payee {
+  id: string;
+  name: string;
+  accountNumber?: string;
+  routingNumber?: string;
+  address?: string;
+  status: 'active' | 'inactive';
 }
 ```
 
 ## C# Implementation
-### Controller Location
+
+### Controller Locations
 ```csharp
-// legacy/legacy-apis/cbp.admin-cu-api/ConnectBillPay.AdminCuApi/Controllers/PaymentController.cs
+// legacy/legacy-apis/cbp.admin-cu-api/Controllers/ConfigurationController.cs
+// legacy/legacy-apis/cbp.admin-cu-api/Controllers/ClientController.cs
+// legacy/legacy-apis/cbp.admin-cu-api/Controllers/PayeeController.cs
+// legacy/legacy-apis/cbp.admin-cu-api/Controllers/HolidayController.cs
+// legacy/legacy-apis/cbp.admin-cu-api/Controllers/NotificationController.cs
+// legacy/legacy-apis/cbp.admin-cu-api/Controllers/SecurityController.cs
 ```
 
-### Available Endpoints
+### Key Endpoints
 ```csharp
-[HttpPost("change-history")] GetScheduledPaymentChangeHistory
-[HttpPost("recurring/change-history")] GetRecurringPaymentChangeHistory
-[HttpPost("pending")] GetPendingPaymentsByDate
-[HttpPost("pending-payments")] GetPendingPayments
-[HttpPost("activity")] GetPaymentActivity
-[HttpPost("reprocess")] Reprocess
-```
+[Route("api/v1/configuration")]
+public class ConfigurationController : ControllerBase
+{
+    [HttpGet]
+    public async Task<ActionResult<BillPayConfigResponse>> GetConfiguration()
 
-### C# Types
-```csharp
-// Requests/Payment/PendingPaymentSearchRequest.cs
-public class PendingPaymentSearchRequest {
-    public DateTime? Date { get; set; }
-    public DateTime? EndDate { get; set; }
-    public string PaymentId { get; set; }
-    public string MemberId { get; set; }
+    [HttpPut]
+    public async Task<ActionResult<BillPayConfigValidationResponse>> UpdateConfiguration([FromBody] BillPayConfigRequest request)
 }
 
-// Responses/Payment/PendingPaymentResponse.cs
-public class PendingPaymentResponse {
-    public string Id { get; set; }
-    public string UserPayeeListId { get; set; }
-    public string FundingAccount { get; set; }
-    public int Amount { get; set; }
-    public int StatusCode { get; set; }
-    public string FriendlyName { get; set; }
-    public string Memo { get; set; }
-    public DateTime WillProcessDate { get; set; }
-    public string RecurringPaymentId { get; set; }
-    public bool Suspended { get; set; }
-    public string UsersAccountAtPayee { get; set; }
-    public string NameOnAccount { get; set; }
-    public string PayeeID { get; set; }
-    public string FisPayeeId { get; set; }
-    public string PayeeName { get; set; }
-    public string PayeeType { get; set; }
-    public string PaymentMethod { get; set; }
-    public short? NumPayments { get; set; }
-    public short? PaymentsProcessed { get; set; }
-    public int? Frequency { get; set; }
-    public string MemberId { get; set; }
-    public string Source { get; set; }
-    public DateTime? DeliveryDate { get; set; }
+[Route("api/v1/clients")]
+public class ClientController : ControllerBase
+{
+    [HttpGet]
+    public async Task<ActionResult<List<ClientResponse>>> GetClients()
+
+    [HttpGet("{id}/payees")]
+    public async Task<ActionResult<List<PayeeResponse>>> GetPayees(string id)
 }
 
-// Responses/Payment/PendingPaymentListResponse.cs
-public class PendingPaymentListResponse {
-    public List<PendingPaymentResponse> PendingPayments { get; set; }
+[Route("api/v1/notifications")]
+public class NotificationController : ControllerBase
+{
+    [HttpGet("templates")]
+    public async Task<ActionResult<List<NotificationTemplateResponse>>> GetTemplates()
+
+    [HttpPut("templates/{id}")]
+    public async Task<ActionResult<NotificationTemplateResponse>> UpdateTemplate(int id, [FromBody] NotificationTemplateRequest request)
 }
 ```
 
-## Endpoint Alignment Analysis
+## Service Layer Alignment
 
-### Current TypeScript Service Endpoints vs C# Controller Endpoints
+### Type Transformations
+1. Property Case Handling
+   - TypeScript uses camelCase (e.g., `clientId`, `payeeId`)
+   - C# uses PascalCase (e.g., `ClientId`, `PayeeId`)
+   - Axios automatically handles case transformation
 
-| TypeScript Endpoint | C# Endpoint | Status | Notes |
-|-------------------|-------------|--------|-------|
-| getPendingPayments | [POST] pending-payments | ✅ Aligned | Used for fetching pending payments with search criteria |
-| approvePayment | [POST] status | ⚠️ Partial | TypeScript hardcodes StatusCode to PENDING_APPROVAL |
-| rejectPayment | [POST] status | ⚠️ Partial | TypeScript hardcodes StatusCode to REJECTED |
-| bulkApprove | ❌ Missing | ❌ Missing | No corresponding C# endpoint for bulk approval |
-| bulkReject | ❌ Missing | ❌ Missing | No corresponding C# endpoint for bulk rejection |
-| getPaymentHistory | ❌ Missing | ❌ Missing | No direct endpoint, might need to use change-history |
+2. Date Handling
+   - TypeScript: ISO string format (`createdAt: string`)
+   - C#: DateTime (`CreatedAt: DateTime`)
+   - Service layer handles date format conversion
 
-### Missing C# Endpoints in TypeScript
+3. Numeric Types
+   - TypeScript: `number` for all numeric values
+   - C#: Mix of `decimal` for amounts and `int` for counts
+   - Service layer ensures proper numeric type conversion
 
-1. Change History Endpoints:
-   - [POST] change-history (GetScheduledPaymentChangeHistory)
-   - [POST] recurring/change-history (GetRecurringPaymentChangeHistory)
+4. Exception Handling
+   - FISException maps to PaymentException in mock service
+   - Exception resolution data stored in FISException fields
+   - Consistent error status and message mapping
 
-2. Payment Management:
-   - [POST] pending (GetPendingPaymentsByDate)
-   - [POST] activity (GetPaymentActivity)
-   - [POST] reprocess (Reprocess)
-   - [POST] confirmation (SendConfirmationSummary)
-   - [PUT] {paymentId} (EditPayment)
-   - [DELETE] {paymentId} (CancelPayment)
-   - [POST] cancel-payment-refund (CancelPaymentAndRefund)
+### Error Handling
+```typescript
+// Service Layer Error Handling
+try {
+  const response = await this.get<BillPayConfig>('/config');
+  return response.data;
+} catch (error) {
+  if (axios.isAxiosError(error)) {
+    switch (error.response?.status) {
+      case 400: throw new ValidationError(error.response.data);
+      case 404: throw new NotFoundError('Configuration not found');
+      default: throw new ApiError('Failed to get configuration');
+    }
+  }
+  throw error;
+}
+```
 
-### Critical Misalignments
+## Implementation Notes
 
-1. Status Updates:
-   - TypeScript uses hardcoded status values in approvePayment/rejectPayment
-   - C# expects a generic status update endpoint with flexible status codes
-   - Solution: Update TypeScript to use the generic status update pattern
+1. API Type Separation
+   - Internal types in separate files:
+     - bill-pay.types.ts
+     - security.types.ts
+     - payment.types.ts
+   - Service layer handles type transformations
 
-2. Bulk Operations:
-   - TypeScript implements bulk approve/reject that don't exist in C#
-   - Need to either:
-     a) Remove bulk operations from TypeScript
-     b) Implement bulk endpoints in C#
-     c) Implement bulk operations as client-side loops over single operations
+2. Service Responsibility Separation
+   - Payment operations moved to IPaymentService
+   - IBillPayService focuses on bill pay configuration and management
+   - Clear separation of concerns between services
 
-3. Payment History:
-   - TypeScript tries to fetch history from a non-existent endpoint
-   - Should use the change-history endpoints instead
-   - Need to align the response types with C# implementation
+3. Mock Service Implementation
+   - Consistent with real service interfaces
+   - Uses mock data generators for stats and trends
+   - Proper type mapping for exceptions and security settings
+
+4. Security
+   - OTP support for sensitive operations
+   - Security settings validation
+   - Configurable security policies
+
+## Gaps and Actions
+
+### Missing Functionality
+1. Configuration Management
+   - Add configuration templates
+   - Add configuration versioning
+   - Add configuration validation rules
+
+2. Exception Management
+   - Add exception categorization
+
+### Type Mismatches
+1. Status Enums
+   - Standardize status enums across types
+   - Consider using shared type definitions
+   - Add status transition validation
+
+2. Amount Handling
+   - Ensure consistent decimal handling
+   - Add currency support
+   - Implement proper rounding rules
+
+### C# API Gaps
+
+1. Configuration Endpoints
+   - TypeScript `getConfiguration` maps to C# `Get(Guid id)`
+   - Missing TypeScript endpoint for C# `Create` operation
+   - Missing TypeScript endpoint for C# `Refresh` operation
+   - Need to align configuration CRUD operations
+
+2. Exception Management
+   - C# API only supports date-based exception queries (`GetExceptionsBySingleDate`)
+   - TypeScript interface supports more flexible filtering (`PaymentFilters`)
+   - Need to extend C# API to support full filter capabilities
+   - C# refund endpoint not exposed in TypeScript interface
+
+3. Security Settings
+   - No dedicated SecurityController exists in C# API
+   - Missing C# endpoints for:
+     - `validateSecuritySettings`
+     - `sendOTP`
+     - Security policy management
+   - Security validation currently handled through ConfigurationController
+   - Need to implement proper security endpoints or document where these operations exist
+
+4. Analytics Support
+   - No dedicated analytics/stats endpoints in C# API
+   - Current stats may be handled through:
+     - PaymentController's activity endpoint
+     - ReportController's generic report runner
+   - Missing direct support for:
+     - `getStats` with timeframe filtering
+     - `getTransactionTrends` with timeframe support
+   - Need to:
+     - Either expose existing report endpoints through TypeScript interface
+     - Or implement dedicated analytics endpoints
+     - Ensure consistent date range handling between front-end and back-end
 
 ### Action Items
 
-1. High Priority:
-   - Remove or properly implement bulk operations
-   - Fix payment history endpoint usage
-   - Align status update implementations
+1. API Alignment
+   - Document all C# endpoints and their TypeScript counterparts
+   - Identify missing endpoints on both sides
+   - Create mapping document for type transformations
 
-2. Medium Priority:
-   - Add missing payment management endpoints
-   - Implement proper error handling for all endpoints
-   - Add proper TypeScript types for all C# request/response models
+2. Security Implementation
+   - Determine if security operations should be:
+     - Added to ConfigurationController
+     - Implemented in a new SecurityController
+     - Or handled through existing endpoints
+   - Document security validation flow
+   - Implement proper OTP handling
 
-3. Low Priority:
-   - Add documentation for all endpoints
-   - Implement proper validation matching C# side
-   - Add proper error mapping between C# and TypeScript
+3. Analytics Implementation
+   - Review existing report procedures
+   - Document which reports provide stats and trends
+   - Consider creating dedicated analytics endpoints
+   - Ensure consistent date handling
 
-### Questions for Implementation
+4. Error Handling
+   - Map C# exception types to TypeScript error types
+   - Ensure consistent error codes and messages
 
-1. Bulk Operations:
-   - Should we keep the bulk operations in TypeScript?
-   - If yes, should we implement them in C# or handle them client-side?
+## Suggested Improvements
+1. Type Safety
+   - Add runtime type validation
+   - Implement stricter null checking
+   - Add request/response type guards
 
-2. Status Updates:
-   - Should we keep the specialized approve/reject methods?
-   - Should we expose the generic status update instead?
-
-3. History Implementation:
-   - Which history endpoint should we use for the current getPaymentHistory calls?
-   - Do we need to implement both scheduled and recurring payment history?
-
-4. Error Handling:
-   - Should we standardize error responses between C# and TypeScript?
-   - How should we handle C# status codes in TypeScript?
-
-## Gaps and Actions Needed
-### Missing Endpoints
-- TypeScript is missing implementation for `GetScheduledPaymentChangeHistory`
-- TypeScript is missing implementation for `GetRecurringPaymentChangeHistory`
-- TypeScript is missing implementation for `GetPaymentActivity`
-- TypeScript is missing implementation for `Reprocess`
-
-### Type Mismatches
-1. DateTime vs string:
-   - C# uses `DateTime?` for dates while TypeScript uses string
-   - Need to ensure proper date formatting in TypeScript (ISO format)
-
-2. Case Sensitivity:
-   - C# uses PascalCase for property names (e.g., `PayeeID`)
-   - TypeScript uses camelCase (e.g., `payeeId`)
-   - Need to ensure consistent casing in API responses
-
-3. Numeric Types:
-   - C# uses specific numeric types (`int`, `short?`)
-   - TypeScript uses generic `number`
-   - Need to ensure proper number range validation
-
-### Suggested Changes
-1. Update TypeScript types to match C# PascalCase for API responses:
-   ```typescript
-   interface PendingPaymentResponse {
-     Id: string;
-     UserPayeeListId: string;
-     // ... rest of properties in PascalCase
-   }
-   ```
-
-2. Add proper date handling in TypeScript service:
-   ```typescript
-   const request = {
-     Date: date?.toISOString(),
-     EndDate: endDate?.toISOString(),
-     // ...
-   };
-   ```
-
-3. Add missing endpoint implementations in PaymentService.ts
+2. API Consistency
+   - Standardize error responses
+   - Add OpenAPI documentation
+   - Implement API versioning
 
 ## Questions for Team Discussion
-1. Should we implement the missing endpoints in TypeScript?
-2. Do we need to standardize on case convention (PascalCase vs camelCase)?
-3. Should we add runtime type checking for numeric ranges?
-4. Do we need to implement all C# endpoints or only the ones currently used by the frontend?
+1. Should we add support for configuration templates?
+2. How should we handle configuration versioning?
+3. Do we need more granular permission controls?
+4. Should we add support for multiple notification providers?

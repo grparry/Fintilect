@@ -17,7 +17,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CloseIcon from '@mui/icons-material/Close';
-import { Payment } from '../../../types/bill-pay.types';
+import { Payment } from '../../../types/payment.types';
 import dayjs from 'dayjs';
 
 interface PaymentDetailsProps {
@@ -75,11 +75,11 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Payment ID</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.id}</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.Id}</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Status</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.status}</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.Status}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -90,12 +90,12 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
               <Divider sx={{ my: 1 }} />
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Client ID</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.clientId}</Typography>
+                  <Typography variant="body2" color="text.secondary">Member ID</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.MemberId}</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Client Name</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.clientName}</Typography>
+                  <Typography variant="body2" color="text.secondary">Source Application</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.SourceApplication || 'N/A'}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -106,29 +106,17 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
               <Divider sx={{ my: 1 }} />
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Payee ID</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.payeeId}</Typography>
+                  <Typography variant="body2" color="text.secondary">Payee List ID</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.UserPayeeListId}</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Payee Name</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.payeeName}</Typography>
+                  <Typography variant="body2" color="text.secondary">Bill Reference</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.BillReference}</Typography>
                 </Grid>
-                {payment.recipient && (
-                  <>
-                    <Grid item xs={6}>
-                      <Typography variant="body2" color="text.secondary">Account Number</Typography>
-                      <Typography variant="body1" color="text.primary">{payment.recipient.accountNumber}</Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography variant="body2" color="text.secondary">Routing Number</Typography>
-                      <Typography variant="body1" color="text.primary">{payment.recipient.routingNumber}</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="body2" color="text.secondary">Bank Name</Typography>
-                      <Typography variant="body1" color="text.primary">{payment.recipient.bankName}</Typography>
-                    </Grid>
-                  </>
-                )}
+                <Grid item xs={6}>
+                  <Typography variant="body2" color="text.secondary">Funding Account</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.FundingAccount}</Typography>
+                </Grid>
               </Grid>
             </Grid>
 
@@ -138,44 +126,32 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
               <Divider sx={{ my: 1 }} />
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Will Process Date</Typography>
+                  <Typography variant="body2" color="text.secondary">Process Date</Typography>
                   <Typography variant="body1" color="text.primary">
-                    {new Date(payment.effectiveDate).toLocaleDateString()}
+                    {payment.ProcessDate ? new Date(payment.ProcessDate).toLocaleDateString() : 'N/A'}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Payment Type</Typography>
+                  <Typography variant="body2" color="text.secondary">Will Process Date</Typography>
                   <Typography variant="body1" color="text.primary">
-                    {payment.method === 'ach' ? 'Electronic' : 'Check'}
+                    {new Date(payment.WillProcessDate).toLocaleDateString()}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Amount</Typography>
                   <Typography variant="body1" color="text.primary">
-                    ${payment.amount.toFixed(2)}
+                    ${Number(payment.Amount).toFixed(2)}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">Currency</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.currency}</Typography>
+                <Grid item xs={12}>
+                  <Typography variant="body2" color="text.secondary">Memo</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.Memo}</Typography>
                 </Grid>
-                {payment.description && (
-                  <Grid item xs={12}>
-                    <Typography variant="body2" color="text.secondary">Description</Typography>
-                    <Typography variant="body1" color="text.primary">{payment.description}</Typography>
-                  </Grid>
-                )}
-                {payment.reference && (
-                  <Grid item xs={12}>
-                    <Typography variant="body2" color="text.secondary">Reference</Typography>
-                    <Typography variant="body1" color="text.primary">{payment.reference}</Typography>
-                  </Grid>
-                )}
               </Grid>
             </Grid>
           </Grid>
         </DialogContent>
-        {payment.status === 'PENDING' && (
+        {payment.Status === 'PENDING' && (
           <DialogActions>
             <Button 
               variant="contained" 
@@ -248,7 +224,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="Will Process Date"
-                    defaultValue={dayjs(payment.effectiveDate)}
+                    defaultValue={dayjs(payment.WillProcessDate)}
                     slotProps={{
                       textField: {
                         required: true,
@@ -265,7 +241,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
                   fullWidth
                   label="Amount"
                   type="number"
-                  defaultValue={payment.amount}
+                  defaultValue={payment.Amount}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>
                   }}

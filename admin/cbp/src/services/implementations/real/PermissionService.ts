@@ -1,93 +1,111 @@
 import { IPermissionService } from '../../interfaces/IPermissionService';
 import {
-  Permission,
-  PermissionGroup,
-  PermissionGroupInput,
-  PermissionGroupFilters,
-  PermissionGroupValidation,
-  PermissionCategoryType,
-  PermissionAction
-} from '../../../types/permission.types';
-import { PaginatedResponse } from '../../../types/common.types';
+  Role,
+  Group,
+  GroupRole,
+  UserGroup,
+  PaginatedResponse,
+  UserPermissions
+} from '../../../types/client.types';
 import { BaseService } from './BaseService';
 
 export class PermissionService extends BaseService implements IPermissionService {
   constructor(basePath: string = '/api/v1/permissions') {
     super(basePath);
   }
-  async getPermissions(): Promise<Permission[]> {
-    return this.get<Permission[]>('/all');
+
+  async getRoles(): Promise<Role[]> {
+    return this.get<Role[]>('/roles');
   }
-  async getPermissionGroups(filters?: PermissionGroupFilters): Promise<PaginatedResponse<PermissionGroup>> {
-    return this.get<PaginatedResponse<PermissionGroup>>('/groups', { params: filters });
+
+  async getRole(roleId: number): Promise<Role> {
+    return this.get<Role>(`/roles/${roleId}`);
   }
-  async getPermissionGroup(id: number): Promise<PermissionGroup> {
-    return this.get<PermissionGroup>(`/groups/${id}`);
+
+  async createRole(role: Omit<Role, 'id'>): Promise<Role> {
+    return this.post<Role>('/roles', role);
   }
-  async createPermissionGroup(group: PermissionGroupInput): Promise<PermissionGroup> {
-    return this.post<PermissionGroup>('/groups', group);
+
+  async updateRole(roleId: number, role: Partial<Role>): Promise<Role> {
+    return this.put<Role>(`/roles/${roleId}`, role);
   }
-  async updatePermissionGroup(id: number, group: Partial<PermissionGroupInput>): Promise<PermissionGroup> {
-    return this.put<PermissionGroup>(`/groups/${id}`, group);
+
+  async deleteRole(roleId: number): Promise<void> {
+    await this.delete(`/roles/${roleId}`);
   }
-  async deletePermissionGroup(groupId: number): Promise<void> {
+
+  async getGroups(params?: {
+    customerId?: number;
+    searchTerm?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<PaginatedResponse<Group>> {
+    return this.get<PaginatedResponse<Group>>('/groups', { params });
+  }
+
+  async getGroup(groupId: number): Promise<Group> {
+    return this.get<Group>(`/groups/${groupId}`);
+  }
+
+  async createGroup(group: Omit<Group, 'id' | 'createdAt' | 'updatedAt'>): Promise<Group> {
+    return this.post<Group>('/groups', group);
+  }
+
+  async updateGroup(groupId: number, group: Partial<Group>): Promise<Group> {
+    return this.put<Group>(`/groups/${groupId}`, group);
+  }
+
+  async deleteGroup(groupId: number): Promise<void> {
     await this.delete(`/groups/${groupId}`);
   }
-  async validatePermissionGroup(group: PermissionGroupInput): Promise<PermissionGroupValidation> {
-    return this.post<PermissionGroupValidation>('/groups/validate', group);
+
+  async getGroupUsers(groupId: number): Promise<UserGroup[]> {
+    return this.get<UserGroup[]>(`/groups/${groupId}/users`);
   }
-  async getPermissionCategories(): Promise<PermissionCategoryType[]> {
-    return this.get<PermissionCategoryType[]>('/categories');
+
+  async getGroupRoles(groupId: number): Promise<GroupRole[]> {
+    return this.get<GroupRole[]>(`/groups/${groupId}/roles`);
   }
-  async getPermissionActions(): Promise<PermissionAction[]> {
-    return this.get<PermissionAction[]>('/actions');
+
+  async addGroupRoles(groupId: number, roleIds: number[]): Promise<void> {
+    await this.post(`/groups/${groupId}/roles`, { roleIds });
   }
-  async assignPermissionGroup(userId: string, groupId: string): Promise<void> {
-    await this.post<void>('/groups/assign', { userId, groupId });
+
+  async removeGroupRoles(groupId: number, roleIds: number[]): Promise<void> {
+    await this.delete(`/groups/${groupId}/roles`, { data: { roleIds } });
   }
-  async unassignPermissionGroup(userId: string, groupId: string): Promise<void> {
-    await this.post<void>('/groups/unassign', { userId, groupId });
+
+  async assignUserGroups(userId: number, groupIds: number[]): Promise<void> {
+    await this.post<void>(`/users/${userId}/groups`, { groupIds });
   }
-  async getUserPermissionGroups(userId: string): Promise<PermissionGroup[]> {
-    return this.get<PermissionGroup[]>(`/users/${userId}/groups`);
+
+  async removeUserGroups(userId: number, groupIds: number[]): Promise<void> {
+    await this.delete(`/users/${userId}/groups`, { data: { groupIds } });
   }
-  async getUserPermissions(userId: string): Promise<Record<PermissionCategoryType, PermissionAction[]>> {
-    const permissions = await this.get<Permission[]>(`/users/${userId}/permissions`);
-    return permissions.reduce((acc, permission) => {
-      acc[permission.category] = permission.actions;
-      return acc;
-    }, {} as Record<PermissionCategoryType, PermissionAction[]>);
+
+  async getUserGroups(userId: number): Promise<UserGroup[]> {
+    return this.get<UserGroup[]>(`/users/${userId}/groups`);
   }
-  async checkUserPermissions(
-    userId: string,
-    category: PermissionCategoryType,
-    actions: PermissionAction[]
-  ): Promise<boolean> {
-    return this.post<boolean>('/check-permissions', { userId, category, actions });
-  }
-  async assignUserPermissionGroups(userId: string, groupIds: number[]): Promise<void> {
-    await this.post<void>('/users/assign-groups', { userId, groupIds });
-  }
-  async removeUserPermissionGroups(userId: string, groupIds: number[]): Promise<void> {
-    await this.post<void>('/users/remove-groups', { userId, groupIds });
-  }
-  async getPermissionGroupUsers(groupId: number): Promise<string[]> {
-    return this.get<string[]>(`/groups/${groupId}/users`);
-  }
-  async getPermissionGroupAuditLog(groupId: number): Promise<Array<{
-    timestamp: string;
-    action: string;
-    userId: string;
-    changes: Record<string, any>;
-  }>> {
-    return this.get<Array<{
-      timestamp: string;
-      action: string;
-      userId: string;
-      changes: Record<string, any>;
-    }>>(`/groups/${groupId}/audit-log`);
-  }
-  async clonePermissionGroup(sourceGroupId: number, newGroupName: string): Promise<PermissionGroup> {
-    return this.post<PermissionGroup>(`/groups/${sourceGroupId}/clone`, { name: newGroupName });
+
+  async getUserPermissions(userId: number): Promise<UserPermissions> {
+    // Get user's groups
+    const userGroups = await this.getUserGroups(userId);
+    const groups = await Promise.all(
+      userGroups.map((ug: UserGroup) => this.getGroup(ug.groupId))
+    );
+
+    // Get roles from those groups
+    const groupRoles = await Promise.all(
+      userGroups.map((ug: UserGroup) => this.getGroupRoles(ug.groupId))
+    );
+    const roleIds = new Set(groupRoles.flat().map((gr: GroupRole) => gr.roleId));
+    const roles = await Promise.all(
+      Array.from(roleIds).map((id: number) => this.getRole(id))
+    );
+
+    return {
+      groups,
+      roles
+    };
   }
 }

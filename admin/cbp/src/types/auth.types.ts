@@ -1,4 +1,4 @@
-import { User } from './client.types';
+import { User, UserPermissions } from './client.types';
 
 export interface LoginFormData {
   username: string;
@@ -14,7 +14,7 @@ export interface AuthState {
   user: User | null;
   loading: boolean;
   error: string | null;
-  permissions: string[];
+  userPermissions: UserPermissions | null;
 }
 export interface LoginResponse {
   user: User;
@@ -25,7 +25,7 @@ export interface AuthContextType {
   user: User | null;
   loading: boolean;
   error: string | null;
-  permissions: string[];
+  userPermissions: UserPermissions | null;
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<void>;

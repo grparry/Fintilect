@@ -26,14 +26,15 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh';
 import HistoryIcon from '@mui/icons-material/History';
 import { useAuth } from '../../../hooks/useAuth';
+import { PaymentException } from '@/types/payment.types';
 import {
-  PaymentException,
   ExceptionResolution,
   ResolutionHistory,
-  FISRetryResult,
-  FISExceptionHistory,
-  FISExceptionStatus,
-} from '../../../types/bill-pay.types';
+  ExceptionToolStatus,
+  ExceptionTool,
+  ExceptionToolFilters,
+  ExceptionStatus,
+} from '@/types/bill-pay.types';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import dayjs from 'dayjs';
 
@@ -49,43 +50,61 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
   onResolutionComplete,
 }) => {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [resolution, setResolution] = useState<ExceptionResolution>({
-    type: 'manual',
-    action: '',
-    notes: '',
-    userId: user?.id?.toString(),
-    timestamp: new Date().toISOString(),
-  });
+  const [currentException, setCurrentException] = useState<PaymentException>(exception);
   const [history, setHistory] = useState<ResolutionHistory[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [historyDialogOpen, setHistoryDialogOpen] = useState(false);
-  const [retryResult, setRetryResult] = useState<FISRetryResult | null>(null);
-  const exceptionService = ServiceFactory.getInstance().getFISExceptionService();
+  const [resolution, setResolution] = useState<{
+    action: string;
+    notes: string;
+  }>({
+    action: '',
+    notes: ''
+  });
+  const [retryResult, setRetryResult] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
+  const exceptionService = ServiceFactory.getInstance().getExceptionService();
+
   useEffect(() => {
     loadResolutionHistory();
-  }, [exception.id]);
-  const mapFISHistoryToResolutionHistory = (fisHistory: FISExceptionHistory[]): ResolutionHistory[] => {
-    return fisHistory.map(item => ({
-      id: parseInt(item.id),
-      exceptionId: parseInt(item.exceptionId),
-      action: item.type,
-      notes: item.details.metadata?.notes as string || '',
-      user: item.userName,
-      timestamp: item.timestamp,
-    }));
-  };
-  const loadResolutionHistory = async () => {
+  }, [currentException.Id]);
+
+  const loadException = async () => {
     try {
-      setLoading(true);
-      const fisHistory = await exceptionService.getFISExceptionHistory(exception.id);
-      setHistory(mapFISHistoryToResolutionHistory(fisHistory));
+      const result = await exceptionService.getException(currentException.Id.toString());
+      if (result.status === 'Resolved') {
+        onResolutionComplete();
+      }
     } catch (err) {
-      setError('Failed to load resolution history. Please try again later.');
-    } finally {
-      setLoading(false);
+      console.error('Failed to load exception:', err);
+      setError('Failed to load exception');
     }
   };
+
+  const loadResolutionHistory = async () => {
+    try {
+      const history = await exceptionService.getExceptions({
+        searchTerm: currentException.Id.toString(),
+        page: 1,
+        limit: 10
+      } as ExceptionToolFilters);
+      setHistory(history.items.map((item: ExceptionTool) => ({
+        id: parseInt(item.id),
+        exceptionId: parseInt(item.id),
+        action: item.status,
+        timestamp: item.timestamp,
+        user: item.clientName,
+        notes: item.errorMessage || ''
+      })));
+    } catch (err) {
+      console.error('Failed to load resolution history:', err);
+      setError('Failed to load resolution history');
+    }
+  };
+
   const handleResolve = async () => {
     if (!resolution.action || !resolution.notes) {
       setError('Please provide both action and notes for resolution');
@@ -93,31 +112,40 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
     }
     try {
       setLoading(true);
-      await exceptionService.updateFISExceptionStatus(
-        exception.id,
-        FISExceptionStatus.RESOLVED
+      await exceptionService.updateExceptionStatus(
+        currentException.Id.toString(),
+        resolution.action as ExceptionToolStatus,
+        resolution.notes
       );
+      await loadException();
       onResolutionComplete();
     } catch (err) {
-      setError('Failed to resolve exception. Please try again later.');
+      console.error('Failed to resolve exception:', err);
+      setError('Failed to resolve exception');
     } finally {
       setLoading(false);
     }
   };
+
   const handleRetry = async () => {
     try {
       setLoading(true);
-      const result = await exceptionService.retryFISException(exception.id);
-      setRetryResult(result);
-      if (result.success) {
+      const result = await exceptionService.getException(currentException.Id.toString());
+      setRetryResult({
+        success: result.status === 'Resolved',
+        message: result.errorMessage || 'Exception processed successfully'
+      });
+      if (result.status === 'Resolved') {
         onResolutionComplete();
       }
     } catch (err) {
-      setError('Failed to retry exception. Please try again later.');
+      console.error('Failed to retry exception:', err);
+      setError('Failed to retry exception');
     } finally {
       setLoading(false);
     }
   };
+
   const renderResolutionHistory = () => (
     <Dialog open={historyDialogOpen} onClose={() => setHistoryDialogOpen(false)} maxWidth="md" fullWidth>
       <DialogTitle>Resolution History</DialogTitle>
@@ -151,6 +179,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
       </DialogActions>
     </Dialog>
   );
+
   return (
     <Card>
       <CardContent>
@@ -160,15 +189,9 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
               {error}
             </Alert>
           )}
-          {retryResult && !retryResult.success && (
-            <Alert severity="warning">
-              Retry failed: {retryResult.message}
-              {retryResult.retryCount > 0 && (
-                <Typography variant="caption" display="block">
-                  Retry count: {retryResult.retryCount}
-                  {retryResult.lastRetryAt && ` (Last attempt: ${dayjs(retryResult.lastRetryAt).format('MM/DD/YYYY HH:mm')})`}
-                </Typography>
-              )}
+          {retryResult && (
+            <Alert severity={retryResult.success ? 'success' : 'error'}>
+              {retryResult.message}
             </Alert>
           )}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -179,7 +202,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
                   <HistoryIcon />
                 </IconButton>
               </Tooltip>
-              {exception.status === FISExceptionStatus.PENDING && (
+              {!currentException.ServiceRequestNumber && (
                 <Tooltip title="Retry">
                   <IconButton size="small" onClick={handleRetry} disabled={loading}>
                     <RefreshIcon />
@@ -192,106 +215,90 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
             <Grid item xs={12} md={6}>
               <Typography variant="subtitle2">Status</Typography>
               <Chip
-                label={exception.status}
+                label={currentException.ServiceRequestNumber ? 'Processed' : 'Pending'}
                 size="small"
-                color={
-                  exception.status === FISExceptionStatus.RESOLVED
-                    ? 'success'
-                    : exception.status === FISExceptionStatus.PENDING
-                    ? 'warning'
-                    : 'error'
-                }
+                color={currentException.ServiceRequestNumber ? 'success' : 'warning'}
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2">Type</Typography>
-              <Typography>{exception.type}</Typography>
+              <Typography variant="subtitle2">Record Type</Typography>
+              <Typography>{currentException.RecordType}</Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle2">Message</Typography>
-              <Typography>{exception.message}</Typography>
+              <Typography>{currentException.MemoLineInfo}</Typography>
             </Grid>
-            {exception.details && (
+            {currentException.ServiceRequestNumber && (
               <Grid item xs={12}>
-                <Typography variant="subtitle2">Details</Typography>
-                <pre style={{ whiteSpace: 'pre-wrap' }}>
-                  {JSON.stringify(exception.details, null, 2)}
-                </pre>
+                <Typography variant="subtitle2">Service Request Number</Typography>
+                <Typography>{currentException.ServiceRequestNumber || 'N/A'}</Typography>
               </Grid>
             )}
+            {currentException.ServiceRequestNumber && (
+              <Box sx={{ mt: 2 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="subtitle2">Service Request Date</Typography>
+                    <Typography>
+                      {currentException.ServiceRequestDate
+                        ? new Date(currentException.ServiceRequestDate).toLocaleString()
+                        : 'N/A'}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="subtitle2">Service Request Time</Typography>
+                    <Typography>
+                      {currentException.ServiceRequestTime || 'N/A'}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
           </Grid>
-          {exception.status === FISExceptionStatus.PENDING && (
+          {!currentException.ServiceRequestNumber && (
             <>
-              <Divider sx={{ my: 2 }} />
-              <Typography variant="h6" color="text.primary">Resolution</Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <FormControl fullWidth>
-                    <InputLabel>Resolution Type</InputLabel>
-                    <Select
-                      value={resolution.type}
-                      onChange={(e) =>
-                        setResolution((prev) => ({
-                          ...prev,
-                          type: e.target.value as 'manual' | 'automated' | 'ignore',
-                        }))
-                      }
-                      label="Resolution Type"
-                    >
-                      <MenuItem value="manual">Manual Resolution</MenuItem>
-                      <MenuItem value="automated">Automated Resolution</MenuItem>
-                      <MenuItem value="ignore">Ignore</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl fullWidth>
-                    <InputLabel>Action</InputLabel>
-                    <Select
-                      value={resolution.action}
-                      onChange={(e) =>
-                        setResolution((prev) => ({
-                          ...prev,
-                          action: e.target.value,
-                        }))
-                      }
-                      label="Action"
-                    >
-                      <MenuItem value="retry">Retry Payment</MenuItem>
-                      <MenuItem value="cancel">Cancel Payment</MenuItem>
-                      <MenuItem value="modify">Modify Payment</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    multiline
-                    rows={4}
-                    label="Resolution Notes"
-                    value={resolution.notes}
-                    onChange={(e) =>
-                      setResolution((prev) => ({
-                        ...prev,
-                        notes: e.target.value,
-                      }))
-                    }
-                  />
-                </Grid>
-              </Grid>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                <Button onClick={onClose} sx={{ mr: 1 }}>
-                  Cancel
-                </Button>
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="h6">Resolution</Typography>
+                <TextField
+                  fullWidth
+                  select
+                  label="Action"
+                  value={resolution.action}
+                  onChange={(e) =>
+                    setResolution({ ...resolution, action: e.target.value })
+                  }
+                  margin="normal"
+                >
+                  <MenuItem value="Resolved">Resolve</MenuItem>
+                  <MenuItem value="Failed">Failed</MenuItem>
+                </TextField>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  label="Notes"
+                  value={resolution.notes}
+                  onChange={(e) =>
+                    setResolution({ ...resolution, notes: e.target.value })
+                  }
+                  margin="normal"
+                />
                 <Button
                   variant="contained"
+                  color="primary"
                   onClick={handleResolve}
-                  disabled={loading || !resolution.action || !resolution.notes}
+                  disabled={loading}
+                  sx={{ mt: 2 }}
                 >
-                  {loading ? <CircularProgress size={24} /> : 'Resolve'}
+                  Submit Resolution
                 </Button>
               </Box>
             </>
+          )}
+          {!currentException.ServiceRequestNumber && (
+            <Alert severity="warning" sx={{ mt: 2 }}>
+              Service request is pending. Please check back later for updates.
+            </Alert>
           )}
         </Stack>
       </CardContent>

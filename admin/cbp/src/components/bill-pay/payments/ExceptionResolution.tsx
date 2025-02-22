@@ -18,9 +18,9 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import { useAuth } from '../../../hooks/useAuth';
-import {
-  PaymentException,
-  ExceptionResolution as ExceptionResolutionType,
+import type { PaymentException } from '../../../types/payment.types';
+import type {
+  ExceptionResolution,
   ExceptionToolStatus,
   ExceptionTool,
 } from '../../../types/bill-pay.types';
@@ -39,7 +39,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [resolution, setResolution] = useState<ExceptionResolutionType>({
+  const [resolution, setResolution] = useState<ExceptionResolution>({
     type: 'manual',
     action: '',
     notes: '',
@@ -109,7 +109,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
                   <Select<'manual' | 'automated' | 'ignore'>
                     value={resolution.type}
                     onChange={(e: SelectChangeEvent<'manual' | 'automated' | 'ignore'>) => {
-                      const value = e.target.value as ExceptionResolutionType['type'];
+                      const value = e.target.value as ExceptionResolution['type'];
                       setResolution((prev) => ({
                         ...prev,
                         type: value,

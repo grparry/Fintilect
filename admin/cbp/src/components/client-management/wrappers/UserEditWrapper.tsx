@@ -30,8 +30,8 @@ const UserEditWrapper: React.FC = () => {
         console.log('Loading user data:', { decodedClientId, decodedUserId });
         // Load user and groups in parallel
         const [userData, groupsData] = await Promise.all([
-          clientService.getUser(decodedClientId, decodedUserId),
-          clientService.getGroups(decodedClientId)
+          clientService.getUser(Number(decodedClientId), Number(decodedUserId)),
+          clientService.getGroups(Number(decodedClientId))
         ]);
         if (!userData) {
           throw new Error('User not found');
@@ -58,7 +58,7 @@ const UserEditWrapper: React.FC = () => {
       }
       const decodedClientId = decodeId(clientId);
       const decodedUserId = decodeId(userId);
-      await clientService.updateUser(decodedClientId, decodedUserId, formData);
+      await clientService.updateUser(Number(decodedClientId), Number(decodedUserId), formData);
       logger.info('User updated successfully');
       navigate(`/admin/client-management/edit/${clientId}/users`);
     } catch (err) {
@@ -98,7 +98,6 @@ const UserEditWrapper: React.FC = () => {
       <DialogContent>
         <UserForm
           user={user}
-          groups={groups}
           onSubmit={handleSave}
           onCancel={handleClose}
           saving={saving}

@@ -106,57 +106,54 @@ interface NotificationStats {
 }
 ```
 
-Note: While the API has basic support notification endpoints (/notification/send/*), we did not see endpoints for template management and delivery configuration features.
+## Notification Templates
 
-## Authentication
+### Template Storage
+❌ Missing:
+- Storage location for notification templates
+- Template retrieval by type
+- Template versioning
 
-❌ Possible Missing API Features:
-- Authentication endpoints for:
-  - User login/logout
-  - Token refresh
-  - Session management
-  - User context and permissions API
-
-## Permission Management
-
-❌ Missing Permission Management Endpoints:
-- CRUD operations for permissions and permission groups:
-  - Create/Update/Delete permission groups
-  - Assign/Revoke permissions to groups
-  - Add/Remove users from groups
-- Permission validation:
-  - Check user permissions
-  - Validate group permissions
-  - Check resource access
-
-### Required Types in API
+### Required Types Not in API
 ```typescript
-interface PermissionGroup {
-  id: number;
-  name: string;
-  description: string;
-  permissions: PermissionCategory;
-  createdAt?: string;
-  updatedAt?: string;
-  createdBy?: string;
-  updatedBy?: string;
-}
-
-interface Permission {
+interface NotificationTemplate {
   id: string;
-  name: string;
-  description: string;
-  category: PermissionCategoryType;
-  actions: PermissionAction[];
-  createdAt: string;
-  updatedAt: string;
+  type: NotificationType;
+  content: string;
+  version: string;
 }
-
-type PermissionAction = 'view' | 'edit' | 'delete' | 'process' | 'approve' | 'export' | 'create';
-type PermissionCategoryType = 'System' | 'BillPay' | 'Client' | 'MoneyDesktop' | 'Users' | 'Security' | 'Settings' | 'Reports';
 ```
 
-Note: The API needs endpoints for managing permissions and permission groups to support role-based access control.
+### Required Endpoints Not in API
+```typescript
+GET    /api/v1/notification/templates/:type  - Get template by type
+PUT    /api/v1/notification/templates/:type  - Update template
+```
+
+## Authentication and Permission Management
+
+❌ Missing Authentication Features:
+- Comprehensive authentication system including:
+  - Role-based access control (RBAC)
+  - Permission management
+  - User session handling
+  - Token refresh mechanism
+
+### Required Types Not in API
+```typescript
+interface AuthenticationRequest {
+  username: string;
+  password: string;
+  clientId: string;
+}
+
+interface AuthenticationResponse {
+  token: string;
+  refreshToken: string;
+  expiresIn: number;
+  tokenType: string;
+}
+```
 
 ## Configuration and Common Types
 
@@ -337,6 +334,112 @@ interface StoredProcedureSpec {
 ```
 
 Note: While the reporting endpoint exists, its documentation needs to be enhanced to specify the available stored procedures and their requirements.
+
+
+### Analytics and Reporting
+❌ Missing Analytics Features:
+- Dedicated analytics endpoints for:
+  - Payment statistics with timeframe filtering
+  - Transaction trends analysis
+  - Performance metrics
+- Current limitations:
+  - Stats available only through generic report runner
+  - Payment activity endpoint lacks proper analytics support
+  - No standardized date range handling
+  - Missing trend analysis capabilities
+
+### Required Analytics Types Not in API
+```typescript
+interface PaymentStats {
+  timeframe: DateRange;
+  totalCount: number;
+  totalAmount: number;
+  successRate: number;
+  averageAmount: number;
+  categoryBreakdown: CategoryStats[];
+}
+
+interface TransactionTrend {
+  timeframe: DateRange;
+  interval: 'daily' | 'weekly' | 'monthly';
+  dataPoints: TrendPoint[];
+}
+
+interface DateRange {
+  startDate: string;
+  endDate: string;
+  timezone?: string;
+}
+
+interface CategoryStats {
+  category: string;
+  count: number;
+  amount: number;
+  percentage: number;
+}
+
+interface TrendPoint {
+  timestamp: string;
+  count: number;
+  amount: number;
+  successRate: number;
+}
+```
+
+## Dashboard Metrics
+
+❌ Missing Dashboard Features:
+- Core transaction metrics including:
+  - Transaction counts and status
+  - Transaction volume over time
+
+### Required Types Not in API
+```typescript
+interface DashboardMetrics {
+  transactions: {
+    successful: number;
+    failed: number;
+    pending: number;
+    total: number;
+    volume: {
+      daily: number;
+      weekly: number;
+      monthly: number;
+    };
+  };
+}
+```
+
+### Required Endpoints Not in API
+```typescript
+// Dashboard Metrics
+GET    /api/v1/dashboard/metrics              - Get all dashboard metrics
+GET    /api/v1/dashboard/transactions/stats   - Get transaction statistics
+```
+
+### Notes
+- Consider caching strategy for dashboard metrics
+- Plan data aggregation approach (real-time vs pre-aggregated)
+- Define metric calculation methods
+- Chart visualizations will be handled client-side using the metrics data
+
+## Payee Management Questions for Team Discussion
+
+1. User Payee Management
+   - What CRUD operations are needed for user payees?
+   - How to handle user payee validation?
+
+2. FIS Integration
+   - What FIS operations are required?
+   - How to handle FIS payee status changes?
+
+## Payment Processing Questions for Team Discussion
+
+1. Processing Requirements
+   - How is payment processing handled?
+   - What validation rules exist?
+   - How to handle reprocessing?
+
 
 ## Next Steps
 1. Evaluate if these features should be added to the C# API

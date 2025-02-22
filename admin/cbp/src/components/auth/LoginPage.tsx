@@ -10,7 +10,7 @@ import {
 import Form, { FormField } from '../../components/common/Form';
 import { useAuth } from '../../context/AuthContext';
 import { LoginFormData, LoginCredentials } from '../../types/auth.types';
-import { ApiError } from '../../types/index';
+import { ApiError } from '../../types/exception.types';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();

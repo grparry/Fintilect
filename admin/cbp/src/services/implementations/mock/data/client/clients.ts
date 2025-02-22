@@ -2,13 +2,10 @@ import {
   PaymentMethod, 
   Environment, 
   ClientStatus, 
-  Client, 
-  ClientType,
-  ClientSettings,
-  GeneralSettings,
-  SecuritySettings
+  Customer, 
+  ClientType
 } from '../../../../../types/client.types';
-import { mockClients as mockClientData } from './mockClientData';
+import { mockCustomers } from './mockClientData';
 
 export const paymentMethodOptions: PaymentMethod[] = [
   'ACH',
@@ -18,7 +15,6 @@ export const paymentMethodOptions: PaymentMethod[] = [
 ];
 export const environmentOptions: Environment[] = [
   Environment.Production,
-  Environment.Staging,
   Environment.Development
 ];
-export const mockClients = mockClientData;
+export const mockClients = mockCustomers;
