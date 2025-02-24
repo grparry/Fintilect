@@ -10,7 +10,7 @@ import {
   Paper,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { Customer } from '../../types/client.types';
+import { Client } from '../../types/client.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import logger from '../../utils/logger';
 
@@ -40,7 +40,7 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
     try {
       setLoading(true);
       setError(null);
-      const client = await clientService.getCustomer(Number(clientId));
+      const client = await clientService.getClient(Number(clientId));
       if (!client) {
         throw new Error('Client not found');
       }
@@ -77,7 +77,7 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
     try {
       setSaving(true);
       setError(null);
-      await clientService.updateCustomer(Number(clientId), {
+      await clientService.updateClient(Number(clientId), {
         contactEmail: contactInfo.email,
         contactPhone: contactInfo.phone,
         name: contactInfo.name,

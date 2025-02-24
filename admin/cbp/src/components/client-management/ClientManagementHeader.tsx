@@ -9,15 +9,15 @@ import GroupIcon from '@mui/icons-material/Group';
 import SecurityIcon from '@mui/icons-material/Security';
 import HistoryIcon from '@mui/icons-material/History';
 import { clientService } from '../../services/factory/ServiceFactory';
-import { Customer } from '../../types/client.types';
+import { Client } from '../../types/client.types';
 import { decodeId } from '../../utils/idEncoder';
 import logger from '../../utils/logger';
 
 const getRouteIcon = (title: string) => {
   switch (title) {
-    case 'Customers':
+    case 'Clients':
       return <PeopleIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />;
-    case 'Customer Details':
+    case 'Client Details':
       return <PersonIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />;
     case 'Contact Information':
       return <ContactMailIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />;
@@ -35,28 +35,28 @@ const getRouteIcon = (title: string) => {
 };
 const ClientManagementHeader: React.FC = () => {
   const { clientId } = useParams<{ clientId: string }>();
-  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    const loadCustomerData = async () => {
+    const loadClientData = async () => {
       if (!clientId) return;
       try {
         setLoading(true);
         setError(null);
         const decodedClientId = Number(decodeId(clientId));
-        const customerData = await clientService.getCustomer(decodedClientId);
-        setCustomer(customerData);
-        logger.info('Customer data loaded successfully');
+        const clientData = await clientService.getClient(decodedClientId);
+        setClient(clientData);
+        logger.info('Client data loaded successfully');
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to load customer data';
-        logger.error('Error loading customer data: ' + message);
+        const message = err instanceof Error ? err.message : 'Failed to load client data';
+        logger.error('Error loading client data: ' + message);
         setError(message);
       } finally {
         setLoading(false);
       }
     };
-    loadCustomerData();
+    loadClientData();
   }, [clientId]);
   if (loading) {
     return (
@@ -69,10 +69,10 @@ const ClientManagementHeader: React.FC = () => {
     <Box>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom color="text.primary">
-          Customer Management
+          Client Management
         </Typography>
         <Typography variant="body1" color="text.primary" paragraph>
-          Welcome to Customer Management. Here you can manage customer accounts, users, and access settings.
+          Welcome to Client Management. Here you can manage client accounts, users, and access settings.
         </Typography>
       </Box>
       {error && (
@@ -103,10 +103,10 @@ const ClientManagementHeader: React.FC = () => {
               >
                 <PeopleIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
                 <Typography variant="h6" gutterBottom color="text.primary">
-                  Customer List
+                  Client List
                 </Typography>
                 <Typography variant="body2" color="text.primary">
-                  View and manage all customer accounts
+                  View and manage all client accounts
                 </Typography>
               </Link>
             </Paper>

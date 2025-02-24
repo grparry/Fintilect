@@ -14,7 +14,6 @@ import { IReportService } from '../interfaces/IReportService';
 import { IHolidayService } from '../interfaces/IHolidayService';
 import { IPermissionService } from '../interfaces/IPermissionService';
 import { IDashboardService } from '../interfaces/IDashboardService';
-import { IAuditService } from '../interfaces/IAuditService';
 import { UserService } from '../implementations/real/UserService';
 import { ClientService } from '../implementations/real/ClientService';
 import { BillPayService } from '../implementations/real/BillPayService';
@@ -30,7 +29,6 @@ import { ReportService } from '../implementations/real/ReportService';
 import { HolidayService } from '../implementations/real/HolidayService';
 import { PermissionService } from '../implementations/real/PermissionService';
 import { DashboardService } from '../implementations/real/DashboardService';
-import { AuditService } from '../implementations/real/AuditService';
 import { MockUserService } from '../implementations/mock/MockUserService';
 import { MockClientService } from '../implementations/mock/MockClientService';
 import { MockBillPayService } from '../implementations/mock/MockBillPayService';
@@ -46,7 +44,6 @@ import { MockReportService } from '../implementations/mock/MockReportService';
 import { MockHolidayService } from '../implementations/mock/MockHolidayService';
 import { MockPermissionService } from '../implementations/mock/MockPermissionService';
 import { MockDashboardService } from '../implementations/mock/MockDashboardService';
-import { MockAuditService } from '../implementations/mock/MockAuditService';
 
 /**
  * Service factory for managing service instantiation
@@ -59,7 +56,7 @@ export class ServiceFactory {
 
   private services: Map<string, IUserService | IClientService | IBillPayService | IAuthService | ISecurityService | 
     INotificationService | IExceptionService | IFISExceptionService | IPayeeService | IPaymentProcessorService | IPaymentService | 
-    IReportService | IHolidayService | IPermissionService | IDashboardService | IAuditService > = new Map();
+    IReportService | IHolidayService | IPermissionService | IDashboardService > = new Map();
 
   private constructor() {
     // Initialize services
@@ -86,7 +83,10 @@ export class ServiceFactory {
   }
 
   private initializeServices(): void {
+    console.log('Initializing services with REACT_APP_USE_MOCK_SERVICES:', process.env.REACT_APP_USE_MOCK_SERVICES);
+    
     if (process.env.REACT_APP_USE_MOCK_SERVICES === 'true') {
+      console.log('Using mock services');
       this.services.set('user', new MockUserService(ServiceFactory.getAdminEndpoint('/users')));
       this.services.set('client', new MockClientService(ServiceFactory.getAdminEndpoint('/clients')));
       this.services.set('billPay', new MockBillPayService(ServiceFactory.getAdminEndpoint('/bill-pay')));
@@ -102,8 +102,8 @@ export class ServiceFactory {
       this.services.set('holiday', new MockHolidayService(ServiceFactory.getAdminEndpoint('/holidays')));
       this.services.set('permission', new MockPermissionService(ServiceFactory.getAdminEndpoint('/permissions')));
       this.services.set('dashboard', new MockDashboardService(ServiceFactory.getAdminEndpoint('/dashboard')));
-      this.services.set('audit', new MockAuditService(ServiceFactory.getAdminEndpoint('/audit')));
     } else {
+      console.log('Using real services');
       this.services.set('user', new UserService(ServiceFactory.getAdminEndpoint('/users')));
       this.services.set('client', new ClientService(ServiceFactory.getAdminEndpoint('/clients')));
       this.services.set('billPay', new BillPayService(ServiceFactory.getAdminEndpoint('/bill-pay')));
@@ -119,7 +119,6 @@ export class ServiceFactory {
       this.services.set('holiday', new HolidayService(ServiceFactory.getAdminEndpoint('/holidays')));
       this.services.set('permission', new PermissionService(ServiceFactory.getAdminEndpoint('/permissions')));
       this.services.set('dashboard', new DashboardService(ServiceFactory.getAdminEndpoint('/dashboard')));
-      this.services.set('audit', new AuditService(ServiceFactory.getAdminEndpoint('/audit')));
     }
   }
 
@@ -156,8 +155,10 @@ export class ServiceFactory {
   }
 
   getSecurityService(): ISecurityService {
+    console.log('Getting security service');
     const service = this.services.get('security');
     if (!service) {
+      console.error('SecurityService not initialized');
       throw new Error('SecurityService not initialized');
     }
     return service as ISecurityService;
@@ -243,13 +244,6 @@ export class ServiceFactory {
     return service as IDashboardService;
   }
 
-  getAuditService(): IAuditService {
-    const service = this.services.get('audit');
-    if (!service) {
-      throw new Error('AuditService not initialized');
-    }
-    return service as IAuditService;
-  }
 }
 
 // Export service instances
@@ -268,4 +262,3 @@ export const reportService = ServiceFactory.getInstance().getReportService();
 export const holidayService = ServiceFactory.getInstance().getHolidayService();
 export const permissionService = ServiceFactory.getInstance().getPermissionService();
 export const dashboardService = ServiceFactory.getInstance().getDashboardService();
-export const auditService = ServiceFactory.getInstance().getAuditService();

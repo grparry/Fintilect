@@ -5,9 +5,7 @@ import {
   HolidayStatus,
   NotificationTemplate,
   NotificationType,
-  NotificationCategory,
-  PermissionGroup,
-  Permission
+  NotificationCategory
 } from '../../../../../types/bill-pay.types';
 
 export const mockTemplates: NotificationTemplate[] = [
@@ -52,19 +50,5 @@ export const initialHolidays: Holiday[] = [
     date: '2024-05-27',
     type: 'Federal' as HolidayType,
     status: 'Active' as HolidayStatus
-  }
-];
-export const mockPermissionGroups: PermissionGroup[] = [
-  {
-    id: 1,
-    name: 'Payment Approvers',
-    description: 'Can approve payments',
-    permissions: ['approve_payments', 'view_payments'] as Permission[]
-  },
-  {
-    id: 2,
-    name: 'Payment Viewers',
-    description: 'Can view payments only',
-    permissions: ['view_payments'] as Permission[]
   }
 ];

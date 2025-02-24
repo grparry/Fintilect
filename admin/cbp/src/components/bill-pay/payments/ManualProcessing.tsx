@@ -32,7 +32,6 @@ import SendIcon from '@mui/icons-material/Send';
 import SaveIcon from '@mui/icons-material/Save';
 import dayjs, { Dayjs } from 'dayjs';
 import {
-  Client,
   Payee,
   ManualPayment,
   ManualPaymentFormData,
@@ -51,10 +50,7 @@ import {
   PaymentStatus,
   PaymentPriority
 } from '../../../types/payment.types';
-import {
-  Customer,
-  ClientStatus
-} from '../../../types/client.types';
+import { Client, ClientStatus } from '../../../types/client.types';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { useAuth } from '../../../hooks/useAuth';
 import { AuthContextType } from '../../../types/auth.types';
@@ -148,15 +144,19 @@ const ManualProcessing: React.FC = () => {
   const fetchInitialData = useCallback(async () => {
     try {
       setError(null);
-      const clientsResponse = await clientService.getCustomers();
+      const clientsResponse = await clientService.getClients();
       const filteredClients = clientsResponse.items
-        .filter((client: Customer) => client.status === ClientStatus.Active)
-        .map((client: Customer) => ({
-          id: client.id.toString(),
+        .filter((client: Client) => client.status === ClientStatus.Active)
+        .map((client: Client) => ({
+          id: client.id,
           name: client.name,
-          status: client.status === ClientStatus.Active ? 'active' : 'inactive',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          status: client.status === ClientStatus.Active ? ClientStatus.active : ClientStatus.inactive,
+          tenantId: client.tenantId,
+          isActive: client.status === ClientStatus.Active,
+          createdOn: client.createdOn,
+          updatedOn: client.updatedOn,
+          type: client.type,
+          environment: client.environment
         } as Client));
       setClients(filteredClients);
     } catch (err) {
@@ -169,12 +169,12 @@ const ManualProcessing: React.FC = () => {
     if (!selectedClient) return;
     try {
       setError(null);
-      const payeesResponse = await clientService.getCustomerContacts(Number(selectedClient.id));
+      const payeesResponse = await clientService.getClientContacts(Number(selectedClient.id));
       const filteredPayees = payeesResponse
         .filter(contact => contact.isPrimary)
         .map(contact => ({
           id: contact.id.toString(), // Convert number to string
-          clientId: selectedClient.id,
+          clientId: selectedClient.id.toString(), // Convert clientId to string
           name: contact.name,
           accountNumber: '', // These will need to be populated from somewhere
           routingNumber: '',

@@ -274,30 +274,30 @@ export interface PendingPaymentResponse extends PendingPayment {
   DeliveryDate?: string;
 }
 
-/** Core model for payment exceptions with details about the customer, payee, and transaction */
+/** Core model for payment exceptions with details about the client, payee, and transaction */
 export interface PaymentException {
     Id: number;
     RecordType: string;
     SponsorTransactionId: string;
     SponsorId: string;
     SponsorName: string;
-    CustomerId: string;
-    CustomerChangeIndicator: string;
-    PrimaryCustomerFirstName: string;
-    PrimaryCustomerLastName: string;
-    PrimaryCustomerSsn: string;
-    SecondaryCustomerFirstName: string;
-    SecondaryCustomerLastName: string;
-    SecondaryCustomerSsn: string;
+    ClientId: string;
+    ClientChangeIndicator: string;
+    PrimaryClientFirstName: string;
+    PrimaryClientLastName: string;
+    PrimaryClientSsn: string;
+    SecondaryClientFirstName: string;
+    SecondaryClientLastName: string;
+    SecondaryClientSsn: string;
     BusinessName: string;
     FederalTaxId: string;
-    CustomerAddress1: string;
-    CustomerAddress2: string;
-    CustomerCity: string;
-    CustomerState: string;
-    CustomerZip: string;
-    CustomerCountry: string;
-    CustomerTelephone: string;
+    ClientAddress1: string;
+    ClientAddress2: string;
+    ClientCity: string;
+    ClientState: string;
+    ClientZip: string;
+    ClientCountry: string;
+    ClientTelephone: string;
     InternalPayeeId: string;
     PayeeChangeIndicator: string;
     PayeeName: string;
@@ -310,8 +310,8 @@ export interface PaymentException {
     PayeeZip: string;
     PayeeCountry: string;
     PayeeNickname: string;
-    CustomerPayeeId: string;
-    CustomerPayeeAccountNumber: string;
+    ClientPayeeId: string;
+    ClientPayeeAccountNumber: string;
     ConfirmationNumber: string;
     TransactionAmount: string;
     MemoLineInfo: string;

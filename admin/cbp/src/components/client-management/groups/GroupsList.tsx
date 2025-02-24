@@ -64,7 +64,7 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
       const response = await permissionService.getGroups({
-        customerId: Number(clientId),
+        clientId: Number(clientId),
         searchTerm: state.filterText
       });
       setState(prev => ({

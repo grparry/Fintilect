@@ -21,14 +21,14 @@ export const mockGroups: Group[] = [
   {
     id: 1,
     name: 'Administrator Group',
-    customerId: 1,
+    clientId: 1,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
   {
     id: 2,
     name: 'Bill Pay Group',
-    customerId: 1,
+    clientId: 1,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   }

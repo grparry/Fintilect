@@ -8,7 +8,6 @@ import ManualProcessing from './payments/ManualProcessing';
 import Holidays from './settings/Holidays';
 import BillPayConfig from './settings/BillPayConfig';
 import NotificationTemplates from './settings/NotificationTemplates';
-import PermissionGroups from './settings/PermissionGroups';
 import Reports from './reports/Reports';
 import BillPaySecuritySettings from './settings/security/BillPaySecuritySettings';
 import Settings from './settings/Settings';
@@ -28,7 +27,6 @@ const BillPay: React.FC = () => {
           <Route path="config" element={<BillPayConfig />} />
           <Route path="holidays" element={<Holidays />} />
           <Route path="notifications" element={<NotificationTemplates />} />
-          <Route path="permissions" element={<PermissionGroups />} />
           <Route path="security" element={<BillPaySecuritySettings />} />
         </Route>
         <Route path="reports" element={<Reports />} />

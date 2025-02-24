@@ -9,14 +9,12 @@ import {
   Alert,
   Chip,
 } from '@mui/material';
-import { Customer, Environment, ClientStatus, ClientType } from '../../types/client.types';
-import { IpAddress } from '../../types/security.types';
+import { Client, Environment, ClientStatus, ClientType } from '../../types/client.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import ContactInformation from './ContactInformation';
 import GroupsWrapper from './wrappers/GroupsWrapper';
 import UsersWrapper from './wrappers/UsersWrapper';
 import MemberSecuritySettingsWrapper from './wrappers/MemberSecuritySettingsWrapper';
-import AuditSearchWrapper from './wrappers/AuditSearchWrapper';
 import { encodeId } from '../../utils/idEncoder';
 import logger from '../../utils/logger';
 
@@ -64,8 +62,7 @@ const DEFAULT_SETTINGS = {
       lockoutDuration: 30,
     },
     sessionTimeout: 30,
-    mfaEnabled: false,
-    ipWhitelist: [] as IpAddress[],
+    mfaEnabled: false
   },
   notifications: {
     emailEnabled: true,
@@ -78,7 +75,7 @@ const DEFAULT_SETTINGS = {
 const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [client, setClient] = useState<Customer | null>(null);
+  const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState(0);
@@ -91,7 +88,7 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
     try {
       setLoading(true);
       setError(null);
-      const clientData = await clientService.getCustomer(Number(clientId));
+      const clientData = await clientService.getClient(Number(clientId));
       if (!clientData) {
         throw new Error('Client not found');
       }

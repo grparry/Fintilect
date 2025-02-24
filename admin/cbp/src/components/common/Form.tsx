@@ -49,21 +49,11 @@ const Form = <T extends FieldValues>({
   loading = false,
   formId
 }: FormProps<T>) => {
-  const auditService = ServiceFactory.getInstance().getAuditService();
-  logger.info({
-    message: 'Form: Initializing',
-    formId,
-    fields: fields.map(f => ({ name: f.name, type: f.type }))
-  });
+  const securityService = ServiceFactory.getInstance().getSecurityService();
   const defaultValues = fields.reduce((acc, field) => {
     acc[field.name] = field.defaultValue ?? '';
     return acc;
   }, {} as DefaultValues<T>);
-  logger.info({
-    message: 'Form: Using default values',
-    formId,
-    defaultValues
-  });
   const {
     control,
     handleSubmit,

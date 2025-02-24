@@ -1,6 +1,6 @@
 import type { Dayjs } from 'dayjs';
 import type { PaginationOptions, PaginatedResponse } from './common.types';
-import type { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';
+import type { PasswordPolicy, SecuritySettings } from './security.types';
 
 // Payment Types
 export type PaymentMethod = 'ACH' | 'Wire' | 'RTP' | 'Check';
@@ -33,7 +33,7 @@ export enum ClientStatus {
   Pending = 'PENDING'
 }
 
-export interface Customer {
+export interface Client {
   id: number;
   externalId?: string;
   name: string;
@@ -67,7 +67,7 @@ export interface User {
   creationDate: string;
   lastLogin?: string;
   externalId?: string;
-  customerId: number;
+  clientId: number;
   firstName?: string;
   lastName?: string;
   department?: string;
@@ -85,6 +85,7 @@ export interface ClientConfiguration {
   requireDualApproval: boolean;
   notificationEmail: string;
   lastModified: string;
+  security?: SecuritySettings;
 }
 
 // Client API Types
@@ -162,7 +163,7 @@ export interface Role {
 export interface Group {
   id: number;
   name?: string;
-  customerId: number;
+  clientId: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -230,7 +231,7 @@ export interface Contact {
 }
 
 // List Response Types
-export type ClientListResponse = PaginatedResponse<Customer>;
+export type ClientListResponse = PaginatedResponse<Client>;
 export type UserListResponse = PaginatedResponse<User>;
 export type GroupListResponse = PaginatedResponse<UserGroup>;
 export type RoleListResponse = PaginatedResponse<SecurityRole>;
@@ -239,21 +240,11 @@ export interface UserPreferences {
   theme: 'light' | 'dark' | 'system';
 }
 
-export interface AuditSearchRequest extends PaginationOptions {
-  startDate?: string;
-  endDate?: string;
-  userId?: string;
-  action?: string;
-  resource?: string;
-}
-
 // Re-export PaginatedResponse for backward compatibility
 export type { PaginatedResponse };
 
-// Audit Log Types
-
 // Re-export security types
-export type { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';
+export type { PasswordPolicy, SecuritySettings } from './security.types';
 
 /**
  * Derived type that represents a flattened view of a user's roles and groups

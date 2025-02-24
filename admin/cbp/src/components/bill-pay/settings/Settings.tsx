@@ -15,13 +15,10 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import GroupIcon from '@mui/icons-material/Group';
 import SecurityIcon from '@mui/icons-material/Security';
 import EventIcon from '@mui/icons-material/Event';
-import HistoryIcon from '@mui/icons-material/History';
 import NotificationTemplates from './NotificationTemplates';
 import BillPayConfig from './BillPayConfig';
-import PermissionGroups from './PermissionGroups';
 import BillPaySecuritySettings from './security/BillPaySecuritySettings';
 import Holidays from './Holidays';
-import AuditLog from './AuditLog';
 import { TabPanelProps, SettingsState } from '../../../types/bill-pay.types';
 
 const TabPanel: React.FC<TabPanelProps> = ({
@@ -132,11 +129,6 @@ const Settings: React.FC = () => {
             label={isMobile ? undefined : 'Holidays'}
             {...a11yProps(4)}
           />
-          <Tab
-            icon={<HistoryIcon />}
-            label={isMobile ? undefined : 'Audit Log'}
-            {...a11yProps(5)}
-          />
         </Tabs>
         <TabPanel value={state.activeTab} index={0}>
           <BillPayConfig />
@@ -144,17 +136,11 @@ const Settings: React.FC = () => {
         <TabPanel value={state.activeTab} index={1}>
           <NotificationTemplates />
         </TabPanel>
-        <TabPanel value={state.activeTab} index={2}>
-          <PermissionGroups />
-        </TabPanel>
         <TabPanel value={state.activeTab} index={3}>
           <BillPaySecuritySettings />
         </TabPanel>
         <TabPanel value={state.activeTab} index={4}>
           <Holidays />
-        </TabPanel>
-        <TabPanel value={state.activeTab} index={5}>
-          <AuditLog />
         </TabPanel>
       </Paper>
     </Box>

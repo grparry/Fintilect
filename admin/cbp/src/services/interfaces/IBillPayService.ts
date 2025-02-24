@@ -3,7 +3,6 @@ import {
     BillPayConfig,
     BillPayConfigUpdate,
     BillPayConfigValidation,
-    Client,
     Payee,
     BillPayStats,
     TransactionTrend,
@@ -14,6 +13,9 @@ import {
     ExceptionResolution,
     HolidayStatus
 } from '../../types/bill-pay.types';
+import {
+    Client
+} from '../../types/client.types';
 import {
     BillPaySecuritySettings,
     BillPayOTPMethod,

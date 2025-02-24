@@ -66,7 +66,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
       const response = await userService.getUsers({
-        customerId: Number(clientId),
+        clientId: Number(clientId),
         isActive: true,
         page: state.page,
         limit: state.limit,
@@ -101,7 +101,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
         firstName: formData.firstName,
         lastName: formData.lastName,
         username: `${formData.firstName.toLowerCase()}.${formData.lastName.toLowerCase()}`,
-        customerId: Number(clientId),
+        clientId: Number(clientId),
         isActive: true,
         creationDate: new Date().toISOString(),
         tenantId: 1, // TODO: Get from context

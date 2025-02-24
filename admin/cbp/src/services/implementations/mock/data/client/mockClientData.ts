@@ -1,5 +1,5 @@
 import {
-  Customer,
+  Client,
   ClientType,
   ClientStatus,
   Environment,
@@ -33,8 +33,8 @@ export const defaultSettings = {
   }
 };
 
-// Mock Customers
-export const mockCustomers: Customer[] = [
+// Mock Clients
+export const mockClients: Client[] = [
   {
     id: 1,
     name: 'Acme Corporation',
@@ -69,8 +69,8 @@ export const mockCustomers: Customer[] = [
   }
 ];
 
-// Mock Customer Contacts
-export const mockCustomerContacts: ClientContact[] = [
+// Mock Client Contacts
+export const mockClientContacts: ClientContact[] = [
   {
     id: 1,
     clientId: 1,
@@ -93,8 +93,8 @@ export const mockCustomerContacts: ClientContact[] = [
   }
 ];
 
-// Mock Customer Services
-export const mockCustomerServices: ClientService[] = [
+// Mock Client Services
+export const mockClientServices: ClientService[] = [
   {
     id: 1,
     clientId: 1,
@@ -121,8 +121,8 @@ export const mockCustomerServices: ClientService[] = [
   }
 ];
 
-// Mock Customer API Keys
-export const mockCustomerApiKeys: ClientApiKey[] = [
+// Mock Client API Keys
+export const mockClientApiKeys: ClientApiKey[] = [
   {
     id: 1,
     clientId: 1,
@@ -145,8 +145,8 @@ export const mockCustomerApiKeys: ClientApiKey[] = [
   }
 ];
 
-// Mock Customer Configurations
-export const mockCustomerConfigurations: ClientConfiguration[] = [
+// Mock Client Configurations
+export const mockClientConfigurations: ClientConfiguration[] = [
   {
     id: 1,
     clientId: 1,

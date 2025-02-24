@@ -2,10 +2,9 @@ import {
   PaymentMethod, 
   Environment, 
   ClientStatus, 
-  Customer, 
+  Client, 
   ClientType
 } from '../../../../../types/client.types';
-import { mockCustomers } from './mockClientData';
 
 export const paymentMethodOptions: PaymentMethod[] = [
   'ACH',
@@ -13,8 +12,10 @@ export const paymentMethodOptions: PaymentMethod[] = [
   'RTP',
   'Check'
 ];
+
 export const environmentOptions: Environment[] = [
   Environment.Production,
   Environment.Development
 ];
-export const mockClients = mockCustomers;
+
+export { mockClients } from './mockClientData';

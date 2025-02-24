@@ -15,7 +15,7 @@ export const useNavigationPermissions = () => {
     // Check client ID if required
     if (requirement.clientId) {
       const clientId = parseInt(requirement.clientId, 10);
-      const hasClientAccess = userPermissions.groups.some(g => g.customerId === clientId);
+      const hasClientAccess = userPermissions.groups.some(g => g.clientId === clientId);
       if (!hasClientAccess) return false;
     }
 

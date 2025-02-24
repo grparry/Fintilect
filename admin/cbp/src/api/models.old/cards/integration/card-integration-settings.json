@@ -101,9 +101,9 @@
                 "type": "string",
                 "x-setting-key": "History.Card.Fiserv.StatementDetailsApiEndpoint"
               },
-              "customerInquiryEndpoint": {
+              "clientInquiryEndpoint": {
                 "type": "string",
-                "x-setting-key": "History.Card.Fiserv.CustomerInquiryApiEndpoint"
+                "x-setting-key": "History.Card.Fiserv.ClientInquiryApiEndpoint"
               }
             }
           },

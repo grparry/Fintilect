@@ -13,8 +13,11 @@ const UsersWrapper = lazy(() => import('../components/client-management/wrappers
 const UserEditWrapper = lazy(() => import('../components/client-management/wrappers/UserEditWrapper'));
 const GroupsWrapper = lazy(() => import('../components/client-management/wrappers/GroupsWrapper'));
 const SecuritySettingsWrapper = lazy(() => import('../components/client-management/wrappers/SecuritySettingsWrapper'));
-const AuditSearch = lazy(() => import('../components/client-management/security/AuditSearch'));
 const ClientManagementHeader = lazy(() => import('../components/client-management/ClientManagementHeader'));
+const SecuritySettings = lazy(() => import('../components/client-management/security/SecuritySettings'));
+const MemberSecuritySettings = lazy(() => import('../components/client-management/security/MemberSecuritySettings'));
+const ClientManagement = lazy(() => import('../components/client-management/ClientManagement'));
+
 interface RouteParams {
   clientId?: string;
   userId?: string;
@@ -29,7 +32,7 @@ const clientManagementRoutes: RouteConfig[] = [
     icon: BusinessIcon,
     title: 'Client Management',
     permissions: {
-      permissions: ['client-management:read']
+      requiredPermissions: ['client-management:read']
     }
   },
   {
@@ -83,16 +86,20 @@ const clientManagementRoutes: RouteConfig[] = [
         id: 'client-security',
         path: 'security',
         title: 'Security Settings',
-        element: SecuritySettingsWrapper,
-        sectionId: 'clientManagement',
+        element: SecuritySettings,
+        permissions: {
+         requiredPermissions: ['client-management:read']
+        }
       },
       {
-        id: 'client-audit',
-        path: 'audit-log',
-        title: 'Audit History',
-        element: AuditSearch,
-        sectionId: 'clientManagement',
-      }
+        id: 'client-member-security',
+        path: 'member-security',
+        title: 'Member Security Settings',
+        element: MemberSecuritySettings,
+        permissions: {
+          requiredPermissions: ['client-management:read']
+         }
+       }
     ]
   }
 ];

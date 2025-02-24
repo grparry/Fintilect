@@ -18,7 +18,7 @@ export class MockUserService extends BaseMockService implements IUserService {
       isActive: true,
       creationDate: '2025-01-01T00:00:00Z',
       lastLogin: '2025-02-21T00:00:00Z',
-      customerId: 1,
+      clientId: 1,
       firstName: 'John',
       lastName: 'Doe',
       department: 'Engineering',
@@ -34,7 +34,7 @@ export class MockUserService extends BaseMockService implements IUserService {
       tenantId: 1,
       isActive: true,
       creationDate: '2025-01-02T00:00:00Z',
-      customerId: 1,
+      clientId: 1,
       firstName: 'Jane',
       lastName: 'Smith',
       department: 'Finance',
@@ -59,7 +59,7 @@ export class MockUserService extends BaseMockService implements IUserService {
   }
 
   async getUsers(params?: {
-    customerId?: number;
+    clientId?: number;
     isActive?: boolean;
     isLocked?: boolean;
     searchTerm?: string;
@@ -72,7 +72,7 @@ export class MockUserService extends BaseMockService implements IUserService {
     const endIndex = startIndex + limit;
 
     let filteredUsers = Array.from(this.users.values()).filter(user => {
-      if (params?.customerId && user.customerId !== params.customerId) return false;
+      if (params?.clientId && user.clientId !== params.clientId) return false;
       if (params?.isActive !== undefined && user.isActive !== params.isActive) return false;
       if (params?.isLocked !== undefined && user.isLocked !== params.isLocked) return false;
       if (params?.searchTerm) {
@@ -107,7 +107,7 @@ export class MockUserService extends BaseMockService implements IUserService {
       isActive: true,
       creationDate: now,
       lastLogin: undefined,
-      customerId: user.customerId,
+      clientId: user.clientId,
       firstName: user.firstName,
       lastName: user.lastName,
       department: user.department,
@@ -131,7 +131,7 @@ export class MockUserService extends BaseMockService implements IUserService {
       id: existingUser.id,
       username: user.username || existingUser.username,
       tenantId: user.tenantId || existingUser.tenantId,
-      customerId: user.customerId || existingUser.customerId,
+      clientId: user.clientId || existingUser.clientId,
       firstName: user.firstName || existingUser.firstName,
       lastName: user.lastName || existingUser.lastName,
       department: user.department || existingUser.department,

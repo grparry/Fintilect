@@ -16,8 +16,10 @@ import {
   ExpandLess as ExpandLessIcon,
   Info as InfoIcon,
 } from '@mui/icons-material';
-import { Permission, SecurityRole, PermissionCategoryType } from '../../../types/client.types';
+import { Permission, SecurityRole } from '../../../types/client.types';
 import { clientService } from '../../../services/factory/ServiceFactory';
+
+type PermissionCategoryType = 'user' | 'client' | 'system' | 'security' | 'settings' | 'reports';
 
 interface PermissionTreeViewProps {
   permissions: Permission[];
@@ -49,11 +51,9 @@ export const PermissionTreeView: React.FC<PermissionTreeViewProps> = ({
       security: [],
       settings: [],
       reports: [],
-      billpay: [],
-      moneydesktop: []
     };
     permissions.forEach((permission) => {
-      tree[permission.category].push(permission);
+      tree[permission.category as PermissionCategoryType].push(permission);
     });
     return tree;
   }, [permissions]);

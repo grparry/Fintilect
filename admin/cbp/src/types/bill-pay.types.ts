@@ -189,14 +189,6 @@ export enum PaymentMethodType {
   CARD = 'CARD'
 }
 
-export interface Client {
-  id: string;
-  name: string;
-  status: 'active' | 'inactive';
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface Payee {
   id: string;
   clientId: string;
@@ -426,21 +418,6 @@ export interface ResolutionHistory {
   timestamp: string;
   user: string;
   notes?: string;
-}
-
-// Permission Types
-export type Permission = 
-  | 'approve_payments'
-  | 'view_payments'
-  | 'create_payments'
-  | 'edit_payments'
-  | 'delete_payments';
-
-export interface PermissionGroup {
-  id: number;
-  name: string;
-  description: string;
-  permissions: Permission[];
 }
 
 // FISExceptionService Types

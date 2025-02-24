@@ -19,13 +19,13 @@ import {
 import { Edit as EditIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { Customer, ClientStatus, ClientType, Environment } from '../../types/client.types';
+import { Client, ClientStatus, ClientType, Environment } from '../../types/client.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import { encodeId } from '../../utils/idEncoder';
 import logger from '../../utils/logger';
 
 const ClientList: React.FC = () => {
-  const [clients, setClients] = useState<Customer[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
@@ -38,7 +38,7 @@ const ClientList: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await clientService.getCustomers({
+      const response = await clientService.getClients({
         page: page + 1,
         limit: rowsPerPage
       });

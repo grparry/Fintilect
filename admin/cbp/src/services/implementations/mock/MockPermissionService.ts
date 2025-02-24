@@ -17,9 +17,9 @@ const mockRoles: Role[] = [
 ];
 
 const mockGroups: Group[] = [
-  { id: 1, name: 'System Admins', customerId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' },
-  { id: 2, name: 'Managers', customerId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' },
-  { id: 3, name: 'Users', customerId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' }
+  { id: 1, name: 'System Admins', clientId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' },
+  { id: 2, name: 'Managers', clientId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' },
+  { id: 3, name: 'Users', clientId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' }
 ];
 
 const mockGroupRoles: GroupRole[] = [
@@ -81,11 +81,11 @@ export class MockPermissionService extends BaseMockService implements IPermissio
     this.roles.delete(roleId);
   }
 
-  async getGroups(params?: { customerId?: number; searchTerm?: string; page?: number; limit?: number; }): Promise<PaginatedResponse<Group>> {
+  async getGroups(params?: { clientId?: number; searchTerm?: string; page?: number; limit?: number; }): Promise<PaginatedResponse<Group>> {
     let groups = Array.from(this.groups.values());
     
-    if (params?.customerId) {
-      groups = groups.filter(g => g.customerId === params.customerId);
+    if (params?.clientId) {
+      groups = groups.filter(g => g.clientId === params.clientId);
     }
     
     if (params?.searchTerm) {
@@ -99,7 +99,7 @@ export class MockPermissionService extends BaseMockService implements IPermissio
     const endIndex = startIndex + limit;
     const filteredGroups = groups
       .filter(group => {
-        if (params?.customerId && group.customerId !== params.customerId) return false;
+        if (params?.clientId && group.clientId !== params.clientId) return false;
         if (params?.searchTerm && !group.name?.toLowerCase().includes(params.searchTerm.toLowerCase())) return false;
         return true;
       });

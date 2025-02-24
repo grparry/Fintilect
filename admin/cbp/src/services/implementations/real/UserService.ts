@@ -12,7 +12,7 @@ export class UserService extends BaseService implements IUserService {
   }
 
   async getUsers(params?: {
-    customerId?: number;
+    clientId?: number;
     isActive?: boolean;
     isLocked?: boolean;
     searchTerm?: string;

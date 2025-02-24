@@ -1,7 +1,7 @@
 import { IClientService } from '../../interfaces/IClientService';
 import { BaseService } from './BaseService';
 import {
-    Customer,
+    Client,
     ClientType,
     ClientStatus,
     Environment,
@@ -17,14 +17,14 @@ import logger from '../../../utils/logger';
 
 /**
  * Real implementation of ClientService
- * Communicates with the backend API for customer management
+ * Communicates with the backend API for client management
  */
 export class ClientService extends BaseService implements IClientService {
     constructor(basePath: string = '/api/v1/customers') {
         super(basePath);
     }
 
-    async getCustomers(params?: {
+    async getClients(params?: {
         tenantId?: number;
         isActive?: boolean;
         type?: ClientType;
@@ -33,101 +33,101 @@ export class ClientService extends BaseService implements IClientService {
         searchTerm?: string;
         page?: number;
         limit?: number;
-    }): Promise<PaginatedResponse<Customer>> {
-        return this.get<PaginatedResponse<Customer>>('', { params });
+    }): Promise<PaginatedResponse<Client>> {
+        return this.get<PaginatedResponse<Client>>('', { params });
     }
 
-    async getCustomer(customerId: number): Promise<Customer> {
-        this.validateRequired({ customerId }, ['customerId']);
-        return this.get<Customer>(`/${customerId}`);
+    async getClient(clientId: number): Promise<Client> {
+        this.validateRequired({ clientId }, ['clientId']);
+        return this.get<Client>(`/${clientId}`);
     }
 
-    async createCustomer(customer: Omit<Customer, 'id' | 'createdOn' | 'updatedOn'>): Promise<Customer> {
-        return this.post<Customer>('', customer);
+    async createClient(client: Omit<Client, 'id' | 'createdOn' | 'updatedOn'>): Promise<Client> {
+        return this.post<Client>('', client);
     }
 
-    async updateCustomer(customerId: number, customer: Partial<Customer>): Promise<Customer> {
-        this.validateRequired({ customerId }, ['customerId']);
-        return this.put<Customer>(`/${customerId}`, customer);
+    async updateClient(clientId: number, client: Partial<Client>): Promise<Client> {
+        this.validateRequired({ clientId }, ['clientId']);
+        return this.put<Client>(`/${clientId}`, client);
     }
 
-    async deleteCustomer(customerId: number): Promise<void> {
-        this.validateRequired({ customerId }, ['customerId']);
-        await this.delete<void>(`/${customerId}`);
+    async deleteClient(clientId: number): Promise<void> {
+        this.validateRequired({ clientId }, ['clientId']);
+        await this.delete<void>(`/${clientId}`);
     }
 
-    async getCustomerConfig(customerId: number): Promise<ClientConfiguration> {
-        this.validateRequired({ customerId }, ['customerId']);
-        return this.get<ClientConfiguration>(`/${customerId}/configuration`);
+    async getClientConfig(clientId: number): Promise<ClientConfiguration> {
+        this.validateRequired({ clientId }, ['clientId']);
+        return this.get<ClientConfiguration>(`/${clientId}/configuration`);
     }
 
-    async updateCustomerConfig(customerId: number, config: Partial<ClientConfiguration>): Promise<ClientConfiguration> {
-        this.validateRequired({ customerId }, ['customerId']);
-        return this.put<ClientConfiguration>(`/${customerId}/configuration`, config);
+    async updateClientConfig(clientId: number, config: Partial<ClientConfiguration>): Promise<ClientConfiguration> {
+        this.validateRequired({ clientId }, ['clientId']);
+        return this.put<ClientConfiguration>(`/${clientId}/configuration`, config);
     }
 
-    async getCustomerApiKeys(customerId: number): Promise<ClientApiKey[]> {
-        this.validateRequired({ customerId }, ['customerId']);
-        return this.get<ClientApiKey[]>(`/${customerId}/api-keys`);
+    async getClientApiKeys(clientId: number): Promise<ClientApiKey[]> {
+        this.validateRequired({ clientId }, ['clientId']);
+        return this.get<ClientApiKey[]>(`/${clientId}/api-keys`);
     }
 
-    async createCustomerApiKey(customerId: number, apiKey: Omit<ClientApiKey, 'id' | 'clientId' | 'createdAt' | 'lastUsed'>): Promise<ClientApiKey> {
-        this.validateRequired({ customerId, apiKey }, ['customerId', 'apiKey']);
-        return this.post<ClientApiKey>(`/${customerId}/api-keys`, apiKey);
+    async createClientApiKey(clientId: number, apiKey: Omit<ClientApiKey, 'id' | 'clientId' | 'createdAt' | 'lastUsed'>): Promise<ClientApiKey> {
+        this.validateRequired({ clientId, apiKey }, ['clientId', 'apiKey']);
+        return this.post<ClientApiKey>(`/${clientId}/api-keys`, apiKey);
     }
 
-    async updateCustomerApiKey(customerId: number, apiKeyId: number, apiKey: Partial<ClientApiKey>): Promise<ClientApiKey> {
-        this.validateRequired({ customerId, apiKeyId }, ['customerId', 'apiKeyId']);
-        return this.put<ClientApiKey>(`/${customerId}/api-keys/${apiKeyId}`, apiKey);
+    async updateClientApiKey(clientId: number, apiKeyId: number, apiKey: Partial<ClientApiKey>): Promise<ClientApiKey> {
+        this.validateRequired({ clientId, apiKeyId }, ['clientId', 'apiKeyId']);
+        return this.put<ClientApiKey>(`/${clientId}/api-keys/${apiKeyId}`, apiKey);
     }
 
-    async deleteCustomerApiKey(customerId: number, apiKeyId: number): Promise<void> {
-        this.validateRequired({ customerId, apiKeyId }, ['customerId', 'apiKeyId']);
-        await this.delete<void>(`/${customerId}/api-keys/${apiKeyId}`);
+    async deleteClientApiKey(clientId: number, apiKeyId: number): Promise<void> {
+        this.validateRequired({ clientId, apiKeyId }, ['clientId', 'apiKeyId']);
+        await this.delete<void>(`/${clientId}/api-keys/${apiKeyId}`);
     }
 
-    async getCustomerServices(customerId: number): Promise<ClientServiceType[]> {
-        this.validateRequired({ customerId }, ['customerId']);
-        return this.get<ClientServiceType[]>(`/${customerId}/services`);
+    async getClientServices(clientId: number): Promise<ClientServiceType[]> {
+        this.validateRequired({ clientId }, ['clientId']);
+        return this.get<ClientServiceType[]>(`/${clientId}/services`);
     }
 
-    async updateCustomerService(customerId: number, serviceId: number, service: Partial<ClientServiceType>): Promise<ClientServiceType> {
-        this.validateRequired({ customerId, serviceId }, ['customerId', 'serviceId']);
-        return this.put<ClientServiceType>(`/${customerId}/services/${serviceId}`, service);
+    async updateClientService(clientId: number, serviceId: number, service: Partial<ClientServiceType>): Promise<ClientServiceType> {
+        this.validateRequired({ clientId, serviceId }, ['clientId', 'serviceId']);
+        return this.put<ClientServiceType>(`/${clientId}/services/${serviceId}`, service);
     }
 
-    async getCustomerContacts(customerId: number): Promise<ClientContact[]> {
-        this.validateRequired({ customerId }, ['customerId']);
-        return this.get<ClientContact[]>(`/${customerId}/contacts`);
+    async getClientContacts(clientId: number): Promise<ClientContact[]> {
+        this.validateRequired({ clientId }, ['clientId']);
+        return this.get<ClientContact[]>(`/${clientId}/contacts`);
     }
 
-    async createCustomerContact(customerId: number, contact: Omit<ClientContact, 'id' | 'clientId'>): Promise<ClientContact> {
-        this.validateRequired({ customerId, contact }, ['customerId', 'contact']);
-        return this.post<ClientContact>(`/${customerId}/contacts`, contact);
+    async createClientContact(clientId: number, contact: Omit<ClientContact, 'id' | 'clientId'>): Promise<ClientContact> {
+        this.validateRequired({ clientId, contact }, ['clientId', 'contact']);
+        return this.post<ClientContact>(`/${clientId}/contacts`, contact);
     }
 
-    async updateCustomerContact(customerId: number, contactId: number, contact: Partial<ClientContact>): Promise<ClientContact> {
-        this.validateRequired({ customerId, contactId }, ['customerId', 'contactId']);
-        return this.put<ClientContact>(`/${customerId}/contacts/${contactId}`, contact);
+    async updateClientContact(clientId: number, contactId: number, contact: Partial<ClientContact>): Promise<ClientContact> {
+        this.validateRequired({ clientId, contactId }, ['clientId', 'contactId']);
+        return this.put<ClientContact>(`/${clientId}/contacts/${contactId}`, contact);
     }
 
-    async deleteCustomerContact(customerId: number, contactId: number): Promise<void> {
-        this.validateRequired({ customerId, contactId }, ['customerId', 'contactId']);
-        await this.delete<void>(`/${customerId}/contacts/${contactId}`);
+    async deleteClientContact(clientId: number, contactId: number): Promise<void> {
+        this.validateRequired({ clientId, contactId }, ['clientId', 'contactId']);
+        await this.delete<void>(`/${clientId}/contacts/${contactId}`);
     }
 
     async getUser(clientId: number, userId: number): Promise<User> {
-        const { data } = await this.get<{ data: User }>(`/clients/${clientId}/users/${userId}`);
-        return data;
-    }
-
-    async getGroups(clientId: number): Promise<UserGroup[]> {
-        const { data } = await this.get<{ data: UserGroup[] }>(`/clients/${clientId}/groups`);
-        return data;
+        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+        return this.get<User>(`/${clientId}/users/${userId}`);
     }
 
     async updateUser(clientId: number, userId: number, userData: Partial<User>): Promise<User> {
-        const { data } = await this.put<{ data: User }>(`/clients/${clientId}/users/${userId}`, userData);
-        return data;
+        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+        return this.put<User>(`/${clientId}/users/${userId}`, userData);
+    }
+
+    async getGroups(clientId: number): Promise<UserGroup[]> {
+        this.validateRequired({ clientId }, ['clientId']);
+        return this.get<UserGroup[]>(`/${clientId}/groups`);
     }
 }

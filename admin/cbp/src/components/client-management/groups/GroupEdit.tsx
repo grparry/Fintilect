@@ -86,14 +86,14 @@ const GroupEdit: React.FC<GroupEditProps> = ({
         // Update existing group
         await permissionService.updateGroup(Number(groupId), {
           name: group.name,
-          customerId: Number(clientId)
+          clientId: Number(clientId)
         });
         await permissionService.addGroupRoles(Number(groupId), selectedRoles);
       } else {
         // Create new group
         const newGroup = await permissionService.createGroup({
           name: group.name,
-          customerId: Number(clientId)
+          clientId: Number(clientId)
         });
         await permissionService.addGroupRoles(newGroup.id, selectedRoles);
       }

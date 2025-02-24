@@ -48,7 +48,7 @@ export interface IPermissionService extends IBaseService {
    * @param params Filter and pagination parameters
    */
   getGroups(params?: {
-    customerId?: number;
+    clientId?: number;
     searchTerm?: string;
     page?: number;
     limit?: number;

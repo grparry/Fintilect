@@ -23,7 +23,7 @@ export interface IUserService extends IBaseService {
      * @returns Paginated list of users
      */
     getUsers(params?: {
-        customerId?: number;
+        clientId?: number;
         isActive?: boolean;
         isLocked?: boolean;
         searchTerm?: string;

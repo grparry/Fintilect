@@ -1,6 +1,6 @@
 import { IBaseService } from './IBaseService';
 import {
-    Customer,
+    Client,
     ClientType,
     ClientStatus,
     Environment,
@@ -10,20 +10,21 @@ import {
     ClientService,
     PaginatedResponse,
     User,
-    UserGroup
+    UserGroup,
+    SecuritySettings,
 } from '../../types/client.types';
 
 /**
- * Interface for client/customer management
- * Handles customer operations, configurations, and API keys
+ * Interface for client/client management
+ * Handles client operations, configurations, and API keys
  */
 export interface IClientService extends IBaseService {
     /**
-     * Get customers with pagination and filtering
+     * Get clients with pagination and filtering
      * @param params Filter and pagination parameters
-     * @returns Paginated list of customers
+     * @returns Paginated list of clients
      */
-    getCustomers(params?: {
+    getClients(params?: {
         tenantId?: number;
         isActive?: boolean;
         type?: ClientType;
@@ -32,128 +33,128 @@ export interface IClientService extends IBaseService {
         searchTerm?: string;
         page?: number;
         limit?: number;
-    }): Promise<PaginatedResponse<Customer>>;
+    }): Promise<PaginatedResponse<Client>>;
 
     /**
-     * Get specific customer
-     * @param customerId Customer identifier
-     * @returns Customer details
+     * Get specific client
+     * @param clientId Client identifier
+     * @returns Client details
      */
-    getCustomer(customerId: number): Promise<Customer>;
+    getClient(clientId: number): Promise<Client>;
 
     /**
-     * Create customer
-     * @param customer Customer data to create
-     * @returns Created customer
+     * Create client
+     * @param client Client data to create
+     * @returns Created client
      */
-    createCustomer(customer: Omit<Customer, 'id' | 'createdOn' | 'updatedOn'>): Promise<Customer>;
+    createClient(client: Omit<Client, 'id' | 'createdOn' | 'updatedOn'>): Promise<Client>;
 
     /**
-     * Update customer
-     * @param customerId Customer identifier
-     * @param customer Updated customer data
-     * @returns Updated customer
+     * Update client
+     * @param clientId Client identifier
+     * @param client Updated client data
+     * @returns Updated client
      */
-    updateCustomer(customerId: number, customer: Partial<Customer>): Promise<Customer>;
+    updateClient(clientId: number, client: Partial<Client>): Promise<Client>;
 
     /**
-     * Delete customer
-     * @param customerId Customer identifier
+     * Delete client
+     * @param clientId Client identifier
      */
-    deleteCustomer(customerId: number): Promise<void>;
+    deleteClient(clientId: number): Promise<void>;
 
     /**
-     * Get customer configuration
-     * @param customerId Customer identifier
-     * @returns Customer configuration
+     * Get client configuration
+     * @param clientId Client identifier
+     * @returns Client configuration
      */
-    getCustomerConfig(customerId: number): Promise<ClientConfiguration>;
+    getClientConfig(clientId: number): Promise<ClientConfiguration>;
 
     /**
-     * Update customer configuration
-     * @param customerId Customer identifier
+     * Update client configuration
+     * @param clientId Client identifier
      * @param config Updated configuration
      * @returns Updated configuration
      */
-    updateCustomerConfig(customerId: number, config: Partial<ClientConfiguration>): Promise<ClientConfiguration>;
+    updateClientConfig(clientId: number, config: Partial<ClientConfiguration>): Promise<ClientConfiguration>;
 
     /**
-     * Get customer API keys
-     * @param customerId Customer identifier
+     * Get client API keys
+     * @param clientId Client identifier
      * @returns List of API keys
      */
-    getCustomerApiKeys(customerId: number): Promise<ClientApiKey[]>;
+    getClientApiKeys(clientId: number): Promise<ClientApiKey[]>;
 
     /**
-     * Create API key for customer
-     * @param customerId Customer identifier
+     * Create API key for client
+     * @param clientId Client identifier
      * @param apiKey API key data
      * @returns Created API key
      */
-    createCustomerApiKey(customerId: number, apiKey: Omit<ClientApiKey, 'id' | 'clientId' | 'createdAt' | 'lastUsed'>): Promise<ClientApiKey>;
+    createClientApiKey(clientId: number, apiKey: Omit<ClientApiKey, 'id' | 'clientId' | 'createdAt' | 'lastUsed'>): Promise<ClientApiKey>;
 
     /**
      * Update API key
-     * @param customerId Customer identifier
+     * @param clientId Client identifier
      * @param apiKeyId API key identifier
      * @param apiKey Updated API key data
      * @returns Updated API key
      */
-    updateCustomerApiKey(customerId: number, apiKeyId: number, apiKey: Partial<ClientApiKey>): Promise<ClientApiKey>;
+    updateClientApiKey(clientId: number, apiKeyId: number, apiKey: Partial<ClientApiKey>): Promise<ClientApiKey>;
 
     /**
      * Delete API key
-     * @param customerId Customer identifier
+     * @param clientId Client identifier
      * @param apiKeyId API key identifier
      */
-    deleteCustomerApiKey(customerId: number, apiKeyId: number): Promise<void>;
+    deleteClientApiKey(clientId: number, apiKeyId: number): Promise<void>;
 
     /**
-     * Get customer services
-     * @param customerId Customer identifier
+     * Get client services
+     * @param clientId Client identifier
      * @returns List of services
      */
-    getCustomerServices(customerId: number): Promise<ClientService[]>;
+    getClientServices(clientId: number): Promise<ClientService[]>;
 
     /**
-     * Update customer service
-     * @param customerId Customer identifier
+     * Update client service
+     * @param clientId Client identifier
      * @param serviceId Service identifier
      * @param service Updated service data
      * @returns Updated service
      */
-    updateCustomerService(customerId: number, serviceId: number, service: Partial<ClientService>): Promise<ClientService>;
+    updateClientService(clientId: number, serviceId: number, service: Partial<ClientService>): Promise<ClientService>;
 
     /**
-     * Get customer contacts
-     * @param customerId Customer identifier
+     * Get client contacts
+     * @param clientId Client identifier
      * @returns List of contacts
      */
-    getCustomerContacts(customerId: number): Promise<ClientContact[]>;
+    getClientContacts(clientId: number): Promise<ClientContact[]>;
 
     /**
-     * Create contact for customer
-     * @param customerId Customer identifier
+     * Create contact for client
+     * @param clientId Client identifier
      * @param contact Contact data
      * @returns Created contact
      */
-    createCustomerContact(customerId: number, contact: Omit<ClientContact, 'id' | 'clientId'>): Promise<ClientContact>;
+    createClientContact(clientId: number, contact: Omit<ClientContact, 'id' | 'clientId'>): Promise<ClientContact>;
 
     /**
      * Update contact
-     * @param customerId Customer identifier
+     * @param clientId Client identifier
      * @param contactId Contact identifier
      * @param contact Updated contact data
      * @returns Updated contact
      */
-    updateCustomerContact(customerId: number, contactId: number, contact: Partial<ClientContact>): Promise<ClientContact>;
+    updateClientContact(clientId: number, contactId: number, contact: Partial<ClientContact>): Promise<ClientContact>;
 
     /**
      * Delete contact
-     * @param customerId Customer identifier
+     * @param clientId Client identifier
      * @param contactId Contact identifier
      */
-    deleteCustomerContact(customerId: number, contactId: number): Promise<void>;
+    deleteClientContact(clientId: number, contactId: number): Promise<void>;
 
     /**
      * Get user details
@@ -178,4 +179,5 @@ export interface IClientService extends IBaseService {
      * @returns Updated user
      */
     updateUser(clientId: number, userId: number, userData: Partial<User>): Promise<User>;
+
 }

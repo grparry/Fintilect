@@ -53,7 +53,7 @@ interface GroupsProps {
 interface GroupFormData extends Omit<Group, 'id' | 'createdAt' | 'updatedAt'> {
   name: string;
   description?: string;
-  customerId: number;
+  clientId: number;
 }
 
 interface State {
@@ -93,7 +93,7 @@ export default function Groups({ clientId }: GroupsProps) {
     try {
       setState(prev => ({ ...prev, loading: true }));
       const response = await permissionService.getGroups({
-        customerId: Number(clientId),
+        clientId: Number(clientId),
         page: state.page,
         limit: state.limit
       });
@@ -117,7 +117,7 @@ export default function Groups({ clientId }: GroupsProps) {
     if (!clientId) return;
     try {
       const response = await userService.getUsers({
-        customerId: Number(clientId),
+        clientId: Number(clientId),
         page: 1,
         limit: 100
       });
@@ -134,7 +134,7 @@ export default function Groups({ clientId }: GroupsProps) {
       setState(prev => ({ ...prev, saving: true, error: null }));
       const newGroup = {
         name: formData.name || 'New Group',
-        customerId: Number(clientId),
+        clientId: Number(clientId),
       };
       await permissionService.createGroup(newGroup);
       setState(prev => ({
@@ -337,7 +337,7 @@ export default function Groups({ clientId }: GroupsProps) {
               onChange={(e) => {
                 const formData = {
                   name: e.target.value,
-                  customerId: Number(clientId)
+                  clientId: Number(clientId)
                 };
                 if (state.selectedGroup) {
                   handleUpdateGroup(state.selectedGroup.id, formData);

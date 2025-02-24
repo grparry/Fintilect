@@ -23,7 +23,7 @@ export class MockAuthService implements IAuthService {
     this.basePath = basePath;
   }
   async login(credentials: LoginCredentials): Promise<AuthenticationResponse> {
-    const user = mockUsers.find(u => u.externalId === credentials.username);
+    const user = mockUsers.find(u => u.username === credentials.username);
     if (!user) {
       throw new AuthError('Invalid credentials', 'AUTH_001');
     }
@@ -34,7 +34,7 @@ export class MockAuthService implements IAuthService {
     const session: UserSession = {
       id: '1',
       userId: user.id.toString(),
-      clientId: user.customerId.toString(),
+      clientId: user.clientId.toString(),
       lastActivity: new Date().toISOString(),
       deviceInfo: {
         browser: 'Chrome',

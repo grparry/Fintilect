@@ -1,7 +1,7 @@
 import { IClientService } from '../../interfaces/IClientService';
 import { BaseMockService } from './BaseMockService';
 import {
-    Customer,
+    Client,
     ClientType,
     ClientStatus,
     Environment,
@@ -14,7 +14,7 @@ import {
     UserGroup,
     Group
 } from '../../../types/client.types';
-import { mockCustomers } from './data/client/mockClientData';
+import { mockClients } from './data/client/mockClientData';
 import { mockUsers } from './data/users/mockUserData';
 import { mockPermissionGroups as mockGroups, mockUserGroups } from './data/permissions/mockPermissionData';
 
@@ -23,15 +23,15 @@ import { mockPermissionGroups as mockGroups, mockUserGroups } from './data/permi
  * Uses in-memory data for testing and development
  */
 export class MockClientService extends BaseMockService implements IClientService {
-    private customers: Map<number, Customer>;
+    private clients: Map<number, Client>;
     private apiKeys: Map<number, ClientApiKey[]>;
     private contacts: Map<number, ClientContact[]>;
     private services: Map<number, ClientServiceType[]>;
     private configurations: Map<number, ClientConfiguration>;
 
-    constructor(basePath: string = '/api/v1/customers') {
+    constructor(basePath: string = '/api/v1/clients') {
         super(basePath);
-        this.customers = new Map(mockCustomers.map(c => [c.id, c]));
+        this.clients = new Map(mockClients.map(c => [c.id, c]));
         this.apiKeys = new Map();
         this.contacts = new Map();
         this.services = new Map();
@@ -40,8 +40,8 @@ export class MockClientService extends BaseMockService implements IClientService
     }
 
     private initializeData(): void {
-        // Initialize mock data for each customer
-        this.customers.forEach((customer, id) => {
+        // Initialize mock data for each client
+        this.clients.forEach((client, id) => {
             // Initialize API keys
             this.apiKeys.set(id, [
                 {
@@ -90,13 +90,13 @@ export class MockClientService extends BaseMockService implements IClientService
                 maxTransactionLimit: 10000,
                 allowWeekendProcessing: false,
                 requireDualApproval: true,
-                notificationEmail: `notifications@${customer.domain || 'example.com'}`,
+                notificationEmail: `notifications@${client.domain || 'example.com'}`,
                 lastModified: '2025-01-01T00:00:00Z'
             });
         });
     }
 
-    async getCustomers(params?: {
+    async getClients(params?: {
         tenantId?: number;
         isActive?: boolean;
         type?: ClientType;
@@ -105,28 +105,28 @@ export class MockClientService extends BaseMockService implements IClientService
         searchTerm?: string;
         page?: number;
         limit?: number;
-    }): Promise<PaginatedResponse<Customer>> {
-        let filteredCustomers = Array.from(this.customers.values());
+    }): Promise<PaginatedResponse<Client>> {
+        let filteredClients = Array.from(this.clients.values());
 
         if (params) {
             if (params.tenantId !== undefined) {
-                filteredCustomers = filteredCustomers.filter(c => c.tenantId === params.tenantId);
+                filteredClients = filteredClients.filter(c => c.tenantId === params.tenantId);
             }
             if (params.isActive !== undefined) {
-                filteredCustomers = filteredCustomers.filter(c => c.isActive === params.isActive);
+                filteredClients = filteredClients.filter(c => c.isActive === params.isActive);
             }
             if (params.type) {
-                filteredCustomers = filteredCustomers.filter(c => c.type === params.type);
+                filteredClients = filteredClients.filter(c => c.type === params.type);
             }
             if (params.status) {
-                filteredCustomers = filteredCustomers.filter(c => c.status === params.status);
+                filteredClients = filteredClients.filter(c => c.status === params.status);
             }
             if (params.environment) {
-                filteredCustomers = filteredCustomers.filter(c => c.environment === params.environment);
+                filteredClients = filteredClients.filter(c => c.environment === params.environment);
             }
             if (params.searchTerm) {
                 const search = params.searchTerm.toLowerCase();
-                filteredCustomers = filteredCustomers.filter(c =>
+                filteredClients = filteredClients.filter(c =>
                     c.name.toLowerCase().includes(search) ||
                     (c.domain?.toLowerCase() || '').includes(search) ||
                     (c.contactName?.toLowerCase() || '').includes(search)
@@ -138,8 +138,8 @@ export class MockClientService extends BaseMockService implements IClientService
         const limit = params?.limit || 10;
         const start = (page - 1) * limit;
         const end = start + limit;
-        const items = filteredCustomers.slice(start, end);
-        const total = filteredCustomers.length;
+        const items = filteredClients.slice(start, end);
+        const total = filteredClients.length;
 
         return {
             items,
@@ -150,101 +150,101 @@ export class MockClientService extends BaseMockService implements IClientService
         };
     }
 
-    async getCustomer(customerId: number): Promise<Customer> {
-        const customer = this.customers.get(customerId);
-        if (!customer) {
-            throw this.createError(`Customer not found: ${customerId}`, 404);
+    async getClient(clientId: number): Promise<Client> {
+        const client = this.clients.get(clientId);
+        if (!client) {
+            throw this.createError(`Client not found: ${clientId}`, 404);
         }
-        return customer;
+        return client;
     }
 
-    async createCustomer(customer: Omit<Customer, 'id' | 'createdOn' | 'updatedOn'>): Promise<Customer> {
-        const newId = Math.max(...Array.from(this.customers.keys()), 0) + 1;
+    async createClient(client: Omit<Client, 'id' | 'createdOn' | 'updatedOn'>): Promise<Client> {
+        const newId = Math.max(...Array.from(this.clients.keys()), 0) + 1;
         const now = new Date().toISOString();
 
-        const newCustomer: Customer = {
-            ...customer,
+        const newClient: Client = {
+            ...client,
             id: newId,
             createdOn: now,
             updatedOn: now
         };
 
-        this.customers.set(newId, newCustomer);
+        this.clients.set(newId, newClient);
         this.initializeData();
-        return newCustomer;
+        return newClient;
     }
 
-    async updateCustomer(customerId: number, customer: Partial<Customer>): Promise<Customer> {
-        const existingCustomer = await this.getCustomer(customerId);
-        const updatedCustomer = {
-            ...existingCustomer,
-            ...customer,
+    async updateClient(clientId: number, client: Partial<Client>): Promise<Client> {
+        const existingClient = await this.getClient(clientId);
+        const updatedClient = {
+            ...existingClient,
+            ...client,
             updatedOn: new Date().toISOString()
         };
 
-        this.customers.set(customerId, updatedCustomer);
-        return updatedCustomer;
+        this.clients.set(clientId, updatedClient);
+        return updatedClient;
     }
 
-    async deleteCustomer(customerId: number): Promise<void> {
-        if (!this.customers.has(customerId)) {
-            throw this.createError(`Customer not found: ${customerId}`, 404);
+    async deleteClient(clientId: number): Promise<void> {
+        if (!this.clients.has(clientId)) {
+            throw this.createError(`Client not found: ${clientId}`, 404);
         }
 
-        this.customers.delete(customerId);
-        this.apiKeys.delete(customerId);
-        this.contacts.delete(customerId);
-        this.services.delete(customerId);
-        this.configurations.delete(customerId);
+        this.clients.delete(clientId);
+        this.apiKeys.delete(clientId);
+        this.contacts.delete(clientId);
+        this.services.delete(clientId);
+        this.configurations.delete(clientId);
     }
 
-    async getCustomerConfig(customerId: number): Promise<ClientConfiguration> {
-        await this.getCustomer(customerId); // Verify customer exists
-        const config = this.configurations.get(customerId);
+    async getClientConfig(clientId: number): Promise<ClientConfiguration> {
+        await this.getClient(clientId); // Verify client exists
+        const config = this.configurations.get(clientId);
         if (!config) {
-            throw this.createError(`Configuration not found for customer: ${customerId}`, 404);
+            throw this.createError(`Configuration not found for client: ${clientId}`, 404);
         }
         return config;
     }
 
-    async updateCustomerConfig(customerId: number, config: Partial<ClientConfiguration>): Promise<ClientConfiguration> {
-        const currentConfig = await this.getCustomerConfig(customerId);
+    async updateClientConfig(clientId: number, config: Partial<ClientConfiguration>): Promise<ClientConfiguration> {
+        const currentConfig = await this.getClientConfig(clientId);
         const updatedConfig = {
             ...currentConfig,
             ...config,
             lastModified: new Date().toISOString()
         };
 
-        this.configurations.set(customerId, updatedConfig);
+        this.configurations.set(clientId, updatedConfig);
         return updatedConfig;
     }
 
-    async getCustomerApiKeys(customerId: number): Promise<ClientApiKey[]> {
-        await this.getCustomer(customerId); // Verify customer exists
-        return this.apiKeys.get(customerId) || [];
+    async getClientApiKeys(clientId: number): Promise<ClientApiKey[]> {
+        await this.getClient(clientId); // Verify client exists
+        return this.apiKeys.get(clientId) || [];
     }
 
-    async createCustomerApiKey(customerId: number, apiKey: Omit<ClientApiKey, 'id' | 'clientId' | 'createdAt' | 'lastUsed'>): Promise<ClientApiKey> {
-        await this.getCustomer(customerId); // Verify customer exists
-        const keys = this.apiKeys.get(customerId) || [];
+    async createClientApiKey(clientId: number, apiKey: Omit<ClientApiKey, 'id' | 'clientId' | 'createdAt' | 'lastUsed'>): Promise<ClientApiKey> {
+        await this.getClient(clientId); // Verify client exists
+        const keys = this.apiKeys.get(clientId) || [];
         const newId = Math.max(...keys.map(k => k.id), 0) + 1;
         const now = new Date().toISOString();
 
         const newApiKey: ClientApiKey = {
             ...apiKey,
             id: newId,
-            clientId: customerId,
+            clientId: clientId,
             createdAt: now,
             lastUsed: null
         };
 
         keys.push(newApiKey);
-        this.apiKeys.set(customerId, keys);
+        this.apiKeys.set(clientId, keys);
         return newApiKey;
     }
 
-    async updateCustomerApiKey(customerId: number, apiKeyId: number, apiKey: Partial<ClientApiKey>): Promise<ClientApiKey> {
-        const keys = await this.getCustomerApiKeys(customerId);
+    async updateClientApiKey(clientId: number, apiKeyId: number, apiKey: Partial<ClientApiKey>): Promise<ClientApiKey> {
+        const keys = await this.getClientApiKeys(clientId);
         const keyIndex = keys.findIndex(k => k.id === apiKeyId);
         if (keyIndex === -1) {
             throw this.createError(`API key not found: ${apiKeyId}`, 404);
@@ -256,28 +256,28 @@ export class MockClientService extends BaseMockService implements IClientService
         };
 
         keys[keyIndex] = updatedKey;
-        this.apiKeys.set(customerId, keys);
+        this.apiKeys.set(clientId, keys);
         return updatedKey;
     }
 
-    async deleteCustomerApiKey(customerId: number, apiKeyId: number): Promise<void> {
-        const keys = await this.getCustomerApiKeys(customerId);
+    async deleteClientApiKey(clientId: number, apiKeyId: number): Promise<void> {
+        const keys = await this.getClientApiKeys(clientId);
         const keyIndex = keys.findIndex(k => k.id === apiKeyId);
         if (keyIndex === -1) {
             throw this.createError(`API key not found: ${apiKeyId}`, 404);
         }
 
         keys.splice(keyIndex, 1);
-        this.apiKeys.set(customerId, keys);
+        this.apiKeys.set(clientId, keys);
     }
 
-    async getCustomerServices(customerId: number): Promise<ClientServiceType[]> {
-        await this.getCustomer(customerId); // Verify customer exists
-        return this.services.get(customerId) || [];
+    async getClientServices(clientId: number): Promise<ClientServiceType[]> {
+        await this.getClient(clientId); // Verify client exists
+        return this.services.get(clientId) || [];
     }
 
-    async updateCustomerService(customerId: number, serviceId: number, service: Partial<ClientServiceType>): Promise<ClientServiceType> {
-        const services = await this.getCustomerServices(customerId);
+    async updateClientService(clientId: number, serviceId: number, service: Partial<ClientServiceType>): Promise<ClientServiceType> {
+        const services = await this.getClientServices(clientId);
         const serviceIndex = services.findIndex(s => s.id === serviceId);
         if (serviceIndex === -1) {
             throw this.createError(`Service not found: ${serviceId}`, 404);
@@ -289,33 +289,33 @@ export class MockClientService extends BaseMockService implements IClientService
         };
 
         services[serviceIndex] = updatedService;
-        this.services.set(customerId, services);
+        this.services.set(clientId, services);
         return updatedService;
     }
 
-    async getCustomerContacts(customerId: number): Promise<ClientContact[]> {
-        await this.getCustomer(customerId); // Verify customer exists
-        return this.contacts.get(customerId) || [];
+    async getClientContacts(clientId: number): Promise<ClientContact[]> {
+        await this.getClient(clientId); // Verify client exists
+        return this.contacts.get(clientId) || [];
     }
 
-    async createCustomerContact(customerId: number, contact: Omit<ClientContact, 'id' | 'clientId'>): Promise<ClientContact> {
-        await this.getCustomer(customerId); // Verify customer exists
-        const contacts = this.contacts.get(customerId) || [];
+    async createClientContact(clientId: number, contact: Omit<ClientContact, 'id' | 'clientId'>): Promise<ClientContact> {
+        await this.getClient(clientId); // Verify client exists
+        const contacts = this.contacts.get(clientId) || [];
         const newId = Math.max(...contacts.map(c => c.id), 0) + 1;
 
         const newContact: ClientContact = {
             ...contact,
             id: newId,
-            clientId: customerId
+            clientId: clientId
         };
 
         contacts.push(newContact);
-        this.contacts.set(customerId, contacts);
+        this.contacts.set(clientId, contacts);
         return newContact;
     }
 
-    async updateCustomerContact(customerId: number, contactId: number, contact: Partial<ClientContact>): Promise<ClientContact> {
-        const contacts = await this.getCustomerContacts(customerId);
+    async updateClientContact(clientId: number, contactId: number, contact: Partial<ClientContact>): Promise<ClientContact> {
+        const contacts = await this.getClientContacts(clientId);
         const contactIndex = contacts.findIndex(c => c.id === contactId);
         if (contactIndex === -1) {
             throw this.createError(`Contact not found: ${contactId}`, 404);
@@ -327,19 +327,19 @@ export class MockClientService extends BaseMockService implements IClientService
         };
 
         contacts[contactIndex] = updatedContact;
-        this.contacts.set(customerId, contacts);
+        this.contacts.set(clientId, contacts);
         return updatedContact;
     }
 
-    async deleteCustomerContact(customerId: number, contactId: number): Promise<void> {
-        const contacts = await this.getCustomerContacts(customerId);
+    async deleteClientContact(clientId: number, contactId: number): Promise<void> {
+        const contacts = await this.getClientContacts(clientId);
         const contactIndex = contacts.findIndex(c => c.id === contactId);
         if (contactIndex === -1) {
             throw this.createError(`Contact not found: ${contactId}`, 404);
         }
 
         contacts.splice(contactIndex, 1);
-        this.contacts.set(customerId, contacts);
+        this.contacts.set(clientId, contacts);
     }
 
     protected async simulateDelay(): Promise<void> {
@@ -359,7 +359,7 @@ export class MockClientService extends BaseMockService implements IClientService
         await this.simulateDelay();
         return mockUserGroups.filter(ug => {
             const group = mockGroups.find(g => g.id === ug.groupId);
-            return group && group.customerId === clientId;
+            return group && group.clientId === clientId;
         });
     }
 

@@ -35,7 +35,7 @@ export class PermissionService extends BaseService implements IPermissionService
   }
 
   async getGroups(params?: {
-    customerId?: number;
+    clientId?: number;
     searchTerm?: string;
     page?: number;
     limit?: number;

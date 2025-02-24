@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { authService } from '../services/factory/ServiceFactory';
 import { LoginCredentials, AuthState } from '../types/auth.types';
-import { User } from '../types/client.types';
+import { User, UserPermissions } from '../types/client.types';
 
 interface AuthContextType {
   state: AuthState;
@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user: null,
     loading: false,
     error: null,
-    permissions: []
+    userPermissions: null
   });
   const login = useCallback(async (credentials: LoginCredentials) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: true,
         user: response.user,
         loading: false,
-        permissions: []
+        userPermissions: { groups: [], roles: [] }
       }));
     } catch (error) {
       setState(prev => ({
@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user: null,
         loading: false,
         error: null,
-        permissions: []
+        userPermissions: null
       });
     } catch (error) {
       setState(prev => ({

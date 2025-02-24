@@ -21,8 +21,8 @@ export interface Exception {
   payeeZip: string;
   payeeCountry: string;
   payeeNickname: string;
-  customerPayeeId: string;
-  customerPayeeAccountNumber: string;
+  clientPayeeId: string;
+  clientPayeeAccountNumber: string;
   confirmationNumber: string;
   transactionAmount: string;
   memoLineInfo: string;
