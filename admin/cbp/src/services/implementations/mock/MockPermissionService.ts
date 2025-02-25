@@ -8,31 +8,12 @@ import {
   UserPermissions
 } from '../../../types/client.types';
 import { BaseMockService } from './BaseMockService';
-
-// Mock data
-const mockRoles: Role[] = [
-  { id: 1, name: 'Admin' },
-  { id: 2, name: 'Manager' },
-  { id: 3, name: 'User' }
-];
-
-const mockGroups: Group[] = [
-  { id: 1, name: 'System Admins', clientId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' },
-  { id: 2, name: 'Managers', clientId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' },
-  { id: 3, name: 'Users', clientId: 1, createdAt: '2025-01-01', updatedAt: '2025-01-01' }
-];
-
-const mockGroupRoles: GroupRole[] = [
-  { groupId: 1, roleId: 1 },
-  { groupId: 2, roleId: 2 },
-  { groupId: 3, roleId: 3 }
-];
-
-const mockUserGroups: UserGroup[] = [
-  { userId: 1, groupId: 1 },
-  { userId: 2, groupId: 2 },
-  { userId: 3, groupId: 3 }
-];
+import { 
+  mockPermissions,
+  mockPermissionGroups,
+  mockGroupRoles,
+  mockUserGroups
+} from './data/permissions/mockPermissionData';
 
 export class MockPermissionService extends BaseMockService implements IPermissionService {
   private roles: Map<number, Role> = new Map();
@@ -46,8 +27,15 @@ export class MockPermissionService extends BaseMockService implements IPermissio
   }
 
   private initializeData(): void {
-    mockRoles.forEach(role => this.roles.set(role.id, role));
-    mockGroups.forEach(group => this.groups.set(group.id, group));
+    // Convert mockPermissions to Role type
+    const roles: Role[] = mockPermissions.map(p => ({
+      id: parseInt(p.id),
+      name: p.name,
+      description: p.description
+    }));
+
+    roles.forEach(role => this.roles.set(role.id, role));
+    mockPermissionGroups.forEach(group => this.groups.set(group.id, group));
     mockGroupRoles.forEach(gr => this.groupRoles.set(`${gr.groupId}-${gr.roleId}`, gr));
     mockUserGroups.forEach(ug => this.userGroups.set(`${ug.userId}-${ug.groupId}`, ug));
   }

@@ -34,7 +34,7 @@ const BillPayHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="dashboard"
+              to="/admin/bill-pay/dashboard"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
@@ -44,12 +44,11 @@ const BillPayHeader: React.FC = () => {
                 Dashboard
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                View payment statistics and system status
+                View bill pay status and statistics
               </Typography>
             </Link>
           </Paper>
         </Grid>
-
         <Grid item xs={12} sm={6} md={4}>
           <Paper 
             sx={{ 
@@ -64,7 +63,7 @@ const BillPayHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="payments"
+              to="/admin/bill-pay/payments"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
@@ -74,12 +73,11 @@ const BillPayHeader: React.FC = () => {
                 Payment Management
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Manage payments and handle exceptions
+                Manage payments and exceptions
               </Typography>
             </Link>
           </Paper>
         </Grid>
-
         <Grid item xs={12} sm={6} md={4}>
           <Paper 
             sx={{ 
@@ -94,7 +92,7 @@ const BillPayHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="reports"
+              to="/admin/bill-pay/reports"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
@@ -104,12 +102,11 @@ const BillPayHeader: React.FC = () => {
                 Reports
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Generate and view payment reports
+                View bill pay reports and analytics
               </Typography>
             </Link>
           </Paper>
         </Grid>
-
         <Grid item xs={12} sm={6} md={4}>
           <Paper 
             sx={{ 
@@ -124,7 +121,7 @@ const BillPayHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="settings"
+              to="/admin/bill-pay/settings"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}

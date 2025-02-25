@@ -53,7 +53,6 @@ const ClientManagementWrapper: React.FC = () => {
               <Route path=":groupId" element={<GroupsWrapper />} />
             </Route>
             <Route path="security" element={<MemberSecuritySettingsWrapper />} />
-            <Route path="audit-log" element={<SecuritySettingsWrapper />} />
             <Route path="*" element={<Navigate to="contact" replace />} />
           </Routes>
         </ClientManagement>

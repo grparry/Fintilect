@@ -109,9 +109,6 @@ export const mockPermissions: Permission[] = [
     { id: '106', name: 'BillPayManagePendingPayments_Update', description: 'BillPayManagePendingPayments_Update role', category: 'Roles', actions: ['all'] },
     { id: '107', name: 'BillPayManagePendingPayments_Cancel', description: 'BillPayManagePendingPayments_Cancel role', category: 'Roles', actions: ['all'] },
     { id: '108', name: 'TimerAdministrator', description: 'TimerAdministrator role', category: 'Roles', actions: ['all'] },
-    { id: '109', name: 'MoneyDesktopInactiveUsers_Read', description: 'MoneyDesktopInactiveUsers_Read role', category: 'Roles', actions: ['all'] },
-    { id: '110', name: 'MoneyDesktopInactiveUsers_Purge', description: 'MoneyDesktopInactiveUsers_Purge role', category: 'Roles', actions: ['all'] },
-    { id: '111', name: 'MoneyDesktopInactiveUsers_Configure', description: 'MoneyDesktopInactiveUsers_Configure role', category: 'Roles', actions: ['all'] },
     { id: '112', name: 'SortRecordList_DemoUser', description: 'SortRecordList_DemoUser role', category: 'Roles', actions: ['all'] },
     { id: '113', name: 'ConnectBillPayBPConvertPayee_Read', description: 'ConnectBillPayBPConvertPayee_Read role', category: 'Roles', actions: ['all'] },
     { id: '114', name: 'ConnectBillPayBPConvertPayee_canRollbackConversion', description: 'ConnectBillPayBPConvertPayee_canRollbackConversion role', category: 'Roles', actions: ['all'] },
@@ -120,7 +117,6 @@ export const mockPermissions: Permission[] = [
     { id: '117', name: 'ConnectBillPayCBRBillingReports_Create', description: 'ConnectBillPayCBRBillingReports_Create role', category: 'Roles', actions: ['all'] },
     { id: '118', name: 'ConnectBillPayCBRBillingReports_Delete', description: 'ConnectBillPayCBRBillingReports_Delete role', category: 'Roles', actions: ['all'] },
     { id: '119', name: 'ConnectBillPayCBRBillingReports_canApproveRescind', description: 'ConnectBillPayCBRBillingReports_canApproveRescind role', category: 'Roles', actions: ['all'] },
-    { id: '120', name: 'MoneyDesktopDeletedUsers_Read', description: 'MoneyDesktopDeletedUsers_Read role', category: 'Roles', actions: ['all'] },
     { id: '121', name: 'ConnectBillPayCBRFeeConfiguration_Delete', description: 'ConnectBillPayCBRFeeConfiguration_Delete role', category: 'Roles', actions: ['all'] },
     { id: '122', name: 'ConnectBillPayCBRFeeConfiguration_canExport', description: 'ConnectBillPayCBRFeeConfiguration_canExport role', category: 'Roles', actions: ['all'] },
     { id: '123', name: 'ConnectBillPayCBRFeeConfiguration_Create', description: 'ConnectBillPayCBRFeeConfiguration_Create role', category: 'Roles', actions: ['all'] },
@@ -156,6 +152,13 @@ export const mockPermissionGroups: Group[] = [
         clientId: 1,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
+    },
+    {
+        id: 3,
+        name: 'Regular Users',
+        clientId: 1,
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z'
     }
 ];
 
@@ -270,9 +273,6 @@ export const mockGroupRoles: GroupRole[] = [
     { groupId: 1, roleId: 106 }, // BillPayManagePendingPayments_Update
     { groupId: 1, roleId: 107 }, // BillPayManagePendingPayments_Cancel
     { groupId: 1, roleId: 108 }, // TimerAdministrator
-    { groupId: 1, roleId: 109 }, // MoneyDesktopInactiveUsers_Read
-    { groupId: 1, roleId: 110 }, // MoneyDesktopInactiveUsers_Purge
-    { groupId: 1, roleId: 111 }, // MoneyDesktopInactiveUsers_Configure
     { groupId: 1, roleId: 112 }, // SortRecordList_DemoUser
     { groupId: 1, roleId: 113 }, // ConnectBillPayBPConvertPayee_Read
     { groupId: 1, roleId: 114 }, // ConnectBillPayBPConvertPayee_canRollbackConversion
@@ -281,7 +281,6 @@ export const mockGroupRoles: GroupRole[] = [
     { groupId: 1, roleId: 117 }, // ConnectBillPayCBRBillingReports_Create
     { groupId: 1, roleId: 118 }, // ConnectBillPayCBRBillingReports_Delete
     { groupId: 1, roleId: 119 }, // ConnectBillPayCBRBillingReports_canApproveRescind
-    { groupId: 1, roleId: 120 }, // MoneyDesktopDeletedUsers_Read
     { groupId: 1, roleId: 121 }, // ConnectBillPayCBRFeeConfiguration_Delete
     { groupId: 1, roleId: 122 }, // ConnectBillPayCBRFeeConfiguration_canExport
     { groupId: 1, roleId: 123 }, // ConnectBillPayCBRFeeConfiguration_Create
@@ -301,23 +300,31 @@ export const mockGroupRoles: GroupRole[] = [
     { groupId: 1, roleId: 137 }, // IdPExample_CloneUser
     { groupId: 1, roleId: 138 }, // User
     { groupId: 1, roleId: 139 }, // HiringManager
+    { groupId: 1, roleId: 27 },  // BillPayViewer - Admin group needs this for bill pay access
 
     // Read Only group gets only read permissions
     { groupId: 2, roleId: 91 }, // AuditReports_Read
     { groupId: 2, roleId: 133 }, // BillPayCBRBillingReports_Read
     { groupId: 2, roleId: 126 }, // BillPayCBRFeeConfiguration_Read
     { groupId: 2, roleId: 52 }, // BillPayConfiguration_Read
-    { groupId: 2, roleId: 68 } // SecurityUsers_Read
+    { groupId: 2, roleId: 68 }, // SecurityUsers_Read
+
+    // Regular users get basic roles
+    { groupId: 3, roleId: 27 }  // BillPayViewer
 ];
 
 // Map users to groups
 export const mockUserGroups: UserGroup[] = [
     {
-        userId: 1, // john.doe
-        groupId: 1 // Admin Group
+        userId: 1, // John Doe
+        groupId: 1 // Admin group
     },
     {
-        userId: 2, // jane.smith
-        groupId: 2 // Read Only Group
+        userId: 2, // Jane Smith
+        groupId: 2 // Regular user group
+    },
+    {
+        userId: 30, // testUser
+        groupId: 3 // Regular users
     }
 ];

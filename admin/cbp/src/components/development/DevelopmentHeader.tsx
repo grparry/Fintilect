@@ -14,12 +14,15 @@ const getRouteIcon = (title: string) => {
 };
 const DevelopmentHeader: React.FC = () => {
   const allRoutes = getAllRoutes();
-  const devRoutes = allRoutes.filter(route => 
-    route.sectionId === 'development' && 
-    !route.hideFromSidebar &&
-    route.path !== '/admin/development' &&
-    (!route.id || !route.id.endsWith('-header')) 
-  );
+  console.log("All routes:", allRoutes);
+  const devRoutes = allRoutes.filter(route => {
+    console.log("Checking route:", route);
+    return route.sectionId === 'development' && 
+      !route.hideFromSidebar &&
+      route.path !== 'development' &&
+      (!route.id || !route.id.endsWith('-header'));
+  });
+  console.log("Development routes:", devRoutes);
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 4 }}>
@@ -46,7 +49,7 @@ const DevelopmentHeader: React.FC = () => {
             >
               <Link
                 component={RouterLink}
-                to={route.path}
+                to={route.path.startsWith('/') ? route.path : `/${route.path}`}
                 color="inherit"
                 underline="none"
                 sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}

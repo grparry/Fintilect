@@ -8,6 +8,7 @@ import {
   Box,
   Link,
   Tooltip,
+  Chip,
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -15,6 +16,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '../../context/AuthContext';
+import { useHost } from '../../context/HostContext';
 import { User } from '../../types/index';
 
 interface HeaderProps {
@@ -34,6 +36,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const theme = useTheme();
   const { user, logout } = useAuth();
+  const { environment } = useHost();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -85,6 +88,17 @@ const Header: React.FC<HeaderProps> = ({
           </Typography>
         </Link>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Chip
+            label={environment.toUpperCase()}
+            variant="outlined"
+            size="small"
+            color={environment === 'production' ? 'error' : 'default'}
+            sx={{ 
+              color: 'white',
+              borderColor: 'white',
+              mr: 2
+            }}
+          />
           <IconButton sx={{ ml: 1 }} onClick={toggleTheme} color="inherit">
             {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>

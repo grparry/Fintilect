@@ -7,10 +7,11 @@ import ApiIcon from '@mui/icons-material/Api';
 // Lazy load components
 const DevelopmentHeader = lazy(() => import('../components/development/DevelopmentHeader'));
 const APITesting = lazy(() => import('../components/development/APITesting'));
+
 const developmentRoutes: RouteConfig[] = [
   {
     id: 'development',
-    path: '/admin/dev',
+    path: '',
     title: 'Development',
     element: DevelopmentHeader,
     icon: CodeIcon,
@@ -19,7 +20,7 @@ const developmentRoutes: RouteConfig[] = [
   },
   {
     id: 'api-testing',
-    path: '/admin/dev/testing',
+    path: 'api-testing',
     title: 'API Testing',
     element: APITesting,
     icon: ApiIcon,

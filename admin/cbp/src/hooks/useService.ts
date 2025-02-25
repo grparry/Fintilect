@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ServiceContext, ServiceContextType } from '../contexts/ServiceContext';
+import { ServiceContext, ServiceContextType } from '../context/ServiceContext';
 
 type ServiceKeys = keyof ServiceContextType;
 /**

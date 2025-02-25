@@ -4,9 +4,14 @@ import { useNavigate, useLocation, To } from 'react-router-dom';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import logger from '../../utils/logger';
 
-const NotFound: React.FC = () => {
+interface NotFoundProps {
+  message?: string;
+}
+
+const NotFound: React.FC<NotFoundProps> = ({ message }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  
   useEffect(() => {
     // Log the 404 occurrence for diagnostics
     logger.warn({
@@ -17,6 +22,7 @@ const NotFound: React.FC = () => {
       timestamp: new Date().toISOString()
     });
   }, [location.pathname]);
+
   const handleNavigateBack = () => {
     logger.info({
       message: 'Navigation: Redirect from 404',
@@ -26,6 +32,7 @@ const NotFound: React.FC = () => {
     });
     navigate(-1);
   };
+
   const handleNavigateTo = (to: To) => {
     logger.info({
       message: 'Navigation: Redirect from 404',
@@ -35,6 +42,7 @@ const NotFound: React.FC = () => {
     });
     navigate(to);
   };
+
   return (
     <Container 
       maxWidth="sm" 
@@ -55,10 +63,10 @@ const NotFound: React.FC = () => {
       >
         <ErrorOutlineIcon sx={{ fontSize: 64, color: 'error.main', mb: 2 }} />
         <Typography variant="h4" gutterBottom color="text.primary">
-          Page Not Found
+          {message || 'Page Not Found'}
         </Typography>
         <Typography variant="body1" color="text.primary" paragraph>
-          The page you're looking for doesn't exist or you don't have permission to access it.
+          {message ? '' : 'The page you are looking for does not exist or you do not have permission to access it.'}
         </Typography>
         <Typography variant="body2" color="text.primary" sx={{ mb: 3 }}>
           Attempted path: {location.pathname}

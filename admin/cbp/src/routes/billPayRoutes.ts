@@ -14,9 +14,10 @@ import TuneIcon from '@mui/icons-material/Tune';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SecurityIcon from '@mui/icons-material/Security';
 import LockIcon from '@mui/icons-material/Lock';
+import BillPayHeader from '../components/bill-pay/BillPayHeader';
 
 // Lazy load components
-const BillPayHeader = lazy(() => import('../components/bill-pay/BillPayHeader'));
+const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
 const Dashboard = lazy(() => import('../components/bill-pay/dashboard/Dashboard'));
 const ExceptionTool = lazy(() => import('../components/bill-pay/payments/ExceptionTool'));
 const FISExceptionHandling = lazy(() => import('../components/bill-pay/payments/FISExceptionHandling'));
@@ -30,154 +31,186 @@ const Holidays = lazy(() => import('../components/bill-pay/settings/Holidays'));
 const BillPayConfig = lazy(() => import('../components/bill-pay/settings/BillPayConfig'));
 const NotificationTemplates = lazy(() => import('../components/bill-pay/settings/NotificationTemplates'));
 const BillPaySecuritySettings = lazy(() => import('../components/bill-pay/settings/security/BillPaySecuritySettings'));
-const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
+const PaymentManagement = lazy(() => import('../components/bill-pay/payments/PaymentManagement'));
 
 const billPayRoutes: RouteConfig[] = [
   {
-    id: 'dashboard',
-    path: 'dashboard',
-    title: 'Dashboard',
-    element: Dashboard,
-    icon: DashboardIcon,
+    id: 'billPay',
+    path: '',  
+    title: 'Bill Pay',
+    element: BillPay,
     sectionId: 'billPay',
     permissions: {
-      requiredPermissions: ['BillPayConfiguration_Read']
-    }
-  },
-  {
-    id: 'payments',
-    path: 'payments',
-    title: 'Payment Management',
-    element: PaymentManagementHeader,
-    icon: PaymentIcon,
-    sectionId: 'billPay',
-    permissions: {
-      requiredPermissions: ['BillPayConfiguration_Read']
+      requiredPermissions: ['BillPayViewer']
     },
     children: [
       {
-        id: 'manage-payments',
-        path: 'manage',
-        title: 'Manage Payments',
-        element: PendingPayments,
-        icon: ScheduleIcon,
+        id: 'billPayIndex',
+        path: '',  
+        title: 'Bill Pay',
+        element: BillPayHeader,
         sectionId: 'billPay',
         permissions: {
-          requiredPermissions: ['BillPayConfiguration_Read']
+          requiredPermissions: ['BillPayViewer']
         }
       },
       {
-        id: 'exceptions',
-        path: 'exceptions',
-        title: 'Exceptions',
-        element: ExceptionTool,
-        icon: WarningIcon,
+        id: 'dashboard',
+        path: 'dashboard',
+        title: 'Dashboard',
+        element: Dashboard,
+        icon: DashboardIcon,
         sectionId: 'billPay',
-        hideFromSidebar: true,
         permissions: {
-          requiredPermissions: ['BillPayConfiguration_Read']
+          requiredPermissions: ['BillPayViewer']
         }
       },
       {
-        id: 'fis-exception-handling',
-        path: 'fis-exceptions',
-        title: 'FIS Exception Handling',
-        element: FISExceptionHandling,
-        icon: ErrorIcon,
+        id: 'payments',
+        path: 'payments',
+        title: 'Payment Management',
+        element: PaymentManagement,
+        icon: PaymentIcon,
         sectionId: 'billPay',
         permissions: {
-          requiredPermissions: ['BillPayConfiguration_Read']
+          requiredPermissions: ['BillPayViewer']
+        },
+        children: [
+          {
+            id: 'paymentsIndex',
+            path: '',
+            title: 'Payment Management',
+            element: PaymentManagementHeader,
+            sectionId: 'billPay',
+            permissions: {
+              requiredPermissions: ['BillPayViewer']
+            }
+          },
+          {
+            id: 'manage-payments',
+            path: 'manage',
+            title: 'Manage Payments',
+            element: PendingPayments,
+            icon: ScheduleIcon,
+            sectionId: 'billPay',
+            permissions: {
+              requiredPermissions: ['BillPayViewer']
+            }
+          },
+          {
+            id: 'exceptions',
+            path: 'exceptions',
+            title: 'Exceptions',
+            element: ExceptionTool,
+            icon: WarningIcon,
+            sectionId: 'billPay',
+            hideFromSidebar: true,
+            permissions: {
+              requiredPermissions: ['BillPayViewer']
+            }
+          },
+          {
+            id: 'fis-exception-handling',
+            path: 'fis-exceptions',
+            title: 'FIS Exception Handling',
+            element: FISExceptionHandling,
+            icon: ErrorIcon,
+            sectionId: 'billPay',
+            permissions: {
+              requiredPermissions: ['BillPayViewer']
+            }
+          },
+          {
+            id: 'manual-processing',
+            path: 'manual',
+            title: 'Manual Processing',
+            element: ManualProcessing,
+            icon: TransformIcon,
+            sectionId: 'billPay',
+            permissions: {
+              requiredPermissions: ['BillPayViewer']
+            }
+          },
+          {
+            id: 'fis-payee-check',
+            path: 'fis-payee',
+            title: 'FIS Payee Check',
+            element: FisPayeeCheck,
+            icon: BuildIcon,
+            sectionId: 'billPay',
+            permissions: {
+              requiredPermissions: ['BillPayViewer']
+            }
+          }
+        ]
+      },
+      {
+        id: 'reports',
+        path: 'reports',
+        title: 'Reports',
+        element: Reports,
+        icon: AssessmentIcon,
+        sectionId: 'billPay',
+        permissions: {
+          requiredPermissions: ['BillPayViewer']
         }
       },
       {
-        id: 'manual-processing',
-        path: 'manual',
-        title: 'Manual Processing',
-        element: ManualProcessing,
-        icon: BuildIcon,
+        id: 'settings',
+        path: 'settings',
+        title: 'Settings',
+        element: Settings,
+        icon: SettingsIcon,
         sectionId: 'billPay',
         permissions: {
-          requiredPermissions: ['BillPayConfiguration_Read']
-        }
-      },
-      {
-        id: 'fis-payee-check',
-        path: 'fis-payee',
-        title: 'FIS Payee Check',
-        element: FisPayeeCheck,
-        icon: BuildIcon,
-        sectionId: 'billPay',
-        permissions: {
-          requiredPermissions: ['BillPayConfiguration_Read']
-        }
-      }
-    ]
-  },
-  {
-    id: 'reports',
-    path: 'reports',
-    title: 'Reports',
-    element: Reports,
-    icon: AssessmentIcon,
-    sectionId: 'billPay',
-    permissions: {
-      requiredPermissions: ['BillPayConfiguration_Read']
-    }
-  },
-  {
-    id: 'settings',
-    path: 'settings',
-    title: 'Settings',
-    icon: SettingsIcon,
-    element: Settings,
-    sectionId: 'billPay',
-    permissions: {
-      requiredPermissions: ['BillPayConfiguration_Read']
-    },
-    children: [
-      {
-        id: 'holidays',
-        path: 'holidays',
-        title: 'Holidays',
-        element: Holidays,
-        icon: EventIcon,
-        sectionId: 'billPay',
-        permissions: {
-          requiredPermissions: ['BillPayConfiguration_Read']
-        }
-      },
-      {
-        id: 'bill-pay-config',
-        path: 'config',
-        title: 'Bill Pay Config',
-        element: BillPayConfig,
-        icon: TuneIcon,
-        sectionId: 'billPay',
-        permissions: {
-          requiredPermissions: ['BillPayConfiguration_Read']
-        }
-      },
-      {
-        id: 'notification-templates',
-        path: 'notifications',
-        title: 'Notification Templates',
-        element: NotificationTemplates,
-        icon: NotificationsIcon,
-        sectionId: 'billPay',
-        permissions: {
-          requiredPermissions: ['BillPayConfiguration_Read']
-        }
-      },
-      {
-        id: 'security-settings',
-        path: 'security',
-        title: 'Security Settings',
-        element: BillPaySecuritySettings,
-        icon: LockIcon,
-        sectionId: 'billPay',
-        permissions: {
-          requiredPermissions: ['BillPayConfiguration_Read']
-        }
+          requiredPermissions: ['BillPayViewer']
+        },
+        children: [
+          {
+            id: 'config',
+            path: 'config',
+            title: 'Configuration',
+            element: BillPayConfig,
+            icon: TuneIcon,
+            sectionId: 'billPay',
+            permissions: {
+              requiredPermissions: ['BillPayViewer']
+            }
+          },
+          {
+            id: 'holidays',
+            path: 'holidays',
+            title: 'Holidays',
+            element: Holidays,
+            icon: EventIcon,
+            sectionId: 'billPay',
+            permissions: {
+              requiredPermissions: ['BillPayViewer']
+            }
+          },
+          {
+            id: 'notifications',
+            path: 'notifications',
+            title: 'Notifications',
+            element: NotificationTemplates,
+            icon: NotificationsIcon,
+            sectionId: 'billPay',
+            permissions: {
+              requiredPermissions: ['BillPayViewer']
+            }
+          },
+          {
+            id: 'security',
+            path: 'security',
+            title: 'Security',
+            element: BillPaySecuritySettings,
+            icon: SecurityIcon,
+            sectionId: 'billPay',
+            permissions: {
+              requiredPermissions: ['BillPayViewer']
+            }
+          }
+        ]
       }
     ]
   }

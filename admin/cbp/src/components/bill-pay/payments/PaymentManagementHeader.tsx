@@ -34,7 +34,7 @@ const PaymentManagementHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="manage"
+              to="/admin/bill-pay/payments/manage"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
@@ -64,7 +64,7 @@ const PaymentManagementHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="fis-exceptions"
+              to="/admin/bill-pay/payments/fis-exceptions"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
@@ -94,7 +94,7 @@ const PaymentManagementHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="manual"
+              to="/admin/bill-pay/payments/manual"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
@@ -124,7 +124,7 @@ const PaymentManagementHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="fis-payee-check"
+              to="/admin/bill-pay/payments/fis-payee"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}

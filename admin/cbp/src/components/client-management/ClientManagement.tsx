@@ -17,6 +17,7 @@ import UsersWrapper from './wrappers/UsersWrapper';
 import MemberSecuritySettingsWrapper from './wrappers/MemberSecuritySettingsWrapper';
 import { encodeId } from '../../utils/idEncoder';
 import logger from '../../utils/logger';
+import { useHost } from '../../context/HostContext';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -75,6 +76,7 @@ const DEFAULT_SETTINGS = {
 const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { environment } = useHost();
   const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -118,7 +120,6 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
       case 'users': return 1;
       case 'groups': return 2;
       case 'security': return 3;
-      case 'audit-log': return 4;
       default: return 0;
     }
   };
@@ -138,9 +139,6 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
         break;
       case 3:
         navigate(`${basePath}/security`);
-        break;
-      case 4:
-        navigate(`${basePath}/audit-log`);
         break;
     }
   };
@@ -189,19 +187,12 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
           size="small"
           sx={{ ml: 2 }}
         />
-        <Chip
-          label={client.environment}
-          variant="outlined"
-          size="small"
-          sx={{ ml: 1 }}
-        />
       </Box>
       <Tabs value={getCurrentTab()} onChange={handleTabChange}>
         <Tab label="Contact Information" />
         <Tab label="Users" />
         <Tab label="Groups" />
         <Tab label="Security Settings" />
-        <Tab label="Audit Log" />
       </Tabs>
       <Box mt={3}>
         {children}

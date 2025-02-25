@@ -142,7 +142,7 @@ export const navigationConfig: NavigationConfig = {
             {
               id: 'fis-payee-check',
               title: 'FIS Payee Check',
-              path: '/admin/bill-pay/payments/fis-payee-check',
+              path: '/admin/bill-pay/payments/fis-payee',
               icon: AccountBalanceIcon,
               permissions: {
                 requiredPermissions: ['SecurityUsers_Read']

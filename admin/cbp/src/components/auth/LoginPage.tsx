@@ -45,7 +45,8 @@ const LoginPage: React.FC = () => {
     }
   ];
   const handleSubmit = async (data: LoginFormData) => {
-    console.log('LoginPage: Submitting form with data:', { ...data, password: '[REDACTED]' });
+    console.log('LoginPage: Starting login process');
+    console.log('LoginPage: Form data:', { ...data, password: '[REDACTED]' });
     setLoading(true);
     setError(null);
     try {
@@ -54,15 +55,22 @@ const LoginPage: React.FC = () => {
         password: data.password,
         clientId: '1' // Default clientId
       };
-      console.log('LoginPage: Calling login with credentials:', { ...credentials, password: '[REDACTED]' });
+      console.log('LoginPage: Prepared credentials:', { ...credentials, password: '[REDACTED]' });
+      console.log('LoginPage: Calling login function');
       await login(credentials);
-      // Get the return URL from location state or default to home
-      const from = location.state?.from?.pathname || '/';
-      navigate(from);
+      console.log('LoginPage: Login successful');
+      console.log('LoginPage: Navigating to: /admin');
+      navigate('/admin');
     } catch (err) {
-      console.error('LoginPage: Login failed:', err);
+      console.error('LoginPage: Login failed with error:', err);
+      console.error('LoginPage: Error details:', {
+        name: err.name,
+        message: err.message,
+        stack: err.stack
+      });
       setError(err as ApiError);
     } finally {
+      console.log('LoginPage: Login process complete');
       setLoading(false);
     }
   };

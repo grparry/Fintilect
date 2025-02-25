@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Box } from '@mui/material';
 
-const BillPay: React.FC = () => {
+const PaymentManagement: React.FC = () => {
   return (
     <Box>
       <Outlet />
@@ -10,4 +10,4 @@ const BillPay: React.FC = () => {
   );
 };
 
-export default BillPay;
+export default PaymentManagement;

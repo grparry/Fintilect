@@ -22,14 +22,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   });
 
   const loadUserPermissions = useCallback(async (userId: number) => {
+    console.log('=== Loading User Permissions ===');
+    console.log('Loading permissions for user ID:', userId);
     try {
+      console.log('Calling permissionService.getUserPermissions');
       const userPermissions = await permissionService.getUserPermissions(userId);
-      setState(prev => ({
-        ...prev,
-        userPermissions
-      }));
+      console.log('Received permissions:', {
+        hasPermissions: !!userPermissions,
+        groups: userPermissions?.groups?.map(g => g.name) || [],
+        roles: userPermissions?.roles?.map(r => r.name) || []
+      });
+      
+      setState(prev => {
+        console.log('Updating state with permissions:', {
+          prevPermissions: prev.userPermissions ? 'exists' : 'null',
+          newPermissions: userPermissions ? 'exists' : 'null'
+        });
+        return {
+          ...prev,
+          userPermissions
+        };
+      });
+      console.log('Permission loading complete');
     } catch (error) {
       console.error('Error loading user permissions:', error);
+      console.error('Error details:', {
+        name: error?.name,
+        message: error?.message,
+        stack: error?.stack
+      });
     }
   }, [permissionService]);
 

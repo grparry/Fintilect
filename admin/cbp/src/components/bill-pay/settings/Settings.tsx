@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link as RouterLink, Outlet } from 'react-router-dom';
 import {
   Box,
   Tabs,
@@ -74,12 +75,9 @@ const Settings: React.FC = () => {
       {/* Breadcrumbs */}
       <Breadcrumbs sx={{ mb: 2 }}>
         <Link
+          component={RouterLink}
+          to="/admin/bill-pay"
           color="inherit"
-          href="#"
-          onClick={(e: React.MouseEvent) => {
-            e.preventDefault();
-            // Navigate to dashboard
-          }}
         >
           Bill Pay
         </Link>
@@ -143,6 +141,10 @@ const Settings: React.FC = () => {
           <Holidays />
         </TabPanel>
       </Paper>
+      {/* Outlet for rendering nested routes */}
+      <Box sx={{ mt: 4 }}>
+        <Outlet />
+      </Box>
     </Box>
   );
 };

@@ -32,7 +32,7 @@ const clientManagementRoutes: RouteConfig[] = [
     icon: BusinessIcon,
     title: 'Client Management',
     permissions: {
-      requiredPermissions: ['client-management:read']
+      requiredPermissions: ['ClientManager']
     }
   },
   {

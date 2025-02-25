@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -11,6 +11,8 @@ import {
   DialogActions,
   TextField,
   FormControl,
+  FormControlLabel,
+  Checkbox,
   InputLabel,
   Select,
   MenuItem,
@@ -21,6 +23,11 @@ import {
   Grid,
   IconButton,
   Tooltip,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  Collapse
 } from '@mui/material';
 import { 
   DataGrid, 
@@ -32,6 +39,9 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PeopleIcon from '@mui/icons-material/People';
+import SecurityIcon from '@mui/icons-material/Security';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
   User,
   Group,
@@ -87,6 +97,15 @@ const initialState: State = {
 export default function Groups({ clientId }: GroupsProps) {
   const navigate = useNavigate();
   const [state, setState] = useState(initialState);
+  const [membersDialogOpen, setMembersDialogOpen] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
+  const [rolesDialogOpen, setRolesDialogOpen] = useState(false);
+  const [roleSearchTerm, setRoleSearchTerm] = useState('');
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    new Set()
+  );
 
   const loadGroups = useCallback(async () => {
     if (!clientId) return;
@@ -127,6 +146,18 @@ export default function Groups({ clientId }: GroupsProps) {
       setState(prev => ({ ...prev, error: message }));
     }
   }, [clientId]);
+
+  const loadRoles = useCallback(async () => {
+    try {
+      const roles = await permissionService.getRoles();
+      setRoles(roles);
+    } catch (error) {
+      setState(prev => ({ 
+        ...prev, 
+        error: error instanceof Error ? error.message : 'Failed to load roles'
+      }));
+    }
+  }, []);
 
   const handleCreateGroup = async (formData: Partial<GroupFormData>) => {
     if (!clientId) return;
@@ -195,10 +226,153 @@ export default function Groups({ clientId }: GroupsProps) {
     }
   };
 
+  const handleOpenMembers = async (group: Group) => {
+    try {
+      setState(prev => ({ ...prev, loading: true, error: null }));
+      
+      // Get current group members
+      const members = await permissionService.getGroupUsers(group.id);
+      setSelectedUsers(members.map(m => m.userId));
+      
+      setState(prev => ({ 
+        ...prev, 
+        selectedGroup: group,
+        loading: false 
+      }));
+      
+      setMembersDialogOpen(true);
+    } catch (error) {
+      setState(prev => ({ 
+        ...prev, 
+        error: error instanceof Error ? error.message : 'Failed to load group members',
+        loading: false 
+      }));
+    }
+  };
+
+  const handleCloseMembersDialog = () => {
+    setMembersDialogOpen(false);
+    setSelectedUsers([]);
+    setState(prev => ({ ...prev, selectedGroup: null }));
+  };
+
+  const handleUpdateMembers = async () => {
+    if (!state.selectedGroup) return;
+    
+    try {
+      setState(prev => ({ ...prev, saving: true, error: null }));
+      
+      await permissionService.assignUserGroups(state.selectedGroup.id, selectedUsers);
+      
+      setState(prev => ({ 
+        ...prev, 
+        saving: false,
+        success: 'Group members updated successfully' 
+      }));
+      
+      handleCloseMembersDialog();
+      loadGroups();
+    } catch (error) {
+      setState(prev => ({ 
+        ...prev, 
+        error: error instanceof Error ? error.message : 'Failed to update group members',
+        saving: false 
+      }));
+    }
+  };
+
+  const handleUserToggle = (userId: number) => {
+    setSelectedUsers(prev => 
+      prev.includes(userId) 
+        ? prev.filter(id => id !== userId)
+        : [...prev, userId]
+    );
+  };
+
+  const handleOpenRoles = async (group: Group) => {
+    try {
+      setState(prev => ({ ...prev, loading: true, error: null }));
+      
+      // Get current group roles
+      const groupRoles = await permissionService.getGroupRoles(group.id);
+      setSelectedRoles(groupRoles.map(r => r.roleId));
+      
+      setState(prev => ({ 
+        ...prev, 
+        selectedGroup: group,
+        loading: false 
+      }));
+      
+      setRolesDialogOpen(true);
+    } catch (error) {
+      setState(prev => ({ 
+        ...prev, 
+        error: error instanceof Error ? error.message : 'Failed to load group roles',
+        loading: false 
+      }));
+    }
+  };
+
+  const handleCloseRolesDialog = () => {
+    setRolesDialogOpen(false);
+    setSelectedRoles([]);
+    setState(prev => ({ ...prev, selectedGroup: null }));
+  };
+
+  const handleUpdateRoles = async () => {
+    if (!state.selectedGroup) return;
+    
+    try {
+      setState(prev => ({ ...prev, saving: true, error: null }));
+      
+      // Remove all existing roles and add selected ones
+      await permissionService.removeGroupRoles(state.selectedGroup.id, roles.map(r => r.id));
+      if (selectedRoles.length > 0) {
+        await permissionService.addGroupRoles(state.selectedGroup.id, selectedRoles);
+      }
+      
+      setState(prev => ({ 
+        ...prev, 
+        saving: false,
+        success: 'Group roles updated successfully' 
+      }));
+      
+      handleCloseRolesDialog();
+      loadGroups();
+    } catch (error) {
+      setState(prev => ({ 
+        ...prev, 
+        error: error instanceof Error ? error.message : 'Failed to update group roles',
+        saving: false 
+      }));
+    }
+  };
+
+  const handleRoleToggle = (roleId: number) => {
+    setSelectedRoles(prev => 
+      prev.includes(roleId) 
+        ? prev.filter(id => id !== roleId)
+        : [...prev, roleId]
+    );
+  };
+
+  const handleCategoryToggle = (category: string) => {
+    setExpandedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(category)) {
+        next.delete(category);
+      } else {
+        next.add(category);
+      }
+      return next;
+    });
+  };
+
   useEffect(() => {
     loadGroups();
     loadUsers();
-  }, [loadGroups, loadUsers]);
+    loadRoles();
+  }, [loadGroups, loadUsers, loadRoles]);
 
   const handleAddGroup = useCallback(() => {
     setState(prev => ({ ...prev, isFormOpen: true, selectedGroup: null }));
@@ -207,10 +381,6 @@ export default function Groups({ clientId }: GroupsProps) {
   const handleEditGroup = useCallback((group: Group) => {
     setState(prev => ({ ...prev, isFormOpen: true, selectedGroup: group }));
   }, []);
-
-  const handleOpenMembers = (group: Group) => {
-    // TODO: Implement handleOpenMembers
-  };
 
   const columns: GridColDef<Group>[] = [
     {
@@ -260,6 +430,13 @@ export default function Groups({ clientId }: GroupsProps) {
             <PeopleIcon />
           </IconButton>
           <IconButton
+            onClick={() => handleOpenRoles(params.row)}
+            size="small"
+            title="Edit Roles"
+          >
+            <SecurityIcon />
+          </IconButton>
+          <IconButton
             onClick={() => handleDeleteGroup(params.row.id)}
             size="small"
             title="Delete Group"
@@ -270,6 +447,62 @@ export default function Groups({ clientId }: GroupsProps) {
       ),
     },
   ];
+
+  const filteredRoles = useMemo(() => {
+    if (!roleSearchTerm) return roles;
+    const searchLower = roleSearchTerm.toLowerCase();
+    return roles.filter(role => 
+      role.name.toLowerCase().includes(searchLower)
+    );
+  }, [roles, roleSearchTerm]);
+
+  const groupedRoles = useMemo(() => {
+    const groups = new Map<string, Role[]>();
+    
+    filteredRoles.forEach(role => {
+      // Handle special cases first
+      if (role.name === 'Administrator' || role.name === 'Admin') {
+        const list = groups.get('Admin') || [];
+        list.push(role);
+        groups.set('Admin', list);
+        return;
+      }
+
+      // For other roles, try to find a meaningful category
+      let category: string;
+      if (role.name.includes('BillPay')) {
+        category = 'BillPay';
+      } else if (role.name.includes('Connect')) {
+        category = 'Connect';
+      } else if (role.name.includes('Security')) {
+        category = 'Security';
+      } else if (role.name.includes('User')) {
+        category = 'User';
+      } else if (role.name.includes('IdP')) {
+        category = 'Identity';
+      } else {
+        // If no specific category found, use the first word or the whole name
+        category = role.name.split(/[_\s]/)[0];
+      }
+      
+      const list = groups.get(category) || [];
+      list.push(role);
+      groups.set(category, list);
+    });
+    
+    // Sort roles within each category
+    groups.forEach((roles, category) => {
+      groups.set(category, roles.sort((a, b) => a.name.localeCompare(b.name)));
+    });
+    
+    return Array.from(groups.entries()).sort((a, b) => {
+      // Put Admin category first
+      if (a[0] === 'Admin') return -1;
+      if (b[0] === 'Admin') return 1;
+      // Then sort other categories alphabetically
+      return a[0].localeCompare(b[0]);
+    });
+  }, [filteredRoles]);
 
   if (state.loading) {
     return (
@@ -388,27 +621,131 @@ export default function Groups({ clientId }: GroupsProps) {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* Members Dialog */}
-      <Dialog
-        open={false}
-        onClose={() => setState(prev => ({ ...prev, selectedGroup: undefined }))}
+      {/* Group Members Dialog */}
+      <Dialog 
+        open={membersDialogOpen} 
+        onClose={handleCloseMembersDialog}
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle>Manage Members</DialogTitle>
+        <DialogTitle>
+          Edit Group Members - {state.selectedGroup?.name}
+        </DialogTitle>
         <DialogContent>
-          {/* TODO: Implement members dialog */}
+          {state.users.length > 0 ? (
+            <Box sx={{ mt: 2 }}>
+              {state.users.map(user => (
+                <FormControlLabel
+                  key={user.id}
+                  control={
+                    <Checkbox
+                      checked={selectedUsers.includes(user.id)}
+                      onChange={() => handleUserToggle(user.id)}
+                    />
+                  }
+                  label={`${user.firstName} ${user.lastName} (${user.email})`}
+                />
+              ))}
+            </Box>
+          ) : (
+            <Typography>No users available</Typography>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setState(prev => ({ ...prev, selectedGroup: undefined }))}>
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
+          <Button onClick={handleCloseMembersDialog}>Cancel</Button>
+          <Button 
+            onClick={handleUpdateMembers}
+            variant="contained" 
             color="primary"
             disabled={state.saving}
           >
-            Save Changes
+            {state.saving ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Roles Dialog */}
+      <Dialog 
+        open={rolesDialogOpen} 
+        onClose={handleCloseRolesDialog}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          Edit Group Roles - {state.selectedGroup?.name}
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            Select the roles to assign to this group. Users in this group will inherit all permissions from the selected roles.
+          </Typography>
+          <TextField
+            fullWidth
+            label="Search roles..."
+            variant="outlined"
+            value={roleSearchTerm}
+            onChange={(e) => setRoleSearchTerm(e.target.value)}
+            sx={{ mb: 3 }}
+          />
+          <Box sx={{ maxHeight: '60vh', overflow: 'auto' }}>
+            <List>
+              {groupedRoles.map(([category, categoryRoles]) => (
+                <Box key={category}>
+                  <ListItem 
+                    button 
+                    onClick={() => handleCategoryToggle(category)}
+                    sx={{
+                      bgcolor: 'background.paper',
+                      borderBottom: '1px solid',
+                      borderColor: 'divider'
+                    }}
+                  >
+                    <ListItemText 
+                      primary={
+                        <Typography variant="subtitle1" color="primary">
+                          {category}
+                        </Typography>
+                      } 
+                    />
+                    {expandedCategories.has(category) ? <ExpandMoreIcon /> : <ChevronRightIcon />}
+                  </ListItem>
+                  <Collapse in={expandedCategories.has(category)} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {categoryRoles.map(role => (
+                        <ListItem 
+                          key={role.id} 
+                          sx={{ 
+                            pl: 4,
+                            '&:hover': {
+                              bgcolor: 'action.hover'
+                            }
+                          }}
+                        >
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={selectedRoles.includes(role.id)}
+                                onChange={() => handleRoleToggle(role.id)}
+                              />
+                            }
+                            label={role.name}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Collapse>
+                </Box>
+              ))}
+            </List>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseRolesDialog}>Cancel</Button>
+          <Button 
+            onClick={handleUpdateRoles}
+            variant="contained" 
+            color="primary"
+            disabled={state.saving}
+          >
+            {state.saving ? 'Saving...' : 'Save Changes'}
           </Button>
         </DialogActions>
       </Dialog>
