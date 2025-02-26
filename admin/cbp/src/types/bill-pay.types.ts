@@ -106,27 +106,136 @@ export interface ExceptionFilters {
 }
 
 export interface FISExceptionFilters extends ExceptionFilters {
-  requestId?: string;
+  serviceRequestNumber?: string;
+  status?: FISExceptionStatus[];
+  errorCode?: FISErrorCode[];
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface FISResponseHistory {
   id: string;
-  requestId: string;
+  serviceRequestNumber: string;
   status: FISExceptionStatus;
   response: Record<string, any>;
   timestamp: string;
   retryCount: number;
 }
 
+export interface PaymentException {
+  id: number;
+  recordType: string;
+  sponsorTransactionId: string;
+  sponsorId: string;
+  sponsorName: string;
+  customerId: string;
+  customerChangeIndicator: string;
+  primaryCustomerFirstName: string;
+  primaryCustomerLastName: string;
+  primaryCustomerSsn: string;
+  secondaryCustomerFirstName: string;
+  secondaryCustomerLastName: string;
+  secondaryCustomerSsn: string;
+  businessName: string;
+  federalTaxId: string;
+  customerAddress1: string;
+  customerAddress2: string;
+  customerCity: string;
+  customerState: string;
+  customerZip: string;
+  customerCountry: string;
+  customerTelephone: string;
+  internalPayeeId: string;
+  payeeChangeIndicator: string;
+  payeeName: string;
+  payeeAttentionLine: string;
+  payeeTelephoneNumber: string;
+  payeeAddress1: string;
+  payeeAddress2: string;
+  payeeCity: string;
+  payeeState: string;
+  payeeZip: string;
+  payeeCountry: string;
+  payeeNickname: string;
+  customerPayeeId: string;
+  customerPayeeAccountNumber: string;
+  confirmationNumber: string;
+  transactionAmount: string;
+  memoLineInfo: string;
+  serviceRequestNumber: string;
+  serviceRequestDate: Date;
+  serviceRequestTime: string;
+  serviceRequestType: string;
+  problemCauseType: string;
+  effectiveDate: string;
+  deliverByDate: string;
+  checkNumber: string;
+  created: Date;
+}
+
+export interface FisExceptionsCorrection {
+  id: number;
+  fisExceptionId: number;
+  correctionMade: boolean;
+  correctionType?: number;
+  correctionDate?: Date;
+  reprocessed: boolean;
+  reprocessedDate?: Date;
+  manualDescription?: string;
+}
+
 export interface FISException {
-  id: string;
-  requestId: string;
+  id: number;
+  recordType: string;
+  sponsorTransactionId: string;
+  sponsorId: string;
+  sponsorName: string;
+  customerId: string;
+  customerChangeIndicator: string;
+  primaryCustomerFirstName: string;
+  primaryCustomerLastName: string;
+  primaryCustomerSsn: string;
+  secondaryCustomerFirstName: string;
+  secondaryCustomerLastName: string;
+  secondaryCustomerSsn: string;
+  businessName: string;
+  federalTaxId: string;
+  customerAddress1: string;
+  customerAddress2: string;
+  customerCity: string;
+  customerState: string;
+  customerZip: string;
+  customerCountry: string;
+  customerTelephone: string;
+  internalPayeeId: string;
+  payeeChangeIndicator: string;
+  payeeName: string;
+  payeeAttentionLine: string;
+  payeeTelephoneNumber: string;
+  payeeAddress1: string;
+  payeeAddress2: string;
+  payeeCity: string;
+  payeeState: string;
+  payeeZip: string;
+  payeeCountry: string;
+  payeeNickname: string;
+  customerPayeeId: string;
+  customerPayeeAccountNumber: string;
+  confirmationNumber: string;
+  transactionAmount: string;
+  memoLineInfo: string;
+  serviceRequestNumber: string;
+  serviceRequestDate: Date;
+  serviceRequestTime: string;
+  serviceRequestType: string;
+  problemCauseType: string;
+  effectiveDate: string;
+  deliverByDate: string;
+  checkNumber: string;
+  created: Date;
   status: FISExceptionStatus;
   errorCode: FISErrorCode;
   errorMessage: string;
-  metadata?: Record<string, any>;
-  createdAt: string;
-  updatedAt: string;
   retryCount: number;
 }
 
@@ -423,7 +532,7 @@ export interface ResolutionHistory {
 // FISExceptionService Types
 export interface FISExceptionService {
   getExceptions: (filters: FISExceptionFilters) => Promise<FISException[]>;
-  getResponseHistory: (requestId: string) => Promise<FISResponseHistory[]>;
+  getResponseHistory: (serviceRequestNumber: string) => Promise<FISResponseHistory[]>;
   retryException: (id: string) => Promise<void>;
   ignoreException: (id: string, notes: string) => Promise<void>;
 }

@@ -1,4 +1,5 @@
 import { NavigationConfig } from '../types/section-navigation.types';
+import { ResourceId } from '../types/permissions.types';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import PhonelinkIcon from '@mui/icons-material/Phonelink';
@@ -71,20 +72,16 @@ export const navigationConfig: NavigationConfig = {
       color: '#2e7d32',
       description: 'Manage clients, users, and permissions',
       path: '/admin/client-management',
+      resourceId: 'navigation:clientManagement' as ResourceId,
       items: [
         {
           id: 'client-list',
           title: 'Clients',
           path: '/admin/client-management/list',
           icon: ListIcon,
-          permissions: {
-            requiredPermissions: ['SecurityUsers_Read']
-          }
+          resourceId: 'route:client-management.list' as ResourceId
         }
-      ],
-      permissions: {
-        requiredPermissions: ['SecurityUsers_Read']
-      }
+      ]
     },
     {
       id: 'billPay',
@@ -93,60 +90,49 @@ export const navigationConfig: NavigationConfig = {
       color: '#ed6c02',
       description: 'Manage bill pay features and settings',
       path: '/admin/bill-pay',
+      resourceId: 'navigation:billPay' as ResourceId,
       items: [
         {
           id: 'dashboard',
           title: 'Dashboard',
           path: '/admin/bill-pay/dashboard',
           icon: DashboardIcon,
-          permissions: {
-            requiredPermissions: ['SecurityUsers_Read']
-          }
+          resourceId: 'route:billPay.dashboard' as ResourceId
         },
         {
           id: 'payments',
           title: 'Payment Management',
           path: '/admin/bill-pay/payments',
           icon: PaymentIcon,
-          permissions: {
-            requiredPermissions: ['SecurityUsers_Read']
-          },
+          resourceId: 'route:billPay.payments' as ResourceId,
           items: [
             {
               id: 'manage-payments',
               title: 'Manage Payments',
               path: '/admin/bill-pay/payments/manage',
               icon: ScheduleIcon,
-              permissions: {
-                requiredPermissions: ['SecurityUsers_Read']
-              }
+              resourceId: 'route:billPay.payments.manage' as ResourceId
             },
             {
               id: 'fis-exceptions',
               title: 'FIS Exception Handling',
               path: '/admin/bill-pay/payments/fis-exceptions',
               icon: ErrorIcon,
-              permissions: {
-                requiredPermissions: ['SecurityUsers_Read']
-              }
+              resourceId: 'route:billPay.payments.exceptions' as ResourceId
             },
             {
               id: 'manual-processing',
               title: 'Manual Processing',
               path: '/admin/bill-pay/payments/manual',
               icon: BuildIcon,
-              permissions: {
-                requiredPermissions: ['SecurityUsers_Read']
-              }
+              resourceId: 'route:billPay.payments.manual' as ResourceId
             },
             {
               id: 'fis-payee-check',
               title: 'FIS Payee Check',
               path: '/admin/bill-pay/payments/fis-payee',
               icon: AccountBalanceIcon,
-              permissions: {
-                requiredPermissions: ['SecurityUsers_Read']
-              }
+              resourceId: 'route:billPay.payments.fis-payee' as ResourceId
             }
           ]
         },
@@ -155,23 +141,16 @@ export const navigationConfig: NavigationConfig = {
           title: 'Reports',
           path: '/admin/bill-pay/reports',
           icon: AssessmentIcon,
-          permissions: {
-            requiredPermissions: ['SecurityUsers_Read']
-          }
+          resourceId: 'route:billPay.reports' as ResourceId
         },
         {
           id: 'settings',
           title: 'Settings',
           path: '/admin/bill-pay/settings',
           icon: SettingsIcon,
-          permissions: {
-            requiredPermissions: ['SecurityUsers_Read']
-          }
+          resourceId: 'route:billPay.settings' as ResourceId
         }
-      ],
-      permissions: {
-        requiredPermissions: ['SecurityUsers_Read']
-      }
+      ]
     },
     {
       id: 'development',
@@ -180,29 +159,23 @@ export const navigationConfig: NavigationConfig = {
       color: '#9c27b0',
       description: 'Development and testing tools',
       path: '/admin/development',
+      resourceId: 'navigation:development' as ResourceId,
       items: [
         {
           id: 'development',
           title: 'Development',
           path: '/admin/development',
           icon: CodeIcon,
-          permissions: {
-            requiredPermissions: ['SecurityUsers_Read']
-          }
+          resourceId: 'route:development' as ResourceId
         },
         {
           id: 'api-testing',
           title: 'API Testing',
           path: '/admin/development/api-testing',
           icon: ApiIcon,
-          permissions: {
-            requiredPermissions: ['SecurityUsers_Read']
-          }
+          resourceId: 'route:development.api-testing' as ResourceId
         }
-      ],
-      permissions: {
-        requiredPermissions: ['SecurityUsers_Read']
-      }
+      ]
     }
   ],
   defaultSection: 'clientManagement'

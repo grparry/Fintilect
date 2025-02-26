@@ -121,48 +121,48 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
     async getExceptions(filters: PaymentFilters): Promise<PaginatedResponse<PaymentException>> {
         // Map FISExceptions to PaymentExceptions
         let filteredExceptions = this.exceptions.map(exception => ({
-            Id: parseInt(exception.id),
-            RecordType: 'EXCEPTION',
-            SponsorTransactionId: exception.requestId,
-            SponsorId: '',
-            SponsorName: '',
-            ClientId: '',
-            ClientChangeIndicator: '',
-            PrimaryClientFirstName: '',
-            PrimaryClientLastName: '',
-            PrimaryClientSsn: '',
-            SecondaryClientFirstName: '',
-            SecondaryClientLastName: '',
-            SecondaryClientSsn: '',
-            BusinessName: '',
-            FederalTaxId: '',
-            ClientAddress1: '',
-            ClientAddress2: '',
-            ClientCity: '',
-            ClientState: '',
-            ClientZip: '',
-            ClientCountry: '',
-            ClientTelephone: '',
-            InternalPayeeId: '',
-            PayeeChangeIndicator: '',
-            PayeeName: '',
-            PayeeAttentionLine: '',
-            PayeeTelephoneNumber: '',
-            PayeeAddress1: '',
-            PayeeAddress2: '',
-            PayeeCity: '',
-            PayeeState: '',
-            PayeeZip: '',
-            PayeeCountry: '',
-            PayeeNickname: '',
-            ClientPayeeId: '',
-            ClientPayeeAccountNumber: '',
-            ConfirmationNumber: '',
-            TransactionAmount: '0',
-            MemoLineInfo: exception.errorMessage,
-            ServiceRequestNumber: exception.requestId,
-            ServiceRequestDate: exception.createdAt,
-            ServiceRequestTime: new Date(exception.createdAt).toLocaleTimeString()
+            Id: exception.id,
+            RecordType: exception.recordType,
+            SponsorTransactionId: exception.sponsorTransactionId,
+            SponsorId: exception.sponsorId,
+            SponsorName: exception.sponsorName,
+            ClientId: exception.customerId,
+            ClientChangeIndicator: exception.customerChangeIndicator,
+            PrimaryClientFirstName: exception.primaryCustomerFirstName,
+            PrimaryClientLastName: exception.primaryCustomerLastName,
+            PrimaryClientSsn: exception.primaryCustomerSsn,
+            SecondaryClientFirstName: exception.secondaryCustomerFirstName,
+            SecondaryClientLastName: exception.secondaryCustomerLastName,
+            SecondaryClientSsn: exception.secondaryCustomerSsn,
+            BusinessName: exception.businessName,
+            FederalTaxId: exception.federalTaxId,
+            ClientAddress1: exception.customerAddress1,
+            ClientAddress2: exception.customerAddress2,
+            ClientCity: exception.customerCity,
+            ClientState: exception.customerState,
+            ClientZip: exception.customerZip,
+            ClientCountry: exception.customerCountry,
+            ClientTelephone: exception.customerTelephone,
+            InternalPayeeId: exception.internalPayeeId,
+            PayeeChangeIndicator: exception.payeeChangeIndicator,
+            PayeeName: exception.payeeName,
+            PayeeAttentionLine: exception.payeeAttentionLine,
+            PayeeTelephoneNumber: exception.payeeTelephoneNumber,
+            PayeeAddress1: exception.payeeAddress1,
+            PayeeAddress2: exception.payeeAddress2,
+            PayeeCity: exception.payeeCity,
+            PayeeState: exception.payeeState,
+            PayeeZip: exception.payeeZip,
+            PayeeCountry: exception.payeeCountry,
+            PayeeNickname: exception.payeeNickname,
+            ClientPayeeId: exception.customerPayeeId,
+            ClientPayeeAccountNumber: exception.customerPayeeAccountNumber,
+            ConfirmationNumber: exception.confirmationNumber,
+            TransactionAmount: exception.transactionAmount,
+            MemoLineInfo: exception.memoLineInfo,
+            ServiceRequestNumber: exception.serviceRequestNumber,
+            ServiceRequestDate: exception.serviceRequestDate.toISOString().split('T')[0],
+            ServiceRequestTime: exception.serviceRequestTime
         }));
 
         // Apply default pagination since C# APIs don't support it
@@ -180,14 +180,14 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
     }
 
     async resolveException(exceptionId: string, resolution: ExceptionResolution): Promise<void> {
-        const exceptionIndex = this.exceptions.findIndex(e => e.id === exceptionId);
+        const exceptionIndex = this.exceptions.findIndex(e => e.id === parseInt(exceptionId));
         if (exceptionIndex === -1) {
             throw new Error(`Exception with ID ${exceptionId} not found`);
         }
         this.exceptions[exceptionIndex].status = FISExceptionStatus.RESOLVED;
         // Store resolution data in a way that matches FISException structure
         this.exceptions[exceptionIndex].errorMessage = resolution.notes || '';
-        this.exceptions[exceptionIndex].updatedAt = new Date().toISOString();
+        this.exceptions[exceptionIndex].created = new Date();
     }
 
     async getClients(): Promise<Client[]> {
@@ -288,5 +288,30 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
         if (!destination) {
             throw new Error('Destination is required');
         }
+    }
+
+    async getFISException(id: number): Promise<FISException | null> {
+        const exception = this.exceptions.find(ex => ex.id === id);
+        if (!exception) {
+            return null;
+        }
+        return exception;
+    }
+
+    async updateFISException(id: number, updates: Partial<FISException>): Promise<FISException> {
+        const exception = await this.getFISException(id);
+        if (!exception) {
+            throw new Error('Exception not found');
+        }
+        const updated = {
+            ...exception,
+            ...updates,
+            created: exception.created
+        };
+        const index = this.exceptions.findIndex(ex => ex.id === id);
+        if (index !== -1) {
+            this.exceptions[index] = updated;
+        }
+        return updated;
     }
 }

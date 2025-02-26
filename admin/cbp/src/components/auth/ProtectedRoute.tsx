@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useHost } from '../../context/HostContext';
+import { usePermissions } from '../../hooks/usePermissions';
 import { CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { ResourceId } from '../../types/permissions.types';
 
 const LoaderContainer = styled('div')({
   display: 'flex',
@@ -20,39 +22,50 @@ const LoadingFallback = () => (
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredPermissions?: string[];
+  resourceId?: ResourceId;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
-  requiredPermissions = [],
+  resourceId,
 }) => {
-  const { isAuthenticated, loading, userPermissions } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const { isAdmin } = useHost();
+  const { checkPermission } = usePermissions();
   const location = useLocation();
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkAccess = async () => {
+      if (!resourceId) {
+        setHasPermission(true);
+        return;
+      }
+
+      try {
+        const result = await checkPermission(resourceId);
+        setHasPermission(result.hasAccess);
+      } catch (error) {
+        console.error('Error checking permissions:', error);
+        setHasPermission(false);
+      }
+    };
+
+    checkAccess();
+  }, [resourceId, checkPermission]);
 
   console.log('=== ProtectedRoute Debug ===');
   console.log('Current Path:', location.pathname);
   console.log('Auth State:', { 
     isAuthenticated, 
     loading,
-    hasPermissions: !!userPermissions,
-    permissionCount: userPermissions?.roles?.length || 0,
-    userPermissions: userPermissions || 'null',
+    resourceId,
+    hasPermission,
     isAdmin
   });
-  
-  if (requiredPermissions?.length > 0) {
-    console.log('Required vs Available Permissions:', {
-      required: requiredPermissions,
-      available: userPermissions?.roles?.map(r => r.name) || [],
-      hasUserPermissions: !!userPermissions,
-      hasRoles: !!userPermissions?.roles
-    });
-  }
 
-  if (loading) {
-    console.log('ProtectedRoute - Loading auth state');
+  if (loading || hasPermission === null) {
+    console.log('ProtectedRoute - Loading auth state or checking permissions');
     return <LoadingFallback />;
   }
 
@@ -68,55 +81,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Check if required permissions are met
-  if (requiredPermissions?.length > 0) {
-    console.log('ProtectedRoute - Starting permission check');
-
-    if (!userPermissions?.roles) {
-      console.log('ProtectedRoute - No user permissions or roles found');
-      return <Navigate to="/unauthorized" replace />;
-    }
-
-    const permissionChecks = requiredPermissions.map(permission => {
-      const normalizedPermission = permission.toLowerCase();
-      console.log(`Checking permission "${permission}":`, {
-        normalized: normalizedPermission,
-        alternateFormat: normalizedPermission.replace(':', '_'),
-        availableRoles: userPermissions.roles.map(r => r.name)
-      });
-      
-      const matchingRoles = userPermissions.roles
-        .filter(role => {
-          const normalizedRole = role.name.toLowerCase();
-          const isMatch = normalizedRole === normalizedPermission ||
-                 normalizedRole === normalizedPermission.replace(':', '_');
-          if (isMatch) {
-            console.log(`Found matching role: ${role.name}`);
-          }
-          return isMatch;
-        });
-
-      const hasPermission = matchingRoles.length > 0;
-      console.log(`Permission "${permission}" check result:`, {
-        hasPermission,
-        matchingRoles: matchingRoles.map(r => r.name)
-      });
-      
-      return hasPermission;
-    });
-
-    const hasAllPermissions = permissionChecks.every(Boolean);
-    console.log('ProtectedRoute - Permission check complete:', {
-      hasAllRequiredPermissions: hasAllPermissions,
-      requiredPermissions,
-      availableRoles: userPermissions.roles.map(r => r.name)
-    });
-
-    if (!hasAllPermissions) {
-      console.log('ProtectedRoute - Missing required permissions, redirecting to unauthorized');
-      return <Navigate to="/unauthorized" replace />;
-    }
-  } else {
-    console.log('ProtectedRoute - No permissions required for this route');
+  if (resourceId && !hasPermission) {
+    console.log('ProtectedRoute - Permission denied for resource:', resourceId);
+    return <Navigate to="/unauthorized" replace />;
   }
 
   console.log('ProtectedRoute - Access granted');

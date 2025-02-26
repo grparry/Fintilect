@@ -15,13 +15,14 @@ import NotFound from './components/common/NotFound';
 import { getAllRoutes } from './routes';
 import { RouteConfig } from './types/route.types';
 import { navigationConfig } from './config/navigation';
-import { NavigationPermissionRequirement } from './types/section-navigation.types';
+import { ResourceId } from './types/permissions.types';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import { usePermissions } from './hooks/usePermissions';
 import './App.css';
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredPermissions?: string[];
+  resourceId?: ResourceId;
 }
 
 interface PublicRouteProps {
@@ -54,14 +55,13 @@ const LoadingFallback: React.FC = () => (
 // Protected route wrapper that doesn't include MainLayout
 const ProtectedRouteWrapper: React.FC<{ 
   Component: React.ComponentType<any>;
-  permissions?: NavigationPermissionRequirement;
-}> = memo(({ Component, permissions }) => {
+  resourceId?: ResourceId;
+}> = memo(({ Component, resourceId }) => {
   console.log('=== ProtectedRouteWrapper Debug ===');
-  console.log('Received permissions:', permissions);
-  console.log('Required permissions:', permissions?.requiredPermissions);
+  console.log('Received resourceId:', resourceId);
   
   return (
-    <ProtectedRoute requiredPermissions={permissions?.requiredPermissions}>
+    <ProtectedRoute resourceId={resourceId}>
       <Suspense fallback={<LoadingFallback />}>
         <Component />
       </Suspense>
@@ -124,7 +124,7 @@ const App: React.FC = () => {
       console.log(`=== Route Configuration ===`);
       console.log(`Route ${route.id}:`, {
         path: route.path,
-        permissions: route.permissions,
+        resourceId: route.resourceId,
         component: Component?.name || 'Anonymous',
         children: route.children
       });
@@ -133,7 +133,7 @@ const App: React.FC = () => {
         <Route
           key={route.id}
           path={route.path}
-          element={<ProtectedRouteWrapper Component={Component} permissions={route.permissions} />}
+          element={<ProtectedRouteWrapper Component={Component} resourceId={route.resourceId} />}
         >
           {route.children && renderRoutes(route.children)}
         </Route>

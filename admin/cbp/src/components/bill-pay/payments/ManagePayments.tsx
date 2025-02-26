@@ -613,7 +613,7 @@ export const ManagePayments: React.FC = () => {
                           onClick={() =>
                             setDialogState({
                               open: true,
-                              payment: null,
+                              payment: payment,
                               action: 'view',
                             })
                           }
@@ -725,7 +725,7 @@ export const ManagePayments: React.FC = () => {
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="subtitle2" color="textSecondary">
+                  <Typography variant="subtitle2" color="text.primary">
                     Payment ID
                   </Typography>
                   <Typography variant="body1">
@@ -733,7 +733,7 @@ export const ManagePayments: React.FC = () => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="subtitle2" color="textSecondary">
+                  <Typography variant="subtitle2" color="text.primary">
                     Amount
                   </Typography>
                   <Typography variant="body1">
@@ -744,7 +744,7 @@ export const ManagePayments: React.FC = () => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="subtitle2" color="textSecondary">
+                  <Typography variant="subtitle2" color="text.primary">
                     Status
                   </Typography>
                   <Typography variant="body1">
@@ -752,7 +752,7 @@ export const ManagePayments: React.FC = () => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="subtitle2" color="textSecondary">
+                  <Typography variant="subtitle2" color="text.primary">
                     Will Process Date
                   </Typography>
                   <Typography variant="body1">
@@ -766,11 +766,11 @@ export const ManagePayments: React.FC = () => {
                     </Typography>
                     {dialogState.history.map((entry, index) => (
                       <Box key={index} sx={{ mb: 2 }}>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" color="text.primary">
                           {entry.Action} by {entry.PerformedBy} at {dayjs(entry.Timestamp).format('MM/DD/YYYY HH:mm:ss')}
                         </Typography>
                         {entry.Details && (
-                          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                          <Typography variant="body2" color="text.primary" sx={{ mt: 0.5 }}>
                             {Object.entries(entry.Details).map(([key, value]) => (
                               <span key={key}>
                                 {key}: {value.toString()}
@@ -858,17 +858,17 @@ export const ManagePayments: React.FC = () => {
 
     return (
       <Box sx={{ mt: 2, mb: 2 }}>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" color="text.primary" gutterBottom>
           Summary
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
-            <Typography variant="body1">
+            <Typography variant="body1" color="text.primary">
               Total Payments: {stats.totalCount}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Typography variant="body1">
+            <Typography variant="body1" color="text.primary">
               Total Amount: {new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD'
@@ -876,7 +876,7 @@ export const ManagePayments: React.FC = () => {
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Typography variant="body1">
+            <Typography variant="body1" color="text.primary">
               Status Distribution:{' '}
               {Object.entries(stats.statusCounts).map(([status, count]) => (
                 <span key={status}>

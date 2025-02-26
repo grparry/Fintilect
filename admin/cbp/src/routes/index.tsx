@@ -1,5 +1,4 @@
 import { RouteConfig, RouteSection, RouteSections } from '../types/route.types';
-import { NavigationPermissionRequirement } from '../types/section-navigation.types';
 import AdminLanding from '../components/admin/AdminLanding';
 import ClientManagementHeader from '../components/client-management/ClientManagementHeader';
 import BillPayHeader from '../components/bill-pay/BillPayHeader';

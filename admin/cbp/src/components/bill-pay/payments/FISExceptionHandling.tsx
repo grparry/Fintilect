@@ -99,16 +99,16 @@ const ExceptionStatusChip: React.FC<{ status: FISExceptionStatus }> = ({ status 
 const ExceptionSummaryDisplay: React.FC<{ summary: FISExceptionStats }> = ({ summary }) => {
   return (
     <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-      <Typography variant="body2">
+      <Typography variant="body2" color="text.primary">
         Total: {summary.total}
       </Typography>
-      <Typography variant="body2">
+      <Typography variant="body2" color="text.primary">
         Pending: {summary.byStatus[FISExceptionStatus.PENDING]}
       </Typography>
-      <Typography variant="body2">
+      <Typography variant="body2" color="text.primary">
         Resolved: {summary.byStatus[FISExceptionStatus.RESOLVED]}
       </Typography>
-      <Typography variant="body2">
+      <Typography variant="body2" color="text.primary">
         Failed: {summary.byStatus[FISExceptionStatus.FAILED]}
       </Typography>
     </Box>
@@ -121,15 +121,18 @@ const FISExceptionHandling: React.FC = () => {
 
   // State
   const [exceptions, setExceptions] = useState<FISException[]>([]);
-  const [selectedIds, setSelectedIds] = useState<FISException['id'][]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [dialogState, setDialogState] = useState<FISDialogState>({
     open: false,
     exception: null,
     action: null,
   });
   const [filters, setFilters] = useState<FISExceptionFilters>({
-    requestId: '',
-    status: []
+    serviceRequestNumber: '',
+    status: [],
+    errorCode: [],
+    startDate: '',
+    endDate: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -180,22 +183,23 @@ const FISExceptionHandling: React.FC = () => {
     }
   }, [fisExceptionService, exceptions]);
 
-  const loadResponseHistory = useCallback(async (requestId: FISException['requestId']) => {
+  const loadResponseHistory = useCallback(async (serviceRequestNumber: string) => {
     try {
-      const history = await fisExceptionService.getFISResponseHistory(requestId);
+      const history = await fisExceptionService.getFISResponseHistory(serviceRequestNumber);
       setResponseHistory(history);
     } catch (err) {
       console.error('Error fetching response history:', err);
     }
   }, [fisExceptionService]);
 
-  const handleRetry = useCallback(async (exceptionId: FISException['id']) => {
+  const handleRetry = useCallback(async (id: number) => {
     try {
-      await fisExceptionService.retryFISException(exceptionId);
-      // Refresh exceptions after retry
-      loadExceptions();
-    } catch (error) {
-      console.error('Failed to retry exception:', error);
+      await fisExceptionService.retryFISException(id);
+      setDialogState({ open: false, exception: null, action: null });
+      await loadExceptions();
+    } catch (err) {
+      console.error('Error retrying exception:', err);
+      setError('Failed to retry exception');
     }
   }, [fisExceptionService, loadExceptions]);
 
@@ -253,8 +257,18 @@ const FISExceptionHandling: React.FC = () => {
     }));
   };
 
+  const handleErrorCodeChange = (event: SelectChangeEvent<FISErrorCode[]>) => {
+    const {
+      target: { value },
+    } = event;
+    setFilters((prev) => ({
+      ...prev,
+      errorCode: typeof value === 'string' ? [value as FISErrorCode] : value as FISErrorCode[],
+    }));
+  };
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleFilterChange('requestId', event.target.value);
+    handleFilterChange('serviceRequestNumber', event.target.value);
   };
 
   const renderStats = () => (
@@ -264,7 +278,7 @@ const FISExceptionHandling: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6" color="text.primary">Total Exceptions</Typography>
-              <Typography variant="h4">{stats.total}</Typography>
+              <Typography variant="h4" color="text.primary">{stats.total}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -272,9 +286,7 @@ const FISExceptionHandling: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6" color="text.primary">Success Rate</Typography>
-              <Typography variant="h4">
-                {(stats.successRate * 100).toFixed(1)}%
-              </Typography>
+              <Typography variant="h4" color="text.primary">{(stats.successRate * 100).toFixed(1)}%</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -282,7 +294,7 @@ const FISExceptionHandling: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6" color="text.primary">Average Retry Count</Typography>
-              <Typography>
+              <Typography color="text.primary">
                 {stats.avgRetryCount.toFixed(1)}
               </Typography>
             </CardContent>
@@ -292,7 +304,7 @@ const FISExceptionHandling: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6" color="text.primary">Pending Exceptions</Typography>
-              <Typography>{stats.byStatus[FISExceptionStatus.PENDING]}</Typography>
+              <Typography color="text.primary">{stats.byStatus[FISExceptionStatus.PENDING]}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -306,8 +318,8 @@ const FISExceptionHandling: React.FC = () => {
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} sm={6} md={3}>
             <TextField
-              label="Request ID"
-              value={filters.requestId}
+              label="Service Request #"
+              value={filters.serviceRequestNumber}
               onChange={handleSearchChange}
               fullWidth
               size="small"
@@ -330,6 +342,41 @@ const FISExceptionHandling: React.FC = () => {
               </Select>
             </FormControl>
           </Grid>
+          <Grid item xs={12} sm={6} md={2}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Error Code</InputLabel>
+              <Select
+                multiple
+                value={filters.errorCode}
+                onChange={handleErrorCodeChange}
+                label="Error Code"
+              >
+                {Object.values(FISErrorCode).map((errorCode) => (
+                  <MenuItem key={errorCode} value={errorCode}>
+                    {errorCode}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6} md={2}>
+            <TextField
+              label="Start Date"
+              value={filters.startDate}
+              onChange={(e) => handleFilterChange('startDate', e.target.value)}
+              fullWidth
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={2}>
+            <TextField
+              label="End Date"
+              value={filters.endDate}
+              onChange={(e) => handleFilterChange('endDate', e.target.value)}
+              fullWidth
+              size="small"
+            />
+          </Grid>
         </Grid>
       </CardContent>
     </Card>
@@ -351,12 +398,13 @@ const FISExceptionHandling: React.FC = () => {
                 }
               />
             </TableCell>
-            <TableCell>Request ID</TableCell>
+            <TableCell>Service Request #</TableCell>
+            <TableCell>Customer</TableCell>
+            <TableCell>Payee</TableCell>
+            <TableCell>Amount</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Error Code</TableCell>
-            <TableCell>Message</TableCell>
-            <TableCell>Retry Count</TableCell>
-            <TableCell>Created At</TableCell>
+            <TableCell>Created</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -375,14 +423,17 @@ const FISExceptionHandling: React.FC = () => {
                   }
                 />
               </TableCell>
-              <TableCell>{exception.requestId}</TableCell>
+              <TableCell>{exception.serviceRequestNumber}</TableCell>
+              <TableCell>
+                {exception.primaryCustomerFirstName} {exception.primaryCustomerLastName}
+              </TableCell>
+              <TableCell>{exception.payeeName}</TableCell>
+              <TableCell>${exception.transactionAmount}</TableCell>
               <TableCell>
                 <ExceptionStatusChip status={exception.status} />
               </TableCell>
               <TableCell>{exception.errorCode}</TableCell>
-              <TableCell>{exception.errorMessage}</TableCell>
-              <TableCell>{exception.retryCount}</TableCell>
-              <TableCell>{dayjs(exception.createdAt).format('MM/DD/YYYY HH:mm')}</TableCell>
+              <TableCell>{dayjs(exception.created).format('MM/DD/YYYY HH:mm')}</TableCell>
               <TableCell>
                 <Stack direction="row" spacing={1}>
                   <Tooltip title="View Details">
@@ -442,37 +493,107 @@ const FISExceptionHandling: React.FC = () => {
       maxWidth="md"
       fullWidth
     >
-      <DialogTitle>
-        {dialogState.action === 'view'
-          ? 'Exception Details'
-          : dialogState.action === 'retry'
-          ? 'Retry Exception'
-          : 'Delete Exception'}
-      </DialogTitle>
+      <DialogTitle>Exception Details</DialogTitle>
       <DialogContent>
         {dialogState.exception && (
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={6}>
-              <Typography variant="subtitle2">Request ID</Typography>
-              <Typography>{dialogState.exception.requestId}</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ width: 120 }}>
+                      Service Request #
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {dialogState.exception.serviceRequestNumber}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ width: 120 }}>
+                      Customer
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {dialogState.exception.primaryCustomerFirstName} {dialogState.exception.primaryCustomerLastName}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ width: 120 }}>
+                      Customer ID
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {dialogState.exception.customerId}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ width: 120 }}>
+                      Payee
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {dialogState.exception.payeeName}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ width: 120 }}>
+                      Payee Account #
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {dialogState.exception.customerPayeeAccountNumber}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ width: 120 }}>
+                      Amount
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      ${dialogState.exception.transactionAmount}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ width: 120 }}>
+                      Status
+                    </Typography>
+                    <ExceptionStatusChip status={dialogState.exception.status} />
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ width: 120 }}>
+                      Error Code
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {dialogState.exception.errorCode}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ width: 120 }}>
+                      Retry Count
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {dialogState.exception.retryCount}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ width: 120 }}>
+                      Error Message
+                    </Typography>
+                    <Typography variant="body2" color="text.primary" sx={{ flex: 1 }}>
+                      {dialogState.exception.errorMessage}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ width: 120 }}>
+                      Created
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {dayjs(dialogState.exception.created).format('MM/DD/YYYY HH:mm')}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <Typography variant="subtitle2">Error Code</Typography>
-              <Typography>{dialogState.exception.errorCode}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle2">Error Message</Typography>
-              <Typography>{dialogState.exception.errorMessage}</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="subtitle2">Status</Typography>
-              <ExceptionStatusChip status={dialogState.exception.status} />
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="subtitle2">Retry Count</Typography>
-              <Typography>{dialogState.exception.retryCount}</Typography>
-            </Grid>
-          </Grid>
+          </Box>
         )}
       </DialogContent>
       <DialogActions>
@@ -516,7 +637,7 @@ const FISExceptionHandling: React.FC = () => {
           alignItems: 'center',
         }}
       >
-        <Typography variant="h5">FIS Exception Handling</Typography>
+        <Typography variant="h5" color="text.primary">FIS Exception Handling</Typography>
         <Stack direction="row" spacing={2}>
           {selectedIds.length > 0 && (
             <>

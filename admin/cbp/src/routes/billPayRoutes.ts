@@ -1,37 +1,37 @@
 import { lazy } from 'react';
 import { RouteConfig } from '../types/route.types';
-import PaymentIcon from '@mui/icons-material/Payment';
+import { ResourceId } from '../types/permissions.types';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import WarningIcon from '@mui/icons-material/Warning';
-import ErrorIcon from '@mui/icons-material/Error';
+import PaymentIcon from '@mui/icons-material/Payment';
 import ScheduleIcon from '@mui/icons-material/Schedule';
-import BuildIcon from '@mui/icons-material/Build';
-import TransformIcon from '@mui/icons-material/Transform';
+import ErrorIcon from '@mui/icons-material/Error';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import SettingsIcon from '@mui/icons-material/Settings';
+import BuildIcon from '@mui/icons-material/Build';
 import EventIcon from '@mui/icons-material/Event';
-import TuneIcon from '@mui/icons-material/Tune';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SecurityIcon from '@mui/icons-material/Security';
+import WarningIcon from '@mui/icons-material/Warning';
+import TransformIcon from '@mui/icons-material/Transform';
 import LockIcon from '@mui/icons-material/Lock';
-import BillPayHeader from '../components/bill-pay/BillPayHeader';
 
 // Lazy load components
 const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
+const BillPayHeader = lazy(() => import('../components/bill-pay/BillPayHeader'));
 const Dashboard = lazy(() => import('../components/bill-pay/dashboard/Dashboard'));
-const ExceptionTool = lazy(() => import('../components/bill-pay/payments/ExceptionTool'));
-const FISExceptionHandling = lazy(() => import('../components/bill-pay/payments/FISExceptionHandling'));
-const PendingPayments = lazy(() => import('../components/bill-pay/payments/ManagePayments'));
+const PaymentManagement = lazy(() => import('../components/bill-pay/payments/PaymentManagement'));
 const PaymentManagementHeader = lazy(() => import('../components/bill-pay/payments/PaymentManagementHeader'));
-const ManualProcessing = lazy(() => import('../components/bill-pay/payments/ManualProcessing'));
-const FisPayeeCheck = lazy(() => import('../components/bill-pay/payments/FisPayeeCheck'));
+const PendingPayments = lazy(() => import('../components/bill-pay/payments/ManagePayments'));
+const ExceptionTool = lazy(() => import('../components/bill-pay/payments/ExceptionTool'));
 const Reports = lazy(() => import('../components/bill-pay/reports/Reports'));
 const Settings = lazy(() => import('../components/bill-pay/settings/Settings'));
-const Holidays = lazy(() => import('../components/bill-pay/settings/Holidays'));
 const BillPayConfig = lazy(() => import('../components/bill-pay/settings/BillPayConfig'));
+const Holidays = lazy(() => import('../components/bill-pay/settings/Holidays'));
 const NotificationTemplates = lazy(() => import('../components/bill-pay/settings/NotificationTemplates'));
 const BillPaySecuritySettings = lazy(() => import('../components/bill-pay/settings/security/BillPaySecuritySettings'));
-const PaymentManagement = lazy(() => import('../components/bill-pay/payments/PaymentManagement'));
+const ManualProcessing = lazy(() => import('../components/bill-pay/payments/ManualProcessing'));
+const FisPayeeCheck = lazy(() => import('../components/bill-pay/payments/FisPayeeCheck'));
+const FISExceptionHandling = lazy(() => import('../components/bill-pay/payments/FISExceptionHandling'));
 
 const billPayRoutes: RouteConfig[] = [
   {
@@ -40,9 +40,7 @@ const billPayRoutes: RouteConfig[] = [
     title: 'Bill Pay',
     element: BillPay,
     sectionId: 'billPay',
-    permissions: {
-      requiredPermissions: ['BillPayViewer']
-    },
+    resourceId: 'route:billPay' as ResourceId,
     children: [
       {
         id: 'billPayIndex',
@@ -50,9 +48,7 @@ const billPayRoutes: RouteConfig[] = [
         title: 'Bill Pay',
         element: BillPayHeader,
         sectionId: 'billPay',
-        permissions: {
-          requiredPermissions: ['BillPayViewer']
-        }
+        resourceId: 'route:billPay.index' as ResourceId
       },
       {
         id: 'dashboard',
@@ -61,9 +57,7 @@ const billPayRoutes: RouteConfig[] = [
         element: Dashboard,
         icon: DashboardIcon,
         sectionId: 'billPay',
-        permissions: {
-          requiredPermissions: ['BillPayViewer']
-        }
+        resourceId: 'route:billPay.dashboard' as ResourceId
       },
       {
         id: 'payments',
@@ -72,9 +66,7 @@ const billPayRoutes: RouteConfig[] = [
         element: PaymentManagement,
         icon: PaymentIcon,
         sectionId: 'billPay',
-        permissions: {
-          requiredPermissions: ['BillPayViewer']
-        },
+        resourceId: 'route:billPay.payments' as ResourceId,
         children: [
           {
             id: 'paymentsIndex',
@@ -82,9 +74,7 @@ const billPayRoutes: RouteConfig[] = [
             title: 'Payment Management',
             element: PaymentManagementHeader,
             sectionId: 'billPay',
-            permissions: {
-              requiredPermissions: ['BillPayViewer']
-            }
+            resourceId: 'route:billPay.payments.index' as ResourceId
           },
           {
             id: 'manage-payments',
@@ -93,9 +83,7 @@ const billPayRoutes: RouteConfig[] = [
             element: PendingPayments,
             icon: ScheduleIcon,
             sectionId: 'billPay',
-            permissions: {
-              requiredPermissions: ['BillPayViewer']
-            }
+            resourceId: 'route:billPay.payments.manage' as ResourceId
           },
           {
             id: 'exceptions',
@@ -105,9 +93,7 @@ const billPayRoutes: RouteConfig[] = [
             icon: WarningIcon,
             sectionId: 'billPay',
             hideFromSidebar: true,
-            permissions: {
-              requiredPermissions: ['BillPayViewer']
-            }
+            resourceId: 'route:billPay.payments.exceptions' as ResourceId
           },
           {
             id: 'fis-exception-handling',
@@ -116,9 +102,7 @@ const billPayRoutes: RouteConfig[] = [
             element: FISExceptionHandling,
             icon: ErrorIcon,
             sectionId: 'billPay',
-            permissions: {
-              requiredPermissions: ['BillPayViewer']
-            }
+            resourceId: 'route:billPay.payments.fis-exceptions' as ResourceId
           },
           {
             id: 'manual-processing',
@@ -127,9 +111,7 @@ const billPayRoutes: RouteConfig[] = [
             element: ManualProcessing,
             icon: TransformIcon,
             sectionId: 'billPay',
-            permissions: {
-              requiredPermissions: ['BillPayViewer']
-            }
+            resourceId: 'route:billPay.payments.manual' as ResourceId
           },
           {
             id: 'fis-payee-check',
@@ -138,9 +120,7 @@ const billPayRoutes: RouteConfig[] = [
             element: FisPayeeCheck,
             icon: BuildIcon,
             sectionId: 'billPay',
-            permissions: {
-              requiredPermissions: ['BillPayViewer']
-            }
+            resourceId: 'route:billPay.payments.fis-payee' as ResourceId
           }
         ]
       },
@@ -151,9 +131,7 @@ const billPayRoutes: RouteConfig[] = [
         element: Reports,
         icon: AssessmentIcon,
         sectionId: 'billPay',
-        permissions: {
-          requiredPermissions: ['BillPayViewer']
-        }
+        resourceId: 'route:billPay.reports' as ResourceId
       },
       {
         id: 'settings',
@@ -162,20 +140,16 @@ const billPayRoutes: RouteConfig[] = [
         element: Settings,
         icon: SettingsIcon,
         sectionId: 'billPay',
-        permissions: {
-          requiredPermissions: ['BillPayViewer']
-        },
+        resourceId: 'route:billPay.settings' as ResourceId,
         children: [
           {
             id: 'config',
             path: 'config',
             title: 'Configuration',
             element: BillPayConfig,
-            icon: TuneIcon,
+            icon: LockIcon,
             sectionId: 'billPay',
-            permissions: {
-              requiredPermissions: ['BillPayViewer']
-            }
+            resourceId: 'route:billPay.settings.config' as ResourceId
           },
           {
             id: 'holidays',
@@ -184,9 +158,7 @@ const billPayRoutes: RouteConfig[] = [
             element: Holidays,
             icon: EventIcon,
             sectionId: 'billPay',
-            permissions: {
-              requiredPermissions: ['BillPayViewer']
-            }
+            resourceId: 'route:billPay.settings.holidays' as ResourceId
           },
           {
             id: 'notifications',
@@ -195,9 +167,7 @@ const billPayRoutes: RouteConfig[] = [
             element: NotificationTemplates,
             icon: NotificationsIcon,
             sectionId: 'billPay',
-            permissions: {
-              requiredPermissions: ['BillPayViewer']
-            }
+            resourceId: 'route:billPay.settings.notifications' as ResourceId
           },
           {
             id: 'security',
@@ -206,9 +176,7 @@ const billPayRoutes: RouteConfig[] = [
             element: BillPaySecuritySettings,
             icon: SecurityIcon,
             sectionId: 'billPay',
-            permissions: {
-              requiredPermissions: ['BillPayViewer']
-            }
+            resourceId: 'route:billPay.settings.security' as ResourceId
           }
         ]
       }

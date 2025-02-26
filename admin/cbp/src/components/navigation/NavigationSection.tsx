@@ -40,7 +40,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
   const isActive = section.id ? state.activeSection === section.id : false;
   
   // For top-level sections (level 0), always keep them expanded when active
-  const isSectionExpanded = level === 0 ? isActive : expandedItems.includes(section.id || '');
+  const isSectionExpanded = level === 0 ? isActive : state.expandedItems.includes(section.id || '');
 
   const handleSectionClick = () => {
     if (!section?.id) return;
@@ -73,7 +73,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
     const itemPath = item.path;
     const isSelected = activePath === itemPath;
     const hasChildren = !!(item.items?.length || item.children?.length);
-    const isItemOpen = item.id ? expandedItems.includes(item.id) : false;
+    const isItemOpen = item.id ? state.expandedItems.includes(item.id) : false;
 
     const handleItemClick = () => {
       if (!item) return;

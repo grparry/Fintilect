@@ -1,19 +1,18 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { NavigationConfig, NavigationSection, NavigationPermissionRequirement } from '../types/section-navigation.types';
-import { useNavigationPermissions } from '../hooks/useNavigationPermissions';
+import { NavigationConfig, NavigationSection, NavigationItem } from '../types/section-navigation.types';
+import { usePermissions } from '../hooks/usePermissions';
 
 interface NavigationState {
   sidebarOpen: boolean;
   activeSection: string | null;
   activePath: string;
-  permissionCache: Map<string, boolean>;
   expandedItems: string[];
   processingSection: string | null;
   activeItems: string[];
 }
 
-export interface NavigationContextType {
+interface NavigationContextType {
   navigationConfig: NavigationConfig;
   state: NavigationState;
   setActiveSection: (sectionId: string | null) => void;
@@ -21,7 +20,7 @@ export interface NavigationContextType {
   toggleSidebar: () => void;
   toggleSection: (sectionId: string) => void;
   getAccessibleSections: () => Promise<NavigationSection[]>;
-  hasPermission: (requirements: NavigationPermissionRequirement) => Promise<boolean>;
+  hasPermission: (section: NavigationSection) => Promise<boolean>;
 }
 
 const NavigationContext = createContext<NavigationContextType | null>(null);
@@ -30,41 +29,31 @@ const initialState: NavigationState = {
   sidebarOpen: true,
   activeSection: null,
   activePath: window.location.pathname,
-  permissionCache: new Map(),
   expandedItems: [],
   processingSection: null,
   activeItems: []
 };
 
-export const NavigationProvider: React.FC<{ children: React.ReactNode; config: NavigationConfig }> = ({
-  children,
+export const NavigationProvider: React.FC<{ config: NavigationConfig; children: React.ReactNode }> = ({
   config,
+  children
 }) => {
   const [state, setState] = useState<NavigationState>(initialState);
   const navigate = useNavigate();
   const location = useLocation();
-  const { checkPermissions } = useNavigationPermissions();
+  const { checkPermission } = usePermissions();
 
-  const hasPermission = useCallback(async (requirements: NavigationPermissionRequirement) => {
-    if (!requirements) return true;
+  const hasPermission = useCallback(async (section: NavigationSection): Promise<boolean> => {
+    if (!section.resourceId) return true;
+    const result = await checkPermission(section.resourceId);
+    return result.hasAccess;
+  }, [checkPermission]);
 
-    const cacheKey = JSON.stringify(requirements);
-    if (state.permissionCache.has(cacheKey)) {
-      return state.permissionCache.get(cacheKey) || false;
-    }
-
-    const result = await checkPermissions([requirements]);
-    const newCache = new Map(state.permissionCache);
-    newCache.set(cacheKey, result);
-    setState(prev => ({ ...prev, permissionCache: newCache }));
-    return result;
-  }, [checkPermissions, state.permissionCache]);
-
-  const getAccessibleSections = useCallback(async () => {
+  const getAccessibleSections = useCallback(async (): Promise<NavigationSection[]> => {
     const accessibleSections: NavigationSection[] = [];
 
     for (const section of config.sections) {
-      if (!section.permissions || await hasPermission(section.permissions)) {
+      if (!section.resourceId || await hasPermission(section)) {
         accessibleSections.push(section);
       }
     }
@@ -72,21 +61,21 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
     return accessibleSections;
   }, [config.sections, hasPermission]);
 
-  const setActiveSection = useCallback((sectionId: string | null) => {
+  const setActiveSection = useCallback((sectionId: string | null): void => {
     setState(prev => ({
       ...prev,
       activeSection: sectionId
     }));
   }, []);
 
-  const setActivePath = useCallback((path: string | null) => {
+  const setActivePath = useCallback((path: string | null): void => {
     setState(prev => ({
       ...prev,
       activePath: path
     }));
   }, []);
 
-  const toggleSidebar = useCallback(() => {
+  const toggleSidebar = useCallback((): void => {
     setState(prev => ({ ...prev, sidebarOpen: !prev.sidebarOpen }));
   }, []);
 
@@ -94,7 +83,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
     const result: string[] = [];
     let bestMatch = { path: '', chain: [] as string[] };
     
-    const findInItems = (items: any[], parentChain: string[] = []) => {
+    const findInItems = (items: NavigationItem[], parentChain: string[] = []): void => {
       for (const item of items) {
         const currentChain = [...parentChain];
         
@@ -153,7 +142,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
     }));
   }, [location.pathname, findParentItems]);
 
-  const toggleSection = useCallback((sectionId: string) => {
+  const toggleSection = useCallback((sectionId: string): void => {
     console.log('[toggleSection] Called with:', sectionId);
     setState(prev => {
       // If we're already processing this section, don't update
@@ -167,7 +156,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
       console.log('[toggleSection] Found section:', section?.id);
 
       // If not found in sections, look through all items recursively
-      const findInItems = (items: any[]): any => {
+      const findInItems = (items: NavigationItem[]): NavigationItem | null => {
         for (const item of items) {
           if (item.id === sectionId) return item;
           if (item.children) {
@@ -182,7 +171,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode; config: N
       const findParentAndDepth = (): { parentSection: NavigationSection | null, depth: number, parentChain: string[] } => {
         for (const s of config.sections) {
           if (s.items) {
-            const findInSection = (items: any[], currentDepth: number, chain: string[] = []): { depth: number, chain: string[] } | null => {
+            const findInSection = (items: NavigationItem[], currentDepth: number, chain: string[] = []): { depth: number, chain: string[] } | null => {
               for (const item of items) {
                 if (item.id === sectionId) {
                   return { depth: currentDepth, chain };

@@ -20,27 +20,27 @@ export class FISExceptionService extends BaseService implements IFISExceptionSer
         return this.get<PaginatedResponse<FISException>>('/exceptions', { params: filters });
     }
 
-    async getFISException(exceptionId: string): Promise<FISException> {
+    async getFISException(exceptionId: number): Promise<FISException> {
         return this.get<FISException>(`/exceptions/${exceptionId}`);
     }
 
-    async getFISExceptionHistory(exceptionId: string): Promise<FISExceptionHistory[]> {
+    async getFISExceptionHistory(exceptionId: number): Promise<FISExceptionHistory[]> {
         return this.get<FISExceptionHistory[]>(`/exceptions/${exceptionId}/history`);
     }
 
-    async getFISResponseHistory(requestId: string): Promise<FISResponseHistory[]> {
-        return this.get<FISResponseHistory[]>(`/responses/${requestId}/history`);
+    async getFISResponseHistory(serviceRequestNumber: string): Promise<FISResponseHistory[]> {
+        return this.get<FISResponseHistory[]>(`/responses/${serviceRequestNumber}/history`);
     }
 
-    async retryFISException(exceptionId: string): Promise<FISRetryResult> {
+    async retryFISException(exceptionId: number): Promise<FISRetryResult> {
         return this.post<FISRetryResult>(`/exceptions/${exceptionId}/retry`);
     }
 
-    async requestFISRefund(exceptionId: string, request: FISRefundRequest): Promise<void> {
+    async requestFISRefund(exceptionId: number, request: FISRefundRequest): Promise<void> {
         await this.post(`/exceptions/${exceptionId}/refund`, request);
     }
 
-    async updateFISExceptionStatus(exceptionId: string, status: FISExceptionStatus): Promise<void> {
+    async updateFISExceptionStatus(exceptionId: number, status: FISExceptionStatus): Promise<void> {
         await this.put(`/exceptions/${exceptionId}/status`, { status });
     }
 

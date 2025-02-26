@@ -27,42 +27,42 @@ export interface IFISExceptionService extends IBaseService {
      * @param exceptionId FIS exception identifier
      * @returns FIS exception details
      */
-    getFISException(exceptionId: string): Promise<FISException>;
+    getFISException(exceptionId: number): Promise<FISException>;
 
     /**
      * Get FIS exception history
      * @param exceptionId FIS exception identifier
      * @returns List of exception history entries
      */
-    getFISExceptionHistory(exceptionId: string): Promise<FISExceptionHistory[]>;
+    getFISExceptionHistory(exceptionId: number): Promise<FISExceptionHistory[]>;
 
     /**
      * Get FIS response history
-     * @param requestId Request identifier
+     * @param serviceRequestNumber Service request number
      * @returns List of response history entries
      */
-    getFISResponseHistory(requestId: string): Promise<FISResponseHistory[]>;
+    getFISResponseHistory(serviceRequestNumber: string): Promise<FISResponseHistory[]>;
 
     /**
      * Retry FIS exception
      * @param exceptionId Exception identifier
      * @returns Retry result
      */
-    retryFISException(exceptionId: string): Promise<FISRetryResult>;
+    retryFISException(exceptionId: number): Promise<FISRetryResult>;
 
     /**
      * Request refund for FIS exception
      * @param exceptionId Exception identifier
      * @param request Refund request details
      */
-    requestFISRefund(exceptionId: string, request: FISRefundRequest): Promise<void>;
+    requestFISRefund(exceptionId: number, request: FISRefundRequest): Promise<void>;
 
     /**
      * Update FIS exception status
      * @param exceptionId Exception identifier
      * @param status New status
      */
-    updateFISExceptionStatus(exceptionId: string, status: FISExceptionStatus): Promise<void>;
+    updateFISExceptionStatus(exceptionId: number, status: FISExceptionStatus): Promise<void>;
 
     /**
      * Get FIS exception summary
