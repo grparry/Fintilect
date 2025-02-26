@@ -1,41 +1,25 @@
 import { Dayjs } from 'dayjs';
 
-export type ReportType = 'all' | 'login' | 'payments' | 'system';
-export interface AuditRecord {
-  id: number;
-  timestamp: string;
-  user: string;
-  action: string;
-  details: string;
+/**
+ * Report request interface matching C# API
+ */
+export interface ReportRunRequest {
+    name: string;
+    arguments: string;  // JSON string of report arguments
 }
-export interface TransactionRecord {
-  id: number;
-  date: string;
-  amount: number;
-  type: string;
-  status: string;
-  recipient: string;
+
+/**
+ * Report response interface matching C# API
+ */
+export interface ReportResponse {
+    jsonResponse: string;  // JSON string of report data
 }
-export interface UserRecord {
-  id: number;
-  username: string;
-  lastLogin: string;
-  status: string;
-  role: string;
-}
-export interface ReportData {
-  audit: AuditRecord[];
-  transactions: TransactionRecord[];
-  users: UserRecord[];
-}
+
+/**
+ * UI-specific filter state
+ */
 export interface ReportFilters {
-  startDate: Dayjs;
-  endDate: Dayjs;
-  reportType: ReportType;
-  searchTerm: string;
-}
-export interface ExportOptions {
-  format: 'csv' | 'pdf' | 'excel';
-  includeHeaders: boolean;
-  dateFormat: string;
+    startDate: Dayjs;
+    endDate: Dayjs;
+    searchTerm: string;
 }

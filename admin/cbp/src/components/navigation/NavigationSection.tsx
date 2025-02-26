@@ -13,6 +13,7 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useNavigation } from '../../context/NavigationContext';
 import { NavigationSection as NavigationSectionType, NavigationItem } from '../../types/section-navigation.types';
+import { useNavigationPermissions } from '../../hooks/useNavigationPermissions';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -33,14 +34,50 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
   const location = useLocation();
   const navigate = useNavigate();
   const { state, toggleSection } = useNavigation();
+  const { hasPermission } = useNavigationPermissions();
+  const [visibleItems, setVisibleItems] = useState<NavigationItem[]>([]);
 
   // Return null if section is undefined
   if (!section) return null;
+
+  // Check section permission and return null if no access
+  useEffect(() => {
+    const checkSectionPermissions = async () => {
+      // Check section permission first
+      if (section.resourceId) {
+        const hasSectionAccess = await hasPermission(section.resourceId);
+        if (!hasSectionAccess) {
+          setVisibleItems([]);
+          return;
+        }
+      }
+
+      // Filter items based on permissions
+      if (section.items) {
+        const filteredItems = await Promise.all(
+          section.items.map(async (item) => {
+            if (item.resourceId) {
+              const hasItemAccess = await hasPermission(item.resourceId);
+              return hasItemAccess ? item : null;
+            }
+            return item;
+          })
+        );
+
+        setVisibleItems(filteredItems.filter((item): item is NavigationItem => item !== null));
+      }
+    };
+
+    checkSectionPermissions();
+  }, [section, hasPermission]);
   
   const isActive = section.id ? state.activeSection === section.id : false;
-  
-  // For top-level sections (level 0), always keep them expanded when active
   const isSectionExpanded = level === 0 ? isActive : state.expandedItems.includes(section.id || '');
+
+  // Don't render if no visible items and no section path
+  if (visibleItems.length === 0 && !section.path) {
+    return null;
+  }
 
   const handleSectionClick = () => {
     if (!section?.id) return;
@@ -52,10 +89,8 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
       currentPath: location.pathname
     });
     
-    // Always toggle the section first
     toggleSection(section.id);
     
-    // Then navigate if we have a path and we're not already there
     if (section.path && location.pathname !== section.path) {
       console.log('NavigationSection - Navigating to:', section.path);
       navigate(section.path);
@@ -78,12 +113,10 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
     const handleItemClick = () => {
       if (!item) return;
       
-      // Toggle section if it has an ID
       if (item.id) {
         toggleSection(item.id);
       }
 
-      // Navigate if we have a path and we're not already there
       if (item.path && location.pathname !== item.path) {
         navigate(item.path);
       }
@@ -105,20 +138,21 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
                 backgroundColor: alpha(theme.palette.primary.main, 0.2),
               },
             },
+            '&:hover': {
+              backgroundColor: alpha(theme.palette.primary.main, 0.05),
+            },
           }}
         >
           {IconComponent && (
             <ListItemIcon sx={{ minWidth: 40 }}>
-              <SvgIcon component={IconComponent} />
+              <IconComponent />
             </ListItemIcon>
           )}
           <ListItemText 
             primary={item.title} 
-            sx={{
-              '& .MuiTypography-root': {
-                fontSize: '0.875rem',
-                fontWeight: isSelected ? 600 : 400,
-              },
+            primaryTypographyProps={{
+              variant: 'body2',
+              sx: { fontWeight: isSelected ? 600 : 400 }
             }}
           />
           {hasChildren && (
@@ -126,14 +160,10 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
           )}
         </ListItemButton>
         {hasChildren && (
-          <Collapse 
-            in={isItemOpen} 
-            timeout={300}
-            mountOnEnter
-          >
+          <Collapse in={isItemOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {(item.items || item.children)?.map((child) => 
-                child ? renderNavigationItem(child, level + 1) : null
+              {(item.items || item.children || []).map((child) => 
+                renderNavigationItem(child, level + 1)
               )}
             </List>
           </Collapse>
@@ -142,66 +172,50 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
     );
   };
 
-  const SectionIconComponent = section.icon;
-
   return (
     <Box>
-      <ListItemButton
-        onClick={(e) => {
-          console.log('Section header clicked:', {
-            id: section.id,
-            title: section.title,
-            path: section.path,
-            event: e
-          });
-          handleSectionClick();
-        }}
-        selected={isActive}
-        sx={{
-          backgroundColor: isActive ? alpha(theme.palette.primary.main, 0.1) : 'transparent',
-          '&:hover': {
-            backgroundColor: isActive 
-              ? alpha(theme.palette.primary.main, 0.2)
-              : alpha(theme.palette.action.hover, 0.1),
-          },
-          '&.Mui-selected': {
-            backgroundColor: alpha(theme.palette.primary.main, 0.1),
-            '&:hover': {
-              backgroundColor: alpha(theme.palette.primary.main, 0.2),
-            },
-          },
-        }}
-      >
-        {SectionIconComponent && (
-          <ListItemIcon sx={{ minWidth: 40 }}>
-            <SvgIcon 
-              component={SectionIconComponent}
-              sx={{ 
-                color: section.color || theme.palette.primary.main 
-              }}
-            />
-          </ListItemIcon>
-        )}
-        <ListItemText 
-          primary={section.title}
+      {section.path && (
+        <ListItemButton
+          onClick={handleSectionClick}
+          selected={isActive}
           sx={{
-            '& .MuiTypography-root': {
-              fontWeight: isActive ? 600 : 400,
+            pl: level * 2,
+            py: 1,
+            '&.Mui-selected': {
+              backgroundColor: alpha(theme.palette.primary.main, 0.1),
+              '&:hover': {
+                backgroundColor: alpha(theme.palette.primary.main, 0.2),
+              },
+            },
+            '&:hover': {
+              backgroundColor: alpha(theme.palette.primary.main, 0.05),
             },
           }}
-        />
-        {/* Only show chevron for non-top-level sections */}
-        {level > 0 && (isSectionExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />)}
-      </ListItemButton>
-      <Collapse 
-        in={isSectionExpanded} 
-        timeout={300}
-        mountOnEnter
-      >
-        <List component="div" disablePadding>
-          {section.items?.map((item) => renderNavigationItem(item))}
-        </List>
-      </Collapse>
+        >
+          {section.icon && (
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <section.icon />
+            </ListItemIcon>
+          )}
+          <ListItemText 
+            primary={section.title}
+            primaryTypographyProps={{
+              variant: 'body2',
+              sx: { fontWeight: isActive ? 600 : 400 }
+            }}
+          />
+          {visibleItems.length > 0 && (
+            isSectionExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />
+          )}
+        </ListItemButton>
+      )}
+      {visibleItems.length > 0 && (
+        <Collapse in={isSectionExpanded} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {visibleItems.map((item) => renderNavigationItem(item, level + 1))}
+          </List>
+        </Collapse>
+      )}
     </Box>
   );
 };
