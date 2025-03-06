@@ -34,4 +34,4 @@ export interface ApiSuccessResponse<T> {
   };
 }
 
-export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
+export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse | T;

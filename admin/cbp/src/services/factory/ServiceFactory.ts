@@ -7,6 +7,7 @@ import { ISecurityService } from '../interfaces/ISecurityService';
 import { INotificationService } from '../interfaces/INotificationService';
 import { IExceptionService } from '../interfaces/IExceptionService';
 import { IFISExceptionService } from '../interfaces/IFISExceptionService';
+import { IGlobalPayeeService } from '../interfaces/IGlobalPayeeService';
 import { IPayeeService } from '../interfaces/IPayeeService';
 import { IPaymentProcessorService } from '../interfaces/IPaymentProcessorService';
 import { IPaymentService } from '../interfaces/IPaymentService';
@@ -22,6 +23,7 @@ import { SecurityService } from '../implementations/real/SecurityService';
 import { NotificationService } from '../implementations/real/NotificationService';
 import { ExceptionService } from '../implementations/real/ExceptionService';
 import { FISExceptionService } from '../implementations/real/FISExceptionService';
+import { GlobalPayeeService } from '../implementations/real/GlobalPayeeService';
 import { PayeeService } from '../implementations/real/PayeeService';
 import { PaymentProcessorService } from '../implementations/real/PaymentProcessorService';
 import { PaymentService } from '../implementations/real/PaymentService';
@@ -37,6 +39,7 @@ import { MockSecurityService } from '../implementations/mock/MockSecurityService
 import { MockNotificationService } from '../implementations/mock/MockNotificationService';
 import { MockExceptionService } from '../implementations/mock/MockExceptionService';
 import { MockFISExceptionService } from '../implementations/mock/FISExceptionService';
+import { MockGlobalPayeeService } from '../implementations/mock/MockGlobalPayeeService';
 import { MockPayeeService } from '../implementations/mock/MockPayeeService';
 import { MockPaymentProcessorService } from '../implementations/mock/MockPaymentProcessorService';
 import { MockPaymentService } from '../implementations/mock/MockPaymentService';
@@ -44,18 +47,18 @@ import { MockReportService } from '../implementations/mock/MockReportService';
 import { MockHolidayService } from '../implementations/mock/MockHolidayService';
 import { MockPermissionService } from '../implementations/mock/MockPermissionService';
 import { MockDashboardService } from '../implementations/mock/MockDashboardService';
+import { shouldUseMockService, API_CONFIG } from '../../config/api.config';
 
 /**
  * Service factory for managing service instantiation
  */
 export class ServiceFactory {
   private static instance: ServiceFactory;
-  private static readonly adminBaseUrl = '/api/admin';
-  private static readonly adminCuBaseUrl = '/api/admin-cu';
-  private static readonly cbpBaseUrl = '/api/cbp';
+  private static readonly adminBaseUrl = API_CONFIG.urls.admin;
+  private static readonly adminCuBaseUrl = API_CONFIG.urls.adminCu;
 
   private services: Map<string, IUserService | IClientService | IBillPayService | IAuthService | ISecurityService | 
-    INotificationService | IExceptionService | IFISExceptionService | IPayeeService | IPaymentProcessorService | IPaymentService | 
+    INotificationService | IExceptionService | IFISExceptionService | IGlobalPayeeService | IPayeeService | IPaymentProcessorService | IPaymentService | 
     IReportService | IHolidayService | IPermissionService | IDashboardService > = new Map();
 
   private constructor() {
@@ -78,48 +81,120 @@ export class ServiceFactory {
     return `${this.adminCuBaseUrl}${path}`;
   }
 
-  static getCbpEndpoint(path: string): string {
-    return `${this.cbpBaseUrl}${path}`;
-  }
-
   private initializeServices(): void {
-    console.log('Initializing services with REACT_APP_USE_MOCK_SERVICES:', process.env.REACT_APP_USE_MOCK_SERVICES);
+    console.log('Initializing services');
     
-    if (process.env.REACT_APP_USE_MOCK_SERVICES === 'true') {
-      console.log('Using mock services');
-      this.services.set('user', new MockUserService(ServiceFactory.getAdminEndpoint('/users')));
-      this.services.set('client', new MockClientService(ServiceFactory.getAdminEndpoint('/clients')));
-      this.services.set('billPay', new MockBillPayService(ServiceFactory.getAdminEndpoint('/bill-pay')));
-      this.services.set('auth', new MockAuthService(ServiceFactory.getAdminEndpoint('/auth')));
-      this.services.set('security', new MockSecurityService(ServiceFactory.getAdminEndpoint('/security')));
-      this.services.set('notification', new MockNotificationService(ServiceFactory.getAdminEndpoint('/notifications')));
-      this.services.set('exceptionService', new MockExceptionService(ServiceFactory.getAdminEndpoint('/exceptions')));
-      this.services.set('fisExceptionService', new MockFISExceptionService(ServiceFactory.getAdminEndpoint('/fis-exceptions')));
-      this.services.set('payee', new MockPayeeService(ServiceFactory.getAdminEndpoint('/payees')));
-      this.services.set('paymentProcessor', new MockPaymentProcessorService(ServiceFactory.getAdminEndpoint('/payment-processor')));
-      this.services.set('payment', new MockPaymentService(ServiceFactory.getAdminEndpoint('/payments')));
-      this.services.set('report', new MockReportService(ServiceFactory.getAdminEndpoint('/reports')));
-      this.services.set('holiday', new MockHolidayService(ServiceFactory.getAdminEndpoint('/holidays')));
-      this.services.set('permission', new MockPermissionService(ServiceFactory.getAdminEndpoint('/permissions')));
-      this.services.set('dashboard', new MockDashboardService(ServiceFactory.getAdminEndpoint('/dashboard')));
-    } else {
-      console.log('Using real services');
-      this.services.set('user', new UserService(ServiceFactory.getAdminEndpoint('/users')));
-      this.services.set('client', new ClientService(ServiceFactory.getAdminEndpoint('/clients')));
-      this.services.set('billPay', new BillPayService(ServiceFactory.getAdminEndpoint('/bill-pay')));
-      this.services.set('auth', new AuthService(ServiceFactory.getAdminEndpoint('/auth')));
-      this.services.set('security', new SecurityService(ServiceFactory.getAdminEndpoint('/security')));
-      this.services.set('notification', new NotificationService(ServiceFactory.getAdminEndpoint('/notifications')));
-      this.services.set('exceptionService', new ExceptionService(ServiceFactory.getAdminEndpoint('/exceptions')));
-      this.services.set('fisExceptionService', new FISExceptionService(ServiceFactory.getAdminEndpoint('/fis-exceptions')));
-      this.services.set('payee', new PayeeService(ServiceFactory.getAdminEndpoint('/payees')));
-      this.services.set('paymentProcessor', new PaymentProcessorService(ServiceFactory.getAdminEndpoint('/payment-processor')));
-      this.services.set('payment', new PaymentService(ServiceFactory.getAdminEndpoint('/payments')));
-      this.services.set('report', new ReportService(ServiceFactory.getAdminEndpoint('/reports')));
-      this.services.set('holiday', new HolidayService(ServiceFactory.getAdminEndpoint('/holidays')));
-      this.services.set('permission', new PermissionService(ServiceFactory.getAdminEndpoint('/permissions')));
-      this.services.set('dashboard', new DashboardService(ServiceFactory.getAdminEndpoint('/dashboard')));
-    }
+    // User Service
+    this.services.set('user', 
+      shouldUseMockService('user')
+        ? new MockUserService(ServiceFactory.getAdminEndpoint('/users'))
+        : new UserService(ServiceFactory.getAdminEndpoint('/users'))
+    );
+
+    // Client Service
+    this.services.set('client',
+      shouldUseMockService('client')
+        ? new MockClientService(ServiceFactory.getAdminEndpoint('/clients'))
+        : new ClientService(ServiceFactory.getAdminEndpoint('/clients'))
+    );
+
+    // BillPay Service
+    this.services.set('billPay',
+      shouldUseMockService('billPay')
+        ? new MockBillPayService(ServiceFactory.getAdminEndpoint('/bill-pay'))
+        : new BillPayService(ServiceFactory.getAdminEndpoint('/bill-pay'))
+    );
+
+    // Auth Service
+    this.services.set('auth',
+      shouldUseMockService('auth')
+        ? new MockAuthService(ServiceFactory.getAdminEndpoint('/api'))
+        : new AuthService(ServiceFactory.getAdminEndpoint('/api'))
+    );
+
+    // Security Service
+    this.services.set('security',
+      shouldUseMockService('security')
+        ? new MockSecurityService(ServiceFactory.getAdminEndpoint('/security'))
+        : new SecurityService(ServiceFactory.getAdminEndpoint('/security'))
+    );
+
+    // Notification Service
+    this.services.set('notification',
+      shouldUseMockService('notification')
+        ? new MockNotificationService(ServiceFactory.getAdminEndpoint('/notifications'))
+        : new NotificationService(ServiceFactory.getAdminEndpoint('/notifications'))
+    );
+
+    // Exception Service
+    this.services.set('exception',
+      shouldUseMockService('exception')
+        ? new MockExceptionService(ServiceFactory.getAdminEndpoint('/exceptions'))
+        : new ExceptionService(ServiceFactory.getAdminEndpoint('/exceptions'))
+    );
+
+    // FIS Exception Service
+    this.services.set('fisException',
+      shouldUseMockService('fisException')
+        ? new MockFISExceptionService(ServiceFactory.getAdminEndpoint('/fis-exceptions'))
+        : new FISExceptionService(ServiceFactory.getAdminEndpoint('/fis-exceptions'))
+    );
+
+    // Global Payee Service
+    this.services.set('globalPayee',
+      shouldUseMockService('globalPayee')
+        ? new MockGlobalPayeeService(ServiceFactory.getAdminEndpoint('/payees'))
+        : new GlobalPayeeService(ServiceFactory.getAdminEndpoint('/payees'))
+    );
+
+    // User Payee Service
+    this.services.set('payee',
+      shouldUseMockService('payee')
+        ? new MockPayeeService(ServiceFactory.getAdminEndpoint('/payees'))
+        : new PayeeService(ServiceFactory.getAdminEndpoint('/payees'))
+    );
+
+    // Payment Processor Service
+    this.services.set('paymentProcessor',
+      shouldUseMockService('paymentProcessor')
+        ? new MockPaymentProcessorService(ServiceFactory.getAdminEndpoint('/payment-processor'))
+        : new PaymentProcessorService(ServiceFactory.getAdminEndpoint('/payment-processor'))
+    );
+
+    // Payment Service
+    this.services.set('payment',
+      shouldUseMockService('payment')
+        ? new MockPaymentService(ServiceFactory.getAdminEndpoint('/payments'))
+        : new PaymentService(ServiceFactory.getAdminEndpoint('/payments'))
+    );
+
+    // Report Service
+    this.services.set('report',
+      shouldUseMockService('report')
+        ? new MockReportService(ServiceFactory.getAdminEndpoint('/reports'))
+        : new ReportService(ServiceFactory.getAdminEndpoint('/reports'))
+    );
+
+    // Holiday Service
+    this.services.set('holiday',
+      shouldUseMockService('holiday')
+        ? new MockHolidayService(ServiceFactory.getAdminEndpoint('/holidays'))
+        : new HolidayService(ServiceFactory.getAdminEndpoint('/holidays'))
+    );
+
+    // Permission Service
+    this.services.set('permission',
+      shouldUseMockService('permission')
+        ? new MockPermissionService(ServiceFactory.getAdminEndpoint('/permissions'))
+        : new PermissionService(ServiceFactory.getAdminEndpoint('/permissions'))
+    );
+
+    // Dashboard Service
+    this.services.set('dashboard',
+      shouldUseMockService('dashboard')
+        ? new MockDashboardService(ServiceFactory.getAdminEndpoint('/dashboard'))
+        : new DashboardService(ServiceFactory.getAdminEndpoint('/dashboard'))
+    );
   }
 
   getUserService(): IUserService {
@@ -173,7 +248,7 @@ export class ServiceFactory {
   }
 
   getExceptionService(): IExceptionService {
-    const service = this.services.get('exceptionService');
+    const service = this.services.get('exception');
     if (!service) {
       throw new Error('ExceptionService not initialized');
     }
@@ -181,11 +256,19 @@ export class ServiceFactory {
   }
 
   getFISExceptionService(): IFISExceptionService {
-    const service = this.services.get('fisExceptionService');
+    const service = this.services.get('fisException');
     if (!service) {
       throw new Error('FISExceptionService not initialized');
     }
     return service as IFISExceptionService;
+  }
+
+  getGlobalPayeeService(): IGlobalPayeeService {
+    const service = this.services.get('globalPayee');
+    if (!service) {
+      throw new Error('GlobalPayeeService not initialized');
+    }
+    return service as IGlobalPayeeService;
   }
 
   getPayeeService(): IPayeeService {
@@ -255,6 +338,7 @@ export const securityService = ServiceFactory.getInstance().getSecurityService()
 export const notificationService = ServiceFactory.getInstance().getNotificationService();
 export const exceptionService = ServiceFactory.getInstance().getExceptionService();
 export const fisExceptionService = ServiceFactory.getInstance().getFISExceptionService();
+export const globalPayeeService = ServiceFactory.getInstance().getGlobalPayeeService();
 export const payeeService = ServiceFactory.getInstance().getPayeeService();
 export const paymentProcessorService = ServiceFactory.getInstance().getPaymentProcessorService();
 export const paymentService = ServiceFactory.getInstance().getPaymentService();

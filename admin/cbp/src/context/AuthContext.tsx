@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { ServiceFactory } from '../services/factory/ServiceFactory';
 import { LoginCredentials, AuthState, SessionInfo, AuthContextType } from '../types/auth.types';
-import { User } from '../types/client.types';
+import { User, Role } from '../types/client.types';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -11,7 +11,6 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const authService = ServiceFactory.getInstance().getAuthService();
-  const permissionService = ServiceFactory.getInstance().getPermissionService();
 
   const [state, setState] = useState<AuthState>({
     isAuthenticated: false,
@@ -21,108 +20,48 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     userPermissions: null
   });
 
-  const loadUserPermissions = useCallback(async (userId: number) => {
-    console.log('=== Loading User Permissions ===');
-    console.log('Loading permissions for user ID:', userId);
+  const login = useCallback(async (credentials: LoginCredentials) => {
     try {
-      console.log('Calling permissionService.getUserPermissions');
-      const userPermissions = await permissionService.getUserPermissions(userId);
-      console.log('Received permissions:', {
-        hasPermissions: !!userPermissions,
-        groups: userPermissions?.groups?.map(g => g.name) || [],
-        roles: userPermissions?.roles?.map(r => r.name) || []
-      });
-      
-      setState(prev => {
-        console.log('Updating state with permissions:', {
-          prevPermissions: prev.userPermissions ? 'exists' : 'null',
-          newPermissions: userPermissions ? 'exists' : 'null'
-        });
-        return {
-          ...prev,
-          userPermissions
-        };
-      });
-      console.log('Permission loading complete');
-    } catch (error) {
-      console.error('Error loading user permissions:', error);
-      console.error('Error details:', {
-        name: error?.name,
-        message: error?.message,
-        stack: error?.stack
-      });
-    }
-  }, [permissionService]);
-
-  useEffect(() => {
-    const initializeAuth = async () => {
-      console.log('=== AuthContext Initialization ===');
-      console.log('Starting auth initialization');
-      try {
-        const session = await authService.getCurrentSession();
-        console.log('Session retrieved:', { hasSession: !!session, user: session?.user });
-        
-        setState({
-          isAuthenticated: !!session,
-          user: session?.user || null,
-          loading: false,
-          error: null,
-          userPermissions: null
-        });
-
-        if (session?.user) {
-          await loadUserPermissions(session.user.id);
-        }
-
-        console.log('Auth state updated:', {
-          isAuthenticated: !!session,
-          hasUser: !!session?.user,
-          permissions: session?.permissions || [],
-        });
-      } catch (error) {
-        console.error('Auth initialization error:', error);
-        setState({
-          isAuthenticated: false,
-          user: null,
-          loading: false,
-          error: error instanceof Error ? error.message : 'An error occurred',
-          userPermissions: null
-        });
-      }
-    };
-    initializeAuth();
-  }, [authService, loadUserPermissions]);
-
-  const login = useCallback(async (credentials: LoginCredentials): Promise<void> => {
-    console.log('=== Login Attempt ===');
-    setState(prev => ({ ...prev, loading: true, error: null }));
-    try {
+      setState(prev => ({ ...prev, loading: true, error: null }));
       const response = await authService.login(credentials);
-      console.log('Login successful:', { hasUser: !!response.user });
-      setState({
+      
+      console.log('AuthContext: Processing roles from login response:', {
+        rawRoles: response.roles,
+        transformedRoles: (response.roles || []).map(roleName => ({
+          id: 0,
+          name: roleName
+        }))
+      });
+      setState(prev => ({
+        ...prev,
         isAuthenticated: true,
         user: response.user,
         loading: false,
         error: null,
-        userPermissions: null
-      });
-
-      await loadUserPermissions(response.user.id);
+        userPermissions: {
+          roles: (response.roles || []).map(roleName => ({
+            id: 0, // Since we only have the role name
+            name: roleName
+          }))
+        }
+      }));
     } catch (error) {
-      console.error('Login error:', error);
       setState(prev => ({
         ...prev,
+        isAuthenticated: false,
+        user: null,
         loading: false,
-        error: error instanceof Error ? error.message : 'An error occurred during login',
+        error: error instanceof Error ? error.message : 'Login failed',
+        userPermissions: null
       }));
       throw error;
     }
-  }, [authService, loadUserPermissions]);
+  }, [authService]);
 
   const logout = useCallback(async () => {
-    setState(prev => ({ ...prev, loading: true }));
     try {
       await authService.logout();
+    } finally {
       setState({
         isAuthenticated: false,
         user: null,
@@ -130,58 +69,81 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         error: null,
         userPermissions: null
       });
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error.message : 'An error occurred',
-        loading: false,
-      }));
     }
   }, [authService]);
 
   const refreshToken = useCallback(async () => {
     try {
-      await authService.refreshToken();
-      const session = await authService.getCurrentSession();
-      if (session) {
-        setState(prev => ({
-          ...prev,
-          isAuthenticated: true,
-          user: session.user,
-          permissions: session.permissions,
-          userPermissions: null
-        }));
-
-        await loadUserPermissions(session.user.id);
-      }
+      const tokens = await authService.refreshToken();
+      // Token refresh successful, maintain current state
+      setState(prev => ({ ...prev, error: null }));
     } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error.message : 'An error occurred',
-      }));
+      // Token refresh failed, log out user
+      await logout();
+      throw error;
     }
-  }, [authService, loadUserPermissions]);
+  }, [authService, logout]);
 
   const clearError = useCallback(() => {
     setState(prev => ({ ...prev, error: null }));
   }, []);
 
-  const value: AuthContextType = {
-    ...state,
+  // Check initial auth state
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const session = await authService.getCurrentSession();
+        if (session) {
+          setState({
+            isAuthenticated: true,
+            user: session.user,
+            loading: false,
+            error: null,
+            userPermissions: {
+              roles: (session.permissions || []).map(roleName => ({
+                id: 0, // Since we only have the role name
+                name: roleName
+              }))
+            }
+          });
+        } else {
+          setState({
+            isAuthenticated: false,
+            user: null,
+            loading: false,
+            error: null,
+            userPermissions: null
+          });
+        }
+      } catch (error) {
+        setState({
+          isAuthenticated: false,
+          user: null,
+          loading: false,
+          error: error instanceof Error ? error.message : 'Failed to check authentication',
+          userPermissions: null
+        });
+      }
+    };
+    checkAuth();
+  }, [authService]);
+
+  const value = {
+    isAuthenticated: state.isAuthenticated,
+    user: state.user,
+    loading: state.loading,
+    error: state.error,
+    userPermissions: state.userPermissions,
     login,
     logout,
     refreshToken,
-    clearError,
+    clearError
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');

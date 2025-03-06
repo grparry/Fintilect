@@ -198,25 +198,4 @@ export class MockPermissionService extends BaseMockService implements IPermissio
     return Array.from(this.userGroups.values())
       .filter(ug => ug.userId === userId);
   }
-
-  async getUserPermissions(userId: number): Promise<UserPermissions> {
-    // Get user's groups
-    const userGroups = Array.from(this.userGroups.values())
-      .filter(ug => ug.userId === userId);
-    const groups = userGroups
-      .map(ug => this.groups.get(ug.groupId))
-      .filter((g): g is Group => g !== undefined);
-
-    // Get roles from those groups
-    const groupRoles = Array.from(this.groupRoles.values())
-      .filter(gr => userGroups.some(ug => ug.groupId === gr.groupId));
-    const roles = groupRoles
-      .map(gr => this.roles.get(gr.roleId))
-      .filter((r): r is Role => r !== undefined);
-
-    return {
-      groups,
-      roles
-    };
-  }
 }

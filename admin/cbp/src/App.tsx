@@ -1,5 +1,5 @@
 import React, { Suspense, ReactNode, lazy, FC, memo, useCallback, useMemo } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { CircularProgress, Box } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -32,13 +32,15 @@ interface PublicRouteProps {
 // Public Route Component
 const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
+  const location = useLocation();
   console.log('PublicRoute - Checking auth');
 
   if (loading) {
     return <LoadingFallback />;
   }
 
-  if (user) {
+  // Don't redirect on unauthorized page even if authenticated
+  if (user && location.pathname !== '/unauthorized') {
     return <Navigate to="/" replace />;
   }
 
@@ -106,6 +108,12 @@ const BillPayHeader = lazy(() => import('./components/bill-pay/BillPayHeader'));
 const ClientManagementHeader = lazy(() => import('./components/client-management/ClientManagementHeader'));
 const DevelopmentHeader = lazy(() => import('./components/development/DevelopmentHeader'));
 
+// Root redirect component that checks admin status
+const RootRedirect: React.FC = () => {
+  const { isAdmin } = useHost();
+  return <Navigate to={isAdmin ? "/admin" : "/unauthorized"} replace />;
+};
+
 const App: React.FC = () => {
   const routes = useMemo(() => getAllRoutes(), []);
   
@@ -162,8 +170,8 @@ const App: React.FC = () => {
                           <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
                           <Route path="/unauthorized" element={<PublicRoute><NotFound message="You are not authorized to access this resource." /></PublicRoute>} />
                           
-                          {/* Root redirect */}
-                          <Route index element={<Navigate to="admin" replace />} />
+                          {/* Root redirect - only go to admin if on admin hostname */}
+                          <Route index element={<RootRedirect />} />
                           
                           {/* Admin section with MainLayout */}
                           <Route path="admin" element={<AdminWrapper />}>

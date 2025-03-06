@@ -17,6 +17,7 @@ const developmentRoutes: RouteConfig[] = [
     icon: CodeIcon,
     hideFromSidebar: true,
     sectionId: 'development',
+    resourceId: 'route:development',
   },
   {
     id: 'api-testing',
@@ -25,6 +26,7 @@ const developmentRoutes: RouteConfig[] = [
     element: APITesting,
     icon: ApiIcon,
     sectionId: 'development',
+    resourceId: 'route:development.api-testing',
   }
 ];
 export default developmentRoutes;

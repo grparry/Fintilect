@@ -11,6 +11,7 @@ import Form, { FormField } from '../../components/common/Form';
 import { useAuth } from '../../context/AuthContext';
 import { LoginFormData, LoginCredentials } from '../../types/auth.types';
 import { ApiError } from '../../types/exception.types';
+import { getTenantFromHostname } from '../../config/host.config';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -50,10 +51,17 @@ const LoginPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
+      console.log('LoginPage: Getting tenant ID from hostname:', window.location.hostname);
+      const tenantId = getTenantFromHostname();
+      console.log('LoginPage: Raw tenant ID from hostname:', tenantId);
+      if (!tenantId) {
+        throw new Error('Invalid tenant ID from hostname');
+      }
+      console.log('LoginPage: Converting tenant ID to number:', { raw: tenantId, parsed: parseInt(tenantId) });
       const credentials: LoginCredentials = {
         username: data.username,
         password: data.password,
-        clientId: '1' // Default clientId
+        tenantId: parseInt(tenantId)
       };
       console.log('LoginPage: Prepared credentials:', { ...credentials, password: '[REDACTED]' });
       console.log('LoginPage: Calling login function');

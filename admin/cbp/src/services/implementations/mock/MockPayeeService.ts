@@ -1,146 +1,70 @@
+import { BaseService } from '../real/BaseService';
 import { IPayeeService } from '../../interfaces/IPayeeService';
-import { BaseMockService } from './BaseMockService';
-import { PaginatedResponse } from '../../../types/common.types';
-import { PaymentStatus, PaymentMethod } from '../../../types/payment.types';
 import {
-  Payee,
-  FisPayeeRequest,
-  FisPayeeResponse,
-  PaymentValidationResult
-} from '../../../types/bill-pay.types';
+  UserPayeeChangeHistoryListResponse,
+  UserPayeeChangeHistoryReportRequest,
+  UserPayeeUpdateAccountNumberRequest,
+  UserPayeeUpdateFisPayeeIdRequest,
+  UpdateAccountAndReprocessRequest,
+  UpdateAccountAndRefund,
+  UpdateFisPayeeIdAndRefundRequest,
+  ManualUpdateRequest,
+  CopyMemberPayeesRequest
+} from '../../../types/payees.types';
 
-export class MockPayeeService extends BaseMockService implements IPayeeService {
-  private mockPayees: Payee[] = [
-    {
-      id: '1',
-      clientId: 'client1',
-      name: 'Mock Payee 1',
-      accountNumber: '123456789',
-      routingNumber: '987654321',
-      bankName: 'Mock Bank',
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      id: '2',
-      clientId: 'client1',
-      name: 'Mock Payee 2',
-      accountNumber: '987654321',
-      routingNumber: '123456789',
-      bankName: 'Mock Bank 2',
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-  ];
+export class MockPayeeService extends BaseService implements IPayeeService {
+  constructor(basePath: string = '/mock/api/v1/payees') {
+    super(basePath);
+  }
 
-  async getFisPayee(request: FisPayeeRequest): Promise<FisPayeeResponse> {
+  async getUserPayeeChangeHistory(_request: UserPayeeChangeHistoryReportRequest): Promise<UserPayeeChangeHistoryListResponse> {
     return {
-      payeeId: '1',
-      message: 'Mock FIS payee retrieved successfully'
+      Histories: [
+        {
+          MemberId: 'mock-member-1',
+          UserPayeeListId: 'mock-payee-list-1',
+          UpdatedBy: 'mock-user',
+          UpdatedOn: new Date().toISOString(),
+          Reason: 'Account number update',
+          ChangeType: 'Update',
+          PayeeId: 'mock-payee-1',
+          FisPayeeId: 'mock-fis-payee-1',
+          PayeeName: 'Mock Payee',
+          UsersAccountAtPayee: '1234567890',
+          NameOnAccount: 'John Doe',
+          PaymentMethod: 'electronic',
+          Active: true,
+          PayeeType: 'personal'
+        }
+      ]
     };
   }
 
-  async getPayees(filters: {
-    clientId?: string;
-    status?: PaymentStatus;
-    type?: PaymentMethod;
-    searchTerm?: string;
-  }): Promise<PaginatedResponse<Payee>> {
-    let filteredPayees = [...this.mockPayees];
-
-    if (filters.clientId) {
-      filteredPayees = filteredPayees.filter(p => p.clientId === filters.clientId);
-    }
-
-    if (filters.searchTerm) {
-      const searchTerm = filters.searchTerm.toLowerCase();
-      filteredPayees = filteredPayees.filter(p =>
-        p.name.toLowerCase().includes(searchTerm) ||
-        p.accountNumber.includes(searchTerm) ||
-        p.routingNumber.includes(searchTerm)
-      );
-    }
-
-    return {
-      items: filteredPayees,
-      total: filteredPayees.length,
-      page: 1,
-      limit: 10,
-      totalPages: Math.ceil(filteredPayees.length / 10)
-    };
+  async updateUserPayeeAccountNumber(_request: UserPayeeUpdateAccountNumberRequest): Promise<void> {
+    return;
   }
 
-  async getPayee(payeeId: string): Promise<Payee> {
-    const payee = this.mockPayees.find(p => p.id === payeeId);
-    if (!payee) {
-      throw new Error('Payee not found');
-    }
-    return payee;
+  async updateUserPayeeFisId(_request: UserPayeeUpdateFisPayeeIdRequest): Promise<void> {
+    return;
   }
 
-  async createPayee(payee: Partial<Payee>): Promise<Payee> {
-    const newPayee: Payee = {
-      id: String(this.mockPayees.length + 1),
-      clientId: payee.clientId || 'client1',
-      name: payee.name || 'New Mock Payee',
-      accountNumber: payee.accountNumber || '123456789',
-      routingNumber: payee.routingNumber || '987654321',
-      bankName: payee.bankName || 'Mock Bank',
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    this.mockPayees.push(newPayee);
-    return newPayee;
+  async updateAccountAndReprocess(_request: UpdateAccountAndReprocessRequest): Promise<void> {
+    return;
   }
 
-  async updatePayee(payeeId: string, payee: Partial<Payee>): Promise<Payee> {
-    const index = this.mockPayees.findIndex(p => p.id === payeeId);
-    if (index === -1) {
-      throw new Error('Payee not found');
-    }
-
-    const updatedPayee = {
-      ...this.mockPayees[index],
-      ...payee,
-      updatedAt: new Date().toISOString()
-    };
-
-    this.mockPayees[index] = updatedPayee;
-    return updatedPayee;
+  async updateAccountAndRefund(_request: UpdateAccountAndRefund): Promise<void> {
+    return;
   }
 
-  async deletePayee(payeeId: string): Promise<void> {
-    const index = this.mockPayees.findIndex(p => p.id === payeeId);
-    if (index === -1) {
-      throw new Error('Payee not found');
-    }
-
-    this.mockPayees.splice(index, 1);
+  async updateFisPayeeIdAndRefund(_request: UpdateFisPayeeIdAndRefundRequest): Promise<void> {
+    return;
   }
 
-  async validatePayee(payee: Partial<Payee>): Promise<PaymentValidationResult> {
-    return {
-      valid: true,
-      errors: [],
-      warnings: [],
-      requiresApproval: false
-    };
+  async manualExceptionReprocess(_request: ManualUpdateRequest): Promise<void> {
+    return;
   }
 
-  async getPayeeTypes(): Promise<PaymentMethod[]> {
-    return [PaymentMethod.ACH, PaymentMethod.CHECK, PaymentMethod.CARD];
-  }
-
-  async getPayeeStatuses(): Promise<PaymentStatus[]> {
-    return [
-      PaymentStatus.PENDING,
-      PaymentStatus.PROCESSING,
-      PaymentStatus.COMPLETED,
-      PaymentStatus.FAILED
-    ];
+  async copyMemberPayees(_request: CopyMemberPayeesRequest): Promise<void> {
+    return;
   }
 }

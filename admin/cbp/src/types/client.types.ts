@@ -251,6 +251,5 @@ export type { PasswordPolicy, SecuritySettings } from './security.types';
  * This is returned by the permission service but not stored in the database
  */
 export type UserPermissions = {
-  groups: Group[];
   roles: Role[];
 }

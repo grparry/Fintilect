@@ -1,30 +1,38 @@
-
-
 // API Configuration
 export const API_CONFIG = {
   // Set this to true to use mock data instead of real API calls
   useMockData: process.env.REACT_APP_USE_MOCK_DATA === 'true' || process.env.NODE_ENV === 'development',
-  // Base URLs for different environments
-  baseUrl: process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001',
+  
+  // Base URLs for different services
+  urls: {
+    admin: process.env.REACT_APP_ADMIN_API_URL || 'https://localhost:4501',
+    adminCu: process.env.REACT_APP_ADMIN_CU_API_URL || 'https://localhost:8001/api/admin-cu'
+  },
+  
   // API Versions
   version: 'v1',
+  
   // Timeouts
   timeout: 30000, // 30 seconds
+  
   // Mock data configuration
   mockDelay: 500, // Delay in milliseconds for mock responses
+  
   // Service factory configuration
   services: {
     // Enable/disable mock services globally
-    useMockServices: process.env.REACT_APP_USE_MOCK_SERVICES === 'true' || process.env.NODE_ENV === 'development',
+    useMockServices: false,
     // Service-specific mock overrides
     mockOverrides: {
-      auth: process.env.REACT_APP_MOCK_AUTH_SERVICE === 'true',
+      auth: process.env.REACT_APP_MOCK_AUTH_SERVICE === 'false',
       user: process.env.REACT_APP_MOCK_USER_SERVICE === 'true',
       client: process.env.REACT_APP_MOCK_CLIENT_SERVICE === 'true',
       billPay: process.env.REACT_APP_MOCK_BILLPAY_SERVICE === 'true',
       security: process.env.REACT_APP_MOCK_SECURITY_SERVICE === 'true',
       notification: process.env.REACT_APP_MOCK_NOTIFICATION_SERVICE === 'true',
       exception: process.env.REACT_APP_MOCK_EXCEPTION_SERVICE === 'true',
+      fisException: process.env.REACT_APP_MOCK_FIS_EXCEPTION_SERVICE === 'true',
+      globalPayee: process.env.REACT_APP_MOCK_PAYEE_SERVICE === 'true',
       payee: process.env.REACT_APP_MOCK_PAYEE_SERVICE === 'true',
       paymentProcessor: process.env.REACT_APP_MOCK_PAYMENT_PROCESSOR_SERVICE === 'true',
       payment: process.env.REACT_APP_MOCK_PAYMENT_SERVICE === 'true',
@@ -37,6 +45,7 @@ export const API_CONFIG = {
       settings: process.env.REACT_APP_MOCK_SETTINGS_SERVICE === 'true',
       moneyDesktop: process.env.REACT_APP_MOCK_MONEYDESKTOP_SERVICE === 'true' || process.env.NODE_ENV === 'development'
     },
+    
     // Cache configuration
     cache: {
       enabled: true,
@@ -44,24 +53,20 @@ export const API_CONFIG = {
     }
   }
 };
-// Export the base URL directly for easier access
-export const API_BASE_URL = API_CONFIG.baseUrl;
+
 // Export configuration getters
 export const getConfig = () => {
   return {
-    baseUrl: API_CONFIG.baseUrl,
-    version: API_CONFIG.version,
-    timeout: API_CONFIG.timeout,
-    mockDelay: API_CONFIG.mockDelay,
-    useMockServices: API_CONFIG.services.useMockServices,
-    mockOverrides: API_CONFIG.services.mockOverrides,
-    cache: API_CONFIG.services.cache
+    ...API_CONFIG,
+    // Add any computed properties here
   };
 };
+
 // Export a helper to determine if we should use mock data
 export const shouldUseMockData = () => {
   return API_CONFIG.useMockData;
 };
+
 // Export a helper to determine if a specific service should use mock implementation
 export const shouldUseMockService = (serviceName: keyof typeof API_CONFIG.services.mockOverrides) => {
   return API_CONFIG.services.useMockServices || API_CONFIG.services.mockOverrides[serviceName];

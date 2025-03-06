@@ -11,11 +11,17 @@ export type ResourceId = `navigation:${string}` | `route:${string}` | `landing:$
 /**
  * Permission requirement defining what is needed to access a resource
  */
+export type Environment = 'production' | 'test' | 'development';
+
 export interface PermissionRequirement {
   resourceId: ResourceId;
   description?: string;  // Optional description of what this permission guards
   clientId?: string;
-  requiredPermissions?: string[];
+  roles?: string[];  // Required roles
+  permissions?: string[];  // Required permissions
+  adminPermissions?: string[];  // Admin roles where having any one grants access
+  allowedEnvironments?: Environment[];  // Optional list of allowed environments
+  requireAll?: boolean;  // If true, all permissions are required. If false, any permission is sufficient.
   customCheck?: () => Promise<boolean>;
 }
 
@@ -50,14 +56,14 @@ export interface PermissionContext {
  */
 export interface PermissionCacheConfig {
   enabled: boolean;
-  ttlMs: number;  // Time-to-live in milliseconds
+  ttlMs: number;
 }
 
 /**
  * Permission check options
  */
 export interface PermissionCheckOptions {
-  bypass?: boolean;  // For development/testing only
+  bypass?: boolean;
   cache?: PermissionCacheConfig;
-  throwOnDenied?: boolean;  // Whether to throw an error on permission denied
+  throwOnDenied?: boolean;
 }

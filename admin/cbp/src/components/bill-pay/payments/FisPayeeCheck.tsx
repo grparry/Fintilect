@@ -16,12 +16,12 @@ const FisPayeeCheck: React.FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FisPayeeRequest>();
   const [searchResult, setSearchResult] = useState<FisPayeeResponse | null>(null);
   const [isSearching, setIsSearching] = useState(false);
-  const payeeService = ServiceFactory.getInstance().getPayeeService();
+  const globalPayeeService = ServiceFactory.getInstance().getGlobalPayeeService();
 
   const onSubmit = async (data: FisPayeeRequest) => {
     setIsSearching(true);
     try {
-      const result = await payeeService.getFisPayee(data);
+      const result = await globalPayeeService.getFisPayee(data);
       setSearchResult(result);
     } catch (error) {
       console.error('FIS payee search failed:', error);

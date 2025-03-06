@@ -5,7 +5,6 @@ import {
   GroupRole,
   UserGroup,
   PaginatedResponse,
-  UserPermissions
 } from '../../types/client.types';
 
 /**
@@ -124,11 +123,4 @@ export interface IPermissionService extends IBaseService {
    * @param userId User identifier
    */
   getUserGroups(userId: number): Promise<UserGroup[]>;
-
-  /**
-   * Get user permissions
-   * Returns a flattened view of a user's groups and roles
-   * @param userId User identifier
-   */
-  getUserPermissions(userId: number): Promise<UserPermissions>;
 }

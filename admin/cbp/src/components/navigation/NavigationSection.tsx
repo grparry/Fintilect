@@ -13,7 +13,7 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useNavigation } from '../../context/NavigationContext';
 import { NavigationSection as NavigationSectionType, NavigationItem } from '../../types/section-navigation.types';
-import { useNavigationPermissions } from '../../hooks/useNavigationPermissions';
+import { usePermissions } from '../../hooks/usePermissions';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -34,42 +34,45 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
   const location = useLocation();
   const navigate = useNavigate();
   const { state, toggleSection } = useNavigation();
-  const { hasPermission } = useNavigationPermissions();
+  const { checkPermissions } = usePermissions();
   const [visibleItems, setVisibleItems] = useState<NavigationItem[]>([]);
 
   // Return null if section is undefined
   if (!section) return null;
 
-  // Check section permission and return null if no access
   useEffect(() => {
-    const checkSectionPermissions = async () => {
+    const checkSectionAndItemPermissions = async () => {
+      // Collect all resource IDs that need to be checked
+      const resourceIds = [
+        ...(section.resourceId ? [section.resourceId] : []),
+        ...(section.items?.map(item => item.resourceId).filter(Boolean) || [])
+      ];
+
+      if (resourceIds.length === 0) {
+        setVisibleItems(section.items || []);
+        return;
+      }
+
+      // Check all permissions at once
+      const permissionResults = await checkPermissions(resourceIds);
+
       // Check section permission first
-      if (section.resourceId) {
-        const hasSectionAccess = await hasPermission(section.resourceId);
-        if (!hasSectionAccess) {
-          setVisibleItems([]);
-          return;
-        }
+      if (section.resourceId && !permissionResults[section.resourceId].hasAccess) {
+        setVisibleItems([]);
+        return;
       }
 
       // Filter items based on permissions
       if (section.items) {
-        const filteredItems = await Promise.all(
-          section.items.map(async (item) => {
-            if (item.resourceId) {
-              const hasItemAccess = await hasPermission(item.resourceId);
-              return hasItemAccess ? item : null;
-            }
-            return item;
-          })
+        const filteredItems = section.items.filter(item => 
+          !item.resourceId || permissionResults[item.resourceId]?.hasAccess
         );
-
-        setVisibleItems(filteredItems.filter((item): item is NavigationItem => item !== null));
+        setVisibleItems(filteredItems);
       }
     };
 
-    checkSectionPermissions();
-  }, [section, hasPermission]);
+    checkSectionAndItemPermissions();
+  }, [section, checkPermissions]);
   
   const isActive = section.id ? state.activeSection === section.id : false;
   const isSectionExpanded = level === 0 ? isActive : state.expandedItems.includes(section.id || '');
@@ -94,11 +97,6 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
     if (section.path && location.pathname !== section.path) {
       console.log('NavigationSection - Navigating to:', section.path);
       navigate(section.path);
-    } else {
-      console.log('NavigationSection - Not navigating because:', {
-        hasPath: !!section.path,
-        pathsMatch: location.pathname === section.path
-      });
     }
   };
 
@@ -149,7 +147,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
             </ListItemIcon>
           )}
           <ListItemText 
-            primary={item.title} 
+            primary={item.title}
             primaryTypographyProps={{
               variant: 'body2',
               sx: { fontWeight: isSelected ? 600 : 400 }

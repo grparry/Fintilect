@@ -1,6 +1,7 @@
 import { IBaseService } from '../../interfaces/IBaseService';
 import { ApiResponse, ApiSuccessResponse, ApiErrorResponse } from '../../types';
-import api, { AxiosError, AxiosResponse } from '../../api';
+import api from '../../api';
+import { AxiosError, AxiosResponse } from 'axios';
 import logger from '../../../utils/logger';
 
 /**
@@ -14,10 +15,16 @@ export class BaseService implements IBaseService {
    */
   protected extractData<T>(response: AxiosResponse<ApiResponse<T>>): T {
     const apiResponse = response.data;
-    if ((apiResponse as ApiSuccessResponse<T>).success) {
+    // If it's a wrapped success response
+    if ((apiResponse as ApiSuccessResponse<T>).success === true) {
       return (apiResponse as ApiSuccessResponse<T>).data;
     }
-    throw this.handleError(apiResponse as ApiErrorResponse);
+    // If it's a wrapped error response
+    if ((apiResponse as ApiErrorResponse).success === false) {
+      throw this.handleError(apiResponse as ApiErrorResponse);
+    }
+    // If it's a direct response
+    return apiResponse as T;
   }
 
   /**
@@ -27,32 +34,53 @@ export class BaseService implements IBaseService {
     // If it's an Axios error
     if ((error as AxiosError).isAxiosError) {
       const axiosError = error as AxiosError<ApiErrorResponse>;
-      logger.error({
-        message: 'API Error',
-        url: axiosError.config?.url,
-        method: axiosError.config?.method,
-        status: axiosError.response?.status,
-        error: axiosError.response?.data
-      });
+      logger.error('Raw API Error Response', JSON.stringify({
+        config: {
+          url: axiosError.config?.url,
+          method: axiosError.config?.method,
+          headers: axiosError.config?.headers,
+          data: axiosError.config?.data
+        },
+        response: axiosError.response ? {
+          status: axiosError.response.status,
+          statusText: axiosError.response.statusText,
+          headers: axiosError.response.headers,
+          data: axiosError.response.data
+        } : undefined
+      }));
       
-      if (axiosError.response?.data) {
-        return new Error(axiosError.response.data.error.message);
+      // For 401 responses, always show 'Invalid username or password'
+      if (axiosError.response?.status === 401) {
+        return new Error('Invalid username or password');
       }
-      return new Error(axiosError.message);
+      
+      const responseData = axiosError.response?.data;
+      if (responseData) {
+        // Handle plain text responses
+        if (typeof responseData === 'string') {
+          return new Error(responseData);
+        }
+        // Handle structured error responses
+        if (responseData.error?.message) {
+          return new Error(responseData.error.message);
+        }
+      }
+      
+      return new Error(axiosError.message || 'An error occurred');
     }
     
     // If it's our ApiErrorResponse
     const apiError = error as ApiErrorResponse;
-    return new Error(apiError.error.message);
+    return new Error(apiError.error?.message || 'An error occurred');
   }
 
   /**
    * Make a GET request
    */
-  protected async get<T>(path: string, params?: Record<string, any>): Promise<T> {
+  protected async get<T>(path: string, config?: any): Promise<T> {
     try {
       const url = `${this.basePath}${path}`;
-      const response = await api.instance.get<ApiResponse<T>>(url, { params });
+      const response = await api.get<ApiResponse<T>>(url, config);
       return this.extractData(response);
     } catch (error) {
       throw this.handleError(error as AxiosError);
@@ -62,10 +90,16 @@ export class BaseService implements IBaseService {
   /**
    * Make a POST request
    */
-  protected async post<T>(path: string, data?: any): Promise<T> {
+  protected async post<T>(path: string, data?: any, config?: any): Promise<T> {
     try {
       const url = `${this.basePath}${path}`;
-      const response = await api.instance.post<ApiResponse<T>>(url, data);
+      const response = await api.post<ApiResponse<T>>(url, data, config);
+      logger.info('Raw API Response', JSON.stringify({
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+        data: response.data
+      }));
       return this.extractData(response);
     } catch (error) {
       throw this.handleError(error as AxiosError);
@@ -75,10 +109,10 @@ export class BaseService implements IBaseService {
   /**
    * Make a PUT request
    */
-  protected async put<T>(path: string, data?: any): Promise<T> {
+  protected async put<T>(path: string, data?: any, config?: any): Promise<T> {
     try {
       const url = `${this.basePath}${path}`;
-      const response = await api.instance.put<ApiResponse<T>>(url, data);
+      const response = await api.put<ApiResponse<T>>(url, data, config);
       return this.extractData(response);
     } catch (error) {
       throw this.handleError(error as AxiosError);
@@ -88,10 +122,10 @@ export class BaseService implements IBaseService {
   /**
    * Make a PATCH request
    */
-  protected async patch<T>(path: string, data?: any): Promise<T> {
+  protected async patch<T>(path: string, data?: any, config?: any): Promise<T> {
     try {
       const url = `${this.basePath}${path}`;
-      const response = await api.instance.patch<ApiResponse<T>>(url, data);
+      const response = await api.patch<ApiResponse<T>>(url, data, config);
       return this.extractData(response);
     } catch (error) {
       throw this.handleError(error as AxiosError);
@@ -101,10 +135,10 @@ export class BaseService implements IBaseService {
   /**
    * Make a DELETE request
    */
-  protected async delete<T>(path: string, config?: { data?: any; params?: Record<string, any> }): Promise<T> {
+  protected async delete<T>(path: string, config?: any): Promise<T> {
     try {
       const url = `${this.basePath}${path}`;
-      const response = await api.instance.delete<ApiResponse<T>>(url, config);
+      const response = await api.delete<ApiResponse<T>>(url, config);
       return this.extractData(response);
     } catch (error) {
       throw this.handleError(error as AxiosError);

@@ -8,162 +8,187 @@ export const permissionRegistry: PermissionRegistry = {
   // Bill Pay Section
   'navigation:billPay': {
     resourceId: 'navigation:billPay',
-    requiredPermissions: ['BillPayViewer'],
+    permissions: ['BillPayViewer'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'Access to Bill Pay section'
   },
   'route:billPay': {
     resourceId: 'route:billPay',
-    requiredPermissions: ['BillPayViewer'],
+    permissions: ['BillPayViewer'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'Access to Bill Pay routes'
   },
   'route:billPay.index': {
     resourceId: 'route:billPay.index',
-    requiredPermissions: ['BillPayViewer'],
+    permissions: ['BillPayViewer'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'View Bill Pay home page'
   },
   'route:billPay.dashboard': {
     resourceId: 'route:billPay.dashboard',
-    requiredPermissions: ['BillPayViewer', 'BillPayReports_Read'],
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'View Bill Pay dashboard'
   },
   'route:billPay.payments': {
     resourceId: 'route:billPay.payments',
-    requiredPermissions: ['BillPayViewer', 'BillPayProcessor'],
+    permissions: ['BillPayViewer', 'BillPayProcessor'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'Manage Bill Pay payments'
   },
   'route:billPay.payments.index': {
     resourceId: 'route:billPay.payments.index',
-    requiredPermissions: ['BillPayViewer', 'BillPayProcessor'],
+    permissions: ['BillPayViewer', 'BillPayProcessor'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'View payments management home'
   },
   'route:billPay.payments.manage': {
     resourceId: 'route:billPay.payments.manage',
-    requiredPermissions: ['BillPayViewer', 'BillPayProcessor'],
+    permissions: ['BillPayViewer', 'BillPayProcessor'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'Manage pending payments'
   },
   'route:billPay.payments.exceptions': {
     resourceId: 'route:billPay.payments.exceptions',
-    requiredPermissions: ['BillPayViewer', 'BillPayProcessor'],
+    permissions: ['BillPayViewer', 'BillPayProcessor'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'Handle payment exceptions'
-  },
-  'route:billPay.payments.manual': {
-    resourceId: 'route:billPay.payments.manual',
-    requiredPermissions: ['BillPayViewer', 'BillPayProcessor'],
-    description: 'Process payments manually'
-  },
-  'route:billPay.payments.fis-payee': {
-    resourceId: 'route:billPay.payments.fis-payee',
-    requiredPermissions: ['BillPayViewer', 'BillPayProcessor'],
-    description: 'Check FIS payee status'
   },
   'route:billPay.payments.fis-exceptions': {
     resourceId: 'route:billPay.payments.fis-exceptions',
-    requiredPermissions: ['BillPayViewer', 'BillPayProcessor'],
-    description: 'FIS Exception Management'
+    permissions: ['BillPayViewer', 'BillPayProcessor'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Handle FIS payment exceptions'
+  },
+  'route:billPay.payments.fis-payee': {
+    resourceId: 'route:billPay.payments.fis-payee',
+    permissions: ['BillPayViewer', 'BillPayProcessor'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Handle FIS payee management'
+  },
+  'route:billPay.payments.manual': {
+    resourceId: 'route:billPay.payments.manual',
+    permissions: ['BillPayViewer', 'BillPayProcessor'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Create manual payments'
+  },
+  'route:billPay.payments.history': {
+    resourceId: 'route:billPay.payments.history',
+    permissions: ['BillPayViewer', 'BillPayProcessor'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View payment history'
   },
   'route:billPay.reports': {
     resourceId: 'route:billPay.reports',
-    requiredPermissions: ['BillPayViewer', 'BillPayReports_Read'],
-    description: 'View Bill Pay reports'
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Access Bill Pay reports'
   },
-  'route:billPay.settings': {
-    resourceId: 'route:billPay.settings',
-    requiredPermissions: ['BillPayViewer', 'BillPayConfiguration_Read'],
-    description: 'Manage Bill Pay settings'
+  'route:billPay.reports.index': {
+    resourceId: 'route:billPay.reports.index',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View reports home'
   },
-  'route:billPay.settings.config': {
-    resourceId: 'route:billPay.settings.config',
-    requiredPermissions: ['BillPayViewer', 'BillPayConfiguration_Read'],
-    description: 'Configure Bill Pay settings'
+  'route:billPay.reports.generate': {
+    resourceId: 'route:billPay.reports.generate',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Generate new reports'
   },
-  'route:billPay.settings.holidays': {
-    resourceId: 'route:billPay.settings.holidays',
-    requiredPermissions: ['BillPayViewer', 'BillPayConfiguration_Read'],
-    description: 'Manage holiday settings'
-  },
-  'route:billPay.settings.notifications': {
-    resourceId: 'route:billPay.settings.notifications',
-    requiredPermissions: ['BillPayViewer', 'BillPayConfiguration_Read'],
-    description: 'Manage notification templates'
-  },
-  'route:billPay.settings.security': {
-    resourceId: 'route:billPay.settings.security',
-    requiredPermissions: ['BillPayViewer', 'BillPayConfiguration_Read'],
-    description: 'Manage Bill Pay security settings'
-  },
-  'landing:billPay.welcome': {
-    resourceId: 'landing:billPay.welcome',
-    requiredPermissions: ['BillPayViewer'],
-    description: 'View Bill Pay welcome page'
+  'route:billPay.reports.view': {
+    resourceId: 'route:billPay.reports.view',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View existing reports'
   },
 
   // Client Management Section
-  'navigation:clientManagement': {
-    resourceId: 'navigation:clientManagement',
-    requiredPermissions: ['SecurityUsers_Read'],
+  'navigation:client-management': {
+    resourceId: 'navigation:client-management',
+    permissions: ['ClientManager'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'Access to Client Management section'
   },
   'route:client-management-root': {
     resourceId: 'route:client-management-root',
-    requiredPermissions: ['ClientManager'],
-    description: 'Access to Client Management root'
+    permissions: ['ClientManager'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Root access to Client Management'
+  },
+  'route:client-management': {
+    resourceId: 'route:client-management',
+    permissions: ['ClientManager'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Access to Client Management routes'
+  },
+  'route:client-management.index': {
+    resourceId: 'route:client-management.index',
+    permissions: ['ClientManager'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Client Management home'
   },
   'route:client-management.list': {
     resourceId: 'route:client-management.list',
-    requiredPermissions: ['ClientManager'],
-    description: 'View client list'
+    permissions: ['ClientManager'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View list of clients'
+  },
+  'route:client-management.create': {
+    resourceId: 'route:client-management.create',
+    permissions: ['ClientManager', 'Client_Create'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Create new clients'
   },
   'route:client-management.edit': {
     resourceId: 'route:client-management.edit',
-    requiredPermissions: ['ClientManager'],
+    permissions: ['ClientManager', 'Client_Edit'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Edit existing clients'
+  },
+  'route:client-management.edit.details': {
+    resourceId: 'route:client-management.edit.details',
+    permissions: ['ClientManager', 'Client_Edit'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'Edit client details'
   },
-  'route:client-management.edit.contact': {
-    resourceId: 'route:client-management.edit.contact',
-    requiredPermissions: ['ClientManager'],
-    description: 'Edit client contact information'
+  'route:client-management.edit.settings': {
+    resourceId: 'route:client-management.edit.settings',
+    permissions: ['ClientManager', 'Client_Edit'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Edit client settings'
   },
   'route:client-management.edit.users': {
     resourceId: 'route:client-management.edit.users',
-    requiredPermissions: ['ClientManager', 'SecurityUsers_Manage'],
+    permissions: ['ClientManager', 'Users_Manage'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'Manage client users'
-  },
-  'route:client-management.edit.users.edit': {
-    resourceId: 'route:client-management.edit.users.edit',
-    requiredPermissions: ['ClientManager', 'SecurityUsers_Manage'],
-    description: 'Edit client user'
   },
   'route:client-management.edit.groups': {
     resourceId: 'route:client-management.edit.groups',
-    requiredPermissions: ['ClientManager', 'SecurityGroups_Manage'],
+    permissions: ['ClientManager', 'SecurityGroups_Manage'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'Manage client groups'
-  },
-  'route:client-management.edit.security': {
-    resourceId: 'route:client-management.edit.security',
-    requiredPermissions: ['ClientManager', 'Security_Manage'],
-    description: 'Manage client security settings'
-  },
-  'route:client-management.edit.member-security': {
-    resourceId: 'route:client-management.edit.member-security',
-    requiredPermissions: ['ClientManager', 'Security_Manage'],
-    description: 'Manage client member security settings'
   },
 
   // Development Section
   'navigation:development': {
     resourceId: 'navigation:development',
-    requiredPermissions: ['Development_Access'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    allowedEnvironments: ['development', 'test'],
     description: 'Access to Development section'
   },
   'route:development': {
     resourceId: 'route:development',
-    requiredPermissions: ['Development_Access'],
-    description: 'Access development tools'
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    allowedEnvironments: ['development', 'test'],
+    description: 'Access to Development tools'
   },
   'route:development.api-testing': {
     resourceId: 'route:development.api-testing',
-    requiredPermissions: ['Development_Access', 'API_Test'],
-    description: 'Access API testing tools'
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    allowedEnvironments: ['development', 'test'],
+    description: 'Access to API Testing tools'
   }
 };
 
@@ -185,9 +210,8 @@ export const hasResource = (resourceId: ResourceId): boolean => {
  * Get permission requirement for a resource
  */
 export const getPermissionRequirement = (resourceId: ResourceId) => {
-  const requirement = permissionRegistry[resourceId];
-  if (!requirement) {
+  if (!hasResource(resourceId)) {
     throw new Error(`No permission requirement found for resource: ${resourceId}`);
   }
-  return requirement;
+  return permissionRegistry[resourceId];
 };

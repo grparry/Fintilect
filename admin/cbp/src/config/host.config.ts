@@ -4,7 +4,8 @@
 const ADMIN_HOSTNAMES = [
   'cfssadminsvc.cfssinternal.com',
   'cfssadminsvc-test.cfssinternal.com',
-  'localhost'
+  'localhost',
+  '127.0.0.1'
 ] as const;
 
 // Client portal hostnames
@@ -30,7 +31,7 @@ export const isAdminHostname = (): boolean => {
  */
 export const isClientHostname = (): boolean => {
   const currentHostname = window.location.hostname;
-  if (currentHostname === 'localhost') return true;
+  if (currentHostname === 'localhost' || currentHostname === '127.0.0.1') return true;
   
   return CLIENT_HOSTNAMES.some(suffix => 
     currentHostname.endsWith(suffix) && currentHostname !== suffix
@@ -42,15 +43,25 @@ export const isClientHostname = (): boolean => {
  */
 export const getTenantFromHostname = (): string | null => {
   const hostname = window.location.hostname;
-  if (hostname === 'localhost') return null;
+  console.log('getTenantFromHostname: Processing hostname:', hostname);
   
+  // In development, any localhost or 127.0.0.1 should return the default tenant
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    console.log('getTenantFromHostname: Development environment detected, using default tenant');
+    return '20';
+  }
+  
+  console.log('getTenantFromHostname: Checking against client hostname suffixes:', CLIENT_HOSTNAMES);
   for (const suffix of CLIENT_HOSTNAMES) {
+    console.log('getTenantFromHostname: Checking if hostname ends with:', suffix);
     if (hostname.endsWith(suffix)) {
       const tenant = hostname.slice(0, -suffix.length);
+      console.log('getTenantFromHostname: Found matching suffix, extracted tenant:', { suffix, tenant });
       return tenant || null;
     }
   }
   
+  console.log('getTenantFromHostname: No matching tenant found');
   return null;
 };
 
@@ -64,6 +75,9 @@ export const getEnvironment = (): 'production' | 'test' | 'development' => {
     return 'development';
   }
   
+  if (hostname === '127.0.0.1') {
+    return 'production';
+  }
   if (hostname.includes('-test.')) {
     return 'test';
   }

@@ -19,18 +19,24 @@ export class MockAuthService implements IAuthService {
     expiresIn: 3600
   };
   readonly basePath: string;
+  private users: Map<number, any> = new Map(mockUsers.map(user => [user.id, user]));
+  private userRoles: Map<number, string[]> = new Map([
+    [1, ['Admin', 'Manager', 'User']],
+    [2, ['Manager', 'User']],
+    [3, ['User']]
+  ]);
+
   constructor(basePath: string) {
     this.basePath = basePath;
   }
+
   async login(credentials: LoginCredentials): Promise<AuthenticationResponse> {
-    const user = mockUsers.find(u => u.username === credentials.username);
+    const user = Array.from(this.users.values()).find(u => u.username === credentials.username);
     if (!user) {
       throw new AuthError('Invalid credentials', 'AUTH_001');
     }
     
-    // Get user's permissions through the permission service
-    const permissions = await this.getUserPermissions(user.id);
-    
+    const roles = this.userRoles.get(user.id) || [];
     const session: UserSession = {
       id: '1',
       userId: user.id.toString(),
@@ -45,19 +51,22 @@ export class MockAuthService implements IAuthService {
     this.activeSessions.push(session);
     this.currentSession = {
       user,
-      permissions,
+      permissions: roles,
       expiresAt: new Date(Date.now() + 3600000).toISOString()
     };
     return {
       user,
-      tokens: this.mockTokens,
-      permissions
+      token: this.mockTokens.accessToken,
+      roles,
+      expiresIn: this.mockTokens.expiresIn
     };
   }
+
   async logout(): Promise<void> {
     this.currentSession = null;
     this.activeSessions = [];
   }
+
   async refreshToken(): Promise<TokenResponse> {
     if (!this.currentSession) {
       throw new AuthError('No active session', 'AUTH_002');
@@ -67,15 +76,23 @@ export class MockAuthService implements IAuthService {
       expiresIn: 3600
     };
   }
+
   async getCurrentSession(): Promise<SessionInfo | null> {
-    return this.currentSession;
+    if (!this.currentSession) return null;
+    return {
+      ...this.currentSession,
+      permissions: this.userRoles.get(this.currentSession.user.id) || []
+    };
   }
+
   async isAuthenticated(): Promise<boolean> {
     return this.currentSession !== null;
   }
+
   async getActiveSessions(): Promise<UserSession[]> {
     return this.activeSessions;
   }
+
   async terminateSession(sessionId: string): Promise<void> {
     const sessionIndex = this.activeSessions.findIndex(s => s.id === sessionId);
     if (sessionIndex === -1) {
@@ -86,6 +103,7 @@ export class MockAuthService implements IAuthService {
       this.currentSession = null;
     }
   }
+
   async terminateOtherSessions(): Promise<void> {
     if (!this.currentSession) {
       throw new AuthError('No active session', 'AUTH_004');
@@ -98,15 +116,5 @@ export class MockAuthService implements IAuthService {
     } else {
       this.activeSessions = [];
     }
-  }
-  private async getUserPermissions(userId: number): Promise<string[]> {
-    // Get the permission service
-    const permissionService = ServiceFactory.getInstance().getPermissionService();
-    
-    // Get user's permissions
-    const userPermissions = await permissionService.getUserPermissions(userId);
-    
-    // Convert roles to permissions (in a real implementation, this would map to actual permissions)
-    return userPermissions.roles.map((role) => `role:${role.name.toLowerCase()}`);
   }
 }

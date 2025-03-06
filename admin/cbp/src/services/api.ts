@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
-import { API_BASE_URL } from '../config/api.config';
+import { API_CONFIG } from '../config/api.config';
 import { ApiSuccessResponse, ApiErrorResponse } from './types';
 import logger from '../utils/logger';
 
@@ -47,10 +47,9 @@ class ApiClient {
   private static instance: AxiosInstance;
 
   private constructor() {
-    // Create Axios instance with default config
+    // Create Axios instance with default config (no baseURL)
     ApiClient.instance = axios.create({
-      baseURL: API_BASE_URL,
-      timeout: DEFAULT_TIMEOUT,
+      timeout: API_CONFIG.timeout,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -65,6 +64,12 @@ class ApiClient {
         if (config.params) {
           config.params = transformKeys(config.params, true);
         }
+        logger.info('API Request', JSON.stringify({
+          url: config.url,
+          method: config.method,
+          headers: config.headers,
+          data: config.data
+        }));
         return config;
       },
       error => Promise.reject(error)
@@ -92,7 +97,6 @@ class ApiClient {
         if (error.response?.data) {
           error.response.data = transformKeys(error.response.data, false);
         }
-
         return Promise.reject(error);
       }
     );
@@ -121,17 +125,11 @@ class ApiClient {
     );
   }
 
-  static getInstance(): { 
-    instance: AxiosInstance;
-    interceptors: typeof ApiClient.instance.interceptors;
-  } {
+  static getInstance(): AxiosInstance {
     if (!ApiClient.instance) {
       new ApiClient();
     }
-    return {
-      instance: ApiClient.instance,
-      interceptors: ApiClient.instance.interceptors
-    };
+    return ApiClient.instance;
   }
 }
 

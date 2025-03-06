@@ -10,14 +10,32 @@ import {
 } from '../../../types/auth.types';
 
 export class AuthService extends BaseService implements IAuthService {
-    constructor(basePath: string = '/api/v1/auth') {
+    constructor(basePath: string) {
         super(basePath);
     }
     async login(credentials: LoginCredentials): Promise<AuthenticationResponse> {
         try {
-            return await this.post<AuthenticationResponse>('/login', credentials);
+            const url = `${this.basePath}/Authentication/tenant/login`;
+            logger.info(`AuthService: Attempting login to ${url} - username: ${credentials.username}, tenantId: ${credentials.tenantId}`);
+            const requestBody = {
+                username: credentials.username,
+                password: credentials.password,
+                tenantId: credentials.tenantId
+            };
+            logger.info('AuthService: Login request details', JSON.stringify({
+                url,
+                headers: { 'Content-Type': 'application/json' },
+                body: requestBody
+            }));
+            const response = await this.post<AuthenticationResponse>('/Authentication/tenant/login', requestBody);
+            logger.info(`AuthService: Login successful - ${JSON.stringify(response)}`);
+            logger.info('AuthService: User roles:', JSON.stringify({
+                roles: response.roles,
+                username: response.user.username
+            }));
+            return response;
         } catch (error) {
-            logger.error(`Login failed for user ${credentials.username}: ${error}`);
+            logger.error(`AuthService: Login failed - username: ${credentials.username}, tenantId: ${credentials.tenantId}, url: ${this.basePath}/Authentication/tenant/login, error: ${error}`);
             throw error;
         }
     }

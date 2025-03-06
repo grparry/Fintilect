@@ -5,7 +5,6 @@ import {
   GroupRole,
   UserGroup,
   PaginatedResponse,
-  UserPermissions
 } from '../../../types/client.types';
 import { BaseService } from './BaseService';
 
@@ -85,27 +84,5 @@ export class PermissionService extends BaseService implements IPermissionService
 
   async getUserGroups(userId: number): Promise<UserGroup[]> {
     return this.get<UserGroup[]>(`/users/${userId}/groups`);
-  }
-
-  async getUserPermissions(userId: number): Promise<UserPermissions> {
-    // Get user's groups
-    const userGroups = await this.getUserGroups(userId);
-    const groups = await Promise.all(
-      userGroups.map((ug: UserGroup) => this.getGroup(ug.groupId))
-    );
-
-    // Get roles from those groups
-    const groupRoles = await Promise.all(
-      userGroups.map((ug: UserGroup) => this.getGroupRoles(ug.groupId))
-    );
-    const roleIds = new Set(groupRoles.flat().map((gr: GroupRole) => gr.roleId));
-    const roles = await Promise.all(
-      Array.from(roleIds).map((id: number) => this.getRole(id))
-    );
-
-    return {
-      groups,
-      roles
-    };
   }
 }

@@ -1,11 +1,13 @@
 import { useCallback, useContext, useMemo, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { permissionRegistry, getResourceId, hasResource } from '../config/permissions';
+import { getEnvironment } from '../config/host.config';
 import type { 
   ResourceId, 
   PermissionResult, 
   PermissionContext,
-  PermissionCheckOptions
+  PermissionCheckOptions,
+  PermissionRequirement
 } from '../types/permissions.types';
 
 interface CacheEntry {
@@ -59,7 +61,7 @@ export const usePermissions = () => {
 
     // Development bypass
     if (bypass && process.env.NODE_ENV === 'development') {
-      const result = { hasAccess: true };
+      const result: PermissionResult = { hasAccess: true };
       if (cache.enabled) {
         cacheRef.current.set(resourceId, { result, timestamp: Date.now() });
       }
@@ -68,7 +70,7 @@ export const usePermissions = () => {
 
     // Get permission requirement
     if (!hasResource(resourceId)) {
-      const result = { 
+      const result: PermissionResult = { 
         hasAccess: false, 
         deniedReason: `No permission requirement found for resource: ${resourceId}` 
       };
@@ -76,12 +78,11 @@ export const usePermissions = () => {
       return result;
     }
 
-    const requirement = permissionRegistry[resourceId];
-    const deniedPermissions: string[] = [];
+    const requirement: PermissionRequirement = permissionRegistry[resourceId];
 
     // Check authentication
     if (!permissionContext.isAuthenticated) {
-      const result = { 
+      const result: PermissionResult = { 
         hasAccess: false, 
         deniedReason: 'User not authenticated' 
       };
@@ -89,57 +90,86 @@ export const usePermissions = () => {
       return result;
     }
 
-    // Check client ID if required
+    // Check environment restrictions
+    if (requirement.allowedEnvironments && requirement.allowedEnvironments.length > 0) {
+      const currentEnvironment = getEnvironment();
+      if (!requirement.allowedEnvironments.includes(currentEnvironment)) {
+        const result: PermissionResult = {
+          hasAccess: false,
+          deniedReason: `Resource not available in ${currentEnvironment} environment`
+        };
+        if (throwOnDenied) throw new Error(result.deniedReason);
+        return result;
+      }
+    }
+
+    // Check client access
     if (requirement.clientId) {
       const clientId = requirement.clientId;
-      const hasClientAccess = userPermissions?.groups.some(g => g.clientId.toString() === clientId);
+      const hasClientAccess = user.clientId.toString() === clientId;
       if (!hasClientAccess) {
-        const result = { 
+        const result: PermissionResult = { 
           hasAccess: false, 
           deniedReason: 'Client access denied',
-          deniedPermissions 
+          deniedPermissions: [] as string[]
         };
         if (throwOnDenied) throw new Error(result.deniedReason);
         return result;
       }
     }
 
-    // Check required permissions
-    if (requirement.requiredPermissions?.length) {
-      for (const permission of requirement.requiredPermissions) {
-        if (!permissionContext.roles.includes(permission)) {
-          deniedPermissions.push(permission);
-        }
-      }
+    // Check admin permissions - any matching admin role grants access
+    if (requirement.adminPermissions && requirement.adminPermissions.length > 0) {
+      const userRoles = permissionContext.roles;
+      const hasAdminRole = requirement.adminPermissions.some(role => userRoles.includes(role));
       
-      if (deniedPermissions.length > 0) {
-        const result = { 
+      if (hasAdminRole) {
+        const result: PermissionResult = { hasAccess: true };
+        if (cache.enabled) {
+          cacheRef.current.set(resourceId, { result, timestamp: Date.now() });
+        }
+        return result;
+      }
+    }
+
+    // Check roles
+    if (requirement.roles && requirement.roles.length > 0) {
+      const userRoles = permissionContext.roles;
+      const missingRoles = requirement.roles.filter((role: string) => !userRoles.includes(role));
+      
+      if (missingRoles.length > 0) {
+        const result: PermissionResult = { 
+          hasAccess: false, 
+          deniedReason: 'Missing required roles',
+          deniedPermissions: missingRoles 
+        };
+        if (throwOnDenied) throw new Error(result.deniedReason);
+        return result;
+      }
+    }
+
+    // Check permissions
+    if (requirement.permissions && requirement.permissions.length > 0) {
+      const userRoles = permissionContext.roles.map(role => `role:${role}`);
+      const missingPermissions = requirement.permissions.filter(
+        (permission: string) => !userRoles.includes(permission.toLowerCase())
+      );
+
+      if (requirement.requireAll && missingPermissions.length > 0) {
+        const result: PermissionResult = { 
           hasAccess: false, 
           deniedReason: 'Missing required permissions',
-          deniedPermissions 
+          deniedPermissions: missingPermissions 
         };
         if (throwOnDenied) throw new Error(result.deniedReason);
         return result;
       }
-    }
 
-    // Check custom validation if provided
-    if (requirement.customCheck) {
-      try {
-        const customResult = await requirement.customCheck();
-        if (!customResult) {
-          const result = { 
-            hasAccess: false, 
-            deniedReason: 'Custom validation failed' 
-          };
-          if (throwOnDenied) throw new Error(result.deniedReason);
-          return result;
-        }
-      } catch (error) {
-        console.error('Error in custom permission check:', error);
-        const result = { 
+      if (!requirement.requireAll && missingPermissions.length === requirement.permissions.length) {
+        const result: PermissionResult = { 
           hasAccess: false, 
-          deniedReason: 'Custom validation error' 
+          deniedReason: 'Missing required permissions',
+          deniedPermissions: missingPermissions 
         };
         if (throwOnDenied) throw new Error(result.deniedReason);
         return result;
@@ -147,7 +177,7 @@ export const usePermissions = () => {
     }
 
     // All checks passed
-    const result = { hasAccess: true };
+    const result: PermissionResult = { hasAccess: true };
     if (cache.enabled) {
       cacheRef.current.set(resourceId, { result, timestamp: Date.now() });
     }
