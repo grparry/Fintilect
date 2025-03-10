@@ -1,36 +1,41 @@
 import { IPermissionService } from '../../interfaces/IPermissionService';
 import {
+  User,
   Role,
   Group,
   GroupRole,
   UserGroup,
-  PaginatedResponse,
+  GroupListResponse,
+  RoleListResponse,
+  UserGroupListResponse,
+  GroupRoleListResponse,
 } from '../../../types/client.types';
 import { BaseService } from './BaseService';
 
 export class PermissionService extends BaseService implements IPermissionService {
-  constructor(basePath: string = '/api/v1/permissions') {
+  constructor(basePath: string = '/api') {
     super(basePath);
+    console.log('PermissionService initialized with base path:', basePath);
   }
 
-  async getRoles(): Promise<Role[]> {
-    return this.get<Role[]>('/roles');
+  async getRoles(): Promise<RoleListResponse> {
+    return this.get<RoleListResponse>('/Role');
   }
 
   async getRole(roleId: number): Promise<Role> {
-    return this.get<Role>(`/roles/${roleId}`);
+    return this.get<Role>(`/Role/${roleId}`);
   }
 
   async createRole(role: Omit<Role, 'id'>): Promise<Role> {
-    return this.post<Role>('/roles', role);
+    return this.post<Role>('/Role', role);
   }
 
   async updateRole(roleId: number, role: Partial<Role>): Promise<Role> {
-    return this.put<Role>(`/roles/${roleId}`, role);
+    return this.put<Role>(`/Role/${roleId}`, role);
   }
 
   async deleteRole(roleId: number): Promise<void> {
-    await this.delete(`/roles/${roleId}`);
+    await this.delete(`/Role/${roleId}`);
   }
 
   async getGroups(params?: {
@@ -38,51 +43,66 @@ export class PermissionService extends BaseService implements IPermissionService
     searchTerm?: string;
     page?: number;
     limit?: number;
-  }): Promise<PaginatedResponse<Group>> {
-    return this.get<PaginatedResponse<Group>>('/groups', { params });
+  }): Promise<GroupListResponse> {
+    try {
+      console.log('Calling getGroups with params:', params);
+      const groups = await this.get<Group[]>('/Group', { params });
+      console.log('Groups response:', groups);
+      return { groups };
+    } catch (error) {
+      console.error('Error in getGroups:', error);
+      throw error;
+    }
   }
 
   async getGroup(groupId: number): Promise<Group> {
-    return this.get<Group>(`/groups/${groupId}`);
+    return this.get<Group>(`/Group/${groupId}`);
   }
 
   async createGroup(group: Omit<Group, 'id' | 'createdAt' | 'updatedAt'>): Promise<Group> {
-    return this.post<Group>('/groups', group);
+    return this.post<Group>('/Group', group);
   }
 
   async updateGroup(groupId: number, group: Partial<Group>): Promise<Group> {
-    return this.put<Group>(`/groups/${groupId}`, group);
+    return this.put<Group>('/Group', group);
   }
 
   async deleteGroup(groupId: number): Promise<void> {
-    await this.delete(`/groups/${groupId}`);
+    await this.delete(`/Group/${groupId}`);
   }
 
-  async getGroupUsers(groupId: number): Promise<UserGroup[]> {
-    return this.get<UserGroup[]>(`/groups/${groupId}/users`);
+  async getGroupUsers(groupId: number): Promise<{ userGroups: UserGroup[] }> {
+    const users = await this.get<User[]>(`/UserGroup/group/${groupId}/users`);
+    return { userGroups: users.map(user => ({ userId: user.id, groupId })) };
   }
 
-  async getGroupRoles(groupId: number): Promise<GroupRole[]> {
-    return this.get<GroupRole[]>(`/groups/${groupId}/roles`);
+  async getGroupRoles(groupId: number): Promise<{ groupRoles: GroupRole[] }> {
+    // According to the API spec, the response should be a GroupRoleListResponse object
+    // with a groupRoles property that is an array of GroupRoleResponse objects
+    const response = await this.get<GroupRoleListResponse>(`/GroupRole/${groupId}`);
+    
+    // Return the response directly as it should already be in the correct format
+    return response;
   }
 
   async addGroupRoles(groupId: number, roleIds: number[]): Promise<void> {
-    await this.post(`/groups/${groupId}/roles`, { roleIds });
+    await Promise.all(roleIds.map(roleId => this.post('/GroupRole', { groupId, roleId })));
   }
 
   async removeGroupRoles(groupId: number, roleIds: number[]): Promise<void> {
-    await this.delete(`/groups/${groupId}/roles`, { data: { roleIds } });
+    await Promise.all(roleIds.map(roleId => this.delete(`/GroupRole/${groupId}/${roleId}`)));
   }
 
   async assignUserGroups(userId: number, groupIds: number[]): Promise<void> {
-    await this.post<void>(`/users/${userId}/groups`, { groupIds });
+    await Promise.all(groupIds.map(groupId => this.post('/UserGroup', { userId, groupId })));
   }
 
   async removeUserGroups(userId: number, groupIds: number[]): Promise<void> {
-    await this.delete(`/users/${userId}/groups`, { data: { groupIds } });
+    await Promise.all(groupIds.map(groupId => this.delete(`/UserGroup/${userId}/${groupId}`)));
   }
 
-  async getUserGroups(userId: number): Promise<UserGroup[]> {
-    return this.get<UserGroup[]>(`/users/${userId}/groups`);
+  async getUserGroups(userId: number): Promise<{ userGroups: UserGroup[] }> {
+    const groups = await this.get<Group[]>(`/UserGroup/user/${userId}/groups`);
+    return { userGroups: groups.map(group => ({ userId, groupId: group.id })) };
   }
 }

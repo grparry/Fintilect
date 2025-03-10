@@ -55,9 +55,25 @@ class ApiClient {
       }
     });
 
-    // Request interceptor: Transform to PascalCase for C# API
+    // Request interceptor: Add auth token and transform to PascalCase for C# API
     ApiClient.instance.interceptors.request.use(
       config => {
+        // Add auth token from session storage if available
+        const session = sessionStorage.getItem('auth_session');
+        if (session) {
+          try {
+            const { token } = JSON.parse(session);
+            if (token) {
+              if (!config.headers) {
+                config.headers = new axios.AxiosHeaders();
+              }
+              config.headers.set('Authorization', `Bearer ${token}`);
+            }
+          } catch (e) {
+            logger.error('Failed to parse auth session:', e);
+          }
+        }
+
         if (config.data) {
           config.data = transformKeys(config.data, true);
         }

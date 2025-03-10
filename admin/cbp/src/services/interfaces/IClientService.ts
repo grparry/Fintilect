@@ -8,7 +8,7 @@ import {
     ClientApiKey,
     ClientContact,
     ClientService,
-    PaginatedResponse,
+    ClientListResponse,
     User,
     UserGroup,
     SecuritySettings,
@@ -33,7 +33,7 @@ export interface IClientService extends IBaseService {
         searchTerm?: string;
         page?: number;
         limit?: number;
-    }): Promise<PaginatedResponse<Client>>;
+    }): Promise<ClientListResponse>;
 
     /**
      * Get specific client

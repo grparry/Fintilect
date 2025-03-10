@@ -15,7 +15,15 @@ export class GlobalPayeeService extends BaseService implements IGlobalPayeeServi
   }
 
   async getFisPayee(request: FisPayeeRequest): Promise<FisPayeeResponse> {
-    return this.post<FisPayeeResponse>('/fis-payee', request);
+    try {
+      return await this.post<FisPayeeResponse>('/fis-payee', request);
+    } catch (error: any) {
+      // Handle 409 Conflict specifically for FIS payee endpoint
+      if (error?.response?.status === 409 || (error?.message && error?.message.includes('409'))) {
+        throw new Error('No matching FIS payee found. Please verify the information provided.');
+      }
+      throw error;
+    }
   }
 
   async getPayees(filters?: { clientId?: string; status?: PaymentStatus; type?: PaymentMethod; searchTerm?: string; }): Promise<PaginatedResponse<Payee>> {

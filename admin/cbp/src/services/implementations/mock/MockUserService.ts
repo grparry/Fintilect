@@ -1,5 +1,5 @@
 import { IUserService } from '../../interfaces/IUserService';
-import { User, UserGroup, PaginatedResponse } from '../../../types/client.types';
+import { User, UserGroup, UserListResponse } from '../../../types/client.types';
 import { BaseMockService } from './BaseMockService';
 
 export class MockUserService extends BaseMockService implements IUserService {
@@ -26,7 +26,11 @@ export class MockUserService extends BaseMockService implements IUserService {
       username: 'john.doe',
       email: 'john.doe@example.com',
       mobilePhone: '123-456-7890',
-      externalId: 'external-id-1'
+      externalId: 'external-id-1',
+      invalidAttempts: 0,
+      forcePasswordChange: false,
+      outSystemsPassword: null,
+      clientName: 'Example Client'
     });
 
     this.users.set(2, {
@@ -42,7 +46,11 @@ export class MockUserService extends BaseMockService implements IUserService {
       username: 'jane.smith',
       email: 'jane.smith@example.com',
       mobilePhone: '987-654-3210',
-      externalId: 'external-id-2'
+      externalId: 'external-id-2',
+      invalidAttempts: 0,
+      forcePasswordChange: false,
+      outSystemsPassword: null,
+      clientName: 'Example Client'
     });
 
     // Add mock group assignments
@@ -65,12 +73,7 @@ export class MockUserService extends BaseMockService implements IUserService {
     searchTerm?: string;
     page?: number;
     limit?: number;
-  }): Promise<PaginatedResponse<User>> {
-    const page = params?.page || 1;
-    const limit = params?.limit || 10;
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-
+  }): Promise<UserListResponse> {
     let filteredUsers = Array.from(this.users.values()).filter(user => {
       if (params?.clientId && user.clientId !== params.clientId) return false;
       if (params?.isActive !== undefined && user.isActive !== params.isActive) return false;
@@ -83,16 +86,8 @@ export class MockUserService extends BaseMockService implements IUserService {
       return true;
     });
 
-    const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
-    const total = filteredUsers.length;
-    const totalPages = Math.ceil(total / limit);
-
     return {
-      items: paginatedUsers,
-      total,
-      page,
-      limit,
-      totalPages
+      users: filteredUsers
     };
   }
 
@@ -115,7 +110,11 @@ export class MockUserService extends BaseMockService implements IUserService {
       email: user.email,
       mobilePhone: user.mobilePhone,
       externalId: user.externalId,
-      password: user.password
+      password: user.password,
+      invalidAttempts: user.invalidAttempts || 0,
+      forcePasswordChange: user.forcePasswordChange || false,
+      outSystemsPassword: user.outSystemsPassword || null,
+      clientName: user.clientName || null
     };
 
     this.users.set(newId, newUser);
@@ -140,7 +139,11 @@ export class MockUserService extends BaseMockService implements IUserService {
       email: user.email || existingUser.email,
       mobilePhone: user.mobilePhone || existingUser.mobilePhone,
       externalId: user.externalId || existingUser.externalId,
-      password: user.password || existingUser.password
+      password: user.password || existingUser.password,
+      invalidAttempts: user.invalidAttempts ?? existingUser.invalidAttempts,
+      forcePasswordChange: user.forcePasswordChange ?? existingUser.forcePasswordChange,
+      outSystemsPassword: user.outSystemsPassword || existingUser.outSystemsPassword,
+      clientName: user.clientName || existingUser.clientName
     };
 
     this.users.set(userId, updatedUser);
@@ -162,5 +165,79 @@ export class MockUserService extends BaseMockService implements IUserService {
       userId: user.id,
       groupId
     }));
+  }
+
+  async lockUser(userId: number): Promise<User> {
+    const user = await this.getUser(userId);
+    
+    // Set the user as locked
+    const updatedUser: User = {
+      ...user,
+      isLocked: true
+    };
+    
+    this.users.set(userId, updatedUser);
+    return updatedUser;
+  }
+
+  async unlockUser(userId: number): Promise<User> {
+    const user = await this.getUser(userId);
+    
+    // Set the user as unlocked
+    const updatedUser: User = {
+      ...user,
+      isLocked: false
+    };
+    
+    this.users.set(userId, updatedUser);
+    return updatedUser;
+  }
+
+  async changePassword(params: {
+    userId: number;
+    currentPassword: string;
+    newPassword: string;
+  }): Promise<void> {
+    const user = await this.getUser(params.userId);
+    
+    // Verify current password
+    if (user.password !== params.currentPassword) {
+      throw this.createError('Current password is incorrect', 401);
+    }
+    
+    // Update password and reset forcePasswordChange flag
+    const updatedUser: User = {
+      ...user,
+      password: params.newPassword,
+      forcePasswordChange: false
+    };
+    
+    this.users.set(params.userId, updatedUser);
+  }
+
+  /**
+   * Reset user password (admin function)
+   * @param params Parameters for password reset
+   * @remarks The real implementation sends only newPassword as a query parameter, not in the body.
+   * According to the OpenAPI spec, forcePasswordChange is set automatically by the API.
+   */
+  async resetPassword(params: {
+    userId: number;
+    newPassword: string;
+    forcePasswordChange?: boolean;
+  }): Promise<void> {
+    const user = await this.getUser(params.userId);
+    
+    // Update password and set forcePasswordChange flag
+    // In the real implementation, only newPassword is passed as a query parameter
+    // forcePasswordChange is automatically set by the API
+    const updatedUser: User = {
+      ...user,
+      password: params.newPassword,
+      // Always set forcePasswordChange to true to match the API's automatic behavior
+      forcePasswordChange: true
+    };
+    
+    this.users.set(params.userId, updatedUser);
   }
 }

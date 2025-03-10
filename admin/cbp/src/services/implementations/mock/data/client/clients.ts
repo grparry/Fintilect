@@ -14,8 +14,8 @@ export const paymentMethodOptions: PaymentMethod[] = [
 ];
 
 export const environmentOptions: Environment[] = [
-  Environment.Production,
-  Environment.Development
+  'PRODUCTION',
+  'DEVELOPMENT'
 ];
 
 export { mockClients } from './mockClientData';

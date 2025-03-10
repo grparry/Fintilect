@@ -9,7 +9,10 @@ import {
   UpdateAccountAndRefund,
   UpdateFisPayeeIdAndRefundRequest,
   ManualUpdateRequest,
-  CopyMemberPayeesRequest
+  CopyMemberPayeesRequest,
+  UserPayeeListResponse,
+  GlobalPayeeChangeHistoryReportRequest,
+  GlobalPayeeChangeHistoryListResponse
 } from '../../../types/payees.types';
 
 export class PayeeService extends BaseService implements IPayeeService {
@@ -47,5 +50,13 @@ export class PayeeService extends BaseService implements IPayeeService {
 
   async copyMemberPayees(request: CopyMemberPayeesRequest): Promise<void> {
     await this.post<void>('/copy-payees', request);
+  }
+
+  async getMemberPayees(memberId: string): Promise<UserPayeeListResponse> {
+    return this.get<UserPayeeListResponse>(`/member/${memberId}`);
+  }
+
+  async getGlobalPayeeChangeHistory(request: GlobalPayeeChangeHistoryReportRequest): Promise<GlobalPayeeChangeHistoryListResponse> {
+    return this.post<GlobalPayeeChangeHistoryListResponse>('/global/change-history', request);
   }
 }

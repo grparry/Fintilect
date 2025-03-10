@@ -14,7 +14,12 @@ export const mockUsers: User[] = [
     lastName: 'Doe',
     department: 'Engineering',
     isLocked: false,
-    password: 'Admin@123!Secure'
+    password: 'Admin@123!Secure',
+    invalidAttempts: 0,
+    forcePasswordChange: false,
+    outSystemsPassword: null,
+    clientName: 'Acme Corporation',
+    email: 'john.doe@acme.com'
   },
   {
     id: 2,
@@ -29,6 +34,11 @@ export const mockUsers: User[] = [
     lastName: 'Smith',
     department: 'Finance',
     isLocked: false,
-    password: 'Admin@123!Secure'
+    password: 'Admin@123!Secure',
+    invalidAttempts: 0,
+    forcePasswordChange: false,
+    outSystemsPassword: null,
+    clientName: 'Acme Corporation',
+    email: 'jane.smith@acme.com'
   }
 ];

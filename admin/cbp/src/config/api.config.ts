@@ -6,7 +6,7 @@ export const API_CONFIG = {
   // Base URLs for different services
   urls: {
     admin: process.env.REACT_APP_ADMIN_API_URL || 'https://localhost:4501',
-    adminCu: process.env.REACT_APP_ADMIN_CU_API_URL || 'https://localhost:8001/api/admin-cu'
+    adminCu: process.env.REACT_APP_ADMIN_CU_API_URL || 'https://localhost:8001'
   },
   
   // API Versions
@@ -25,20 +25,20 @@ export const API_CONFIG = {
     // Service-specific mock overrides
     mockOverrides: {
       auth: process.env.REACT_APP_MOCK_AUTH_SERVICE === 'false',
-      user: process.env.REACT_APP_MOCK_USER_SERVICE === 'true',
-      client: process.env.REACT_APP_MOCK_CLIENT_SERVICE === 'true',
-      billPay: process.env.REACT_APP_MOCK_BILLPAY_SERVICE === 'true',
+      user: process.env.REACT_APP_MOCK_USER_SERVICE === 'false',
+      client: process.env.REACT_APP_MOCK_CLIENT_SERVICE === 'false',
+      billPay: process.env.REACT_APP_MOCK_BILLPAY_SERVICE === 'false',
       security: process.env.REACT_APP_MOCK_SECURITY_SERVICE === 'true',
       notification: process.env.REACT_APP_MOCK_NOTIFICATION_SERVICE === 'true',
       exception: process.env.REACT_APP_MOCK_EXCEPTION_SERVICE === 'true',
       fisException: process.env.REACT_APP_MOCK_FIS_EXCEPTION_SERVICE === 'true',
-      globalPayee: process.env.REACT_APP_MOCK_PAYEE_SERVICE === 'true',
-      payee: process.env.REACT_APP_MOCK_PAYEE_SERVICE === 'true',
+      globalPayee: process.env.REACT_APP_MOCK_PAYEE_SERVICE === 'false',
+      payee: process.env.REACT_APP_MOCK_PAYEE_SERVICE === 'false',
       paymentProcessor: process.env.REACT_APP_MOCK_PAYMENT_PROCESSOR_SERVICE === 'true',
       payment: process.env.REACT_APP_MOCK_PAYMENT_SERVICE === 'true',
       report: process.env.REACT_APP_MOCK_REPORT_SERVICE === 'true',
       holiday: process.env.REACT_APP_MOCK_HOLIDAY_SERVICE === 'true',
-      permission: process.env.REACT_APP_MOCK_PERMISSION_SERVICE === 'true',
+      permission: process.env.REACT_APP_MOCK_PERMISSION_SERVICE === 'false',
       dashboard: process.env.REACT_APP_MOCK_DASHBOARD_SERVICE === 'true',
       audit: process.env.REACT_APP_MOCK_AUDIT_SERVICE === 'true',
       member: process.env.REACT_APP_MOCK_MEMBER_SERVICE === 'true',

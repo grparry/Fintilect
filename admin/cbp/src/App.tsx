@@ -11,6 +11,7 @@ import { ServiceProvider } from './providers/ServiceProvider';
 import MainLayout from './components/layout/MainLayout';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import LoginPage from './components/auth/LoginPage';
+import PasswordChangePage from './components/auth/PasswordChangePage';
 import NotFound from './components/common/NotFound';
 import { getAllRoutes } from './routes';
 import { RouteConfig } from './types/route.types';
@@ -169,6 +170,9 @@ const App: React.FC = () => {
                           {/* Public routes */}
                           <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
                           <Route path="/unauthorized" element={<PublicRoute><NotFound message="You are not authorized to access this resource." /></PublicRoute>} />
+                          
+                          {/* Password change route - protected but outside admin layout */}
+                          <Route path="/admin/change-password" element={<ProtectedRoute><PasswordChangePage /></ProtectedRoute>} />
                           
                           {/* Root redirect - only go to admin if on admin hostname */}
                           <Route index element={<RootRedirect />} />

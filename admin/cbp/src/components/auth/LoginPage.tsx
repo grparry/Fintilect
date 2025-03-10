@@ -8,7 +8,7 @@ import {
   Alert,
 } from '@mui/material';
 import Form, { FormField } from '../../components/common/Form';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth, PASSWORD_CHANGE_PATH } from '../../context/AuthContext';
 import { LoginFormData, LoginCredentials } from '../../types/auth.types';
 import { ApiError } from '../../types/exception.types';
 import { getTenantFromHostname } from '../../config/host.config';
@@ -65,10 +65,17 @@ const LoginPage: React.FC = () => {
       };
       console.log('LoginPage: Prepared credentials:', { ...credentials, password: '[REDACTED]' });
       console.log('LoginPage: Calling login function');
-      await login(credentials);
-      console.log('LoginPage: Login successful');
-      console.log('LoginPage: Navigating to: /admin');
-      navigate('/admin');
+      const { forcePasswordChange } = await login(credentials);
+      console.log('LoginPage: Login successful, forcePasswordChange:', forcePasswordChange);
+      
+      // Check if user needs to change password
+      if (forcePasswordChange) {
+        console.log('LoginPage: User must change password, redirecting to password change page');
+        navigate(PASSWORD_CHANGE_PATH);
+      } else {
+        console.log('LoginPage: Navigating to: /admin');
+        navigate('/admin');
+      }
     } catch (err) {
       console.error('LoginPage: Login failed with error:', err);
       console.error('LoginPage: Error details:', {

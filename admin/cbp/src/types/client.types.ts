@@ -6,52 +6,65 @@ import type { PasswordPolicy, SecuritySettings } from './security.types';
 export type PaymentMethod = 'ACH' | 'Wire' | 'RTP' | 'Check';
 
 // Environment Types
-export enum Environment {
-  Production = 'PRODUCTION',
-  Staging = 'STAGING',
-  Development = 'DEVELOPMENT'
-}
+export type Environment = 'PRODUCTION' | 'STAGING' | 'DEVELOPMENT';
 
 // Client Types
-export enum ClientType {
-  Enterprise = 'ENTERPRISE',
-  SMB = 'SMB',
-  Startup = 'STARTUP',
-  Business = 'business',
-  Personal = 'personal',
-  Standard = 'STANDARD',
-  Premium = 'PREMIUM'
-}
+export type ClientType = 'ENTERPRISE' | 'SMB' | 'STARTUP' | 'STANDARD';
 
-export enum ClientStatus {
-  Active = 'ACTIVE',
-  Inactive = 'INACTIVE',
-  Suspended = 'SUSPENDED',
-  active = 'active',
-  inactive = 'inactive',
-  pending = 'pending',
-  Pending = 'PENDING'
-}
+// Client Status Types
+export type ClientStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
 
 export interface Client {
   id: number;
-  externalId?: string;
-  name: string;
+  name: string | null;
   tenantId: number;
   isActive: boolean;
   createdOn: string;
-  updatedOn?: string;
-  type: ClientType;
-  status: ClientStatus;
-  environment: Environment;
-  domain?: string;
-  contactName?: string;
-  contactEmail?: string;
-  contactPhone?: string;
-  sponsorId?: string;
-  routingId?: string;
-  require2fa: boolean;
-  logoUrl?: string;
+  updatedOn: string | null;
+  type: string | null;
+  status: string | null;
+  environment: string | null;
+  domain: string | null;
+  sponsorId: number | null;
+  routingId: string | null;
+  require2FA: boolean;
+  logoUrl: string | null;
+}
+
+export interface ClientUpdateRequest {
+  /** @maxLength 255 @minLength 0 */
+  name: string;
+  /** @maxLength 255 @minLength 0 */
+  domain: string;
+  /** @maxLength 50 @minLength 0 */
+  environment: string;
+  /** @maxLength 50 @minLength 0 */
+  type: string;
+  /** @maxLength 50 @minLength 0 */
+  status: string;
+  isActive?: boolean;
+  tenantId?: number;
+}
+
+export interface ClientAddRequest {
+  /** @maxLength 255 @minLength 0 */
+  name: string;
+  /** @maxLength 255 @minLength 0 */
+  domain: string;
+  /** @maxLength 50 @minLength 0 */
+  environment: string;
+  /** @maxLength 50 @minLength 0 */
+  type: string;
+  /** @maxLength 50 @minLength 0 */
+  status: string;
+  tenantId?: number;
+  isActive?: boolean;
+}
+
+export interface ClientAuthenticationRequest {
+  username: string;
+  password: string;
+  clientId: number;
 }
 
 /**
@@ -73,6 +86,10 @@ export interface User {
   department?: string;
   isLocked: boolean;
   password?: string;
+  invalidAttempts?: number;
+  forcePasswordChange?: boolean;
+  outSystemsPassword?: string;
+  clientName?: string;
 }
 
 // Client Configuration Types
@@ -104,12 +121,30 @@ export interface ClientApiKey {
 export interface ClientContact {
   id: number;
   clientId: number;
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  isPrimary: boolean;
+  createdOn: string;
+  updatedOn: string | null;
+  isActive: boolean;
+}
+
+export interface ClientContactAddRequest {
+  clientId: number;
   name: string;
   email: string;
-  phone: string;
-  role: string;
+  phone?: string;
   isPrimary: boolean;
-  lastModified: string;
+}
+
+export interface ClientContactUpdateRequest {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  isPrimary: boolean;
+  isActive: boolean;
 }
 
 // Client Service Types
@@ -163,9 +198,10 @@ export interface Role {
 export interface Group {
   id: number;
   name?: string;
+  description?: string;
   clientId: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface GroupRole {
@@ -231,10 +267,27 @@ export interface Contact {
 }
 
 // List Response Types
-export type ClientListResponse = PaginatedResponse<Client>;
-export type UserListResponse = PaginatedResponse<User>;
-export type GroupListResponse = PaginatedResponse<UserGroup>;
-export type RoleListResponse = PaginatedResponse<SecurityRole>;
+export interface ClientListResponse {
+  clients: Client[] | null;
+}
+export type _ClientListResponse = PaginatedResponse<Client>;
+export interface UserListResponse {
+  users: User[];
+}
+export interface GroupListResponse {
+  groups: Group[];
+}
+export interface RoleListResponse {
+  roles: Role[];
+}
+
+export interface UserGroupListResponse {
+  userGroups: UserGroup[];
+}
+
+export interface GroupRoleListResponse {
+  groupRoles: GroupRole[];
+}
 
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'system';

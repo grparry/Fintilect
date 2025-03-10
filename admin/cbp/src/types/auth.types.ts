@@ -17,6 +17,7 @@ export interface AuthState {
   loading: boolean;
   error: string | null;
   userPermissions: UserPermissions | null;
+  forcePasswordChange: boolean;
 }
 
 export interface LoginResponse {
@@ -30,10 +31,12 @@ export interface AuthContextType {
   loading: boolean;
   error: string | null;
   userPermissions: UserPermissions | null;
-  login: (credentials: LoginCredentials) => Promise<void>;
+  forcePasswordChange: boolean;
+  login: (credentials: LoginCredentials) => Promise<{ forcePasswordChange: boolean }>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<void>;
   clearError: () => void;
+  updateForcePasswordChange: (value: boolean) => void;
 }
 
 export interface ProtectedRouteProps {

@@ -87,15 +87,15 @@ export class ServiceFactory {
     // User Service
     this.services.set('user', 
       shouldUseMockService('user')
-        ? new MockUserService(ServiceFactory.getAdminEndpoint('/users'))
-        : new UserService(ServiceFactory.getAdminEndpoint('/users'))
+        ? new MockUserService(ServiceFactory.getAdminEndpoint('/api'))
+        : new UserService(ServiceFactory.getAdminEndpoint('/api'))
     );
 
     // Client Service
     this.services.set('client',
       shouldUseMockService('client')
-        ? new MockClientService(ServiceFactory.getAdminEndpoint('/clients'))
-        : new ClientService(ServiceFactory.getAdminEndpoint('/clients'))
+        ? new MockClientService(ServiceFactory.getAdminEndpoint('/api'))
+        : new ClientService(ServiceFactory.getAdminEndpoint('/api'))
     );
 
     // BillPay Service
@@ -123,7 +123,7 @@ export class ServiceFactory {
     this.services.set('notification',
       shouldUseMockService('notification')
         ? new MockNotificationService(ServiceFactory.getAdminEndpoint('/notifications'))
-        : new NotificationService(ServiceFactory.getAdminEndpoint('/notifications'))
+        : new NotificationService(ServiceFactory.getAdminCuEndpoint('/api/v1/Notification'))
     );
 
     // Exception Service
@@ -144,14 +144,14 @@ export class ServiceFactory {
     this.services.set('globalPayee',
       shouldUseMockService('globalPayee')
         ? new MockGlobalPayeeService(ServiceFactory.getAdminEndpoint('/payees'))
-        : new GlobalPayeeService(ServiceFactory.getAdminEndpoint('/payees'))
+        : new GlobalPayeeService(ServiceFactory.getAdminEndpoint('/api/v1/Payee'))
     );
 
     // User Payee Service
     this.services.set('payee',
       shouldUseMockService('payee')
         ? new MockPayeeService(ServiceFactory.getAdminEndpoint('/payees'))
-        : new PayeeService(ServiceFactory.getAdminEndpoint('/payees'))
+        : new PayeeService(ServiceFactory.getAdminCuEndpoint('/api/v1/Payee'))
     );
 
     // Payment Processor Service
@@ -165,28 +165,28 @@ export class ServiceFactory {
     this.services.set('payment',
       shouldUseMockService('payment')
         ? new MockPaymentService(ServiceFactory.getAdminEndpoint('/payments'))
-        : new PaymentService(ServiceFactory.getAdminEndpoint('/payments'))
+        : new PaymentService(ServiceFactory.getAdminCuEndpoint('/api/v1/Payment'))
     );
 
     // Report Service
     this.services.set('report',
       shouldUseMockService('report')
         ? new MockReportService(ServiceFactory.getAdminEndpoint('/reports'))
-        : new ReportService(ServiceFactory.getAdminEndpoint('/reports'))
+        : new ReportService(ServiceFactory.getAdminCuEndpoint('/api/v1/Report'))
     );
 
     // Holiday Service
     this.services.set('holiday',
       shouldUseMockService('holiday')
         ? new MockHolidayService(ServiceFactory.getAdminEndpoint('/holidays'))
-        : new HolidayService(ServiceFactory.getAdminEndpoint('/holidays'))
+        : new HolidayService(ServiceFactory.getAdminCuEndpoint('/api/v1/Calendar/holiday'))
     );
 
     // Permission Service
     this.services.set('permission',
       shouldUseMockService('permission')
-        ? new MockPermissionService(ServiceFactory.getAdminEndpoint('/permissions'))
-        : new PermissionService(ServiceFactory.getAdminEndpoint('/permissions'))
+        ? new MockPermissionService(ServiceFactory.getAdminEndpoint('/api'))
+        : new PermissionService(ServiceFactory.getAdminEndpoint('/api'))
     );
 
     // Dashboard Service

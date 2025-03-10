@@ -9,7 +9,7 @@ import {
     ClientApiKey,
     ClientContact,
     ClientService as ClientServiceType,
-    PaginatedResponse,
+    ClientListResponse,
     User,
     UserGroup,
     Group
@@ -48,7 +48,7 @@ export class MockClientService extends BaseMockService implements IClientService
                     id: 1,
                     clientId: id,
                     keyName: 'Production API Key',
-                    environment: Environment.Production,
+                    environment: 'PRODUCTION',
                     createdAt: '2025-01-01T00:00:00Z',
                     expiresAt: '2026-01-01T00:00:00Z',
                     lastUsed: '2025-02-21T00:00:00Z',
@@ -64,9 +64,10 @@ export class MockClientService extends BaseMockService implements IClientService
                     name: 'John Doe',
                     email: 'john.doe@example.com',
                     phone: '555-0123',
-                    role: 'Primary',
                     isPrimary: true,
-                    lastModified: new Date().toISOString()
+                    createdOn: '2025-01-01T00:00:00Z',
+                    updatedOn: null,
+                    isActive: true
                 }
             ]);
 
@@ -105,7 +106,7 @@ export class MockClientService extends BaseMockService implements IClientService
         searchTerm?: string;
         page?: number;
         limit?: number;
-    }): Promise<PaginatedResponse<Client>> {
+    }): Promise<ClientListResponse> {
         let filteredClients = Array.from(this.clients.values());
 
         if (params) {
@@ -128,25 +129,14 @@ export class MockClientService extends BaseMockService implements IClientService
                 const search = params.searchTerm.toLowerCase();
                 filteredClients = filteredClients.filter(c =>
                     c.name.toLowerCase().includes(search) ||
-                    (c.domain?.toLowerCase() || '').includes(search) ||
-                    (c.contactName?.toLowerCase() || '').includes(search)
+                    (c.domain?.toLowerCase() || '').includes(search)
                 );
             }
         }
 
-        const page = params?.page || 1;
-        const limit = params?.limit || 10;
-        const start = (page - 1) * limit;
-        const end = start + limit;
-        const items = filteredClients.slice(start, end);
-        const total = filteredClients.length;
-
+        // Note: We're ignoring pagination parameters since the real API doesn't support them
         return {
-            items,
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit)
+            clients: filteredClients
         };
     }
 
@@ -303,10 +293,14 @@ export class MockClientService extends BaseMockService implements IClientService
         const contacts = this.contacts.get(clientId) || [];
         const newId = Math.max(...contacts.map(c => c.id), 0) + 1;
 
+        const now = new Date().toISOString();
         const newContact: ClientContact = {
             ...contact,
             id: newId,
-            clientId: clientId
+            clientId: clientId,
+            createdOn: now,
+            updatedOn: null,
+            isActive: true
         };
 
         contacts.push(newContact);

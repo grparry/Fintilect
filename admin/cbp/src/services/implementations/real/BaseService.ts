@@ -15,15 +15,33 @@ export class BaseService implements IBaseService {
    */
   protected extractData<T>(response: AxiosResponse<ApiResponse<T>>): T {
     const apiResponse = response.data;
+    logger.info({
+      message: 'Extracting data from response',
+      responseType: typeof apiResponse,
+      hasSuccess: apiResponse && typeof apiResponse === 'object' && 'success' in apiResponse,
+      keys: apiResponse && typeof apiResponse === 'object' ? Object.keys(apiResponse) : [],
+      apiResponse
+    });
+
     // If it's a wrapped success response
-    if ((apiResponse as ApiSuccessResponse<T>).success === true) {
-      return (apiResponse as ApiSuccessResponse<T>).data;
-    }
-    // If it's a wrapped error response
-    if ((apiResponse as ApiErrorResponse).success === false) {
-      throw this.handleError(apiResponse as ApiErrorResponse);
+    if (apiResponse && typeof apiResponse === 'object' && 'success' in apiResponse) {
+      if ((apiResponse as ApiSuccessResponse<T>).success === true) {
+        logger.info({ message: 'Found success wrapper, returning data' });
+        return (apiResponse as ApiSuccessResponse<T>).data;
+      }
+      // If it's a wrapped error response
+      if ((apiResponse as ApiErrorResponse).success === false) {
+        logger.info({ message: 'Found error wrapper, throwing error' });
+        throw this.handleError(apiResponse as ApiErrorResponse);
+      }
     }
     // If it's a direct response
+    logger.info({
+      message: 'Using direct response',
+      responseData: apiResponse,
+      responseDataType: typeof apiResponse,
+      responseDataKeys: apiResponse && typeof apiResponse === 'object' ? Object.keys(apiResponse) : []
+    });
     return apiResponse as T;
   }
 
@@ -31,6 +49,11 @@ export class BaseService implements IBaseService {
    * Handle API errors consistently
    */
   protected handleError(error: AxiosError | ApiErrorResponse): Error {
+    logger.info({
+      message: 'Handling error',
+      errorType: error.constructor.name,
+      error
+    });
     // If it's an Axios error
     if ((error as AxiosError).isAxiosError) {
       const axiosError = error as AxiosError<ApiErrorResponse>;
@@ -81,6 +104,12 @@ export class BaseService implements IBaseService {
     try {
       const url = `${this.basePath}${path}`;
       const response = await api.get<ApiResponse<T>>(url, config);
+      logger.info('Raw API Response', JSON.stringify({
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+        data: response.data
+      }));
       return this.extractData(response);
     } catch (error) {
       throw this.handleError(error as AxiosError);

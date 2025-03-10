@@ -33,8 +33,13 @@ import {
   DataGrid, 
   GridColDef, 
   GridRenderCellParams,
-  GridValueFormatter 
+  GridValueFormatter,
+  gridPageCountSelector,
+  gridPageSelector,
+  useGridApiContext,
+  useGridSelector
 } from '@mui/x-data-grid';
+import Pagination from '@mui/material/Pagination';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -50,7 +55,7 @@ import {
   GroupRole,
   Permission
 } from '../../types/client.types';
-import { PaginatedResponse } from '../../types/common.types';
+// Removed PaginatedResponse import as it's not used with the service layer
 import { clientService, userService, permissionService } from '../../services/factory/ServiceFactory';
 import { useNavigate } from 'react-router-dom';
 import { encodeId } from '../../utils/idEncoder';
@@ -75,9 +80,6 @@ interface State {
   users: User[];
   selectedGroup: Group | null;
   isFormOpen: boolean;
-  page: number;
-  limit: number;
-  total: number;
 }
 
 const initialState: State = {
@@ -88,10 +90,7 @@ const initialState: State = {
   groups: [],
   users: [],
   selectedGroup: null,
-  isFormOpen: false,
-  page: 1,
-  limit: 10,
-  total: 0
+  isFormOpen: false
 };
 
 export default function Groups({ clientId }: GroupsProps) {
@@ -108,19 +107,115 @@ export default function Groups({ clientId }: GroupsProps) {
   );
 
   const loadGroups = useCallback(async () => {
+    console.log('loadGroups called with clientId: %d', clientId);
     if (!clientId) return;
     try {
+      console.log('Setting loading state to true');
       setState(prev => ({ ...prev, loading: true }));
+      console.log('About to call permissionService.getGroups');
+      console.log('permissionService object:', permissionService);
       const response = await permissionService.getGroups({
-        clientId: Number(clientId),
-        page: state.page,
-        limit: state.limit
+        clientId: Number(clientId)
       });
+      console.log('Response from getGroups:', response);
+      console.log('Groups data type:', Array.isArray(response.groups) ? 'array' : typeof response.groups);
+      
+      // Ensure we have an array of groups
+      let groupsArray: Group[] = [];
+      
+      // Define the possible response structure types
+      interface NestedGroupsResponse {
+        groups?: {
+          groups?: Group[];
+          [key: string]: any;
+        };
+      }
+      
+      // Special handling for the nested structure we've discovered
+      const typedResponse = response as NestedGroupsResponse;
+      if (typedResponse.groups && 
+          'groups' in typedResponse.groups && 
+          Array.isArray(typedResponse.groups.groups)) {
+        // Direct access to the nested groups array
+        groupsArray = typedResponse.groups.groups;
+        console.log('Extracted nested groups array with length:', groupsArray.length);
+      } else if (Array.isArray(typedResponse.groups)) {
+        // Standard array handling
+        groupsArray = typedResponse.groups as unknown as Group[];
+        console.log('Response groups is an array with length:', groupsArray.length);
+      } else if (typedResponse.groups && typeof typedResponse.groups === 'object') {
+        console.log('Response groups is an object with keys:', Object.keys(typedResponse.groups));
+        
+        // Check if the first item is an array (as we discovered in the logs)
+        const firstValue = Object.values(typedResponse.groups)[0];
+        if (Array.isArray(firstValue)) {
+          groupsArray = firstValue as Group[];
+          console.log('Extracted array from first value with length:', groupsArray.length);
+        } else {
+          // Standard object to array conversion
+          groupsArray = Object.values(typedResponse.groups) as unknown as Group[];
+          console.log('Converted object to array with length:', groupsArray.length);
+        }
+      } else {
+        console.log('Could not process response.groups, defaulting to empty array');
+      }
+      
+      // Check for duplicate IDs
+      const idMap = new Map<number, Group>();
+      interface DuplicateIdInfo {
+        id: number;
+        firstGroup: Group;
+        duplicateGroup: Group;
+      }
+      const duplicateIds: DuplicateIdInfo[] = [];
+      
+      groupsArray.forEach(group => {
+        if (group && group.id !== undefined) {
+          if (idMap.has(group.id)) {
+            duplicateIds.push({
+              id: group.id,
+              firstGroup: idMap.get(group.id),
+              duplicateGroup: group
+            });
+          } else {
+            idMap.set(group.id, group);
+          }
+        }
+      });
+      
+      // Check for missing or invalid IDs
+      const groupsWithoutIds = groupsArray.filter(group => group.id === undefined || group.id === null);
+      const groupsWithZeroIds = groupsArray.filter(group => group.id === 0);
+      
+      if (groupsWithoutIds.length > 0) {
+        console.error('Found groups without IDs:', groupsWithoutIds);
+      }
+      
+      if (groupsWithZeroIds.length > 0) {
+        console.warn('Found groups with ID=0:', groupsWithZeroIds);
+      }
+      
+      // Log the first few items to inspect their structure
+      console.log('First 3 items in groupsArray:');
+      for (let i = 0; i < Math.min(3, groupsArray.length); i++) {
+        console.log(`Item ${i}:`, groupsArray[i]);
+        if (Array.isArray(groupsArray[i])) {
+          console.warn(`Item ${i} is itself an array!`);
+        }
+      }
+      
+      if (duplicateIds.length > 0) {
+        console.error('Found duplicate IDs in groups array:', duplicateIds);
+      } else {
+        console.log('No duplicate IDs found in groups array');
+      }
+      
+      console.log('Processed groups array:', groupsArray);
+      
       setState(prev => ({
         ...prev,
         loading: false,
-        groups: response.items,
-        total: response.total
+        groups: groupsArray
       }));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to load groups';
@@ -130,7 +225,7 @@ export default function Groups({ clientId }: GroupsProps) {
         error: message
       }));
     }
-  }, [clientId, state.page, state.limit]);
+  }, [clientId]);
 
   const loadUsers = useCallback(async () => {
     if (!clientId) return;
@@ -140,7 +235,7 @@ export default function Groups({ clientId }: GroupsProps) {
         page: 1,
         limit: 100
       });
-      setState(prev => ({ ...prev, users: response.items }));
+      setState(prev => ({ ...prev, users: response.users }));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to load users';
       setState(prev => ({ ...prev, error: message }));
@@ -149,8 +244,8 @@ export default function Groups({ clientId }: GroupsProps) {
 
   const loadRoles = useCallback(async () => {
     try {
-      const roles = await permissionService.getRoles();
-      setRoles(roles);
+      const response = await permissionService.getRoles();
+      setRoles(response.roles);
     } catch (error) {
       setState(prev => ({ 
         ...prev, 
@@ -165,6 +260,7 @@ export default function Groups({ clientId }: GroupsProps) {
       setState(prev => ({ ...prev, saving: true, error: null }));
       const newGroup = {
         name: formData.name || 'New Group',
+        description: formData.description || '',
         clientId: Number(clientId),
       };
       await permissionService.createGroup(newGroup);
@@ -188,7 +284,21 @@ export default function Groups({ clientId }: GroupsProps) {
   const handleUpdateGroup = async (groupId: number, formData: Partial<GroupFormData>) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
-      await permissionService.updateGroup(groupId, formData);
+      
+      // Get the current group data first
+      const currentGroup = await permissionService.getGroup(groupId);
+      
+      // Merge the current data with the form data to create a complete update
+      const completeGroupData = {
+        id: groupId,
+        name: formData.name || currentGroup.name || '',
+        description: formData.description !== undefined ? formData.description : (currentGroup.description || ''),
+        clientId: currentGroup.clientId,
+        createdAt: currentGroup.createdAt,
+        updatedAt: currentGroup.updatedAt
+      };
+      
+      await permissionService.updateGroup(groupId, completeGroupData);
       setState(prev => ({
         ...prev,
         saving: false,
@@ -231,8 +341,8 @@ export default function Groups({ clientId }: GroupsProps) {
       setState(prev => ({ ...prev, loading: true, error: null }));
       
       // Get current group members
-      const members = await permissionService.getGroupUsers(group.id);
-      setSelectedUsers(members.map(m => m.userId));
+      const response = await permissionService.getGroupUsers(group.id);
+      setSelectedUsers(response.userGroups.map((userGroup: UserGroup) => userGroup.userId));
       
       setState(prev => ({ 
         ...prev, 
@@ -294,8 +404,8 @@ export default function Groups({ clientId }: GroupsProps) {
       setState(prev => ({ ...prev, loading: true, error: null }));
       
       // Get current group roles
-      const groupRoles = await permissionService.getGroupRoles(group.id);
-      setSelectedRoles(groupRoles.map(r => r.roleId));
+      const response = await permissionService.getGroupRoles(group.id);
+      setSelectedRoles(response.groupRoles.map((groupRole: GroupRole) => groupRole.roleId));
       
       setState(prev => ({ 
         ...prev, 
@@ -325,10 +435,22 @@ export default function Groups({ clientId }: GroupsProps) {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
       
-      // Remove all existing roles and add selected ones
-      await permissionService.removeGroupRoles(state.selectedGroup.id, roles.map(r => r.id));
-      if (selectedRoles.length > 0) {
-        await permissionService.addGroupRoles(state.selectedGroup.id, selectedRoles);
+      // Get current group roles
+      const response = await permissionService.getGroupRoles(state.selectedGroup.id);
+      const currentRoleIds = response.groupRoles.map((groupRole: GroupRole) => groupRole.roleId);
+      
+      // Determine which roles to add and which to remove
+      const rolesToAdd = selectedRoles.filter(roleId => !currentRoleIds.includes(roleId));
+      const rolesToRemove = currentRoleIds.filter(roleId => !selectedRoles.includes(roleId));
+      
+      // Only remove roles that need to be removed
+      if (rolesToRemove.length > 0) {
+        await permissionService.removeGroupRoles(state.selectedGroup.id, rolesToRemove);
+      }
+      
+      // Only add roles that need to be added
+      if (rolesToAdd.length > 0) {
+        await permissionService.addGroupRoles(state.selectedGroup.id, rolesToAdd);
       }
       
       setState(prev => ({ 
@@ -369,9 +491,23 @@ export default function Groups({ clientId }: GroupsProps) {
   };
 
   useEffect(() => {
-    loadGroups();
-    loadUsers();
-    loadRoles();
+    console.log('useEffect called to load Groups, Users, and Roles');
+    
+    const loadData = async () => {
+      try {
+        console.log('Loading users');
+        await loadUsers();
+        console.log('Users loaded, now loading roles');
+        await loadRoles();
+        console.log('Roles loaded, now loading groups');
+        await loadGroups();
+        console.log('All data loaded successfully');
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
+    };
+    
+    loadData();
   }, [loadGroups, loadUsers, loadRoles]);
 
   const handleAddGroup = useCallback(() => {
@@ -386,33 +522,48 @@ export default function Groups({ clientId }: GroupsProps) {
     {
       field: 'id',
       headerName: 'ID',
-      width: 100,
+      width: 70,
     },
     {
       field: 'name',
       headerName: 'Name',
-      width: 200,
+      width: 150,
     },
+    {
+      field: 'description',
+      headerName: 'Description',
+      width: 200,
+      renderCell: (params: GridRenderCellParams<Group>) => (
+        <Typography>
+          {params.row.description || '-'}
+        </Typography>
+      )
+    },
+
     {
       field: 'createdAt',
       headerName: 'Created',
-      width: 200,
-      valueFormatter: (params: { value: string }) => {
-        return dayjs(params.value).format('MMM D, YYYY h:mm A');
-      }
+      width: 170,
+      renderCell: (params: GridRenderCellParams<Group>) => (
+        <Typography>
+          {params.row.createdAt ? dayjs(params.row.createdAt).format('MMM D, YYYY h:mm A') : '-'}
+        </Typography>
+      )
     },
     {
       field: 'updatedAt',
       headerName: 'Last Updated',
-      width: 200,
-      valueFormatter: (params: { value: string | undefined }) => {
-        return params.value ? dayjs(params.value).format('MMM D, YYYY h:mm A') : '-';
-      }
+      width: 170,
+      renderCell: (params: GridRenderCellParams<Group>) => (
+        <Typography>
+          {params.row.updatedAt ? dayjs(params.row.updatedAt).format('MMM D, YYYY h:mm A') : '-'}
+        </Typography>
+      )
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 200,
+      width: 150,
       renderCell: (params: GridRenderCellParams<Group>) => (
         <Box>
           <IconButton
@@ -535,19 +686,58 @@ export default function Groups({ clientId }: GroupsProps) {
           {state.success}
         </Alert>
       )}
-      <DataGrid
-        rows={state.groups}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10,
+      {/* Add additional check to ensure all rows have valid IDs */}
+      {state.groups.length > 0 ? (
+        <DataGrid
+          rows={state.groups.filter(group => group && group.id !== undefined && group.id !== null)}
+          columns={columns}
+          getRowId={(row) => {
+            // Add extra safeguard for ID
+            if (row.id === undefined || row.id === null) {
+              console.error('Row missing ID:', row);
+              return `missing-${Math.random()}`; // Fallback ID
+            }
+            return row.id;
+          }}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 10,
+              },
             },
-          },
-        }}
-        pageSizeOptions={[10]}
-        autoHeight
-      />
+          }}
+          pageSizeOptions={[10, 25, 50]}
+          pagination
+          paginationMode="client"
+          autoHeight
+          disableRowSelectionOnClick
+          rowHeight={52}
+          slots={{
+            pagination: () => {
+              const apiRef = useGridApiContext();
+              const page = useGridSelector(apiRef, gridPageSelector);
+              const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+              
+              return (
+                <Box sx={{ display: 'flex', justifyContent: 'center', padding: 1 }}>
+                  <Pagination 
+                    count={pageCount}
+                    page={page + 1} // DataGrid uses 0-based indexing, Pagination uses 1-based
+                    showFirstButton 
+                    showLastButton 
+                    color="primary"
+                    onChange={(event, value) => {
+                      apiRef.current.setPage(value - 1);
+                    }}
+                  />
+                </Box>
+              );
+            }
+          }}
+        />
+      ) : (
+        <Typography sx={{ p: 2 }}>No groups available</Typography>
+      )}
       {/* Group Form Dialog */}
       <Dialog
         open={state.isFormOpen}
@@ -559,7 +749,7 @@ export default function Groups({ clientId }: GroupsProps) {
           {state.selectedGroup ? 'Edit Group' : 'Create Group'}
         </DialogTitle>
         <DialogContent>
-          <Box component="form" sx={{ mt: 2 }}>
+          <Box sx={{ mt: 2 }}>
             <TextField
               label="Name"
               name="name"
@@ -567,18 +757,23 @@ export default function Groups({ clientId }: GroupsProps) {
               required
               defaultValue={state.selectedGroup?.name || ''}
               margin="normal"
-              onChange={(e) => {
-                const formData = {
-                  name: e.target.value,
-                  clientId: Number(clientId)
-                };
-                if (state.selectedGroup) {
-                  handleUpdateGroup(state.selectedGroup.id, formData);
-                } else {
-                  handleCreateGroup(formData);
-                }
+              inputProps={{
+                id: 'group-name-input'
               }}
             />
+            <TextField
+              label="Description"
+              name="description"
+              fullWidth
+              multiline
+              rows={3}
+              defaultValue={state.selectedGroup?.description || ''}
+              margin="normal"
+              inputProps={{
+                id: 'group-description-input'
+              }}
+            />
+
           </Box>
         </DialogContent>
         <DialogActions>
@@ -590,7 +785,20 @@ export default function Groups({ clientId }: GroupsProps) {
           <Button
             variant="contained"
             color="primary"
-            type="submit"
+            onClick={() => {
+              const nameInput = document.getElementById('group-name-input') as HTMLInputElement;
+              const descriptionInput = document.getElementById('group-description-input') as HTMLInputElement;
+              const formData = {
+                name: nameInput?.value || '',
+                description: descriptionInput?.value || '',
+                clientId: Number(clientId)
+              };
+              if (state.selectedGroup) {
+                handleUpdateGroup(state.selectedGroup.id, formData);
+              } else {
+                handleCreateGroup(formData);
+              }
+            }}
             disabled={state.saving}
           >
             {state.saving ? 'Saving...' : 'Save'}
@@ -677,65 +885,182 @@ export default function Groups({ clientId }: GroupsProps) {
           <Typography variant="subtitle1" sx={{ mb: 2 }}>
             Select the roles to assign to this group. Users in this group will inherit all permissions from the selected roles.
           </Typography>
-          <TextField
-            fullWidth
-            label="Search roles..."
-            variant="outlined"
-            value={roleSearchTerm}
-            onChange={(e) => setRoleSearchTerm(e.target.value)}
-            sx={{ mb: 3 }}
-          />
-          <Box sx={{ maxHeight: '60vh', overflow: 'auto' }}>
-            <List>
-              {groupedRoles.map(([category, categoryRoles]) => (
-                <Box key={category}>
-                  <ListItem 
-                    button 
-                    onClick={() => handleCategoryToggle(category)}
-                    sx={{
-                      bgcolor: 'background.paper',
-                      borderBottom: '1px solid',
-                      borderColor: 'divider'
-                    }}
-                  >
-                    <ListItemText 
-                      primary={
-                        <Typography variant="subtitle1" color="primary">
-                          {category}
-                        </Typography>
-                      } 
-                    />
-                    {expandedCategories.has(category) ? <ExpandMoreIcon /> : <ChevronRightIcon />}
-                  </ListItem>
-                  <Collapse in={expandedCategories.has(category)} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                      {categoryRoles.map(role => (
-                        <ListItem 
-                          key={role.id} 
-                          sx={{ 
-                            pl: 4,
-                            '&:hover': {
-                              bgcolor: 'action.hover'
-                            }
-                          }}
-                        >
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={selectedRoles.includes(role.id)}
-                                onChange={() => handleRoleToggle(role.id)}
+          
+          <Grid container spacing={2}>
+            {/* Available Roles Column */}
+            <Grid item xs={12} md={6}>
+              <Paper variant="outlined" sx={{ height: '100%' }}>
+                <Box sx={{ p: 2 }}>
+                  <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                    Available Roles
+                  </Typography>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    label="Search available roles..."
+                    variant="outlined"
+                    value={roleSearchTerm}
+                    onChange={(e) => setRoleSearchTerm(e.target.value)}
+                    sx={{ mb: 2 }}
+                  />
+                  <Box sx={{ maxHeight: '50vh', overflow: 'auto' }}>
+                    <List dense disablePadding>
+                      {groupedRoles.map(([category, categoryRoles]) => {
+                        // Filter out roles that are already selected
+                        const availableRoles = categoryRoles.filter(role => !selectedRoles.includes(role.id));
+                        
+                        // Skip categories with no available roles
+                        if (availableRoles.length === 0) return null;
+                        
+                        return (
+                          <Box key={`available-${category}`}>
+                            <ListItem 
+                              button 
+                              onClick={() => handleCategoryToggle(`available-${category}`)}
+                              sx={{
+                                bgcolor: 'background.paper',
+                                borderBottom: '1px solid',
+                                borderColor: 'divider'
+                              }}
+                            >
+                              <ListItemText 
+                                primary={
+                                  <Typography variant="subtitle2" color="primary">
+                                    {category}
+                                  </Typography>
+                                } 
                               />
-                            }
-                            label={role.name}
-                          />
-                        </ListItem>
-                      ))}
+                              {expandedCategories.has(`available-${category}`) ? <ExpandMoreIcon /> : <ChevronRightIcon />}
+                            </ListItem>
+                            <Collapse in={expandedCategories.has(`available-${category}`)} timeout="auto" unmountOnExit>
+                              <List component="div" disablePadding>
+                                {availableRoles.map(role => (
+                                  <ListItem 
+                                    key={role.id} 
+                                    button
+                                    onClick={() => handleRoleToggle(role.id)}
+                                    sx={{ 
+                                      pl: 4,
+                                      '&:hover': {
+                                        bgcolor: 'action.hover'
+                                      }
+                                    }}
+                                  >
+                                    <ListItemText 
+                                      primary={role.name}
+                                      primaryTypographyProps={{ variant: 'body2' }}
+                                    />
+                                    <Button 
+                                      size="small" 
+                                      color="primary" 
+                                      variant="outlined"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRoleToggle(role.id);
+                                      }}
+                                    >
+                                      Add
+                                    </Button>
+                                  </ListItem>
+                                ))}
+                              </List>
+                            </Collapse>
+                          </Box>
+                        );
+                      })}
                     </List>
-                  </Collapse>
+                  </Box>
                 </Box>
-              ))}
-            </List>
-          </Box>
+              </Paper>
+            </Grid>
+            
+            {/* Assigned Roles Column */}
+            <Grid item xs={12} md={6}>
+              <Paper variant="outlined" sx={{ height: '100%' }}>
+                <Box sx={{ p: 2 }}>
+                  <Typography variant="subtitle2" fontWeight="bold" gutterBottom color="primary">
+                    Assigned Roles
+                  </Typography>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    label="Search assigned roles..."
+                    variant="outlined"
+                    value={roleSearchTerm}
+                    onChange={(e) => setRoleSearchTerm(e.target.value)}
+                    sx={{ mb: 2, bgcolor: 'background.paper', borderRadius: 1 }}
+                  />
+                  <Box sx={{ maxHeight: '50vh', overflow: 'auto' }}>
+                    <List dense disablePadding>
+                      {groupedRoles.map(([category, categoryRoles]) => {
+                        // Filter to only show selected roles
+                        const assignedRoles = categoryRoles.filter(role => selectedRoles.includes(role.id));
+                        
+                        // Skip categories with no assigned roles
+                        if (assignedRoles.length === 0) return null;
+                        
+                        return (
+                          <Box key={`assigned-${category}`}>
+                            <ListItem 
+                              button 
+                              onClick={() => handleCategoryToggle(`assigned-${category}`)}
+                              sx={{
+                                bgcolor: 'background.paper',
+                                borderBottom: '1px solid',
+                                borderColor: 'divider'
+                              }}
+                            >
+                              <ListItemText 
+                                primary={
+                                  <Typography variant="subtitle2" color="primary">
+                                    {category}
+                                  </Typography>
+                                } 
+                              />
+                              {expandedCategories.has(`assigned-${category}`) ? <ExpandMoreIcon /> : <ChevronRightIcon />}
+                            </ListItem>
+                            <Collapse in={expandedCategories.has(`assigned-${category}`)} timeout="auto" unmountOnExit>
+                              <List component="div" disablePadding>
+                                {assignedRoles.map(role => (
+                                  <ListItem 
+                                    key={role.id} 
+                                    button
+                                    onClick={() => handleRoleToggle(role.id)}
+                                    sx={{ 
+                                      pl: 4,
+                                      '&:hover': {
+                                        bgcolor: 'action.hover'
+                                      }
+                                    }}
+                                  >
+                                    <ListItemText 
+                                      primary={role.name}
+                                      primaryTypographyProps={{ variant: 'body2' }}
+                                    />
+                                    <Button 
+                                      size="small" 
+                                      color="error" 
+                                      variant="outlined"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRoleToggle(role.id);
+                                      }}
+                                    >
+                                      Remove
+                                    </Button>
+                                  </ListItem>
+                                ))}
+                              </List>
+                            </Collapse>
+                          </Box>
+                        );
+                      })}
+                    </List>
+                  </Box>
+                </Box>
+              </Paper>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseRolesDialog}>Cancel</Button>

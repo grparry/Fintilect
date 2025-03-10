@@ -62,10 +62,10 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
   const loadRoles = async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
-      const roles = await permissionService.getRoles();
+      const response = await permissionService.getRoles();
       setState(prev => ({
         ...prev,
-        roles,
+        roles: response.roles,
         loading: false
       }));
       logger.info('Roles loaded successfully');

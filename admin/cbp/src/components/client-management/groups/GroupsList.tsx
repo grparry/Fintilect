@@ -69,7 +69,7 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
       });
       setState(prev => ({
         ...prev,
-        groups: response.items,
+        groups: response.groups,
         loading: false
       }));
       logger.info('Groups loaded successfully');

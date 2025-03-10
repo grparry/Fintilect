@@ -133,6 +133,20 @@ export const navigationConfig: NavigationConfig = {
               path: '/admin/bill-pay/payments/fis-payee',
               icon: AccountBalanceIcon,
               resourceId: 'route:billPay.payments.fis-payee' as ResourceId
+            },
+            {
+              id: 'copy-member-payees',
+              title: 'Copy Member Payees',
+              path: '/admin/bill-pay/payments/copy-payees',
+              icon: TransformIcon,
+              resourceId: 'route:billPay.payments.copy-payees' as ResourceId
+            },
+            {
+              id: 'change-history',
+              title: 'Change History',
+              path: '/admin/bill-pay/payments/change-history',
+              icon: HistoryIcon,
+              resourceId: 'route:billPay.payments.change-history' as ResourceId
             }
           ]
         },

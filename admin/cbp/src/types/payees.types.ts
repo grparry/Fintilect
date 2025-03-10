@@ -6,19 +6,54 @@ export interface PayeeCloseGlobalRequest {
 }
 
 export interface CopyMemberPayeesRequest {
+  memberId: string;
   newMemberId: string;
+}
+
+// Response Types
+export interface Payee {
+  payeeId?: string;
+  payeeName?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  phoneNumber?: string;
+  payeeType?: string;
+}
+
+export interface UserPayeeData {
+  payee: Payee;
+  userPayeeListId?: string;
+  memberId?: string;
+  usersAccountAtPayee?: string;
+  nameOnAccount?: string;
+  nickName?: string;
+  attentionLine?: string;
+  paymentMethod?: string;
+  payeeType?: string;
+  fisPayeeId?: string;
+  active: boolean;
+  favorite: boolean;
+}
+
+export interface UserPayeeListResponse {
+  payees: UserPayeeData[];
 }
 
 export interface UserPayeeChangeHistoryReportRequest {
   startDate: string;
   endDate: string;
   searchValue: string;
+  searchType: string;
 }
 
 export interface GlobalPayeeChangeHistoryReportRequest {
   startDate: string;
   endDate: string;
   searchValue: string;
+  searchType: string;
 }
 
 export interface UserPayeeUpdateAccountNumberRequest {
@@ -52,58 +87,58 @@ export interface ManualUpdateRequest {
 
 // Response Types
 export interface UserPayeeChangeHistoryResponse {
-  MemberId: string;
-  UserPayeeListId: string;
-  UpdatedBy: string;
-  UpdatedOn: string; // C# DateTime
-  Reason: string;
-  ChangeType: string;
-  PayeeId: string;
-  FisPayeeId: string;
-  PayeeName: string;
-  UsersAccountAtPayee: string;
-  NameOnAccount: string;
-  PaymentMethod: string;
-  Active: boolean | null;
-  PayeeType: string;
+  memberId: string;
+  userPayeeListId: string;
+  updatedBy: string;
+  updatedOn: string; // C# DateTime
+  reason: string;
+  changeType: string;
+  payeeId: string;
+  fisPayeeId: string;
+  payeeName: string;
+  usersAccountAtPayee: string;
+  nameOnAccount: string;
+  paymentMethod: string;
+  active: boolean | null;
+  payeeType: string;
 }
 
 export interface GlobalPayeeChangeHistoryResponse {
-  Id: number;
-  RecordType: string;
-  InternalPayeeId: string;
-  PayeeName: string;
-  UserPayeeListId: string;
-  MemberId: string;
-  MemberFirstName: string;
-  MemberMiddleName: string;
-  MemberLastName: string;
-  AttentionLine: string;
-  AddressLine1: string;
-  AddressLine2: string;
-  City: string;
-  State: string;
-  ZipCode: string;
-  CountryCode: string;
-  PhoneNumber: string;
-  PayeeStatus: string;
-  DisbursementType: string;
-  PayeeLevelType: string;
-  CustomerId: string;
-  ElectronicLeadTime: string;
-  CheckLeadTime: string;
-  Ofacstatus: string;
-  CloseReason: string;
-  FileCreatorCutoffTime: string;
-  IndustryCode: string;
-  Reason: string;
-  InsertDate: string; // C# DateTime
+  id: number;
+  recordType: string;
+  internalPayeeId: string;
+  payeeName: string;
+  userPayeeListId: string;
+  memberId: string;
+  memberFirstName: string;
+  memberMiddleName: string;
+  memberLastName: string;
+  attentionLine: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  countryCode: string;
+  phoneNumber: string;
+  payeeStatus: string;
+  disbursementType: string;
+  payeeLevelType: string;
+  customerId: string;
+  electronicLeadTime: string;
+  checkLeadTime: string;
+  ofacstatus: string;
+  closeReason: string;
+  fileCreatorCutoffTime: string;
+  industryCode: string;
+  reason: string;
+  insertDate: string; // C# DateTime
 }
 
 export interface UserPayeeChangeHistoryListResponse {
-  Histories: UserPayeeChangeHistoryResponse[];
+  histories: UserPayeeChangeHistoryResponse[];
 }
 
 export interface GlobalPayeeChangeHistoryListResponse {
-  Histories: GlobalPayeeChangeHistoryResponse[];
+  histories: GlobalPayeeChangeHistoryResponse[];
 }

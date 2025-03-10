@@ -48,8 +48,8 @@ const GroupEdit: React.FC<GroupEditProps> = ({
         setError(null);
 
         // Load roles
-        const rolesData = await permissionService.getRoles();
-        setRoles(rolesData);
+        const rolesResponse = await permissionService.getRoles();
+        setRoles(rolesResponse.roles);
 
         // Load group if editing
         if (groupId) {
@@ -57,8 +57,8 @@ const GroupEdit: React.FC<GroupEditProps> = ({
           setGroup(groupData);
 
           // Load group roles
-          const groupRoles = await permissionService.getGroupRoles(Number(groupId));
-          setSelectedRoles(groupRoles.map(r => r.roleId));
+          const groupRolesResponse = await permissionService.getGroupRoles(Number(groupId));
+          setSelectedRoles(groupRolesResponse.groupRoles.map((r: GroupRole) => r.roleId));
         }
 
         logger.info('Group edit data loaded successfully');

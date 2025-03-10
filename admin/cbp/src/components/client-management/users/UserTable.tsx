@@ -17,6 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import KeyIcon from '@mui/icons-material/Key';
 import { User as UIUser, UserGroup as UIUserGroup, UserStatus } from '../../../types/client.types';
 import dayjs from 'dayjs';
 import { encodeId } from '../../../utils/idEncoder';
@@ -28,6 +29,7 @@ interface UserTableProps {
   onEdit: (user: UIUser) => void;
   onDelete: (user: UIUser) => void;
   onToggleLock: (user: UIUser) => void;
+  onResetPassword: (user: UIUser) => void;
   clientId: string;
 }
 
@@ -37,12 +39,14 @@ const UserTable: React.FC<UserTableProps> = ({
   onEdit,
   onDelete,
   onToggleLock,
+  onResetPassword,
   clientId,
 }) => {
   const navigate = useNavigate();
   const handleEdit = (user: UIUser) => {
     const encodedClientId = encodeId(clientId);
     const encodedUserId = encodeId(user.id);
+    // Fix the route to match the route configuration in ClientManagementRoutes.tsx
     navigate(`/admin/client-management/edit/${encodedClientId}/users/${encodedUserId}`);
   };
   if (users.length === 0) {
@@ -108,6 +112,11 @@ const UserTable: React.FC<UserTableProps> = ({
                       ) : (
                         <LockIcon fontSize="small" />
                       )}
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Reset password">
+                    <IconButton size="small" onClick={() => onResetPassword(user)}>
+                      <KeyIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
                 </Box>

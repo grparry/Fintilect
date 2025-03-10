@@ -9,7 +9,10 @@ import {
   UpdateAccountAndRefund,
   UpdateFisPayeeIdAndRefundRequest,
   ManualUpdateRequest,
-  CopyMemberPayeesRequest
+  CopyMemberPayeesRequest,
+  UserPayeeListResponse,
+  GlobalPayeeChangeHistoryReportRequest,
+  GlobalPayeeChangeHistoryListResponse
 } from '../../../types/payees.types';
 
 export class MockPayeeService extends BaseService implements IPayeeService {
@@ -19,22 +22,22 @@ export class MockPayeeService extends BaseService implements IPayeeService {
 
   async getUserPayeeChangeHistory(_request: UserPayeeChangeHistoryReportRequest): Promise<UserPayeeChangeHistoryListResponse> {
     return {
-      Histories: [
+      histories: [
         {
-          MemberId: 'mock-member-1',
-          UserPayeeListId: 'mock-payee-list-1',
-          UpdatedBy: 'mock-user',
-          UpdatedOn: new Date().toISOString(),
-          Reason: 'Account number update',
-          ChangeType: 'Update',
-          PayeeId: 'mock-payee-1',
-          FisPayeeId: 'mock-fis-payee-1',
-          PayeeName: 'Mock Payee',
-          UsersAccountAtPayee: '1234567890',
-          NameOnAccount: 'John Doe',
-          PaymentMethod: 'electronic',
-          Active: true,
-          PayeeType: 'personal'
+          memberId: 'mock-member-1',
+          userPayeeListId: 'mock-payee-list-1',
+          updatedBy: 'mock-user',
+          updatedOn: new Date().toISOString(),
+          reason: 'Account number update',
+          changeType: 'Update',
+          payeeId: 'mock-payee-1',
+          fisPayeeId: 'mock-fis-payee-1',
+          payeeName: 'Mock Payee',
+          usersAccountAtPayee: '1234567890',
+          nameOnAccount: 'John Doe',
+          paymentMethod: 'electronic',
+          active: true,
+          payeeType: 'personal'
         }
       ]
     };
@@ -66,5 +69,73 @@ export class MockPayeeService extends BaseService implements IPayeeService {
 
   async copyMemberPayees(_request: CopyMemberPayeesRequest): Promise<void> {
     return;
+  }
+
+  async getMemberPayees(_memberId: string): Promise<UserPayeeListResponse> {
+    return {
+      payees: [
+        {
+          payee: {
+            payeeId: 'mock-payee-1',
+            payeeName: 'Mock Electric Company',
+            addressLine1: '123 Mock St',
+            city: 'Mockville',
+            state: 'MK',
+            zipCode: '12345',
+            phoneNumber: '555-0123',
+            payeeType: 'utility'
+          },
+          userPayeeListId: 'mock-list-1',
+          memberId: _memberId,
+          usersAccountAtPayee: '987654321',
+          nameOnAccount: 'John Mock',
+          nickName: 'Electric Bill',
+          attentionLine: null,
+          paymentMethod: 'electronic',
+          payeeType: 'utility',
+          fisPayeeId: 'mock-fis-1',
+          active: true,
+          favorite: false
+        }
+      ]
+    };
+  }
+
+  async getGlobalPayeeChangeHistory(_request: GlobalPayeeChangeHistoryReportRequest): Promise<GlobalPayeeChangeHistoryListResponse> {
+    return {
+      histories: [
+        {
+          id: 1,
+          recordType: 'PayeeUpdate',
+          internalPayeeId: 'mock-internal-payee-1',
+          payeeName: 'Mock Global Payee',
+          userPayeeListId: 'mock-user-payee-list-1',
+          memberId: 'mock-member-1',
+          memberFirstName: 'John',
+          memberMiddleName: '',
+          memberLastName: 'Doe',
+          attentionLine: '',
+          addressLine1: '123 Mock St',
+          addressLine2: '',
+          city: 'Mockville',
+          state: 'MK',
+          zipCode: '12345',
+          countryCode: 'US',
+          phoneNumber: '555-0123',
+          payeeStatus: 'Active',
+          disbursementType: 'Electronic',
+          payeeLevelType: 'Global',
+          customerId: 'mock-customer-1',
+          electronicLeadTime: '2',
+          checkLeadTime: '5',
+          ofacstatus: 'Approved',
+          closeReason: '',
+          fileCreatorCutoffTime: '14:00',
+          industryCode: 'UTIL',
+          reason: 'Address Update',
+          insertDate: new Date().toISOString()
+        }
+      ]
+    };
   }
 }

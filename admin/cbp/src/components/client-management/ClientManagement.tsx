@@ -12,6 +12,7 @@ import {
 import { Client, Environment, ClientStatus, ClientType } from '../../types/client.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import ContactInformation from './ContactInformation';
+import ClientInformation from './ClientInformation';
 import GroupsWrapper from './wrappers/GroupsWrapper';
 import UsersWrapper from './wrappers/UsersWrapper';
 import MemberSecuritySettingsWrapper from './wrappers/MemberSecuritySettingsWrapper';
@@ -112,14 +113,22 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
   const getCurrentTab = () => {
     const path = location.pathname;
     console.log('Getting current tab for path:', path);
-    // Extract the last segment of the path
+    // Extract the segments of the path
     const segments = path.split('/');
+    console.log('Path analysis:', { segments });
+    
+    // Check if the path contains 'users' segment
+    if (segments.includes('users')) {
+      return 2; // Users tab
+    }
+    
+    // Check other segments
     const lastSegment = segments[segments.length - 1];
-    console.log('Path analysis:', { segments, lastSegment });
     switch (lastSegment) {
-      case 'users': return 1;
-      case 'groups': return 2;
-      case 'security': return 3;
+      case 'contacts': return 1;
+      case 'groups': return 3;
+      case 'security': return 4;
+      case 'info': return 0;
       default: return 0;
     }
   };
@@ -129,26 +138,29 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
     console.log('Tab change:', { newValue, basePath });
     switch (newValue) {
       case 0:
-        navigate(`${basePath}/contact`);
+        navigate(`${basePath}/info`);
         break;
       case 1:
-        navigate(`${basePath}/users`);
+        navigate(`${basePath}/contacts`);
         break;
       case 2:
-        navigate(`${basePath}/groups`);
+        navigate(`${basePath}/users`);
         break;
       case 3:
+        navigate(`${basePath}/groups`);
+        break;
+      case 4:
         navigate(`${basePath}/security`);
         break;
     }
   };
-  const getStatusColor = (status: ClientStatus) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case ClientStatus.Active:
+      case 'ACTIVE':
         return 'success';
-      case ClientStatus.Inactive:
+      case 'INACTIVE':
         return 'error';
-      case ClientStatus.Suspended:
+      case 'SUSPENDED':
         return 'warning';
       default:
         return 'default';
@@ -189,14 +201,28 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
         />
       </Box>
       <Tabs value={getCurrentTab()} onChange={handleTabChange}>
-        <Tab label="Contact Information" />
+        <Tab label="Client Information" />
+        <Tab label="Contacts" />
         <Tab label="Users" />
         <Tab label="Groups" />
         <Tab label="Security Settings" />
       </Tabs>
-      <Box mt={3}>
-        {children}
-      </Box>
+
+      <TabPanel value={getCurrentTab()} index={0}>
+        <ClientInformation clientId={clientId} />
+      </TabPanel>
+      <TabPanel value={getCurrentTab()} index={1}>
+        <ContactInformation clientId={clientId} mode="contacts" />
+      </TabPanel>
+      <TabPanel value={getCurrentTab()} index={2}>
+        <UsersWrapper />
+      </TabPanel>
+      <TabPanel value={getCurrentTab()} index={3}>
+        <GroupsWrapper />
+      </TabPanel>
+      <TabPanel value={getCurrentTab()} index={4}>
+        <MemberSecuritySettingsWrapper />
+      </TabPanel>
     </Box>
   );
 };

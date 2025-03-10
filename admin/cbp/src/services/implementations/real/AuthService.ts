@@ -29,6 +29,12 @@ export class AuthService extends BaseService implements IAuthService {
             }));
             const response = await this.post<AuthenticationResponse>('/Authentication/tenant/login', requestBody);
             logger.info(`AuthService: Login successful - ${JSON.stringify(response)}`);
+            
+            // Store the JWT token
+            if (response.token) {
+                localStorage.setItem('jwt_token', response.token);
+            }
+            
             logger.info('AuthService: User roles:', JSON.stringify({
                 roles: response.roles,
                 username: response.user.username
@@ -42,6 +48,8 @@ export class AuthService extends BaseService implements IAuthService {
     async logout(): Promise<void> {
         try {
             await this.post<void>('/logout');
+            // Clear the JWT token on logout
+            localStorage.removeItem('jwt_token');
         } catch (error) {
             logger.error(`Logout failed: ${error}`);
             throw error;

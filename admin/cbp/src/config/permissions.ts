@@ -66,6 +66,12 @@ export const permissionRegistry: PermissionRegistry = {
     adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'Handle FIS payee management'
   },
+  'route:billPay.payments.copy-payees': {
+    resourceId: 'route:billPay.payments.copy-payees',
+    permissions: ['BillPayViewer', 'BillPayProcessor'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Copy payees between members'
+  },
   'route:billPay.payments.manual': {
     resourceId: 'route:billPay.payments.manual',
     permissions: ['BillPayViewer', 'BillPayProcessor'],
@@ -77,6 +83,12 @@ export const permissionRegistry: PermissionRegistry = {
     permissions: ['BillPayViewer', 'BillPayProcessor'],
     adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'View payment history'
+  },
+  'route:billPay.payments.change-history': {
+    resourceId: 'route:billPay.payments.change-history',
+    permissions: ['BillPayViewer', 'BillPayProcessor'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View payee change history'
   },
   'route:billPay.reports': {
     resourceId: 'route:billPay.reports',

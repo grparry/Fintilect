@@ -8,7 +8,10 @@ import {
   UpdateAccountAndRefund,
   UpdateFisPayeeIdAndRefundRequest,
   ManualUpdateRequest,
-  CopyMemberPayeesRequest
+  CopyMemberPayeesRequest,
+  UserPayeeListResponse,
+  GlobalPayeeChangeHistoryReportRequest,
+  GlobalPayeeChangeHistoryListResponse
 } from '../../types/payees.types';
 
 /**
@@ -65,4 +68,18 @@ export interface IPayeeService extends BaseService {
    * @param request The request containing the new member ID
    */
   copyMemberPayees(request: CopyMemberPayeesRequest): Promise<void>;
+
+  /**
+   * Gets a list of payees for a specific member.
+   * @param memberId The ID of the member to get payees for
+   * @returns A list of payees associated with the member
+   */
+  getMemberPayees(memberId: string): Promise<UserPayeeListResponse>;
+
+  /**
+   * Gets the global change history for payees within a specified date range.
+   * @param request The request containing start date, end date, and search value
+   * @returns A list of global payee change history records
+   */
+  getGlobalPayeeChangeHistory(request: GlobalPayeeChangeHistoryReportRequest): Promise<GlobalPayeeChangeHistoryListResponse>;
 }

@@ -1,8 +1,5 @@
 import {
   Client,
-  ClientType,
-  ClientStatus,
-  Environment,
   ClientConfiguration,
   ClientContact,
   ClientService,
@@ -38,34 +35,34 @@ export const mockClients: Client[] = [
   {
     id: 1,
     name: 'Acme Corporation',
-    type: ClientType.Enterprise,
-    status: ClientStatus.Active,
-    environment: Environment.Production,
+    type: 'ENTERPRISE',
+    status: 'ACTIVE',
+    environment: 'PRODUCTION',
     tenantId: 1,
     isActive: true,
     createdOn: new Date('2024-01-01').toISOString(),
     updatedOn: new Date('2024-01-22').toISOString(),
     domain: 'acme.com',
-    contactName: 'John Doe',
-    contactEmail: 'john.doe@acme.com',
-    contactPhone: '+1234567890',
-    require2fa: true
+    sponsorId: null,
+    routingId: null,
+    logoUrl: null,
+    require2FA: true
   },
   {
     id: 2,
     name: 'Startup Labs',
-    type: ClientType.Startup,
-    status: ClientStatus.Active,
-    environment: Environment.Development,
+    type: 'STARTUP',
+    status: 'ACTIVE',
+    environment: 'DEVELOPMENT',
     tenantId: 2,
     isActive: true,
     createdOn: new Date('2024-01-15').toISOString(),
     updatedOn: new Date('2024-01-22').toISOString(),
     domain: 'startuplabs.com',
-    contactName: 'Jane Smith',
-    contactEmail: 'jane.smith@startuplabs.com',
-    contactPhone: '+1987654321',
-    require2fa: true
+    sponsorId: null,
+    routingId: null,
+    logoUrl: null,
+    require2FA: true
   }
 ];
 
@@ -77,9 +74,10 @@ export const mockClientContacts: ClientContact[] = [
     name: 'John Doe',
     email: 'john.doe@acme.com',
     phone: '+1234567890',
-    role: 'Technical Lead',
+    isActive: true,
     isPrimary: true,
-    lastModified: new Date('2024-01-22').toISOString()
+    createdOn: new Date('2024-01-22').toISOString(),
+    updatedOn: new Date('2024-01-22').toISOString()
   },
   {
     id: 2,
@@ -87,9 +85,10 @@ export const mockClientContacts: ClientContact[] = [
     name: 'Jane Smith',
     email: 'jane.smith@acme.com',
     phone: '+1987654321',
-    role: 'Business Contact',
+    isActive: true,
     isPrimary: false,
-    lastModified: new Date('2024-01-22').toISOString()
+    createdOn: new Date('2024-01-22').toISOString(),
+    updatedOn: new Date('2024-01-22').toISOString()
   }
 ];
 
@@ -127,7 +126,7 @@ export const mockClientApiKeys: ClientApiKey[] = [
     id: 1,
     clientId: 1,
     keyName: 'Production API Key',
-    environment: Environment.Production,
+    environment: 'PRODUCTION',
     createdAt: new Date('2024-01-01').toISOString(),
     expiresAt: new Date('2025-01-01').toISOString(),
     lastUsed: new Date('2024-01-22').toISOString(),
@@ -137,7 +136,7 @@ export const mockClientApiKeys: ClientApiKey[] = [
     id: 2,
     clientId: 1,
     keyName: 'Development API Key',
-    environment: Environment.Development,
+    environment: 'DEVELOPMENT',
     createdAt: new Date('2024-01-01').toISOString(),
     expiresAt: new Date('2025-01-01').toISOString(),
     lastUsed: new Date('2024-01-22').toISOString(),

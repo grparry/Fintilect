@@ -145,14 +145,14 @@ const ManualProcessing: React.FC = () => {
     try {
       setError(null);
       const clientsResponse = await clientService.getClients();
-      const filteredClients = clientsResponse.items
-        .filter((client: Client) => client.status === ClientStatus.Active)
+      const filteredClients = clientsResponse.clients
+        .filter((client: Client) => client.status === 'ACTIVE')
         .map((client: Client) => ({
           id: client.id,
           name: client.name,
-          status: client.status === ClientStatus.Active ? ClientStatus.active : ClientStatus.inactive,
+          status: client.status === 'ACTIVE' ? 'ACTIVE' : 'INACTIVE',
           tenantId: client.tenantId,
-          isActive: client.status === ClientStatus.Active,
+          isActive: client.status === 'ACTIVE',
           createdOn: client.createdOn,
           updatedOn: client.updatedOn,
           type: client.type,

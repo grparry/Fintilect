@@ -1,4 +1,4 @@
-import { Client, ClientStatus, ClientType, Environment } from '../../../../../types/client.types';
+import { Client } from '../../../../../types/client.types';
 import { Payee } from '../../../../../types/bill-pay.types';
 
 export const mockClients: Client[] = [
@@ -9,10 +9,14 @@ export const mockClients: Client[] = [
         isActive: true,
         createdOn: new Date().toISOString(),
         updatedOn: new Date().toISOString(),
-        type: ClientType.Enterprise,
-        status: ClientStatus.Active,
-        environment: Environment.Production,
-        require2fa: true    
+        type: 'ENTERPRISE',
+        status: 'ACTIVE',
+        environment: 'PRODUCTION',
+        require2FA: true,
+        domain: 'acme.com',
+        sponsorId: null,
+        routingId: null,
+        logoUrl: null
     },
     {
         id: 2,
@@ -21,10 +25,14 @@ export const mockClients: Client[] = [
         isActive: true,
         createdOn: new Date().toISOString(),
         updatedOn: new Date().toISOString(),
-        type: ClientType.Enterprise,
-        status: ClientStatus.Active,
-        environment: Environment.Production,
-        require2fa: true    
+        type: 'ENTERPRISE',
+        status: 'ACTIVE',
+        environment: 'PRODUCTION',
+        require2FA: true,
+        domain: 'acme.com',
+        sponsorId: null,
+        routingId: null,
+        logoUrl: null
     }
 ];
 

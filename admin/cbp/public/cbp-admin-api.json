@@ -401,17 +401,18 @@
         }
       }
     },
-    "/api/ClientContact": {
+    "/api/Client/{clientId}/Contact": {
       "get": {
         "tags": [
           "ClientContact"
         ],
-        "summary": "Gets all client contacts",
+        "summary": "Gets all contacts for a client",
         "parameters": [
           {
             "name": "clientId",
-            "in": "query",
+            "in": "path",
             "description": "The ID of the client",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -458,6 +459,18 @@
           "ClientContact"
         ],
         "summary": "Creates a new client contact",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The ID of the client",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "requestBody": {
           "description": "The client contact to create",
           "content": {
@@ -484,7 +497,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "The created client contact",
             "content": {
               "text/plain": {
@@ -504,6 +517,67 @@
               }
             }
           },
+          "400": {
+            "description": "Invalid request data"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
+    "/api/Client/{clientId}/Contact/{id}": {
+      "get": {
+        "tags": [
+          "ClientContact"
+        ],
+        "summary": "Gets a client contact by ID",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The ID of the client",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the client contact to retrieve",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested client contact",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientContactResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientContactResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientContactResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Client contact not found"
+          },
           "500": {
             "description": "Something went wrong"
           }
@@ -514,6 +588,28 @@
           "ClientContact"
         ],
         "summary": "Updates a client contact",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The ID of the client",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the contact to update",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "requestBody": {
           "description": "The updated client contact",
           "content": {
@@ -560,53 +656,8 @@
               }
             }
           },
-          "404": {
-            "description": "Client contact not found"
-          },
-          "500": {
-            "description": "Something went wrong"
-          }
-        }
-      }
-    },
-    "/api/ClientContact/{id}": {
-      "get": {
-        "tags": [
-          "ClientContact"
-        ],
-        "summary": "Gets a client contact by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The ID of the client contact to retrieve",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The requested client contact",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientContactResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientContactResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientContactResponse"
-                }
-              }
-            }
+          "400": {
+            "description": "Invalid request data"
           },
           "404": {
             "description": "Client contact not found"
@@ -623,6 +674,16 @@
         "summary": "Deletes a client contact",
         "parameters": [
           {
+            "name": "clientId",
+            "in": "path",
+            "description": "The ID of the client",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
             "name": "id",
             "in": "path",
             "description": "The ID of the client contact to delete",
@@ -634,25 +695,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "The client contact was deleted",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "boolean"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "boolean"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "boolean"
-                }
-              }
-            }
+          "204": {
+            "description": "The client contact was deleted"
           },
           "404": {
             "description": "Client contact not found"
@@ -2719,6 +2763,82 @@
         }
       }
     },
+    "/api/User/{id}/password": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Changes a user's password with current password validation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the user whose password to change",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Object containing current and new password",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordChangeRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordChangeRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordChangeRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordChangeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The password was changed successfully",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid current password"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
     "/api/UserGroup/{userId}/{groupId}": {
       "get": {
         "tags": [
@@ -4226,7 +4346,6 @@
         "required": [
           "clientId",
           "id",
-          "isActive",
           "name"
         ],
         "type": "object",
@@ -4245,9 +4364,6 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
-          },
-          "isActive": {
-            "type": "boolean"
           },
           "clientId": {
             "type": "integer",
@@ -4270,6 +4386,24 @@
           },
           "reprocessOnly": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PasswordChangeRequest": {
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ],
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "newPassword": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -4665,7 +4799,6 @@
           "email",
           "firstName",
           "isActive",
-          "isLocked",
           "lastName",
           "password",
           "tenantId",
@@ -4723,7 +4856,17 @@
             "type": "boolean"
           },
           "isLocked": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
+          },
+          "invalidAttempts": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "forcePasswordChange": {
+            "type": "boolean",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4817,6 +4960,10 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "forcePasswordChange": {
+            "type": "boolean",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4860,7 +5007,17 @@
             "type": "boolean"
           },
           "isLocked": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
+          },
+          "invalidAttempts": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "forcePasswordChange": {
+            "type": "boolean",
+            "nullable": true
           },
           "creationDate": {
             "type": "string",
@@ -4889,7 +5046,6 @@
           "firstName",
           "id",
           "isActive",
-          "isLocked",
           "lastName",
           "tenantId",
           "username"
@@ -4951,7 +5107,17 @@
             "type": "boolean"
           },
           "isLocked": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
+          },
+          "invalidAttempts": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "forcePasswordChange": {
+            "type": "boolean",
+            "nullable": true
           }
         },
         "additionalProperties": false

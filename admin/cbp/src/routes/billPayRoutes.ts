@@ -14,6 +14,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 import WarningIcon from '@mui/icons-material/Warning';
 import TransformIcon from '@mui/icons-material/Transform';
 import LockIcon from '@mui/icons-material/Lock';
+import HistoryIcon from '@mui/icons-material/History';
 
 // Lazy load components
 const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
@@ -32,6 +33,8 @@ const BillPaySecuritySettings = lazy(() => import('../components/bill-pay/settin
 const ManualProcessing = lazy(() => import('../components/bill-pay/payments/ManualProcessing'));
 const FisPayeeCheck = lazy(() => import('../components/bill-pay/payments/FisPayeeCheck'));
 const FISExceptionHandling = lazy(() => import('../components/bill-pay/payments/FISExceptionHandling'));
+const CopyMemberPayees = lazy(() => import('../components/bill-pay/payments/CopyMemberPayees'));
+const ChangeHistory = lazy(() => import('../components/bill-pay/payments/ChangeHistory'));
 
 const billPayRoutes: RouteConfig[] = [
   {
@@ -121,6 +124,24 @@ const billPayRoutes: RouteConfig[] = [
             icon: BuildIcon,
             sectionId: 'billPay',
             resourceId: 'route:billPay.payments.fis-payee' as ResourceId
+          },
+          {
+            id: 'copy-member-payees',
+            path: 'copy-payees',
+            title: 'Copy Member Payees',
+            element: CopyMemberPayees,
+            icon: TransformIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.payments.copy-payees' as ResourceId
+          },
+          {
+            id: 'change-history',
+            path: 'change-history',
+            title: 'Change History',
+            element: ChangeHistory,
+            icon: HistoryIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.payments.change-history' as ResourceId
           }
         ]
       },

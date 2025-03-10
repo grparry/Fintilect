@@ -4,7 +4,10 @@ import {
   Group,
   GroupRole,
   UserGroup,
-  PaginatedResponse,
+  GroupListResponse,
+  RoleListResponse,
+  UserGroupListResponse,
+  GroupRoleListResponse,
   UserPermissions
 } from '../../../types/client.types';
 import { BaseMockService } from './BaseMockService';
@@ -40,8 +43,8 @@ export class MockPermissionService extends BaseMockService implements IPermissio
     mockUserGroups.forEach(ug => this.userGroups.set(`${ug.userId}-${ug.groupId}`, ug));
   }
 
-  async getRoles(): Promise<Role[]> {
-    return Array.from(this.roles.values());
+  async getRoles(): Promise<RoleListResponse> {
+    return { roles: Array.from(this.roles.values()) };
   }
 
   async getRole(roleId: number): Promise<Role> {
@@ -69,7 +72,7 @@ export class MockPermissionService extends BaseMockService implements IPermissio
     this.roles.delete(roleId);
   }
 
-  async getGroups(params?: { clientId?: number; searchTerm?: string; page?: number; limit?: number; }): Promise<PaginatedResponse<Group>> {
+  async getGroups(params?: { clientId?: number; searchTerm?: string; }): Promise<GroupListResponse> {
     let groups = Array.from(this.groups.values());
     
     if (params?.clientId) {
@@ -81,27 +84,8 @@ export class MockPermissionService extends BaseMockService implements IPermissio
       groups = groups.filter(g => g.name?.toLowerCase().includes(term));
     }
 
-    const page = params?.page || 1;
-    const limit = params?.limit || 10;
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const filteredGroups = groups
-      .filter(group => {
-        if (params?.clientId && group.clientId !== params.clientId) return false;
-        if (params?.searchTerm && !group.name?.toLowerCase().includes(params.searchTerm.toLowerCase())) return false;
-        return true;
-      });
-
-    const paginatedGroups = filteredGroups.slice(startIndex, endIndex);
-    const total = filteredGroups.length;
-    const totalPages = Math.ceil(total / limit);
-
     return {
-      items: paginatedGroups,
-      total,
-      page,
-      limit,
-      totalPages
+      groups
     };
   }
 
@@ -140,14 +124,16 @@ export class MockPermissionService extends BaseMockService implements IPermissio
     this.groups.delete(groupId);
   }
 
-  async getGroupUsers(groupId: number): Promise<UserGroup[]> {
-    return Array.from(this.userGroups.values())
+  async getGroupUsers(groupId: number): Promise<UserGroupListResponse> {
+    const userGroups = Array.from(this.userGroups.values())
       .filter(ug => ug.groupId === groupId);
+    return { userGroups };
   }
 
-  async getGroupRoles(groupId: number): Promise<GroupRole[]> {
-    return Array.from(this.groupRoles.values())
+  async getGroupRoles(groupId: number): Promise<GroupRoleListResponse> {
+    const groupRoles = Array.from(this.groupRoles.values())
       .filter(gr => gr.groupId === groupId);
+    return { groupRoles };
   }
 
   async addGroupRoles(groupId: number, roleIds: number[]): Promise<void> {
@@ -194,8 +180,9 @@ export class MockPermissionService extends BaseMockService implements IPermissio
     }
   }
 
-  async getUserGroups(userId: number): Promise<UserGroup[]> {
-    return Array.from(this.userGroups.values())
+  async getUserGroups(userId: number): Promise<UserGroupListResponse> {
+    const userGroups = Array.from(this.userGroups.values())
       .filter(ug => ug.userId === userId);
+    return { userGroups };
   }
 }

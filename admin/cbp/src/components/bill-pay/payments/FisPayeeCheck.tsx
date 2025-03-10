@@ -23,11 +23,13 @@ const FisPayeeCheck: React.FC = () => {
     try {
       const result = await globalPayeeService.getFisPayee(data);
       setSearchResult(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error('FIS payee search failed:', error);
+      
+      // Display the error message from the service
       setSearchResult({
         payeeId: undefined,
-        message: `Search failed: ${error.message}`
+        message: error.message
       });
     } finally {
       setIsSearching(false);

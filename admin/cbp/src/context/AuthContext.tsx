@@ -9,6 +9,9 @@ interface AuthProviderProps {
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
+// Path for the password change page
+export const PASSWORD_CHANGE_PATH = '/admin/change-password';
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const authService = ServiceFactory.getInstance().getAuthService();
 
@@ -17,13 +20,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user: null,
     loading: true,
     error: null,
-    userPermissions: null
+    userPermissions: null,
+    forcePasswordChange: false
   });
 
   const login = useCallback(async (credentials: LoginCredentials) => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
       const response = await authService.login(credentials);
+      
+      // Store auth session in session storage
+      sessionStorage.setItem('auth_session', JSON.stringify({
+        token: response.token,
+        expiresIn: response.expiresIn
+      }));
       
       console.log('AuthContext: Processing roles from login response:', {
         rawRoles: response.roles,
@@ -32,12 +42,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           name: roleName
         }))
       });
+      const forcePasswordChange = response.user?.forcePasswordChange === true;
+      console.log('AuthContext: Setting forcePasswordChange flag:', forcePasswordChange);
+      
       setState(prev => ({
         ...prev,
         isAuthenticated: true,
         user: response.user,
         loading: false,
         error: null,
+        forcePasswordChange: forcePasswordChange,
         userPermissions: {
           roles: (response.roles || []).map(roleName => ({
             id: 0, // Since we only have the role name
@@ -45,6 +59,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }))
         }
       }));
+      
+      return { forcePasswordChange };
     } catch (error) {
       setState(prev => ({
         ...prev,
@@ -62,12 +78,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       await authService.logout();
     } finally {
+      // Clear auth session and state on logout
+      sessionStorage.removeItem('auth_session');
       setState({
         isAuthenticated: false,
         user: null,
         loading: false,
         error: null,
-        userPermissions: null
+        userPermissions: null,
+        forcePasswordChange: false
       });
     }
   }, [authService]);
@@ -88,45 +107,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setState(prev => ({ ...prev, error: null }));
   }, []);
 
-  // Check initial auth state
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const session = await authService.getCurrentSession();
-        if (session) {
-          setState({
-            isAuthenticated: true,
-            user: session.user,
-            loading: false,
-            error: null,
-            userPermissions: {
-              roles: (session.permissions || []).map(roleName => ({
-                id: 0, // Since we only have the role name
-                name: roleName
-              }))
-            }
-          });
-        } else {
-          setState({
-            isAuthenticated: false,
-            user: null,
-            loading: false,
-            error: null,
-            userPermissions: null
-          });
-        }
-      } catch (error) {
-        setState({
-          isAuthenticated: false,
-          user: null,
-          loading: false,
-          error: error instanceof Error ? error.message : 'Failed to check authentication',
-          userPermissions: null
-        });
+  const updateForcePasswordChange = useCallback((value: boolean) => {
+    console.log('AuthContext: Updating forcePasswordChange flag to:', value);
+    setState(prev => {
+      if (prev.user) {
+        return {
+          ...prev,
+          forcePasswordChange: value,
+          user: { ...prev.user, forcePasswordChange: value }
+        };
       }
-    };
-    checkAuth();
-  }, [authService]);
+      return { ...prev, forcePasswordChange: value };
+    });
+  }, []);
+
+  // Initialize auth state without checking for existing sessions
+  useEffect(() => {
+    // Set initial state to not authenticated and not loading
+    setState({
+      isAuthenticated: false,
+      user: null,
+      loading: false,
+      error: null,
+      userPermissions: null,
+      forcePasswordChange: false
+    });
+  }, []);
 
   const value = {
     isAuthenticated: state.isAuthenticated,
@@ -134,10 +140,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loading: state.loading,
     error: state.error,
     userPermissions: state.userPermissions,
+    forcePasswordChange: state.forcePasswordChange,
     login,
     logout,
     refreshToken,
-    clearError
+    clearError,
+    updateForcePasswordChange
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
