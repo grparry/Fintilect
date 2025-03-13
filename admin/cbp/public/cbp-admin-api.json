@@ -707,6 +707,163 @@
         }
       }
     },
+    "/api/ClientLoginSecurity/{id}": {
+      "get": {
+        "tags": [
+          "ClientLoginSecurity"
+        ],
+        "summary": "Gets login security settings by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the login security settings to retrieve",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested login security settings",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientLoginSecurityResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientLoginSecurityResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientLoginSecurityResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Login security settings not found"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
+    "/api/ClientLoginSecurity/client/{clientId}": {
+      "get": {
+        "tags": [
+          "ClientLoginSecurity"
+        ],
+        "summary": "Gets login security settings for a specific client",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The ID of the client",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The login security settings for the client",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientLoginSecurityResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientLoginSecurityResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientLoginSecurityResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Login security settings not found for the client"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
+    "/api/ClientLoginSecurity": {
+      "put": {
+        "tags": [
+          "ClientLoginSecurity"
+        ],
+        "summary": "Updates login security settings",
+        "requestBody": {
+          "description": "The updated login security settings",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientLoginSecurityUpdateRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientLoginSecurityUpdateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientLoginSecurityUpdateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientLoginSecurityUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated login security settings",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientLoginSecurityResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientLoginSecurityResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientLoginSecurityResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Login security settings not found"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
     "/api/v1/Configuration/refresh": {
       "post": {
         "tags": [
@@ -1688,6 +1845,70 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetPayeeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Payee."
+          },
+          "404": {
+            "description": "Unable to find global payee."
+          },
+          "500": {
+            "description": "Something went wrong."
+          }
+        }
+      }
+    },
+    "/api/v1/Payee/fis-payee/v2": {
+      "post": {
+        "tags": [
+          "Payee"
+        ],
+        "summary": "Gets a detailed payee from FIS Web Service (v2 endpoint)",
+        "requestBody": {
+          "description": "request to send to fis(Name, Address1, City, State, PostalCode, UsersAccountAtPayee)",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPayeeRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPayeeRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPayeeRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPayeeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPayeeDetailedResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPayeeDetailedResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPayeeDetailedResponse"
                 }
               }
             }
@@ -3527,6 +3748,140 @@
         },
         "additionalProperties": false
       },
+      "ClientLoginSecurityResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "clientId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "minPasswordLength": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requireUppercase": {
+            "type": "boolean"
+          },
+          "requireLowercase": {
+            "type": "boolean"
+          },
+          "requireNumbers": {
+            "type": "boolean"
+          },
+          "requireSpecialCharacters": {
+            "type": "boolean"
+          },
+          "passwordExpiryDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxLoginAttempts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sessionTimeoutMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "preventPasswordReuse": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "twoFactorAuthRequired": {
+            "type": "boolean"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastModifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientLoginSecurityUpdateRequest": {
+        "required": [
+          "id",
+          "maxLoginAttempts",
+          "minPasswordLength",
+          "passwordExpiryDays",
+          "preventPasswordReuse",
+          "requireLowercase",
+          "requireNumbers",
+          "requireSpecialCharacters",
+          "requireUppercase",
+          "sessionTimeoutMinutes",
+          "twoFactorAuthRequired"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minPasswordLength": {
+            "maximum": 20,
+            "minimum": 6,
+            "type": "integer",
+            "format": "int32"
+          },
+          "requireUppercase": {
+            "type": "boolean"
+          },
+          "requireLowercase": {
+            "type": "boolean"
+          },
+          "requireNumbers": {
+            "type": "boolean"
+          },
+          "requireSpecialCharacters": {
+            "type": "boolean"
+          },
+          "passwordExpiryDays": {
+            "maximum": 365,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxLoginAttempts": {
+            "maximum": 10,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "sessionTimeoutMinutes": {
+            "maximum": 1440,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "preventPasswordReuse": {
+            "maximum": 24,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "twoFactorAuthRequired": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "ClientResponse": {
         "type": "object",
         "properties": {
@@ -4058,6 +4413,100 @@
           },
           "fisPayeeId": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetPayeeDetailedResponse": {
+        "type": "object",
+        "properties": {
+          "payeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "merchantId": {
+            "type": "string",
+            "nullable": true
+          },
+          "merchantName": {
+            "type": "string",
+            "nullable": true
+          },
+          "webhelp": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "cutoffTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "leadDays": {
+            "type": "string",
+            "nullable": true
+          },
+          "address1": {
+            "type": "string",
+            "nullable": true
+          },
+          "address2": {
+            "type": "string",
+            "nullable": true
+          },
+          "address3": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "dpbc": {
+            "type": "string",
+            "nullable": true
+          },
+          "billerType": {
+            "type": "string",
+            "nullable": true
+          },
+          "billerId": {
+            "type": "string",
+            "nullable": true
+          },
+          "help": {
+            "type": "string",
+            "nullable": true
+          },
+          "terms": {
+            "type": "string",
+            "nullable": true
+          },
+          "valid": {
+            "type": "boolean",
             "nullable": true
           }
         },

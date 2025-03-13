@@ -114,18 +114,11 @@ export const navigationConfig: NavigationConfig = {
               resourceId: 'route:billPay.payments.manage' as ResourceId
             },
             {
-              id: 'fis-exceptions',
-              title: 'FIS Exception Handling',
-              path: '/admin/bill-pay/payments/fis-exceptions',
+              id: 'payment-exceptions',
+              title: 'Exception Handling',
+              path: '/admin/bill-pay/payments/exceptions',
               icon: ErrorIcon,
               resourceId: 'route:billPay.payments.exceptions' as ResourceId
-            },
-            {
-              id: 'manual-processing',
-              title: 'Manual Processing',
-              path: '/admin/bill-pay/payments/manual',
-              icon: BuildIcon,
-              resourceId: 'route:billPay.payments.manual' as ResourceId
             },
             {
               id: 'fis-payee-check',

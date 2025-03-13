@@ -5,8 +5,8 @@ import ClientManagement from '../ClientManagement';
 import ContactInformation from '../ContactInformation';
 import UsersWrapper from './UsersWrapper';
 import GroupsWrapper from './GroupsWrapper';
-import SecuritySettingsWrapper from './SecuritySettingsWrapper';
-import MemberSecuritySettingsWrapper from './MemberSecuritySettingsWrapper';
+import SecuritySettings from '../security/SecuritySettings';
+import Configuration from '../Configuration';
 import { decodeId } from '../../../utils/idEncoder';
 import logger from '../../../utils/logger';
 
@@ -53,7 +53,8 @@ const ClientManagementWrapper: React.FC = () => {
               <Route index element={<GroupsWrapper />} />
               <Route path=":groupId" element={<GroupsWrapper />} />
             </Route>
-            <Route path="security" element={<MemberSecuritySettingsWrapper />} />
+            <Route path="security" element={<SecuritySettings />} />
+            <Route path="configuration" element={<Configuration clientId={decodedClientId} />} />
             <Route path="*" element={<Navigate to="info" replace />} />
           </Routes>
         </ClientManagement>

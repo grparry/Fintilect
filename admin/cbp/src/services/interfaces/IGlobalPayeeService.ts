@@ -5,7 +5,8 @@ import {
   Payee,
   PaymentValidationResult,
   FisPayeeRequest,
-  FisPayeeResponse
+  FisPayeeResponse,
+  FisPayeeDetailedResponse
 } from '../../types/bill-pay.types';
 
 /**
@@ -19,6 +20,13 @@ export interface IGlobalPayeeService extends IBaseService {
      * @returns FIS payee response
      */
     getFisPayee(request: FisPayeeRequest): Promise<FisPayeeResponse>;
+
+    /**
+     * Get a detailed global payee from FIS Web Service (v2)
+     * @param request FIS payee request parameters
+     * @returns FIS payee detailed response
+     */
+    getFisPayeeDetailed(request: FisPayeeRequest): Promise<FisPayeeDetailedResponse>;
 
     /**
      * Get payees with pagination and filtering

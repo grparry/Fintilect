@@ -3,10 +3,12 @@ import { lazy } from 'react';
 import { RouteConfig } from '../types/route.types';
 import CodeIcon from '@mui/icons-material/Code';
 import ApiIcon from '@mui/icons-material/Api';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 // Lazy load components
 const DevelopmentHeader = lazy(() => import('../components/development/DevelopmentHeader'));
 const APITesting = lazy(() => import('../components/development/APITesting'));
+const ClientConfigTest = lazy(() => import('../components/development/ClientConfigTest'));
 
 const developmentRoutes: RouteConfig[] = [
   {
@@ -27,6 +29,15 @@ const developmentRoutes: RouteConfig[] = [
     icon: ApiIcon,
     sectionId: 'development',
     resourceId: 'route:development.api-testing',
+  },
+  {
+    id: 'client-config',
+    path: 'client-config',
+    title: 'Client Configuration',
+    element: ClientConfigTest,
+    icon: SettingsIcon,
+    sectionId: 'development',
+    resourceId: 'route:development.client-config',
   }
 ];
 export default developmentRoutes;

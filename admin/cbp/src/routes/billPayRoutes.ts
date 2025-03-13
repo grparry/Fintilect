@@ -24,7 +24,7 @@ const PaymentManagement = lazy(() => import('../components/bill-pay/payments/Pay
 const PaymentManagementHeader = lazy(() => import('../components/bill-pay/payments/PaymentManagementHeader'));
 const PendingPayments = lazy(() => import('../components/bill-pay/payments/ManagePayments'));
 const ExceptionTool = lazy(() => import('../components/bill-pay/payments/ExceptionTool'));
-const Reports = lazy(() => import('../components/bill-pay/reports/Reports'));
+const Reports = lazy(() => import('../components/bill-pay/reports/index'));
 const Settings = lazy(() => import('../components/bill-pay/settings/Settings'));
 const BillPayConfig = lazy(() => import('../components/bill-pay/settings/BillPayConfig'));
 const Holidays = lazy(() => import('../components/bill-pay/settings/Holidays'));

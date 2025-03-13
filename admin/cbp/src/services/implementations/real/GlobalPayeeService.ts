@@ -6,7 +6,8 @@ import {
   Payee,
   PaymentValidationResult,
   FisPayeeRequest,
-  FisPayeeResponse
+  FisPayeeResponse,
+  FisPayeeDetailedResponse
 } from '../../../types/bill-pay.types';
 
 export class GlobalPayeeService extends BaseService implements IGlobalPayeeService {
@@ -17,6 +18,18 @@ export class GlobalPayeeService extends BaseService implements IGlobalPayeeServi
   async getFisPayee(request: FisPayeeRequest): Promise<FisPayeeResponse> {
     try {
       return await this.post<FisPayeeResponse>('/fis-payee', request);
+    } catch (error: any) {
+      // Handle 409 Conflict specifically for FIS payee endpoint
+      if (error?.response?.status === 409 || (error?.message && error?.message.includes('409'))) {
+        throw new Error('No matching FIS payee found. Please verify the information provided.');
+      }
+      throw error;
+    }
+  }
+
+  async getFisPayeeDetailed(request: FisPayeeRequest): Promise<FisPayeeDetailedResponse> {
+    try {
+      return await this.post<FisPayeeDetailedResponse>('/fis-payee/v2', request);
     } catch (error: any) {
       // Handle 409 Conflict specifically for FIS payee endpoint
       if (error?.response?.status === 409 || (error?.message && error?.message.includes('409'))) {

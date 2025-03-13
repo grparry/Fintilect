@@ -135,6 +135,9 @@ const CopyMemberPayees: React.FC = () => {
       setTargetMemberId('');
       setConfirmTargetMemberId('');
       setConfirmationInput('');
+      
+      // Refresh the source member payees to show updated status (inactive)
+      await handleSearch();
     } catch (err) {
       setCopyError(`Failed to copy member payees: ${err instanceof Error ? err.message : 'Unknown error'}`);
       console.error('Error copying member payees:', err);

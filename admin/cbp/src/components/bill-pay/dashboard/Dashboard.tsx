@@ -152,8 +152,8 @@ const Dashboard: React.FC = () => {
         // Set end to end of day
         now.setHours(23, 59, 59, 999);
         return {
-          StartDate: start.toISOString().split('T')[0],
-          EndDate: now.toISOString().split('T')[0]
+          startDate: start.toISOString().split('T')[0],
+          endDate: now.toISOString().split('T')[0]
         };
       };
       const dateRange = getDateRange();
@@ -162,10 +162,10 @@ const Dashboard: React.FC = () => {
         processorService.getProcessorMetrics({ dateRange })
       ]);
       const statusCounts = {
-        [PaymentStatus.PENDING]: processorMetrics.InProcessPayments || 0,
-        [PaymentStatus.COMPLETED]: processorMetrics.CompletedPayments || 0,
-        [PaymentStatus.FAILED]: processorMetrics.FailedPayments || 0,
-        [PaymentStatus.CANCELLED]: processorMetrics.CancelledPayments || 0,
+        [PaymentStatus.PENDING]: processorMetrics.inProcessPayments || 0,
+        [PaymentStatus.COMPLETED]: processorMetrics.completedPayments || 0,
+        [PaymentStatus.FAILED]: processorMetrics.failedPayments || 0,
+        [PaymentStatus.CANCELLED]: processorMetrics.cancelledPayments || 0,
         [PaymentStatus.PROCESSING]: 0,
         [PaymentStatus.PENDING_APPROVAL]: 0,
         [PaymentStatus.ON_HOLD]: 0,

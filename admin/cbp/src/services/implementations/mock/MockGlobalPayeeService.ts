@@ -6,6 +6,7 @@ import {
   Payee,
   FisPayeeRequest,
   FisPayeeResponse,
+  FisPayeeDetailedResponse,
   PaymentValidationResult
 } from '../../../types/bill-pay.types';
 
@@ -39,6 +40,33 @@ export class MockGlobalPayeeService extends BaseMockService implements IGlobalPa
     return {
       payeeId: '1',
       message: 'Mock FIS payee retrieved successfully'
+    };
+  }
+
+  async getFisPayeeDetailed(request: FisPayeeRequest): Promise<FisPayeeDetailedResponse> {
+    return {
+      payeeId: '1',
+      message: 'Mock FIS payee retrieved successfully',
+      merchantId: 'MERCH001',
+      merchantName: 'Verizon Wireless',
+      webhelp: 'https://www.verizon.com/support',
+      payeeName: 'Verizon',
+      accountNumber: request.usersAccountAtPayee || '123456789',
+      cutoffTime: '14:00',
+      leadDays: '2',
+      address1: '1095 Avenue of the Americas',
+      address2: 'Floor 8',
+      address3: '',
+      city: 'New York',
+      state: 'NY',
+      postalCode: '10036',
+      country: 'USA',
+      dpbc: '',
+      billerType: 'Telecom',
+      billerId: 'VZW001',
+      help: 'For account questions call 1-800-922-0204',
+      terms: 'Standard payment terms apply',
+      valid: true
     };
   }
 

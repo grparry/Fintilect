@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -6,55 +7,18 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import { SecuritySettings as SecuritySettingsType } from '../../../types/security.types';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
-import MemberSecuritySettings from './MemberSecuritySettings';
+import { 
+  ClientLoginSecurityResponse 
+} from '../../../types/security.types';
+import { clientLoginSecurityService } from '../../../services/factory/ServiceFactory';
+import ClientLoginSecuritySettings from './ClientLoginSecuritySettings';
+import { decodeId } from '../../../utils/idEncoder';
 
-interface SecuritySettingsProps {
-  clientId: string;
-}
-
-const defaultSecuritySettings: SecuritySettingsType = {
-  passwordPolicy: {
-    minLength: 8,
-    requireUppercase: true,
-    requireLowercase: true,
-    requireNumbers: true,
-    requireSpecialChars: true,
-    expirationDays: 90,
-    preventReuse: 5,
-    complexityScore: 3
-  },
-  loginPolicy: {
-    maxAttempts: 3,
-    lockoutDuration: 30,
-    sessionTimeout: 30,
-    requireMFA: false,
-    allowRememberMe: true,
-    allowMultipleSessions: false,
-    requirePasswordChange: false
-  },
-  ipWhitelist: {
-    enabled: false,
-    addresses: [],
-    allowedRanges: []
-  },
-  mfaSettings: {
-    methods: ['email'],
-    defaultMethod: 'email',
-    gracePeriod: 7,
-    trustDuration: 30
-  },
-  alertSettings: {
-    enableEmailAlerts: true,
-    enableSMSAlerts: false,
-    recipients: [],
-    severityLevels: ['high', 'critical']
-  }
-};
-
-const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
-  const [settings, setSettings] = useState<SecuritySettingsType | null>(null);
+const SecuritySettings: React.FC = () => {
+  // Extract and decode clientId from URL parameters
+  const { clientId: encodedClientId } = useParams<{ clientId: string }>();
+  const clientId = encodedClientId ? decodeId(encodedClientId) : '';
+  const [clientLoginSettings, setClientLoginSettings] = useState<ClientLoginSecurityResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -66,14 +30,20 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     try {
       setLoading(true);
       setError(null);
-      const clientService = ServiceFactory.getInstance().getClientService();
-      const config = await clientService.getClientConfig(parseInt(clientId));
-      const mergedSettings: SecuritySettingsType = {
-        ...defaultSecuritySettings,
-        ...config.security
-      };
-      setSettings(mergedSettings);
+      
+      // The clientId should already be decoded by the wrapper component
+      // Convert to number for the service call
+      const numericClientId = Number(clientId);
+      
+      if (isNaN(numericClientId)) {
+        throw new Error(`Invalid client ID: ${clientId}`);
+      }
+      
+      // Load client login security settings
+      const loginSecuritySettings = await clientLoginSecurityService.getLoginSecurityByClientId(numericClientId);
+      setClientLoginSettings(loginSecuritySettings);
     } catch (err) {
+      console.error('Error loading security settings:', err);
       const message = err instanceof Error ? err.message : 'Failed to load security settings';
       setError(message);
     } finally {
@@ -81,14 +51,13 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
     }
   };
 
-  const handleSettingsChange = (field: keyof SecuritySettingsType, value: any) => {
-    if (settings) {
-      setSettings({
-        ...settings,
-        [field]: value
-      });
-    }
-  };
+  if (!clientId) {
+    return (
+      <Alert severity="error" sx={{ mb: 2 }}>
+        Client ID is required. Please select a client from the list.
+      </Alert>
+    );
+  }
 
   if (loading) {
     return (
@@ -111,14 +80,18 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ clientId }) => {
       <Typography variant="h5" gutterBottom>
         Security Settings
       </Typography>
-      <Paper>
-        <Box p={3}>
-          <MemberSecuritySettings
+      <Paper sx={{ p: 3 }}>
+        {clientLoginSettings ? (
+          <ClientLoginSecuritySettings
             clientId={clientId}
-            settings={settings}
-            onChange={handleSettingsChange}
+            settings={clientLoginSettings}
+            onRefresh={loadSettings}
           />
-        </Box>
+        ) : (
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+            <CircularProgress />
+          </Box>
+        )}
       </Paper>
     </Box>
   );

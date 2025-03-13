@@ -98,7 +98,7 @@ const LoginPage: React.FC = () => {
           </Typography>
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
-              {error.message}
+              {error.details?.message || 'Authentication failed. Please check your credentials.'}
             </Alert>
           )}
           <Form

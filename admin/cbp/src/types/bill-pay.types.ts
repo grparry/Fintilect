@@ -661,6 +661,36 @@ export interface FisPayeeRequest {
 export interface FisPayeeResponse {
   payeeId?: string;
   message?: string;
+  payeeName?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+}
+
+export interface FisPayeeDetailedResponse {
+  payeeId?: string;
+  message?: string;
+  merchantId?: string;
+  merchantName?: string;
+  webhelp?: string;
+  payeeName?: string;
+  accountNumber?: string;
+  cutoffTime?: string;
+  leadDays?: string;
+  address1?: string;
+  address2?: string;
+  address3?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
+  dpbc?: string;
+  billerType?: string;
+  billerId?: string;
+  help?: string;
+  terms?: string;
+  valid?: boolean;
 }
 
 // Report Types

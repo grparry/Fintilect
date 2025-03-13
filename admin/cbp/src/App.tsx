@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { NavigationProvider } from './context/NavigationContext';
 import { HostProvider, useHost } from './context/HostContext';
+import { ClientProvider } from './context/ClientContext';
 import { ServiceProvider } from './providers/ServiceProvider';
 import MainLayout from './components/layout/MainLayout';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -115,6 +116,11 @@ const RootRedirect: React.FC = () => {
   return <Navigate to={isAdmin ? "/admin" : "/unauthorized"} replace />;
 };
 
+// Only import DevTools in development mode
+const DevTools: React.FC = process.env.NODE_ENV === 'development' 
+  ? lazy(() => import('./components/development/DevTools'))
+  : () => null;
+
 const App: React.FC = () => {
   const routes = useMemo(() => getAllRoutes(), []);
   
@@ -156,9 +162,10 @@ const App: React.FC = () => {
         <ThemeProvider>
           <AuthProvider>
             <HostProvider>
-              <ServiceProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <NavigationProvider config={navigationConfig}>
+              <ClientProvider>
+                <ServiceProvider>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <NavigationProvider config={navigationConfig}>
                     <Box sx={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -198,11 +205,14 @@ const App: React.FC = () => {
                           </Route>
 
                         </Routes>
+                        {/* Development Tools - only rendered in development mode */}
+                        {process.env.NODE_ENV === 'development' && <DevTools />}
                       </Suspense>
                     </Box>
-                  </NavigationProvider>
-                </LocalizationProvider>
-              </ServiceProvider>
+                    </NavigationProvider>
+                  </LocalizationProvider>
+                </ServiceProvider>
+              </ClientProvider>
             </HostProvider>
           </AuthProvider>
         </ThemeProvider>

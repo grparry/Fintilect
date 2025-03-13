@@ -14,9 +14,7 @@ const UsersWrapper = lazy(() => import('../components/client-management/wrappers
 const UserEditWrapper = lazy(() => import('../components/client-management/wrappers/UserEditWrapper'));
 const GroupsWrapper = lazy(() => import('../components/client-management/wrappers/GroupsWrapper'));
 const SecuritySettings = lazy(() => import('../components/client-management/security/SecuritySettings'));
-const MemberSecuritySettings = lazy(() => import('../components/client-management/security/MemberSecuritySettings'));
 const ClientManagement = lazy(() => import('../components/client-management/ClientManagement'));
-const SecuritySettingsWrapper = lazy(() => import('../components/client-management/wrappers/SecuritySettingsWrapper'));
 
 interface RouteParams {
   clientId?: string;
@@ -89,7 +87,7 @@ const clientManagementRoutes: RouteConfig[] = [
         id: 'client-security',
         path: 'security',
         title: 'Security Settings',
-        element: SecuritySettingsWrapper,
+        element: SecuritySettings,
         children: [
           {
             id: 'client-security-settings',
@@ -99,10 +97,10 @@ const clientManagementRoutes: RouteConfig[] = [
             resourceId: 'route:client-management.edit.security' as ResourceId
           },
           {
-            id: 'client-member-security',
+            id: 'client-login-security',
             path: 'member-security',
-            title: 'Member Security Settings',
-            element: MemberSecuritySettings,
+            title: 'Login Security Settings',
+            element: SecuritySettings,
             resourceId: 'route:client-management.edit.member-security' as ResourceId
           }
         ]

@@ -7,7 +7,6 @@ import {
   Tabs,
   CircularProgress,
   Alert,
-  Chip,
 } from '@mui/material';
 import { Client, Environment, ClientStatus, ClientType } from '../../types/client.types';
 import { clientService } from '../../services/factory/ServiceFactory';
@@ -15,7 +14,8 @@ import ContactInformation from './ContactInformation';
 import ClientInformation from './ClientInformation';
 import GroupsWrapper from './wrappers/GroupsWrapper';
 import UsersWrapper from './wrappers/UsersWrapper';
-import MemberSecuritySettingsWrapper from './wrappers/MemberSecuritySettingsWrapper';
+import SecuritySettings from './security/SecuritySettings';
+import Configuration from './Configuration';
 import { encodeId } from '../../utils/idEncoder';
 import logger from '../../utils/logger';
 import { useHost } from '../../context/HostContext';
@@ -128,6 +128,7 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
       case 'contacts': return 1;
       case 'groups': return 3;
       case 'security': return 4;
+      case 'configuration': return 5;
       case 'info': return 0;
       default: return 0;
     }
@@ -152,20 +153,12 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
       case 4:
         navigate(`${basePath}/security`);
         break;
+      case 5:
+        navigate(`${basePath}/configuration`);
+        break;
     }
   };
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'ACTIVE':
-        return 'success';
-      case 'INACTIVE':
-        return 'error';
-      case 'SUSPENDED':
-        return 'warning';
-      default:
-        return 'default';
-    }
-  };
+  // Status color function removed
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -193,19 +186,14 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
         <Typography variant="h5" component="h1" color="text.primary">
           {client.name}
         </Typography>
-        <Chip
-          label={client.status}
-          color={getStatusColor(client.status)}
-          size="small"
-          sx={{ ml: 2 }}
-        />
       </Box>
       <Tabs value={getCurrentTab()} onChange={handleTabChange}>
         <Tab label="Client Information" />
         <Tab label="Contacts" />
         <Tab label="Users" />
         <Tab label="Groups" />
-        <Tab label="Security Settings" />
+        <Tab label="Login Security" />
+        <Tab label="Configuration" />
       </Tabs>
 
       <TabPanel value={getCurrentTab()} index={0}>
@@ -221,7 +209,10 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
         <GroupsWrapper />
       </TabPanel>
       <TabPanel value={getCurrentTab()} index={4}>
-        <MemberSecuritySettingsWrapper />
+        <SecuritySettings />
+      </TabPanel>
+      <TabPanel value={getCurrentTab()} index={5}>
+        <Configuration clientId={clientId} />
       </TabPanel>
     </Box>
   );

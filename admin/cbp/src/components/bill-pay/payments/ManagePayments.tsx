@@ -55,7 +55,8 @@ import {
   PaymentActivityRequest,
   PaymentMethod,
   PaymentStatus,
-  PaymentHistory
+  PaymentHistory,
+  SearchType
 } from '../../../types/payment.types';
 import dayjs, { Dayjs } from 'dayjs';
 
@@ -69,6 +70,7 @@ interface FilterState {
   startDate: Dayjs | null;
   endDate: Dayjs | null;
   searchTerm: string;
+  searchType: SearchType;
   status: PaymentStatus[];
   method: PaymentMethod[];
   page: number;
@@ -88,11 +90,12 @@ const initialFilterState: FilterState = {
   startDate: dayjs().subtract(30, 'days'),
   endDate: dayjs(),
   searchTerm: '',
+  searchType: SearchType.Date,
   status: [],
   method: [],
   page: 1,
   limit: 10,
-  sortBy: 'PaymentID',
+  sortBy: 'paymentID',
   sortOrder: 'desc'
 };
 
@@ -130,31 +133,111 @@ export const ManagePayments: React.FC = () => {
   };
 
   // Fetch payments
-  const fetchPayments = useCallback(async () => {
+  const fetchPendingPayments = useCallback(async () => {
     try {
       setLoading(true);
-      setError(null);
+      
+      // Determine the appropriate search type based on the search term and filters
+      let searchType = filters.searchType;
+      let searchValue = filters.searchTerm;
+      let payeeName = '';
+      
+      // If no specific search type is selected, try to auto-detect based on the format
+      if (searchValue && !searchType) {
+        // If search term looks like a payment ID (e.g., TSTC00001785)
+        if (/^TSTC\d+$/.test(searchValue)) {
+          searchType = SearchType.PaymentID;
+        } 
+        // If search term looks like a member ID (numeric)
+        else if (/^\d+$/.test(searchValue)) {
+          searchType = SearchType.MemberID;
+        }
+        // If search term looks like a payee ID (e.g., TSTC0000000512)
+        else if (/^TSTC\d+$/.test(searchValue)) {
+          searchType = SearchType.PayeeID;
+        }
+        // If search term looks like a userPayeeListID
+        else if (/^TSTC\d+$/.test(searchValue)) {
+          searchType = SearchType.UserPayeeListId;
+        }
+        // If search term might be a payee name
+        else {
+          searchType = SearchType.PayeeName;
+          payeeName = searchValue;
+          searchValue = '';
+        }
+      }
+      
+      // Handle combined search types
+      if (filters.startDate && filters.endDate) {
+        if (searchType === SearchType.MemberID) {
+          searchType = SearchType.MemberIDAndDate;
+        } else if (searchType === SearchType.PayeeName || payeeName) {
+          searchType = SearchType.Date;
+          payeeName = payeeName || searchValue;
+          searchValue = '';
+        } else if (!searchValue) {
+          // If we only have dates, use Date search type
+          searchType = SearchType.Date;
+        }
+      } else if (searchType === SearchType.MemberID && payeeName) {
+        searchType = SearchType.MemberIDAndPayeeName;
+      }
 
+      // Construct the search request with proper parameter casing
       const searchRequest: PaymentActivityRequest = {
-        StartDate: filters.startDate?.format('YYYY-MM-DD') || '',
-        EndDate: filters.endDate?.format('YYYY-MM-DD') || '',
-        SearchType: 'all',
-        SearchValue: filters.searchTerm,
-        PayeeName: ''
+        startDate: filters.startDate?.format('YYYY-MM-DD') || '',
+        endDate: filters.endDate?.format('YYYY-MM-DD') || '',
+        searchType: searchType,
+        searchValue: searchValue,
+        payeeName: payeeName
       };
 
       const response: PaymentActivityListResponse = await paymentService.getPendingPayments(searchRequest);
-      const payments: PaymentActivity[] = response.PaymentActivities.map(p => ({
+      
+      // Handle both response formats - either paymentActivities or payments
+      const paymentData = response.paymentActivities || (response as any).payments || [];
+      
+      // Map the response data to the expected format with proper ID casing
+      const payments: PaymentActivity[] = paymentData.map((p: any) => ({
         ...p,
+        // Map API response fields to expected fields with proper ID casing
+        paymentID: p.paymentID || p.paymentId,
+        memberID: p.memberID || p.memberId,
+        payeeID: p.payeeID || p.payeeId,
+        userPayeeListID: p.userPayeeListID || p.userPayeeListId,
+        recurringPaymentID: p.recurringPaymentID || p.recurringPaymentId,
+        payeeName: p.payeeName,
+        amount: p.amount,
+        dueDate: p.dueDate || p.willProcessDate,
+        // Set a proper status name based on the payment data
+        statusName: p.status || (p.willProcessDate && new Date(p.willProcessDate) > new Date() ? 
+                    PaymentStatus.PENDING : PaymentStatus.PROCESSING),
         recipient: {
-          name: p.PayeeName || '',
-          accountNumber: p.PayeeID || '',
-          routingNumber: p.FisPayeeId || '',
+          name: p.payeeName || '',
+          accountNumber: p.payeeID || p.payeeId || '',
+          routingNumber: p.userPayeeListID || p.userPayeeListId || '',
           bankName: ''
         }
       }));
-      setPendingPayments(payments);
-      setPagination(prev => ({ ...prev, total: payments.length }));
+      
+      // Apply client-side filtering for status and method if needed
+      let filteredPayments = payments;
+      
+      if (filters.status && filters.status.length > 0) {
+        filteredPayments = filteredPayments.filter(p => 
+          filters.status.includes(p.statusName as PaymentStatus)
+        );
+      }
+      
+      if (filters.method && filters.method.length > 0) {
+        filteredPayments = filteredPayments.filter(p => 
+          filters.method.includes(p.paymentMethod as PaymentMethod)
+        );
+      }
+      
+      setPendingPayments(filteredPayments);
+      setPagination(prev => ({ ...prev, total: filteredPayments.length }));
     } catch (err) {
       handleError(err);
       setPendingPayments([]);
@@ -165,8 +248,8 @@ export const ManagePayments: React.FC = () => {
   }, [filters, paymentService]);
 
   useEffect(() => {
-    fetchPayments();
-  }, [fetchPayments]);
+    fetchPendingPayments();
+  }, [fetchPendingPayments]);
 
   // Apply client-side filtering whenever payments or searchTerm changes
   useEffect(() => {
@@ -177,10 +260,10 @@ export const ManagePayments: React.FC = () => {
     const searchTermLower = filters.searchTerm.toLowerCase();
     const filtered = pendingPayments.filter(payment => {
       return (
-        payment.PaymentID.toLowerCase().includes(searchTermLower) ||
-        payment.PayeeID.toLowerCase().includes(searchTermLower) ||
-        payment.Amount.toString().includes(searchTermLower) ||
-        payment.StatusName.toLowerCase().includes(searchTermLower)
+        payment.paymentID.toLowerCase().includes(searchTermLower) ||
+        payment.payeeID.toLowerCase().includes(searchTermLower) ||
+        payment.amount.toString().includes(searchTermLower) ||
+        payment.statusName.toLowerCase().includes(searchTermLower)
       );
     });
 
@@ -210,21 +293,21 @@ export const ManagePayments: React.FC = () => {
 
   const handleApprove = useCallback(async (payment: PaymentActivity) => {
     try {
-      setProcessing((prev) => ({ ...prev, [payment.PaymentID]: true }));
-      await paymentService.approvePayment(payment.PaymentID);
-      await fetchPayments();
+      setProcessing((prev) => ({ ...prev, [payment.paymentID]: true }));
+      await paymentService.approvePayment(payment.paymentID);
+      await fetchPendingPayments();
     } catch (err) {
       handleError(err);
     } finally {
-      setProcessing((prev) => ({ ...prev, [payment.PaymentID]: false }));
+      setProcessing((prev) => ({ ...prev, [payment.paymentID]: false }));
     }
-  }, [fetchPayments]);
+  }, [fetchPendingPayments]);
 
   const handleRejectPayment = useCallback(async (paymentId: string) => {
     try {
       setProcessing((prev) => ({ ...prev, [paymentId]: true }));
       await paymentService.rejectPayment(paymentId, rejectReason);
-      await fetchPayments();
+      await fetchPendingPayments();
       setDialogState({ open: false, payment: null, action: null });
       setRejectReason('');
     } catch (err) {
@@ -232,27 +315,51 @@ export const ManagePayments: React.FC = () => {
     } finally {
       setProcessing((prev) => ({ ...prev, [paymentId]: false }));
     }
-  }, [user?.id, fetchPayments, rejectReason]);
+  }, [user?.id, fetchPendingPayments, rejectReason]);
 
   const handleViewHistory = async (payment: PaymentActivity) => {
     try {
       setLoading(true);
-      const history = await paymentService.getPaymentHistory(payment.PaymentID);
-      const formattedHistory = history.map(h => ({
-        Action: h.PaymentMethod || 'Unknown',
-        PerformedBy: h.MemberId,
-        Timestamp: h.EntryDate || h.LastUpdate || '',
-        Details: {
-          amount: h.Amount,
-          method: h.PaymentMethod,
-          status: h.StatusCode
-        }
-      }));
+      
+      // Create a request with the required parameters as specified in the cURL example
+      const searchParams = {
+        StartDate: "2021-01-01", // Using a wide date range to ensure results
+        EndDate: new Date().toISOString().split('T')[0], // Current date
+        SearchType: 2, // 2 is for PaymentId as per the instructions
+        SearchValue: payment.paymentID
+      };
+      
+      // Pass the search parameters to the service
+      const response = await paymentService.getPaymentHistory(payment.paymentID, searchParams);
+      
+      // Handle the API response format
+      const historyData = Array.isArray(response) ? response : [];
+      
+      // Always show the dialog, even if there's no history
       setDialogState({
         open: true,
         payment,
         action: 'history',
-        history: formattedHistory
+        history: historyData.length === 0 ? 
+          [{ 
+            action: 'No Payment History', 
+            performedBy: '', 
+            timestamp: '', 
+            details: { 
+              notes: 'No history is available for this payment.' 
+            } 
+          }] : 
+          historyData.map((h: any) => ({
+            action: h.action || h.paymentMethod || 'Unknown',
+            performedBy: h.performedBy || h.memberID || h.memberId || '',
+            timestamp: h.timestamp || h.entryDate || h.lastUpdate || '',
+            details: {
+              amount: h.amount || 0,
+              method: h.method || h.paymentMethod || '',
+              status: h.status || h.statusCode || 0,
+              notes: h.notes || h.memo || ''
+            }
+          }))
       });
     } catch (error) {
       console.error('Error fetching payment history:', error);
@@ -270,7 +377,7 @@ export const ManagePayments: React.FC = () => {
     try {
       setProcessing(prev => ({ ...prev, bulk: true }));
       await Promise.all(selectedPayments.map(id => paymentService.approvePayment(id)));
-      await fetchPayments();
+      await fetchPendingPayments();
       setSelectedPayments([]);
     } catch (err) {
       handleError(err, 'Failed to approve payments');
@@ -289,7 +396,7 @@ export const ManagePayments: React.FC = () => {
       await Promise.all(selectedPayments.map(id => 
         paymentService.rejectPayment(id, rejectReason || 'Bulk rejected by admin')
       ));
-      await fetchPayments();
+      await fetchPendingPayments();
       setSelectedPayments([]);
     } catch (err) {
       handleError(err, 'Failed to reject payments');
@@ -337,7 +444,28 @@ export const ManagePayments: React.FC = () => {
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleFilterChange('searchTerm', event.target.value);
+    const searchTerm = event.target.value;
+    
+    // Determine search type based on the search term pattern
+    let searchType = SearchType.Date;
+    
+    if (searchTerm) {
+      if (/^P\d+$/.test(searchTerm)) {
+        searchType = SearchType.PaymentID;
+      } else if (/^M\d+$/.test(searchTerm)) {
+        searchType = SearchType.MemberID;
+      } else if (/^PAY\d+$/.test(searchTerm)) {
+        searchType = SearchType.PayeeID;
+      } else if (!/^\d+$/.test(searchTerm)) {
+        searchType = SearchType.PayeeName;
+      }
+    }
+    
+    setFilters(prev => ({ 
+      ...prev, 
+      searchTerm, 
+      searchType 
+    }));
   };
 
   const handleDeleteFilterValue = (
@@ -538,7 +666,7 @@ export const ManagePayments: React.FC = () => {
                   }
                   onChange={(event) =>
                     setSelectedPayments(
-                      event.target.checked ? pendingPayments.map((p) => p.PaymentID) : []
+                      event.target.checked ? pendingPayments.map((p) => p.paymentID) : []
                     )
                   }
                   aria-label="Select all payments"
@@ -569,41 +697,41 @@ export const ManagePayments: React.FC = () => {
               </TableRow>
             ) : (
               pendingPayments.map((payment) => (
-                <TableRow key={payment.PaymentID}>
+                <TableRow key={payment.paymentID}>
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedPayments.includes(payment.PaymentID)}
+                      checked={selectedPayments.includes(payment.paymentID)}
                       onChange={(event) =>
                         setSelectedPayments(
                           event.target.checked
-                            ? [...selectedPayments, payment.PaymentID]
-                            : selectedPayments.filter((id) => id !== payment.PaymentID)
+                            ? [...selectedPayments, payment.paymentID]
+                            : selectedPayments.filter((id) => id !== payment.paymentID)
                         )
                       }
                       aria-label="Select payment"
                     />
                   </TableCell>
-                  <TableCell>{payment.PaymentID}</TableCell>
-                  <TableCell>{payment.PayeeID}</TableCell>
-                  <TableCell>{payment.MemberID}</TableCell>
+                  <TableCell>{payment.paymentID}</TableCell>
+                  <TableCell>{payment.payeeID}</TableCell>
+                  <TableCell>{payment.memberID}</TableCell>
                   <TableCell>
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
                       currency: 'USD',
-                    }).format(payment.Amount)}
+                    }).format(payment.amount)}
                   </TableCell>
                   <TableCell>
                     <Chip
-                      label={payment.StatusName}
+                      label={payment.statusName}
                       size="small"
-                      color={getStatusColor(payment.StatusName as PaymentStatus)}
+                      color={getStatusColor(payment.statusName as PaymentStatus)}
                     />
                   </TableCell>
                   <TableCell>
-                    {payment.DateProcessed ? dayjs(payment.DateProcessed).format('MM/DD/YYYY') : '-'}
+                    {payment.dateProcessed ? dayjs(payment.dateProcessed).format('MM/DD/YYYY') : '-'}
                   </TableCell>
                   <TableCell>
-                    {dayjs(payment.DueDate).format('MM/DD/YYYY')}
+                    {dayjs(payment.dueDate).format('MM/DD/YYYY')}
                   </TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1}>
@@ -622,14 +750,14 @@ export const ManagePayments: React.FC = () => {
                           <VisibilityIcon />
                         </IconButton>
                       </Tooltip>
-                      {payment.StatusName === PaymentStatus.PENDING && (
+                      {payment.statusName === PaymentStatus.PENDING && (
                         <>
                           <Tooltip title="Approve">
                             <IconButton
                               size="small"
                               color="success"
                               onClick={() => handleApprove(payment)}
-                              disabled={processing[payment.PaymentID]}
+                              disabled={processing[payment.paymentID]}
                               aria-label="Approve"
                             >
                               <CheckCircleIcon />
@@ -646,7 +774,7 @@ export const ManagePayments: React.FC = () => {
                                   action: 'reject'
                                 });
                               }}
-                              disabled={processing[payment.PaymentID]}
+                              disabled={processing[payment.paymentID]}
                               aria-label="Reject"
                             >
                               <CancelIcon />
@@ -686,18 +814,18 @@ export const ManagePayments: React.FC = () => {
     if (dialogState.action === 'view' && dialogState.payment) {
       // Transform PaymentActivity to Payment
       const payment: Payment = {
-        Id: dialogState.payment.PaymentID,
-        WillProcessDate: dialogState.payment.DueDate || '',
-        Memo: '',  // PaymentActivity doesn't have this field
-        BillReference: '',  // PaymentActivity doesn't have this field
-        FundingAccount: '',  // PaymentActivity doesn't have this field
-        UserPayeeListId: dialogState.payment.PayeeID,
-        MemberId: dialogState.payment.MemberID,
-        Amount: dialogState.payment.Amount,
-        SourceApplication: '',  // PaymentActivity doesn't have this field
-        DeliveryDate: dialogState.payment.DateProcessed,
-        Status: dialogState.payment.StatusName,
-        PaymentMethod: dialogState.payment.PaymentMethod
+        paymentID: dialogState.payment.paymentID,
+        willProcessDate: dialogState.payment.dueDate || '',
+        memo: '',  // PaymentActivity doesn't have this field
+        billReference: '',  // PaymentActivity doesn't have this field
+        fundingAccount: '',  // PaymentActivity doesn't have this field
+        userPayeeListID: dialogState.payment.payeeID,
+        memberID: dialogState.payment.memberID,
+        amount: dialogState.payment.amount,
+        sourceApplication: '',  // PaymentActivity doesn't have this field
+        deliveryDate: dialogState.payment.dateProcessed,
+        status: dialogState.payment.statusName,
+        paymentMethod: dialogState.payment.paymentMethod
       };
 
       return (
@@ -729,7 +857,7 @@ export const ManagePayments: React.FC = () => {
                     Payment ID
                   </Typography>
                   <Typography variant="body1">
-                    {dialogState.payment.PaymentID}
+                    {dialogState.payment.paymentID}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -740,7 +868,7 @@ export const ManagePayments: React.FC = () => {
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
                       currency: 'USD',
-                    }).format(dialogState.payment.Amount)}
+                    }).format(dialogState.payment.amount)}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -748,7 +876,7 @@ export const ManagePayments: React.FC = () => {
                     Status
                   </Typography>
                   <Typography variant="body1">
-                    {dialogState.payment.StatusName}
+                    {dialogState.payment.statusName}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -756,7 +884,7 @@ export const ManagePayments: React.FC = () => {
                     Will Process Date
                   </Typography>
                   <Typography variant="body1">
-                    {dayjs(dialogState.payment.DueDate).format('MM/DD/YYYY')}
+                    {dayjs(dialogState.payment.dueDate).format('MM/DD/YYYY')}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -767,11 +895,11 @@ export const ManagePayments: React.FC = () => {
                     {dialogState.history.map((entry, index) => (
                       <Box key={index} sx={{ mb: 2 }}>
                         <Typography variant="body2" color="text.primary">
-                          {entry.Action} by {entry.PerformedBy} at {dayjs(entry.Timestamp).format('MM/DD/YYYY HH:mm:ss')}
+                          {entry.action}{entry.performedBy ? ` by ${entry.performedBy}` : ''}{entry.timestamp ? ` at ${dayjs(entry.timestamp).format('MM/DD/YYYY HH:mm:ss')}` : ''}
                         </Typography>
-                        {entry.Details && (
+                        {entry.details && (
                           <Typography variant="body2" color="text.primary" sx={{ mt: 0.5 }}>
-                            {Object.entries(entry.Details).map(([key, value]) => (
+                            {Object.entries(entry.details).map(([key, value]) => (
                               <span key={key}>
                                 {key}: {value.toString()}
                                 <br />
@@ -832,8 +960,8 @@ export const ManagePayments: React.FC = () => {
             Cancel
           </Button>
           <Button
-            onClick={() => dialogState.payment && handleRejectPayment(dialogState.payment.PaymentID)}
-            disabled={!rejectReason || (dialogState.payment && processing[dialogState.payment.PaymentID])}
+            onClick={() => dialogState.payment && handleRejectPayment(dialogState.payment.paymentID)}
+            disabled={!rejectReason || (dialogState.payment && processing[dialogState.payment.paymentID])}
             color="error"
             variant="contained"
           >
@@ -847,11 +975,11 @@ export const ManagePayments: React.FC = () => {
   const renderSummary = () => {
     const stats = pendingPayments.reduce((acc, payment) => {
       return {
-        totalAmount: (acc.totalAmount || 0) + payment.Amount,
+        totalAmount: (acc.totalAmount || 0) + payment.amount,
         totalCount: (acc.totalCount || 0) + 1,
         statusCounts: {
           ...acc.statusCounts,
-          [payment.StatusName]: ((acc.statusCounts || {})[payment.StatusName] || 0) + 1
+          [payment.statusName]: ((acc.statusCounts || {})[payment.statusName] || 0) + 1
         }
       };
     }, { totalAmount: 0, totalCount: 0, statusCounts: {} as Record<string, number> });
@@ -907,13 +1035,13 @@ export const ManagePayments: React.FC = () => {
     ];
 
     const csvData = pendingPayments.map(payment => [
-      payment.PaymentID,
-      payment.PayeeID,
-      payment.MemberID,
-      payment.Amount.toString(),
-      payment.StatusName,
-      payment.DateProcessed ? dayjs(payment.DateProcessed).format('MM/DD/YYYY') : '',
-      dayjs(payment.DueDate).format('MM/DD/YYYY')
+      payment.paymentID,
+      payment.payeeID,
+      payment.memberID,
+      payment.amount.toString(),
+      payment.statusName,
+      payment.dateProcessed ? dayjs(payment.dateProcessed).format('MM/DD/YYYY') : '',
+      dayjs(payment.dueDate).format('MM/DD/YYYY')
     ]);
 
     const csvContent = [

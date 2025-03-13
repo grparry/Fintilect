@@ -197,9 +197,9 @@ const ManualProcessing: React.FC = () => {
       const config = await paymentProcessorService.getProcessorConfig();
       const validationConfig = {
         maxAmounts: {
-          [PaymentMethod.ACH]: config.ValidationRules.MaxAmount || 0,
-          [PaymentMethod.CHECK]: config.ValidationRules.MaxAmount || 0,
-          [PaymentMethod.CARD]: config.ValidationRules.MaxAmount || 0
+          [PaymentMethod.ACH]: config.validationRules.maxAmount || 0,
+          [PaymentMethod.CHECK]: config.validationRules.maxAmount || 0,
+          [PaymentMethod.CARD]: config.validationRules.maxAmount || 0
         } as ValidPaymentMethods
       };
       setPaymentLimits(validationConfig.maxAmounts);
@@ -340,30 +340,30 @@ const ManualProcessing: React.FC = () => {
       setLoading(true);
       setError(null);
       const transaction: PaymentTransaction = {
-        Id: '', // Will be assigned by service
-        ClientId: form.clientId,
-        Amount: parseFloat(form.amount),
-        Currency: 'USD',
-        Method: form.paymentType as PaymentMethod,
-        Type: PaymentType.DEBIT,
-        Status: PaymentStatus.PENDING,
-        ScheduledAt: form.effectiveDate.toDate(),
-        Priority: PaymentPriority.NORMAL,
-        CreatedAt: new Date(),
-        UpdatedAt: new Date(),
-        Metadata: {
-          AccountNumber: form.accountNumber,
-          RoutingNumber: form.routingNumber,
-          BankName: form.bankName,
-          Memo: form.memo
+        id: '', // Will be assigned by service
+        clientId: form.clientId,
+        amount: parseFloat(form.amount),
+        currency: 'USD',
+        method: form.paymentType as PaymentMethod,
+        type: PaymentType.DEBIT,
+        status: PaymentStatus.PENDING,
+        scheduledAt: form.effectiveDate.toDate(),
+        priority: PaymentPriority.NORMAL,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        metadata: {
+          accountNumber: form.accountNumber,
+          routingNumber: form.routingNumber,
+          bankName: form.bankName,
+          memo: form.memo
         }
       };
       const validationResult = await paymentProcessorService.validatePayment(transaction);
-      if (!validationResult.IsValid) {
+      if (!validationResult.isValid) {
         setValidation({
-          errors: validationResult.Errors.reduce((acc: Record<string, string>, err: { Code: string; Message: string }) => ({
+          errors: validationResult.errors.reduce((acc: Record<string, string>, err: { code: string; message: string }) => ({
             ...acc,
-            [err.Code]: err.Message,
+            [err.code]: err.message,
           }), {}),
           warnings: {},
         });
@@ -390,27 +390,27 @@ const ManualProcessing: React.FC = () => {
     setError(null);
     try {
       const transaction: PaymentTransaction = {
-        Id: '', // Will be assigned by service
-        ClientId: form.clientId,
-        Amount: parseFloat(form.amount || '0'),
-        Currency: 'USD',
-        Method: form.paymentType as PaymentMethod,
-        Type: PaymentType.DEBIT,
-        Status: PaymentStatus.PENDING,
-        ScheduledAt: form.effectiveDate.toDate(),
-        Priority: PaymentPriority.NORMAL,
-        CreatedAt: new Date(),
-        UpdatedAt: new Date(),
-        Metadata: {
-          AccountNumber: form.accountNumber,
-          RoutingNumber: form.routingNumber,
-          BankName: form.bankName,
-          Memo: form.memo
+        id: '', // Will be assigned by service
+        clientId: form.clientId,
+        amount: parseFloat(form.amount || '0'),
+        currency: 'USD',
+        method: form.paymentType as PaymentMethod,
+        type: PaymentType.DEBIT,
+        status: PaymentStatus.PENDING,
+        scheduledAt: form.effectiveDate.toDate(),
+        priority: PaymentPriority.NORMAL,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        metadata: {
+          accountNumber: form.accountNumber,
+          routingNumber: form.routingNumber,
+          bankName: form.bankName,
+          memo: form.memo
         }
       };
       const schedule: PaymentSchedule = {
-        WillProcessDate: form.effectiveDate.toISOString(),
-        Frequency: 'once'
+        willProcessDate: form.effectiveDate.toISOString(),
+        frequency: 'once'
       };
       const response = await paymentProcessorService.schedulePayment(transaction, schedule);
       if (response) {

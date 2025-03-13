@@ -5,7 +5,7 @@
     "version": "v1"
   },
   "paths": {
-    "/api/v1/Calendar/holiday": {
+    "/api/v1/calendar/holiday": {
       "post": {
         "tags": [
           "Calendar"
@@ -97,7 +97,7 @@
         }
       }
     },
-    "/api/v1/Calendar/holiday/{holidayId}": {
+    "/api/v1/calendar/holiday/{holidayId}": {
       "delete": {
         "tags": [
           "Calendar"
@@ -180,7 +180,7 @@
         }
       }
     },
-    "/api/v1/Calendar/holiday/all/{sponsorId}": {
+    "/api/v1/calendar/holiday/all/{sponsorId}": {
       "get": {
         "tags": [
           "Calendar"
@@ -224,7 +224,7 @@
         }
       }
     },
-    "/api/v1/Configuration": {
+    "/api/v1/configuration": {
       "post": {
         "tags": [
           "Configuration"
@@ -313,7 +313,7 @@
         }
       }
     },
-    "/api/v1/Configuration/{id}": {
+    "/api/v1/configuration/{id}": {
       "delete": {
         "tags": [
           "Configuration"
@@ -396,7 +396,7 @@
         }
       }
     },
-    "/api/v1/Configuration/all": {
+    "/api/v1/configuration/all": {
       "get": {
         "tags": [
           "Configuration"
@@ -429,7 +429,7 @@
         }
       }
     },
-    "/api/v1/Configuration/refresh": {
+    "/api/v1/configuration/refresh": {
       "post": {
         "tags": [
           "Configuration"
@@ -442,7 +442,7 @@
         }
       }
     },
-    "/api/v1/Contact": {
+    "/api/v1/contact": {
       "post": {
         "tags": [
           "Contact"
@@ -531,7 +531,7 @@
         }
       }
     },
-    "/api/v1/Contact/{id}": {
+    "/api/v1/contact/{id}": {
       "delete": {
         "tags": [
           "Contact"
@@ -562,7 +562,7 @@
         }
       }
     },
-    "/api/v1/Contact/all": {
+    "/api/v1/contact/all": {
       "get": {
         "tags": [
           "Contact"
@@ -595,7 +595,7 @@
         }
       }
     },
-    "/api/v1/Customer": {
+    "/api/v1/customer": {
       "post": {
         "tags": [
           "Customer"
@@ -653,7 +653,94 @@
         }
       }
     },
-    "/api/v1/Exception/{date}": {
+    "/api/v1/report/errorrecap": {
+      "get": {
+        "tags": [
+          "ErrorRecap"
+        ],
+        "summary": "Retrieves paginated error recap data based on search criteria",
+        "parameters": [
+          {
+            "name": "SearchType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchValue",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRecapItemPagedResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRecapItemPagedResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRecapItemPagedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/exception/{date}": {
       "get": {
         "tags": [
           "Exception"
@@ -699,7 +786,7 @@
         }
       }
     },
-    "/api/v1/Exception/refund": {
+    "/api/v1/exception/refund": {
       "post": {
         "tags": [
           "Exception"
@@ -762,7 +849,7 @@
         }
       }
     },
-    "/api/v1/InstitutionInfo": {
+    "/api/v1/institutioninfo": {
       "post": {
         "tags": [
           "InstitutionInfo"
@@ -885,7 +972,7 @@
         }
       }
     },
-    "/api/v1/Notification/saved/clear": {
+    "/api/v1/notification/saved/clear": {
       "post": {
         "tags": [
           "Notification"
@@ -926,7 +1013,7 @@
         }
       }
     },
-    "/api/v1/Notification": {
+    "/api/v1/notification": {
       "post": {
         "tags": [
           "Notification"
@@ -1018,7 +1105,7 @@
         }
       }
     },
-    "/api/v1/Notification/{notificationId}": {
+    "/api/v1/notification/{notificationId}": {
       "delete": {
         "tags": [
           "Notification"
@@ -1101,7 +1188,7 @@
         }
       }
     },
-    "/api/v1/Notification/all": {
+    "/api/v1/notification/all": {
       "get": {
         "tags": [
           "Notification"
@@ -1134,7 +1221,7 @@
         }
       }
     },
-    "/api/v1/Notification/configured": {
+    "/api/v1/notification/configured": {
       "get": {
         "tags": [
           "Notification"
@@ -1167,7 +1254,7 @@
         }
       }
     },
-    "/api/v1/Notification/search": {
+    "/api/v1/notification/search": {
       "post": {
         "tags": [
           "Notification"
@@ -1225,7 +1312,7 @@
         }
       }
     },
-    "/api/v1/Notification/send/customer": {
+    "/api/v1/notification/send/customer": {
       "post": {
         "tags": [
           "Notification"
@@ -1271,7 +1358,7 @@
         }
       }
     },
-    "/api/v1/Notification/send": {
+    "/api/v1/notification/send": {
       "post": {
         "tags": [
           "Notification"
@@ -1317,7 +1404,7 @@
         }
       }
     },
-    "/api/v1/Notification/send/support": {
+    "/api/v1/notification/send/support": {
       "post": {
         "tags": [
           "Notification"
@@ -1358,7 +1445,7 @@
         }
       }
     },
-    "/api/v1/OnUs/payment/{id}": {
+    "/api/v1/onus/payment/{id}": {
       "get": {
         "tags": [
           "OnUs"
@@ -1389,7 +1476,7 @@
         }
       }
     },
-    "/api/v1/OnUs/payment/repost": {
+    "/api/v1/onus/payment/repost": {
       "put": {
         "tags": [
           "OnUs"
@@ -1435,7 +1522,7 @@
         }
       }
     },
-    "/api/v1/OnUs/payment/refund": {
+    "/api/v1/onus/payment/refund": {
       "put": {
         "tags": [
           "OnUs"
@@ -1481,7 +1568,7 @@
         }
       }
     },
-    "/api/v1/OnUs/failed-on-us": {
+    "/api/v1/onus/failed-on-us": {
       "post": {
         "tags": [
           "OnUs"
@@ -1542,7 +1629,7 @@
         }
       }
     },
-    "/api/v1/Payee/global/close": {
+    "/api/v1/payee/global/close": {
       "post": {
         "tags": [
           "Payee"
@@ -1588,7 +1675,7 @@
         }
       }
     },
-    "/api/v1/Payee/copy-payees": {
+    "/api/v1/payee/copy-payees": {
       "post": {
         "tags": [
           "Payee"
@@ -1634,7 +1721,7 @@
         }
       }
     },
-    "/api/v1/Payee/user/change-history": {
+    "/api/v1/payee/user/change-history": {
       "post": {
         "tags": [
           "Payee"
@@ -1695,7 +1782,7 @@
         }
       }
     },
-    "/api/v1/Payee/global/change-history": {
+    "/api/v1/payee/global/change-history": {
       "post": {
         "tags": [
           "Payee"
@@ -1756,7 +1843,7 @@
         }
       }
     },
-    "/api/v1/Payee/user/account-number": {
+    "/api/v1/payee/user/account-number": {
       "post": {
         "tags": [
           "Payee"
@@ -1802,7 +1889,7 @@
         }
       }
     },
-    "/api/v1/Payee/account-number-reprocess": {
+    "/api/v1/payee/account-number-reprocess": {
       "post": {
         "tags": [
           "Payee"
@@ -1848,7 +1935,7 @@
         }
       }
     },
-    "/api/v1/Payee/account-number-refund": {
+    "/api/v1/payee/account-number-refund": {
       "post": {
         "tags": [
           "Payee"
@@ -1894,7 +1981,7 @@
         }
       }
     },
-    "/api/v1/Payee/user/fis-payee-id": {
+    "/api/v1/payee/user/fis-payee-id": {
       "post": {
         "tags": [
           "Payee"
@@ -1957,7 +2044,7 @@
         }
       }
     },
-    "/api/v1/Payee/user/fis-payee-refund": {
+    "/api/v1/payee/user/fis-payee-refund": {
       "post": {
         "tags": [
           "Payee"
@@ -2020,7 +2107,7 @@
         }
       }
     },
-    "/api/v1/Payee/manual-exception-reprocess": {
+    "/api/v1/payee/manual-exception-reprocess": {
       "post": {
         "tags": [
           "Payee"
@@ -2083,7 +2170,7 @@
         }
       }
     },
-    "/api/v1/Payee/member/{memberId}": {
+    "/api/v1/payee/member/{memberId}": {
       "get": {
         "tags": [
           "Payee"
@@ -2102,7 +2189,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the list of payees",
+            "description": "Returns the list of payees (may be empty)",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2124,16 +2211,13 @@
           "400": {
             "description": "Invalid request syntax"
           },
-          "404": {
-            "description": "No payees found for the member"
-          },
           "500": {
             "description": "Something went wrong"
           }
         }
       }
     },
-    "/api/v1/Payment/change-history": {
+    "/api/v1/payment/change-history": {
       "post": {
         "tags": [
           "Payment"
@@ -2171,7 +2255,7 @@
         }
       }
     },
-    "/api/v1/Payment/recurring/change-history": {
+    "/api/v1/payment/recurring/change-history": {
       "post": {
         "tags": [
           "Payment"
@@ -2209,7 +2293,7 @@
         }
       }
     },
-    "/api/v1/Payment/pending": {
+    "/api/v1/payment/pending": {
       "post": {
         "tags": [
           "Payment"
@@ -2247,7 +2331,7 @@
         }
       }
     },
-    "/api/v1/Payment/pending-payments": {
+    "/api/v1/payment/pending-payments": {
       "post": {
         "tags": [
           "Payment"
@@ -2285,7 +2369,7 @@
         }
       }
     },
-    "/api/v1/Payment/activity": {
+    "/api/v1/payment/activity": {
       "post": {
         "tags": [
           "Payment"
@@ -2323,7 +2407,7 @@
         }
       }
     },
-    "/api/v1/Payment/reprocess": {
+    "/api/v1/payment/reprocess": {
       "post": {
         "tags": [
           "Payment"
@@ -2369,7 +2453,7 @@
         }
       }
     },
-    "/api/v1/Payment/confirmation": {
+    "/api/v1/payment/confirmation": {
       "post": {
         "tags": [
           "Payment"
@@ -2385,7 +2469,7 @@
         }
       }
     },
-    "/api/v1/Payment/status": {
+    "/api/v1/payment/status": {
       "post": {
         "tags": [
           "Payment"
@@ -2431,7 +2515,7 @@
         }
       }
     },
-    "/api/v1/Payment/{paymentId}": {
+    "/api/v1/payment/{paymentId}": {
       "put": {
         "tags": [
           "Payment"
@@ -2520,7 +2604,7 @@
         }
       }
     },
-    "/api/v1/Payment/cancel-payment-refund": {
+    "/api/v1/payment/cancel-payment-refund": {
       "post": {
         "tags": [
           "Payment"
@@ -2567,7 +2651,116 @@
         }
       }
     },
-    "/api/v1/PaymentHistory/error-recap": {
+    "/api/v1/report/paymentactivity": {
+      "get": {
+        "tags": [
+          "PaymentActivity"
+        ],
+        "summary": "Retrieves paginated payment activity data based on search criteria",
+        "parameters": [
+          {
+            "name": "SearchType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "StartDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "EndDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "MemberId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "PayeeName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentActivityItemPagedResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentActivityItemPagedResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentActivityItemPagedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/paymenthistory/error-recap": {
       "post": {
         "tags": [
           "PaymentHistory"
@@ -2628,7 +2821,7 @@
         }
       }
     },
-    "/api/v1/PaymentHistory/large-payment/{runDate}": {
+    "/api/v1/paymenthistory/large-payment/{runDate}": {
       "get": {
         "tags": [
           "PaymentHistory"
@@ -2675,7 +2868,7 @@
         }
       }
     },
-    "/api/v1/Report/run": {
+    "/api/v1/report/run": {
       "post": {
         "tags": [
           "Report"
@@ -2740,7 +2933,7 @@
         }
       }
     },
-    "/api/v1/Run/manual": {
+    "/api/v1/run/manual": {
       "post": {
         "tags": [
           "Run"
@@ -2783,7 +2976,7 @@
         }
       }
     },
-    "/api/v1/Search/payment-history": {
+    "/api/v1/search/payment-history": {
       "post": {
         "tags": [
           "Search"
@@ -2841,7 +3034,7 @@
         }
       }
     },
-    "/api/v1/Search/payment": {
+    "/api/v1/search/payment": {
       "post": {
         "tags": [
           "Search"
@@ -2899,7 +3092,7 @@
         }
       }
     },
-    "/api/v1/Search/recurring-payment": {
+    "/api/v1/search/recurring-payment": {
       "post": {
         "tags": [
           "Search"
@@ -2957,7 +3150,7 @@
         }
       }
     },
-    "/api/v1/Search/error-history": {
+    "/api/v1/search/error-history": {
       "post": {
         "tags": [
           "Search"
@@ -3015,7 +3208,7 @@
         }
       }
     },
-    "/api/v1/Search/user-payee-list": {
+    "/api/v1/search/user-payee-list": {
       "post": {
         "tags": [
           "Search"
@@ -3073,7 +3266,7 @@
         }
       }
     },
-    "/api/v1/Search/payment-clear": {
+    "/api/v1/search/payment-clear": {
       "post": {
         "tags": [
           "Search"
@@ -3131,7 +3324,7 @@
         }
       }
     },
-    "/api/v1/Search/nickname": {
+    "/api/v1/search/nickname": {
       "post": {
         "tags": [
           "Search"
@@ -3189,7 +3382,7 @@
         }
       }
     },
-    "/api/v1/Search/payee": {
+    "/api/v1/search/payee": {
       "post": {
         "tags": [
           "Search"
@@ -3247,7 +3440,7 @@
         }
       }
     },
-    "/api/v1/Search/payment-information": {
+    "/api/v1/search/payment-information": {
       "post": {
         "tags": [
           "Search"
@@ -3305,7 +3498,7 @@
         }
       }
     },
-    "/api/v1/StatusCode/{code}": {
+    "/api/v1/statuscode/{code}": {
       "get": {
         "tags": [
           "StatusCode"
@@ -3356,7 +3549,7 @@
         }
       }
     },
-    "/api/v1/StatusCode/all": {
+    "/api/v1/statuscode/all": {
       "get": {
         "tags": [
           "StatusCode"
@@ -3389,7 +3582,7 @@
         }
       }
     },
-    "/api/v1/Version": {
+    "/api/v1/version": {
       "get": {
         "tags": [
           "Version"
@@ -3960,6 +4153,98 @@
         ],
         "type": "integer",
         "format": "int32"
+      },
+      "ErrorRecapItem": {
+        "type": "object",
+        "properties": {
+          "failedDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberId": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "userPayeeListId": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "usersAccountAtPayee": {
+            "type": "string",
+            "nullable": true
+          },
+          "nameOnAccount": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "hostCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ErrorRecapItemPagedResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorRecapItem"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "hasNext": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "hasPrevious": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
       },
       "ExceptionRefundRequest": {
         "type": "object",
@@ -4961,6 +5246,86 @@
         },
         "additionalProperties": false
       },
+      "PaymentActivityItem": {
+        "type": "object",
+        "properties": {
+          "memberID": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentID": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeID": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateProcessed": {
+            "type": "string",
+            "nullable": true
+          },
+          "dueDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentMethod": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentActivityItemPagedResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentActivityItem"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "hasNext": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "hasPrevious": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PaymentActivityRequest": {
         "type": "object",
         "properties": {
@@ -5756,6 +6121,33 @@
           }
         },
         "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
       },
       "RecurringPaymentChangeHistoryReportRequest": {
         "type": "object",

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect, Rea
 import { ServiceFactory } from '../services/factory/ServiceFactory';
 import { LoginCredentials, AuthState, SessionInfo, AuthContextType } from '../types/auth.types';
 import { User, Role } from '../types/client.types';
+import logger from '../utils/logger';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -45,6 +46,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const forcePasswordChange = response.user?.forcePasswordChange === true;
       console.log('AuthContext: Setting forcePasswordChange flag:', forcePasswordChange);
       
+      // Transform roles for state
+      const roles = (response.roles || []).map(roleName => ({
+        id: 0, // Since we only have the role name
+        name: roleName
+      }));
+      
       setState(prev => ({
         ...prev,
         isAuthenticated: true,
@@ -53,11 +60,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         error: null,
         forcePasswordChange: forcePasswordChange,
         userPermissions: {
-          roles: (response.roles || []).map(roleName => ({
-            id: 0, // Since we only have the role name
-            name: roleName
-          }))
+          roles: roles
         }
+      }));
+      
+      // Log user login and permissions information
+      logger.info('User authentication successful', JSON.stringify({
+        username: response.user?.username || 'unknown',
+        userID: response.user?.id || 'unknown',
+        clientId: response.user?.clientId || 'unknown'
+      }));
+      
+      // Log detailed role information
+      logger.info('User roles and permissions', JSON.stringify({
+        rawRoles: response.roles || [],
+        mappedRoles: roles.map(r => r.name),
+        isSuperuser: (response.roles || []).includes('ClientSuperuser'),
+        isAdmin: (response.roles || []).includes('ClientAdmin'),
+        isOperator: (response.roles || []).includes('ClientOperator'),
+        isReadOnly: (response.roles || []).includes('ClientReadOnly')
       }));
       
       return { forcePasswordChange };

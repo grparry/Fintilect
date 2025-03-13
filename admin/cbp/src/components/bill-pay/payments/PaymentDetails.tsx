@@ -54,7 +54,8 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
           '& .MuiDialog-paper': {
             position: 'relative',
             zIndex: 1400,
-            backgroundColor: '#424242'
+            backgroundColor: theme => theme.palette.mode === 'dark' ? '#424242' : '#ffffff',
+            color: theme => theme.palette.mode === 'dark' ? '#ffffff' : '#000000'
           }
         }}
       >
@@ -75,11 +76,11 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Payment ID</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.Id}</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.paymentID}</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Status</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.Status}</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.status}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -91,11 +92,11 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Member ID</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.MemberId}</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.memberID}</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Source Application</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.SourceApplication || 'N/A'}</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.sourceApplication || 'N/A'}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -107,15 +108,15 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Payee List ID</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.UserPayeeListId}</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.userPayeeListID}</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Bill Reference</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.BillReference}</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.billReference}</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Funding Account</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.FundingAccount}</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.fundingAccount}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -128,30 +129,30 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Process Date</Typography>
                   <Typography variant="body1" color="text.primary">
-                    {payment.ProcessDate ? new Date(payment.ProcessDate).toLocaleDateString() : 'N/A'}
+                    {payment.processDate ? new Date(payment.processDate).toLocaleDateString() : 'N/A'}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Will Process Date</Typography>
                   <Typography variant="body1" color="text.primary">
-                    {new Date(payment.WillProcessDate).toLocaleDateString()}
+                    {new Date(payment.willProcessDate).toLocaleDateString()}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">Amount</Typography>
                   <Typography variant="body1" color="text.primary">
-                    ${Number(payment.Amount).toFixed(2)}
+                    ${Number(payment.amount).toFixed(2)}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant="body2" color="text.secondary">Memo</Typography>
-                  <Typography variant="body1" color="text.primary">{payment.Memo}</Typography>
+                  <Typography variant="body1" color="text.primary">{payment.memo}</Typography>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
         </DialogContent>
-        {payment.Status === 'PENDING' && (
+        {payment.status === 'PENDING' && (
           <DialogActions>
             <Button 
               variant="contained" 
@@ -224,7 +225,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="Will Process Date"
-                    defaultValue={dayjs(payment.WillProcessDate)}
+                    defaultValue={dayjs(payment.willProcessDate)}
                     slotProps={{
                       textField: {
                         required: true,
@@ -241,7 +242,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({ open, onClose, payment 
                   fullWidth
                   label="Amount"
                   type="number"
-                  defaultValue={payment.Amount}
+                  defaultValue={payment.amount}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>
                   }}

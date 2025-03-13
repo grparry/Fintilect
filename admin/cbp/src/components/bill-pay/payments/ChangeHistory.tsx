@@ -73,8 +73,62 @@ const USER_SEARCH_TYPES = [
 
 const GLOBAL_SEARCH_TYPES = [
   { value: 'Date', label: 'Date Range' },
-  { value: 'FisPayeeId', label: 'FIS Payee ID' }
+  { value: 'FisPayeeId', label: 'FIS Payee ID' },
+  { value: 'PayeeId', label: 'Payee ID' },
+  { value: 'MemberId', label: 'Member ID' },
+  { value: 'PaymentId', label: 'Payment ID' },
+  { value: 'RecurringPaymentId', label: 'Recurring Payment ID' },
+  { value: 'PayeeName', label: 'Payee Name' },
+  { value: 'MemberIdAndDate', label: 'Member ID and Date' },
+  { value: 'MemberIdAndPayeeName', label: 'Member ID and Payee Name' },
+  { value: 'MemberIdAndDateAndPayeeName', label: 'Member ID, Date, and Payee Name' }
 ];
+
+// Helper function to get appropriate placeholder text based on search type
+const getSearchPlaceholder = (type: string): string => {
+  switch (type) {
+    case 'Date':
+      return 'Using date range only';
+    case 'MemberId':
+      return 'Enter Member ID';
+    case 'PayeeId':
+      return 'Enter Payee ID';
+    case 'PaymentId':
+      return 'Enter Payment ID';
+    case 'RecurringPaymentId':
+      return 'Enter Recurring Payment ID';
+    case 'FisPayeeId':
+      return 'Enter FIS Payee ID';
+    case 'PayeeName':
+      return 'Enter Payee Name';
+    case 'MemberIdAndDate':
+      return 'Enter Member ID';
+    case 'MemberIdAndPayeeName':
+      return 'Enter Member ID,Payee Name';
+    case 'MemberIdAndDateAndPayeeName':
+      return 'Enter Member ID,Payee Name';
+    case 'UserPayeeListId':
+      return 'Enter User Payee List ID';
+    default:
+      return `Enter ${type}`;
+  }
+};
+
+// Helper function to get appropriate helper text based on search type
+const getSearchHelperText = (type: string): string => {
+  switch (type) {
+    case 'Date':
+      return 'Date range search only requires start and end dates';
+    case 'MemberIdAndDate':
+      return 'Date range will be applied with Member ID';
+    case 'MemberIdAndPayeeName':
+      return 'Format: MemberID,PayeeName';
+    case 'MemberIdAndDateAndPayeeName':
+      return 'Format: MemberID,PayeeName (Date range will be applied)';
+    default:
+      return '';
+  }
+};
 
 const ChangeHistory: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -82,6 +136,14 @@ const ChangeHistory: React.FC = () => {
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());
   const [searchValue, setSearchValue] = useState('');
   const [searchType, setSearchType] = useState('MemberId');
+  
+  // Dedicated search fields for different search types
+  const [memberId, setMemberId] = useState('');
+  const [payeeName, setPayeeName] = useState('');
+  const [fisPayeeId, setFisPayeeId] = useState('');
+  const [payeeId, setPayeeId] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
+  const [routingNumber, setRoutingNumber] = useState('');
   
   const [userHistories, setUserHistories] = useState<UserPayeeChangeHistoryResponse[]>([]);
   const [globalHistories, setGlobalHistories] = useState<GlobalPayeeChangeHistoryResponse[]>([]);
@@ -102,8 +164,14 @@ const ChangeHistory: React.FC = () => {
     } else {
       setSearchType(GLOBAL_SEARCH_TYPES[0].value);
     }
-    // Clear search value when switching tabs
+    // Clear all search values when switching tabs
     setSearchValue('');
+    setMemberId('');
+    setPayeeName('');
+    setFisPayeeId('');
+    setPayeeId('');
+    setAccountNumber('');
+    setRoutingNumber('');
   };
 
   const handleSearchUserHistory = async () => {
@@ -114,6 +182,12 @@ const ChangeHistory: React.FC = () => {
 
     if (startDate > endDate) {
       setUserHistoryError('Start date cannot be after end date');
+      return;
+    }
+
+    // Validate search value based on search type
+    if (!searchValue.trim()) {
+      setUserHistoryError(`Please enter a value for ${searchType} search`);
       return;
     }
 
@@ -149,14 +223,124 @@ const ChangeHistory: React.FC = () => {
       return;
     }
 
+    // Prepare search value based on search type
+    let finalSearchValue = '';
+    
+    switch (searchType) {
+      case 'Date':
+        // For Date search type, no search value is needed
+        finalSearchValue = '';
+        break;
+        
+      case 'MemberIdAndPayeeName':
+        // Validate both fields are provided
+        if (!memberId.trim()) {
+          setGlobalHistoryError('Please enter a Member ID');
+          return;
+        }
+        if (!payeeName.trim()) {
+          setGlobalHistoryError('Please enter a Payee Name');
+          return;
+        }
+        // Combine values with comma separator
+        finalSearchValue = `${memberId.trim()},${payeeName.trim()}`;
+        break;
+        
+      case 'MemberIdAndDateAndPayeeName':
+        // Validate both fields are provided
+        if (!memberId.trim()) {
+          setGlobalHistoryError('Please enter a Member ID');
+          return;
+        }
+        if (!payeeName.trim()) {
+          setGlobalHistoryError('Please enter a Payee Name');
+          return;
+        }
+        // Combine values with comma separator
+        finalSearchValue = `${memberId.trim()},${payeeName.trim()}`;
+        break;
+        
+      case 'MemberIdAndDate':
+        // Validate Member ID is provided
+        if (!memberId.trim()) {
+          setGlobalHistoryError('Please enter a Member ID');
+          return;
+        }
+        finalSearchValue = memberId.trim();
+        break;
+        
+      case 'MemberId':
+        // Validate Member ID is provided
+        if (!memberId.trim()) {
+          setGlobalHistoryError('Please enter a Member ID');
+          return;
+        }
+        finalSearchValue = memberId.trim();
+        break;
+        
+      case 'FisPayeeId':
+        // Validate FIS Payee ID is provided
+        if (!fisPayeeId.trim()) {
+          setGlobalHistoryError('Please enter a FIS Payee ID');
+          return;
+        }
+        finalSearchValue = fisPayeeId.trim();
+        break;
+        
+      case 'PayeeId':
+        // Validate Payee ID is provided
+        if (!payeeId.trim()) {
+          setGlobalHistoryError('Please enter a Payee ID');
+          return;
+        }
+        finalSearchValue = payeeId.trim();
+        break;
+        
+      case 'AccountNumber':
+        // Validate Account Number is provided
+        if (!accountNumber.trim()) {
+          setGlobalHistoryError('Please enter an Account Number');
+          return;
+        }
+        finalSearchValue = accountNumber.trim();
+        break;
+        
+      case 'RoutingNumber':
+        // Validate Routing Number is provided
+        if (!routingNumber.trim()) {
+          setGlobalHistoryError('Please enter a Routing Number');
+          return;
+        }
+        finalSearchValue = routingNumber.trim();
+        break;
+        
+      case 'PayeeName':
+        // Validate Payee Name is provided
+        if (!payeeName.trim()) {
+          setGlobalHistoryError('Please enter a Payee Name');
+          return;
+        }
+        finalSearchValue = payeeName.trim();
+        break;
+        
+      default:
+        // For all other search types, validate search value is provided
+        if (!searchValue.trim()) {
+          setGlobalHistoryError(`Please enter a value for ${searchType} search`);
+          return;
+        }
+        finalSearchValue = searchValue.trim();
+    }
+
     try {
       setIsGlobalHistoryLoading(true);
       setGlobalHistoryError(null);
 
+      // Format request according to CBP Report API requirements
       const request: GlobalPayeeChangeHistoryReportRequest = {
         startDate: startDate.format('YYYY-MM-DD'),
         endDate: endDate.format('YYYY-MM-DD'),
-        searchValue: searchValue,
+        searchValue: finalSearchValue,
         searchType: searchType
       };
 
@@ -248,24 +432,207 @@ const ChangeHistory: React.FC = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={2}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Search"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  placeholder={searchType === 'Date' ? 'Using date range only' : `Enter ${searchType}`}
-                  disabled={searchType === 'Date'}
-                />
-              </Grid>
+              {/* Dynamic search fields based on search type */}
+              {activeTab === 1 ? (
+                // Dedicated search fields for global history
+                <>
+                  {searchType === 'MemberId' && (
+                    <Grid item xs={12} sm={2}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        label="Member ID"
+                        value={memberId}
+                        onChange={(e) => setMemberId(e.target.value)}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                        placeholder="Enter Member ID"
+                      />
+                    </Grid>
+                  )}
+                  {(searchType === 'MemberIdAndPayeeName' || searchType === 'MemberIdAndDateAndPayeeName') && (
+                    <>
+                      <Grid item xs={12} sm={2}>
+                        <TextField
+                          fullWidth
+                          size="small"
+                          label="Member ID"
+                          value={memberId}
+                          onChange={(e) => setMemberId(e.target.value)}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <SearchIcon />
+                              </InputAdornment>
+                            ),
+                          }}
+                          placeholder="Enter Member ID"
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={2}>
+                        <TextField
+                          fullWidth
+                          size="small"
+                          label="Payee Name"
+                          value={payeeName}
+                          onChange={(e) => setPayeeName(e.target.value)}
+                          placeholder="Enter Payee Name"
+                        />
+                      </Grid>
+                    </>
+                  )}
+                  {searchType === 'FisPayeeId' && (
+                    <Grid item xs={12} sm={2}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        label="FIS Payee ID"
+                        value={fisPayeeId}
+                        onChange={(e) => setFisPayeeId(e.target.value)}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                        placeholder="Enter FIS Payee ID"
+                      />
+                    </Grid>
+                  )}
+                  {searchType === 'PayeeId' && (
+                    <Grid item xs={12} sm={2}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        label="Payee ID"
+                        value={payeeId}
+                        onChange={(e) => setPayeeId(e.target.value)}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                        placeholder="Enter Payee ID"
+                      />
+                    </Grid>
+                  )}
+                  {searchType === 'AccountNumber' && (
+                    <Grid item xs={12} sm={2}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        label="Account Number"
+                        value={accountNumber}
+                        onChange={(e) => setAccountNumber(e.target.value)}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                        placeholder="Enter Account Number"
+                      />
+                    </Grid>
+                  )}
+                  {searchType === 'RoutingNumber' && (
+                    <Grid item xs={12} sm={2}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        label="Routing Number"
+                        value={routingNumber}
+                        onChange={(e) => setRoutingNumber(e.target.value)}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                        placeholder="Enter Routing Number"
+                      />
+                    </Grid>
+                  )}
+                  {searchType === 'MemberIdAndDate' && (
+                    <Grid item xs={12} sm={2}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        label="Member ID"
+                        value={memberId}
+                        onChange={(e) => setMemberId(e.target.value)}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                        placeholder="Enter Member ID"
+                      />
+                    </Grid>
+                  )}
+                  {(searchType !== 'Date' && 
+                    searchType !== 'MemberIdAndPayeeName' && 
+                    searchType !== 'MemberIdAndDateAndPayeeName' && 
+                    searchType !== 'MemberIdAndDate' && 
+                    searchType !== 'FisPayeeId' && 
+                    searchType !== 'PayeeId' && 
+                    searchType !== 'AccountNumber' && 
+                    searchType !== 'RoutingNumber' && 
+                    searchType !== 'MemberId') && (
+                    <Grid item xs={12} sm={2}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        label="Search"
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                        placeholder={getSearchPlaceholder(searchType)}
+                        disabled={searchType === 'Date'}
+                        helperText={getSearchHelperText(searchType)}
+                      />
+                    </Grid>
+                  )}
+                </>
+              ) : (
+                // Standard search field for other search types
+                <Grid item xs={12} sm={2}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    label="Search"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                    placeholder={getSearchPlaceholder(searchType)}
+                    disabled={searchType === 'Date'}
+                    helperText={getSearchHelperText(searchType)}
+                  />
+                </Grid>
+              )}
               <Grid item xs={12} sm={2}>
                 <Button
                   fullWidth

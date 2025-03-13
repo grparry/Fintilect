@@ -66,47 +66,17 @@ const PaymentManagementHeader: React.FC = () => {
           >
             <Link
               component={RouterLink}
-              to="/admin/bill-pay/payments/fis-exceptions"
+              to="/admin/bill-pay/payments/exceptions"
               color="inherit"
               underline="none"
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
             >
               <ErrorIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
               <Typography variant="h6" color="text.primary" gutterBottom>
-                FIS Exception Handling
+                Exception Handling
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Handle FIS payment exceptions
-              </Typography>
-            </Link>
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <Paper 
-            sx={{ 
-              p: 3, 
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              '&:hover': {
-                bgcolor: 'action.hover'
-              }
-            }}
-          >
-            <Link
-              component={RouterLink}
-              to="/admin/bill-pay/payments/manual"
-              color="inherit"
-              underline="none"
-              sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
-            >
-              <BuildIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" color="text.primary" gutterBottom>
-                Manual Processing
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Process payments manually
+                Handle payment exceptions
               </Typography>
             </Link>
           </Paper>

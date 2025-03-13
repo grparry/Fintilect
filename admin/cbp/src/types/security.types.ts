@@ -103,3 +103,43 @@ export interface BillPaySecurityValidation {
     isValid: boolean;
     errors: Record<string, string>;
 }
+
+// Client Login Security Types
+/**
+ * Response model for client login security settings
+ */
+export interface ClientLoginSecurityResponse {
+    id: number;
+    clientId: number;
+    minPasswordLength: number;
+    requireUppercase: boolean;
+    requireLowercase: boolean;
+    requireNumbers: boolean;
+    requireSpecialCharacters: boolean;
+    passwordExpiryDays: number;
+    maxLoginAttempts: number;
+    sessionTimeoutMinutes: number;
+    preventPasswordReuse: number;
+    twoFactorAuthRequired: boolean;
+    createdOn: string;
+    updatedOn: string | null;
+    lastModifiedBy: string | null;
+    clientName: string | null;
+}
+
+/**
+ * Request model for updating client login security settings
+ */
+export interface ClientLoginSecurityUpdateRequest {
+    id: number;
+    minPasswordLength: number;
+    requireUppercase: boolean;
+    requireLowercase: boolean;
+    requireNumbers: boolean;
+    requireSpecialCharacters: boolean;
+    passwordExpiryDays: number;
+    maxLoginAttempts: number;
+    sessionTimeoutMinutes: number;
+    preventPasswordReuse: number;
+    twoFactorAuthRequired: boolean;
+}

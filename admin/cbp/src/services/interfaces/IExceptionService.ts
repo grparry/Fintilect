@@ -1,11 +1,12 @@
 import { IBaseService } from './IBaseService';
 import {
-    ExceptionTool,
-    ExceptionToolStatus,
-    ExceptionToolPriority,
-    ExceptionToolFilters,
-    ExceptionResolution
-} from '../../types/bill-pay.types';
+    Exception,
+    ExceptionFilter,
+    ExceptionStatus,
+    UpdateExceptionRequest,
+    ExceptionListResponse,
+    ExceptionCorrectionType
+} from '../../types/exception.types';
 import { PaginatedResponse } from '../../types/common.types';
 
 /**
@@ -14,18 +15,18 @@ import { PaginatedResponse } from '../../types/common.types';
  */
 export interface IExceptionService extends IBaseService {
     /**
-     * Get exceptions with pagination and filtering
+     * Get exceptions with filtering
      * @param filters Exception filters
-     * @returns Paginated list of exceptions
+     * @returns List of exceptions
      */
-    getExceptions(filters: ExceptionToolFilters): Promise<PaginatedResponse<ExceptionTool>>;
+    getExceptions(filters: ExceptionFilter): Promise<ExceptionListResponse>;
 
     /**
      * Get specific exception
      * @param exceptionId Exception identifier
      * @returns Exception details
      */
-    getException(exceptionId: string): Promise<ExceptionTool>;
+    getException(exceptionId: string): Promise<Exception>;
 
     /**
      * Update exception status
@@ -35,7 +36,7 @@ export interface IExceptionService extends IBaseService {
      */
     updateExceptionStatus(
         exceptionId: string,
-        status: ExceptionToolStatus,
+        status: ExceptionStatus,
         notes?: string
     ): Promise<void>;
 
@@ -46,22 +47,23 @@ export interface IExceptionService extends IBaseService {
      */
     updateExceptionPriority(
         exceptionId: string,
-        priority: ExceptionToolPriority
+        priority: string
     ): Promise<void>;
 
     /**
-     * Get exception summary
+     * Get summary of exceptions
      * @returns Exception summary statistics
      */
     getExceptionSummary(): Promise<{
-        total: number;
-        byStatus: Record<ExceptionToolStatus, number>;
-        byPriority: Record<ExceptionToolPriority, number>;
+        totalCount: number;
+        byStatus: Record<ExceptionStatus, number>;
+        byCategory: Record<string, number>;
+        bySeverity: Record<string, number>;
         avgResolutionTime: number;
     }>;
 
     /**
-     * Assign exception
+     * Assign exception to user
      * @param exceptionId Exception identifier
      * @param userId User identifier
      */
@@ -70,21 +72,21 @@ export interface IExceptionService extends IBaseService {
     /**
      * Bulk update exceptions
      * @param exceptionIds List of exception identifiers
-     * @param updates Updates to apply
+     * @param updates Update data
      */
     bulkUpdateExceptions(
         exceptionIds: string[],
         updates: {
-            status?: ExceptionToolStatus;
-            priority?: ExceptionToolPriority;
+            status?: ExceptionStatus;
+            priority?: string;
             assignedTo?: string;
         }
     ): Promise<void>;
 
     /**
-     * Get exception audit trail
+     * Get audit trail for exception
      * @param exceptionId Exception identifier
-     * @returns List of audit entries
+     * @returns Audit trail entries
      */
     getExceptionAuditTrail(exceptionId: string): Promise<Array<{
         action: string;
@@ -94,7 +96,7 @@ export interface IExceptionService extends IBaseService {
     }>>;
 
     /**
-     * Add exception note
+     * Add note to exception
      * @param exceptionId Exception identifier
      * @param note Note content
      * @param userId User identifier
@@ -106,9 +108,9 @@ export interface IExceptionService extends IBaseService {
     ): Promise<void>;
 
     /**
-     * Get exception notes
+     * Get notes for exception
      * @param exceptionId Exception identifier
-     * @returns List of notes
+     * @returns Exception notes
      */
     getExceptionNotes(exceptionId: string): Promise<Array<{
         id: string;
@@ -118,9 +120,28 @@ export interface IExceptionService extends IBaseService {
     }>>;
 
     /**
-     * Resolve a payment exception
+     * Resolve exception
      * @param exceptionId Exception identifier
      * @param resolution Resolution details
      */
-    resolveException(exceptionId: string, resolution: ExceptionResolution): Promise<void>;
+    resolveException(exceptionId: string, resolution: string): Promise<void>;
+
+    /**
+     * Update exception with correction information
+     * @param exceptionId Exception identifier
+     * @param correctionType Type of correction
+     * @param correctionData Correction data based on the correction type
+     */
+    updateExceptionCorrection(
+        exceptionId: string, 
+        correctionType: ExceptionCorrectionType, 
+        correctionData: {
+            usersAccountAtPayee?: string;
+            manualDescription?: string;
+            fisPayeeId?: string;
+            amount?: number;
+            date?: string;
+            notes?: string;
+        }
+    ): Promise<void>;
 }

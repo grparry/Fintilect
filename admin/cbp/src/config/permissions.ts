@@ -88,8 +88,41 @@ export const permissionRegistry: PermissionRegistry = {
     resourceId: 'route:billPay.payments.change-history',
     permissions: ['BillPayViewer', 'BillPayProcessor'],
     adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
-    description: 'View payee change history'
+    description: 'View payment change history'
   },
+  
+  // Bill Pay Settings
+  'route:billPay.settings': {
+    resourceId: 'route:billPay.settings',
+    permissions: ['BillPayAdmin'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Access Bill Pay settings'
+  },
+  'route:billPay.settings.config': {
+    resourceId: 'route:billPay.settings.config',
+    permissions: ['BillPayAdmin'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Manage Bill Pay configuration settings'
+  },
+  'route:billPay.settings.holidays': {
+    resourceId: 'route:billPay.settings.holidays',
+    permissions: ['BillPayAdmin'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Manage Bill Pay holidays'
+  },
+  'route:billPay.settings.notifications': {
+    resourceId: 'route:billPay.settings.notifications',
+    permissions: ['BillPayAdmin'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Manage Bill Pay notification templates'
+  },
+  'route:billPay.settings.security': {
+    resourceId: 'route:billPay.settings.security',
+    permissions: ['BillPayAdmin'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'Manage Bill Pay security settings'
+  },
+  
   'route:billPay.reports': {
     resourceId: 'route:billPay.reports',
     permissions: ['BillPayViewer', 'BillPayReports_Read'],

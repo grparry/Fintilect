@@ -15,6 +15,8 @@ import { IReportService } from '../interfaces/IReportService';
 import { IHolidayService } from '../interfaces/IHolidayService';
 import { IPermissionService } from '../interfaces/IPermissionService';
 import { IDashboardService } from '../interfaces/IDashboardService';
+import { IConfigurationService } from '../interfaces/IConfigurationService';
+import { IClientLoginSecurityService } from '../interfaces/IClientLoginSecurityService';
 import { UserService } from '../implementations/real/UserService';
 import { ClientService } from '../implementations/real/ClientService';
 import { BillPayService } from '../implementations/real/BillPayService';
@@ -31,6 +33,8 @@ import { ReportService } from '../implementations/real/ReportService';
 import { HolidayService } from '../implementations/real/HolidayService';
 import { PermissionService } from '../implementations/real/PermissionService';
 import { DashboardService } from '../implementations/real/DashboardService';
+import { ConfigurationService } from '../implementations/real/ConfigurationService';
+import { ClientLoginSecurityService } from '../implementations/real/ClientLoginSecurityService';
 import { MockUserService } from '../implementations/mock/MockUserService';
 import { MockClientService } from '../implementations/mock/MockClientService';
 import { MockBillPayService } from '../implementations/mock/MockBillPayService';
@@ -47,6 +51,8 @@ import { MockReportService } from '../implementations/mock/MockReportService';
 import { MockHolidayService } from '../implementations/mock/MockHolidayService';
 import { MockPermissionService } from '../implementations/mock/MockPermissionService';
 import { MockDashboardService } from '../implementations/mock/MockDashboardService';
+import { MockConfigurationService } from '../implementations/mock/MockConfigurationService';
+import { MockClientLoginSecurityService } from '../implementations/mock/MockClientLoginSecurityService';
 import { shouldUseMockService, API_CONFIG } from '../../config/api.config';
 
 /**
@@ -54,12 +60,11 @@ import { shouldUseMockService, API_CONFIG } from '../../config/api.config';
  */
 export class ServiceFactory {
   private static instance: ServiceFactory;
-  private static readonly adminBaseUrl = API_CONFIG.urls.admin;
-  private static readonly adminCuBaseUrl = API_CONFIG.urls.adminCu;
+  // Use functions to dynamically get the API URLs based on the selected client
 
   private services: Map<string, IUserService | IClientService | IBillPayService | IAuthService | ISecurityService | 
     INotificationService | IExceptionService | IFISExceptionService | IGlobalPayeeService | IPayeeService | IPaymentProcessorService | IPaymentService | 
-    IReportService | IHolidayService | IPermissionService | IDashboardService > = new Map();
+    IReportService | IHolidayService | IPermissionService | IDashboardService | IConfigurationService | IClientLoginSecurityService > = new Map();
 
   private constructor() {
     // Initialize services
@@ -74,15 +79,22 @@ export class ServiceFactory {
   }
 
   static getAdminEndpoint(path: string): string {
-    return `${this.adminBaseUrl}${path}`;
+    return `${API_CONFIG.urls.admin()}${path}`;
   }
 
   static getAdminCuEndpoint(path: string): string {
-    return `${this.adminCuBaseUrl}${path}`;
+    return `${API_CONFIG.urls.adminCu()}${path}`;
   }
 
   private initializeServices(): void {
     console.log('Initializing services');
+    
+    // Configuration Service
+    this.services.set('configuration',
+      shouldUseMockService('configuration')
+        ? new MockConfigurationService()
+        : new ConfigurationService()
+    );
     
     // User Service
     this.services.set('user', 
@@ -119,6 +131,13 @@ export class ServiceFactory {
         : new SecurityService(ServiceFactory.getAdminEndpoint('/security'))
     );
 
+    // Client Login Security Service
+    this.services.set('clientLoginSecurity',
+      shouldUseMockService('clientLoginSecurity')
+        ? new MockClientLoginSecurityService(ServiceFactory.getAdminEndpoint('/api'))
+        : new ClientLoginSecurityService(ServiceFactory.getAdminEndpoint('/api'))
+    );
+
     // Notification Service
     this.services.set('notification',
       shouldUseMockService('notification')
@@ -129,8 +148,8 @@ export class ServiceFactory {
     // Exception Service
     this.services.set('exception',
       shouldUseMockService('exception')
-        ? new MockExceptionService(ServiceFactory.getAdminEndpoint('/exceptions'))
-        : new ExceptionService(ServiceFactory.getAdminEndpoint('/exceptions'))
+        ? new MockExceptionService(ServiceFactory.getAdminEndpoint('/Exception'))
+        : new ExceptionService(ServiceFactory.getAdminEndpoint('/api/v1/Exception'))
     );
 
     // FIS Exception Service
@@ -327,6 +346,30 @@ export class ServiceFactory {
     return service as IDashboardService;
   }
 
+  /**
+   * Get the configuration service instance
+   * @returns The configuration service instance
+   */
+  getConfigurationService(): IConfigurationService {
+    const service = this.services.get('configuration');
+    if (!service) {
+      throw new Error('Configuration service not initialized');
+    }
+    return service as IConfigurationService;
+  }
+
+  /**
+   * Get the client login security service instance
+   * @returns The client login security service instance
+   */
+  getClientLoginSecurityService(): IClientLoginSecurityService {
+    const service = this.services.get('clientLoginSecurity');
+    if (!service) {
+      throw new Error('ClientLoginSecurity service not initialized');
+    }
+    return service as IClientLoginSecurityService;
+  }
+
 }
 
 // Export service instances
@@ -335,6 +378,7 @@ export const clientService = ServiceFactory.getInstance().getClientService();
 export const billPayService = ServiceFactory.getInstance().getBillPayService();
 export const authService = ServiceFactory.getInstance().getAuthService();
 export const securityService = ServiceFactory.getInstance().getSecurityService();
+export const clientLoginSecurityService = ServiceFactory.getInstance().getClientLoginSecurityService();
 export const notificationService = ServiceFactory.getInstance().getNotificationService();
 export const exceptionService = ServiceFactory.getInstance().getExceptionService();
 export const fisExceptionService = ServiceFactory.getInstance().getFISExceptionService();
@@ -346,3 +390,4 @@ export const reportService = ServiceFactory.getInstance().getReportService();
 export const holidayService = ServiceFactory.getInstance().getHolidayService();
 export const permissionService = ServiceFactory.getInstance().getPermissionService();
 export const dashboardService = ServiceFactory.getInstance().getDashboardService();
+export const configurationService = ServiceFactory.getInstance().getConfigurationService();

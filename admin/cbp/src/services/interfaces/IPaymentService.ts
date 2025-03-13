@@ -40,11 +40,12 @@ export interface IPaymentService extends IBaseService {
   cancelPayment(paymentId: string, reason: string): Promise<void>;
 
   /**
-   * Get payment history
+   * Get payment history for a specific payment
    * @param paymentId Payment identifier
+   * @param searchParams Search parameters
    * @returns List of payment history entries
    */
-  getPaymentHistory(paymentId: string): Promise<PaymentHistory[]>;
+  getPaymentHistory(paymentId: string, searchParams: any): Promise<PaymentHistory[]>;
 
   /**
    * Approve a pending payment

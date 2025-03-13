@@ -30,11 +30,9 @@ import { PaymentException } from '@/types/payment.types';
 import {
   ExceptionResolution,
   ResolutionHistory,
-  ExceptionToolStatus,
-  ExceptionTool,
   ExceptionToolFilters,
-  ExceptionStatus,
 } from '@/types/bill-pay.types';
+import { Exception, ExceptionStatus } from '@/types/exception.types';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import dayjs from 'dayjs';
 
@@ -70,12 +68,12 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
 
   useEffect(() => {
     loadResolutionHistory();
-  }, [currentException.Id]);
+  }, [currentException.id]);
 
   const loadException = async () => {
     try {
-      const result = await exceptionService.getException(currentException.Id.toString());
-      if (result.status === 'Resolved') {
+      const result = await exceptionService.getException(currentException.id.toString());
+      if (result.status === ExceptionStatus.RESOLVED) {
         onResolutionComplete();
       }
     } catch (err) {
@@ -87,18 +85,21 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
   const loadResolutionHistory = async () => {
     try {
       const history = await exceptionService.getExceptions({
-        searchTerm: currentException.Id.toString(),
+        searchTerm: currentException.id.toString(),
         page: 1,
         limit: 10
       } as ExceptionToolFilters);
-      setHistory(history.items.map((item: ExceptionTool) => ({
-        id: parseInt(item.id),
-        exceptionId: parseInt(item.id),
-        action: item.status,
-        timestamp: item.timestamp,
-        user: item.clientName,
-        notes: item.errorMessage || ''
-      })));
+      
+      if (history.exceptions) {
+        setHistory(history.exceptions.map((item: Exception) => ({
+          id: item.id,
+          exceptionId: item.id,
+          action: item.status || ExceptionStatus.PENDING,
+          timestamp: item.created,
+          user: item.payeeName || 'Unknown',
+          notes: item.serviceRequestNumber || ''
+        })));
+      }
     } catch (err) {
       console.error('Failed to load resolution history:', err);
       setError('Failed to load resolution history');
@@ -113,8 +114,8 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
     try {
       setLoading(true);
       await exceptionService.updateExceptionStatus(
-        currentException.Id.toString(),
-        resolution.action as ExceptionToolStatus,
+        currentException.id.toString(),
+        resolution.action as ExceptionStatus,
         resolution.notes
       );
       await loadException();
@@ -130,12 +131,12 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
   const handleRetry = async () => {
     try {
       setLoading(true);
-      const result = await exceptionService.getException(currentException.Id.toString());
+      const result = await exceptionService.getException(currentException.id.toString());
       setRetryResult({
-        success: result.status === 'Resolved',
-        message: result.errorMessage || 'Exception processed successfully'
+        success: result.status === ExceptionStatus.RESOLVED,
+        message: result.serviceRequestNumber || 'Exception processed successfully'
       });
-      if (result.status === 'Resolved') {
+      if (result.status === ExceptionStatus.RESOLVED) {
         onResolutionComplete();
       }
     } catch (err) {
@@ -202,7 +203,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
                   <HistoryIcon />
                 </IconButton>
               </Tooltip>
-              {!currentException.ServiceRequestNumber && (
+              {!currentException.serviceRequestNumber && (
                 <Tooltip title="Retry">
                   <IconButton size="small" onClick={handleRetry} disabled={loading}>
                     <RefreshIcon />
@@ -215,63 +216,64 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
             <Grid item xs={12} md={6}>
               <Typography variant="subtitle2">Status</Typography>
               <Chip
-                label={currentException.ServiceRequestNumber ? 'Processed' : 'Pending'}
+                label={currentException.serviceRequestNumber ? 'Processed' : 'Pending'}
                 size="small"
-                color={currentException.ServiceRequestNumber ? 'success' : 'warning'}
+                color={currentException.serviceRequestNumber ? 'success' : 'warning'}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="subtitle2">Record Type</Typography>
-              <Typography>{currentException.RecordType}</Typography>
+              <Typography>{currentException.recordType}</Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle2">Message</Typography>
-              <Typography>{currentException.MemoLineInfo}</Typography>
+              <Typography>{currentException.memoLineInfo}</Typography>
             </Grid>
-            {currentException.ServiceRequestNumber && (
+            {currentException.serviceRequestNumber && (
               <Grid item xs={12}>
                 <Typography variant="subtitle2">Service Request Number</Typography>
-                <Typography>{currentException.ServiceRequestNumber || 'N/A'}</Typography>
+                <Typography>{currentException.serviceRequestNumber || 'N/A'}</Typography>
               </Grid>
             )}
-            {currentException.ServiceRequestNumber && (
+            {currentException.serviceRequestNumber && (
               <Box sx={{ mt: 2 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="subtitle2">Service Request Date</Typography>
                     <Typography>
-                      {currentException.ServiceRequestDate
-                        ? new Date(currentException.ServiceRequestDate).toLocaleString()
+                      {currentException.serviceRequestDate
+                        ? new Date(currentException.serviceRequestDate).toLocaleString()
                         : 'N/A'}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="subtitle2">Service Request Time</Typography>
                     <Typography>
-                      {currentException.ServiceRequestTime || 'N/A'}
+                      {currentException.serviceRequestTime || 'N/A'}
                     </Typography>
                   </Grid>
                 </Grid>
               </Box>
             )}
           </Grid>
-          {!currentException.ServiceRequestNumber && (
+          {!currentException.serviceRequestNumber && (
             <>
               <Box sx={{ mt: 2 }}>
                 <Typography variant="h6">Resolution</Typography>
-                <TextField
-                  fullWidth
-                  select
-                  label="Action"
-                  value={resolution.action}
-                  onChange={(e) =>
-                    setResolution({ ...resolution, action: e.target.value })
-                  }
-                  margin="normal"
-                >
-                  <MenuItem value="Resolved">Resolve</MenuItem>
-                  <MenuItem value="Failed">Failed</MenuItem>
-                </TextField>
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                  <InputLabel id="resolution-action-label">Action</InputLabel>
+                  <Select
+                    labelId="resolution-action-label"
+                    id="resolution-action"
+                    value={resolution.action}
+                    label="Action"
+                    onChange={(e) => setResolution({ ...resolution, action: e.target.value })}
+                  >
+                    <MenuItem value={ExceptionStatus.RESOLVED}>Resolve</MenuItem>
+                    <MenuItem value={ExceptionStatus.CLOSED}>Close</MenuItem>
+                    <MenuItem value={ExceptionStatus.IN_PROGRESS}>In Progress</MenuItem>
+                  </Select>
+                </FormControl>
                 <TextField
                   fullWidth
                   multiline
@@ -295,7 +297,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
               </Box>
             </>
           )}
-          {!currentException.ServiceRequestNumber && (
+          {!currentException.serviceRequestNumber && (
             <Alert severity="warning" sx={{ mt: 2 }}>
               Service request is pending. Please check back later for updates.
             </Alert>

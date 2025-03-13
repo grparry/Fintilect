@@ -29,17 +29,8 @@ import {
   ListItemText,
   Collapse
 } from '@mui/material';
-import { 
-  DataGrid, 
-  GridColDef, 
-  GridRenderCellParams,
-  GridValueFormatter,
-  gridPageCountSelector,
-  gridPageSelector,
-  useGridApiContext,
-  useGridSelector
-} from '@mui/x-data-grid';
-import Pagination from '@mui/material/Pagination';
+// Removed DataGrid imports
+// Removed Pagination import
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -60,6 +51,7 @@ import { clientService, userService, permissionService } from '../../services/fa
 import { useNavigate } from 'react-router-dom';
 import { encodeId } from '../../utils/idEncoder';
 import dayjs from 'dayjs';
+import GroupTable from './groups/GroupTable';
 
 interface GroupsProps {
   clientId: string;
@@ -518,86 +510,7 @@ export default function Groups({ clientId }: GroupsProps) {
     setState(prev => ({ ...prev, isFormOpen: true, selectedGroup: group }));
   }, []);
 
-  const columns: GridColDef<Group>[] = [
-    {
-      field: 'id',
-      headerName: 'ID',
-      width: 70,
-    },
-    {
-      field: 'name',
-      headerName: 'Name',
-      width: 150,
-    },
-    {
-      field: 'description',
-      headerName: 'Description',
-      width: 200,
-      renderCell: (params: GridRenderCellParams<Group>) => (
-        <Typography>
-          {params.row.description || '-'}
-        </Typography>
-      )
-    },
-
-    {
-      field: 'createdAt',
-      headerName: 'Created',
-      width: 170,
-      renderCell: (params: GridRenderCellParams<Group>) => (
-        <Typography>
-          {params.row.createdAt ? dayjs(params.row.createdAt).format('MMM D, YYYY h:mm A') : '-'}
-        </Typography>
-      )
-    },
-    {
-      field: 'updatedAt',
-      headerName: 'Last Updated',
-      width: 170,
-      renderCell: (params: GridRenderCellParams<Group>) => (
-        <Typography>
-          {params.row.updatedAt ? dayjs(params.row.updatedAt).format('MMM D, YYYY h:mm A') : '-'}
-        </Typography>
-      )
-    },
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      width: 150,
-      renderCell: (params: GridRenderCellParams<Group>) => (
-        <Box>
-          <IconButton
-            onClick={() => handleEditGroup(params.row)}
-            size="small"
-            title="Edit Group"
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            onClick={() => handleOpenMembers(params.row)}
-            size="small"
-            title="View Members"
-          >
-            <PeopleIcon />
-          </IconButton>
-          <IconButton
-            onClick={() => handleOpenRoles(params.row)}
-            size="small"
-            title="Edit Roles"
-          >
-            <SecurityIcon />
-          </IconButton>
-          <IconButton
-            onClick={() => handleDeleteGroup(params.row.id)}
-            size="small"
-            title="Delete Group"
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Box>
-      ),
-    },
-  ];
+  // Removed DataGrid columns definition
 
   const filteredRoles = useMemo(() => {
     if (!roleSearchTerm) return roles;
@@ -686,58 +599,20 @@ export default function Groups({ clientId }: GroupsProps) {
           {state.success}
         </Alert>
       )}
-      {/* Add additional check to ensure all rows have valid IDs */}
-      {state.groups.length > 0 ? (
-        <DataGrid
-          rows={state.groups.filter(group => group && group.id !== undefined && group.id !== null)}
-          columns={columns}
-          getRowId={(row) => {
-            // Add extra safeguard for ID
-            if (row.id === undefined || row.id === null) {
-              console.error('Row missing ID:', row);
-              return `missing-${Math.random()}`; // Fallback ID
-            }
-            return row.id;
-          }}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          pageSizeOptions={[10, 25, 50]}
-          pagination
-          paginationMode="client"
-          autoHeight
-          disableRowSelectionOnClick
-          rowHeight={52}
-          slots={{
-            pagination: () => {
-              const apiRef = useGridApiContext();
-              const page = useGridSelector(apiRef, gridPageSelector);
-              const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-              
-              return (
-                <Box sx={{ display: 'flex', justifyContent: 'center', padding: 1 }}>
-                  <Pagination 
-                    count={pageCount}
-                    page={page + 1} // DataGrid uses 0-based indexing, Pagination uses 1-based
-                    showFirstButton 
-                    showLastButton 
-                    color="primary"
-                    onChange={(event, value) => {
-                      apiRef.current.setPage(value - 1);
-                    }}
-                  />
-                </Box>
-              );
-            }
-          }}
-        />
-      ) : (
-        <Typography sx={{ p: 2 }}>No groups available</Typography>
-      )}
+      {/* Using the new GroupTable component */}
+      <Box sx={{ mt: 2 }}>
+        {state.groups.length > 0 ? (
+          <GroupTable
+            groups={state.groups.filter(group => group && group.id !== undefined && group.id !== null)}
+            onEdit={handleEditGroup}
+            onDelete={(group) => handleDeleteGroup(group.id)}
+            onManageMembers={handleOpenMembers}
+            onManageRoles={handleOpenRoles}
+          />
+        ) : (
+          <Typography sx={{ p: 2 }}>No groups available</Typography>
+        )}
+      </Box>
       {/* Group Form Dialog */}
       <Dialog
         open={state.isFormOpen}
