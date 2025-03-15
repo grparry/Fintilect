@@ -165,8 +165,80 @@
       "clientId": 9999,
       "tenantId": 20,
       "logoUrl": "https://www.fintilect.com/wp-content/uploads/2024/07/Logo.svg",
-      "name": "Fintilect Admin (Local)",
+      "name": "Fintilect Admin (Local IP)",
       "isAdmin": true
+    },
+    "cfssadminsvc-test.cfssinternal.dev": {
+      "url": "http://cfssadminsvc-test.cfssinternal.dev:4000/login",
+      "hostname": "cfssadminsvc-test.cfssinternal.dev",
+      "environment": "development",
+      "clientApiUrl": "N/A",
+      "adminApiUrl": "https://cbp-test-clientapi.cfssinternal.dev:4501/",
+      "clientId": 9999,
+      "tenantId": 20,
+      "logoUrl": "https://www.fintilect.com/wp-content/uploads/2024/07/Logo.svg",
+      "name": "Fintilect Admin (Dev)",
+      "isAdmin": true
+    },
+    "1stnorcalcu68668-adminsvc-test.cfssinternal.dev": {
+      "url": "http://1stnorcalcu68668-adminsvc-test.cfssinternal.dev:4000/login",
+      "hostname": "1stnorcalcu68668-adminsvc-test.cfssinternal.dev",
+      "environment": "development",
+      "clientApiUrl": "https://cuapi-1stnorcalcu.cfssinternal.dev:8001/1stnorcalcu68668/",
+      "adminApiUrl": "https://cbp-test-clientapi.cfssinternal.dev:4501/",
+      "clientId": 24,
+      "tenantId": 77,
+      "logoUrl": "https://www.1stnorcalcu.org/wp-content/uploads/1stnorcalcu-logo.png",
+      "name": "1st Nor Cal Credit Union (Dev)",
+      "isAdmin": false
+    },
+    "firstcoastccu68524-adminsvc-test.cfssinternal.dev": {
+      "url": "http://firstcoastccu68524-adminsvc-test.cfssinternal.dev:4000/login",
+      "hostname": "firstcoastccu68524-adminsvc-test.cfssinternal.dev",
+      "environment": "development",
+      "clientApiUrl": "https://cuapi-firstcoastccu.cfssinternal.dev:8001/firstcoastccu68524/",
+      "adminApiUrl": "https://cbp-test-clientapi.cfssinternal.dev:4501/",
+      "clientId": 9,
+      "tenantId": 62,
+      "logoUrl": "https://www.firstcoastccu.com/wp-content/uploads/2016/08/fcccu-logo.png",
+      "name": "First Coast Community Credit Union (Dev)",
+      "isAdmin": false
+    },
+    "firstcommunitycu68530-adminsvc-test.cfssinternal.dev": {
+      "url": "http://firstcommunitycu68530-adminsvc-test.cfssinternal.dev:4000/login",
+      "hostname": "firstcommunitycu68530-adminsvc-test.cfssinternal.dev",
+      "environment": "development",
+      "clientApiUrl": "https://cuapi-firstcommunitycu.cfssinternal.dev:8001/firstcommunitycu68530/",
+      "adminApiUrl": "https://cbp-test-clientapi.cfssinternal.dev:4501/",
+      "clientId": 11,
+      "tenantId": 64,
+      "logoUrl": "https://www.myfirstccu.org/favicon.ico",
+      "name": "First Community Credit Union (Dev)",
+      "isAdmin": false
+    },
+    "onthegridfinancial383-adminsvc-test.cfssinternal.dev": {
+      "url": "http://onthegridfinancial383-adminsvc-test.cfssinternal.dev:4000/login",
+      "hostname": "onthegridfinancial383-adminsvc-test.cfssinternal.dev",
+      "environment": "development",
+      "clientApiUrl": "https://cuapi-onthegridfinancial.cfssinternal.dev:8001/onthegridfinancial383/",
+      "adminApiUrl": "https://cbp-test-clientapi.cfssinternal.dev:4501/",
+      "clientId": 16,
+      "tenantId": 69,
+      "logoUrl": "https://cuonthegrid.com/wp-content/themes/otgf/images/logo.png",
+      "name": "On The Grid Financial (Dev)",
+      "isAdmin": false
+    },
+    "wclacu68328-adminsvc-test.cfssinternal.dev": {
+      "url": "http://wclacu68328-adminsvc-test.cfssinternal.dev:4000/login",
+      "hostname": "wclacu68328-adminsvc-test.cfssinternal.dev",
+      "environment": "development",
+      "clientApiUrl": "https://cuapi-wclacu.cfssinternal.dev:8001/wclacu68328/",
+      "adminApiUrl": "https://cbp-test-clientapi.cfssinternal.dev:4501/",
+      "clientId": 23,
+      "tenantId": 76,
+      "logoUrl": "https://loggerscu.com/wp-content/uploads/2019/11/logowcla.jpg",
+      "name": "WCLA Credit Union (Dev)",
+      "isAdmin": false
     }
   }
 }
