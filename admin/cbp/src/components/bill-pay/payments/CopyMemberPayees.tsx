@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
-import { IPayeeService } from '../../../services/interfaces/IPayeeService';
-import { UserPayeeData } from '../../../types/payees.types';
 import {
   Box,
   Card,
@@ -26,7 +23,15 @@ import {
   DialogActions
 } from '@mui/material';
 
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+import { IPayeeService } from '../../../services/interfaces/IPayeeService';
+import { UserPayeeData } from '../../../types/payees.types';
+import useClientApi from '../../../hooks/useClientApi';
+
 const CopyMemberPayees: React.FC = () => {
+  // Indicate that this component uses client-specific API
+  useClientApi(true);
+
   const [sourceMemberId, setSourceMemberId] = useState('');
   const [targetMemberId, setTargetMemberId] = useState('');
   const [confirmTargetMemberId, setConfirmTargetMemberId] = useState('');

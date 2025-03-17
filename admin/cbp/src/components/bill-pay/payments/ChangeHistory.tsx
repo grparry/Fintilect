@@ -37,6 +37,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
+import useClientApi from '../../../hooks/useClientApi';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -131,6 +132,9 @@ const getSearchHelperText = (type: string): string => {
 };
 
 const ChangeHistory: React.FC = () => {
+  // Indicate that this component uses client-specific API
+  useClientApi(true);
+
   const [activeTab, setActiveTab] = useState(0);
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs().subtract(1, 'month'));
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());

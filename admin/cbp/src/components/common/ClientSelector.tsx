@@ -16,15 +16,38 @@ const ClientLabel = styled(Typography)(({ theme }) => ({
 }));
 
 const ClientSelector: React.FC = () => {
-  const { selectedClient, availableClients, setSelectedClient, isAdmin } = useClient();
+  const { selectedClient, availableClients, setSelectedClient, isAdmin, usesClientApi } = useClient();
 
-  // If not an admin user, don't render the selector
-  if (!isAdmin) {
+  // Debug: Log client selector state
+  console.log('[ClientSelector] Rendering with:', {
+    isAdmin,
+    usesClientApi,
+    selectedClientId: selectedClient?.clientId,
+    availableClientsCount: Object.keys(availableClients).length
+  });
+
+  // Debug: Log available clients
+  if (Object.keys(availableClients).length === 0) {
+    console.log('[ClientSelector] WARNING: No available clients to display in dropdown');
+  } else {
+    console.log('[ClientSelector] Available clients:', 
+      Object.values(availableClients).map(c => ({ 
+        id: c.clientId, 
+        name: c.name, 
+        environment: c.environment 
+      }))
+    );
+  }
+
+  // Only render the selector if the user is an admin AND the current view uses client API
+  if (!isAdmin || !usesClientApi) {
+    console.log('[ClientSelector] Not rendering because:', { isAdmin, usesClientApi });
     return null;
   }
 
   const handleClientChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const clientId = event.target.value as number;
+    console.log(`[ClientSelector] Selected client changed to ID: ${clientId}`);
     setSelectedClient(clientId);
   };
 
@@ -40,7 +63,7 @@ const ClientSelector: React.FC = () => {
         >
           {Object.values(availableClients).map((client) => (
             <MenuItem key={client.clientId} value={client.clientId}>
-              {client.name} {client.environment !== 'production' ? `(${client.environment})` : ''}
+              {client.name}
             </MenuItem>
           ))}
         </Select>

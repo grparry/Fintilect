@@ -59,6 +59,7 @@ import {
   SearchType
 } from '../../../types/payment.types';
 import dayjs, { Dayjs } from 'dayjs';
+import useClientApi from '../../../hooks/useClientApi';
 
 interface PaginationState {
   page: number;
@@ -100,6 +101,9 @@ const initialFilterState: FilterState = {
 };
 
 export const ManagePayments: React.FC = () => {
+  // Indicate that this component uses client-specific API
+  useClientApi(true);
+
   const { user } = useAuth();
   const paymentService = ServiceFactory.getInstance().getPaymentService();
 
@@ -212,7 +216,7 @@ export const ManagePayments: React.FC = () => {
         dueDate: p.dueDate || p.willProcessDate,
         // Set a proper status name based on the payment data
         statusName: p.status || (p.willProcessDate && new Date(p.willProcessDate) > new Date() ? 
-                    PaymentStatus.PENDING : PaymentStatus.PROCESSING),
+                  PaymentStatus.PENDING : PaymentStatus.PROCESSING),
         recipient: {
           name: p.payeeName || '',
           accountNumber: p.payeeID || p.payeeId || '',
@@ -245,11 +249,29 @@ export const ManagePayments: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [filters, paymentService]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    filters.startDate, 
+    filters.endDate, 
+    filters.status, 
+    filters.method, 
+    filters.searchTerm, 
+    filters.searchType, 
+    paymentService
+  ]);
 
   useEffect(() => {
+    // Only fetch payments when the component mounts or when specific dependencies change
     fetchPendingPayments();
-  }, [fetchPendingPayments]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    filters.startDate, 
+    filters.endDate, 
+    filters.status, 
+    filters.method, 
+    filters.searchTerm, 
+    filters.searchType
+  ]);
 
   // Apply client-side filtering whenever payments or searchTerm changes
   useEffect(() => {

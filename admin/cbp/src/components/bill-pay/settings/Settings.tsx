@@ -13,12 +13,9 @@ import {
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import GroupIcon from '@mui/icons-material/Group';
-import SecurityIcon from '@mui/icons-material/Security';
 import EventIcon from '@mui/icons-material/Event';
 import NotificationTemplates from './NotificationTemplates';
 import BillPayConfig from './BillPayConfig';
-import BillPaySecuritySettings from './security/BillPaySecuritySettings';
 import Holidays from './Holidays';
 import { TabPanelProps, SettingsState } from '../../../types/bill-pay.types';
 
@@ -58,7 +55,7 @@ const Settings: React.FC = () => {
   };
   // Load last active tab from local storage
   useEffect(() => {
-    const savedTab = localStorage.getItem('billPaySettingsTab');
+    const savedTab = sessionStorage.getItem('billPaySettingsTab');
     if (savedTab !== null) {
       setState((prev) => ({
         ...prev,
@@ -68,7 +65,7 @@ const Settings: React.FC = () => {
   }, []);
   // Save active tab to local storage
   useEffect(() => {
-    localStorage.setItem('billPaySettingsTab', state.activeTab.toString());
+    sessionStorage.setItem('billPaySettingsTab', state.activeTab.toString());
   }, [state.activeTab]);
   return (
     <Box sx={{ width: '100%' }}>
@@ -113,19 +110,9 @@ const Settings: React.FC = () => {
             {...a11yProps(1)}
           />
           <Tab
-            icon={<GroupIcon />}
-            label={isMobile ? undefined : 'Permissions'}
-            {...a11yProps(2)}
-          />
-          <Tab
-            icon={<SecurityIcon />}
-            label={isMobile ? undefined : 'Security'}
-            {...a11yProps(3)}
-          />
-          <Tab
             icon={<EventIcon />}
             label={isMobile ? undefined : 'Holidays'}
-            {...a11yProps(4)}
+            {...a11yProps(2)}
           />
         </Tabs>
         <TabPanel value={state.activeTab} index={0}>
@@ -134,10 +121,7 @@ const Settings: React.FC = () => {
         <TabPanel value={state.activeTab} index={1}>
           <NotificationTemplates />
         </TabPanel>
-        <TabPanel value={state.activeTab} index={3}>
-          <BillPaySecuritySettings />
-        </TabPanel>
-        <TabPanel value={state.activeTab} index={4}>
+        <TabPanel value={state.activeTab} index={2}>
           <Holidays />
         </TabPanel>
       </Paper>

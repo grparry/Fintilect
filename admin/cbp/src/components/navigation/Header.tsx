@@ -7,17 +7,15 @@ import {
   useTheme,
   Box,
   Link,
-  Tooltip,
   Chip,
 } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '../../context/AuthContext';
 import { useHost } from '../../context/HostContext';
-import { User } from '../../types/index';
+import { User } from '../../types/client.types';
+import UserMenu from './UserMenu';
+import { getCurrentClientConfig } from '../../config/host.config';
 
 interface HeaderProps {
   drawerWidth: number;
@@ -37,16 +35,7 @@ const Header: React.FC<HeaderProps> = ({
   const theme = useTheme();
   const { user, logout } = useAuth();
   const { environment } = useHost();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
+  const clientConfig = getCurrentClientConfig();
 
   return (
     <AppBar
@@ -99,22 +88,13 @@ const Header: React.FC<HeaderProps> = ({
               mr: 2
             }}
           />
-          <IconButton sx={{ ml: 1 }} onClick={toggleTheme} color="inherit">
-            {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>
-          <Typography variant="body2" color="text.primary" sx={{ ml: 2, mr: 2 }}>
-            {user?.email || 'Guest'}
-          </Typography>
-          <Tooltip title="Logout">
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={handleLogout}
-              sx={{ ml: 1 }}
-            >
-              <LogoutIcon />
-            </IconButton>
-          </Tooltip>
+          <UserMenu 
+            user={user} 
+            logout={logout} 
+            toggleTheme={toggleTheme} 
+            isDarkMode={isDarkMode} 
+            clientName={clientConfig.name}
+          />
         </Box>
       </Toolbar>
     </AppBar>

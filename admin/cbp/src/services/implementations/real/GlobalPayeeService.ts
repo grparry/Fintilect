@@ -11,7 +11,7 @@ import {
 } from '../../../types/bill-pay.types';
 
 export class GlobalPayeeService extends BaseService implements IGlobalPayeeService {
-  constructor(basePath: string = '/api/v1/payees') {
+  constructor(basePath: string = '/api/v1/Payee') {
     super(basePath);
   }
 

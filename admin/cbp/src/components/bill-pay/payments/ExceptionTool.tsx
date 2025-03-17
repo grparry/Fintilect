@@ -45,6 +45,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAuth } from '../../../hooks/useAuth';
+import { useClientApi } from '../../../hooks/useClientApi';
 import {
   ExceptionFilters
 } from '../../../types/bill-pay.types';
@@ -88,6 +89,9 @@ const getPriorityColor = (priority: string) => {
 };
 
 const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
+  // Indicate that this component uses client-specific API
+  useClientApi(true);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [exceptions, setExceptions] = useState<Exception[]>([]);

@@ -11,6 +11,7 @@ export interface ClientConfig {
   adminApiUrl: string;
   clientId: number;
   tenantId: number;
+  sponsorId?: number; // Optional sponsor ID for calendar API
   logoUrl: string;
   name: string;
   isAdmin: boolean;
@@ -24,9 +25,10 @@ export interface ClientConfig {
 export let CLIENT_CONFIGS_BY_HOSTNAME: Record<string, ClientConfig> = {};
 
 /**
- * Secondary index by client ID for client selection
+ * Secondary index by client ID and environment for precise client selection
+ * Key format: `${clientId}_${environment}`
  */
-export let CLIENT_CONFIGS_BY_ID: Record<number, ClientConfig> = {};
+export let CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT: Record<string, ClientConfig> = {};
 
 /**
  * Get the current hostname, with support for development mode override via query parameter
@@ -73,16 +75,14 @@ const initializeClientConfigs = (): void => {
       throw new Error('Invalid client configuration format');
     }
     
-    // Build the client ID index
-    CLIENT_CONFIGS_BY_ID = Object.values(CLIENT_CONFIGS_BY_HOSTNAME)
+    // Build the client ID and environment index for precise lookup
+    CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT = Object.values(CLIENT_CONFIGS_BY_HOSTNAME)
       .reduce((acc, config) => {
-        // If we have multiple entries for the same client ID (e.g., test and prod),
-        // prefer the production one for the client selector
-        if (!acc[config.clientId] || config.environment === 'production') {
-          acc[config.clientId] = config;
-        }
+        // Create a composite key of clientId and environment
+        const key = `${config.clientId}_${config.environment}`;
+        acc[key] = config;
         return acc;
-      }, {} as Record<number, ClientConfig>);
+      }, {} as Record<string, ClientConfig>);
   } catch (error) {
     console.error('Error loading client configuration:', error);
     // Display critical error to user
@@ -161,9 +161,28 @@ export const getEnvironment = (): 'production' | 'test' | 'development' => {
 };
 
 /**
- * Get client API URL for the current hostname
+ * Get client API URL for the current hostname or selected client
  */
 export const getClientApiUrl = (): string => {
+  // Check if there's a selected client in sessionStorage (for admin users)
+  const savedClientId = sessionStorage.getItem('selectedClientId');
+  const currentEnvironment = getEnvironment();
+  
+  if (savedClientId) {
+    const clientId = parseInt(savedClientId, 10);
+    // Try to find a client with matching ID and environment
+    const key = `${clientId}_${currentEnvironment}`;
+    
+    if (CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT[key]) {
+      const selectedClient = CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT[key];
+      console.log(`[Client API URL] Using selected client: ${selectedClient.name}, ClientId: ${selectedClient.clientId}, Environment: ${selectedClient.environment}`);
+      return selectedClient.clientApiUrl;
+    }
+    
+    console.log(`[Client API URL] No client configuration found for ID ${clientId} in environment ${currentEnvironment}`);
+  }
+  
+  // Fall back to host-based configuration
   return getCurrentClientConfig().clientApiUrl;
 };
 
@@ -178,6 +197,45 @@ export const getAdminApiUrl = (): string => {
  * Get all available client configurations
  * Used for admin client selection
  */
-export const getAllClientConfigs = (): Record<number, ClientConfig> => {
-  return CLIENT_CONFIGS_BY_ID;
+export const getAllClientConfigs = (): Record<string, ClientConfig> => {
+  return CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT;
+};
+
+/**
+ * Get sponsor ID for the current hostname or selected client
+ * Returns the sponsor ID if available, otherwise returns 0 (which gets all holidays)
+ */
+export const getSponsorId = (): number => {
+  // Check if there's a selected client in sessionStorage (for admin users)
+  const savedClientId = sessionStorage.getItem('selectedClientId');
+  const currentEnvironment = getEnvironment();
+  
+  let config: ClientConfig;
+  let source = 'Host Context';
+  
+  if (savedClientId) {
+    const clientId = parseInt(savedClientId, 10);
+    // Try to find a client with matching ID and environment
+    const key = `${clientId}_${currentEnvironment}`;
+    
+    if (CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT[key]) {
+      config = CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT[key];
+      source = 'Selected Client (ID and Environment match)';
+    }
+    else {
+      config = getCurrentClientConfig();
+      console.log(`[getSponsorId] No client configuration found for ID ${clientId} in environment ${currentEnvironment}`);
+    }
+  } else {
+    config = getCurrentClientConfig();
+  }
+  
+  console.log(`[getSponsorId] Using configuration from ${source}:`, {
+    name: config.name,
+    clientId: config.clientId,
+    sponsorId: config.sponsorId || 0,
+    environment: config.environment
+  });
+  
+  return config.sponsorId || 0;
 };

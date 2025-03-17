@@ -104,7 +104,7 @@ export const usePermissions = () => {
     }
 
     // Check client access
-    if (requirement.clientId) {
+    if (requirement.clientId && user?.clientId) {
       const clientId = requirement.clientId;
       const hasClientAccess = user.clientId.toString() === clientId;
       if (!hasClientAccess) {
@@ -182,7 +182,7 @@ export const usePermissions = () => {
       cacheRef.current.set(resourceId, { result, timestamp: Date.now() });
     }
     return result;
-  }, [permissionContext, cleanCache]);
+  }, [permissionContext, cleanCache, user]);
 
   // Helper to check multiple permissions at once
   const checkPermissions = useCallback(async (

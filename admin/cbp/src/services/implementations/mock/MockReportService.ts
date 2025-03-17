@@ -123,10 +123,7 @@ export class MockReportService extends BaseMockService implements IReportService
                 searchParams.append('MemberID', params.searchValue);
             } else if (params.searchType.includes('PaymentID')) {
                 searchParams.append('PaymentID', params.searchValue);
-            } else if (params.searchType.includes('PayeeID')) {
-                searchParams.append('PayeeID', params.searchValue);
             }
-            // SearchValue is not a valid parameter for the API
         }
         
         if (params.startDate) {
@@ -164,31 +161,25 @@ export class MockReportService extends BaseMockService implements IReportService
         let filteredItems = [...mockItems];
         
         switch(params.searchType) {
-            case 'MemberID':
+            case SearchType.MemberID:
                 if (params.searchValue) {
                     filteredItems = mockItems.filter(item => 
                         item.memberID?.includes(params.searchValue));
                 }
                 break;
-            case 'PaymentID':
+            case SearchType.PaymentID:
                 if (params.searchValue) {
                     filteredItems = mockItems.filter(item => 
                         item.paymentID?.includes(params.searchValue));
                 }
                 break;
-            case 'PayeeID':
-                if (params.searchValue) {
-                    filteredItems = mockItems.filter(item => 
-                        item.payeeID?.includes(params.searchValue));
-                }
-                break;
-            case 'PayeeName':
+            case SearchType.PayeeName:
                 if (params.payeeName) {
                     filteredItems = mockItems.filter(item => 
                         item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
                 }
                 break;
-            case 'DateRange':
+            case SearchType.DateRange:
                 // Filter by date range if provided
                 if (params.startDate && params.endDate) {
                     const startDate = new Date(params.startDate).getTime();
@@ -199,13 +190,68 @@ export class MockReportService extends BaseMockService implements IReportService
                         return processedDate >= startDate && processedDate <= endDate;
                     });
                 }
+                
+                // Additional filter by payee name if provided
+                if (params.payeeName) {
+                    filteredItems = filteredItems.filter(item => 
+                        item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
+                }
                 break;
-        }
-        
-        // Additional filter by payee name if provided and not already filtered
-        if (params.payeeName && params.searchType !== 'PayeeName') {
-            filteredItems = filteredItems.filter(item => 
-                item.payeeName?.toLowerCase().includes(params.payeeName!.toLowerCase()));
+            case SearchType.MemberIDAndDate:
+                // Filter by member ID
+                if (params.searchValue) {
+                    filteredItems = mockItems.filter(item => 
+                        item.memberID?.includes(params.searchValue));
+                }
+                
+                // Additional filter by date range
+                if (params.startDate && params.endDate) {
+                    const startDate = new Date(params.startDate).getTime();
+                    const endDate = new Date(params.endDate).getTime();
+                    
+                    filteredItems = filteredItems.filter(item => {
+                        const processedDate = new Date(item.dateProcessed || '').getTime();
+                        return processedDate >= startDate && processedDate <= endDate;
+                    });
+                }
+                break;
+            case SearchType.MemberIDAndPayeeName:
+                // Filter by member ID
+                if (params.searchValue) {
+                    filteredItems = mockItems.filter(item => 
+                        item.memberID?.includes(params.searchValue));
+                }
+                
+                // Additional filter by payee name
+                if (params.payeeName) {
+                    filteredItems = filteredItems.filter(item => 
+                        item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
+                }
+                break;
+            case SearchType.MemberIDAndDateAndPayeeName:
+                // Filter by member ID
+                if (params.searchValue) {
+                    filteredItems = mockItems.filter(item => 
+                        item.memberID?.includes(params.searchValue));
+                }
+                
+                // Additional filter by date range
+                if (params.startDate && params.endDate) {
+                    const startDate = new Date(params.startDate).getTime();
+                    const endDate = new Date(params.endDate).getTime();
+                    
+                    filteredItems = filteredItems.filter(item => {
+                        const processedDate = new Date(item.dateProcessed || '').getTime();
+                        return processedDate >= startDate && processedDate <= endDate;
+                    });
+                }
+                
+                // Additional filter by payee name
+                if (params.payeeName) {
+                    filteredItems = filteredItems.filter(item => 
+                        item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
+                }
+                break;
         }
         
         // Handle pagination

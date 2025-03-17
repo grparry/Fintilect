@@ -6,21 +6,16 @@ import {
     Payee,
     BillPayStats,
     TransactionTrend,
+    ExceptionResolution
+} from '../../../types/bill-pay.types';
+import {
     Holiday,
     HolidayInput,
-    NotificationTemplate,
-    NotificationTemplateInput,
-    ExceptionResolution,
     HolidayStatus
-} from '../../../types/bill-pay.types';
+} from '../../../types/calendar.types';
 import {
     Client
 } from '../../../types/client.types';
-import {
-    BillPaySecuritySettings,
-    BillPayOTPMethod,
-    BillPaySecurityValidation
-} from '../../../types/security.types';
 import {
     PaymentException,
     PaymentFilters
@@ -135,55 +130,7 @@ export class BillPayService extends BaseService implements IBillPayService {
         }
     }
 
-    async getNotificationTemplates(): Promise<NotificationTemplate[]> {
-        try {
-            return await this.get<NotificationTemplate[]>('/notifications/templates');
-        } catch (error) {
-            logger.error(`Error getting notification templates: ${error}`);
-            throw error;
-        }
-    }
-
-    async updateNotificationTemplate(
-        templateId: number,
-        template: NotificationTemplateInput
-    ): Promise<NotificationTemplate> {
-        try {
-            return await this.put<NotificationTemplate>(`/notifications/templates/${templateId}`, template);
-        } catch (error) {
-            logger.error(`Error updating notification template: ${error}`);
-            throw error;
-        }
-    }
-
-    async getSecuritySettings(): Promise<BillPaySecuritySettings> {
-        try {
-            return await this.get<BillPaySecuritySettings>('/security/settings');
-        } catch (error) {
-            logger.error(`Error getting security settings: ${error}`);
-            throw error;
-        }
-    }
-
-    async updateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecuritySettings> {
-        try {
-            return await this.put<BillPaySecuritySettings>('/security/settings', settings);
-        } catch (error) {
-            logger.error(`Error updating security settings: ${error}`);
-            throw error;
-        }
-    }
-
-    async validateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecurityValidation> {
-        try {
-            return await this.post<BillPaySecurityValidation>('/security/settings/validate', settings);
-        } catch (error) {
-            logger.error(`Error validating security settings: ${error}`);
-            throw error;
-        }
-    }
-
-    async sendOTP(method: BillPayOTPMethod, destination: string): Promise<void> {
+    async sendOTP(method: string, destination: string): Promise<void> {
         try {
             await this.post<void>('/security/otp/send', { method, destination });
         } catch (error) {

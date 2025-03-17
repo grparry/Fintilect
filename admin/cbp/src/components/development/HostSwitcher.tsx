@@ -171,7 +171,7 @@ const HostSwitcher: React.FC = () => {
                         <ClientChip label="Client" size="small" />
                       }
                       <Link href={getHostnameUrl(config.hostname)}>
-                        {config.hostname}
+                        {config.name}
                       </Link>
                     </Box>
                   }
@@ -211,7 +211,7 @@ const HostSwitcher: React.FC = () => {
                         <ClientChip label="Client" size="small" />
                       }
                       <Link href={getHostnameUrl(config.hostname)}>
-                        {config.hostname}
+                        {config.name}
                       </Link>
                     </Box>
                   }
@@ -251,7 +251,7 @@ const HostSwitcher: React.FC = () => {
                         <ClientChip label="Client" size="small" />
                       }
                       <Link href={getHostnameUrl(config.hostname)}>
-                        {config.hostname}
+                        {config.name}
                       </Link>
                     </Box>
                   }

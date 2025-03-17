@@ -11,7 +11,8 @@ export const PAYMENT_ACTIVITY_SEARCH_TYPES = {
   'MemberIDAndPayeeName': SearchType.MemberIDAndPayeeName,
   'MemberIDAndDateAndPayeeName': SearchType.MemberIDAndDateAndPayeeName,
   'DateRange': SearchType.DateRange,
-  'PaymentID': SearchType.PaymentID
+  'PaymentID': SearchType.PaymentID,
+  'PayeeName': SearchType.PayeeName
 };
 
 /**

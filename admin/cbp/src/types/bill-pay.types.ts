@@ -346,50 +346,6 @@ export interface ManualPaymentValidation {
   }>;
 }
 
-// Holiday Types
-export enum HolidayType {
-  FEDERAL = 'FEDERAL',
-  STATE = 'STATE',
-  BANK = 'BANK',
-  CUSTOM = 'CUSTOM'
-}
-
-export enum HolidayStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  PENDING = 'PENDING'
-}
-
-export interface Holiday {
-  id: number;
-  name: string;
-  date: string;
-  type: HolidayType;
-  description?: string;
-  status: HolidayStatus;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface HolidayInput {
-  name: string;
-  date: string;
-  type: HolidayType;
-  description?: string;
-  status: HolidayStatus;
-}
-
-export interface HolidayValidation {
-  isValid: boolean;
-  errors: {
-    name?: string;
-    date?: string;
-    type?: string;
-    description?: string;
-    status?: string;
-  };
-}
-
 // Bill Pay Config Types
 export interface BillPayConfig {
   id: string;
@@ -430,63 +386,6 @@ export interface BillPayConfigValidation {
     field: keyof BillPayConfigUpdate;
     message: string;
   }>;
-}
-
-// Notification Template Types
-export enum NotificationType {
-  PAYMENT_COMPLETED = 'PAYMENT_COMPLETED',
-  PAYMENT_FAILED = 'PAYMENT_FAILED',
-  PAYMENT_APPROVAL_REQUIRED = 'PAYMENT_APPROVAL_REQUIRED',
-  PAYMENT_CANCELLED = 'PAYMENT_CANCELLED',
-  PAYMENT_EXPIRED = 'PAYMENT_EXPIRED'
-}
-
-export enum NotificationCategory {
-  PAYMENT = 'Payment',
-  ACCOUNT = 'Account',
-  SYSTEM = 'System'
-}
-
-export interface NotificationVariable {
-  name: string;
-  description: string;
-  example?: string;
-}
-
-export interface NotificationTemplate {
-  id: number;
-  name: string;
-  type: NotificationType;
-  category: NotificationCategory;
-  subject: string;
-  content: string;
-  active: boolean;
-  lastModified: string;
-  createdAt?: string;
-  updatedAt?: string;
-  variables?: NotificationVariable[];
-}
-
-export interface NotificationTemplateInput {
-  name: string;
-  type: NotificationType;
-  category: NotificationCategory;
-  subject: string;
-  content: string;
-  active: boolean;
-}
-
-export interface NotificationTemplateFilters {
-  searchTerm?: string;
-  type?: NotificationType | 'all';
-  category?: NotificationCategory | 'all';
-  active?: boolean;
-}
-
-export interface NotificationPreview {
-  subject: string;
-  content: string;
-  sampleData: Record<string, string>;
 }
 
 // Exception Tool Types
@@ -607,46 +506,6 @@ export interface ProcessorWebhookEvent {
     completedAt?: string;
     error?: string;
   };
-}
-
-// Notification Types
-export interface NotificationConfig {
-  providers: {
-    email: {
-      enabled: boolean;
-      provider: string;
-      apiKey: string;
-      fromEmail: string;
-      templates: Record<NotificationType, string>;
-    };
-    sms: {
-      enabled: boolean;
-      provider: string;
-      apiKey: string;
-      fromNumber: string;
-      templates: Record<NotificationType, string>;
-    };
-  };
-  defaultChannel: 'email' | 'sms';
-}
-
-export interface NotificationRequest {
-  type: NotificationType;
-  recipientId: string;
-  data: Record<string, any>;
-  channel?: 'email' | 'sms';
-  priority?: 'high' | 'normal' | 'low';
-}
-
-export interface NotificationResponse {
-  id: string;
-  recipientId: string;
-  type: NotificationType;
-  status: 'SENT' | 'DELIVERED' | 'FAILED';
-  channel: 'email' | 'sms';
-  sentAt: string;
-  deliveredAt?: string;
-  error?: string;
 }
 
 export interface FisPayeeRequest {

@@ -1,113 +1,116 @@
 import { INotificationService } from '../../interfaces/INotificationService';
 import { BaseService } from './BaseService';
 import {
-    NotificationTemplate,
-    NotificationTemplateInput,
-    NotificationTemplateFilters,
-    NotificationPreview,
-    NotificationType,
-    NotificationVariable,
-    NotificationCategory
-} from '../../../types/bill-pay.types';
-import { PaginatedResponse } from '../../../types/common.types';
+    NotificationCreateRequest,
+    NotificationUpdateRequest,
+    NotificationResponse,
+    NotificationListResponse,
+    NotificationSendRequest,
+    NotificationSendCustomerRequest,
+    SavedNotificationResponse,
+    SavedNotificationListResponse,
+    SavedNotificationClearRequest,
+    SavedNotificationSearchRequest
+} from '../../../types/notification.types';
+import logger from '../../../utils/logger';
 
 export class NotificationService extends BaseService implements INotificationService {
-    constructor(basePath: string = '/api/notifications') {
+    constructor(basePath: string = '/api/v1/Notification') {
         super(basePath);
     }
-    async getTemplates(filters?: NotificationTemplateFilters): Promise<PaginatedResponse<NotificationTemplate>> {
-        return this.get('/templates', { params: filters });
+
+    // API-aligned notification methods
+    async createNotification(request: NotificationCreateRequest): Promise<void> {
+        logger.info({
+            message: 'Creating notification',
+            endpoint: `${this.basePath}`
+        });
+        return this.post('', request);
     }
-    async getTemplate(id: number): Promise<NotificationTemplate> {
-        return this.get(`/templates/${id}`);
+
+    async updateNotification(request: NotificationUpdateRequest): Promise<void> {
+        logger.info({
+            message: 'Updating notification',
+            notificationID: request.id,
+            endpoint: `${this.basePath}`
+        });
+        return this.put('', request);
     }
-    async createTemplate(input: NotificationTemplateInput): Promise<NotificationTemplate> {
-        return this.post('/templates', input);
+
+    async deleteNotification(notificationId: string): Promise<void> {
+        if (!notificationId) {
+            throw new Error('Notification ID is required for deletion');
+        }
+        
+        // Using direct path without additional 'Notification' segment
+        // since basePath already includes it
+        const endpoint = `/${notificationId}`;
+        
+        logger.info({
+            message: 'Deleting notification',
+            notificationID: notificationId,
+            endpoint: `${this.basePath}${endpoint}`
+        });
+        
+        return this.delete(endpoint);
     }
-    async updateTemplate(templateId: number, template: Partial<NotificationTemplateInput>): Promise<NotificationTemplate> {
-        return this.put(`/templates/${templateId}`, template);
+
+    async getNotification(notificationId: string): Promise<NotificationResponse> {
+        logger.info({
+            message: 'Getting notification',
+            notificationID: notificationId,
+            endpoint: `${this.basePath}/${notificationId}`
+        });
+        return this.get<NotificationResponse>(`/${notificationId}`);
     }
-    async deleteTemplate(templateId: number): Promise<void> {
-        return this.delete(`/templates/${templateId}`);
+
+    async getAllNotifications(): Promise<NotificationListResponse> {
+        logger.info({
+            message: 'Getting all notifications',
+            endpoint: `${this.basePath}/all`
+        });
+        return this.get<NotificationListResponse>('/all');
     }
-    async previewTemplate(templateId: number, sampleData: Record<string, string>): Promise<NotificationPreview> {
-        return this.post(`/templates/${templateId}/preview`, { variables: sampleData });
+
+    async sendNotification(request: NotificationSendRequest): Promise<void> {
+        logger.info({
+            message: 'Sending notification',
+            statusCode: request.statusCode,
+            endpoint: `${this.basePath}/send`
+        });
+        return this.post('/send', request);
     }
-    async getNotificationTypes(): Promise<NotificationType[]> {
-        return this.get('/types');
+
+    async sendCustomerNotification(request: NotificationSendCustomerRequest): Promise<void> {
+        logger.info({
+            message: 'Sending customer notification',
+            paymentID: request.paymentID,
+            endpoint: `${this.basePath}/send/customer`
+        });
+        return this.post('/send/customer', request);
     }
-    async getNotificationVariables(): Promise<NotificationVariable[]> {
-        return this.get('/variables');
+
+    async getSavedNotifications(): Promise<SavedNotificationListResponse> {
+        logger.info({
+            message: 'Getting saved notifications',
+            endpoint: `${this.basePath}/saved`
+        });
+        return this.get<SavedNotificationListResponse>('/saved');
     }
-    async getNotificationCategories(): Promise<NotificationCategory[]> {
-        return this.get('/categories');
+
+    async searchSavedNotifications(request: SavedNotificationSearchRequest): Promise<SavedNotificationListResponse> {
+        logger.info({
+            message: 'Searching saved notifications',
+            endpoint: `${this.basePath}/saved/search`
+        });
+        return this.post<SavedNotificationListResponse>('/saved/search', request);
     }
-    async sendTestNotification(
-        templateId: number,
-        testData: Record<string, string>,
-        recipients: string[]
-    ): Promise<boolean> {
-        return this.post(`/templates/${templateId}/test`, { testData, recipients });
-    }
-    async validateTemplateContent(
-        content: string,
-        type: NotificationType
-    ): Promise<{ valid: boolean; errors: string[] }> {
-        return this.post<{ valid: boolean; errors: string[] }>('/templates/validate', { content, type });
-    }
-    async getDeliverySettings(): Promise<{
-        emailEnabled: boolean;
-        smsEnabled: boolean;
-        defaultRecipients: string[];
-        retryAttempts: number;
-        retryInterval: number;
-    }> {
-        return this.get<{
-            emailEnabled: boolean;
-            smsEnabled: boolean;
-            defaultRecipients: string[];
-            retryAttempts: number;
-            retryInterval: number;
-        }>('/delivery/settings');
-    }
-    async updateDeliverySettings(settings: {
-        emailEnabled?: boolean;
-        smsEnabled?: boolean;
-        defaultRecipients?: string[];
-        retryAttempts?: number;
-        retryInterval?: number;
-    }): Promise<{
-        emailEnabled: boolean;
-        smsEnabled: boolean;
-        defaultRecipients: string[];
-        retryAttempts: number;
-        retryInterval: number;
-    }> {
-        return this.put<{
-            emailEnabled: boolean;
-            smsEnabled: boolean;
-            defaultRecipients: string[];
-            retryAttempts: number;
-            retryInterval: number;
-        }>('/delivery/settings', settings);
-    }
-    async getDeliveryStatus(notificationId: string): Promise<{
-        status: 'pending' | 'sent' | 'failed';
-        attempts: number;
-        lastAttempt?: string;
-        error?: string;
-    }> {
-        return this.get<{
-            status: 'pending' | 'sent' | 'failed';
-            attempts: number;
-            lastAttempt?: string;
-            error?: string;
-        }>(`/delivery/status/${notificationId}`);
-    }
-    async retryNotification(notificationId: string): Promise<boolean> {
-        return this.post<boolean>(`/delivery/retry/${notificationId}`, {});
-    }
-    async getTemplateVariables(type: NotificationType): Promise<NotificationVariable[]> {
-        return this.get<NotificationVariable[]>(`/variables/${type}`);
+
+    async clearSavedNotifications(request: SavedNotificationClearRequest): Promise<void> {
+        logger.info({
+            message: 'Clearing saved notifications',
+            endpoint: `${this.basePath}/saved/clear`
+        });
+        return this.post('/saved/clear', request);
     }
 }

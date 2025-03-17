@@ -1,4 +1,4 @@
-import { Holiday, HolidayType, HolidayStatus } from '../../../../../types/bill-pay.types';
+import { Holiday, HolidayType, HolidayStatus } from '../../../../../types/calendar.types';
 
 export const mockHolidays: Holiday[] = [
     {

@@ -5,10 +5,14 @@ import dayjs from 'dayjs';
 import ReportContainer from '../components/ReportContainer';
 import ReportTable from '../components/ReportTable';
 import { ERROR_RECAP_SEARCH_TYPES, ErrorRecapReportData, getErrorRecap } from '../../../../utils/reports/errorRecap';
+import useClientApi from '../../../../hooks/useClientApi';
 
 const DEFAULT_PAGE_SIZE = 20;
 
 const ErrorRecapReport: React.FC = () => {
+  // Indicate that this component uses client-specific API
+  useClientApi(true);
+  
   // State for report parameters
   const [searchType, setSearchType] = useState<keyof typeof ERROR_RECAP_SEARCH_TYPES>('MemberID');
   const [searchValue, setSearchValue] = useState<string>('');

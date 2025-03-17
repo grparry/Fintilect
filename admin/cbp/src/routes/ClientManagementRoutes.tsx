@@ -15,6 +15,8 @@ const UserEditWrapper = lazy(() => import('../components/client-management/wrapp
 const GroupsWrapper = lazy(() => import('../components/client-management/wrappers/GroupsWrapper'));
 const SecuritySettings = lazy(() => import('../components/client-management/security/SecuritySettings'));
 const ClientManagement = lazy(() => import('../components/client-management/ClientManagement'));
+const ClientManagementRedirect = lazy(() => import('../components/client-management/ClientManagementRedirect'));
+const ClientInformation = lazy(() => import('../components/client-management/ClientInformation'));
 
 interface RouteParams {
   clientId?: string;
@@ -26,7 +28,7 @@ const clientManagementRoutes: RouteConfig[] = [
   {
     id: 'client-management-root',
     path: '',
-    element: ClientManagementHeader,
+    element: ClientManagementRedirect,
     icon: BusinessIcon,
     title: 'Client Management',
     resourceId: 'route:client-management-root' as ResourceId
@@ -49,6 +51,13 @@ const clientManagementRoutes: RouteConfig[] = [
     sectionId: 'clientManagement',
     resourceId: 'route:client-management.edit' as ResourceId,
     children: [
+      {
+        id: 'client-info',
+        path: 'info',
+        title: 'Client Information',
+        element: ClientInformation,
+        resourceId: 'route:client-management.edit.info' as ResourceId
+      },
       {
         id: 'client-contact',
         path: 'contact',

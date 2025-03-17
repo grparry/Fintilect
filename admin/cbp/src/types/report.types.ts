@@ -118,6 +118,7 @@ export enum SearchType {
     MemberIDAndPayeeName = 'PaymentActivity_MemberIDAndPayeeName',
     MemberIDAndDateAndPayeeName = 'PaymentActivity_MemberIDAndDateAndPayeeName',
     DateRange = 'PaymentActivity_Date',
-    PaymentID = 'PaymentActivity_PaymentID'
+    PaymentID = 'PaymentActivity_PaymentID',
+    PayeeName = 'PaymentActivity_PayeeName'
     // Add other search types as needed
 }

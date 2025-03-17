@@ -65,8 +65,9 @@ export class ReportService extends BaseService implements IReportService {
                 searchParams.append('MemberID', params.searchValue);
             } else if (params.searchType.includes('PaymentID')) {
                 searchParams.append('PaymentID', params.searchValue);
+            } else if (params.searchType.includes('PayeeName')) {
+                searchParams.append('PayeeName', params.searchValue);
             }
-            // SearchValue is not a valid parameter for the API
         }
         
         // Add optional parameters only if they have values

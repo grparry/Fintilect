@@ -11,8 +11,12 @@ import {
   getPaymentActivity
 } from '../../../../utils/reports/paymentActivity';
 import { PaymentActivityItem, PaymentActivityItemPagedResponse } from '../../../../types/report.types';
+import useClientApi from '../../../../hooks/useClientApi';
 
 const PaymentActivityReport: React.FC = () => {
+  // Indicate that this component uses client-specific API
+  useClientApi(true);
+  
   // State for report parameters
   const [startDate, setStartDate] = useState<Dayjs>(dayjs().subtract(7, 'day'));
   const [endDate, setEndDate] = useState<Dayjs>(dayjs());
@@ -113,6 +117,12 @@ const PaymentActivityReport: React.FC = () => {
           }
           params.payeeName = payeeName;
           break;
+        case 'PayeeName':
+          if (!payeeName) {
+            throw new Error('Payee Name is required for this search type');
+          }
+          params.payeeName = payeeName;
+          break;
       }
       
       console.log('Payment Activity Report parameters:', params);
@@ -190,7 +200,7 @@ const PaymentActivityReport: React.FC = () => {
   const showDateRange = searchType === 'DateRange' || searchType === 'MemberIDAndDate' || searchType === 'MemberIDAndDateAndPayeeName';
   const showMemberID = searchType === 'MemberID' || searchType === 'MemberIDAndDate' || searchType === 'MemberIDAndPayeeName' || searchType === 'MemberIDAndDateAndPayeeName';
   const showPaymentID = searchType === 'PaymentID';
-  const showPayeeName = searchType === 'MemberIDAndPayeeName' || searchType === 'MemberIDAndDateAndPayeeName';
+  const showPayeeName = searchType === 'PayeeName' || searchType === 'MemberIDAndPayeeName' || searchType === 'MemberIDAndDateAndPayeeName';
 
   // Get the label for the search value field based on search type
   const getSearchValueLabel = () => {
@@ -271,14 +281,12 @@ const PaymentActivityReport: React.FC = () => {
         )}
 
         {showDateRange && (
-          <Grid item xs={12} md={6} lg={6}>
-            <DateRangeSelector
-              startDate={startDate}
-              endDate={endDate}
-              onStartDateChange={setStartDate}
-              onEndDateChange={setEndDate}
-            />
-          </Grid>
+          <DateRangeSelector
+            startDate={startDate}
+            endDate={endDate}
+            onStartDateChange={setStartDate}
+            onEndDateChange={setEndDate}
+          />
         )}
       </Grid>
     </ReportContainer>

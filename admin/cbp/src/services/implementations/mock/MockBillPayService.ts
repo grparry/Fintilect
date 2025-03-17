@@ -6,20 +6,16 @@ import {
     Payee,
     BillPayStats,
     TransactionTrend,
-    Holiday,
-    HolidayInput,
-    NotificationTemplate,
-    NotificationTemplateInput,
     ExceptionResolution,
-    HolidayStatus,
     FISException,
     FISExceptionStatus
 } from '../../../types/bill-pay.types';
 import {
-    BillPaySecuritySettings,
-    BillPayOTPMethod,
-    BillPaySecurityValidation
-} from '../../../types/security.types';
+    Holiday,
+    HolidayInput,
+    HolidayStatus
+} from '../../../types/calendar.types';
+
 import {
     PaymentException,
     PaymentFilters
@@ -28,7 +24,7 @@ import { PaginatedResponse } from '../../../types/common.types';
 import { Client } from '../../../types/client.types';
 import { mockExceptions } from './data/billpay/exceptions';
 import { mockDashboardStats, generateMockTrends } from './data/billpay/dashboard';
-import { mockTemplates, initialHolidays } from './data/billpay/settings';
+import { initialHolidays } from './data/billpay/settings';
 import { mockClients, mockPayees } from './data/billpay/clients';
 import { BaseMockService } from './BaseMockService';
 
@@ -59,36 +55,8 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
     };
     private exceptions: FISException[] = [...mockExceptions];
     private holidays: Holiday[] = [...initialHolidays];
-    private notificationTemplates: NotificationTemplate[] = [...mockTemplates];
     private clients: Client[] = [...mockClients];
     private payees: Payee[] = [...mockPayees];
-    private securitySettings: BillPaySecuritySettings = {
-        passwordPolicy: {
-            minLength: 12,
-            requireUppercase: true,
-            requireLowercase: true,
-            requireNumbers: true,
-            requireSpecialChars: true,
-            expiryDays: 90,
-            preventReuse: 5
-        },
-        loginPolicy: {
-            maxAttempts: 3,
-            lockoutDuration: 15,
-            sessionTimeout: 30,
-            requireMFA: true,
-            allowRememberMe: false
-        },
-        ipWhitelist: {
-            enabled: false,
-            addresses: ''
-        },
-        otpSettings: {
-            method: BillPayOTPMethod.EMAIL,
-            email: 'admin@example.com',
-            phone: '+1234567890'
-        }
-    };
 
     async getConfiguration(): Promise<BillPayConfig> {
         return this.config;
@@ -229,65 +197,11 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
         return newHoliday;
     }
 
-    async getNotificationTemplates(): Promise<NotificationTemplate[]> {
-        return this.notificationTemplates;
-    }
-
-    async updateNotificationTemplate(
-        templateId: number,
-        template: NotificationTemplateInput
-    ): Promise<NotificationTemplate> {
-        const index = this.notificationTemplates.findIndex(t => t.id === templateId);
-        if (index === -1) {
-            throw new Error(`Template with ID ${templateId} not found`);
-        }
-        this.notificationTemplates[index] = {
-            ...this.notificationTemplates[index],
-            ...template,
-            updatedAt: new Date().toISOString()
-        };
-        return this.notificationTemplates[index];
-    }
-
-    async getSecuritySettings(): Promise<BillPaySecuritySettings> {
-        return this.securitySettings;
-    }
-
-    async updateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecuritySettings> {
-        this.securitySettings = {
-            ...this.securitySettings,
-            ...settings
-        };
-        return this.securitySettings;
-    }
-
-    async validateSecuritySettings(settings: BillPaySecuritySettings): Promise<BillPaySecurityValidation> {
-        const errors: Record<string, string> = {};
-        
-        if (settings.passwordPolicy.minLength < 8) {
-            errors['passwordPolicy.minLength'] = 'Password must be at least 8 characters';
-        }
-        if (settings.passwordPolicy.expiryDays < 30) {
-            errors['passwordPolicy.expiryDays'] = 'Password must expire after at least 30 days';
-        }
-        if (settings.loginPolicy.maxAttempts < 1) {
-            errors['loginPolicy.maxAttempts'] = 'Max attempts must be at least 1';
-        }
-
-        return {
-            isValid: Object.keys(errors).length === 0,
-            errors
-        };
-    }
-
-    async sendOTP(method: BillPayOTPMethod, destination: string): Promise<void> {
-        // Mock implementation - just validate the method and destination
-        if (!Object.values(BillPayOTPMethod).includes(method)) {
-            throw new Error(`Invalid OTP method: ${method}`);
-        }
-        if (!destination) {
-            throw new Error('Destination is required');
-        }
+    async sendOTP(method: string, destination: string): Promise<void> {
+        console.log(`Sending OTP via ${method} to ${destination}`);
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        return;
     }
 
     async getFISException(id: number): Promise<FISException | null> {

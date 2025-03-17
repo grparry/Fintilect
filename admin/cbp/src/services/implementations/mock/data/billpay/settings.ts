@@ -1,41 +1,59 @@
 import {
-  BillPayConfig,
+  BillPayConfig
+} from '../../../../../types/bill-pay.types';
+
+import {
+  NotificationResponse
+} from '../../../../../types/notification.types';
+
+import {
   Holiday,
   HolidayType,
   HolidayStatus,
-  NotificationTemplate,
-  NotificationType,
-  NotificationCategory
-} from '../../../../../types/bill-pay.types';
+} from '../../../../../types/calendar.types';
 
-export const mockTemplates: NotificationTemplate[] = [
+export const mockTemplates: NotificationResponse[] = [
   {
-    id: 1,
-    name: 'Payment Confirmation',
-    type: NotificationType.PAYMENT_COMPLETED,
-    category: NotificationCategory.PAYMENT,
-    subject: 'Payment Confirmation',
-    content: 'Your payment of {{amount}} has been processed',
-    active: true,
-    lastModified: new Date().toISOString()
+    id: '1',
+    errorNumber: 100,
+    statusCode: 200,
+    matchMode: 1,
+    matchOrder: 1,
+    matchText: 'Payment Confirmation',
+    messageSubject: 'Payment Confirmation',
+    messageBody: 'Your payment has been processed',
+    emailMember: true,
+    emailMemberServices: false,
+    emailSysOp: false,
+    notes: '',
+    symmetry: false,
+    emerge: false
   },
   {
-    id: 2,
-    name: 'Payment Failed',
-    type: NotificationType.PAYMENT_FAILED,
-    category: NotificationCategory.PAYMENT,
-    subject: 'Payment Failed',
-    content: 'Your payment of {{amount}} has failed',
-    active: true,
-    lastModified: new Date().toISOString()
+    id: '2',
+    errorNumber: 101,
+    statusCode: 400,
+    matchMode: 1,
+    matchOrder: 1,
+    matchText: 'Payment Failed',
+    messageSubject: 'Payment Failed',
+    messageBody: 'Your payment has failed',
+    emailMember: true,
+    emailMemberServices: true,
+    emailSysOp: true,
+    notes: 'Sent when a payment fails',
+    symmetry: false,
+    emerge: true
   }
 ];
+
 export const availableVariables: string[] = [
   'amount',
   'date',
-  'paymentId',
+  'paymentID',
   'status'
 ];
+
 export const initialHolidays: Holiday[] = [
   {
     id: 1,

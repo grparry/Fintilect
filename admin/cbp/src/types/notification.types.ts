@@ -1,39 +1,96 @@
-
-
-// Notification system types
-export interface DeliverySettings {
-    emailEnabled: boolean;
-    smsEnabled: boolean;
-    defaultRecipients: string[];
-    retryAttempts: number;
-    retryInterval: number;
+// API-aligned notification types
+export interface NotificationCreateRequest {
+    errorNumber: number;
+    statusCode?: number;
+    matchMode: number;
+    matchOrder: number;
+    matchText?: string;
+    messageSubject?: string;
+    messageBody?: string;
+    emailMember: boolean;
+    emailMemberServices: boolean;
+    emailSysOp: boolean;
+    notes?: string;
+    symmetry: boolean;
+    emerge: boolean;
 }
-export interface NotificationTemplate {
-    id: number;
-    name: string;
-    description?: string;
-    subject: string;
-    body: string;
-    type: 'email' | 'sms';
-    variables: string[];
-    isActive: boolean;
-    createdAt: string;
-    updatedAt: string;
-}
-export interface NotificationEvent {
+
+export interface NotificationUpdateRequest {
     id: string;
-    templateId: string;
-    recipient: string;
-    type: 'email' | 'sms';
-    status: 'pending' | 'sent' | 'failed';
-    data: Record<string, unknown>;
-    sentAt?: string;
-    error?: string;
-    createdAt: string;
+    errorNumber: number;
+    statusCode?: number;
+    matchMode: number;
+    matchOrder: number;
+    matchText?: string;
+    messageSubject?: string;
+    messageBody?: string;
+    emailMember: boolean;
+    emailMemberServices: boolean;
+    emailSysOp: boolean;
+    notes?: string;
+    symmetry?: boolean;
+    emerge?: boolean;
 }
-export interface NotificationStats {
-    totalSent: number;
-    totalFailed: number;
-    deliveryRate: number;
-    averageDeliveryTime: number;
+
+export interface NotificationResponse {
+    id: string;
+    errorNumber: number;
+    statusCode?: number;
+    matchMode: number;
+    matchOrder: number;
+    matchText?: string;
+    messageSubject?: string;
+    messageBody?: string;
+    emailMember: boolean;
+    emailMemberServices: boolean;
+    emailSysOp: boolean;
+    notes?: string;
+    symmetry: boolean;
+    emerge: boolean;
+}
+
+export interface NotificationListResponse {
+    notifications?: NotificationResponse[];
+}
+
+export interface NotificationSendRequest {
+    statusCode: number;
+}
+
+export interface NotificationSendCustomerRequest {
+    paymentID?: string;
+    statusCode: number;
+}
+
+export interface SavedNotificationResponse {
+    ID: number;
+    statusCode: number;
+    statusCodeDescription?: string;
+    date: string;
+    memberID?: string;
+    paymentID?: string;
+    paymentDate?: string;
+    name?: string;
+    memberEmail?: string;
+    subject?: string;
+    body?: string;
+    sent: boolean;
+}
+
+export interface SavedNotificationListResponse {
+    savedNotifications?: SavedNotificationResponse[];
+}
+
+export interface SavedNotificationClearRequest {
+    clearUpToDate: string;
+}
+
+export interface SavedNotificationSearchParameter {
+    type: number;
+    value?: string;
+    value2?: string;
+}
+
+export interface SavedNotificationSearchRequest {
+    parameters?: SavedNotificationSearchParameter[];
 }

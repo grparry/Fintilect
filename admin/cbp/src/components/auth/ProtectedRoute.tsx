@@ -74,12 +74,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Redirect if trying to access admin features without admin hostname
-  if (location.pathname.startsWith('/admin') && !isAdmin) {
-    console.log('ProtectedRoute - Non-admin hostname trying to access admin route');
-    return <Navigate to="/unauthorized" replace />;
-  }
-
   // Check if required permissions are met
   if (resourceId && !hasPermission) {
     console.log('ProtectedRoute - Permission denied for resource:', resourceId);

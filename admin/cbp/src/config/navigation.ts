@@ -73,6 +73,9 @@ export const navigationConfig: NavigationConfig = {
       description: 'Manage clients, users, and permissions',
       path: '/admin/client-management',
       resourceId: 'navigation:clientManagement' as ResourceId,
+      // The root path will handle redirection based on admin status
+      // For admin users: redirects to /admin/client-management/list
+      // For non-admin users: redirects to /admin/client-management/edit/:clientId/info
       items: [
         {
           id: 'client-list',

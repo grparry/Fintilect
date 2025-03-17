@@ -10,7 +10,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import BuildIcon from '@mui/icons-material/Build';
 import EventIcon from '@mui/icons-material/Event';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import SecurityIcon from '@mui/icons-material/Security';
 import WarningIcon from '@mui/icons-material/Warning';
 import TransformIcon from '@mui/icons-material/Transform';
 import LockIcon from '@mui/icons-material/Lock';
@@ -29,7 +28,6 @@ const Settings = lazy(() => import('../components/bill-pay/settings/Settings'));
 const BillPayConfig = lazy(() => import('../components/bill-pay/settings/BillPayConfig'));
 const Holidays = lazy(() => import('../components/bill-pay/settings/Holidays'));
 const NotificationTemplates = lazy(() => import('../components/bill-pay/settings/NotificationTemplates'));
-const BillPaySecuritySettings = lazy(() => import('../components/bill-pay/settings/security/BillPaySecuritySettings'));
 const ManualProcessing = lazy(() => import('../components/bill-pay/payments/ManualProcessing'));
 const FisPayeeCheck = lazy(() => import('../components/bill-pay/payments/FisPayeeCheck'));
 const FISExceptionHandling = lazy(() => import('../components/bill-pay/payments/FISExceptionHandling'));
@@ -189,15 +187,6 @@ const billPayRoutes: RouteConfig[] = [
             icon: NotificationsIcon,
             sectionId: 'billPay',
             resourceId: 'route:billPay.settings.notifications' as ResourceId
-          },
-          {
-            id: 'security',
-            path: 'security',
-            title: 'Security',
-            element: BillPaySecuritySettings,
-            icon: SecurityIcon,
-            sectionId: 'billPay',
-            resourceId: 'route:billPay.settings.security' as ResourceId
           }
         ]
       }
