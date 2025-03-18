@@ -58,12 +58,6 @@ const Dashboard: React.FC = () => {
       description: 'Manage Emerge administrative settings.',
       icon: <Settings fontSize="large" />,
       path: '/admin/emerge'
-    },
-    {
-      title: 'Development',
-      description: 'Access development tools and configurations.',
-      icon: <Code fontSize="large" />,
-      path: '/admin/development'
     }
   ];
   return (

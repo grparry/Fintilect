@@ -38,7 +38,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AddIcon from '@mui/icons-material/Add';
 import PreviewIcon from '@mui/icons-material/Preview';
 import SendIcon from '@mui/icons-material/Send';
-import { notificationService } from '../../../services/factory/ServiceFactory';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { useClientApi } from '../../../hooks/useClientApi';
 import {
   NotificationResponse,
@@ -70,6 +70,9 @@ interface DeleteDialogState {
 const NotificationTemplates: React.FC = () => {
   // Indicate that this component uses client-specific API
   useClientApi(true);
+
+  // Get a fresh instance of the notification service
+  const notificationService = ServiceFactory.getInstance().getNotificationService();
 
   // State
   const [notifications, setNotifications] = useState<NotificationResponse[]>([]);

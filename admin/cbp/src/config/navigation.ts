@@ -96,13 +96,6 @@ export const navigationConfig: NavigationConfig = {
       resourceId: 'navigation:billPay' as ResourceId,
       items: [
         {
-          id: 'dashboard',
-          title: 'Dashboard',
-          path: '/admin/bill-pay/dashboard',
-          icon: DashboardIcon,
-          resourceId: 'route:billPay.dashboard' as ResourceId
-        },
-        {
           id: 'payments',
           title: 'Payment Management',
           path: '/admin/bill-pay/payments',
@@ -159,31 +152,6 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/bill-pay/settings',
           icon: SettingsIcon,
           resourceId: 'route:billPay.settings' as ResourceId
-        }
-      ]
-    },
-    {
-      id: 'development',
-      title: 'Development',
-      icon: CodeIcon,
-      color: '#9c27b0',
-      description: 'Development and testing tools',
-      path: '/admin/development',
-      resourceId: 'navigation:development' as ResourceId,
-      items: [
-        {
-          id: 'development',
-          title: 'Development',
-          path: '/admin/development',
-          icon: CodeIcon,
-          resourceId: 'route:development' as ResourceId
-        },
-        {
-          id: 'api-testing',
-          title: 'API Testing',
-          path: '/admin/development/api-testing',
-          icon: ApiIcon,
-          resourceId: 'route:development.api-testing' as ResourceId
         }
       ]
     }

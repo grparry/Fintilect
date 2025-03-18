@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Typography, Grid, Paper, Link } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import PaymentIcon from '@mui/icons-material/Payment';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import TransformIcon from '@mui/icons-material/Transform';
@@ -20,35 +19,6 @@ const BillPayHeader: React.FC = () => {
       </Box>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={4}>
-          <Paper 
-            sx={{ 
-              p: 3, 
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              '&:hover': {
-                bgcolor: 'action.hover'
-              }
-            }}
-          >
-            <Link
-              component={RouterLink}
-              to="/admin/bill-pay/dashboard"
-              color="inherit"
-              underline="none"
-              sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
-            >
-              <DashboardIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" color="text.primary" gutterBottom>
-                Dashboard
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                View bill pay status and statistics
-              </Typography>
-            </Link>
-          </Paper>
-        </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Paper 
             sx={{ 
@@ -102,7 +72,7 @@ const BillPayHeader: React.FC = () => {
                 Reports
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                View bill pay reports and analytics
+                View and export bill pay reports
               </Typography>
             </Link>
           </Paper>

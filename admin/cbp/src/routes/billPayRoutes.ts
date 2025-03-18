@@ -58,6 +58,7 @@ const billPayRoutes: RouteConfig[] = [
         element: Dashboard,
         icon: DashboardIcon,
         sectionId: 'billPay',
+        hideFromSidebar: true,
         resourceId: 'route:billPay.dashboard' as ResourceId
       },
       {

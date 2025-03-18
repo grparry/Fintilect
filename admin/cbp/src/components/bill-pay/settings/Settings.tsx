@@ -57,9 +57,15 @@ const Settings: React.FC = () => {
   useEffect(() => {
     const savedTab = sessionStorage.getItem('billPaySettingsTab');
     if (savedTab !== null) {
+      // Convert the saved tab index, ensuring it's valid for our current tab structure
+      const parsedTab = parseInt(savedTab, 10);
+      // If the saved tab was 0 (General), default to 0 (now Notifications)
+      // If it was 1 or 2, adjust to the new index (0 or 1)
+      const adjustedTab = parsedTab >= 1 ? Math.min(parsedTab - 1, 1) : 0;
+      
       setState((prev) => ({
         ...prev,
-        activeTab: parseInt(savedTab, 10),
+        activeTab: adjustedTab,
       }));
     }
   }, []);
@@ -100,28 +106,20 @@ const Settings: React.FC = () => {
           }}
         >
           <Tab
-            icon={<SettingsIcon />}
-            label={isMobile ? undefined : 'General'}
-            {...a11yProps(0)}
-          />
-          <Tab
             icon={<NotificationsIcon />}
             label={isMobile ? undefined : 'Notifications'}
-            {...a11yProps(1)}
+            {...a11yProps(0)}
           />
           <Tab
             icon={<EventIcon />}
             label={isMobile ? undefined : 'Holidays'}
-            {...a11yProps(2)}
+            {...a11yProps(1)}
           />
         </Tabs>
         <TabPanel value={state.activeTab} index={0}>
-          <BillPayConfig />
-        </TabPanel>
-        <TabPanel value={state.activeTab} index={1}>
           <NotificationTemplates />
         </TabPanel>
-        <TabPanel value={state.activeTab} index={2}>
+        <TabPanel value={state.activeTab} index={1}>
           <Holidays />
         </TabPanel>
       </Paper>

@@ -118,7 +118,7 @@ export class ServiceFactory {
   getNotificationService(): INotificationService {
     console.log('[ServiceFactory] Creating NotificationService instance');
     return shouldUseMockService('notification')
-      ? new MockNotificationService(ServiceFactory.getAdminEndpoint('/notifications'))
+      ? new MockNotificationService(ServiceFactory.getAdminCuEndpoint('/api/v1/Notification'))
       : new NotificationService(ServiceFactory.getAdminCuEndpoint('/api/v1/Notification'));
   }
 
