@@ -48,7 +48,11 @@ export const getCurrentHostname = (): string => {
     }
   }
   
-  return window.location.hostname;
+  const currentHostname = window.location.hostname;
+  console.log('[getCurrentHostname] Raw hostname:', currentHostname);
+  console.log('[getCurrentHostname] Full URL:', window.location.href);
+  console.log('[getCurrentHostname] Protocol:', window.location.protocol);
+  return currentHostname;
 };
 
 /**
@@ -58,20 +62,32 @@ export const getCurrentHostname = (): string => {
  */
 const initializeClientConfigs = (): void => {
   try {
+    console.log('[initializeClientConfigs] Environment:', process.env.NODE_ENV);
+    console.log('[initializeClientConfigs] Base URL:', window.location.origin);
+    console.log('[initializeClientConfigs] Full URL:', window.location.href);
+    
     // Use XMLHttpRequest for synchronous loading
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/config/client-config.json', false); // false = synchronous
+    const configPath = '/config/client-config.json';
+    console.log('[initializeClientConfigs] Loading from:', window.location.origin + configPath);
+    
+    xhr.open('GET', configPath, false); // false = synchronous
     xhr.send();
     
     if (xhr.status !== 200) {
+      console.error('[initializeClientConfigs] Failed to load client configuration');
+      console.error('Status:', xhr.status, xhr.statusText);
+      console.error('Response:', xhr.responseText);
       throw new Error(`Failed to load client configuration: ${xhr.status} ${xhr.statusText}`);
     }
     
+    console.log('[initializeClientConfigs] Successfully loaded client configuration');
     const config = JSON.parse(xhr.responseText);
     if (config && config.clientConfigs) {
       CLIENT_CONFIGS_BY_HOSTNAME = config.clientConfigs;
-      console.log('Client configuration loaded from JSON file');
+      console.log('[initializeClientConfigs] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
     } else {
+      console.error('[initializeClientConfigs] Invalid configuration format');
       throw new Error('Invalid client configuration format');
     }
     
@@ -84,7 +100,7 @@ const initializeClientConfigs = (): void => {
         return acc;
       }, {} as Record<string, ClientConfig>);
   } catch (error) {
-    console.error('Error loading client configuration:', error);
+    console.error('[initializeClientConfigs] Error loading client configuration:', error);
     // Display critical error to user
     document.body.innerHTML = `
       <div style="font-family: sans-serif; padding: 20px; text-align: center;">
@@ -110,11 +126,13 @@ try {
  */
 export const getCurrentClientConfig = (): ClientConfig => {
   const hostname = getCurrentHostname();
+  console.log('[getCurrentClientConfig] Looking up config for hostname:', hostname);
   const config = CLIENT_CONFIGS_BY_HOSTNAME[hostname];
   
   if (!config) {
     const errorMessage = `No configuration found for hostname: ${hostname}`;
-    console.error(errorMessage);
+    console.error('[getCurrentClientConfig] Error:', errorMessage);
+    console.error('[getCurrentClientConfig] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
     
     // Display critical error to user
     document.body.innerHTML = `
@@ -128,6 +146,13 @@ export const getCurrentClientConfig = (): ClientConfig => {
     
     throw new Error(errorMessage);
   }
+  
+  console.log('[getCurrentClientConfig] Found config:', {
+    name: config.name,
+    environment: config.environment,
+    hostname: config.hostname,
+    adminApiUrl: config.adminApiUrl
+  });
   
   return config;
 };
@@ -161,36 +186,34 @@ export const getEnvironment = (): 'production' | 'test' | 'development' => {
 };
 
 /**
- * Get client API URL for the current hostname or selected client
- */
-export const getClientApiUrl = (): string => {
-  // Check if there's a selected client in sessionStorage (for admin users)
-  const savedClientId = sessionStorage.getItem('selectedClientId');
-  const currentEnvironment = getEnvironment();
-  
-  if (savedClientId) {
-    const clientId = parseInt(savedClientId, 10);
-    // Try to find a client with matching ID and environment
-    const key = `${clientId}_${currentEnvironment}`;
-    
-    if (CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT[key]) {
-      const selectedClient = CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT[key];
-      console.log(`[Client API URL] Using selected client: ${selectedClient.name}, ClientId: ${selectedClient.clientId}, Environment: ${selectedClient.environment}`);
-      return selectedClient.clientApiUrl;
-    }
-    
-    console.log(`[Client API URL] No client configuration found for ID ${clientId} in environment ${currentEnvironment}`);
-  }
-  
-  // Fall back to host-based configuration
-  return getCurrentClientConfig().clientApiUrl;
-};
-
-/**
  * Get admin API URL for the current hostname
  */
 export const getAdminApiUrl = (): string => {
-  return getCurrentClientConfig().adminApiUrl;
+  console.log('[getAdminApiUrl] Getting admin API URL...');
+  const config = getCurrentClientConfig();
+  console.log('[getAdminApiUrl] Using config:', {
+    name: config.name,
+    environment: config.environment,
+    hostname: config.hostname,
+    adminApiUrl: config.adminApiUrl
+  });
+  console.log('[getAdminApiUrl] Resolved admin API URL:', config.adminApiUrl);
+  return config.adminApiUrl;
+};
+
+/**
+ * Get client API URL for the current hostname or selected client
+ */
+export const getClientApiUrl = (): string => {
+  console.log('[getClientApiUrl] Getting client API URL...');
+  const config = getCurrentClientConfig();
+  console.log('[getClientApiUrl] Using config:', {
+    hostname: config.hostname,
+    environment: config.environment,
+    clientApiUrl: config.clientApiUrl
+  });
+  console.log('[getClientApiUrl] Resolved client API URL:', config.clientApiUrl);
+  return config.clientApiUrl;
 };
 
 /**

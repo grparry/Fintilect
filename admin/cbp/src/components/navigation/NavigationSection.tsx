@@ -37,11 +37,10 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
   const { checkPermissions } = usePermissions();
   const [visibleItems, setVisibleItems] = useState<NavigationItem[]>([]);
 
-  // Return null if section is undefined
-  if (!section) return null;
-
   useEffect(() => {
     const checkSectionAndItemPermissions = async () => {
+      if (!section) return;
+
       // Collect all resource IDs that need to be checked
       const resourceIds = [
         ...(section.resourceId ? [section.resourceId] : []),
@@ -49,31 +48,36 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
       ];
 
       if (resourceIds.length === 0) {
+        // If no permissions to check, show all items
         setVisibleItems(section.items || []);
         return;
       }
 
-      // Check all permissions at once
-      const permissionResults = await checkPermissions(resourceIds);
+      try {
+        const permissions = await checkPermissions(resourceIds);
+        const hasAccess = section.resourceId ? permissions[section.resourceId] : true;
 
-      // Check section permission first
-      if (section.resourceId && !permissionResults[section.resourceId].hasAccess) {
-        setVisibleItems([]);
-        return;
-      }
+        if (!hasAccess) {
+          setVisibleItems([]);
+          return;
+        }
 
-      // Filter items based on permissions
-      if (section.items) {
-        const filteredItems = section.items.filter(item => 
-          !item.resourceId || permissionResults[item.resourceId]?.hasAccess
-        );
+        // Filter items based on permissions
+        const filteredItems = (section.items || []).filter(item => {
+          if (!item.resourceId) return true;
+          return permissions[item.resourceId];
+        });
+
         setVisibleItems(filteredItems);
+      } catch (error) {
+        console.error('Error checking permissions:', error);
+        setVisibleItems([]);
       }
     };
 
     checkSectionAndItemPermissions();
   }, [section, checkPermissions]);
-  
+
   const isActive = section.id ? state.activeSection === section.id : false;
   const isSectionExpanded = level === 0 ? isActive : state.expandedItems.includes(section.id || '');
 
