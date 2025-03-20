@@ -24,7 +24,7 @@ export const API_CONFIG = {
   // Service factory configuration
   services: {
     // Enable/disable mock services globally
-    useMockServices: false,
+    useMockServices: process.env.REACT_APP_USE_MOCK_SERVICES === 'true',
     // Service-specific mock overrides
     mockOverrides: {
       auth: process.env.REACT_APP_MOCK_AUTH_SERVICE === 'true',
@@ -69,5 +69,9 @@ export const getConfig = () => {
 
 // Export a helper to determine if a specific service should use mock implementation
 export const shouldUseMockService = (serviceName: keyof typeof API_CONFIG.services.mockOverrides) => {
+  console.log(`[shouldUseMockService] Checking if ${serviceName} should use mock:`, {
+    globalSetting: API_CONFIG.services.useMockServices,
+    serviceSetting: API_CONFIG.services.mockOverrides[serviceName]
+  });
   return API_CONFIG.services.useMockServices || API_CONFIG.services.mockOverrides[serviceName];
 };
