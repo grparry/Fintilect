@@ -14,47 +14,52 @@ const GroupsWrapper: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [group, setGroup] = useState<UserGroup | null>(null);
-  if (!clientId) {
-    return (
-      <Alert severity="error" sx={{ mt: 2 }}>
-        Client ID is required
-      </Alert>
-    );
-  }
-  try {
-    const decodedClientId = decodeId(clientId);
-    // If groupId is present, show the edit view
-    if (groupId) {
+  const renderContent = () => {
+    if (!clientId) {
       return (
-        <GroupEdit 
-          clientId={decodedClientId}
-          groupId={groupId}
-          onSave={() => {
-            navigate(`/admin/client-management/${clientId}/groups`, { 
-              replace: true,
-              state: { 
-                returnUrl: location.pathname,
-                message: 'Group saved successfully'
-              }
-            });
-          }}
-          onCancel={() => {
-            navigate(`/admin/client-management/${clientId}/groups`, { 
-              replace: true,
-              state: { returnUrl: location.pathname }
-            });
-          }}
-        />
+        <Alert severity="error" sx={{ mt: 2 }}>
+          Client ID is required
+        </Alert>
       );
     }
-    // Otherwise show the groups list
-    return <Groups clientId={decodedClientId} />;
-  } catch (err) {
-    return (
-      <Alert severity="error" sx={{ mt: 2 }}>
-        Invalid client ID format. Please select a client from the list.
-      </Alert>
-    );
-  }
+
+    try {
+      const decodedClientId = decodeId(clientId);
+      // If groupId is present, show the edit view
+      if (groupId) {
+        return (
+          <GroupEdit 
+            clientId={decodedClientId}
+            groupId={groupId}
+            onSave={() => {
+              navigate(`/admin/client-management/${clientId}/groups`, { 
+                replace: true,
+                state: { 
+                  returnUrl: location.pathname,
+                  message: 'Group saved successfully'
+                }
+              });
+            }}
+            onCancel={() => {
+              navigate(`/admin/client-management/${clientId}/groups`, { 
+                replace: true,
+                state: { returnUrl: location.pathname }
+              });
+            }}
+          />
+        );
+      }
+      // Otherwise show the groups list
+      return <Groups clientId={decodedClientId} />;
+    } catch (err) {
+      return (
+        <Alert severity="error" sx={{ mt: 2 }}>
+          Invalid client ID format. Please select a client from the list.
+        </Alert>
+      );
+    }
+  };
+
+  return renderContent();
 };
 export default GroupsWrapper;

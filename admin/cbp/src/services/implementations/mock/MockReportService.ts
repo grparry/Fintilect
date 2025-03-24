@@ -1,131 +1,304 @@
-import {
-    ReportType,
-    ReportData,
-    ReportFilters,
-    ExportOptions,
-    AuditRecord,
-    TransactionRecord,
-    UserRecord
-} from '../../../types/report.types';
-import {
-    BaseReportArguments,
-    ExportReportArguments,
-    ScheduleReportArguments,
-    ReportRunRequest,
-    ReportResponse
-} from '../../../types/report-api.types';
-import { PaginatedResponse } from '../../../types/common.types';
+import { ReportResponse, ErrorRecapRequest, ErrorRecapItemPagedResponse, ErrorRecapItem, PaymentActivityRequest, PaymentActivityItemPagedResponse, PaymentActivityItem, SearchType } from '../../../types/report.types';
+import { IReportService } from '../../interfaces/IReportService';
 import { BaseMockService } from './BaseMockService';
-import { mockReportData } from './data/report/reports';
+import logger from '../../../utils/logger';
 
-export class MockReportService extends BaseMockService {
-    private reports: Map<string, ReportData> = new Map();
-    private reportTypes: ReportType[] = ['all', 'login', 'payments', 'system'];
-    private exportOptions: ExportOptions = {
-        format: 'csv',
-        includeHeaders: true,
-        dateFormat: 'YYYY-MM-DD'
-    };
-    constructor(basePath: string = '/api/v1/reports') {
+export class MockReportService extends BaseMockService implements IReportService {
+    constructor(basePath: string = '/api/v1/Report') {
         super(basePath);
-        this.initializeData();
     }
-    private initializeData(): void {
-        // Initialize with mock data
-        mockReportData.forEach(report => {
-            const id = Math.random().toString(36).substring(7);
-            this.reports.set(id, report);
-        });
-    }
-    async runReport(request: ReportRunRequest): Promise<ReportResponse<ReportData>> {
+
+    async runReport(name: string | null, args: string | null): Promise<ReportResponse> {
         await this.delay();
-        const reportId = Math.random().toString(36).substring(7);
-        const report = {
-            ...mockReportData[0]
-        };
-        this.reports.set(reportId, report);
+        // Return an object with jsonResponse property to match the API specification
         return {
-            data: report,
-            status: 'completed',
-            createdAt: new Date().toISOString(),
-            completedAt: new Date().toISOString()
+            jsonResponse: JSON.stringify({
+                message: 'Mock report response',
+                name,
+                args: args ? this.parseReportParams(args) : null
+            })
         };
     }
-    async getReport(reportId: string): Promise<ReportData> {
-        await this.delay();
-        const report = this.reports.get(reportId);
-        if (!report) {
-            throw this.createError(`Report not found: ${reportId}`);
+
+    async runReportWithParams(name: string, params: Record<string, string | number | Date>): Promise<ReportResponse> {
+        // Validate report name follows convention (starts with "rpt" and ends with "JSON")
+        if (!name.startsWith('rpt') || !name.endsWith('JSON')) {
+            throw new Error(`Invalid report name: ${name}. Report names must start with "rpt" and end with "JSON"`);
         }
-        return report;
+
+        const formattedArgs = this.formatReportParams(params);
+        return this.runReport(name, formattedArgs);
     }
-    async searchReports(filters: ReportFilters): Promise<PaginatedResponse<ReportData>> {
+
+    async getErrorRecap(params: ErrorRecapRequest): Promise<ErrorRecapItemPagedResponse> {
         await this.delay();
-        const reports = Array.from(this.reports.values());
+        
+        if (!params.searchType || !params.searchValue) {
+            throw new Error('SearchType and SearchValue are required parameters');
+        }
+        
+        // Log the parameters being sent for debugging
+        const searchParams = new URLSearchParams();
+        searchParams.append('SearchType', params.searchType);
+        searchParams.append('SearchValue', params.searchValue);
+        searchParams.append('PageNumber', (params.pageNumber || 1).toString());
+        searchParams.append('PageSize', (params.pageSize || 20).toString());
+        
+        const queryString = searchParams.toString();
+        logger.info(`Mock ErrorRecap request with query string: ${queryString}`);
+        
+        // Create mock data based on search parameters
+        const mockItems: ErrorRecapItem[] = Array(10).fill(null).map((_, index) => ({
+            failedDate: new Date(Date.now() - index * 86400000).toISOString(),
+            memberId: `M${100000 + index}`,
+            paymentId: `P${200000 + index}`,
+            amount: 100 + (index * 10),
+            userPayeeListId: `UPL${300000 + index}`,
+            payeeId: `PY${400000 + index}`,
+            payeeName: `Mock Payee ${index + 1}`,
+            usersAccountAtPayee: `ACCT-${500000 + index}`,
+            nameOnAccount: `Mock User ${index + 1}`,
+            status: index % 2 === 0 ? 'Failed' : 'Error',
+            hostCode: `HC-${index}`,
+            error: `Mock error message for ${params.searchType}=${params.searchValue} (${index + 1})`
+        }));
+        
+        // Filter mock data based on search parameters if needed
+        let filteredItems = [...mockItems];
+        if (params.searchType && params.searchValue) {
+            const searchValue = params.searchValue.toLowerCase();
+            
+            switch(params.searchType) {
+                case 'MemberID':
+                    filteredItems = mockItems.filter(item => 
+                        item.memberId?.toLowerCase().includes(searchValue));
+                    break;
+                case 'PaymentID':
+                    filteredItems = mockItems.filter(item => 
+                        item.paymentId?.toLowerCase().includes(searchValue));
+                    break;
+                case 'UserPayeeListID':
+                    filteredItems = mockItems.filter(item => 
+                        item.userPayeeListId?.toLowerCase().includes(searchValue));
+                    break;
+                case 'StatusCode':
+                    filteredItems = mockItems.filter(item => 
+                        item.hostCode?.toLowerCase().includes(searchValue));
+                    break;
+            }
+        }
+        
+        // Handle pagination
+        const pageNumber = params.pageNumber || 1;
+        const pageSize = params.pageSize || 20;
+        const startIndex = (pageNumber - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const paginatedItems = filteredItems.slice(startIndex, endIndex);
+        
         return {
-            items: reports,
-            total: reports.length,
-            page: 1,
-            limit: 10,
-            totalPages: 1
+            items: paginatedItems,
+            pageNumber: pageNumber,
+            pageSize: pageSize,
+            totalCount: filteredItems.length,
+            totalPages: Math.ceil(filteredItems.length / pageSize),
+            hasNext: endIndex < filteredItems.length
         };
     }
-    async scheduleReport(request: ReportRunRequest<ScheduleReportArguments>): Promise<string> {
+
+    async getPaymentActivity(params: PaymentActivityRequest): Promise<PaymentActivityItemPagedResponse> {
         await this.delay();
-        return Math.random().toString(36).substring(7);
-    }
-    async cancelScheduledReport(reportId: string): Promise<void> {
-        await this.delay();
-        // No-op in mock
-    }
-    async exportReport(request: ReportRunRequest<ExportReportArguments>): Promise<string> {
-        await this.delay();
-        return 'https://mock-export-url.com/report.pdf';
-    }
-    async getAuditRecords(filters: ReportFilters): Promise<PaginatedResponse<AuditRecord>> {
-        await this.delay();
+        
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+        
+        // Log the parameters being sent for debugging
+        const searchParams = new URLSearchParams();
+        searchParams.append('SearchType', params.searchType);
+        
+        // Add parameters based on search type
+        if (params.searchValue) {
+            // Map searchValue to the appropriate parameter based on search type
+            if (params.searchType.includes('MemberID')) {
+                searchParams.append('MemberID', params.searchValue);
+            } else if (params.searchType.includes('PaymentID')) {
+                searchParams.append('PaymentID', params.searchValue);
+            }
+        }
+        
+        if (params.startDate) {
+            searchParams.append('StartDate', params.startDate);
+        }
+        
+        if (params.endDate) {
+            searchParams.append('EndDate', params.endDate);
+        }
+        
+        if (params.payeeName) {
+            searchParams.append('PayeeName', params.payeeName);
+        }
+        
+        searchParams.append('PageNumber', (params.pageNumber || 1).toString());
+        searchParams.append('PageSize', (params.pageSize || 20).toString());
+        
+        const queryString = searchParams.toString();
+        logger.info(`Mock PaymentActivity request with query string: ${queryString}`);
+        
+        // Create mock payment activity data
+        const mockItems: PaymentActivityItem[] = Array(15).fill(null).map((_, index) => ({
+            memberID: `M${100000 + index}`,
+            paymentID: `P${200000 + index}`,
+            payeeID: `PY${400000 + index}`,
+            payeeName: `Mock Payee ${index + 1}`,
+            dateProcessed: new Date(Date.now() - index * 86400000).toISOString(),
+            dueDate: new Date(Date.now() + (7 - index) * 86400000).toISOString(),
+            status: index % 3 === 0 ? 'Processed' : (index % 3 === 1 ? 'Pending' : 'Canceled'),
+            paymentMethod: index % 2 === 0 ? 'Check' : 'Electronic',
+            amount: 100 + (index * 25)
+        }));
+        
+        // Filter mock data based on search parameters
+        let filteredItems = [...mockItems];
+        
+        switch(params.searchType) {
+            case SearchType.MemberID:
+                if (params.searchValue) {
+                    filteredItems = mockItems.filter(item => 
+                        item.memberID?.includes(params.searchValue));
+                }
+                break;
+            case SearchType.PaymentID:
+                if (params.searchValue) {
+                    filteredItems = mockItems.filter(item => 
+                        item.paymentID?.includes(params.searchValue));
+                }
+                break;
+            case SearchType.PayeeName:
+                if (params.payeeName) {
+                    filteredItems = mockItems.filter(item => 
+                        item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
+                }
+                break;
+            case SearchType.DateRange:
+                // Filter by date range if provided
+                if (params.startDate && params.endDate) {
+                    const startDate = new Date(params.startDate).getTime();
+                    const endDate = new Date(params.endDate).getTime();
+                    
+                    filteredItems = mockItems.filter(item => {
+                        const processedDate = new Date(item.dateProcessed || '').getTime();
+                        return processedDate >= startDate && processedDate <= endDate;
+                    });
+                }
+                
+                // Additional filter by payee name if provided
+                if (params.payeeName) {
+                    filteredItems = filteredItems.filter(item => 
+                        item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
+                }
+                break;
+            case SearchType.MemberIDAndDate:
+                // Filter by member ID
+                if (params.searchValue) {
+                    filteredItems = mockItems.filter(item => 
+                        item.memberID?.includes(params.searchValue));
+                }
+                
+                // Additional filter by date range
+                if (params.startDate && params.endDate) {
+                    const startDate = new Date(params.startDate).getTime();
+                    const endDate = new Date(params.endDate).getTime();
+                    
+                    filteredItems = filteredItems.filter(item => {
+                        const processedDate = new Date(item.dateProcessed || '').getTime();
+                        return processedDate >= startDate && processedDate <= endDate;
+                    });
+                }
+                break;
+            case SearchType.MemberIDAndPayeeName:
+                // Filter by member ID
+                if (params.searchValue) {
+                    filteredItems = mockItems.filter(item => 
+                        item.memberID?.includes(params.searchValue));
+                }
+                
+                // Additional filter by payee name
+                if (params.payeeName) {
+                    filteredItems = filteredItems.filter(item => 
+                        item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
+                }
+                break;
+            case SearchType.MemberIDAndDateAndPayeeName:
+                // Filter by member ID
+                if (params.searchValue) {
+                    filteredItems = mockItems.filter(item => 
+                        item.memberID?.includes(params.searchValue));
+                }
+                
+                // Additional filter by date range
+                if (params.startDate && params.endDate) {
+                    const startDate = new Date(params.startDate).getTime();
+                    const endDate = new Date(params.endDate).getTime();
+                    
+                    filteredItems = filteredItems.filter(item => {
+                        const processedDate = new Date(item.dateProcessed || '').getTime();
+                        return processedDate >= startDate && processedDate <= endDate;
+                    });
+                }
+                
+                // Additional filter by payee name
+                if (params.payeeName) {
+                    filteredItems = filteredItems.filter(item => 
+                        item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
+                }
+                break;
+        }
+        
+        // Handle pagination
+        const pageNumber = params.pageNumber || 1;
+        const pageSize = params.pageSize || 20;
+        const startIndex = (pageNumber - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const paginatedItems = filteredItems.slice(startIndex, endIndex);
+        
         return {
-            items: mockReportData[0].audit,
-            total: mockReportData[0].audit.length,
-            page: 1,
-            limit: 10,
-            totalPages: 1
+            items: paginatedItems,
+            pageNumber: pageNumber,
+            pageSize: pageSize,
+            totalCount: filteredItems.length,
+            totalPages: Math.ceil(filteredItems.length / pageSize),
+            hasNext: endIndex < filteredItems.length,
+            hasPrevious: pageNumber > 1
         };
     }
-    async getTransactionRecords(filters: ReportFilters): Promise<PaginatedResponse<TransactionRecord>> {
-        await this.delay();
-        return {
-            items: mockReportData[0].transactions,
-            total: mockReportData[0].transactions.length,
-            page: 1,
-            limit: 10,
-            totalPages: 1
-        };
+
+    formatReportParams(params: Record<string, string | number | Date>): string {
+        return Object.entries(params)
+            .map(([key, value]) => this.formatReportParam(key, value))
+            .join(',');
     }
-    async getUserRecords(filters: ReportFilters): Promise<PaginatedResponse<UserRecord>> {
-        await this.delay();
-        return {
-            items: mockReportData[0].users,
-            total: mockReportData[0].users.length,
-            page: 1,
-            limit: 10,
-            totalPages: 1
-        };
+
+    formatReportParam(key: string, value: string | number | Date): string {
+        // Format Date objects as YYYY-MM-DD
+        if (value instanceof Date) {
+            const year = value.getFullYear();
+            const month = String(value.getMonth() + 1).padStart(2, '0');
+            const day = String(value.getDate()).padStart(2, '0');
+            return `${key}=${year}-${month}-${day}`;
+        }
+        
+        return `${key}=${value}`;
     }
-    async getReportTypes(): Promise<ReportType[]> {
-        await this.delay();
-        return this.reportTypes;
-    }
-    async getExportOptions(): Promise<ExportOptions> {
-        await this.delay();
-        return this.exportOptions;
-    }
-    async validateReportArgs(args: BaseReportArguments): Promise<boolean> {
-        await this.delay();
-        return true;
-    }
-    async getReportErrors(reportId: string): Promise<string[]> {
-        await this.delay();
-        return [];
+
+    parseReportParams(params: string): Record<string, string> {
+        if (!params) return {};
+        
+        return params.split(',').reduce((acc, param) => {
+            const [key, value] = param.split('=');
+            if (key) {
+                acc[key] = value || '';
+            }
+            return acc;
+        }, {} as Record<string, string>);
     }
 }

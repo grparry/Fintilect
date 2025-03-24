@@ -10,23 +10,49 @@ import {
 } from '../../../types/auth.types';
 
 export class AuthService extends BaseService implements IAuthService {
-    constructor(basePath: string = '/api/v1/auth') {
+    constructor(basePath: string) {
         super(basePath);
     }
     async login(credentials: LoginCredentials): Promise<AuthenticationResponse> {
         try {
-            return await this.post<AuthenticationResponse>('/login', credentials);
+            const url = `${this.basePath}/Authentication/tenant/login`;
+            logger.info(`AuthService: Attempting login to ${url} - username: ${credentials.username}, tenantId: ${credentials.tenantId}`);
+            const requestBody = {
+                username: credentials.username,
+                password: credentials.password,
+                tenantId: credentials.tenantId
+            };
+            logger.info('AuthService: Login request details', JSON.stringify({
+                url,
+                headers: { 'Content-Type': 'application/json' },
+                body: requestBody
+            }));
+            const response = await this.post<AuthenticationResponse>('/Authentication/tenant/login', requestBody);
+            logger.info(`AuthService: Login successful - ${JSON.stringify(response)}`);
+            
+            // Store the JWT token
+            if (response.token) {
+                localStorage.setItem('jwt_token', response.token);
+            }
+            
+            logger.info('AuthService: User roles:', JSON.stringify({
+                roles: response.roles,
+                username: response.user.username
+            }));
+            return response;
         } catch (error) {
-            logger.error(`Login failed for user ${credentials.username}: ${error}`);
-            throw this.handleError(error, 'Login failed');
+            logger.error(`AuthService: Login failed - username: ${credentials.username}, tenantId: ${credentials.tenantId}, url: ${this.basePath}/Authentication/tenant/login, error: ${error}`);
+            throw error;
         }
     }
     async logout(): Promise<void> {
         try {
             await this.post<void>('/logout');
+            // Clear the JWT token on logout
+            localStorage.removeItem('jwt_token');
         } catch (error) {
             logger.error(`Logout failed: ${error}`);
-            throw this.handleError(error, 'Logout failed');
+            throw error;
         }
     }
     async refreshToken(): Promise<TokenResponse> {
@@ -34,7 +60,7 @@ export class AuthService extends BaseService implements IAuthService {
             return await this.post<TokenResponse>('/refresh');
         } catch (error) {
             logger.error(`Token refresh failed: ${error}`);
-            throw this.handleError(error, 'Token refresh failed');
+            throw error;
         }
     }
     async getCurrentSession(): Promise<SessionInfo | null> {
@@ -58,7 +84,7 @@ export class AuthService extends BaseService implements IAuthService {
             return await this.get<UserSession[]>('/sessions');
         } catch (error) {
             logger.error(`Failed to get active sessions: ${error}`);
-            throw this.handleError(error, 'Failed to get active sessions');
+            throw error;
         }
     }
     async terminateSession(sessionId: string): Promise<void> {
@@ -66,7 +92,7 @@ export class AuthService extends BaseService implements IAuthService {
             await this.delete<void>(`/sessions/${sessionId}`);
         } catch (error) {
             logger.error(`Failed to terminate session ${sessionId}: ${error}`);
-            throw this.handleError(error, 'Failed to terminate session');
+            throw error;
         }
     }
     async terminateOtherSessions(): Promise<void> {
@@ -74,13 +100,7 @@ export class AuthService extends BaseService implements IAuthService {
             await this.delete<void>('/sessions/others');
         } catch (error) {
             logger.error(`Failed to terminate other sessions: ${error}`);
-            throw this.handleError(error, 'Failed to terminate other sessions');
+            throw error;
         }
-    }
-    protected handleError(error: unknown, defaultMessage: string): Error {
-        if (error instanceof Error) {
-            return error;
-        }
-        return new Error(defaultMessage);
     }
 }

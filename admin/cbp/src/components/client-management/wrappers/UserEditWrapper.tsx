@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Box, CircularProgress, Alert, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import UserForm from '../users/UserForm';
-import { clientService } from '../../../services/factory/ServiceFactory';
+import { clientService, userService } from '../../../services/factory/ServiceFactory';
 import { User, UserGroup } from '../../../types/client.types';
 import { decodeId } from '../../../utils/idEncoder';
 import logger from '../../../utils/logger';
@@ -30,8 +30,8 @@ const UserEditWrapper: React.FC = () => {
         console.log('Loading user data:', { decodedClientId, decodedUserId });
         // Load user and groups in parallel
         const [userData, groupsData] = await Promise.all([
-          clientService.getUser(decodedClientId, decodedUserId),
-          clientService.getGroups(decodedClientId)
+          userService.getUser(Number(decodedUserId)),
+          userService.getUserGroups(Number(decodedUserId))
         ]);
         if (!userData) {
           throw new Error('User not found');
@@ -53,12 +53,18 @@ const UserEditWrapper: React.FC = () => {
     try {
       setSaving(true);
       setError(null);
-      if (!clientId || !userId) {
+      if (!clientId || !userId || !user) {
         throw new Error('Missing required parameters');
       }
-      const decodedClientId = decodeId(clientId);
       const decodedUserId = decodeId(userId);
-      await clientService.updateUser(decodedClientId, decodedUserId, formData);
+      
+      // Create a complete user object by merging the existing user with the form data
+      const completeUserData = {
+        ...user,
+        ...formData
+      };
+      
+      await userService.updateUser(Number(decodedUserId), completeUserData);
       logger.info('User updated successfully');
       navigate(`/admin/client-management/edit/${clientId}/users`);
     } catch (err) {
@@ -98,7 +104,6 @@ const UserEditWrapper: React.FC = () => {
       <DialogContent>
         <UserForm
           user={user}
-          groups={groups}
           onSubmit={handleSave}
           onCancel={handleClose}
           saving={saving}

@@ -17,6 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import KeyIcon from '@mui/icons-material/Key';
 import { User as UIUser, UserGroup as UIUserGroup, UserStatus } from '../../../types/client.types';
 import dayjs from 'dayjs';
 import { encodeId } from '../../../utils/idEncoder';
@@ -28,33 +29,24 @@ interface UserTableProps {
   onEdit: (user: UIUser) => void;
   onDelete: (user: UIUser) => void;
   onToggleLock: (user: UIUser) => void;
+  onResetPassword: (user: UIUser) => void;
   clientId: string;
 }
-const statusColors: Record<string, "success" | "error" | "warning"> = {
-  ACTIVE: 'success',
-  INACTIVE: 'error',
-  PENDING: 'warning',
-  LOCKED: 'error',
-};
-const roleColors: Record<string, "error" | "default" | "warning" | "info"> = {
-  Admin: 'error',
-  User: 'default',
-  Manager: 'warning',
-  Support: 'info',
-  ReadOnly: 'default',
-};
+
 const UserTable: React.FC<UserTableProps> = ({
   users,
   groups,
   onEdit,
   onDelete,
   onToggleLock,
+  onResetPassword,
   clientId,
 }) => {
   const navigate = useNavigate();
   const handleEdit = (user: UIUser) => {
     const encodedClientId = encodeId(clientId);
     const encodedUserId = encodeId(user.id);
+    // Fix the route to match the route configuration in ClientManagementRoutes.tsx
     navigate(`/admin/client-management/edit/${encodedClientId}/users/${encodedUserId}`);
   };
   if (users.length === 0) {
@@ -72,10 +64,8 @@ const UserTable: React.FC<UserTableProps> = ({
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Role</TableCell>
-            <TableCell>Status</TableCell>
             <TableCell>Department</TableCell>
+            <TableCell>Status</TableCell>
             <TableCell>Last Login</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
@@ -88,23 +78,14 @@ const UserTable: React.FC<UserTableProps> = ({
                   {user.firstName} {user.lastName}
                 </Typography>
               </TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>
-                <Chip
-                  label={user.roles[0] || 'User'}
-                  size="small"
-                  color={roleColors[user.roles[0] || 'User'] || 'default'}
-                  variant="outlined"
-                />
-              </TableCell>
-              <TableCell>
-                <Chip
-                  label={user.status}
-                  size="small"
-                  color={statusColors[user.status] || 'default'}
-                />
-              </TableCell>
               <TableCell>{user.department || '-'}</TableCell>
+              <TableCell>
+                <Chip
+                  label={user.isLocked ? 'Locked' : (user.isActive ? 'Active' : 'Inactive')}
+                  size="small"
+                  color={user.isLocked ? 'error' : (user.isActive ? 'success' : 'warning')}
+                />
+              </TableCell>
               <TableCell>
                 {user.lastLogin
                   ? dayjs(user.lastLogin).format('YYYY-MM-DD HH:mm:ss')
@@ -123,14 +104,19 @@ const UserTable: React.FC<UserTableProps> = ({
                     </IconButton>
                   </Tooltip>
                   <Tooltip
-                    title={user.status === UserStatus.LOCKED ? 'Unlock user' : 'Lock user'}
+                    title={user.isLocked ? 'Unlock user' : 'Lock user'}
                   >
                     <IconButton size="small" onClick={() => onToggleLock(user)}>
-                      {user.status === UserStatus.LOCKED ? (
+                      {user.isLocked ? (
                         <LockOpenIcon fontSize="small" />
                       ) : (
                         <LockIcon fontSize="small" />
                       )}
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Reset password">
+                    <IconButton size="small" onClick={() => onResetPassword(user)}>
+                      <KeyIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
                 </Box>

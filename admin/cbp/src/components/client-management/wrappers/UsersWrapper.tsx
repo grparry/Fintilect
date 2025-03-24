@@ -57,8 +57,9 @@ const UsersWrapper: React.FC = () => {
   }
   // If we have a userId, show the edit form
   if (userId) {
-    console.log('📝 Rendering UserEditWrapper');
-    return <UserEditWrapper />;
+    console.log('📝 Rendering UserEditWrapper with userId:', userId);
+    // Force the component to re-render when the userId changes
+    return <UserEditWrapper key={userId} />;
   }
   // Otherwise show the users list
   console.log('📋 Rendering Users list');

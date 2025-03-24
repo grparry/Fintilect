@@ -8,84 +8,145 @@ import {
   Grid,
   Typography,
   Paper,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  FormHelperText,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { Client } from '../../types/client.types';
+import { Client, Environment, ClientType, ClientStatus, ClientContact } from '../../types/client.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import logger from '../../utils/logger';
 
 interface ContactInformationProps {
   clientId: string;
+  mode: 'info' | 'contacts';
 }
-interface ContactInfo {
+interface ContactFormData {
+  id?: number;
   name: string;
   email: string;
   phone: string;
+  isPrimary: boolean;
+  isActive: boolean;
 }
 const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => {
-  const [contactInfo, setContactInfo] = useState<ContactInfo>({
+  const [contacts, setContacts] = useState<ClientContact[]>([]);
+  const [selectedContact, setSelectedContact] = useState<ContactFormData>({
     name: '',
     email: '',
     phone: '',
+    isPrimary: false,
+    isActive: true,
   });
+  const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const loadContactInfo = useCallback(async () => {
+  const loadContacts = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const client = await clientService.getClient(clientId);
-      if (!client) {
-        throw new Error('Client not found');
-      }
-      setContactInfo({
-        name: client.name || '',
-        email: client.contactEmail || '',
-        phone: client.contactPhone || '',
-      });
-      logger.info(`Contact information loaded for client ${clientId}`);
+      const loadedContacts = await clientService.getClientContacts(Number(clientId));
+      setContacts(loadedContacts);
+      logger.info(`Contacts loaded for client ${clientId}`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
-      logger.error(`Failed to load contact information: ${errorMessage}`);
-      setError('Failed to load contact information. Please try again later.');
+      logger.error(`Failed to load contacts: ${errorMessage}`);
+      setError('Failed to load contacts. Please try again later.');
     } finally {
       setLoading(false);
     }
   }, [clientId]);
   useEffect(() => {
-    loadContactInfo();
-  }, [loadContactInfo]);
-  const handleInputChange = useCallback((field: keyof ContactInfo) => (
+    loadContacts();
+  }, [loadContacts]);
+  const handleInputChange = useCallback((field: keyof ContactFormData) => (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setContactInfo((prev) => ({
+    setSelectedContact((prev) => ({
       ...prev,
       [field]: event.target.value,
     }));
     setSuccess(null);
     setError(null);
   }, []);
+
+  const handleAddNew = useCallback(() => {
+    setSelectedContact({
+      name: '',
+      email: '',
+      phone: '',
+      isPrimary: false,
+      isActive: true,
+    });
+    setIsEditing(true);
+  }, []);
+
+  const handleEdit = useCallback((contact: ClientContact) => {
+    setSelectedContact({
+      id: contact.id,
+      name: contact.name || '',
+      email: contact.email || '',
+      phone: contact.phone || '',
+      isPrimary: contact.isPrimary,
+      isActive: contact.isActive,
+    });
+    setIsEditing(true);
+  }, []);
+
+  const handleCancel = useCallback(() => {
+    setSelectedContact({
+      name: '',
+      email: '',
+      phone: '',
+      isPrimary: false,
+      isActive: true,
+    });
+    setIsEditing(false);
+    setError(null);
+    setSuccess(null);
+  }, []);
   const handleSave = useCallback(async () => {
     try {
       setSaving(true);
       setError(null);
-      await clientService.updateClient(clientId, {
-        contactEmail: contactInfo.email,
-        contactPhone: contactInfo.phone,
-        name: contactInfo.name,
-      });
-      setSuccess('Contact information updated successfully');
-      logger.info(`Contact information updated for client ${clientId}`);
+
+      if (selectedContact.id) {
+        await clientService.updateClientContact(Number(clientId), selectedContact.id, {
+          id: selectedContact.id,
+          name: selectedContact.name,
+          email: selectedContact.email,
+          phone: selectedContact.phone || undefined,
+          isPrimary: selectedContact.isPrimary,
+          isActive: selectedContact.isActive
+        });
+      } else {
+        await clientService.createClientContact(Number(clientId), {
+          name: selectedContact.name,
+          email: selectedContact.email,
+          phone: selectedContact.phone || null,
+          isPrimary: selectedContact.isPrimary,
+          isActive: selectedContact.isActive,
+          createdOn: new Date().toISOString(),
+          updatedOn: null
+        });
+      }
+      
+      await loadContacts();
+      setSuccess('Contact saved successfully');
+      setIsEditing(false);
+      logger.info(`Contact ${selectedContact.id ? 'updated' : 'created'} for client ${clientId}`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
-      logger.error(`Failed to update contact information: ${errorMessage}`);
-      setError('Failed to update contact information. Please try again later.');
+      logger.error(`Failed to save contact: ${errorMessage}`);
+      setError('Failed to save contact. Please try again later.');
     } finally {
       setSaving(false);
     }
-  }, [clientId, contactInfo]);
+  }, [clientId, selectedContact, loadContacts]);
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
@@ -95,9 +156,22 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
   }
   return (
     <Paper sx={{ p: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        Contact Information
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h6" color="text.primary">
+          Contact Information
+        </Typography>
+        {!isEditing && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAddNew}
+            startIcon={<SaveIcon />}
+          >
+            Add Contact
+          </Button>
+        )}
+      </Box>
+
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
@@ -108,52 +182,107 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
           {success}
         </Alert>
       )}
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        handleSave();
-      }}>
+
+      {isEditing ? (
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          handleSave();
+        }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Name"
+                value={selectedContact.name}
+                onChange={handleInputChange('name')}
+                disabled={saving}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Email"
+                type="email"
+                value={selectedContact.email}
+                onChange={handleInputChange('email')}
+                disabled={saving}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Phone"
+                value={selectedContact.phone}
+                onChange={handleInputChange('phone')}
+                disabled={saving}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Primary Contact</InputLabel>
+                <Select
+                  value={selectedContact.isPrimary}
+                  label="Primary Contact"
+                  onChange={(e) => setSelectedContact(prev => ({ ...prev, isPrimary: e.target.value === 'true' }))}
+                  disabled={saving}
+                >
+                  <MenuItem value="true">Yes</MenuItem>
+                  <MenuItem value="false">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={saving}
+                  startIcon={<SaveIcon />}
+                >
+                  {saving ? 'Saving...' : 'Save Contact'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={handleCancel}
+                  disabled={saving}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        </form>
+      ) : (
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Contact Name"
-              value={contactInfo.name}
-              onChange={handleInputChange('name')}
-              disabled={saving}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Email"
-              type="email"
-              value={contactInfo.email}
-              onChange={handleInputChange('email')}
-              disabled={saving}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Phone"
-              value={contactInfo.phone}
-              onChange={handleInputChange('phone')}
-              disabled={saving}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={saving}
-              startIcon={<SaveIcon />}
-            >
-              {saving ? 'Saving...' : 'Save Changes'}
-            </Button>
-          </Grid>
+          {contacts.map((contact) => (
+            <Grid item xs={12} key={contact.id}>
+              <Paper sx={{ p: 2 }}>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item xs>
+                    <Typography variant="subtitle1">{contact.name}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {contact.email} • {contact.phone || 'No phone'}
+                      {contact.isPrimary && ' • Primary Contact'}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => handleEdit(contact)}
+                    >
+                      Edit
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+          ))}
         </Grid>
-      </form>
+      )}
     </Paper>
   );
 };

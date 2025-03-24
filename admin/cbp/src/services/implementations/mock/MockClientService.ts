@@ -5,73 +5,117 @@ import {
     ClientType,
     ClientStatus,
     Environment,
-    ClientSettings,
     ClientConfiguration,
     ClientApiKey,
     ClientContact,
-    ClientService,
+    ClientService as ClientServiceType,
+    ClientListResponse,
     User,
-    UserRole,
     UserGroup,
-    SecurityRole,
-    Permission,
-    ContactInformation,
-    Address,
-    PaginatedResponse,
-    Contact,
-    UserStatus
+    Group
 } from '../../../types/client.types';
-import { AuditLog, AuditSearchRequest, SecuritySettings, LoginPolicy } from '../../../types/security.types';
-import { mockClients, mockUsers, defaultSettings, mockPermissions, mockGroups, mockAuditLogs } from './data/client/mockClientData';
+import { mockClients } from './data/client/mockClientData';
+import { mockUsers } from './data/users/mockUserData';
+import { mockPermissionGroups as mockGroups, mockUserGroups } from './data/permissions/mockPermissionData';
 
 /**
  * Mock implementation of ClientService
  * Uses in-memory data for testing and development
  */
 export class MockClientService extends BaseMockService implements IClientService {
-    private clients: Client[] = [...mockClients];
-    private users: Map<string, User[]> = new Map();
-    private apiKeys: Map<string, ClientApiKey[]> = new Map();
-    private contacts: Map<string, ClientContact[]> = new Map();
-    private services: Map<string, ClientService[]> = new Map();
-    private userGroups: Map<string, UserGroup[]> = new Map();
-    private auditLogs: Map<string, AuditLog[]> = new Map();
-    private addresses: Map<string, Address> = new Map();
+    private clients: Map<number, Client>;
+    private apiKeys: Map<number, ClientApiKey[]>;
+    private contacts: Map<number, ClientContact[]>;
+    private services: Map<number, ClientServiceType[]>;
+    private configurations: Map<number, ClientConfiguration>;
+
     constructor(basePath: string = '/api/v1/clients') {
         super(basePath);
+        this.clients = new Map(mockClients.map(c => [c.id, c]));
+        this.apiKeys = new Map();
+        this.contacts = new Map();
+        this.services = new Map();
+        this.configurations = new Map();
         this.initializeData();
     }
+
     private initializeData(): void {
-        // Initialize mock data structures
-        this.clients.forEach(client => {
-            this.apiKeys.set(client.id, []);
-            this.contacts.set(client.id, []);
-            this.services.set(client.id, []);
-            this.userGroups.set(client.id, mockGroups);
-            this.auditLogs.set(client.id, [...mockAuditLogs]); // Initialize with mock audit logs
-            this.addresses.set(client.id, {
-                street1: '123 Main St',
-                street2: 'Suite 100',
-                city: 'Denver',
-                state: 'CO',
-                zipCode: '80202',
-                country: 'USA'
+        // Initialize mock data for each client
+        this.clients.forEach((client, id) => {
+            // Initialize API keys
+            this.apiKeys.set(id, [
+                {
+                    id: 1,
+                    clientId: id,
+                    keyName: 'Production API Key',
+                    environment: 'PRODUCTION',
+                    createdAt: '2025-01-01T00:00:00Z',
+                    expiresAt: '2026-01-01T00:00:00Z',
+                    lastUsed: '2025-02-21T00:00:00Z',
+                    status: 'Active'
+                }
+            ]);
+
+            // Initialize contacts
+            this.contacts.set(id, [
+                {
+                    id: 1,
+                    clientId: id,
+                    name: 'John Doe',
+                    email: 'john.doe@example.com',
+                    phone: '555-0123',
+                    isPrimary: true,
+                    createdOn: '2025-01-01T00:00:00Z',
+                    updatedOn: null,
+                    isActive: true
+                }
+            ]);
+
+            // Initialize services
+            this.services.set(id, [
+                {
+                    id: 1,
+                    clientId: id,
+                    serviceName: 'Payment Processing',
+                    status: 'Enabled',
+                    startDate: '2025-01-01T00:00:00Z',
+                    configuration: {}
+                }
+            ]);
+
+            // Initialize configurations
+            this.configurations.set(id, {
+                id: 1,
+                clientId: id,
+                maxDailyLimit: 100000,
+                maxTransactionLimit: 10000,
+                allowWeekendProcessing: false,
+                requireDualApproval: true,
+                notificationEmail: `notifications@${client.domain || 'example.com'}`,
+                lastModified: '2025-01-01T00:00:00Z'
             });
-            this.users.set(client.id, mockUsers.filter(u => u.clientId === client.id));
-            // Debug log
-            console.log(`Initialized audit logs for client ${client.id}:`, this.auditLogs.get(client.id));
         });
     }
+
     async getClients(params?: {
+        tenantId?: number;
+        isActive?: boolean;
         type?: ClientType;
         status?: ClientStatus;
         environment?: Environment;
         searchTerm?: string;
         page?: number;
         limit?: number;
-    }): Promise<PaginatedResponse<Client>> {
-        let filteredClients = [...this.clients];
+    }): Promise<ClientListResponse> {
+        let filteredClients = Array.from(this.clients.values());
+
         if (params) {
+            if (params.tenantId !== undefined) {
+                filteredClients = filteredClients.filter(c => c.tenantId === params.tenantId);
+            }
+            if (params.isActive !== undefined) {
+                filteredClients = filteredClients.filter(c => c.isActive === params.isActive);
+            }
             if (params.type) {
                 filteredClients = filteredClients.filter(c => c.type === params.type);
             }
@@ -85,558 +129,246 @@ export class MockClientService extends BaseMockService implements IClientService
                 const search = params.searchTerm.toLowerCase();
                 filteredClients = filteredClients.filter(c =>
                     c.name.toLowerCase().includes(search) ||
-                    (c.domain?.toLowerCase() || '').includes(search) ||
-                    (c.contactName?.toLowerCase() || '').includes(search)
+                    (c.domain?.toLowerCase() || '').includes(search)
                 );
             }
         }
-        const page = params?.page || 1;
-        const limit = params?.limit || 10;
-        const start = (page - 1) * limit;
-        const end = start + limit;
-        const items = filteredClients.slice(start, end);
-        const total = filteredClients.length;
+
+        // Note: We're ignoring pagination parameters since the real API doesn't support them
         return {
-            items,
-            pagination: {
-                total,
-                page,
-                limit,
-                pages: Math.ceil(total / limit)
-            }
+            clients: filteredClients
         };
     }
-    async getClient(clientId: string): Promise<Client> {
-        this.validateRequired({ clientId }, ['clientId']);
-        const client = this.clients.find(c => c.id === clientId);
+
+    async getClient(clientId: number): Promise<Client> {
+        const client = this.clients.get(clientId);
         if (!client) {
-            this.createError(`Client not found: ${clientId}`, 404);
+            throw this.createError(`Client not found: ${clientId}`, 404);
         }
-        return client!;
+        return client;
     }
-    async createClient(client: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>): Promise<Client> {
+
+    async createClient(client: Omit<Client, 'id' | 'createdOn' | 'updatedOn'>): Promise<Client> {
+        const newId = Math.max(...Array.from(this.clients.keys()), 0) + 1;
+        const now = new Date().toISOString();
+
         const newClient: Client = {
             ...client,
-            id: Math.random().toString(36).substr(2, 9),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            settings: defaultSettings
+            id: newId,
+            createdOn: now,
+            updatedOn: now
         };
-        this.clients.push(newClient);
+
+        this.clients.set(newId, newClient);
         this.initializeData();
         return newClient;
     }
-    async updateClient(clientId: string, client: Partial<Client>): Promise<Client> {
-        this.validateRequired({ clientId }, ['clientId']);
-        const index = this.clients.findIndex(c => c.id === clientId);
-        if (index === -1) {
-            this.createError(`Client not found: ${clientId}`, 404);
-        }
+
+    async updateClient(clientId: number, client: Partial<Client>): Promise<Client> {
+        const existingClient = await this.getClient(clientId);
         const updatedClient = {
-            ...this.clients[index],
+            ...existingClient,
             ...client,
-            updatedAt: new Date().toISOString()
+            updatedOn: new Date().toISOString()
         };
-        this.clients[index] = updatedClient;
+
+        this.clients.set(clientId, updatedClient);
         return updatedClient;
     }
-    async deleteClient(clientId: string): Promise<void> {
-        this.validateRequired({ clientId }, ['clientId']);
-        const index = this.clients.findIndex(c => c.id === clientId);
-        if (index === -1) {
-            this.createError(`Client not found: ${clientId}`, 404);
+
+    async deleteClient(clientId: number): Promise<void> {
+        if (!this.clients.has(clientId)) {
+            throw this.createError(`Client not found: ${clientId}`, 404);
         }
-        this.clients.splice(index, 1);
+
+        this.clients.delete(clientId);
         this.apiKeys.delete(clientId);
         this.contacts.delete(clientId);
         this.services.delete(clientId);
-        this.userGroups.delete(clientId);
-        this.auditLogs.delete(clientId);
-        this.addresses.delete(clientId);
-        this.users.delete(clientId);
+        this.configurations.delete(clientId);
     }
-    async getClientSettings(clientId: string): Promise<ClientSettings> {
-        this.validateRequired({ clientId }, ['clientId']);
-        const client = await this.getClient(clientId);
-        return client.settings;
+
+    async getClientConfig(clientId: number): Promise<ClientConfiguration> {
+        await this.getClient(clientId); // Verify client exists
+        const config = this.configurations.get(clientId);
+        if (!config) {
+            throw this.createError(`Configuration not found for client: ${clientId}`, 404);
+        }
+        return config;
     }
-    async updateClientSettings(clientId: string, settings: {
-        general?: Partial<ClientSettings['general']>;
-        security?: Partial<ClientSettings['security']>;
-        notifications?: Partial<ClientSettings['notifications']>;
-    }): Promise<ClientSettings> {
-        this.validateRequired({ clientId }, ['clientId']);
-        const client = await this.getClient(clientId);
-        const updatedSettings = {
-            ...client.settings,
-            general: { ...client.settings.general, ...settings.general },
-            security: { ...client.settings.security, ...settings.security },
-            notifications: { ...client.settings.notifications, ...settings.notifications }
-        };
-        await this.updateClient(clientId, { settings: updatedSettings });
-        return updatedSettings;
-    }
-    async getClientConfiguration(clientId: string): Promise<ClientConfiguration> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return {
-            id: parseInt(clientId),
-            clientId: parseInt(clientId),
-            maxDailyLimit: 100000,
-            maxTransactionLimit: 10000,
-            allowWeekendProcessing: false,
-            requireDualApproval: true,
-            notificationEmail: 'notifications@example.com',
+
+    async updateClientConfig(clientId: number, config: Partial<ClientConfiguration>): Promise<ClientConfiguration> {
+        const currentConfig = await this.getClientConfig(clientId);
+        const updatedConfig = {
+            ...currentConfig,
+            ...config,
             lastModified: new Date().toISOString()
         };
+
+        this.configurations.set(clientId, updatedConfig);
+        return updatedConfig;
     }
-    async updateClientConfiguration(clientId: string, config: Partial<ClientConfiguration>): Promise<ClientConfiguration> {
-        this.validateRequired({ clientId }, ['clientId']);
-        const currentConfig = await this.getClientConfiguration(clientId);
-        return { ...currentConfig, ...config, lastModified: new Date().toISOString() };
-    }
-    async getClientApiKeys(clientId: string): Promise<ClientApiKey[]> {
-        this.validateRequired({ clientId }, ['clientId']);
+
+    async getClientApiKeys(clientId: number): Promise<ClientApiKey[]> {
+        await this.getClient(clientId); // Verify client exists
         return this.apiKeys.get(clientId) || [];
     }
-    async createClientApiKey(clientId: string, keyData: {
-        keyName: string;
-        environment: Environment;
-        expiresAt?: string;
-    }): Promise<ClientApiKey> {
-        this.validateRequired({ clientId, keyData }, ['clientId', 'keyData']);
-        const newKey: ClientApiKey = {
-            id: parseInt(Math.random().toString().substr(2, 8)),
-            clientId: parseInt(clientId),
-            keyName: keyData.keyName,
-            environment: keyData.environment,
-            createdAt: new Date().toISOString(),
-            expiresAt: keyData.expiresAt || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-            lastUsed: null,
-            status: 'Active'
-        };
+
+    async createClientApiKey(clientId: number, apiKey: Omit<ClientApiKey, 'id' | 'clientId' | 'createdAt' | 'lastUsed'>): Promise<ClientApiKey> {
+        await this.getClient(clientId); // Verify client exists
         const keys = this.apiKeys.get(clientId) || [];
-        keys.push(newKey);
-        this.apiKeys.set(clientId, keys);
-        return newKey;
-    }
-    async revokeClientApiKey(clientId: string, keyId: number): Promise<void> {
-        this.validateRequired({ clientId, keyId }, ['clientId', 'keyId']);
-        const keys = this.apiKeys.get(clientId);
-        if (!keys) {
-            this.createError(`Client not found: ${clientId}`, 404);
-        }
-        const keyIndex = keys!.findIndex(k => k.id === keyId);
-        if (keyIndex === -1) {
-            this.createError(`API key not found: ${keyId}`, 404);
-        }
-        keys![keyIndex].status = 'Revoked';
-    }
-    async getClientContacts(clientId: string): Promise<ClientContact[]> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.contacts.get(clientId) || [];
-    }
-    async updateClientContacts(clientId: string, contacts: ContactInformation): Promise<ContactInformation> {
-        this.validateRequired({ clientId }, ['clientId']);
-        const clientContacts: ClientContact[] = [
-            this.createClientContact(clientId, contacts.primaryContact, 'Primary'),
-            this.createClientContact(clientId, contacts.technicalContact, 'Technical'),
-            this.createClientContact(clientId, contacts.billingContact, 'Billing'),
-            ...contacts.emergencyContacts.map(c => this.createClientContact(clientId, c, 'Emergency'))
-        ];
-        this.contacts.set(clientId, clientContacts);
-        return contacts;
-    }
-    private createClientContact(clientId: string, contact: Contact, role: string): ClientContact {
-        return {
-            id: parseInt(Math.random().toString().substr(2, 8)),
-            clientId: parseInt(clientId),
-            name: contact.name,
-            email: contact.email,
-            phone: contact.phone,
-            role,
-            isPrimary: role === 'Primary',
-            lastModified: new Date().toISOString()
+        const newId = Math.max(...keys.map(k => k.id), 0) + 1;
+        const now = new Date().toISOString();
+
+        const newApiKey: ClientApiKey = {
+            ...apiKey,
+            id: newId,
+            clientId: clientId,
+            createdAt: now,
+            lastUsed: null
         };
+
+        keys.push(newApiKey);
+        this.apiKeys.set(clientId, keys);
+        return newApiKey;
     }
-    async getClientServices(clientId: string): Promise<ClientService[]> {
-        this.validateRequired({ clientId }, ['clientId']);
+
+    async updateClientApiKey(clientId: number, apiKeyId: number, apiKey: Partial<ClientApiKey>): Promise<ClientApiKey> {
+        const keys = await this.getClientApiKeys(clientId);
+        const keyIndex = keys.findIndex(k => k.id === apiKeyId);
+        if (keyIndex === -1) {
+            throw this.createError(`API key not found: ${apiKeyId}`, 404);
+        }
+
+        const updatedKey = {
+            ...keys[keyIndex],
+            ...apiKey
+        };
+
+        keys[keyIndex] = updatedKey;
+        this.apiKeys.set(clientId, keys);
+        return updatedKey;
+    }
+
+    async deleteClientApiKey(clientId: number, apiKeyId: number): Promise<void> {
+        const keys = await this.getClientApiKeys(clientId);
+        const keyIndex = keys.findIndex(k => k.id === apiKeyId);
+        if (keyIndex === -1) {
+            throw this.createError(`API key not found: ${apiKeyId}`, 404);
+        }
+
+        keys.splice(keyIndex, 1);
+        this.apiKeys.set(clientId, keys);
+    }
+
+    async getClientServices(clientId: number): Promise<ClientServiceType[]> {
+        await this.getClient(clientId); // Verify client exists
         return this.services.get(clientId) || [];
     }
-    async updateClientService(
-        clientId: string,
-        serviceId: number,
-        service: Partial<ClientService>
-    ): Promise<ClientService> {
-        this.validateRequired({ clientId, serviceId }, ['clientId', 'serviceId']);
-        const services = this.services.get(clientId);
-        if (!services) {
-            this.createError(`Client not found: ${clientId}`, 404);
-        }
-        const serviceIndex = services!.findIndex(s => s.id === serviceId);
+
+    async updateClientService(clientId: number, serviceId: number, service: Partial<ClientServiceType>): Promise<ClientServiceType> {
+        const services = await this.getClientServices(clientId);
+        const serviceIndex = services.findIndex(s => s.id === serviceId);
         if (serviceIndex === -1) {
-            this.createError(`Service not found: ${serviceId}`, 404);
+            throw this.createError(`Service not found: ${serviceId}`, 404);
         }
+
         const updatedService = {
-            ...services![serviceIndex],
-            ...service,
-            clientId: parseInt(clientId)
+            ...services[serviceIndex],
+            ...service
         };
-        services![serviceIndex] = updatedService;
+
+        services[serviceIndex] = updatedService;
+        this.services.set(clientId, services);
         return updatedService;
     }
-    async getClientUsers(clientId: string, params?: {
-        role?: UserRole;
-        searchTerm?: string;
-        page?: number;
-        limit?: number;
-    }): Promise<PaginatedResponse<User>> {
-        this.validateRequired({ clientId }, ['clientId']);
-        let filteredUsers = this.users.get(clientId) || [];
-        if (params) {
-            if (params.role) {
-                filteredUsers = filteredUsers.filter(u => u.roles.includes(params.role));
-            }
-            if (params.searchTerm) {
-                const search = params.searchTerm.toLowerCase();
-                filteredUsers = filteredUsers.filter(u =>
-                    u.username.toLowerCase().includes(search) ||
-                    u.firstName.toLowerCase().includes(search) ||
-                    u.lastName.toLowerCase().includes(search) ||
-                    u.email.toLowerCase().includes(search)
-                );
-            }
-        }
-        const page = params?.page || 1;
-        const limit = params?.limit || 10;
-        const start = (page - 1) * limit;
-        const end = start + limit;
-        const items = filteredUsers.slice(start, end);
-        const total = filteredUsers.length;
-        return {
-            items,
-            pagination: {
-                total,
-                page,
-                limit,
-                pages: Math.ceil(total / limit)
-            }
+
+    async getClientContacts(clientId: number): Promise<ClientContact[]> {
+        await this.getClient(clientId); // Verify client exists
+        return this.contacts.get(clientId) || [];
+    }
+
+    async createClientContact(clientId: number, contact: Omit<ClientContact, 'id' | 'clientId'>): Promise<ClientContact> {
+        await this.getClient(clientId); // Verify client exists
+        const contacts = this.contacts.get(clientId) || [];
+        const newId = Math.max(...contacts.map(c => c.id), 0) + 1;
+
+        const now = new Date().toISOString();
+        const newContact: ClientContact = {
+            ...contact,
+            id: newId,
+            clientId: clientId,
+            createdOn: now,
+            updatedOn: null,
+            isActive: true
         };
+
+        contacts.push(newContact);
+        this.contacts.set(clientId, contacts);
+        return newContact;
     }
-    async getClientUserGroups(clientId: string): Promise<UserGroup[]> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.userGroups.get(clientId) || [];
-    }
-    async getClientRoles(clientId: string): Promise<SecurityRole[]> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return [
-            {
-                id: 'admin',
-                name: 'Administrator',
-                description: 'Full system access',
-                permissions: mockPermissions,
-                isSystem: true,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            },
-            {
-                id: 'user',
-                name: 'User',
-                description: 'Standard user access',
-                permissions: mockPermissions.filter(p => !p.id.includes('admin')),
-                isSystem: true,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            },
-            {
-                id: 'viewer',
-                name: 'Viewer',
-                description: 'Read-only access',
-                permissions: mockPermissions.filter(p => p.id.includes('read')),
-                isSystem: true,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            }
-        ];
-    }
-    async getClientPermissions(clientId: string): Promise<Permission[]> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return mockPermissions;
-    }
-    async getPermissions(): Promise<Permission[]> {
-        return mockPermissions;
-    }
-    async getClientAuditLogs(clientId: string, request: AuditSearchRequest): Promise<{ logs: AuditLog[], total: number }> {
-        console.log('MockClientService.getClientAuditLogs - clientId:', clientId);
-        console.log('MockClientService.getClientAuditLogs - request:', request);
-        this.validateRequired({ clientId }, ['clientId']);
-        let logs = this.auditLogs.get(clientId) || [];
-        console.log('MockClientService.getClientAuditLogs - initial logs:', logs);
-        // Apply filters
-        if (request) {
-            if (request.startDate && typeof request.startDate === 'string') {
-                const startDate = new Date(request.startDate);
-                startDate.setHours(0, 0, 0, 0); // Set to start of day
-                logs = logs.filter(log => {
-                    const logDate = new Date(log.timestamp);
-                    return logDate >= startDate;
-                });
-                console.log('After startDate filter:', logs);
-            }
-            if (request.endDate && typeof request.endDate === 'string') {
-                const endDate = new Date(request.endDate);
-                endDate.setHours(23, 59, 59, 999); // Set to end of day
-                logs = logs.filter(log => {
-                    const logDate = new Date(log.timestamp);
-                    return logDate <= endDate;
-                });
-                console.log('After endDate filter:', logs);
-            }
-            if (request.eventTypes?.length) {
-                logs = logs.filter(log => request.eventTypes!.includes(log.eventType));
-            }
-            if (request.userIds?.length) {
-                logs = logs.filter(log => request.userIds!.includes(log.userId));
-            }
-            if (request.resourceTypes?.length) {
-                logs = logs.filter(log => request.resourceTypes!.includes(log.resourceType));
-            }
-            if (request.actions?.length) {
-                logs = logs.filter(log => request.actions!.includes(log.action));
-            }
-            if (request.riskLevels?.length) {
-                logs = logs.filter(log => request.riskLevels!.includes(log.riskLevel));
-            }
-            if (request.status) {
-                logs = logs.filter(log => log.status === request.status);
-            }
+
+    async updateClientContact(clientId: number, contactId: number, contact: Partial<ClientContact>): Promise<ClientContact> {
+        const contacts = await this.getClientContacts(clientId);
+        const contactIndex = contacts.findIndex(c => c.id === contactId);
+        if (contactIndex === -1) {
+            throw this.createError(`Contact not found: ${contactId}`, 404);
         }
-        // Store total before pagination
-        const total = logs.length;
-        // Apply sorting
-        if (request.sortBy) {
-            logs = [...logs].sort((a: any, b: any) => {
-                const aValue = a[request.sortBy!];
-                const bValue = b[request.sortBy!];
-                const order = request.sortOrder === 'desc' ? -1 : 1;
-                if (aValue < bValue) return -1 * order;
-                if (aValue > bValue) return 1 * order;
-                return 0;
-            });
-        }
-        // Apply pagination
-        if (request.page !== undefined && request.limit !== undefined) {
-            const start = (request.page - 1) * request.limit;
-            const end = start + request.limit;
-            logs = logs.slice(start, end);
-            console.log('After pagination:', logs);
-        }
-        console.log('MockClientService.getClientAuditLogs - returning logs:', logs);
-        console.log('MockClientService.getClientAuditLogs - total logs:', total);
-        return { logs, total };
-    }
-    async getClientAddress(clientId: string): Promise<Address> {
-        this.validateRequired({ clientId }, ['clientId']);
-        const address = this.addresses.get(clientId);
-        if (!address) {
-            this.createError(`Address not found for client: ${clientId}`, 404);
-        }
-        return address!;
-    }
-    async updateClientAddress(clientId: string, address: Address): Promise<Address> {
-        this.validateRequired({ clientId }, ['clientId']);
-        this.addresses.set(clientId, address);
-        return address;
-    }
-    async getClientStats(clientId: string): Promise<{
-        userCount: number;
-        activeUserCount: number;
-        totalTransactions: number;
-        activeServices: number;
-        lastActivityDate: string;
-    }> {
-        this.validateRequired({ clientId }, ['clientId']);
-        const clientUsers = this.users.get(clientId) || [];
-        const activeUsers = clientUsers.filter(u => !u.locked);
-        return {
-            userCount: clientUsers.length,
-            activeUserCount: activeUsers.length,
-            totalTransactions: Math.floor(Math.random() * 10000),
-            activeServices: (this.services.get(clientId) || []).length,
-            lastActivityDate: new Date().toISOString()
+
+        const updatedContact = {
+            ...contacts[contactIndex],
+            ...contact
         };
+
+        contacts[contactIndex] = updatedContact;
+        this.contacts.set(clientId, contacts);
+        return updatedContact;
     }
-    async getSecuritySettings(clientId: string): Promise<SecuritySettings> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return {
-            passwordPolicy: {
-                minLength: 8,
-                requireUppercase: true,
-                requireLowercase: true,
-                requireNumbers: true,
-                requireSpecialChars: true,
-                expirationDays: 90,
-                preventReuse: 5,
-                complexityScore: 3
-            },
-            loginPolicy: {
-                maxAttempts: 5,
-                lockoutDuration: 30,
-                sessionTimeout: 30,
-                requireMFA: true,
-                allowRememberMe: false,
-                allowMultipleSessions: false,
-                requirePasswordChange: false
-            },
-            ipWhitelist: {
-                enabled: false,
-                addresses: [],
-                allowedRanges: []
-            },
-            mfaSettings: {
-                methods: ['email', 'authenticator'],
-                defaultMethod: 'email',
-                gracePeriod: 7,
-                trustDuration: 30
-            },
-            auditSettings: {
-                retentionDays: 90,
-                highRiskEvents: ['login', 'password_change', 'mfa_update'],
-                alertThresholds: {
-                    login_attempts: 5,
-                    password_changes: 3,
-                    mfa_updates: 2
-                }
-            },
-            alertSettings: {
-                enableEmailAlerts: true,
-                enableSMSAlerts: false,
-                recipients: [],
-                severityLevels: ['high', 'critical']
-            }
-        };
-    }
-    async updateSecuritySettings(clientId: string, settings: Partial<SecuritySettings>): Promise<SecuritySettings> {
-        this.validateRequired({ clientId }, ['clientId']);
-        const currentSettings = await this.getSecuritySettings(clientId);
-        return { ...currentSettings, ...settings };
-    }
-    async getGroup(clientId: string, groupId: string): Promise<UserGroup> {
-        this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
-        const groups = this.userGroups.get(clientId) || [];
-        const group = groups.find(g => g.id === groupId);
-        if (!group) {
-            this.createError(`Group not found: ${groupId}`, 404);
+
+    async deleteClientContact(clientId: number, contactId: number): Promise<void> {
+        const contacts = await this.getClientContacts(clientId);
+        const contactIndex = contacts.findIndex(c => c.id === contactId);
+        if (contactIndex === -1) {
+            throw this.createError(`Contact not found: ${contactId}`, 404);
         }
-        return group!;
+
+        contacts.splice(contactIndex, 1);
+        this.contacts.set(clientId, contacts);
     }
-    async createGroup(clientId: string, group: Omit<UserGroup, 'id'>): Promise<UserGroup> {
-        this.validateRequired({ clientId, group }, ['clientId', 'group']);
-        const groups = this.userGroups.get(clientId) || [];
-        const newGroup: UserGroup = {
-            ...group,
-            id: Math.random().toString(36).substr(2, 9),
-            clientId,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-        };
-        groups.push(newGroup);
-        this.userGroups.set(clientId, groups);
-        return newGroup;
+
+    protected async simulateDelay(): Promise<void> {
+        await new Promise(resolve => setTimeout(resolve, 500));
     }
-    async updateGroup(clientId: string, groupId: string, group: Partial<UserGroup>): Promise<UserGroup> {
-        this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
-        const groups = this.userGroups.get(clientId) || [];
-        const groupIndex = groups.findIndex(g => g.id === groupId);
-        if (groupIndex === -1) {
-            this.createError(`Group not found: ${groupId}`, 404);
-        }
-        const updatedGroup = {
-            ...groups[groupIndex],
-            ...group,
-            updatedAt: new Date().toISOString()
-        };
-        groups[groupIndex] = updatedGroup;
-        this.userGroups.set(clientId, groups);
-        return updatedGroup;
-    }
-    async deleteGroup(clientId: string, groupId: string): Promise<void> {
-        this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
-        const groups = this.userGroups.get(clientId) || [];
-        const groupIndex = groups.findIndex(g => g.id === groupId);
-        if (groupIndex === -1) {
-            this.createError(`Group not found: ${groupId}`, 404);
-        }
-        groups.splice(groupIndex, 1);
-        this.userGroups.set(clientId, groups);
-    }
-    async getGroups(clientId: string): Promise<UserGroup[]> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.userGroups.get(clientId) || [];
-    }
-    async getUser(clientId: string, userId: string): Promise<User> {
-        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
-        const users = this.users.get(clientId) || [];
-        const user = users.find(u => u.id === userId);
+
+    async getUser(clientId: number, userId: number): Promise<User> {
+        await this.simulateDelay();
+        const user = mockUsers.find((u: User) => u.id === userId);
         if (!user) {
-            this.createError(`User not found: ${userId}`, 404);
+            throw new Error('User not found');
         }
-        return user!;
+        return user;
     }
-    async createUser(clientId: string, user: Omit<User, 'id'>): Promise<User> {
-        this.validateRequired({ clientId, user }, ['clientId', 'user']);
-        const users = this.users.get(clientId) || [];
-        const newUser: User = {
-            ...user,
-            id: Math.random().toString(36).substr(2, 9),
-            clientId,
-            status: UserStatus.PENDING,
-            locked: false,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-        };
-        users.push(newUser);
-        this.users.set(clientId, users);
-        return newUser;
+
+    async getGroups(clientId: number): Promise<UserGroup[]> {
+        await this.simulateDelay();
+        return mockUserGroups.filter(ug => {
+            const group = mockGroups.find(g => g.id === ug.groupId);
+            return group && group.clientId === clientId;
+        });
     }
-    async updateUser(clientId: string, userId: string, user: Partial<User>): Promise<User> {
-        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
-        const users = this.users.get(clientId) || [];
-        const userIndex = users.findIndex(u => u.id === userId);
+
+    async updateUser(clientId: number, userId: number, userData: Partial<User>): Promise<User> {
+        await this.simulateDelay();
+        const userIndex = mockUsers.findIndex((u: User) => u.id === userId);
         if (userIndex === -1) {
-            this.createError(`User not found: ${userId}`, 404);
+            throw new Error('User not found');
         }
-        const updatedUser = {
-            ...users[userIndex],
-            ...user,
-            updatedAt: new Date().toISOString()
+        const now = new Date().toISOString();
+        mockUsers[userIndex] = {
+            ...mockUsers[userIndex],
+            ...userData,
+            lastLogin: now
         };
-        users[userIndex] = updatedUser;
-        this.users.set(clientId, users);
-        return updatedUser;
-    }
-    async deleteUser(clientId: string, userId: string): Promise<void> {
-        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
-        const users = this.users.get(clientId) || [];
-        const userIndex = users.findIndex(u => u.id === userId);
-        if (userIndex === -1) {
-            this.createError(`User not found: ${userId}`, 404);
-        }
-        users.splice(userIndex, 1);
-        this.users.set(clientId, users);
-    }
-    async setUserLockStatus(clientId: string, userId: string, locked: boolean): Promise<void> {
-        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
-        const users = this.users.get(clientId) || [];
-        const userIndex = users.findIndex(u => u.id === userId);
-        if (userIndex === -1) {
-            this.createError(`User not found: ${userId}`, 404);
-        }
-        users[userIndex] = {
-            ...users[userIndex],
-            locked,
-            status: locked ? UserStatus.LOCKED : UserStatus.ACTIVE,
-            updatedAt: new Date().toISOString()
-        };
-        this.users.set(clientId, users);
+        return mockUsers[userIndex];
     }
 }

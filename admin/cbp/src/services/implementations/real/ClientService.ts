@@ -5,278 +5,131 @@ import {
     ClientType,
     ClientStatus,
     Environment,
-    ClientSettings,
     ClientConfiguration,
     ClientApiKey,
     ClientContact,
     ClientService as ClientServiceType,
-    User,
-    UserRole,
-    UserGroup,
-    SecurityRole,
-    Permission,
-    AuditLog,
-    AuditSearchRequest,
-    ContactInformation,
-    Address,
     PaginatedResponse,
-    SecuritySettings,
-    ApiResponse
+    User,
+    UserGroup
 } from '../../../types/client.types';
 import logger from '../../../utils/logger';
+import { ClientListResponse } from '../../../types/client.types';
 
 /**
  * Real implementation of ClientService
- * Communicates with the backend API
+ * Communicates with the backend API for client management
  */
 export class ClientService extends BaseService implements IClientService {
-    constructor(
-        basePath: string = '/api/v1/clients'
-    ) {
+    constructor(basePath: string = '/api') {
         super(basePath);
     }
+
     async getClients(params?: {
+        tenantId?: number;
+        isActive?: boolean;
         type?: ClientType;
         status?: ClientStatus;
         environment?: Environment;
         searchTerm?: string;
         page?: number;
         limit?: number;
-    }): Promise<PaginatedResponse<Client>> {
-        return this.get<PaginatedResponse<Client>>('', { params });
+    }): Promise<ClientListResponse> {
+        return this.get<ClientListResponse>('/Client', { params });
     }
-    async getClient(clientId: string): Promise<Client> {
+
+    async getClient(clientId: number): Promise<Client> {
         this.validateRequired({ clientId }, ['clientId']);
-        return this.get<Client>(`/${clientId}`);
+        return this.get<Client>(`/Client/${clientId}`);
     }
-    async createClient(client: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>): Promise<Client> {
-        return this.post<Client>('', client);
+
+    async createClient(client: Omit<Client, 'id' | 'createdOn' | 'updatedOn'>): Promise<Client> {
+        return this.post<Client>('/Client', client);
     }
-    async updateClient(clientId: string, client: Partial<Client>): Promise<Client> {
+
+    async updateClient(clientId: number, client: Partial<Client>): Promise<Client> {
         this.validateRequired({ clientId }, ['clientId']);
-        return this.put<Client>(`/${clientId}`, client);
+        return this.put<Client>(`/Client/${clientId}`, client);
     }
-    async deleteClient(clientId: string): Promise<void> {
+
+    async deleteClient(clientId: number): Promise<void> {
         this.validateRequired({ clientId }, ['clientId']);
-        await this.delete<void>(`/${clientId}`);
+        await this.delete<void>(`/Client/${clientId}`);
     }
-    async getClientSettings(clientId: string): Promise<ClientSettings> {
+
+    async getClientConfig(clientId: number): Promise<ClientConfiguration> {
         this.validateRequired({ clientId }, ['clientId']);
-        return this.get<ClientSettings>(`/${clientId}/settings`);
+        return this.get<ClientConfiguration>(`/Client/${clientId}/configuration`);
     }
-    async updateClientSettings(clientId: string, settings: {
-        general?: Partial<ClientSettings['general']>;
-        security?: Partial<ClientSettings['security']>;
-        notifications?: Partial<ClientSettings['notifications']>;
-    }): Promise<ClientSettings> {
+
+    async updateClientConfig(clientId: number, config: Partial<ClientConfiguration>): Promise<ClientConfiguration> {
         this.validateRequired({ clientId }, ['clientId']);
-        return this.put<ClientSettings>(`/${clientId}/settings`, settings);
+        return this.put<ClientConfiguration>(`/Client/${clientId}/configuration`, config);
     }
-    async getClientConfiguration(clientId: string): Promise<ClientConfiguration> {
+
+    async getClientApiKeys(clientId: number): Promise<ClientApiKey[]> {
         this.validateRequired({ clientId }, ['clientId']);
-        return this.get<ClientConfiguration>(`/${clientId}/configuration`);
+        return this.get<ClientApiKey[]>(`/Client/${clientId}/api-keys`);
     }
-    async updateClientConfiguration(clientId: string, config: Partial<ClientConfiguration>): Promise<ClientConfiguration> {
+
+    async createClientApiKey(clientId: number, apiKey: Omit<ClientApiKey, 'id' | 'clientId' | 'createdAt' | 'lastUsed'>): Promise<ClientApiKey> {
+        this.validateRequired({ clientId, apiKey }, ['clientId', 'apiKey']);
+        return this.post<ClientApiKey>(`/Client/${clientId}/api-keys`, apiKey);
+    }
+
+    async updateClientApiKey(clientId: number, apiKeyId: number, apiKey: Partial<ClientApiKey>): Promise<ClientApiKey> {
+        this.validateRequired({ clientId, apiKeyId }, ['clientId', 'apiKeyId']);
+        return this.put<ClientApiKey>(`/Client/${clientId}/api-keys/${apiKeyId}`, apiKey);
+    }
+
+    async deleteClientApiKey(clientId: number, apiKeyId: number): Promise<void> {
+        this.validateRequired({ clientId, apiKeyId }, ['clientId', 'apiKeyId']);
+        await this.delete<void>(`/Client/${clientId}/api-keys/${apiKeyId}`);
+    }
+
+    async getClientServices(clientId: number): Promise<ClientServiceType[]> {
         this.validateRequired({ clientId }, ['clientId']);
-        return this.put<ClientConfiguration>(`/${clientId}/configuration`, config);
+        return this.get<ClientServiceType[]>(`/Client/${clientId}/services`);
     }
-    async getClientApiKeys(clientId: string): Promise<ClientApiKey[]> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.get<ClientApiKey[]>(`/${clientId}/api-keys`);
-    }
-    async createClientApiKey(clientId: string, keyData: {
-        keyName: string;
-        environment: Environment;
-        expiresAt?: string;
-    }): Promise<ClientApiKey> {
-        this.validateRequired({ clientId, keyData }, ['clientId', 'keyData']);
-        return this.post<ClientApiKey>(`/${clientId}/api-keys`, keyData);
-    }
-    async revokeClientApiKey(clientId: string, keyId: number): Promise<void> {
-        this.validateRequired({ clientId, keyId }, ['clientId', 'keyId']);
-        await this.delete<void>(`/${clientId}/api-keys/${keyId}`);
-    }
-    async getClientContacts(clientId: string): Promise<ClientContact[]> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.get<ClientContact[]>(`/${clientId}/contacts`);
-    }
-    async updateClientContacts(clientId: string, contacts: ContactInformation): Promise<ContactInformation> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.put<ContactInformation>(`/${clientId}/contacts`, contacts);
-    }
-    async getClientServices(clientId: string): Promise<ClientServiceType[]> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.get<ClientServiceType[]>(`/${clientId}/services`);
-    }
-    async updateClientService(
-        clientId: string,
-        serviceId: number,
-        service: Partial<ClientServiceType>
-    ): Promise<ClientServiceType> {
+
+    async updateClientService(clientId: number, serviceId: number, service: Partial<ClientServiceType>): Promise<ClientServiceType> {
         this.validateRequired({ clientId, serviceId }, ['clientId', 'serviceId']);
-        return this.put<ClientServiceType>(`/${clientId}/services/${serviceId}`, service);
+        return this.put<ClientServiceType>(`/Client/${clientId}/services/${serviceId}`, service);
     }
-    async getClientUsers(clientId: string, params?: {
-        role?: UserRole;
-        searchTerm?: string;
-        page?: number;
-        limit?: number;
-    }): Promise<PaginatedResponse<User>> {
+
+    async getClientContacts(clientId: number): Promise<ClientContact[]> {
         this.validateRequired({ clientId }, ['clientId']);
-        return this.get<PaginatedResponse<User>>(`/${clientId}/users`, { params });
+        const response = await this.get<{ contacts: ClientContact[] }>(`/Client/${clientId}/Contact`);
+        return response.contacts;
     }
-    async getUser(clientId: string, userId: string): Promise<User> {
-        try {
-            this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
-            return await this.get<User>(`/${clientId}/users/${userId}`);
-        } catch (error) {
-            throw this.handleError(error, 'Failed to get user');
-        }
+
+    async createClientContact(clientId: number, contact: Omit<ClientContact, 'id' | 'clientId'>): Promise<ClientContact> {
+        this.validateRequired({ clientId, contact }, ['clientId', 'contact']);
+        return this.post<ClientContact>(`/Client/${clientId}/Contact`, contact);
     }
-    async createUser(clientId: string, user: Omit<User, 'id'>): Promise<User> {
-        try {
-            this.validateRequired({ clientId, user }, ['clientId', 'user']);
-            return await this.post<User>(`/${clientId}/users`, user);
-        } catch (error) {
-            throw this.handleError(error, 'Failed to create user');
-        }
+
+    async updateClientContact(clientId: number, contactId: number, contact: Partial<ClientContact>): Promise<ClientContact> {
+        this.validateRequired({ clientId, contactId }, ['clientId', 'contactId']);
+        return this.put<ClientContact>(`/Client/${clientId}/Contact/${contactId}`, contact);
     }
-    async updateUser(clientId: string, userId: string, user: Partial<User>): Promise<User> {
-        try {
-            this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
-            return await this.put<User>(`/${clientId}/users/${userId}`, user);
-        } catch (error) {
-            throw this.handleError(error, 'Failed to update user');
-        }
+
+    async deleteClientContact(clientId: number, contactId: number): Promise<void> {
+        this.validateRequired({ clientId, contactId }, ['clientId', 'contactId']);
+        await this.delete<void>(`/Client/${clientId}/Contact/${contactId}`);
     }
-    async deleteUser(clientId: string, userId: string): Promise<void> {
-        try {
-            this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
-            await this.delete<void>(`/${clientId}/users/${userId}`);
-        } catch (error) {
-            throw this.handleError(error, 'Failed to delete user');
-        }
+
+    async getUser(clientId: number, userId: number): Promise<User> {
+        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+        return this.get<User>(`/Client/${clientId}/users/${userId}`);
     }
-    async setUserLockStatus(clientId: string, userId: string, locked: boolean): Promise<void> {
-        try {
-            this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
-            await this.put<void>(`/${clientId}/users/${userId}/lock`, { locked });
-        } catch (error) {
-            throw this.handleError(error, 'Failed to set user lock status');
-        }
+
+    async updateUser(clientId: number, userId: number, userData: Partial<User>): Promise<User> {
+        this.validateRequired({ clientId, userId }, ['clientId', 'userId']);
+        return this.put<User>(`/Client/${clientId}/users/${userId}`, userData);
     }
-    async getClientUserGroups(clientId: string): Promise<UserGroup[]> {
+
+    async getGroups(clientId: number): Promise<UserGroup[]> {
         this.validateRequired({ clientId }, ['clientId']);
-        return this.get<UserGroup[]>(`/${clientId}/groups`);
-    }
-    async getClientRoles(clientId: string): Promise<SecurityRole[]> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.get<SecurityRole[]>(`/${clientId}/roles`);
-    }
-    async getClientPermissions(clientId: string): Promise<Permission[]> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.get<Permission[]>(`/${clientId}/permissions`);
-    }
-    async getClientAuditLogs(clientId: string, request: AuditSearchRequest): Promise<{ logs: AuditLog[]; total: number }> {
-        this.validateRequired({ clientId }, ['clientId']);
-        const response = await this.get<ApiResponse<{ logs: AuditLog[]; total: number }>>(`/${clientId}/audit-logs`, { params: request });
-        if (!response.success) {
-            throw this.handleError(new Error('Failed to fetch audit logs'), 'Failed to fetch audit logs');
-        }
-        return response.data;
-    }
-    async getClientAddress(clientId: string): Promise<Address> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.get<Address>(`/${clientId}/address`);
-    }
-    async updateClientAddress(clientId: string, address: Address): Promise<Address> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.put<Address>(`/${clientId}/address`, address);
-    }
-    async getClientStats(clientId: string): Promise<{
-        userCount: number;
-        activeUserCount: number;
-        totalTransactions: number;
-        activeServices: number;
-        lastActivityDate: string;
-    }> {
-        this.validateRequired({ clientId }, ['clientId']);
-        return this.get<{
-            userCount: number;
-            activeUserCount: number;
-            totalTransactions: number;
-            activeServices: number;
-            lastActivityDate: string;
-        }>(`/${clientId}/stats`);
-    }
-    async getPermissions(): Promise<Permission[]> {
-        try {
-            return await this.get<Permission[]>('/permissions');
-        } catch (error) {
-            throw this.handleError(error, 'Failed to get permissions');
-        }
-    }
-    async getSecuritySettings(clientId: string): Promise<SecuritySettings> {
-        try {
-            this.validateRequired({ clientId }, ['clientId']);
-            return await this.get<SecuritySettings>(`/${clientId}/security-settings`);
-        } catch (error) {
-            throw this.handleError(error, 'Failed to get security settings');
-        }
-    }
-    async updateSecuritySettings(clientId: string, settings: Partial<SecuritySettings>): Promise<SecuritySettings> {
-        try {
-            this.validateRequired({ clientId }, ['clientId']);
-            return await this.put<SecuritySettings>(`/${clientId}/security-settings`, settings);
-        } catch (error) {
-            throw this.handleError(error, 'Failed to update security settings');
-        }
-    }
-    async getGroup(clientId: string, groupId: string): Promise<UserGroup> {
-        try {
-            this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
-            return await this.get<UserGroup>(`/${clientId}/groups/${groupId}`);
-        } catch (error) {
-            throw this.handleError(error, 'Failed to get group');
-        }
-    }
-    async createGroup(clientId: string, group: Omit<UserGroup, 'id'>): Promise<UserGroup> {
-        try {
-            this.validateRequired({ clientId, group }, ['clientId', 'group']);
-            return await this.post<UserGroup>(`/${clientId}/groups`, group);
-        } catch (error) {
-            throw this.handleError(error, 'Failed to create group');
-        }
-    }
-    async updateGroup(clientId: string, groupId: string, group: Partial<UserGroup>): Promise<UserGroup> {
-        try {
-            this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
-            return await this.put<UserGroup>(`/${clientId}/groups/${groupId}`, group);
-        } catch (error) {
-            throw this.handleError(error, 'Failed to update group');
-        }
-    }
-    async deleteGroup(clientId: string, groupId: string): Promise<void> {
-        try {
-            this.validateRequired({ clientId, groupId }, ['clientId', 'groupId']);
-            await this.delete<void>(`/${clientId}/groups/${groupId}`);
-        } catch (error) {
-            throw this.handleError(error, 'Failed to delete group');
-        }
-    }
-    async getGroups(clientId: string): Promise<UserGroup[]> {
-        try {
-            this.validateRequired({ clientId }, ['clientId']);
-            return await this.get<UserGroup[]>(`/${clientId}/groups`);
-        } catch (error) {
-            throw this.handleError(error, 'Failed to get groups');
-        }
-    }
-    protected handleError(error: unknown, defaultMessage: string): Error {
-        logger.error(`${defaultMessage}: ${error instanceof Error ? error.message : String(error)}`);
-        if (error instanceof Error) {
-            return error;
-        }
-        return new Error(defaultMessage);
+        return this.get<UserGroup[]>(`/Client/${clientId}/groups`);
     }
 }

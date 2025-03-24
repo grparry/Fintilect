@@ -1,5 +1,6 @@
 import { ChartDataPoint, TimeRangeOption, ChartViewOption } from '../../../../../types/dashboard.types';
-import { BillPayStats, PaymentMethod, PaymentStatus, TransactionTrend } from '../../../../../types/bill-pay.types';
+import { BillPayStats, TransactionTrend } from '../../../../../types/bill-pay.types';
+import { PaymentStatus, PaymentMethod } from '../../../../../types/payment.types';
 import { TimeRange } from '../../../../../types/index';
 
 export const mockChartData: ChartDataPoint[] = [
@@ -87,7 +88,7 @@ export const mockDashboardStats = (timeframe?: 'day' | 'week' | 'month' | 'quart
       default: return 15;
     }
   })();
-  const methods = [PaymentMethod.ACH, PaymentMethod.WIRE, PaymentMethod.RTP, PaymentMethod.CHECK, PaymentMethod.CARD];
+  const methods = [PaymentMethod.ACH, PaymentMethod.CHECK, PaymentMethod.CARD];
   // Initialize stats
   const stats: BillPayStats = {
     totalTransactions: 0,
@@ -97,12 +98,26 @@ export const mockDashboardStats = (timeframe?: 'day' | 'week' | 'month' | 'quart
     transactionsByMethod: Object.values(PaymentMethod).reduce((acc, method) => {
       acc[method] = 0;
       return acc;
-    }, {} as Record<PaymentMethod, number>),
+    }, {} as Record<string, number>),
     transactionsByStatus: Object.values(PaymentStatus).reduce((acc, status) => {
       acc[status] = 0;
       return acc;
-    }, {} as Record<PaymentStatus, number>),
+    }, {} as Record<string, number>),
     recentActivity: []
+  };
+  const getRandomStatus = (): PaymentStatus => {
+    const statuses = [
+      PaymentStatus.PENDING,
+      PaymentStatus.PROCESSING,
+      PaymentStatus.COMPLETED,
+      PaymentStatus.FAILED,
+      PaymentStatus.CANCELLED,
+      PaymentStatus.PENDING_APPROVAL,
+      PaymentStatus.ON_HOLD,
+      PaymentStatus.REJECTED,
+      PaymentStatus.EXPIRED
+    ];
+    return statuses[Math.floor(Math.random() * statuses.length)];
   };
   // Generate daily transactions
   let totalTransactions = 0;
@@ -119,44 +134,7 @@ export const mockDashboardStats = (timeframe?: 'day' | 'week' | 'month' | 'quart
       // Randomly assign method and status with realistic probabilities
       const method = methods[Math.floor(Math.random() * methods.length)];
       stats.transactionsByMethod[method]++;
-      // Status distribution with more varied statuses
-      const statusRoll = Math.random() * 100;
-      let status: PaymentStatus;
-      if (statusRoll < 75) {
-        // 75% completed
-        status = PaymentStatus.COMPLETED;
-      } else if (statusRoll < 85) {
-        // 10% pending states
-        const pendingRoll = Math.random() * 100;
-        if (pendingRoll < 30) {
-          status = PaymentStatus.PENDING;
-        } else if (pendingRoll < 50) {
-          status = PaymentStatus.PENDING_APPROVAL;
-        } else if (pendingRoll < 70) {
-          status = PaymentStatus.PROCESSING;
-        } else if (pendingRoll < 85) {
-          status = PaymentStatus.DRAFT;
-        } else {
-          status = PaymentStatus.SCHEDULED;
-        }
-      } else {
-        // 15% failed states
-        const failedRoll = Math.random() * 100;
-        if (failedRoll < 40) {
-          status = PaymentStatus.FAILED;
-        } else if (failedRoll < 70) {
-          status = PaymentStatus.REJECTED;
-        } else if (failedRoll < 85) {
-          status = PaymentStatus.CANCELLED;
-        } else {
-          status = PaymentStatus.EXPIRED;
-        }
-      }
-      console.log('Generated transaction:', {
-        status,
-        statusRoll,
-        currentStats: stats.transactionsByStatus
-      });
+      const status = getRandomStatus();
       stats.transactionsByStatus[status]++;
       // Add to recent activity - no longer limiting to 30 days
       stats.recentActivity.push({

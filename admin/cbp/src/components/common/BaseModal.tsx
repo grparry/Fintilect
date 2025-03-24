@@ -83,7 +83,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
             justifyContent: 'space-between',
           }}
         >
-          <Typography variant="h6" component="div">
+          <Typography variant="h6" color="text.primary" component="div">
             {title}
           </Typography>
           <IconButton

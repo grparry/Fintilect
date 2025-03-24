@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -11,6 +11,8 @@ import {
   DialogActions,
   TextField,
   FormControl,
+  FormControlLabel,
+  Checkbox,
   InputLabel,
   Select,
   MenuItem,
@@ -21,252 +23,563 @@ import {
   Grid,
   IconButton,
   Tooltip,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  Collapse
 } from '@mui/material';
+// Removed DataGrid imports
+// Removed Pagination import
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PeopleIcon from '@mui/icons-material/People';
+import SecurityIcon from '@mui/icons-material/Security';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
   User,
+  Group,
   UserGroup,
-  SecurityRole,
+  Role,
+  GroupRole,
   Permission
 } from '../../types/client.types';
-import { PaginatedResponse } from '../../types/common.types';
-import { clientService, userService } from '../../services/factory/ServiceFactory';
+// Removed PaginatedResponse import as it's not used with the service layer
+import { clientService, userService, permissionService } from '../../services/factory/ServiceFactory';
 import { useNavigate } from 'react-router-dom';
 import { encodeId } from '../../utils/idEncoder';
+import dayjs from 'dayjs';
+import GroupTable from './groups/GroupTable';
 
 interface GroupsProps {
   clientId: string;
 }
-interface GroupFormData {
-  name: string;
-  description: string;
-  permissionIds: string[];
-  roleIds: string[];
-  members?: string[];
-}
-interface ServiceGroup {
-  id: string;
+
+interface GroupFormData extends Omit<Group, 'id' | 'createdAt' | 'updatedAt'> {
   name: string;
   description?: string;
-  permissions: string[];
-  roles: string[];
-  members: string[];
+  clientId: number;
 }
+
+interface State {
+  loading: boolean;
+  saving: boolean;
+  error: string | null;
+  success: string | null;
+  groups: Group[];
+  users: User[];
+  selectedGroup: Group | null;
+  isFormOpen: boolean;
+}
+
+const initialState: State = {
+  loading: false,
+  saving: false,
+  error: null,
+  success: null,
+  groups: [],
+  users: [],
+  selectedGroup: null,
+  isFormOpen: false
+};
+
 export default function Groups({ clientId }: GroupsProps) {
   const navigate = useNavigate();
-  // Data state
-  const [groups, setGroups] = useState<UserGroup[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [roles, setRoles] = useState<SecurityRole[]>([]);
-  const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
-  const [formData, setFormData] = useState<GroupFormData>({
-    name: '',
-    description: '',
-    permissionIds: [],
-    roleIds: [],
-  });
-  // UI state
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  // Dialog state
-  const [openGroupForm, setOpenGroupForm] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState<UserGroup | null>(null);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [groupToDelete, setGroupToDelete] = useState<UserGroup | null>(null);
-  const [openMembersDialog, setOpenMembersDialog] = useState(false);
-  // Load initial data
-  const loadData = useCallback(async () => {
+  const [state, setState] = useState(initialState);
+  const [membersDialogOpen, setMembersDialogOpen] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
+  const [rolesDialogOpen, setRolesDialogOpen] = useState(false);
+  const [roleSearchTerm, setRoleSearchTerm] = useState('');
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    new Set()
+  );
+
+  const loadGroups = useCallback(async () => {
+    console.log('loadGroups called with clientId: %d', clientId);
+    if (!clientId) return;
     try {
-      setLoading(true);
-      setError(null);
-      console.log('Loading groups data for client:', clientId);
-      // Load groups first
-      let groupsData: UserGroup[];
-      try {
-        groupsData = await clientService.getClientUserGroups(clientId);
-        console.log('Loaded groups:', groupsData);
-      } catch (err) {
-        console.error('Error loading groups:', err);
-        throw new Error('Failed to load groups');
+      console.log('Setting loading state to true');
+      setState(prev => ({ ...prev, loading: true }));
+      console.log('About to call permissionService.getGroups');
+      console.log('permissionService object:', permissionService);
+      const response = await permissionService.getGroups({
+        clientId: Number(clientId)
+      });
+      console.log('Response from getGroups:', response);
+      console.log('Groups data type:', Array.isArray(response.groups) ? 'array' : typeof response.groups);
+      
+      // Ensure we have an array of groups
+      let groupsArray: Group[] = [];
+      
+      // Define the possible response structure types
+      interface NestedGroupsResponse {
+        groups?: {
+          groups?: Group[];
+          [key: string]: any;
+        };
       }
-      // Load users
-      let usersData: PaginatedResponse<User>;
-      try {
-        usersData = await userService.getUsers({ pagination: { page: 1, limit: 100 } });
-        const users = usersData.items;
-        const totalUsers = usersData.total;
-        console.log('Loaded users:', { users, totalUsers });
-      } catch (err) {
-        console.error('Error loading users:', err);
-        throw new Error('Failed to load users');
+      
+      // Special handling for the nested structure we've discovered
+      const typedResponse = response as NestedGroupsResponse;
+      if (typedResponse.groups && 
+          'groups' in typedResponse.groups && 
+          Array.isArray(typedResponse.groups.groups)) {
+        // Direct access to the nested groups array
+        groupsArray = typedResponse.groups.groups;
+        console.log('Extracted nested groups array with length:', groupsArray.length);
+      } else if (Array.isArray(typedResponse.groups)) {
+        // Standard array handling
+        groupsArray = typedResponse.groups as unknown as Group[];
+        console.log('Response groups is an array with length:', groupsArray.length);
+      } else if (typedResponse.groups && typeof typedResponse.groups === 'object') {
+        console.log('Response groups is an object with keys:', Object.keys(typedResponse.groups));
+        
+        // Check if the first item is an array (as we discovered in the logs)
+        const firstValue = Object.values(typedResponse.groups)[0];
+        if (Array.isArray(firstValue)) {
+          groupsArray = firstValue as Group[];
+          console.log('Extracted array from first value with length:', groupsArray.length);
+        } else {
+          // Standard object to array conversion
+          groupsArray = Object.values(typedResponse.groups) as unknown as Group[];
+          console.log('Converted object to array with length:', groupsArray.length);
+        }
+      } else {
+        console.log('Could not process response.groups, defaulting to empty array');
       }
-      // Load permissions
-      let permissionsData: Permission[];
-      try {
-        permissionsData = await clientService.getClientPermissions(clientId);
-        console.log('Loaded permissions:', permissionsData);
-      } catch (err) {
-        console.error('Error loading permissions:', err);
-        throw new Error('Failed to load permissions');
+      
+      // Check for duplicate IDs
+      const idMap = new Map<number, Group>();
+      interface DuplicateIdInfo {
+        id: number;
+        firstGroup: Group;
+        duplicateGroup: Group;
       }
-      // Load roles
-      let rolesData: SecurityRole[];
-      try {
-        rolesData = await clientService.getClientRoles(clientId);
-        console.log('Loaded roles:', rolesData);
-      } catch (err) {
-        console.error('Error loading roles:', err);
-        throw new Error('Failed to load roles');
+      const duplicateIds: DuplicateIdInfo[] = [];
+      
+      groupsArray.forEach(group => {
+        if (group && group.id !== undefined) {
+          if (idMap.has(group.id)) {
+            duplicateIds.push({
+              id: group.id,
+              firstGroup: idMap.get(group.id),
+              duplicateGroup: group
+            });
+          } else {
+            idMap.set(group.id, group);
+          }
+        }
+      });
+      
+      // Check for missing or invalid IDs
+      const groupsWithoutIds = groupsArray.filter(group => group.id === undefined || group.id === null);
+      const groupsWithZeroIds = groupsArray.filter(group => group.id === 0);
+      
+      if (groupsWithoutIds.length > 0) {
+        console.error('Found groups without IDs:', groupsWithoutIds);
       }
-      setGroups(groupsData);
-      setUsers(usersData.items);
-      setPermissions(permissionsData);
-      setRoles(rolesData);
-      console.log('Successfully loaded all data');
+      
+      if (groupsWithZeroIds.length > 0) {
+        console.warn('Found groups with ID=0:', groupsWithZeroIds);
+      }
+      
+      // Log the first few items to inspect their structure
+      console.log('First 3 items in groupsArray:');
+      for (let i = 0; i < Math.min(3, groupsArray.length); i++) {
+        console.log(`Item ${i}:`, groupsArray[i]);
+        if (Array.isArray(groupsArray[i])) {
+          console.warn(`Item ${i} is itself an array!`);
+        }
+      }
+      
+      if (duplicateIds.length > 0) {
+        console.error('Found duplicate IDs in groups array:', duplicateIds);
+      } else {
+        console.log('No duplicate IDs found in groups array');
+      }
+      
+      console.log('Processed groups array:', groupsArray);
+      
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        groups: groupsArray
+      }));
     } catch (error) {
-      console.error('Error in loadData:', error);
-      setError(error instanceof Error ? error.message : 'Failed to load groups data');
-    } finally {
-      setLoading(false);
+      const message = error instanceof Error ? error.message : 'Failed to load groups';
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        error: message
+      }));
     }
   }, [clientId]);
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-  const handleAddGroup = useCallback(() => {
-    setSelectedGroup(null);
-    setFormData({
-      name: '',
-      description: '',
-      permissionIds: [],
-      roleIds: [],
-    });
-    setOpenGroupForm(true);
-  }, []); // No dependencies needed
-  const handleEditGroup = useCallback((group: UserGroup) => {
-    const encodedClientId = encodeId(clientId);
-    const encodedGroupId = encodeId(group.id);
-    setSelectedGroup(group);
-    setFormData({
-      name: group.name,
-      description: group.description || '',
-      permissionIds: group.permissions.map(p => p.id),
-      roleIds: group.roles.map(r => r.id),
-    });
-    setOpenGroupForm(true);
-  }, [clientId]); // Depends on clientId for encoding
-  const handleDeleteGroup = async (groupId: string) => {
+
+  const loadUsers = useCallback(async () => {
+    if (!clientId) return;
     try {
-      setLoading(true);
-      setError(null);
-      // TODO: Implement proper group deletion endpoint
-      // For now, we'll use a mock implementation
-      await new Promise(resolve => setTimeout(resolve, 500));
-      await loadData();
+      const response = await userService.getUsers({
+        clientId: Number(clientId),
+        page: 1,
+        limit: 100
+      });
+      setState(prev => ({ ...prev, users: response.users }));
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to delete group');
-    } finally {
-      setLoading(false);
+      const message = error instanceof Error ? error.message : 'Failed to load users';
+      setState(prev => ({ ...prev, error: message }));
+    }
+  }, [clientId]);
+
+  const loadRoles = useCallback(async () => {
+    try {
+      const response = await permissionService.getRoles();
+      setRoles(response.roles);
+    } catch (error) {
+      setState(prev => ({ 
+        ...prev, 
+        error: error instanceof Error ? error.message : 'Failed to load roles'
+      }));
+    }
+  }, []);
+
+  const handleCreateGroup = async (formData: Partial<GroupFormData>) => {
+    if (!clientId) return;
+    try {
+      setState(prev => ({ ...prev, saving: true, error: null }));
+      const newGroup = {
+        name: formData.name || 'New Group',
+        description: formData.description || '',
+        clientId: Number(clientId),
+      };
+      await permissionService.createGroup(newGroup);
+      setState(prev => ({
+        ...prev,
+        saving: false,
+        isFormOpen: false,
+        success: 'Group created successfully'
+      }));
+      loadGroups();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to create group';
+      setState(prev => ({
+        ...prev,
+        saving: false,
+        error: message
+      }));
     }
   };
-  const handleConfirmDelete = async () => {
-    if (!groupToDelete) return;
+
+  const handleUpdateGroup = async (groupId: number, formData: Partial<GroupFormData>) => {
     try {
-      setError(null);
-      await handleDeleteGroup(groupToDelete.id);
-      setSuccess('Group deleted successfully');
-      setOpenDeleteDialog(false);
+      setState(prev => ({ ...prev, saving: true, error: null }));
+      
+      // Get the current group data first
+      const currentGroup = await permissionService.getGroup(groupId);
+      
+      // Merge the current data with the form data to create a complete update
+      const completeGroupData = {
+        id: groupId,
+        name: formData.name || currentGroup.name || '',
+        description: formData.description !== undefined ? formData.description : (currentGroup.description || ''),
+        clientId: currentGroup.clientId,
+        createdAt: currentGroup.createdAt,
+        updatedAt: currentGroup.updatedAt
+      };
+      
+      await permissionService.updateGroup(groupId, completeGroupData);
+      setState(prev => ({
+        ...prev,
+        saving: false,
+        isFormOpen: false,
+        success: 'Group updated successfully'
+      }));
+      loadGroups();
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to delete group');
+      const message = error instanceof Error ? error.message : 'Failed to update group';
+      setState(prev => ({
+        ...prev,
+        saving: false,
+        error: message
+      }));
     }
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+
+  const handleDeleteGroup = async (groupId: number) => {
     try {
-      setError(null);
-      setSaving(true);
-      if (selectedGroup) {
-        await handleUpdateGroup(selectedGroup.id, formData);
-      } else {
-        await handleCreateGroup(formData);
-      }
+      setState(prev => ({ ...prev, loading: true, error: null }));
+      await permissionService.deleteGroup(groupId);
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        success: 'Group deleted successfully'
+      }));
+      loadGroups();
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to save group');
-    } finally {
-      setSaving(false);
+      const message = error instanceof Error ? error.message : 'Failed to delete group';
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        error: message
+      }));
     }
   };
-  const handleCreateGroup = async (data: GroupFormData) => {
+
+  const handleOpenMembers = async (group: Group) => {
     try {
-      setLoading(true);
-      setError(null);
-      // TODO: Implement proper group creation endpoint
-      // For now, we'll use a mock implementation
-      await new Promise(resolve => setTimeout(resolve, 500));
-      await loadData();
-      setOpenGroupForm(false);
+      setState(prev => ({ ...prev, loading: true, error: null }));
+      
+      // Get current group members
+      const response = await permissionService.getGroupUsers(group.id);
+      setSelectedUsers(response.userGroups.map((userGroup: UserGroup) => userGroup.userId));
+      
+      setState(prev => ({ 
+        ...prev, 
+        selectedGroup: group,
+        loading: false 
+      }));
+      
+      setMembersDialogOpen(true);
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to create group');
-    } finally {
-      setLoading(false);
+      setState(prev => ({ 
+        ...prev, 
+        error: error instanceof Error ? error.message : 'Failed to load group members',
+        loading: false 
+      }));
     }
   };
-  const handleUpdateGroup = async (groupId: string, data: GroupFormData) => {
-    try {
-      setLoading(true);
-      setError(null);
-      // TODO: Implement proper group update endpoint
-      // For now, we'll use a mock implementation
-      await new Promise(resolve => setTimeout(resolve, 500));
-      await loadData();
-      setOpenGroupForm(false);
-      setSelectedGroup(null);
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to update group');
-    } finally {
-      setLoading(false);
-    }
+
+  const handleCloseMembersDialog = () => {
+    setMembersDialogOpen(false);
+    setSelectedUsers([]);
+    setState(prev => ({ ...prev, selectedGroup: null }));
   };
-  const handleOpenMembers = (group: UserGroup) => {
-    setSelectedGroup(group);
-    setSelectedMembers(group.members);
-    setOpenMembersDialog(true);
-  };
+
   const handleUpdateMembers = async () => {
+    if (!state.selectedGroup) return;
+    
     try {
-      setError(null);
-      setSaving(true);
-      if (selectedGroup) {
-        // TODO: Implement proper member update endpoint
-        // For now, we'll use a mock implementation
-        await new Promise(resolve => setTimeout(resolve, 500));
-        await loadData();
-        setSuccess('Group members updated successfully');
-        setOpenMembersDialog(false);
-      }
+      setState(prev => ({ ...prev, saving: true, error: null }));
+      
+      await permissionService.assignUserGroups(state.selectedGroup.id, selectedUsers);
+      
+      setState(prev => ({ 
+        ...prev, 
+        saving: false,
+        success: 'Group members updated successfully' 
+      }));
+      
+      handleCloseMembersDialog();
+      loadGroups();
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to update group members');
-    } finally {
-      setSaving(false);
+      setState(prev => ({ 
+        ...prev, 
+        error: error instanceof Error ? error.message : 'Failed to update group members',
+        saving: false 
+      }));
     }
   };
-  if (loading) {
+
+  const handleUserToggle = (userId: number) => {
+    setSelectedUsers(prev => 
+      prev.includes(userId) 
+        ? prev.filter(id => id !== userId)
+        : [...prev, userId]
+    );
+  };
+
+  const handleOpenRoles = async (group: Group) => {
+    try {
+      setState(prev => ({ ...prev, loading: true, error: null }));
+      
+      // Get current group roles
+      const response = await permissionService.getGroupRoles(group.id);
+      setSelectedRoles(response.groupRoles.map((groupRole: GroupRole) => groupRole.roleId));
+      
+      setState(prev => ({ 
+        ...prev, 
+        selectedGroup: group,
+        loading: false 
+      }));
+      
+      setRolesDialogOpen(true);
+    } catch (error) {
+      setState(prev => ({ 
+        ...prev, 
+        error: error instanceof Error ? error.message : 'Failed to load group roles',
+        loading: false 
+      }));
+    }
+  };
+
+  const handleCloseRolesDialog = () => {
+    setRolesDialogOpen(false);
+    setSelectedRoles([]);
+    setState(prev => ({ ...prev, selectedGroup: null }));
+  };
+
+  const handleUpdateRoles = async () => {
+    if (!state.selectedGroup) return;
+    
+    try {
+      setState(prev => ({ ...prev, saving: true, error: null }));
+      
+      // Get current group roles
+      const response = await permissionService.getGroupRoles(state.selectedGroup.id);
+      const currentRoleIds = response.groupRoles.map((groupRole: GroupRole) => groupRole.roleId);
+      
+      // Determine which roles to add and which to remove
+      const rolesToAdd = selectedRoles.filter(roleId => !currentRoleIds.includes(roleId));
+      const rolesToRemove = currentRoleIds.filter(roleId => !selectedRoles.includes(roleId));
+      
+      // Only remove roles that need to be removed
+      if (rolesToRemove.length > 0) {
+        await permissionService.removeGroupRoles(state.selectedGroup.id, rolesToRemove);
+      }
+      
+      // Only add roles that need to be added
+      if (rolesToAdd.length > 0) {
+        await permissionService.addGroupRoles(state.selectedGroup.id, rolesToAdd);
+      }
+      
+      setState(prev => ({ 
+        ...prev, 
+        saving: false,
+        success: 'Group roles updated successfully' 
+      }));
+      
+      handleCloseRolesDialog();
+      loadGroups();
+    } catch (error) {
+      setState(prev => ({ 
+        ...prev, 
+        error: error instanceof Error ? error.message : 'Failed to update group roles',
+        saving: false 
+      }));
+    }
+  };
+
+  const handleRoleToggle = (roleId: number) => {
+    setSelectedRoles(prev => 
+      prev.includes(roleId) 
+        ? prev.filter(id => id !== roleId)
+        : [...prev, roleId]
+    );
+  };
+
+  const handleCategoryToggle = (category: string) => {
+    setExpandedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(category)) {
+        next.delete(category);
+      } else {
+        next.add(category);
+      }
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    console.log('useEffect called to load Groups, Users, and Roles');
+    
+    const loadData = async () => {
+      try {
+        console.log('Loading users');
+        await loadUsers();
+        console.log('Users loaded, now loading roles');
+        await loadRoles();
+        console.log('Roles loaded, now loading groups');
+        await loadGroups();
+        console.log('All data loaded successfully');
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
+    };
+    
+    loadData();
+  }, [loadGroups, loadUsers, loadRoles]);
+
+  const handleAddGroup = useCallback(() => {
+    setState(prev => ({ ...prev, isFormOpen: true, selectedGroup: null }));
+  }, []);
+
+  const handleEditGroup = useCallback((group: Group) => {
+    setState(prev => ({ ...prev, isFormOpen: true, selectedGroup: group }));
+  }, []);
+
+  // Removed DataGrid columns definition
+
+  const filteredRoles = useMemo(() => {
+    if (!roleSearchTerm) return roles;
+    const searchLower = roleSearchTerm.toLowerCase();
+    return roles.filter(role => 
+      role.name.toLowerCase().includes(searchLower)
+    );
+  }, [roles, roleSearchTerm]);
+
+  const groupedRoles = useMemo(() => {
+    const groups = new Map<string, Role[]>();
+    
+    filteredRoles.forEach(role => {
+      // Handle special cases first
+      if (role.name === 'Administrator' || role.name === 'Admin') {
+        const list = groups.get('Admin') || [];
+        list.push(role);
+        groups.set('Admin', list);
+        return;
+      }
+
+      // For other roles, try to find a meaningful category
+      let category: string;
+      if (role.name.includes('BillPay')) {
+        category = 'BillPay';
+      } else if (role.name.includes('Connect')) {
+        category = 'Connect';
+      } else if (role.name.includes('Security')) {
+        category = 'Security';
+      } else if (role.name.includes('User')) {
+        category = 'User';
+      } else if (role.name.includes('IdP')) {
+        category = 'Identity';
+      } else {
+        // If no specific category found, use the first word or the whole name
+        category = role.name.split(/[_\s]/)[0];
+      }
+      
+      const list = groups.get(category) || [];
+      list.push(role);
+      groups.set(category, list);
+    });
+    
+    // Sort roles within each category
+    groups.forEach((roles, category) => {
+      groups.set(category, roles.sort((a, b) => a.name.localeCompare(b.name)));
+    });
+    
+    return Array.from(groups.entries()).sort((a, b) => {
+      // Put Admin category first
+      if (a[0] === 'Admin') return -1;
+      if (b[0] === 'Admin') return 1;
+      // Then sort other categories alphabetically
+      return a[0].localeCompare(b[0]);
+    });
+  }, [filteredRoles]);
+
+  if (state.loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
         <CircularProgress />
       </Box>
     );
   }
+
   return (
     <Box>
       <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6">Groups</Typography>
+        <Typography variant="h6" color="text.primary">Groups</Typography>
         <Button
           variant="contained"
           color="primary"
@@ -276,182 +589,101 @@ export default function Groups({ clientId }: GroupsProps) {
           Add Group
         </Button>
       </Box>
-      {error && (
+      {state.error && (
         <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
+          {state.error}
         </Alert>
       )}
-      {success && (
+      {state.success && (
         <Alert severity="success" sx={{ mb: 2 }}>
-          {success}
+          {state.success}
         </Alert>
       )}
-      <Grid container spacing={2}>
-        {groups.map((group) => (
-          <Grid item xs={12} sm={6} md={4} key={group.id}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  {group.name}
-                </Typography>
-                {group.description && (
-                  <Typography color="textSecondary" gutterBottom>
-                    {group.description}
-                  </Typography>
-                )}
-                <Typography variant="subtitle2" sx={{ mt: 2 }}>
-                  Permissions:
-                </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {group.permissions.map((permission) => (
-                    <Chip
-                      key={permission.id}
-                      label={permission.name}
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
-                  ))}
-                </Box>
-                <Typography variant="subtitle2" sx={{ mt: 2 }}>
-                  Roles:
-                </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {group.roles.map((role) => (
-                    <Chip
-                      key={role.id}
-                      label={role.name}
-                      size="small"
-                      color="secondary"
-                      variant="outlined"
-                    />
-                  ))}
-                </Box>
-              </CardContent>
-              <CardActions>
-                <IconButton
-                  size="small"
-                  onClick={() => handleEditGroup(group)}
-                  aria-label="edit group"
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  onClick={() => handleDeleteGroup(group.id)}
-                  aria-label="delete group"
-                >
-                  <DeleteIcon />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  onClick={() => handleOpenMembers(group)}
-                  aria-label="manage members"
-                >
-                  <PeopleIcon />
-                </IconButton>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      {/* Using the new GroupTable component */}
+      <Box sx={{ mt: 2 }}>
+        {state.groups.length > 0 ? (
+          <GroupTable
+            groups={state.groups.filter(group => group && group.id !== undefined && group.id !== null)}
+            onEdit={handleEditGroup}
+            onDelete={(group) => handleDeleteGroup(group.id)}
+            onManageMembers={handleOpenMembers}
+            onManageRoles={handleOpenRoles}
+          />
+        ) : (
+          <Typography sx={{ p: 2 }}>No groups available</Typography>
+        )}
+      </Box>
       {/* Group Form Dialog */}
       <Dialog
-        open={openGroupForm}
-        onClose={() => setOpenGroupForm(false)}
-        maxWidth="md"
+        open={state.isFormOpen}
+        onClose={() => setState(prev => ({ ...prev, isFormOpen: false, selectedGroup: null }))}
+        maxWidth="sm"
         fullWidth
       >
         <DialogTitle>
-          {selectedGroup ? 'Edit Group' : 'Create Group'}
+          {state.selectedGroup ? 'Edit Group' : 'Create Group'}
         </DialogTitle>
         <DialogContent>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <Box sx={{ mt: 2 }}>
             <TextField
+              label="Name"
+              name="name"
               fullWidth
-              label="Group Name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
-              sx={{ mb: 2 }}
+              defaultValue={state.selectedGroup?.name || ''}
+              margin="normal"
+              inputProps={{
+                id: 'group-name-input'
+              }}
             />
             <TextField
-              fullWidth
               label="Description"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              name="description"
+              fullWidth
               multiline
               rows={3}
-              sx={{ mb: 2 }}
+              defaultValue={state.selectedGroup?.description || ''}
+              margin="normal"
+              inputProps={{
+                id: 'group-description-input'
+              }}
             />
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel>Permissions</InputLabel>
-              <Select
-                multiple
-                value={formData.permissionIds}
-                onChange={(e) => setFormData({ ...formData, permissionIds: e.target.value as string[] })}
-                renderValue={(selected: string[]) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip
-                        key={value}
-                        label={permissions.find(p => p.id === value)?.name}
-                        size="small"
-                      />
-                    ))}
-                  </Box>
-                )}
-              >
-                {permissions.map((permission) => (
-                  <MenuItem key={permission.id} value={permission.id}>
-                    {permission.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel>Roles</InputLabel>
-              <Select
-                multiple
-                value={formData.roleIds}
-                onChange={(e) => setFormData({ ...formData, roleIds: e.target.value as string[] })}
-                renderValue={(selected: string[]) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip
-                        key={value}
-                        label={roles.find(r => r.id === value)?.name}
-                        size="small"
-                      />
-                    ))}
-                  </Box>
-                )}
-              >
-                {roles.map((role) => (
-                  <MenuItem key={role.id} value={role.id}>
-                    {role.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenGroupForm(false)}>Cancel</Button>
           <Button
-            onClick={handleSubmit}
+            onClick={() => setState(prev => ({ ...prev, isFormOpen: false, selectedGroup: null }))}
+          >
+            Cancel
+          </Button>
+          <Button
             variant="contained"
             color="primary"
-            disabled={saving}
+            onClick={() => {
+              const nameInput = document.getElementById('group-name-input') as HTMLInputElement;
+              const descriptionInput = document.getElementById('group-description-input') as HTMLInputElement;
+              const formData = {
+                name: nameInput?.value || '',
+                description: descriptionInput?.value || '',
+                clientId: Number(clientId)
+              };
+              if (state.selectedGroup) {
+                handleUpdateGroup(state.selectedGroup.id, formData);
+              } else {
+                handleCreateGroup(formData);
+              }
+            }}
+            disabled={state.saving}
           >
-            {saving ? 'Saving...' : 'Save'}
+            {state.saving ? 'Saving...' : 'Save'}
           </Button>
         </DialogActions>
       </Dialog>
       {/* Delete Confirmation Dialog */}
       <Dialog
-        open={openDeleteDialog}
-        onClose={() => setOpenDeleteDialog(false)}
+        open={false}
+        onClose={() => setState(prev => ({ ...prev, selectedGroup: undefined }))}
       >
         <DialogTitle>Delete Group</DialogTitle>
         <DialogContent>
@@ -460,9 +692,11 @@ export default function Groups({ clientId }: GroupsProps) {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)}>Cancel</Button>
+          <Button onClick={() => setState(prev => ({ ...prev, selectedGroup: undefined }))}>
+            Cancel
+          </Button>
           <Button
-            onClick={handleConfirmDelete}
+            onClick={() => handleDeleteGroup(state.selectedGroup!.id)}
             color="error"
             variant="contained"
           >
@@ -470,53 +704,248 @@ export default function Groups({ clientId }: GroupsProps) {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* Members Dialog */}
-      <Dialog
-        open={openMembersDialog}
-        onClose={() => setOpenMembersDialog(false)}
+      {/* Group Members Dialog */}
+      <Dialog 
+        open={membersDialogOpen} 
+        onClose={handleCloseMembersDialog}
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle>Manage Members</DialogTitle>
+        <DialogTitle>
+          Edit Group Members - {state.selectedGroup?.name}
+        </DialogTitle>
         <DialogContent>
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel>Members</InputLabel>
-            <Select
-              multiple
-              value={selectedMembers}
-              onChange={(e) => setSelectedMembers(e.target.value as string[])}
-              renderValue={(selected: string[]) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => {
-                    const user = users.find(u => u.id.toString() === value);
-                    return (
-                      <Chip
-                        key={value}
-                        label={user ? `${user.firstName} ${user.lastName}` : value}
-                        size="small"
-                      />
-                    );
-                  })}
-                </Box>
-              )}
-            >
-              {users.map((user) => (
-                <MenuItem key={user.id} value={user.id.toString()}>
-                  {user.firstName} {user.lastName} ({user.email})
-                </MenuItem>
+          {state.users.length > 0 ? (
+            <Box sx={{ mt: 2 }}>
+              {state.users.map(user => (
+                <FormControlLabel
+                  key={user.id}
+                  control={
+                    <Checkbox
+                      checked={selectedUsers.includes(user.id)}
+                      onChange={() => handleUserToggle(user.id)}
+                    />
+                  }
+                  label={`${user.firstName} ${user.lastName} (${user.email})`}
+                />
               ))}
-            </Select>
-          </FormControl>
+            </Box>
+          ) : (
+            <Typography>No users available</Typography>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenMembersDialog(false)}>Cancel</Button>
-          <Button
+          <Button onClick={handleCloseMembersDialog}>Cancel</Button>
+          <Button 
             onClick={handleUpdateMembers}
-            variant="contained"
+            variant="contained" 
             color="primary"
-            disabled={saving}
+            disabled={state.saving}
           >
-            Save Changes
+            {state.saving ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Roles Dialog */}
+      <Dialog 
+        open={rolesDialogOpen} 
+        onClose={handleCloseRolesDialog}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          Edit Group Roles - {state.selectedGroup?.name}
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            Select the roles to assign to this group. Users in this group will inherit all permissions from the selected roles.
+          </Typography>
+          
+          <Grid container spacing={2}>
+            {/* Available Roles Column */}
+            <Grid item xs={12} md={6}>
+              <Paper variant="outlined" sx={{ height: '100%' }}>
+                <Box sx={{ p: 2 }}>
+                  <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                    Available Roles
+                  </Typography>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    label="Search available roles..."
+                    variant="outlined"
+                    value={roleSearchTerm}
+                    onChange={(e) => setRoleSearchTerm(e.target.value)}
+                    sx={{ mb: 2 }}
+                  />
+                  <Box sx={{ maxHeight: '50vh', overflow: 'auto' }}>
+                    <List dense disablePadding>
+                      {groupedRoles.map(([category, categoryRoles]) => {
+                        // Filter out roles that are already selected
+                        const availableRoles = categoryRoles.filter(role => !selectedRoles.includes(role.id));
+                        
+                        // Skip categories with no available roles
+                        if (availableRoles.length === 0) return null;
+                        
+                        return (
+                          <Box key={`available-${category}`}>
+                            <ListItem 
+                              button 
+                              onClick={() => handleCategoryToggle(`available-${category}`)}
+                              sx={{
+                                bgcolor: 'background.paper',
+                                borderBottom: '1px solid',
+                                borderColor: 'divider'
+                              }}
+                            >
+                              <ListItemText 
+                                primary={
+                                  <Typography variant="subtitle2" color="primary">
+                                    {category}
+                                  </Typography>
+                                } 
+                              />
+                              {expandedCategories.has(`available-${category}`) ? <ExpandMoreIcon /> : <ChevronRightIcon />}
+                            </ListItem>
+                            <Collapse in={expandedCategories.has(`available-${category}`)} timeout="auto" unmountOnExit>
+                              <List component="div" disablePadding>
+                                {availableRoles.map(role => (
+                                  <ListItem 
+                                    key={role.id} 
+                                    button
+                                    onClick={() => handleRoleToggle(role.id)}
+                                    sx={{ 
+                                      pl: 4,
+                                      '&:hover': {
+                                        bgcolor: 'action.hover'
+                                      }
+                                    }}
+                                  >
+                                    <ListItemText 
+                                      primary={role.name}
+                                      primaryTypographyProps={{ variant: 'body2' }}
+                                    />
+                                    <Button 
+                                      size="small" 
+                                      color="primary" 
+                                      variant="outlined"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRoleToggle(role.id);
+                                      }}
+                                    >
+                                      Add
+                                    </Button>
+                                  </ListItem>
+                                ))}
+                              </List>
+                            </Collapse>
+                          </Box>
+                        );
+                      })}
+                    </List>
+                  </Box>
+                </Box>
+              </Paper>
+            </Grid>
+            
+            {/* Assigned Roles Column */}
+            <Grid item xs={12} md={6}>
+              <Paper variant="outlined" sx={{ height: '100%' }}>
+                <Box sx={{ p: 2 }}>
+                  <Typography variant="subtitle2" fontWeight="bold" gutterBottom color="primary">
+                    Assigned Roles
+                  </Typography>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    label="Search assigned roles..."
+                    variant="outlined"
+                    value={roleSearchTerm}
+                    onChange={(e) => setRoleSearchTerm(e.target.value)}
+                    sx={{ mb: 2, bgcolor: 'background.paper', borderRadius: 1 }}
+                  />
+                  <Box sx={{ maxHeight: '50vh', overflow: 'auto' }}>
+                    <List dense disablePadding>
+                      {groupedRoles.map(([category, categoryRoles]) => {
+                        // Filter to only show selected roles
+                        const assignedRoles = categoryRoles.filter(role => selectedRoles.includes(role.id));
+                        
+                        // Skip categories with no assigned roles
+                        if (assignedRoles.length === 0) return null;
+                        
+                        return (
+                          <Box key={`assigned-${category}`}>
+                            <ListItem 
+                              button 
+                              onClick={() => handleCategoryToggle(`assigned-${category}`)}
+                              sx={{
+                                bgcolor: 'background.paper',
+                                borderBottom: '1px solid',
+                                borderColor: 'divider'
+                              }}
+                            >
+                              <ListItemText 
+                                primary={
+                                  <Typography variant="subtitle2" color="primary">
+                                    {category}
+                                  </Typography>
+                                } 
+                              />
+                              {expandedCategories.has(`assigned-${category}`) ? <ExpandMoreIcon /> : <ChevronRightIcon />}
+                            </ListItem>
+                            <Collapse in={expandedCategories.has(`assigned-${category}`)} timeout="auto" unmountOnExit>
+                              <List component="div" disablePadding>
+                                {assignedRoles.map(role => (
+                                  <ListItem 
+                                    key={role.id} 
+                                    button
+                                    onClick={() => handleRoleToggle(role.id)}
+                                    sx={{ 
+                                      pl: 4,
+                                      '&:hover': {
+                                        bgcolor: 'action.hover'
+                                      }
+                                    }}
+                                  >
+                                    <ListItemText 
+                                      primary={role.name}
+                                      primaryTypographyProps={{ variant: 'body2' }}
+                                    />
+                                    <Button 
+                                      size="small" 
+                                      color="error" 
+                                      variant="outlined"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRoleToggle(role.id);
+                                      }}
+                                    >
+                                      Remove
+                                    </Button>
+                                  </ListItem>
+                                ))}
+                              </List>
+                            </Collapse>
+                          </Box>
+                        );
+                      })}
+                    </List>
+                  </Box>
+                </Box>
+              </Paper>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseRolesDialog}>Cancel</Button>
+          <Button 
+            onClick={handleUpdateRoles}
+            variant="contained" 
+            color="primary"
+            disabled={state.saving}
+          >
+            {state.saving ? 'Saving...' : 'Save Changes'}
           </Button>
         </DialogActions>
       </Dialog>

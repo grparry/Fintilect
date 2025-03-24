@@ -1,14 +1,17 @@
 import { IBaseService } from './IBaseService';
-import {
-    NotificationTemplate,
-    NotificationTemplateInput,
-    NotificationTemplateFilters,
-    NotificationPreview,
-    NotificationType,
-    NotificationVariable,
-    NotificationCategory
-} from '../../types/bill-pay.types';
 import { PaginatedResponse } from '../../types/common.types';
+import {
+    NotificationCreateRequest,
+    NotificationUpdateRequest,
+    NotificationResponse,
+    NotificationListResponse,
+    NotificationSendRequest,
+    NotificationSendCustomerRequest,
+    SavedNotificationResponse,
+    SavedNotificationListResponse,
+    SavedNotificationClearRequest,
+    SavedNotificationSearchRequest
+} from '../../types/notification.types';
 
 /**
  * Interface for notification management
@@ -16,124 +19,70 @@ import { PaginatedResponse } from '../../types/common.types';
  */
 export interface INotificationService extends IBaseService {
     /**
-     * Get notification templates with pagination and filtering
-     * @param filters Template filters
-     * @returns Paginated list of notification templates
+     * Create a new notification
+     * @param request Notification creation request
+     * @returns Created notification response
      */
-    getTemplates(filters: NotificationTemplateFilters): Promise<PaginatedResponse<NotificationTemplate>>;
+    createNotification(request: NotificationCreateRequest): Promise<void>;
+
     /**
-     * Get specific notification template
-     * @param templateId Template identifier
-     * @returns Template details
+     * Update an existing notification
+     * @param request Notification update request
+     * @returns Updated notification response
      */
-    getTemplate(templateId: number): Promise<NotificationTemplate>;
+    updateNotification(request: NotificationUpdateRequest): Promise<void>;
+
     /**
-     * Create notification template
-     * @param template Template to create
-     * @returns Created template
-     */
-    createTemplate(template: NotificationTemplateInput): Promise<NotificationTemplate>;
-    /**
-     * Update notification template
-     * @param templateId Template identifier
-     * @param template Updated template data
-     * @returns Updated template
-     */
-    updateTemplate(templateId: number, template: Partial<NotificationTemplateInput>): Promise<NotificationTemplate>;
-    /**
-     * Delete notification template
-     * @param templateId Template identifier
-     */
-    deleteTemplate(templateId: number): Promise<void>;
-    /**
-     * Preview notification with sample data
-     * @param templateId Template identifier
-     * @param sampleData Sample data for preview
-     * @returns Preview with rendered content
-     */
-    previewTemplate(templateId: number, sampleData: Record<string, string>): Promise<NotificationPreview>;
-    /**
-     * Get available notification types
-     * @returns List of notification types
-     */
-    getNotificationTypes(): Promise<NotificationType[]>;
-    /**
-     * Get available notification categories
-     * @returns List of notification categories
-     */
-    getNotificationCategories(): Promise<NotificationCategory[]>;
-    /**
-     * Get template variables
-     * @param type Notification type
-     * @returns List of available variables for the type
-     */
-    getTemplateVariables(type: NotificationType): Promise<NotificationVariable[]>;
-    /**
-     * Send test notification
-     * @param templateId Template identifier
-     * @param testData Test data for notification
-     * @param recipients Test recipients
-     * @returns Success status
-     */
-    sendTestNotification(
-        templateId: number,
-        testData: Record<string, string>,
-        recipients: string[]
-    ): Promise<boolean>;
-    /**
-     * Validate template content
-     * @param content Template content to validate
-     * @param type Notification type
-     * @returns Validation result with any errors
-     */
-    validateTemplateContent(
-        content: string,
-        type: NotificationType
-    ): Promise<{ valid: boolean; errors: string[] }>;
-    /**
-     * Get notification delivery settings
-     * @returns Current delivery settings
-     */
-    getDeliverySettings(): Promise<{
-        emailEnabled: boolean;
-        smsEnabled: boolean;
-        defaultRecipients: string[];
-        retryAttempts: number;
-        retryInterval: number;
-    }>;
-    /**
-     * Update notification delivery settings
-     * @param settings Updated delivery settings
-     * @returns Updated settings
-     */
-    updateDeliverySettings(settings: {
-        emailEnabled?: boolean;
-        smsEnabled?: boolean;
-        defaultRecipients?: string[];
-        retryAttempts?: number;
-        retryInterval?: number;
-    }): Promise<{
-        emailEnabled: boolean;
-        smsEnabled: boolean;
-        defaultRecipients: string[];
-        retryAttempts: number;
-        retryInterval: number;
-    }>;
-    /**
-     * Get notification delivery status
-     * @param notificationId Notification identifier
-     * @returns Delivery status details
-     */
-    getDeliveryStatus(notificationId: string): Promise<{
-        status: 'pending' | 'sent' | 'failed';
-        attempts: number;
-        lastAttempt?: string;
-        error?: string;
-    }>;
-    /**
-     * Retry failed notification
+     * Delete a notification
      * @param notificationId Notification identifier
      * @returns Success status
      */
-    retryNotification(notificationId: string): Promise<boolean>;
+    deleteNotification(notificationId: string): Promise<void>;
+
+    /**
+     * Get a notification by ID
+     * @param notificationId Notification identifier
+     * @returns Notification details
+     */
+    getNotification(notificationId: string): Promise<NotificationResponse>;
+
+    /**
+     * Get all notifications
+     * @returns List of all notifications
+     */
+    getAllNotifications(): Promise<NotificationListResponse>;
+
+    /**
+     * Send a notification
+     * @param request Notification send request
+     * @returns Success status
+     */
+    sendNotification(request: NotificationSendRequest): Promise<void>;
+
+    /**
+     * Send a notification to a customer
+     * @param request Notification send customer request
+     * @returns Success status
+     */
+    sendCustomerNotification(request: NotificationSendCustomerRequest): Promise<void>;
+
+    /**
+     * Get saved notifications
+     * @returns List of saved notifications
+     */
+    getSavedNotifications(): Promise<SavedNotificationListResponse>;
+
+    /**
+     * Search saved notifications
+     * @param request Search parameters
+     * @returns List of matching saved notifications
+     */
+    searchSavedNotifications(request: SavedNotificationSearchRequest): Promise<SavedNotificationListResponse>;
+
+    /**
+     * Clear saved notifications up to a specific date
+     * @param request Clear request with date
+     * @returns Success status
+     */
+    clearSavedNotifications(request: SavedNotificationClearRequest): Promise<void>;
 }

@@ -29,16 +29,22 @@ const Breadcrumbs: React.FC = () => {
   }
 
   return (
-    <Box sx={{ mb: 2 }}>
+    <Box sx={{ p: 2 }}>
       <MuiBreadcrumbs aria-label="breadcrumb">
-        <Link component={RouterLink} to="/" color="inherit">
+        <Link
+          component={RouterLink}
+          underline="hover"
+          color="inherit"
+          to="/"
+        >
           Home
         </Link>
         {activeSection && (
           <Link
             component={RouterLink}
-            to={activeSection.basePath || '#'}
+            underline="hover"
             color="inherit"
+            to={activeSection.basePath || '#'}
           >
             {activeSection.title}
           </Link>

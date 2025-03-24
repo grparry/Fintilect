@@ -1,105 +1,62 @@
-import { IPayeeService } from '../../interfaces/IPayeeService';
 import { BaseService } from './BaseService';
-import { PaginatedResponse } from '../../../types/common.types';
+import { IPayeeService } from '../../interfaces/IPayeeService';
 import {
-  Payee,
-  PayeeStatus,
-  PayeeType,
-  PayeeValidationResult,
-  PayeeConversionSummary,
-  PayeeConversionFilters,
-  PayeeConversionFile,
-  PayeeConversionValidation,
-  PayeeConversionFileUploadResponse,
-  PayeeConversionProgressResponse,
-  PayeeConversionProgress,
-  PayeeConversionRecord,
-  PayeeConversionTemplate
-} from '../../../types/bill-pay.types';
+  UserPayeeChangeHistoryListResponse,
+  UserPayeeChangeHistoryReportRequest,
+  UserPayeeUpdateAccountNumberRequest,
+  UserPayeeUpdateFisPayeeIdRequest,
+  UpdateAccountAndReprocessRequest,
+  UpdateAccountAndRefund,
+  UpdateFisPayeeIdAndRefundRequest,
+  ManualUpdateRequest,
+  CopyMemberPayeesRequest,
+  UserPayeeListResponse,
+  GlobalPayeeChangeHistoryReportRequest,
+  GlobalPayeeChangeHistoryListResponse
+} from '../../../types/payees.types';
 
 export class PayeeService extends BaseService implements IPayeeService {
-  constructor(basePath: string = '/api/v1/payees') {
+  constructor(basePath: string) {
     super(basePath);
   }
-  async getPayees(filters?: Record<string, any>): Promise<PaginatedResponse<Payee>> {
-    return this.get<PaginatedResponse<Payee>>('', { params: filters });
+
+  async getUserPayeeChangeHistory(request: UserPayeeChangeHistoryReportRequest): Promise<UserPayeeChangeHistoryListResponse> {
+    return this.post<UserPayeeChangeHistoryListResponse>('/user/change-history', request);
   }
-  async getPayee(id: string): Promise<Payee> {
-    return this.get<Payee>(`/${id}`);
+
+  async updateUserPayeeAccountNumber(request: UserPayeeUpdateAccountNumberRequest): Promise<void> {
+    await this.post<void>('/user/account-number', request);
   }
-  async createPayee(payee: Partial<Payee>): Promise<Payee> {
-    return this.post<Payee>('', payee);
+
+  async updateUserPayeeFisId(request: UserPayeeUpdateFisPayeeIdRequest): Promise<void> {
+    await this.post<void>('/user/fis-payee-id', request);
   }
-  async updatePayee(id: string, payee: Partial<Payee>): Promise<Payee> {
-    return this.put<Payee>(`/${id}`, payee);
+
+  async updateAccountAndReprocess(request: UpdateAccountAndReprocessRequest): Promise<void> {
+    await this.post<void>('/account-number-reprocess', request);
   }
-  async deletePayee(id: string): Promise<void> {
-    await this.delete(`/${id}`);
+
+  async updateAccountAndRefund(request: UpdateAccountAndRefund): Promise<void> {
+    await this.post<void>('/account-number-refund', request);
   }
-  async validatePayee(payee: Partial<Payee>): Promise<PayeeValidationResult> {
-    return this.post<PayeeValidationResult>('/validate', payee);
+
+  async updateFisPayeeIdAndRefund(request: UpdateFisPayeeIdAndRefundRequest): Promise<void> {
+    await this.post<void>('/user/fis-payee-refund', request);
   }
-  async getPayeeTypes(): Promise<PayeeType[]> {
-    return this.get<PayeeType[]>('/types');
+
+  async manualExceptionReprocess(request: ManualUpdateRequest): Promise<void> {
+    await this.post<void>('/manual-exception-reprocess', request);
   }
-  async getPayeeStatuses(): Promise<PayeeStatus[]> {
-    return this.get<PayeeStatus[]>('/statuses');
+
+  async copyMemberPayees(request: CopyMemberPayeesRequest): Promise<void> {
+    await this.post<void>('/copy-payees', request);
   }
-  async getConversionSummary(): Promise<PayeeConversionSummary> {
-    return this.get<PayeeConversionSummary>('/conversions/summary');
+
+  async getMemberPayees(memberId: string): Promise<UserPayeeListResponse> {
+    return this.get<UserPayeeListResponse>(`/member/${memberId}`);
   }
-  async getConversions(filters: PayeeConversionFilters): Promise<PaginatedResponse<PayeeConversionRecord>> {
-    return this.get<PaginatedResponse<PayeeConversionRecord>>('/conversions', { params: filters });
-  }
-  async getConversionFiles(): Promise<PayeeConversionFile[]> {
-    return this.get<PayeeConversionFile[]>('/conversions/files');
-  }
-  async uploadConversionFile(file: File, templateId: string): Promise<PayeeConversionFileUploadResponse> {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('templateId', templateId);
-    return this.post<PayeeConversionFileUploadResponse>('/conversions/upload', formData);
-  }
-  async validateConversionFile(fileId: string): Promise<PayeeConversionValidation> {
-    return this.post<PayeeConversionValidation>(`/conversions/${fileId}/validate`);
-  }
-  async startConversion(fileId: string): Promise<PayeeConversionProgressResponse> {
-    return this.post<PayeeConversionProgressResponse>(`/conversions/${fileId}/start`);
-  }
-  async getConversionProgress(fileId: string): Promise<PayeeConversionProgress> {
-    return this.get<PayeeConversionProgress>(`/conversions/${fileId}/progress`);
-  }
-  async cancelConversion(fileId: string): Promise<void> {
-    await this.post(`/conversions/${fileId}/cancel`);
-  }
-  async getConversionTemplates(): Promise<PayeeConversionTemplate[]> {
-    return this.get<PayeeConversionTemplate[]>('/conversions/templates');
-  }
-  async createConversionTemplate(template: Omit<PayeeConversionTemplate, 'id' | 'createdAt' | 'updatedAt'>): Promise<PayeeConversionTemplate> {
-    return this.post<PayeeConversionTemplate>('/conversions/templates', template);
-  }
-  async updateConversionTemplate(templateId: string, template: Partial<PayeeConversionTemplate>): Promise<PayeeConversionTemplate> {
-    return this.put<PayeeConversionTemplate>(`/conversions/templates/${templateId}`, template);
-  }
-  async deleteConversionTemplate(templateId: string): Promise<void> {
-    await this.delete(`/conversions/templates/${templateId}`);
-  }
-  async getConversionHistory(conversionId: string): Promise<Array<{
-    action: string;
-    timestamp: string;
-    details: Record<string, unknown>;
-    user: string;
-  }>> {
-    return this.get(`/conversions/${conversionId}/history`);
-  }
-  async exportConversionResults(conversionId: string, format: 'csv' | 'excel'): Promise<string> {
-    return this.get<string>(`/conversions/${conversionId}/export`, { params: { format } });
-  }
-  async retryFailedConversions(conversionId: string, recordIds?: string[]): Promise<{
-    successful: number;
-    failed: number;
-    errors: Record<string, string>;
-  }> {
-    return this.post(`/conversions/${conversionId}/retry`, { recordIds });
+
+  async getGlobalPayeeChangeHistory(request: GlobalPayeeChangeHistoryReportRequest): Promise<GlobalPayeeChangeHistoryListResponse> {
+    return this.post<GlobalPayeeChangeHistoryListResponse>('/global/change-history', request);
   }
 }

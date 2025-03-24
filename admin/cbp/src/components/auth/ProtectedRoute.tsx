@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useHost } from '../../context/HostContext';
+import { usePermissions } from '../../hooks/usePermissions';
 import { CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { ResourceId } from '../../types/permissions.types';
 
 const LoaderContainer = styled('div')({
   display: 'flex',
@@ -10,58 +13,75 @@ const LoaderContainer = styled('div')({
   alignItems: 'center',
   height: '100vh',
 });
+
+const LoadingFallback = () => (
+  <LoaderContainer>
+    <CircularProgress />
+  </LoaderContainer>
+);
+
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRoles?: string[];
-  requiredPermissions?: string[];
+  resourceId?: ResourceId;
 }
+
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
-  requiredRoles = [],
-  requiredPermissions = [],
+  resourceId,
 }) => {
-  const { isAuthenticated, user, loading, permissions } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  const { isAdmin } = useHost();
+  const { checkPermission } = usePermissions();
   const location = useLocation();
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkAccess = async () => {
+      if (!resourceId) {
+        setHasPermission(true);
+        return;
+      }
+
+      try {
+        const result = await checkPermission(resourceId);
+        setHasPermission(result.hasAccess);
+      } catch (error) {
+        console.error('Error checking permissions:', error);
+        setHasPermission(false);
+      }
+    };
+
+    checkAccess();
+  }, [resourceId, checkPermission]);
+
   console.log('=== ProtectedRoute Debug ===');
-  console.log('Path:', location.pathname);
-  console.log('Auth State:', { isAuthenticated, loading, hasUser: !!user });
-  console.log('User:', user);
-  console.log('Permissions:', permissions);
-  console.log('Required Roles:', requiredRoles);
-  console.log('Required Permissions:', requiredPermissions);
-  if (loading) {
-    console.log('ProtectedRoute - Loading auth state');
-    return (
-      <LoaderContainer>
-        <CircularProgress />
-      </LoaderContainer>
-    );
+  console.log('Current Path:', location.pathname);
+  console.log('Auth State:', { 
+    isAuthenticated, 
+    loading,
+    resourceId,
+    hasPermission,
+    isAdmin
+  });
+
+  if (loading || hasPermission === null) {
+    console.log('ProtectedRoute - Loading auth state or checking permissions');
+    return <LoadingFallback />;
   }
-  if (!isAuthenticated || !user) {
+
+  if (!isAuthenticated) {
     console.log('ProtectedRoute - Not authenticated, redirecting to login');
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-  // Check roles if required
-  if (requiredRoles.length > 0) {
-    const hasRequiredRole = requiredRoles.some(role => user.roles.includes(role));
-    console.log('ProtectedRoute - Checking roles:', { requiredRoles, userRoles: user.roles, hasRequiredRole });
-    if (!hasRequiredRole) {
-      console.log('ProtectedRoute - Missing required role, redirecting to unauthorized');
-      return <Navigate to="/unauthorized" replace />;
-    }
+
+  // Check if required permissions are met
+  if (resourceId && !hasPermission) {
+    console.log('ProtectedRoute - Permission denied for resource:', resourceId);
+    return <Navigate to="/unauthorized" replace />;
   }
-  // Check permissions if required
-  if (requiredPermissions.length > 0) {
-    const hasRequiredPermissions = requiredPermissions.every(permission =>
-      permissions.includes(permission)
-    );
-    console.log('ProtectedRoute - Checking permissions:', { requiredPermissions, userPermissions: permissions, hasRequiredPermissions });
-    if (!hasRequiredPermissions) {
-      console.log('ProtectedRoute - Missing required permissions, redirecting to unauthorized');
-      return <Navigate to="/unauthorized" replace />;
-    }
-  }
+
   console.log('ProtectedRoute - Access granted');
   return <>{children}</>;
 };
+
 export default ProtectedRoute;

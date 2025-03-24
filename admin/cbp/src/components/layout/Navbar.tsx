@@ -85,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} color="text.primary">
           Connect Bill Pay Admin
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

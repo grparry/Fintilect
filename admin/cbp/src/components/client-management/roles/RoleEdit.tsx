@@ -9,172 +9,154 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { SecurityRole, Permission } from '../../../types/client.types';
-import { ClientService } from '../../../services/implementations/real/ClientService';
-import { PermissionService } from '../../../services/implementations/real/PermissionService';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
-import { PermissionCategory, PermissionAction } from '../../../types/permission.types';
-import { encodeId, decodeId } from '../../../utils/idEncoder';
-import PermissionTreeView from '../groups/PermissionTreeView';
+import { Role } from '../../../types/client.types';
+import { permissionService } from '../../../services/factory/ServiceFactory';
+import logger from '../../../utils/logger';
 
 interface RoleEditProps {
   clientId: string;
   roleId?: string;
 }
-// Get service instances
-const clientService = ServiceFactory.getInstance().getClientService();
-const permissionService = ServiceFactory.getInstance().getPermissionService();
-// Convert permissions array to PermissionCategory format
-const convertToPermissionCategory = (permissions: Permission[]): PermissionCategory => {
-  const category: PermissionCategory = {};
-  permissions.forEach(permission => {
-    // Ensure actions are of type PermissionAction
-    const validActions = permission.actions.filter((action): action is PermissionAction => {
-      return ['view', 'edit', 'delete', 'process', 'approve', 'export', 'create'].includes(action);
-    });
-    category[permission.id] = validActions;
-  });
-  return category;
-};
-export const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
+
+const RoleEdit: React.FC<RoleEditProps> = ({ clientId, roleId }) => {
   const navigate = useNavigate();
-  const [role, setRole] = useState<SecurityRole | null>(null);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [selectedPermissions, setSelectedPermissions] = useState<Permission[]>([]);
+  const [role, setRole] = useState<Role | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const loadRole = async () => {
       try {
         setLoading(true);
         setError(null);
-        // Fetch all available permissions
-        const permissions = await clientService.getPermissions();
-        setPermissions(permissions);
-        // If editing existing role, fetch its data
+
         if (roleId) {
-          const roles = await clientService.getClientRoles(clientId);
-          const role = roles.find((r: SecurityRole) => r.id === roleId);
-          if (!role) {
-            throw new Error('Role not found');
-          }
-          setRole(role);
-          setSelectedPermissions(role.permissions);
+          const roleData = await permissionService.getRole(Number(roleId));
+          setRole(roleData);
+          logger.info('Role loaded successfully');
         }
-        setLoading(false);
-      } catch (error) {
-        setError(error instanceof Error ? error.message : 'Failed to load data');
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to load role';
+        logger.error(`Error loading role: ${message}`);
+        setError(message);
+      } finally {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [clientId, roleId]);
+
+    loadRole();
+  }, [roleId]);
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!role?.name) return;
+
     try {
       setSaving(true);
       setError(null);
-      const roleData = {
-        name: role.name,
-        description: role.description || '',
-        permissions: convertToPermissionCategory(selectedPermissions),
-        clientId
-      };
+
       if (roleId) {
-        // Update existing role
-        await permissionService.updatePermissionGroup(Number(roleId), roleData);
+        await permissionService.updateRole(Number(roleId), {
+          name: role.name
+        });
+        logger.info('Role updated successfully');
       } else {
-        // Create new role
-        await permissionService.createPermissionGroup(roleData);
+        await permissionService.createRole({
+          name: role.name
+        });
+        logger.info('Role created successfully');
       }
-      setSuccess('Role saved successfully');
-      setSaving(false);
-      setTimeout(() => navigate(`/clients/${encodeId(clientId)}/roles`), 1500);
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to save role');
+
+      navigate(`/admin/client-management/edit/${clientId}/roles`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to save role';
+      logger.error(`Error saving role: ${message}`);
+      setError(message);
+    } finally {
       setSaving(false);
     }
   };
+
+  const handleDelete = async () => {
+    if (!roleId) return;
+
+    try {
+      setSaving(true);
+      setError(null);
+      await permissionService.deleteRole(Number(roleId));
+      logger.info('Role deleted successfully');
+      navigate(`/admin/client-management/edit/${clientId}/roles`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to delete role';
+      logger.error(`Error deleting role: ${message}`);
+      setError(message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+      <Box display="flex" justifyContent="center" p={3}>
         <CircularProgress />
       </Box>
     );
   }
+
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 800, mx: 'auto', p: 2 }}>
-      <Typography variant="h5" gutterBottom>
-        {roleId ? 'Edit Role' : 'Create New Role'}
-      </Typography>
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
-      {success && (
-        <Alert severity="success" sx={{ mb: 2 }}>
-          {success}
-        </Alert>
-      )}
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <TextField
-          fullWidth
-          label="Role Name"
-          value={role?.name || ''}
-          onChange={e => setRole(prev => prev ? { ...prev, name: e.target.value } : null)}
-          required
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          fullWidth
-          label="Description"
-          value={role?.description || ''}
-          onChange={e => setRole(prev => prev ? { ...prev, description: e.target.value } : null)}
-          multiline
-          rows={3}
-          sx={{ mb: 2 }}
-        />
-        <Typography variant="subtitle1" gutterBottom>
-          Permissions
-        </Typography>
-        <PermissionTreeView
-          permissions={permissions}
-          selectedPermissions={selectedPermissions}
-          roles={[]}
-          selectedRoles={[]}
-          onPermissionToggle={(permission: Permission) => {
-            const isSelected = selectedPermissions.some(p => p.id === permission.id);
-            const newSelectedPermissions = isSelected
-              ? selectedPermissions.filter(p => p.id !== permission.id)
-              : [...selectedPermissions, permission];
-            setSelectedPermissions(newSelectedPermissions);
-            setRole(prev => prev ? { ...prev, permissions: newSelectedPermissions } : null);
-          }}
-          onRoleToggle={() => {}}  // No-op since we don't handle roles here
-        />
-      </Paper>
-      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-        <Button
-          variant="outlined"
-          onClick={() => navigate(`/clients/${encodeId(clientId)}/roles`)}
-          disabled={saving}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          disabled={saving || !role?.name}
-          startIcon={saving ? <CircularProgress size={20} /> : undefined}
-        >
-          {saving ? 'Saving...' : 'Save Role'}
-        </Button>
+    <Paper>
+      <Box p={3}>
+        <form onSubmit={handleSubmit}>
+          {error && (
+            <Box mb={2}>
+              <Alert severity="error">{error}</Alert>
+            </Box>
+          )}
+          <Box mb={3}>
+            <Typography variant="h6">
+              {roleId ? 'Edit Role' : 'Create Role'}
+            </Typography>
+          </Box>
+          <Box mb={3}>
+            <TextField
+              label="Name"
+              fullWidth
+              required
+              value={role?.name || ''}
+              onChange={(e) => setRole(prev => ({ ...prev, name: e.target.value } as Role))}
+              disabled={saving}
+            />
+          </Box>
+          <Box display="flex" gap={2} justifyContent="flex-end">
+            <Button
+              onClick={() => navigate(`/admin/client-management/edit/${clientId}/roles`)}
+              disabled={saving}
+            >
+              Cancel
+            </Button>
+            {roleId && (
+              <Button
+                onClick={handleDelete}
+                color="error"
+                disabled={saving}
+              >
+                Delete
+              </Button>
+            )}
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={saving}
+            >
+              {saving ? 'Saving...' : 'Save'}
+            </Button>
+          </Box>
+        </form>
       </Box>
-    </Box>
+    </Paper>
   );
 };
+
 export default RoleEdit;

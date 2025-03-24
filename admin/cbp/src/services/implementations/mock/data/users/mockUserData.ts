@@ -1,38 +1,44 @@
-import { User, UserRole, UserStatus } from '../../../../../types/client.types';
+import { User } from '../../../../../types/client.types';
 
 export const mockUsers: User[] = [
   {
-    id: "1",
+    id: 1,
     username: 'john.doe',
-    email: 'john.doe',
+    tenantId: 1,
+    isActive: true,
+    creationDate: '2024-01-01T00:00:00Z',
+    lastLogin: '2024-02-20T15:30:00Z',
+    externalId: 'ext-001',
+    clientId: 1,
     firstName: 'John',
     lastName: 'Doe',
-    roles: ['Admin'],
-    status: UserStatus.ACTIVE,
-    department: 'IT',
-    lastLogin: new Date().toISOString(),
-    locked: false,
-    password: 'Admin@123!Secure', // For testing only
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    clientId: 'default-client',
-    groups: []
+    department: 'Engineering',
+    isLocked: false,
+    password: 'Admin@123!Secure',
+    invalidAttempts: 0,
+    forcePasswordChange: false,
+    outSystemsPassword: null,
+    clientName: 'Acme Corporation',
+    email: 'john.doe@acme.com'
   },
   {
-    id: "2",
+    id: 2,
     username: 'jane.smith',
-    email: 'jane.smith',
+    tenantId: 1,
+    isActive: true,
+    creationDate: '2024-01-02T00:00:00Z',
+    lastLogin: '2024-02-21T09:15:00Z',
+    externalId: 'ext-002',
+    clientId: 1,
     firstName: 'Jane',
     lastName: 'Smith',
-    roles: ['User'],
-    status: UserStatus.ACTIVE,
-    department: 'Sales',
-    lastLogin: new Date().toISOString(),
-    locked: false,
-    password: 'Admin@123!Secure', // For testing only
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    clientId: 'default-client',
-    groups: []
+    department: 'Finance',
+    isLocked: false,
+    password: 'Admin@123!Secure',
+    invalidAttempts: 0,
+    forcePasswordChange: false,
+    outSystemsPassword: null,
+    clientName: 'Acme Corporation',
+    email: 'jane.smith@acme.com'
   }
 ];

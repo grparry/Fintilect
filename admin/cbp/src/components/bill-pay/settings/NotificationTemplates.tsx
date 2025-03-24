@@ -32,306 +32,380 @@ import {
   CircularProgress,
   TablePagination
 } from '@mui/material';
-import { Editor } from '@tinymce/tinymce-react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AddIcon from '@mui/icons-material/Add';
 import PreviewIcon from '@mui/icons-material/Preview';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { notificationService } from '../../../services/factory/ServiceFactory';
+import SendIcon from '@mui/icons-material/Send';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+import { useClientApi } from '../../../hooks/useClientApi';
 import {
-  NotificationTemplate,
-  NotificationTemplateInput,
-  NotificationTemplateFilters,
-  NotificationVariable,
-  NotificationType,
-  NotificationCategory,
-  NotificationPreview
-} from '../../../types/bill-pay.types';
+  NotificationResponse,
+  NotificationCreateRequest,
+  NotificationUpdateRequest,
+  NotificationSendRequest
+} from '../../../types/notification.types';
 
-interface TemplateDialogState {
+interface NotificationDialogState {
   open: boolean;
   mode: 'create' | 'edit';
-  template?: NotificationTemplate;
+  notification?: NotificationResponse;
 }
+
 interface PreviewDialogState {
   open: boolean;
   subject: string;
-  content: string;
-  sampleData: Record<string, string>;
+  body: string;
 }
+
+interface DeleteDialogState {
+  open: boolean;
+  notificationId: string;
+  notificationName: string;
+  errorNumber?: number;
+  statusCode?: number;
+}
+
 const NotificationTemplates: React.FC = () => {
+  // Indicate that this component uses client-specific API
+  useClientApi(true);
+
+  // Get a fresh instance of the notification service
+  const notificationService = ServiceFactory.getInstance().getNotificationService();
+
   // State
-  const [templates, setTemplates] = useState<NotificationTemplate[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<NotificationTemplate | null>(null);
+  const [notifications, setNotifications] = useState<NotificationResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [filters, setFilters] = useState<NotificationTemplateFilters>({
-    searchTerm: '',
-    type: 'all',
-    category: NotificationCategory.PAYMENT
-  });
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [templateDialog, setTemplateDialog] = useState<TemplateDialogState>({
+  const [searchTerm, setSearchTerm] = useState('');
+  const [notificationDialog, setNotificationDialog] = useState<NotificationDialogState>({
     open: false,
     mode: 'create',
   });
   const [previewDialog, setPreviewDialog] = useState<PreviewDialogState>({
     open: false,
     subject: '',
-    content: '',
-    sampleData: {}
+    body: ''
   });
-  const [formData, setFormData] = useState<NotificationTemplateInput>({
-    name: '',
-    type: NotificationType.PAYMENT_COMPLETED,
-    category: NotificationCategory.PAYMENT,
-    subject: '',
-    content: '',
-    active: true,
+  const [deleteDialog, setDeleteDialog] = useState<DeleteDialogState>({
+    open: false,
+    notificationId: '',
+    notificationName: '',
+    errorNumber: undefined,
+    statusCode: undefined
   });
-  const [formErrors, setFormErrors] = useState<Partial<Record<keyof NotificationTemplateInput, string>>>({});
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [searchQuery, setSearchQuery] = useState('');
-  // Load templates with search and pagination
-  const loadTemplates = async () => {
+  const [formData, setFormData] = useState<NotificationCreateRequest>({
+    errorNumber: 0,
+    statusCode: 0,
+    matchMode: 0,
+    matchOrder: 1,
+    matchText: '',
+    messageSubject: '',
+    messageBody: '',
+    emailMember: true,
+    emailMemberServices: false,
+    emailSysOp: false,
+    notes: '',
+    symmetry: false,
+    emerge: false
+  });
+  const [formErrors, setFormErrors] = useState<Partial<Record<keyof NotificationCreateRequest, string>>>({});
+
+  // Load notifications
+  const loadNotifications = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await notificationService.getTemplates({
-        searchTerm: searchQuery || undefined,
-        type: filters.type === 'all' ? undefined : filters.type,
-        category: filters.category,
-        active: undefined
-      });
-      setTemplates(response.items);
-      setTotal(response.total);
-      setTotalPages(response.totalPages);
+      const response = await notificationService.getAllNotifications();
+      if (response.notifications) {
+        setNotifications(response.notifications);
+      } else {
+        setNotifications([]);
+      }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to load templates');
+      setError(err instanceof Error ? err.message : 'Failed to load notifications');
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-    loadTemplates();
-  }, [searchQuery]);
-  // Handle template dialog
-  const handleOpenTemplateDialog = (mode: 'create' | 'edit', template?: NotificationTemplate) => {
-    if (mode === 'edit' && template) {
+    loadNotifications();
+  }, []);
+
+  // Filter notifications based on search term
+  const filteredNotifications = notifications.filter(notification => {
+    if (!searchTerm) return true;
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      notification.errorNumber.toString().includes(searchLower) ||
+      (notification.statusCode?.toString() || '').includes(searchLower) ||
+      (notification.matchText || '').toLowerCase().includes(searchLower) ||
+      (notification.messageSubject || '').toLowerCase().includes(searchLower)
+    );
+  });
+
+  // Handle notification dialog
+  const handleOpenNotificationDialog = (mode: 'create' | 'edit', notification?: NotificationResponse) => {
+    if (mode === 'edit' && notification) {
+      console.log('Editing notification with matchMode:', notification.matchMode);
       setFormData({
-        name: template.name,
-        type: template.type,
-        category: template.category,
-        subject: template.subject,
-        content: template.content,
-        active: template.active,
+        errorNumber: notification.errorNumber,
+        statusCode: notification.statusCode || 0,
+        matchMode: notification.matchMode,
+        matchOrder: notification.matchOrder,
+        matchText: notification.matchText || '',
+        messageSubject: notification.messageSubject || '',
+        messageBody: notification.messageBody || '',
+        emailMember: notification.emailMember,
+        emailMemberServices: notification.emailMemberServices,
+        emailSysOp: notification.emailSysOp,
+        notes: notification.notes || '',
+        symmetry: notification.symmetry,
+        emerge: notification.emerge
       });
     } else {
       setFormData({
-        name: '',
-        type: NotificationType.PAYMENT_COMPLETED,
-        category: NotificationCategory.PAYMENT,
-        subject: '',
-        content: '',
-        active: true,
+        errorNumber: 0,
+        statusCode: 0,
+        matchMode: 0,
+        matchOrder: 1,
+        matchText: '',
+        messageSubject: '',
+        messageBody: '',
+        emailMember: true,
+        emailMemberServices: false,
+        emailSysOp: false,
+        notes: '',
+        symmetry: false,
+        emerge: false
       });
     }
-    setTemplateDialog({ open: true, mode, template });
+    setNotificationDialog({ open: true, mode, notification });
     setFormErrors({});
   };
-  const handleCloseTemplateDialog = () => {
-    setTemplateDialog({
+
+  const handleCloseNotificationDialog = () => {
+    setNotificationDialog({
       open: false,
       mode: 'create'
     });
-    setSelectedTemplate(null);
     setFormData({
-      name: '',
-      type: NotificationType.PAYMENT_COMPLETED,
-      category: NotificationCategory.PAYMENT,
-      subject: '',
-      content: '',
-      active: true,
+      errorNumber: 0,
+      statusCode: 0,
+      matchMode: 0,
+      matchOrder: 1,
+      matchText: '',
+      messageSubject: '',
+      messageBody: '',
+      emailMember: true,
+      emailMemberServices: false,
+      emailSysOp: false,
+      notes: '',
+      symmetry: false,
+      emerge: false
     });
     setFormErrors({});
   };
+
   // Dialog handlers
   const handleClosePreviewDialog = () => {
     setPreviewDialog({
       open: false,
       subject: '',
-      content: '',
-      sampleData: {}
+      body: ''
     });
   };
+
+  // Open delete confirmation dialog
+  const openDeleteDialog = (notification: NotificationResponse) => {
+    console.log('Opening delete dialog with notification:', notification);
+    
+    if (!notification || !notification.id) {
+      console.error('Cannot open delete dialog: Missing notification or notification ID');
+      setError('Cannot delete notification: Missing notification ID');
+      return;
+    }
+    
+    // Create a descriptive name for the notification
+    const notificationName = notification.matchText || 
+                            `Error ${notification.errorNumber}` || 
+                            `Status ${notification.statusCode}` || 
+                            'this notification';
+    
+    // Ensure we're using the lowercase id property to match API convention
+    setDeleteDialog({
+      open: true,
+      notificationId: notification.id, // Using lowercase id to match API convention
+      notificationName: notification.matchText || '',
+      errorNumber: notification.errorNumber,
+      statusCode: notification.statusCode
+    });
+    
+    console.log('Delete dialog state set to:', {
+      notificationId: notification.id, // Using lowercase id to match API convention
+      notificationName: notification.matchText || '',
+      errorNumber: notification.errorNumber,
+      statusCode: notification.statusCode
+    });
+  };
+
+  // Close delete confirmation dialog
+  const closeDeleteDialog = () => {
+    setDeleteDialog({
+      open: false,
+      notificationId: '',
+      notificationName: '',
+      errorNumber: undefined,
+      statusCode: undefined
+    });
+  };
+
+  // Handle notification deletion
+  const handleDelete = async (notificationId: string) => {
+    try {
+      console.log('Deleting notification with ID:', notificationId);
+      
+      if (!notificationId) {
+        setError('Cannot delete notification: Missing notification ID');
+        return;
+      }
+      
+      // Ensure we have a valid ID before proceeding
+      const trimmedId = notificationId.trim();
+      if (!trimmedId) {
+        setError('Cannot delete notification: Invalid notification ID');
+        return;
+      }
+      
+      setLoading(true);
+      setError(null);
+      
+      // Log the exact API call we're about to make
+      console.log(`Calling deleteNotification with ID: "${trimmedId}"`);
+      
+      await notificationService.deleteNotification(trimmedId);
+      setSuccess('Notification deleted successfully');
+      loadNotifications();
+      setDeleteDialog({ open: false, notificationId: '', notificationName: '', errorNumber: undefined, statusCode: undefined });
+    } catch (err: unknown) {
+      console.error('Delete error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to delete notification');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Validate form
+  const validateForm = (): boolean => {
+    const errors: Partial<Record<keyof NotificationCreateRequest, string>> = {};
+    
+    // Error number validation
+    if (!formData.errorNumber) {
+      errors.errorNumber = 'Error number is required';
+    } else {
+      // Check for uniqueness of error number
+      const existingWithSameErrorNumber = notifications.find(
+        n => n.errorNumber === formData.errorNumber && 
+        (notificationDialog.mode === 'create' || n.id !== notificationDialog.notification?.id)
+      );
+      if (existingWithSameErrorNumber) {
+        errors.errorNumber = 'Error number must be unique';
+      }
+    }
+    
+    // Status code validation
+    if (formData.statusCode !== undefined && formData.statusCode !== null) {
+      // Check for uniqueness of status code if provided
+      const existingWithSameStatusCode = notifications.find(
+        n => n.statusCode === formData.statusCode && formData.statusCode !== 0 &&
+        (notificationDialog.mode === 'create' || n.id !== notificationDialog.notification?.id)
+      );
+      if (existingWithSameStatusCode) {
+        errors.statusCode = 'Status code must be unique';
+      }
+    }
+    
+    // Match order validation
+    if (formData.matchOrder < 0 || formData.matchOrder > 255) {
+      errors.matchOrder = 'Match order must be between 0 and 255';
+    }
+    
+    if (!formData.matchText) {
+      errors.matchText = 'Match text is required';
+    }
+    
+    if (!formData.messageSubject) {
+      errors.messageSubject = 'Subject is required';
+    }
+    
+    if (!formData.messageBody) {
+      errors.messageBody = 'Body is required';
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   // Handle form submission
   const handleSubmit = async () => {
+    if (!validateForm()) return;
+    
     try {
       setLoading(true);
       setError(null);
-      if (templateDialog.mode === 'create') {
-        await notificationService.createTemplate(formData);
-      } else if (templateDialog.template) {
-        await notificationService.updateTemplate(templateDialog.template.id, formData);
+      
+      if (notificationDialog.mode === 'create') {
+        await notificationService.createNotification(formData);
+        setSuccess('Notification created successfully');
+      } else if (notificationDialog.notification) {
+        const updateRequest: NotificationUpdateRequest = {
+          ...formData,
+          id: notificationDialog.notification.id
+        };
+        await notificationService.updateNotification(updateRequest);
+        setSuccess('Notification updated successfully');
       }
-      handleCloseTemplateDialog();
-      loadTemplates();
+      
+      handleCloseNotificationDialog();
+      loadNotifications();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to save template');
+      setError(err instanceof Error ? err.message : 'Failed to save notification');
     } finally {
       setLoading(false);
     }
   };
-  // Handle template deletion
-  const handleDelete = async (template: NotificationTemplate) => {
+
+  // Handle notification preview
+  const handlePreview = (notification: NotificationResponse) => {
+    setPreviewDialog({
+      open: true,
+      subject: notification.messageSubject || '',
+      body: notification.messageBody || ''
+    });
+  };
+
+  // Handle sending a notification
+  const handleSendNotification = async (statusCode: number | undefined) => {
+    if (!statusCode) {
+      setError('Status code is required to send a notification');
+      return;
+    }
+    
     try {
       setLoading(true);
       setError(null);
-      await notificationService.deleteTemplate(template.id);
-      loadTemplates();
+      await notificationService.sendNotification({ statusCode });
+      setSuccess('Notification sent successfully');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to delete template');
+      setError(err instanceof Error ? err.message : 'Failed to send notification');
     } finally {
       setLoading(false);
     }
   };
-  // Handle template preview
-  const handlePreview = async (template: NotificationTemplate) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const preview = await notificationService.previewTemplate(template.id, {});
-      setPreviewDialog({
-        open: true,
-        subject: preview.subject,
-        content: preview.content,
-        sampleData: preview.sampleData || {}
-      });
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to preview template');
-    } finally {
-      setLoading(false);
-    }
-  };
-  // Template actions
-  const handleGetTemplate = async (templateId: string) => {
-    try {
-      const template = await notificationService.getTemplate(Number(templateId));
-      setTemplateDialog({
-        open: true,
-        mode: 'edit',
-        template
-      });
-    } catch (error) {
-      console.error('Error loading template:', error);
-      setError('Failed to load template for editing');
-    }
-  };
-  const handleDuplicate = async (templateId: string) => {
-    try {
-      const template = await notificationService.getTemplate(Number(templateId));
-      const clonedTemplate: NotificationTemplateInput = {
-        name: `${template.name} (Copy)`,
-        type: template.type,
-        category: template.category,
-        subject: template.subject,
-        content: template.content,
-        active: template.active
-      };
-      await notificationService.createTemplate(clonedTemplate);
-      await loadTemplates();
-      setSuccess('Template cloned successfully');
-    } catch (error) {
-      console.error('Error cloning template:', error);
-      setError('Failed to clone template');
-    }
-  };
-  const handlePreviewTemplate = async (templateId: string) => {
-    try {
-      const template = await notificationService.getTemplate(Number(templateId));
-      const preview = await notificationService.previewTemplate(
-        Number(templateId),
-        {
-          recipientName: 'John Doe',
-          amount: '$100.00',
-          date: new Date().toLocaleDateString(),
-          paymentId: 'PAY123'
-        }
-      );
-      setPreviewDialog({
-        open: true,
-        subject: preview.subject || '',
-        content: preview.content || '',
-        sampleData: preview.sampleData || {}
-      });
-    } catch (error) {
-      console.error('Error loading template preview:', error);
-      setError('Failed to load template preview');
-    }
-  };
-  const handleEdit = async (templateId: string) => {
-    try {
-      const template = await notificationService.getTemplate(Number(templateId));
-      setTemplateDialog({
-        open: true,
-        mode: 'edit',
-        template
-      });
-    } catch (error) {
-      console.error('Error loading template:', error);
-      setError('Failed to load template for editing');
-    }
-  };
-  const handleClone = async (templateId: string) => {
-    try {
-      const template = await notificationService.getTemplate(Number(templateId));
-      const clonedTemplate: NotificationTemplateInput = {
-        name: `${template.name} (Copy)`,
-        type: template.type,
-        category: template.category,
-        subject: template.subject,
-        content: template.content,
-        active: template.active
-      };
-      await notificationService.createTemplate(clonedTemplate);
-      await loadTemplates();
-      setSuccess('Template cloned successfully');
-    } catch (error) {
-      console.error('Error cloning template:', error);
-      setError('Failed to clone template');
-    }
-  };
-  const handleDeleteTemplate = async (templateId: string) => {
-    if (window.confirm('Are you sure you want to delete this template?')) {
-      try {
-        await notificationService.deleteTemplate(Number(templateId));
-        await loadTemplates();
-        setSuccess('Template deleted successfully');
-      } catch (error) {
-        console.error('Error deleting template:', error);
-        setError('Failed to delete template');
-      }
-    }
-  };
-  const handleTypeChange = (type: NotificationType | 'all') => {
-    setFilters(prev => ({ ...prev, type }));
-  };
-  const handleCategoryChange = (category: NotificationCategory) => {
-    setFilters(prev => ({ ...prev, category }));
-  };
-  const handlePageChange = (event: unknown, newPage: number) => {
-    setCurrentPage(newPage);
-  };
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setItemsPerPage(parseInt(event.target.value, 10));
-    setCurrentPage(1);
-  };
+
   return (
     <Box>
       {error && (
@@ -345,59 +419,26 @@ const NotificationTemplates: React.FC = () => {
         </Alert>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant="h5">Notification Templates</Typography>
+        <Typography variant="h5" color="text.primary">Notification Management</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() => handleOpenTemplateDialog('create')}
+          onClick={() => handleOpenNotificationDialog('create')}
         >
-          Create Template
+          Create Notification
         </Button>
       </Box>
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={4}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Type</InputLabel>
-                <Select
-                  value={filters.type}
-                  label="Type"
-                  onChange={(e) => handleTypeChange(e.target.value as NotificationType | 'all')}
-                >
-                  <MenuItem value="all">All Types</MenuItem>
-                  {Object.values(NotificationType).map((type) => (
-                    <MenuItem key={type} value={type}>
-                      {type}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Category</InputLabel>
-                <Select
-                  value={filters.category}
-                  label="Category"
-                  onChange={(e) => handleCategoryChange(e.target.value as NotificationCategory)}
-                >
-                  {Object.values(NotificationCategory).map((category) => (
-                    <MenuItem key={category} value={category}>
-                      {category}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12}>
               <TextField
                 fullWidth
                 size="small"
                 label="Search"
-                value={filters.searchTerm}
-                onChange={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
-                placeholder="Search templates..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search by error number, status code, or text..."
               />
             </Grid>
           </Grid>
@@ -407,11 +448,11 @@ const NotificationTemplates: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Last Modified</TableCell>
+              <TableCell>Error Number</TableCell>
+              <TableCell>Status Code</TableCell>
+              <TableCell>Match Text</TableCell>
+              <TableCell>Subject</TableCell>
+              <TableCell>Email To</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -422,34 +463,32 @@ const NotificationTemplates: React.FC = () => {
                   <CircularProgress size={24} />
                 </TableCell>
               </TableRow>
-            ) : templates.length === 0 ? (
+            ) : filteredNotifications.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} align="center">
-                  No templates found
+                  No notifications found
                 </TableCell>
               </TableRow>
             ) : (
-              templates.map((template) => (
-                <TableRow key={template.id}>
-                  <TableCell>{template.name}</TableCell>
-                  <TableCell>{template.type}</TableCell>
-                  <TableCell>{template.category}</TableCell>
+              filteredNotifications.map((notification) => (
+                <TableRow key={notification.id}>
+                  <TableCell>{notification.errorNumber}</TableCell>
+                  <TableCell>{notification.statusCode}</TableCell>
+                  <TableCell>{notification.matchText || '-'}</TableCell>
+                  <TableCell>{notification.messageSubject || '-'}</TableCell>
                   <TableCell>
-                    <Chip
-                      label={template.active ? 'Active' : 'Inactive'}
-                      color={template.active ? 'success' : 'default'}
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {new Date(template.lastModified).toLocaleDateString()}
+                    <Stack direction="row" spacing={1}>
+                      {notification.emailMember && <Chip key="member" label="Member" size="small" color="primary" />}
+                      {notification.emailMemberServices && <Chip key="memberServices" label="Member Services" size="small" color="secondary" />}
+                      {notification.emailSysOp && <Chip key="sysOp" label="SysOp" size="small" color="info" />}
+                    </Stack>
                   </TableCell>
                   <TableCell align="right">
                     <Stack direction="row" spacing={1} justifyContent="flex-end">
                       <Tooltip title="Preview">
                         <IconButton
                           size="small"
-                          onClick={() => handlePreviewTemplate(template.id.toString())}
+                          onClick={() => handlePreview(notification)}
                         >
                           <PreviewIcon />
                         </IconButton>
@@ -457,23 +496,26 @@ const NotificationTemplates: React.FC = () => {
                       <Tooltip title="Edit">
                         <IconButton
                           size="small"
-                          onClick={() => handleEdit(template.id.toString())}
+                          onClick={() => handleOpenNotificationDialog('edit', notification)}
                         >
                           <EditIcon />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Duplicate">
+                      <Tooltip title="Send">
                         <IconButton
                           size="small"
-                          onClick={() => handleClone(template.id.toString())}
+                          onClick={() => handleSendNotification(notification.statusCode)}
                         >
-                          <ContentCopyIcon />
+                          <SendIcon />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Delete">
                         <IconButton
                           size="small"
-                          onClick={() => handleDeleteTemplate(template.id.toString())}
+                          onClick={() => {
+                            console.log('Delete button clicked for notification:', notification);
+                            openDeleteDialog(notification);
+                          }}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -486,127 +528,169 @@ const NotificationTemplates: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
-        <TablePagination
-          component="div"
-          count={total}
-          page={currentPage - 1}
-          onPageChange={handlePageChange}
-          rowsPerPage={itemsPerPage}
-          onRowsPerPageChange={handleRowsPerPageChange}
-          rowsPerPageOptions={[5, 10, 25, 50]}
-        />
-      </Box>
-      {/* Template Dialog */}
+      
+      {/* Notification Dialog */}
       <Dialog
-        open={templateDialog.open}
-        onClose={handleCloseTemplateDialog}
+        open={notificationDialog.open}
+        onClose={handleCloseNotificationDialog}
         maxWidth="md"
         fullWidth
       >
         <DialogTitle>
-          {templateDialog.mode === 'create' ? 'Create Template' : 'Edit Template'}
+          {notificationDialog.mode === 'create' ? 'Create Notification' : 'Edit Notification'}
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                label="Error Number"
+                type="text"
+                value={formData.errorNumber}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // Only allow numeric input
+                  if (value === '' || /^[0-9]+$/.test(value)) {
+                    setFormData({ ...formData, errorNumber: value === '' ? 0 : parseInt(value) });
+                  }
+                }}
+                error={!!formErrors.errorNumber}
+                helperText={formErrors.errorNumber}
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                label="Status Code"
+                type="number"
+                value={formData.statusCode}
+                onChange={(e) => setFormData({ ...formData, statusCode: parseInt(e.target.value) || 0 })}
+                error={!!formErrors.statusCode}
+                helperText={formErrors.statusCode}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                label="Match Order"
+                type="number"
+                value={formData.matchOrder}
+                onChange={(e) => setFormData({ ...formData, matchOrder: parseInt(e.target.value) || 0 })}
+                error={!!formErrors.matchOrder}
+                helperText={formErrors.matchOrder || "Value must be between 0 and 255"}
+                inputProps={{ min: 0, max: 255 }}
+              />
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                error={!!formErrors.name}
-                helperText={formErrors.name}
+                label="Match Text"
+                value={formData.matchText}
+                onChange={(e) => setFormData({ ...formData, matchText: e.target.value })}
+                error={!!formErrors.matchText}
+                helperText={formErrors.matchText}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Type</InputLabel>
-                <Select
-                  value={formData.type}
-                  label="Type"
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value as NotificationType })}
-                  error={!!formErrors.type}
-                >
-                  {Object.values(NotificationType).map((type) => (
-                    <MenuItem key={type} value={type}>
-                      {type}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Category</InputLabel>
-                <Select
-                  value={formData.category}
-                  label="Category"
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value as NotificationCategory })}
-                  error={!!formErrors.category}
-                >
-                  {Object.values(NotificationCategory).map((category) => (
-                    <MenuItem key={category} value={category}>
-                      {category}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
                 label="Subject"
-                value={formData.subject}
-                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                error={!!formErrors.subject}
-                helperText={formErrors.subject}
+                value={formData.messageSubject}
+                onChange={(e) => setFormData({ ...formData, messageSubject: e.target.value })}
+                error={!!formErrors.messageSubject}
+                helperText={formErrors.messageSubject}
               />
             </Grid>
             <Grid item xs={12}>
-              <Editor
-                value={formData.content}
-                onEditorChange={(content) => setFormData({ ...formData, content })}
-                init={{
-                  height: 400,
-                  menubar: false,
-                  plugins: [
-                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
-                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                    'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
-                  ],
-                  toolbar: 'undo redo | blocks | ' +
-                    'bold italic forecolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help',
-                }}
+              <Typography variant="subtitle2" gutterBottom>Message Body</Typography>
+              <TextField
+                fullWidth
+                multiline
+                rows={10}
+                value={formData.messageBody}
+                onChange={(e) => setFormData({ ...formData, messageBody: e.target.value })}
+                error={!!formErrors.messageBody}
+                helperText={formErrors.messageBody}
+                placeholder="Enter notification message body"
+                variant="outlined"
               />
-              {formErrors.content && (
-                <Typography color="error" variant="caption">
-                  {formErrors.content}
-                </Typography>
-              )}
             </Grid>
             <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formData.active}
-                    onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                  />
-                }
-                label="Active"
+              <TextField
+                fullWidth
+                label="Notes"
+                multiline
+                rows={2}
+                value={formData.notes}
+                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle2" gutterBottom>Email Recipients</Typography>
+              <Stack direction="row" spacing={2}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.emailMember}
+                      onChange={(e) => setFormData({ ...formData, emailMember: e.target.checked })}
+                    />
+                  }
+                  label="Member"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.emailMemberServices}
+                      onChange={(e) => setFormData({ ...formData, emailMemberServices: e.target.checked })}
+                    />
+                  }
+                  label="Member Services"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.emailSysOp}
+                      onChange={(e) => setFormData({ ...formData, emailSysOp: e.target.checked })}
+                    />
+                  }
+                  label="SysOp"
+                />
+              </Stack>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle2" gutterBottom>Options</Typography>
+              <Stack direction="row" spacing={2}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.symmetry}
+                      onChange={(e) => setFormData({ ...formData, symmetry: e.target.checked })}
+                    />
+                  }
+                  label="Symmetry"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.emerge}
+                      onChange={(e) => setFormData({ ...formData, emerge: e.target.checked })}
+                    />
+                  }
+                  label="Emerge"
+                />
+              </Stack>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseTemplateDialog}>Cancel</Button>
+          <Button onClick={handleCloseNotificationDialog}>Cancel</Button>
           <Button onClick={handleSubmit} variant="contained" disabled={loading}>
             {loading ? <CircularProgress size={24} /> : 'Save'}
           </Button>
         </DialogActions>
       </Dialog>
+      
       {/* Preview Dialog */}
       <Dialog
         open={previewDialog.open}
@@ -614,25 +698,92 @@ const NotificationTemplates: React.FC = () => {
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle>Preview Template</DialogTitle>
+        <DialogTitle>Preview Notification</DialogTitle>
         <DialogContent>
-          {previewDialog.subject && previewDialog.content && (
-            <Box>
-              <Typography variant="subtitle1" gutterBottom>
-                Subject: {previewDialog.subject}
-              </Typography>
-              <Box
-                dangerouslySetInnerHTML={{ __html: previewDialog.content }}
-                sx={{ mt: 2 }}
-              />
-            </Box>
-          )}
+          <Box>
+            <Typography variant="subtitle1" gutterBottom color="text.primary">
+              Subject: {previewDialog.subject}
+            </Typography>
+            <Box
+              dangerouslySetInnerHTML={{ __html: previewDialog.body }}
+              sx={{ mt: 2 }}
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClosePreviewDialog}>Close</Button>
         </DialogActions>
       </Dialog>
+      
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteDialog.open}
+        onClose={closeDeleteDialog}
+        aria-labelledby="delete-dialog-title"
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle id="delete-dialog-title">Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <Typography variant="h6" gutterBottom>
+            Are you sure you want to delete this notification?
+          </Typography>
+          
+          <Box sx={{ 
+            mt: 2, 
+            mb: 2, 
+            p: 2, 
+            bgcolor: 'grey.100', 
+            borderRadius: 1, 
+            border: '1px solid', 
+            borderColor: 'grey.300' 
+          }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant="body1">
+                  <strong>Notification ID:</strong> {deleteDialog.notificationId || 'N/A'}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body1">
+                  <strong>Match Text:</strong> {deleteDialog.notificationName || 'N/A'}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body1">
+                  <strong>Error Number:</strong> {deleteDialog.errorNumber !== undefined ? deleteDialog.errorNumber : 'N/A'}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body1">
+                  <strong>Status Code:</strong> {deleteDialog.statusCode !== undefined ? deleteDialog.statusCode : 'N/A'}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+          
+          <Typography variant="body2" color="error" sx={{ mt: 1, fontWeight: 'bold' }}>
+            This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDeleteDialog} color="primary" variant="outlined">
+            Cancel
+          </Button>
+          <Button 
+            onClick={() => {
+              console.log('Delete button clicked with ID:', deleteDialog.notificationId);
+              handleDelete(deleteDialog.notificationId);
+            }} 
+            color="error" 
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
+
 export default NotificationTemplates;

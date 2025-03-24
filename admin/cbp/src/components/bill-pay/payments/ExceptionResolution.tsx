@@ -18,12 +18,12 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import { useAuth } from '../../../hooks/useAuth';
-import {
-  PaymentException,
-  ExceptionResolution as ExceptionResolutionType,
-  ExceptionToolStatus,
+import type { PaymentException } from '../../../types/payment.types';
+import type {
+  ExceptionResolution,
   ExceptionTool,
 } from '../../../types/bill-pay.types';
+import { Exception, ExceptionStatus } from '../../../types/exception.types';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 
 interface ExceptionResolutionProps {
@@ -39,7 +39,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [resolution, setResolution] = useState<ExceptionResolutionType>({
+  const [resolution, setResolution] = useState<ExceptionResolution>({
     type: 'manual',
     action: '',
     notes: '',
@@ -56,7 +56,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
       setLoading(true);
       await exceptionService.updateExceptionStatus(
         exception.id.toString(),
-        resolution.action as ExceptionToolStatus,
+        resolution.action as ExceptionStatus,
         resolution.notes
       );
       onResolutionComplete();
@@ -77,7 +77,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
             </Alert>
           )}
           <Box>
-            <Typography variant="h6">Exception Details</Typography>
+            <Typography variant="h6" color="text.primary">Exception Details</Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
               <Grid item xs={12} md={6}>
                 <Typography variant="subtitle2">Status</Typography>
@@ -101,7 +101,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
           </Box>
           <Divider />
           <Box>
-            <Typography variant="h6">Resolution</Typography>
+            <Typography variant="h6" color="text.primary">Resolution</Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
               <Grid item xs={12}>
                 <FormControl fullWidth>
@@ -109,7 +109,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
                   <Select<'manual' | 'automated' | 'ignore'>
                     value={resolution.type}
                     onChange={(e: SelectChangeEvent<'manual' | 'automated' | 'ignore'>) => {
-                      const value = e.target.value as ExceptionResolutionType['type'];
+                      const value = e.target.value as ExceptionResolution['type'];
                       setResolution((prev) => ({
                         ...prev,
                         type: value,
@@ -126,18 +126,19 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>Action</InputLabel>
-                  <Select<string>
+                  <Select
                     value={resolution.action}
-                    onChange={(e: SelectChangeEvent<string>) =>
+                    onChange={(e) => {
                       setResolution((prev) => ({
                         ...prev,
                         action: e.target.value,
-                      }))
-                    }
+                      }));
+                    }}
                     label="Action"
                   >
-                    <MenuItem value="resolved">Resolve</MenuItem>
-                    <MenuItem value="ignored">Ignore</MenuItem>
+                    <MenuItem value={ExceptionStatus.RESOLVED}>Resolve</MenuItem>
+                    <MenuItem value={ExceptionStatus.CLOSED}>Close</MenuItem>
+                    <MenuItem value={ExceptionStatus.IN_PROGRESS}>In Progress</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

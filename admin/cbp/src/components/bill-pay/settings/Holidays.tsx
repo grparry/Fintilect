@@ -1,29 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Button,
-  Typography,
-  Alert,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  IconButton,
-  FormHelperText,
-} from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Box, Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, FormControl, InputLabel, FormHelperText, IconButton, Alert } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
+import { Holiday, HolidayInput, HolidayStatus, HolidayType } from '../../../types/calendar.types';
+import { ServiceFactory } from '../../../services/factory/ServiceFactory';
+import useClientApi from '../../../hooks/useClientApi';
+import { isAdminHostname } from '../../../config/host.config';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Holiday, HolidayInput, HolidayType, HolidayStatus } from '../../../types/bill-pay.types';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 
 interface FormData {
   name: string;
@@ -38,6 +24,9 @@ const initialFormData: FormData = {
   status: HolidayStatus.ACTIVE,
 };
 const Holidays: React.FC = () => {
+  // Indicate that this component uses client-specific API
+  useClientApi(true);
+
   // State
   const [holidays, setHolidays] = useState<Holiday[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,23 +35,27 @@ const Holidays: React.FC = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [validationErrors, setValidationErrors] = useState<Partial<Record<keyof HolidayInput, string>>>({});
   const [editingId, setEditingId] = useState<number | null>(null);
-  const holidayService = ServiceFactory.getInstance().getHolidayService();
-  // Load holidays
+  const calendarService = ServiceFactory.getInstance().getCalendarService();
+  
+  // Function to load holidays
+  const loadHolidays = async () => {
+    try {
+      setLoading(true);
+      const holidays = await calendarService.getHolidays();
+      setHolidays(holidays);
+      setError(null);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to load holidays');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Load holidays on component mount
   useEffect(() => {
-    const loadHolidays = async () => {
-      try {
-        setLoading(true);
-        const holidays = await holidayService.getHolidays();
-        setHolidays(holidays);
-        setError(null);
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Failed to load holidays');
-      } finally {
-        setLoading(false);
-      }
-    };
     loadHolidays();
   }, []);
+  
   // Handle form submission
   const handleSubmit = async () => {
     try {
@@ -75,7 +68,7 @@ const Holidays: React.FC = () => {
         status: formData.status,
       };
       // Validate holiday data
-      const validation = await holidayService.validateHoliday(holidayData);
+      const validation = await calendarService.validateHoliday(holidayData);
       if (!validation.isValid && validation.errors) {
         const errors: Partial<Record<keyof HolidayInput, string>> = {};
         Object.entries(validation.errors).forEach(([field, message]) => {
@@ -87,98 +80,128 @@ const Holidays: React.FC = () => {
         return;
       }
       if (editingId) {
-        await holidayService.updateHoliday(editingId, holidayData);
+        await calendarService.updateHoliday(editingId, holidayData);
       } else {
-        await holidayService.createHoliday(holidayData);
+        await calendarService.createHoliday(holidayData);
       }
       // Refresh holidays list
-      const updatedHolidays = await holidayService.getHolidays();
-      setHolidays(updatedHolidays);
+      await loadHolidays();
       // Reset form
       handleCloseDialog();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to save holiday');
     }
   };
+  
   // Handle holiday deletion
   const handleDelete = async (id: number) => {
     try {
-      await holidayService.deleteHoliday(id);
-      const updatedHolidays = await holidayService.getHolidays();
-      setHolidays(updatedHolidays);
-      setError(null);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to delete holiday');
+      // Find the holiday by ID
+      const holidayToDelete = holidays.find(h => h.id === id);
+      
+      // Check if this is a shared holiday (sponsorID = "0") and we're not on an admin endpoint
+      if (holidayToDelete && holidayToDelete.sponsorID === "0" && !isAdminHostname()) {
+        setError("Shared holidays (sponsorID = 0) can only be deleted from administrative endpoints.");
+        return;
+      }
+      
+      await calendarService.deleteHoliday(id);
+      // Refresh the holidays list
+      loadHolidays();
+    } catch (error) {
+      console.error('Error deleting holiday:', error);
+      setError('Failed to delete holiday. Please try again.');
     }
   };
-  // Handle dialog open/close
+  
+  // Handle opening the dialog for adding/editing a holiday
   const handleOpenDialog = (holiday?: Holiday) => {
+    // Check if this is a shared holiday (sponsorID = "0") and we're not on an admin endpoint
+    if (holiday && holiday.sponsorID === "0" && !isAdminHostname()) {
+      // Don't allow editing shared holidays on non-admin endpoints
+      setError("Shared holidays (sponsorID = 0) can only be edited from administrative endpoints.");
+      return;
+    }
+    
     if (holiday) {
+      // Editing an existing holiday
+      setEditingId(holiday.id);
       setFormData({
         name: holiday.name,
         date: dayjs(holiday.date),
         type: holiday.type,
         status: holiday.status,
       });
-      setEditingId(holiday.id);
     } else {
-      setFormData(initialFormData);
+      // Adding a new holiday
       setEditingId(null);
+      setFormData({
+        name: '',
+        date: dayjs(),
+        type: HolidayType.CUSTOM, // Default to CUSTOM for new client-specific holidays
+        status: HolidayStatus.ACTIVE,
+      });
     }
-    setValidationErrors({});
     setDialogOpen(true);
   };
+  
   const handleCloseDialog = () => {
     setDialogOpen(false);
     setFormData(initialFormData);
     setValidationErrors({});
     setEditingId(null);
   };
+  
   // Grid columns
   const columns: GridColDef[] = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      flex: 1,
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'date', headerName: 'Date', width: 150 },
+    { 
+      field: 'type', 
+      headerName: 'Type', 
+      width: 150,
+      valueGetter: (params: { row: Holiday }) => {
+        // For display purposes, we can show a more meaningful type based on sponsorID
+        if (params.row && params.row.sponsorID === "0") {
+          return "Shared";
+        }
+        return params.row?.type || "Custom";
+      }
     },
-    {
-      field: 'date',
-      headerName: 'Date',
-      flex: 1,
-      valueFormatter: (params: { value: string }) => dayjs(params.value).format('MMM D, YYYY'),
-    },
-    {
-      field: 'type',
-      headerName: 'Type',
-      flex: 1,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      flex: 1,
-    },
+    { field: 'status', headerName: 'Status', width: 150 },
     {
       field: 'actions',
       headerName: 'Actions',
-      flex: 1,
-      sortable: false,
-      renderCell: (params) => (
-        <Box>
-          <IconButton
-            onClick={() => handleOpenDialog(params.row)}
-            size="small"
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            onClick={() => handleDelete(params.row.id)}
-            size="small"
-            color="error"
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Box>
-      ),
+      width: 120,
+      renderCell: (params) => {
+        // Determine if this holiday can be edited based on sponsorID and admin status
+        const isAdmin = isAdminHostname();
+        const isSharedHoliday = params.row.sponsorID === "0";
+        const canEdit = isAdmin || !isSharedHoliday;
+        
+        return (
+          <Box>
+            <IconButton
+              onClick={() => handleOpenDialog(params.row)}
+              size="small"
+              disabled={!canEdit}
+              title={!canEdit ? "Shared holidays can only be edited from administrative endpoints" : "Edit holiday"}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => handleDelete(params.row.id)}
+              size="small"
+              color="error"
+              disabled={!canEdit}
+              title={!canEdit ? "Shared holidays can only be deleted from administrative endpoints" : "Delete holiday"}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        );
+      },
     },
   ];
   return (
@@ -189,7 +212,7 @@ const Holidays: React.FC = () => {
         </Alert>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant="h5">Holidays</Typography>
+        <Typography variant="h5" color="text.primary">Holidays</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -211,7 +234,7 @@ const Holidays: React.FC = () => {
       />
       <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
         <DialogTitle>
-          {editingId ? 'Edit Holiday' : 'Add Holiday'}
+          {editingId ? 'Edit Holiday' : 'Add Client-Specific Holiday'}
         </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -236,19 +259,19 @@ const Holidays: React.FC = () => {
               }}
             />
             <FormControl fullWidth error={!!validationErrors.type}>
-              <InputLabel>Type</InputLabel>
+              <InputLabel>Category</InputLabel>
               <Select
                 value={formData.type}
-                label="Type"
+                label="Category"
                 onChange={(e) => setFormData((prev) => ({ ...prev, type: e.target.value as HolidayType }))}
               >
                 <MenuItem value={HolidayType.FEDERAL}>Federal</MenuItem>
                 <MenuItem value={HolidayType.STATE}>State</MenuItem>
                 <MenuItem value={HolidayType.CUSTOM}>Custom</MenuItem>
               </Select>
-              {validationErrors.type && (
-                <FormHelperText>{validationErrors.type}</FormHelperText>
-              )}
+              <FormHelperText>
+                {validationErrors.type || "This category is for display purposes only"}
+              </FormHelperText>
             </FormControl>
             <FormControl fullWidth error={!!validationErrors.status}>
               <InputLabel>Status</InputLabel>

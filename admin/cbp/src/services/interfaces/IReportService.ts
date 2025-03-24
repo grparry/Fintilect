@@ -1,21 +1,12 @@
 import { IBaseService } from './IBaseService';
 import {
-    ReportType,
-    ReportData,
+    ReportResponse,
     ReportFilters,
-    ExportOptions,
-    AuditRecord,
-    TransactionRecord,
-    UserRecord
+    ErrorRecapRequest,
+    ErrorRecapItemPagedResponse,
+    PaymentActivityRequest,
+    PaymentActivityItemPagedResponse
 } from '../../types/report.types';
-import {
-    BaseReportArguments,
-    ExportReportArguments,
-    ScheduleReportArguments,
-    ReportRunRequest,
-    ReportResponse
-} from '../../types/report-api.types';
-import { PaginatedResponse } from '../../types/common.types';
 
 /**
  * Interface for report management
@@ -24,77 +15,59 @@ import { PaginatedResponse } from '../../types/common.types';
 export interface IReportService extends IBaseService {
     /**
      * Run a report with specified arguments
-     * @param request Report request parameters
-     * @returns Report data
+     * @param name Name of the report to run
+     * @param args Arguments for the report in comma-separated string format (param1=value1,param2=value2)
+     * @returns Report response containing JSON data
      */
-    runReport(request: ReportRunRequest): Promise<ReportResponse<ReportData>>;
+    runReport(name: string | null, args: string | null): Promise<ReportResponse>;
+
+    /**
+     * Run a report with parameters as an object
+     * @param name Name of the report to run (must start with "rpt" and end with "JSON")
+     * @param params Object containing parameter key-value pairs
+     * @returns Report response containing JSON data
+     */
+    runReportWithParams(name: string, params: Record<string, string | number | Date>): Promise<ReportResponse>;
+
+    /**
+     * Format parameters object into the required comma-separated string format
+     * @param params Object containing parameter key-value pairs
+     * @returns Formatted string in the format "param1=value1,param2=value2"
+     */
+    formatReportParams(params: Record<string, string | number | Date>): string;
+
     /**
      * Get report by ID
      * @param reportId Report identifier
      * @returns Report data
      */
-    getReport(reportId: string): Promise<ReportData>;
+
     /**
-     * Search reports with filtering
-     * @param filters Report filters
-     * @returns Paginated list of report data
+     * Get error recap data using the dedicated endpoint
+     * @param params Error recap search parameters
+     * @returns Paginated error recap data
      */
-    searchReports(filters: ReportFilters): Promise<PaginatedResponse<ReportData>>;
+    getErrorRecap(params: ErrorRecapRequest): Promise<ErrorRecapItemPagedResponse>;
+
     /**
-     * Schedule a report
-     * @param request Schedule report request
-     * @returns Report run request ID
+     * Get payment activity data using the dedicated endpoint
+     * @param params Payment activity search parameters
+     * @returns Paginated payment activity data
      */
-    scheduleReport(request: ReportRunRequest<ScheduleReportArguments>): Promise<string>;
+    getPaymentActivity(params: PaymentActivityRequest): Promise<PaymentActivityItemPagedResponse>;
+
     /**
-     * Cancel scheduled report
-     * @param reportId Report identifier
+     * Format a single parameter into a string
+     * @param key Parameter key
+     * @param value Parameter value
+     * @returns Formatted string in the format "key=value"
      */
-    cancelScheduledReport(reportId: string): Promise<void>;
+    formatReportParam(key: string, value: string | number | Date): string;
+
     /**
-     * Export report in specified format
-     * @param request Export report request
-     * @returns Export URL
+     * Parse a comma-separated string of parameters into an object
+     * @param params Comma-separated string of parameters (e.g. "param1=value1,param2=value2")
+     * @returns Object containing parameter key-value pairs
      */
-    exportReport(request: ReportRunRequest<ExportReportArguments>): Promise<string>;
-    /**
-     * Get audit records
-     * @param filters Report filters
-     * @returns Paginated list of audit records
-     */
-    getAuditRecords(filters: ReportFilters): Promise<PaginatedResponse<AuditRecord>>;
-    /**
-     * Get transaction records
-     * @param filters Report filters
-     * @returns Paginated list of transaction records
-     */
-    getTransactionRecords(filters: ReportFilters): Promise<PaginatedResponse<TransactionRecord>>;
-    /**
-     * Get user records
-     * @param filters Report filters
-     * @returns Paginated list of user records
-     */
-    getUserRecords(filters: ReportFilters): Promise<PaginatedResponse<UserRecord>>;
-    /**
-     * Get available report types
-     * @returns List of report types
-     */
-    getReportTypes(): Promise<ReportType[]>;
-    /**
-     * Get export options
-     * @returns Available export options
-     */
-    getExportOptions(): Promise<ExportOptions>;
-    /**
-     * Validate report arguments
-     * @param args Report arguments to validate
-     * @returns Validation result
-     */
-    validateReportArgs(args: BaseReportArguments): Promise<boolean>;
-    /**
-     * Get report errors
-     * @param reportId Report identifier
-     * @returns List of error messages
-     */
-    getReportErrors(reportId: string): Promise<string[]>;
+    parseReportParams(params: string): Record<string, string | number | Date>;
 }

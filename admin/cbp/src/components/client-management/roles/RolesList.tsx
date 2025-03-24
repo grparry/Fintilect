@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -18,10 +18,8 @@ import {
   DialogActions,
   Alert,
   CircularProgress,
-  Chip,
   TextField,
   InputAdornment,
-  SvgIcon
 } from '@mui/material';
 import {
   Edit as EditIcon,
@@ -29,29 +27,25 @@ import {
   Search as SearchIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { SecurityRole, Permission } from '../../../types/client.types';
-import { ClientService } from '../../../services/implementations/real/ClientService';
-import { PermissionService } from '../../../services/implementations/real/PermissionService';
-import { ServiceFactory } from '../../../services/factory/ServiceFactory';
-import { encodeId, decodeId } from '../../../utils/idEncoder';
-import { shouldUseMockData } from '../../../config/api.config';
+import { Role } from '../../../types/client.types';
+import { permissionService } from '../../../services/factory/ServiceFactory';
+import logger from '../../../utils/logger';
 
-// Get service instances
-const clientService = ServiceFactory.getInstance().getClientService();
-const permissionService = ServiceFactory.getInstance().getPermissionService();
 interface RolesListProps {
   clientId: string;
 }
+
 interface RolesListState {
-  roles: SecurityRole[];
+  roles: Role[];
   loading: boolean;
   error: string | null;
   deleteDialogOpen: boolean;
-  roleToDelete: SecurityRole | null;
-  sortBy: 'name' | 'description' | 'permissions';
+  roleToDelete: Role | null;
+  sortBy: 'name';
   sortDirection: 'asc' | 'desc';
   filterText: string;
 }
+
 const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
   const navigate = useNavigate();
   const [state, setState] = useState<RolesListState>({
@@ -64,168 +58,184 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
     sortDirection: 'asc',
     filterText: ''
   });
+
+  const loadRoles = async () => {
+    try {
+      setState(prev => ({ ...prev, loading: true, error: null }));
+      const response = await permissionService.getRoles();
+      setState(prev => ({
+        ...prev,
+        roles: response.roles,
+        loading: false
+      }));
+      logger.info('Roles loaded successfully');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to load roles';
+      logger.error(`Error loading roles: ${message}`);
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        error: message
+      }));
+    }
+  };
+
   useEffect(() => {
-    fetchRoles();
-  }, [clientId]);
-  const fetchRoles = async () => {
-    try {
-      setState(prev => ({ ...prev, loading: true, error: null }));
-      const roles = await clientService.getClientRoles(clientId);
-      setState(prev => ({ ...prev, roles, loading: false }));
-    } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
-        loading: false, 
-        error: error instanceof Error ? error.message : 'Failed to load roles'
-      }));
-    }
+    loadRoles();
+  }, []);
+
+  const handleDeleteClick = (role: Role) => {
+    setState(prev => ({
+      ...prev,
+      deleteDialogOpen: true,
+      roleToDelete: role
+    }));
   };
-  const handleDeleteRole = async () => {
-    if (!state.roleToDelete) return;
+
+  const handleDeleteConfirm = async () => {
+    const { roleToDelete } = state;
+    if (!roleToDelete) return;
+
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
-      await permissionService.deletePermissionGroup(Number(state.roleToDelete.id));
+      await permissionService.deleteRole(roleToDelete.id);
+      logger.info('Role deleted successfully');
+      await loadRoles();
       setState(prev => ({
         ...prev,
-        loading: false,
         deleteDialogOpen: false,
-        roleToDelete: null,
-        roles: prev.roles.filter(role => role.id !== state.roleToDelete?.id)
+        roleToDelete: null
       }));
-    } catch (error) {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to delete role';
+      logger.error(`Error deleting role: ${message}`);
       setState(prev => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error.message : 'Failed to delete role'
+        error: message
       }));
     }
   };
-  const handleSort = (field: RolesListState['sortBy']) => {
+
+  const handleDeleteCancel = () => {
+    setState(prev => ({
+      ...prev,
+      deleteDialogOpen: false,
+      roleToDelete: null
+    }));
+  };
+
+  const handleSort = (field: 'name') => {
     setState(prev => ({
       ...prev,
       sortBy: field,
-      sortDirection: prev.sortBy === field && prev.sortDirection === 'asc' ? 'desc' : 'asc'
+      sortDirection:
+        prev.sortBy === field && prev.sortDirection === 'asc' ? 'desc' : 'asc'
     }));
   };
-  const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState(prev => ({ ...prev, filterText: event.target.value }));
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState(prev => ({
+      ...prev,
+      filterText: event.target.value
+    }));
   };
-  const filteredAndSortedRoles = useMemo(() => {
-    let result = [...state.roles];
-    // Filter
-    if (state.filterText) {
-      const searchText = state.filterText.toLowerCase();
-      result = result.filter(role =>
-        role.name.toLowerCase().includes(searchText) ||
-        role.description?.toLowerCase().includes(searchText)
-      );
-    }
-    // Sort
-    result.sort((a, b) => {
-      let compareResult = 0;
-      switch (state.sortBy) {
-        case 'name':
-          compareResult = a.name.localeCompare(b.name);
-          break;
-        case 'description':
-          compareResult = (a.description || '').localeCompare(b.description || '');
-          break;
-        case 'permissions':
-          compareResult = (a.permissions?.length || 0) - (b.permissions?.length || 0);
-          break;
-      }
-      return state.sortDirection === 'asc' ? compareResult : -compareResult;
-    });
-    return result;
-  }, [state.roles, state.filterText, state.sortBy, state.sortDirection]);
-  if (state.loading) {
+
+  const { roles, loading, error, deleteDialogOpen, sortBy, sortDirection, filterText } = state;
+
+  const filteredRoles = roles.filter(role =>
+    role.name.toLowerCase().includes(filterText.toLowerCase())
+  );
+
+  const sortedRoles = [...filteredRoles].sort((a, b) => {
+    const direction = sortDirection === 'asc' ? 1 : -1;
+    return a.name.localeCompare(b.name) * direction;
+  });
+
+  if (loading && roles.length === 0) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+      <Box display="flex" justifyContent="center" p={3}>
         <CircularProgress />
       </Box>
     );
   }
+
   return (
     <Box>
-      <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography variant="h6">Roles</Typography>
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <TextField
-          label="Search"
-          value={state.filterText}
-          onChange={handleFilter}
+          placeholder="Search roles..."
+          value={filterText}
+          onChange={handleFilterChange}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SvgIcon component={SearchIcon} />
+                <SearchIcon />
               </InputAdornment>
             )
           }}
+          size="small"
         />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate(`/admin/client-management/edit/${clientId}/roles/new`)}
+        >
+          Add Role
+        </Button>
       </Box>
-      {state.error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {state.error}
-        </Alert>
-      )}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell onClick={() => handleSort('name')}>Name</TableCell>
-              <TableCell onClick={() => handleSort('description')}>Description</TableCell>
-              <TableCell>System Role</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell
+                onClick={() => handleSort('name')}
+                style={{ cursor: 'pointer' }}
+              >
+                Name {sortBy === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+              </TableCell>
+              <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredAndSortedRoles.map(role => (
+            {sortedRoles.map((role) => (
               <TableRow key={role.id}>
                 <TableCell>{role.name}</TableCell>
-                <TableCell>{role.description}</TableCell>
-                <TableCell>
-                  {role.isSystem ? (
-                    <Chip label="Yes" color="primary" size="small" />
-                  ) : (
-                    <Chip label="No" variant="outlined" size="small" />
-                  )}
-                </TableCell>
-                <TableCell>
+                <TableCell align="right">
                   <IconButton
-                    onClick={() => navigate(`/clients/${encodeId(clientId)}/roles/${encodeId(role.id)}`)}
+                    onClick={() => navigate(`/admin/client-management/edit/${clientId}/roles/${role.id}`)}
                     size="small"
-                    color="primary"
                   >
                     <EditIcon />
                   </IconButton>
-                  {!role.isSystem && (
-                    <IconButton
-                      onClick={() => setState(prev => ({ ...prev, deleteDialogOpen: true, roleToDelete: role }))}
-                      size="small"
-                      color="error"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  )}
+                  <IconButton
+                    onClick={() => handleDeleteClick(role)}
+                    size="small"
+                    color="error"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <Dialog
-        open={state.deleteDialogOpen}
-        onClose={() => setState(prev => ({ ...prev, deleteDialogOpen: false, roleToDelete: null }))}
-      >
-        <DialogTitle>Confirm Delete</DialogTitle>
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Role</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete the role "{state.roleToDelete?.name}"?
-            This action cannot be undone.
+            Are you sure you want to delete the role "{state.roleToDelete?.name}"? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setState(prev => ({ ...prev, deleteDialogOpen: false, roleToDelete: null }))}>Cancel</Button>
-          <Button onClick={handleDeleteRole} color="error" autoFocus>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color="error">
             Delete
           </Button>
         </DialogActions>
@@ -233,4 +243,5 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
     </Box>
   );
 };
+
 export default RolesList;

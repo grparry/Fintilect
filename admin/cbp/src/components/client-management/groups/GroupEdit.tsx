@@ -15,8 +15,9 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-import { UserGroup, SecurityRole, Permission, PermissionCategoryType } from '../../../types/client.types';
-import { clientService } from '../../../services/factory/ServiceFactory';
+import { Group, Role, GroupRole, Permission } from '../../../types/client.types';
+import { clientService, permissionService } from '../../../services/factory/ServiceFactory';
+import logger from '../../../utils/logger';
 
 interface GroupEditProps {
   clientId: string;
@@ -24,210 +25,204 @@ interface GroupEditProps {
   onSave: () => void;
   onCancel: () => void;
 }
-interface ServicePermission {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  scope: 'READ' | 'WRITE' | 'ADMIN';
-}
-const decodeId = (id: string): string => {
-  try {
-    return atob(id);
-  } catch {
-    return id;
-  }
-};
+
 const GroupEdit: React.FC<GroupEditProps> = ({
   clientId,
   groupId,
   onSave,
   onCancel,
 }) => {
-  const [group, setGroup] = useState<UserGroup | null>(null);
-  const [allPermissions, setAllPermissions] = useState<Permission[]>([]);
-  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+  const [group, setGroup] = useState<Group | null>(null);
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
+  const [rolePermissions, setRolePermissions] = useState<Map<number, Permission[]>>(new Map());
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+
+  // Load group and roles data
   useEffect(() => {
-    const loadPermissions = async () => {
+    const loadData = async () => {
       try {
         setLoading(true);
-        const permissions = await clientService.getPermissions();
-        setAllPermissions(permissions);
-        setLoading(false);
-      } catch (err: any) {
-        setError('Failed to load permissions');
+        setError(null);
+
+        // Load roles
+        const rolesResponse = await permissionService.getRoles();
+        setRoles(rolesResponse.roles);
+
+        // Load group if editing
+        if (groupId) {
+          const groupData = await permissionService.getGroup(Number(groupId));
+          setGroup(groupData);
+
+          // Load group roles
+          const groupRolesResponse = await permissionService.getGroupRoles(Number(groupId));
+          setSelectedRoles(groupRolesResponse.groupRoles.map((r: GroupRole) => r.roleId));
+        }
+
+        logger.info('Group edit data loaded successfully');
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to load group data';
+        logger.error('Error loading group data: ' + message);
+        setError(message);
+      } finally {
         setLoading(false);
       }
     };
-    const loadGroup = async () => {
-      if (!groupId) {
-        setLoading(false);
-        return;
-      }
-      try {
-        setLoading(true);
-        const decodedClientId = decodeId(clientId);
-        const decodedGroupId = decodeId(groupId);
-        const group = await clientService.getGroup(decodedClientId, decodedGroupId);
-        setGroup(group);
-        setSelectedPermissions(group.permissions.map(p => p.id));
-        setLoading(false);
-      } catch (err: any) {
-        setError('Failed to load group');
-        setLoading(false);
-      }
-    };
-    Promise.all([loadPermissions(), loadGroup()]).catch(err => {
-      setError(err.message || 'Failed to load data');
-      setLoading(false);
-    });
-  }, [clientId, groupId]);
-  const handlePermissionToggle = (permissionId: string) => {
-    setSelectedPermissions((prev) =>
-      prev.includes(permissionId)
-        ? prev.filter((id) => id !== permissionId)
-        : [...prev, permissionId]
-    );
-  };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+
+    loadData();
+  }, [groupId]);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (!group) return;
+
     try {
       setSaving(true);
-      const decodedClientId = decodeId(clientId);
-      const permissions = allPermissions.filter(p => selectedPermissions.includes(p.id));
-      const groupData = {
-        ...group,
-        permissions
-      };
+      setError(null);
+
       if (groupId) {
-        const decodedGroupId = decodeId(groupId);
-        await clientService.updateGroup(decodedClientId, decodedGroupId, groupData);
+        // Update existing group
+        await permissionService.updateGroup(Number(groupId), {
+          name: group.name,
+          clientId: Number(clientId)
+        });
+        await permissionService.addGroupRoles(Number(groupId), selectedRoles);
       } else {
-        await clientService.createGroup(decodedClientId, groupData);
+        // Create new group
+        const newGroup = await permissionService.createGroup({
+          name: group.name,
+          clientId: Number(clientId)
+        });
+        await permissionService.addGroupRoles(newGroup.id, selectedRoles);
       }
+
+      logger.info(`Group ${groupId ? 'updated' : 'created'} successfully`);
       onSave();
-    } catch (err: any) {
-      setError(err.message || 'Failed to save group');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to save group';
+      logger.error('Error saving group: ' + message);
+      setError(message);
     } finally {
       setSaving(false);
     }
   };
+
   const handleDelete = async () => {
-    if (!groupId || !group) return;
+    if (!groupId) return;
+
     try {
       setSaving(true);
-      const decodedClientId = decodeId(clientId);
-      const decodedGroupId = decodeId(groupId);
-      await clientService.deleteGroup(decodedClientId, decodedGroupId);
+      setError(null);
+      await permissionService.deleteGroup(Number(groupId));
+      logger.info('Group deleted successfully');
       onSave();
-    } catch (err: any) {
-      setError(err.message || 'Failed to delete group');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to delete group';
+      logger.error('Error deleting group: ' + message);
+      setError(message);
     } finally {
       setSaving(false);
     }
   };
+
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+      <Box display="flex" justifyContent="center" p={3}>
         <CircularProgress />
       </Box>
     );
   }
+
   return (
-    <Paper sx={{ p: 3 }}>
-      <form onSubmit={handleSubmit}>
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Typography variant="h6">
-              {groupId ? 'Edit Group' : 'Create New Group'}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Group Name"
-              value={group?.name || ''}
-              onChange={(e) =>
-                setGroup((prev) =>
-                  prev ? { ...prev, name: e.target.value } : null
-                )
-              }
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Description"
-              value={group?.description || ''}
-              onChange={(e) =>
-                setGroup((prev) =>
-                  prev ? { ...prev, description: e.target.value } : null
-                )
-              }
-              multiline
-              rows={3}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" sx={{ mb: 2 }}>
-              Permissions
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {allPermissions.map((permission) => (
-                <Chip
-                  key={permission.id}
-                  label={permission.name}
-                  onClick={() => handlePermissionToggle(permission.id)}
-                  color={
-                    selectedPermissions.includes(permission.id)
-                      ? 'primary'
-                      : 'default'
-                  }
-                  variant={
-                    selectedPermissions.includes(permission.id)
-                      ? 'filled'
-                      : 'outlined'
-                  }
-                />
-              ))}
+    <Paper>
+      <Box p={3}>
+        <form onSubmit={handleSubmit}>
+          {error && (
+            <Box mb={2}>
+              <Alert severity="error">{error}</Alert>
             </Box>
-          </Grid>
-          <Grid item xs={12}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-              <Button onClick={onCancel}>Cancel</Button>
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={saving || !group?.name}
-              >
-                {saving ? <CircularProgress size={24} /> : 'Save'}
-              </Button>
-              {groupId && (
+          )}
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <TextField
+                label="Name"
+                fullWidth
+                required
+                value={group?.name || ''}
+                onChange={(e) => setGroup(prev => ({ ...prev, name: e.target.value } as Group))}
+                disabled={saving}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Roles</InputLabel>
+                <Select
+                  multiple
+                  value={selectedRoles}
+                  onChange={(e) => setSelectedRoles(e.target.value as number[])}
+                  disabled={saving}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      {selected.map((roleId) => {
+                        const role = roles.find(r => r.id === roleId);
+                        return role ? (
+                          <Chip key={roleId} label={role.name} />
+                        ) : null;
+                      })}
+                    </Box>
+                  )}
+                >
+                  {roles.map((role) => (
+                    <MenuItem key={role.id} value={role.id}>
+                      <Box>
+                        <Typography variant="subtitle1">{role.name}</Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1 }}>
+                          {rolePermissions.get(role.id)?.map((permission) => (
+                            <Chip
+                              key={permission.id}
+                              label={permission.name}
+                              size="small"
+                              sx={{ backgroundColor: 'action.selected' }}
+                            />
+                          ))}
+                        </Box>
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Box display="flex" gap={2} justifyContent="flex-end">
+                <Button onClick={onCancel} disabled={saving}>
+                  Cancel
+                </Button>
+                {groupId && (
+                  <Button
+                    onClick={handleDelete}
+                    color="error"
+                    disabled={saving}
+                  >
+                    Delete
+                  </Button>
+                )}
                 <Button
+                  type="submit"
                   variant="contained"
-                  color="error"
-                  onClick={handleDelete}
+                  color="primary"
                   disabled={saving}
                 >
-                  Delete
+                  {saving ? 'Saving...' : 'Save'}
                 </Button>
-              )}
-            </Box>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
+        </form>
+      </Box>
     </Paper>
   );
 };
+
 export default GroupEdit;

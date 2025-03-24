@@ -2,17 +2,12 @@ import { IBaseService } from './IBaseService';
 import { 
     User,
     UserGroup,
-    UserPreferences,
-    UserFilters,
-    UserStats,
-    UserStatus
+    UserListResponse
 } from '../../types/client.types';
-import { PaginatedResponse } from '../../types/common.types';
-import { QueryOptions } from '../../types/index';
 
 /**
  * Interface for user management operations
- * Handles user CRUD, group management, and user preferences
+ * Handles user CRUD and group management
  */
 export interface IUserService extends IBaseService {
     /**
@@ -20,80 +15,84 @@ export interface IUserService extends IBaseService {
      * @param userId User identifier
      * @returns User information
      */
-    getUser(userId: string): Promise<User>;
+    getUser(userId: number): Promise<User>;
+
     /**
-     * Get list of users with pagination
-     * @param queryParams Pagination and filter parameters
+     * Get list of users with pagination and filtering
+     * @param params Query parameters for filtering and pagination
      * @returns Paginated list of users
      */
-    getUsers(queryParams: QueryOptions): Promise<PaginatedResponse<User>>;
+    getUsers(params?: {
+        clientId?: number;
+        isActive?: boolean;
+        isLocked?: boolean;
+        searchTerm?: string;
+        page?: number;
+        limit?: number;
+    }): Promise<UserListResponse>;
+
     /**
      * Create new user
      * @param user User data to create
      * @returns Created user information
      */
-    createUser(user: Omit<User, 'id'>): Promise<User>;
+    createUser(user: Omit<User, 'id' | 'creationDate' | 'lastLogin'>): Promise<User>;
+
     /**
      * Update existing user
      * @param userId User identifier
      * @param user Updated user data
      * @returns Updated user information
      */
-    updateUser(userId: string, user: Partial<User>): Promise<User>;
+    updateUser(userId: number, user: Partial<User>): Promise<User>;
+
     /**
      * Delete user
      * @param userId User identifier
      */
-    deleteUser(userId: string): Promise<void>;
+    deleteUser(userId: number): Promise<void>;
+
     /**
      * Get user's group memberships
      * @param userId User identifier
      * @returns List of user's groups
      */
-    getUserGroups(userId: string): Promise<UserGroup[]>;
+    getUserGroups(userId: number): Promise<UserGroup[]>;
+
     /**
-     * Add user to group
+     * Lock a user account
      * @param userId User identifier
-     * @param groupId Group identifier
-     */
-    addUserToGroup(userId: string, groupId: string): Promise<void>;
-    /**
-     * Remove user from group
-     * @param userId User identifier
-     * @param groupId Group identifier
-     */
-    removeUserFromGroup(userId: string, groupId: string): Promise<void>;
-    /**
-     * Get user preferences
-     * @param userId User identifier
-     * @returns User preferences
-     */
-    getUserPreferences(userId: string): Promise<UserPreferences>;
-    /**
-     * Update user preferences
-     * @param userId User identifier
-     * @param preferences Updated preferences
-     * @returns Updated preferences
-     */
-    updateUserPreferences(userId: string, preferences: Partial<UserPreferences>): Promise<UserPreferences>;
-    /**
-     * Update user status
-     * @param userId User identifier
-     * @param status New status
      * @returns Updated user information
      */
-    updateUserStatus(userId: string, status: UserStatus): Promise<User>;
+    lockUser(userId: number): Promise<User>;
+
     /**
-     * Check if user exists
+     * Unlock a user account
      * @param userId User identifier
-     * @returns True if user exists
+     * @returns Updated user information
      */
-    userExists(userId: string): Promise<boolean>;
+    unlockUser(userId: number): Promise<User>;
+
     /**
-     * Get users by group
-     * @param groupId Group identifier
-     * @param queryParams Pagination and filter parameters
-     * @returns Paginated list of users in group
+     * Change user password
+     * @param params Password change parameters
+     * @returns Success status
      */
-    getUsersByGroup(groupId: string, queryParams: QueryOptions): Promise<PaginatedResponse<User>>;
+    changePassword(params: {
+        userId: number;
+        currentPassword: string;
+        newPassword: string;
+    }): Promise<void>;
+
+    /**
+     * Reset user password (admin function)
+     * @param userId User identifier
+     * @param newPassword New password to set
+     * @returns Success status
+     * @remarks According to the OpenAPI spec, only newPassword is sent as a query parameter
+     */
+    resetPassword(params: {
+        userId: number;
+        newPassword: string;
+    }): Promise<void>;
 }

@@ -5,8 +5,8 @@ import ClientManagement from '../ClientManagement';
 import ContactInformation from '../ContactInformation';
 import UsersWrapper from './UsersWrapper';
 import GroupsWrapper from './GroupsWrapper';
-import MemberSecuritySettingsWrapper from './MemberSecuritySettingsWrapper';
-import AuditSearchWrapper from './AuditSearchWrapper';
+import SecuritySettings from '../security/SecuritySettings';
+import Configuration from '../Configuration';
 import { decodeId } from '../../../utils/idEncoder';
 import logger from '../../../utils/logger';
 
@@ -36,14 +36,15 @@ const ClientManagementWrapper: React.FC = () => {
     console.log('Path analysis:', { basePath, currentPath });
     // Only redirect if we're exactly at the client root
     if (currentPath === basePath) {
-      console.log('At root path, redirecting to contact');
-      return <Navigate to={`${basePath}/contact`} replace />;
+      console.log('At root path, redirecting to info');
+      return <Navigate to={`${basePath}/info`} replace />;
     }
     return (
       <Suspense fallback={<CircularProgress />}>
         <ClientManagement clientId={decodedClientId}>
           <Routes>
-            <Route path="contact" element={<ContactInformation clientId={decodedClientId} />} />
+            <Route path="info" element={<ContactInformation clientId={decodedClientId} mode="info" />} />
+            <Route path="contacts" element={<ContactInformation clientId={decodedClientId} mode="contacts" />} />
             <Route path="users">
               <Route index element={<UsersWrapper />} />
               <Route path=":userId" element={<UsersWrapper />} />
@@ -52,9 +53,9 @@ const ClientManagementWrapper: React.FC = () => {
               <Route index element={<GroupsWrapper />} />
               <Route path=":groupId" element={<GroupsWrapper />} />
             </Route>
-            <Route path="security" element={<MemberSecuritySettingsWrapper />} />
-            <Route path="audit-log" element={<AuditSearchWrapper />} />
-            <Route path="*" element={<Navigate to="contact" replace />} />
+            <Route path="security" element={<SecuritySettings />} />
+            <Route path="configuration" element={<Configuration clientId={decodedClientId} />} />
+            <Route path="*" element={<Navigate to="info" replace />} />
           </Routes>
         </ClientManagement>
       </Suspense>

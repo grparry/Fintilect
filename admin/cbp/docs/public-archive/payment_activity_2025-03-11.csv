@@ -1,0 +1,3 @@
+paymentID,memberID,payeeName,amount,status,dateProcessed,dueDate,paymentMethod
+30031337,323C00326516,323C0000063550,Company Name,03/22/2024,08/31/2023,Cancelled,Check,1
+30031337,323C00326566,323C0000063624,Company Z,03/22/2024,03/29/2024,Cancelled,Check,1

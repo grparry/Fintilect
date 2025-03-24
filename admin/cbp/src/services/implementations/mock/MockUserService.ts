@@ -1,194 +1,242 @@
 import { IUserService } from '../../interfaces/IUserService';
-import { 
-    User,
-    UserGroup,
-    UserPreferences,
-    UserStatus, 
-    UserRole, 
-    UserFilters, 
-    UserStats,
-    Permission 
-} from '../../../types/client.types';
-import { PaginatedResponse } from '../../../types/common.types';
-import { QueryOptions } from '../../../types/index';
+import { User, UserGroup, UserListResponse } from '../../../types/client.types';
 import { BaseMockService } from './BaseMockService';
-import { mockUsers } from './data/users/mockUserData';
 
-/**
- * Mock implementation of UserService
- */
 export class MockUserService extends BaseMockService implements IUserService {
-  private users: User[] = [...mockUsers];
-  private userGroups: Map<string, UserGroup[]> = new Map();
-  private userPreferences: Map<string, UserPreferences> = new Map();
+  private users: Map<number, User>;
+  private userGroups: Map<number, Set<number>>;
+
   constructor(basePath: string = '/api/v1/users') {
     super(basePath);
+    this.users = new Map();
+    this.userGroups = new Map();
+
+    // Add some mock data
+    this.users.set(1, {
+      id: 1,
+      tenantId: 1,
+      isActive: true,
+      creationDate: '2025-01-01T00:00:00Z',
+      lastLogin: '2025-02-21T00:00:00Z',
+      clientId: 1,
+      firstName: 'John',
+      lastName: 'Doe',
+      department: 'Engineering',
+      isLocked: false,
+      username: 'john.doe',
+      email: 'john.doe@example.com',
+      mobilePhone: '123-456-7890',
+      externalId: 'external-id-1',
+      invalidAttempts: 0,
+      forcePasswordChange: false,
+      outSystemsPassword: null,
+      clientName: 'Example Client'
+    });
+
+    this.users.set(2, {
+      id: 2,
+      tenantId: 1,
+      isActive: true,
+      creationDate: '2025-01-02T00:00:00Z',
+      clientId: 1,
+      firstName: 'Jane',
+      lastName: 'Smith',
+      department: 'Finance',
+      isLocked: false,
+      username: 'jane.smith',
+      email: 'jane.smith@example.com',
+      mobilePhone: '987-654-3210',
+      externalId: 'external-id-2',
+      invalidAttempts: 0,
+      forcePasswordChange: false,
+      outSystemsPassword: null,
+      clientName: 'Example Client'
+    });
+
+    // Add mock group assignments
+    this.userGroups.set(1, new Set([1, 2])); // User 1 is in groups 1 and 2
+    this.userGroups.set(2, new Set([1]));    // User 2 is in group 1
   }
-  async getUser(userId: string): Promise<User> {
-    const user = this.users.find(u => u.id === userId);
+
+  async getUser(userId: number): Promise<User> {
+    const user = this.users.get(userId);
     if (!user) {
       throw this.createError(`User not found: ${userId}`, 404);
     }
     return user;
   }
-  async getUsers(queryParams: QueryOptions): Promise<PaginatedResponse<User>> {
-    const page = queryParams.pagination?.page || 1;
-    const limit = queryParams.pagination?.limit || 10;
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const filteredUsers = this.users;
-    const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+
+  async getUsers(params?: {
+    clientId?: number;
+    isActive?: boolean;
+    isLocked?: boolean;
+    searchTerm?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<UserListResponse> {
+    let filteredUsers = Array.from(this.users.values()).filter(user => {
+      if (params?.clientId && user.clientId !== params.clientId) return false;
+      if (params?.isActive !== undefined && user.isActive !== params.isActive) return false;
+      if (params?.isLocked !== undefined && user.isLocked !== params.isLocked) return false;
+      if (params?.searchTerm) {
+        const searchLower = params.searchTerm.toLowerCase();
+        const fullName = `${user.firstName || ''} ${user.lastName || ''}`.toLowerCase();
+        if (!fullName.includes(searchLower)) return false;
+      }
+      return true;
+    });
 
     return {
-      items: paginatedUsers,
-      total: filteredUsers.length,
-      page,
-      limit,
-      totalPages: Math.ceil(filteredUsers.length / limit)
+      users: filteredUsers
     };
   }
-  async createUser(user: Omit<User, 'id'>): Promise<User> {
+
+  async createUser(user: Omit<User, 'id' | 'creationDate' | 'lastLogin'>): Promise<User> {
+    const newId = Math.max(...Array.from(this.users.keys())) + 1;
+    const now = new Date().toISOString();
+
     const newUser: User = {
-      id: String(this.users.length + 1),
-      ...user,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      id: newId,
+      username: user.username,
+      tenantId: user.tenantId,
+      isActive: true,
+      creationDate: now,
+      lastLogin: undefined,
+      clientId: user.clientId,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      department: user.department,
+      isLocked: false,
+      email: user.email,
+      mobilePhone: user.mobilePhone,
+      externalId: user.externalId,
+      password: user.password,
+      invalidAttempts: user.invalidAttempts || 0,
+      forcePasswordChange: user.forcePasswordChange || false,
+      outSystemsPassword: user.outSystemsPassword || null,
+      clientName: user.clientName || null
     };
-    this.users.push(newUser);
+
+    this.users.set(newId, newUser);
     return newUser;
   }
-  async updateUser(userId: string, updates: Partial<User>): Promise<User> {
-    const index = this.users.findIndex(u => u.id === userId);
-    if (index === -1) {
-      throw this.createError(`User not found: ${userId}`, 404);
-    }
-    const updatedUser = {
-      ...this.users[index],
-      ...updates,
-      updatedAt: new Date().toISOString()
+
+  async updateUser(userId: number, user: Partial<User>): Promise<User> {
+    const existingUser = await this.getUser(userId);
+
+    const updatedUser: User = {
+      ...existingUser,
+      ...user,
+      id: existingUser.id,
+      username: user.username || existingUser.username,
+      tenantId: user.tenantId || existingUser.tenantId,
+      clientId: user.clientId || existingUser.clientId,
+      firstName: user.firstName || existingUser.firstName,
+      lastName: user.lastName || existingUser.lastName,
+      department: user.department || existingUser.department,
+      isLocked: user.isLocked ?? existingUser.isLocked,
+      isActive: user.isActive ?? existingUser.isActive,
+      email: user.email || existingUser.email,
+      mobilePhone: user.mobilePhone || existingUser.mobilePhone,
+      externalId: user.externalId || existingUser.externalId,
+      password: user.password || existingUser.password,
+      invalidAttempts: user.invalidAttempts ?? existingUser.invalidAttempts,
+      forcePasswordChange: user.forcePasswordChange ?? existingUser.forcePasswordChange,
+      outSystemsPassword: user.outSystemsPassword || existingUser.outSystemsPassword,
+      clientName: user.clientName || existingUser.clientName
     };
-    this.users[index] = updatedUser;
+
+    this.users.set(userId, updatedUser);
     return updatedUser;
   }
-  async deleteUser(userId: string): Promise<void> {
-    const index = this.users.findIndex(u => u.id === userId);
-    if (index === -1) {
-      throw this.createError(`User not found: ${userId}`, 404);
-    }
-    this.users.splice(index, 1);
-  }
-  async getUsersByGroup(groupId: string, queryParams: QueryOptions): Promise<PaginatedResponse<User>> {
-    const page = queryParams.pagination?.page || 1;
-    const limit = queryParams.pagination?.limit || 10;
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const usersInGroup = this.users.filter(user => {
-      const groups = this.userGroups.get(user.id) || [];
-      return groups.some(g => g.id === groupId);
-    });
-    const paginatedUsers = usersInGroup.slice(startIndex, endIndex);
 
-    return {
-      items: paginatedUsers,
-      total: usersInGroup.length,
-      page,
-      limit,
-      totalPages: Math.ceil(usersInGroup.length / limit)
-    };
-  }
-  async getUserGroups(userId: string): Promise<UserGroup[]> {
-    return this.userGroups.get(userId) || [];
-  }
-  async getUserPreferences(userId: string): Promise<UserPreferences> {
-    const defaultPreferences: UserPreferences = {
-      theme: 'light',
-      notifications: {
-        email: true,
-        push: true,
-        sms: false
-      },
-      language: 'en',
-      timezone: 'UTC',
-      dateFormat: 'MM/DD/YYYY',
-      displayDensity: 'comfortable'
-    };
-    return this.userPreferences.get(userId) || defaultPreferences;
-  }
-  async updateUserPreferences(userId: string, preferences: Partial<UserPreferences>): Promise<UserPreferences> {
-    const currentPrefs = await this.getUserPreferences(userId);
-    const updatedPrefs = { ...currentPrefs, ...preferences };
-    this.userPreferences.set(userId, updatedPrefs);
-    return updatedPrefs;
-  }
-  async updateUserRole(userId: string, role: UserRole): Promise<User> {
-    return this.updateUser(userId, { roles: [role] });
-  }
-  async updateUserStatus(userId: string, status: UserStatus): Promise<User> {
-    return this.updateUser(userId, { status });
-  }
-  async userExists(userId: string): Promise<boolean> {
-    return this.users.some(u => u.id === userId);
-  }
-  async searchUsers(filters: UserFilters): Promise<{ users: User[], total: number }> {
-    let filteredUsers = [...this.users];
-    if (filters.status) {
-      filteredUsers = filteredUsers.filter(u => u.status === filters.status);
-    }
-    if (filters.role) {
-      filteredUsers = filteredUsers.filter(user => 
-        user.roles.includes(filters.role as string)
-      );
-    }
-    if (filters.search) {
-      const search = filters.search.toLowerCase();
-      filteredUsers = filteredUsers.filter(u =>
-        u.username.toLowerCase().includes(search) ||
-        u.email.toLowerCase().includes(search) ||
-        u.firstName?.toLowerCase().includes(search) ||
-        u.lastName?.toLowerCase().includes(search)
-      );
-    }
-    return {
-      users: filteredUsers,
-      total: filteredUsers.length
-    };
-  }
-  async getUserStats(userId: string): Promise<UserStats> {
-    if (!this.users.some(u => u.id === userId)) {
+  async deleteUser(userId: number): Promise<void> {
+    if (!this.users.has(userId)) {
       throw this.createError(`User not found: ${userId}`, 404);
     }
-    return {
-      totalLogins: Math.floor(Math.random() * 100),
-      lastActiveDate: new Date().toISOString(),
-      failedLoginAttempts: Math.floor(Math.random() * 5),
-      accountCreatedAt: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
-      lastPasswordChange: new Date(Date.now() - Math.random() * 1000000000).toISOString(),
-      groupCount: this.userGroups.get(userId)?.length || 0,
-      activeSessionCount: Math.floor(Math.random() * 3)
+    this.users.delete(userId);
+    this.userGroups.delete(userId);
+  }
+
+  async getUserGroups(userId: number): Promise<UserGroup[]> {
+    const user = await this.getUser(userId);
+    const groupIds = this.userGroups.get(userId) || new Set();
+    return Array.from(groupIds).map(groupId => ({
+      userId: user.id,
+      groupId
+    }));
+  }
+
+  async lockUser(userId: number): Promise<User> {
+    const user = await this.getUser(userId);
+    
+    // Set the user as locked
+    const updatedUser: User = {
+      ...user,
+      isLocked: true
     };
+    
+    this.users.set(userId, updatedUser);
+    return updatedUser;
   }
-  async addUserToGroup(userId: string, groupId: string): Promise<void> {
-    const userGroups = this.userGroups.get(userId) || [];
-    if (!userGroups.find(g => g.id === groupId)) {
-      const newGroup: UserGroup = {
-        id: groupId,
-        name: `Group ${groupId}`,
-        description: 'Auto-generated group',
-        clientId: userId.split('-')[0], 
-        roles: [], 
-        permissions: [], 
-        members: [],
-        users: [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      userGroups.push(newGroup);
-      this.userGroups.set(userId, userGroups);
+
+  async unlockUser(userId: number): Promise<User> {
+    const user = await this.getUser(userId);
+    
+    // Set the user as unlocked
+    const updatedUser: User = {
+      ...user,
+      isLocked: false
+    };
+    
+    this.users.set(userId, updatedUser);
+    return updatedUser;
+  }
+
+  async changePassword(params: {
+    userId: number;
+    currentPassword: string;
+    newPassword: string;
+  }): Promise<void> {
+    const user = await this.getUser(params.userId);
+    
+    // Verify current password
+    if (user.password !== params.currentPassword) {
+      throw this.createError('Current password is incorrect', 401);
     }
+    
+    // Update password and reset forcePasswordChange flag
+    const updatedUser: User = {
+      ...user,
+      password: params.newPassword,
+      forcePasswordChange: false
+    };
+    
+    this.users.set(params.userId, updatedUser);
   }
-  async removeUserFromGroup(userId: string, groupId: string): Promise<void> {
-    const userGroups = this.userGroups.get(userId) || [];
-    const updatedGroups = userGroups.filter(g => g.id !== groupId);
-    this.userGroups.set(userId, updatedGroups);
+
+  /**
+   * Reset user password (admin function)
+   * @param params Parameters for password reset
+   * @remarks The real implementation sends only newPassword as a query parameter, not in the body.
+   * According to the OpenAPI spec, forcePasswordChange is set automatically by the API.
+   */
+  async resetPassword(params: {
+    userId: number;
+    newPassword: string;
+  }): Promise<void> {
+    const user = await this.getUser(params.userId);
+    
+    // Update password and set forcePasswordChange flag
+    // In the real implementation, only newPassword is passed in the request body
+    // forcePasswordChange is automatically set by the API
+    const updatedUser: User = {
+      ...user,
+      password: params.newPassword,
+      // Always set forcePasswordChange to true to match the API's automatic behavior
+      forcePasswordChange: true
+    };
+    
+    this.users.set(params.userId, updatedUser);
   }
 }

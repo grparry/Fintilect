@@ -32,30 +32,29 @@ import SendIcon from '@mui/icons-material/Send';
 import SaveIcon from '@mui/icons-material/Save';
 import dayjs, { Dayjs } from 'dayjs';
 import {
-  Client as BillPayClient,
   Payee,
   ManualPayment,
   ManualPaymentFormData,
   ManualPaymentValidation,
-  PaymentMethod as BillPayPaymentMethod,
-  PendingPayment,
-  Payment,
+  PaymentMethodType,
   Priority
 } from '../../../types/bill-pay.types';
 import {
   PaymentTransaction,
+  PaymentValidation,
+  PaymentSchedule,
+  Payment,
+  PendingPayment,
+  PaymentMethod,
   PaymentType,
   PaymentStatus,
-  PaymentPriority,
-  PaymentValidation,
-  ProcessorConfig,
-  PaymentMethod,
-  PaymentSchedule
+  PaymentPriority
 } from '../../../types/payment.types';
 import { Client, ClientStatus } from '../../../types/client.types';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { useAuth } from '../../../hooks/useAuth';
 import { AuthContextType } from '../../../types/auth.types';
+import PaymentDetails from './PaymentDetails';
 
 interface PaymentForm {
   clientId: string;
@@ -92,7 +91,6 @@ const initialPaymentForm: PaymentForm = {
 };
 const paymentTypes = [
   { value: PaymentMethod.ACH, label: 'ACH' },
-  { value: PaymentMethod.WIRE, label: 'Wire' },
   { value: PaymentMethod.CHECK, label: 'Check' },
   { value: PaymentMethod.CARD, label: 'Card' }
 ];
@@ -101,9 +99,9 @@ const ManualProcessing: React.FC = () => {
   const paymentProcessorService = ServiceFactory.getInstance().getPaymentProcessorService();
   const clientService = ServiceFactory.getInstance().getClientService();
   // State
-  const [clients, setClients] = useState<BillPayClient[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
   const [payees, setPayees] = useState<Payee[]>([]);
-  const [selectedClient, setSelectedClient] = useState<BillPayClient | null>(null);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [selectedPayee, setSelectedPayee] = useState<Payee | null>(null);
   const [form, setForm] = useState<PaymentForm>(initialPaymentForm);
   const [loading, setLoading] = useState(false);
@@ -112,27 +110,54 @@ const ManualProcessing: React.FC = () => {
     errors: {},
     warnings: {},
   });
-  const [paymentLimits, setPaymentLimits] = useState<Record<PaymentMethod, number>>({
+  // Define type for payment limits to include only valid methods
+  type ValidPaymentMethods = {
+    [PaymentMethod.ACH]: number;
+    [PaymentMethod.CHECK]: number;
+    [PaymentMethod.CARD]: number;
+  };
+
+  const [paymentLimits, setPaymentLimits] = useState<ValidPaymentMethods>({
     [PaymentMethod.ACH]: 0,
-    [PaymentMethod.WIRE]: 0,
+    [PaymentMethod.CHECK]: 0,
+    [PaymentMethod.CARD]: 0
+  });
+  const [methodCounts, setMethodCounts] = useState<ValidPaymentMethods>({
+    [PaymentMethod.ACH]: 0,
     [PaymentMethod.CHECK]: 0,
     [PaymentMethod.CARD]: 0
   });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [paymentDetailsOpen, setPaymentDetailsOpen] = useState(false);
+
+  const handleViewPaymentDetails = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setPaymentDetailsOpen(true);
+  };
+
+  const handleClosePaymentDetails = () => {
+    setPaymentDetailsOpen(false);
+    setSelectedPayment(null);
+  };
   // Fetch initial data
   const fetchInitialData = useCallback(async () => {
     try {
       setError(null);
       const clientsResponse = await clientService.getClients();
-      const filteredClients = clientsResponse.items
-        .filter((client) => client.status === ClientStatus.Active)
-        .map(client => ({
+      const filteredClients = clientsResponse.clients
+        .filter((client: Client) => client.status === 'ACTIVE')
+        .map((client: Client) => ({
           id: client.id,
           name: client.name,
-          status: client.status === ClientStatus.Active ? 'active' : 'inactive',
-          createdAt: client.createdAt || '',
-          updatedAt: client.updatedAt || ''
-        } as BillPayClient));
+          status: client.status === 'ACTIVE' ? 'ACTIVE' : 'INACTIVE',
+          tenantId: client.tenantId,
+          isActive: client.status === 'ACTIVE',
+          createdOn: client.createdOn,
+          updatedOn: client.updatedOn,
+          type: client.type,
+          environment: client.environment
+        } as Client));
       setClients(filteredClients);
     } catch (err) {
       setError('Failed to load clients');
@@ -144,12 +169,12 @@ const ManualProcessing: React.FC = () => {
     if (!selectedClient) return;
     try {
       setError(null);
-      const payeesResponse = await clientService.getClientContacts(selectedClient.id);
+      const payeesResponse = await clientService.getClientContacts(Number(selectedClient.id));
       const filteredPayees = payeesResponse
         .filter(contact => contact.isPrimary)
         .map(contact => ({
           id: contact.id.toString(), // Convert number to string
-          clientId: selectedClient.id,
+          clientId: selectedClient.id.toString(), // Convert clientId to string
           name: contact.name,
           accountNumber: '', // These will need to be populated from somewhere
           routingNumber: '',
@@ -170,12 +195,14 @@ const ManualProcessing: React.FC = () => {
     try {
       setError(null);
       const config = await paymentProcessorService.getProcessorConfig();
-      setPaymentLimits({
-        [PaymentMethod.ACH]: config.validationRules.maxAmount || 0,
-        [PaymentMethod.WIRE]: config.validationRules.maxAmount || 0,
-        [PaymentMethod.CHECK]: config.validationRules.maxAmount || 0,
-        [PaymentMethod.CARD]: config.validationRules.maxAmount || 0
-      });
+      const validationConfig = {
+        maxAmounts: {
+          [PaymentMethod.ACH]: config.validationRules.maxAmount || 0,
+          [PaymentMethod.CHECK]: config.validationRules.maxAmount || 0,
+          [PaymentMethod.CARD]: config.validationRules.maxAmount || 0
+        } as ValidPaymentMethods
+      };
+      setPaymentLimits(validationConfig.maxAmounts);
     } catch (err) {
       setError('Failed to load payment limits');
       console.error('Error loading payment limits:', err);
@@ -193,7 +220,7 @@ const ManualProcessing: React.FC = () => {
   // Form handlers
   const handleClientChange = (
     _: React.SyntheticEvent,
-    client: BillPayClient | null
+    client: Client | null
   ) => {
     setSelectedClient(client);
     setSelectedPayee(null);
@@ -251,12 +278,13 @@ const ManualProcessing: React.FC = () => {
       if (isNaN(numAmount)) {
         errors.amount = 'Invalid amount';
       } else if (paymentLimits) {
-        if (numAmount < paymentLimits[form.paymentType]) {
-          errors.amount = `Amount must be at least ${paymentLimits[form.paymentType]}`;
-        } else if (numAmount > paymentLimits[form.paymentType]) {
-          errors.amount = `Amount cannot exceed ${paymentLimits[form.paymentType]}`;
-        } else if (numAmount > paymentLimits[form.paymentType] * 0.8) {
-          warnings.amount = 'Amount is close to daily limit';
+        const limit = paymentLimits[form.paymentType as keyof ValidPaymentMethods];
+        if (numAmount < limit) {
+          errors.amount = `Amount must be at least ${limit}`;
+        } else if (numAmount > limit) {
+          errors.amount = `Amount cannot exceed ${limit}`;
+        } else if (numAmount > limit * 0.8) {
+          warnings.amount = 'Amount is approaching the limit';
         }
       }
     }
@@ -381,7 +409,8 @@ const ManualProcessing: React.FC = () => {
         }
       };
       const schedule: PaymentSchedule = {
-        scheduledDate: form.effectiveDate.toDate()
+        willProcessDate: form.effectiveDate.toISOString(),
+        frequency: 'once'
       };
       const response = await paymentProcessorService.schedulePayment(transaction, schedule);
       if (response) {
@@ -448,7 +477,7 @@ const ManualProcessing: React.FC = () => {
         validation.errors.amount ||
         validation.warnings.amount ||
         (paymentLimits &&
-          `Limit: ${paymentLimits[form.paymentType]}`)
+          `Limit: ${paymentLimits[form.paymentType as keyof ValidPaymentMethods]}`)
       }
       InputProps={{
         startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -486,31 +515,31 @@ const ManualProcessing: React.FC = () => {
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
           <Grid item xs={6}>
-            <Typography variant="subtitle2">Client</Typography>
-            <Typography>{selectedClient?.name}</Typography>
+            <Typography variant="subtitle2" color="text.primary">Client</Typography>
+            <Typography color="text.primary">{selectedClient?.name}</Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="subtitle2">Payee</Typography>
-            <Typography>{selectedPayee?.name}</Typography>
+            <Typography variant="subtitle2" color="text.primary">Payee</Typography>
+            <Typography color="text.primary">{selectedPayee?.name}</Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="subtitle2">Amount</Typography>
-            <Typography>
+            <Typography variant="subtitle2" color="text.primary">Amount</Typography>
+            <Typography color="text.primary">
               ${parseFloat(form.amount).toFixed(2)}
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="subtitle2">Payment Type</Typography>
-            <Typography>{form.paymentType}</Typography>
+            <Typography variant="subtitle2" color="text.primary">Payment Type</Typography>
+            <Typography color="text.primary">{form.paymentType}</Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="subtitle2">Effective Date</Typography>
-            <Typography>{form.effectiveDate.format('YYYY-MM-DD')}</Typography>
+            <Typography variant="subtitle2" color="text.primary">Effective Date</Typography>
+            <Typography color="text.primary">{form.effectiveDate.format('YYYY-MM-DD')}</Typography>
           </Grid>
           {form.memo && (
             <Grid item xs={12}>
-              <Typography variant="subtitle2">Memo</Typography>
-              <Typography>{form.memo}</Typography>
+              <Typography variant="subtitle2" color="text.primary">Memo</Typography>
+              <Typography color="text.primary">{form.memo}</Typography>
             </Grid>
           )}
         </Grid>
@@ -529,9 +558,17 @@ const ManualProcessing: React.FC = () => {
       </DialogActions>
     </Dialog>
   );
+  // Payment Details Dialog
+  const renderPaymentDetails = () => (
+    <PaymentDetails
+      open={paymentDetailsOpen}
+      onClose={handleClosePaymentDetails}
+      payment={selectedPayment}
+    />
+  );
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h5" sx={{ mb: 3 }}>
+      <Typography variant="h5" sx={{ mb: 3 }} color="text.primary">
         Manual Payment Processing
       </Typography>
       {error && (
@@ -644,6 +681,7 @@ const ManualProcessing: React.FC = () => {
         </Grid>
       </Paper>
       {renderConfirmDialog()}
+      {selectedPayment && renderPaymentDetails()}
     </Box>
   );
 };

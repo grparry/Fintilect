@@ -1,38 +1,58 @@
-
-
 class Logger {
-  private async writeToFile(message: any) {
+  private writeToFile(message: any) {
+    const timestamp = new Date().toISOString();
+    const logEntry = `${timestamp} ${JSON.stringify(message)}\n`;
+    // Just use console logging for now
+    console.log(logEntry);
+  }
+
+  async log(message: any): Promise<void>;
+  async log(message: string, payload: string): Promise<void>;
+  async log(message: any, payload?: string) {
     try {
-      const fileServerUrl = process.env.REACT_APP_FILE_SERVER_URL || 'http://localhost:4001';
-      const response = await fetch(`${fileServerUrl}/api/debug/log`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message })
-      });
-      if (!response.ok) {
-        console.error('Failed to write to log file:', response.statusText);
-      }
+      const logMessage = payload ? { message, payload } : message;
+      console.log(logMessage);
+      await this.writeToFile(logMessage);
     } catch (error) {
-      console.error('Error writing to log file:', error);
+      console.error('Error in log method:', error);
     }
   }
-  log(message: any) {
-    console.log(message);
-    this.writeToFile(message);
+
+  async error(message: any): Promise<void>;
+  async error(message: string, payload: string): Promise<void>;
+  async error(message: any, payload?: string) {
+    try {
+      const logMessage = payload ? { message, payload } : message;
+      console.error(logMessage);
+      await this.writeToFile(logMessage);
+    } catch (error) {
+      console.error('Error in error method:', error);
+    }
   }
-  error(message: any) {
-    console.error(message);
-    this.writeToFile(message);
+
+  async warn(message: any): Promise<void>;
+  async warn(message: string, payload: string): Promise<void>;
+  async warn(message: any, payload?: string) {
+    try {
+      const logMessage = payload ? { message, payload } : message;
+      console.warn(logMessage);
+      await this.writeToFile(logMessage);
+    } catch (error) {
+      console.error('Error in warn method:', error);
+    }
   }
-  warn(message: any) {
-    console.warn(message);
-    this.writeToFile(message);
-  }
-  info(message: any) {
-    console.info(message);
-    this.writeToFile(message);
+
+  async info(message: any): Promise<void>;
+  async info(message: string, payload: string): Promise<void>;
+  async info(message: any, payload?: string) {
+    try {
+      const logMessage = payload ? { message, payload } : message;
+      console.info(logMessage);
+      await this.writeToFile(logMessage);
+    } catch (error) {
+      console.error('Error in info method:', error);
+    }
   }
 }
+
 export default new Logger();

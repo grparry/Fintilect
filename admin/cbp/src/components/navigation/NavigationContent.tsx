@@ -46,8 +46,6 @@ const NavigationContent: React.FC<NavigationContentProps> = ({ items }) => {
   const handleItemClick = (item: NavigationItem) => {
     if (item.children) {
       toggleSection(item.id);
-    } else {
-      navigate(item.path);
     }
   };
 

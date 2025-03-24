@@ -51,12 +51,6 @@ const AdminLanding: React.FC = () => {
       title: routes.billPay.title,
       description: getRouteDescription(routes.billPay),
     },
-    {
-      id: 'development',
-      path: routes.development.basePath,
-      title: routes.development.title,
-      description: getRouteDescription(routes.development),
-    },
   ];
   const handleCardClick = (route: AdminRoute) => {
     // Update navigation state first

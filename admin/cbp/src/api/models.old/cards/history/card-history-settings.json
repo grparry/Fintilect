@@ -65,10 +65,10 @@
             "description": "API Endpoint for use with Fiserv Card History API. Use this API endpoint to get card transactions",
             "x-setting-key": "History.Card.Fiserv.StatementDetailsApiEndpoint"
           },
-          "customerInquiryApiEndpoint": {
+          "clientInquiryApiEndpoint": {
             "type": "string",
-            "description": "API Endpoint for use with Fiserv Card History API. Use this API endpoint to get customer details (credit limit, current balance, etc)",
-            "x-setting-key": "History.Card.Fiserv.CustomerInquiryApiEndpoint"
+            "description": "API Endpoint for use with Fiserv Card History API. Use this API endpoint to get client details (credit limit, current balance, etc)",
+            "x-setting-key": "History.Card.Fiserv.ClientInquiryApiEndpoint"
           },
           "userId": {
             "type": "string",

@@ -15,37 +15,38 @@ import {
   IconButton,
   Tooltip,
   TablePagination,
+  FormControlLabel,
+  Switch,
+  Grid,
 } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { Client, ClientStatus, ClientType, Environment } from '../../types/client.types';
+import { Client } from '../../types/client.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import { encodeId } from '../../utils/idEncoder';
 import logger from '../../utils/logger';
 
 const ClientList: React.FC = () => {
-  const [clients, setClients] = useState<Client[]>([]);
+  const [allClients, setAllClients] = useState<Client[]>([]);
+  const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [totalCount, setTotalCount] = useState(0);
+  const [hideInactive, setHideInactive] = useState(true);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
   const loadClients = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await clientService.getClients({
-        page: page + 1,
-        limit: rowsPerPage
-      });
-      if (!response || !response.items) {
+      const response = await clientService.getClients();
+      if (!response || !response.clients) {
         throw new Error('Failed to load clients');
       }
-      setClients(response.items);
-      setTotalCount(response.pagination.total);
+      setAllClients(response.clients);
       logger.info('Clients loaded successfully');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load clients';
@@ -55,10 +56,21 @@ const ClientList: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, rowsPerPage, enqueueSnackbar]);
+  }, [enqueueSnackbar]);
   useEffect(() => {
     loadClients();
   }, [loadClients]);
+
+  // Filter clients based on hideInactive setting
+  useEffect(() => {
+    if (hideInactive) {
+      setFilteredClients(allClients.filter(client => client.status !== 'INACTIVE'));
+      // Reset to first page when filter changes
+      setPage(0);
+    } else {
+      setFilteredClients(allClients);
+    }
+  }, [allClients, hideInactive]);
   const handleChangePage = useCallback((_event: unknown, newPage: number) => {
     setPage(newPage);
   }, []);
@@ -66,33 +78,33 @@ const ClientList: React.FC = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   }, []);
-  const getTypeChipColor = (type: ClientType) => {
+  const getTypeChipColor = (type: string | null) => {
     switch (type) {
-      case ClientType.Enterprise:
+      case 'ENTERPRISE':
         return 'primary';
-      case ClientType.SMB:
+      case 'SMB':
         return 'secondary';
-      case ClientType.Startup:
+      case 'STARTUP':
         return 'default';
       default:
         return 'default';
     }
   };
-  const getStatusChipColor = (status: ClientStatus) => {
+  const getStatusChipColor = (status: string | null) => {
     switch (status) {
-      case ClientStatus.Active:
+      case 'ACTIVE':
         return 'success';
-      case ClientStatus.Inactive:
+      case 'INACTIVE':
         return 'error';
-      case ClientStatus.Suspended:
+      case 'SUSPENDED':
         return 'warning';
       default:
         return 'default';
     }
   };
-  const handleEditClick = useCallback((clientId: string) => {
+  const handleEditClick = useCallback((clientId: number) => {
     try {
-      const encodedId = encodeId(clientId);
+      const encodedId = encodeId(clientId.toString());
       logger.info(`Navigating to edit client - ID: ${clientId}, Encoded: ${encodedId}`);
       navigate(`/admin/client-management/edit/${encodedId}`);
     } catch (error) {
@@ -100,7 +112,7 @@ const ClientList: React.FC = () => {
       enqueueSnackbar('Error navigating to client details', { variant: 'error' });
     }
   }, [navigate, enqueueSnackbar]);
-  if (loading && clients.length === 0) {
+  if (loading && allClients.length === 0) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
         <CircularProgress />
@@ -114,8 +126,33 @@ const ClientList: React.FC = () => {
       </Box>
     );
   }
+  const handleToggleInactive = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setHideInactive(event.target.checked);
+  };
+
   return (
     <Paper>
+      <Box p={2}>
+        <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+          <Grid item>
+            <Typography variant="h6" component="h2">
+              Client Management
+            </Typography>
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={hideInactive}
+                  onChange={handleToggleInactive}
+                  color="primary"
+                />
+              }
+              label="Hide Inactive Clients"
+            />
+          </Grid>
+        </Grid>
+      </Box>
       <TableContainer>
         <Table>
           <TableHead>
@@ -129,36 +166,35 @@ const ClientList: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {clients.map((client) => (
+            {filteredClients
+              .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+              .map((client) => (
               <TableRow key={client.id}>
-                <TableCell>{client.name}</TableCell>
+                <TableCell>{client.name || 'Unnamed Client'}</TableCell>
                 <TableCell>
                   <Chip
-                    label={client.type}
+                    label={client.type || 'Unknown'}
                     color={getTypeChipColor(client.type)}
                     size="small"
                   />
                 </TableCell>
                 <TableCell>
                   <Chip
-                    label={client.environment}
+                    label={client.environment || 'Unknown'}
                     variant="outlined"
                     size="small"
                   />
                 </TableCell>
                 <TableCell>
                   <Chip
-                    label={client.status}
+                    label={client.status || 'Unknown'}
                     color={getStatusChipColor(client.status)}
                     size="small"
                   />
                 </TableCell>
                 <TableCell>
-                  {client.contactName && (
-                    <Tooltip title={`${client.contactEmail || ''}\n${client.contactPhone || ''}`}>
-                      <span>{client.contactName}</span>
-                    </Tooltip>
-                  )}
+                  {/* Contact information is now managed separately */}
+                  <span>-</span>
                 </TableCell>
                 <TableCell>
                   <IconButton
@@ -176,7 +212,7 @@ const ClientList: React.FC = () => {
       </TableContainer>
       <TablePagination
         component="div"
-        count={totalCount}
+        count={filteredClients.length}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}

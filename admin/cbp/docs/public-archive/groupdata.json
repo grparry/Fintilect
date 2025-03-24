@@ -1,0 +1,2874 @@
+{
+    "message": "Extracting data from response",
+    "responseType": "object",
+    "hasSuccess": false,
+    "keys": [
+        "groups"
+    ],
+    "apiResponse": {
+        "groups": [
+            {
+                "id": 82,
+                "name": "Client Viewer",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:25:58.047",
+                "updatedAt": "2025-02-21T16:25:58.047",
+                "tenantId": null
+            },
+            {
+                "id": 92,
+                "name": "Client Editor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:25:58.047",
+                "updatedAt": "2025-02-21T16:25:58.047",
+                "tenantId": null
+            },
+            {
+                "id": 105,
+                "name": "Superuser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:25:58.047",
+                "updatedAt": "2025-02-21T16:25:58.047",
+                "tenantId": null
+            },
+            {
+                "id": 117,
+                "name": "Bill Pay Viewer",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:25:58.047",
+                "updatedAt": "2025-02-21T16:25:58.047",
+                "tenantId": null
+            },
+            {
+                "id": 520,
+                "name": "Role Group - Administrator - 520",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 521,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 522,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 523,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 524,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 525,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 526,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 527,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 528,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 529,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 530,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 531,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 532,
+                "name": "Role Group - Administrator - 532",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 533,
+                "name": "Role Group - Administrator - 533",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 534,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 535,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 536,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 537,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 538,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 539,
+                "name": "Role Group - Accountant, Client, ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 540,
+                "name": "Role Group - Accountant, Client",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 541,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 542,
+                "name": "Role Group - Manager, Accountant, Client",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 543,
+                "name": "Role Group - Manager, Accountant, Client",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 544,
+                "name": "Role Group - Manager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 545,
+                "name": "Role Group - Administrator - 545",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 546,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 547,
+                "name": "Role Group - ConnectSecurityManager, BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 548,
+                "name": "Role Group - Administrator - 548",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 549,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 550,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 551,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 552,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 553,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 554,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 555,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 556,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 557,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 558,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 559,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 560,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 561,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 562,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 563,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 564,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 565,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 566,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 567,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 568,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 569,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 570,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 571,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 572,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 573,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 574,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 575,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 576,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 577,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 578,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 579,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 580,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 581,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 582,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 583,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 584,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 585,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 586,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 587,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 588,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 589,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 590,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 591,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 592,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 593,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 594,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 595,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 596,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 597,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 598,
+                "name": "Role Group - Employee, DirectoryManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 599,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 600,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 601,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 602,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 603,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 604,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 605,
+                "name": "Role Group - Employee, DirectoryManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 606,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 607,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 608,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 609,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 610,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 611,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 612,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 613,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 614,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 615,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 616,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 617,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 618,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 619,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 620,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 621,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 622,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 623,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 624,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 625,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 626,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 627,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 628,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 629,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 630,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 631,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 632,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 633,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 634,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 635,
+                "name": "Role Group - BillPayEditor, BillPayManagePendingPayments_Update, BillPayManagePendingPayments_Cancel",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 636,
+                "name": "Role Group - BillPayEditor, BillPayManagePendingPayments_Update, BillPayManagePendingPayments_Cancel",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 637,
+                "name": "Role Group - BillPayEditor, BillPayManagePendingPayments_Update, BillPayManagePendingPayments_Cancel",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 638,
+                "name": "Role Group - BillPayEditor, BillPayManagePendingPayments_Update, BillPayManagePendingPayments_Cancel",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 639,
+                "name": "Role Group - BillPayEditor, BillPayManagePendingPayments_Update, BillPayManagePendingPayments_Cancel",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 640,
+                "name": "Role Group - Recruiter",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 641,
+                "name": "Role Group - Manager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 642,
+                "name": "Role Group - HiringManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 643,
+                "name": "Role Group - Recruiter",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 644,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 645,
+                "name": "Role Group - Configurator, Architect",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:48:11.41",
+                "updatedAt": "2025-02-21T16:48:11.41",
+                "tenantId": null
+            },
+            {
+                "id": 646,
+                "name": "Role Group - Administrator - 646",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 647,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 648,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 649,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 650,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 651,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 652,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 653,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 654,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 655,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 656,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 657,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 658,
+                "name": "Role Group - Administrator - 658",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 659,
+                "name": "Role Group - Administrator - 659",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 660,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 661,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 662,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 663,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 664,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 665,
+                "name": "Role Group - Accountant, Client, ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 666,
+                "name": "Role Group - Accountant, Client",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 667,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 668,
+                "name": "Role Group - Manager, Accountant, Client",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 669,
+                "name": "Role Group - Manager, Accountant, Client",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 670,
+                "name": "Role Group - Manager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 671,
+                "name": "Role Group - Administrator - 671",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 672,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 673,
+                "name": "Role Group - ConnectSecurityManager, BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 674,
+                "name": "Role Group - Administrator - 674",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 675,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 676,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 677,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 678,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 679,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 680,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 681,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 682,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 683,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 684,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 685,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 686,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 687,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 688,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 689,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 690,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 691,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 692,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 693,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 694,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 695,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 696,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 697,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 698,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 699,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 700,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 701,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 702,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 703,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 704,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 705,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 706,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 707,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 708,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 709,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 710,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 711,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 712,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 713,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 714,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 715,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 716,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 717,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 718,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 719,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 720,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 721,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 722,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 723,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 724,
+                "name": "Role Group - Employee, DirectoryManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 725,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 726,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 727,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 728,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 729,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 730,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 731,
+                "name": "Role Group - Employee, DirectoryManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 732,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 733,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 734,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 735,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 736,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 737,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 738,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 739,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 740,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 741,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 742,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 743,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 744,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 745,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 746,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 747,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 748,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 749,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 750,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 751,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 752,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 753,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 754,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 755,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 756,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 757,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 758,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 759,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 760,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 761,
+                "name": "Role Group - BillPayEditor, BillPayManagePendingPayments_Update, BillPayManagePendingPayments_Cancel",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 762,
+                "name": "Role Group - BillPayEditor, BillPayManagePendingPayments_Update, BillPayManagePendingPayments_Cancel",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 763,
+                "name": "Role Group - BillPayEditor, BillPayManagePendingPayments_Update, BillPayManagePendingPayments_Cancel",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 764,
+                "name": "Role Group - BillPayEditor, BillPayManagePendingPayments_Update, BillPayManagePendingPayments_Cancel",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 765,
+                "name": "Role Group - BillPayEditor, BillPayManagePendingPayments_Update, BillPayManagePendingPayments_Cancel",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 766,
+                "name": "Role Group - Recruiter",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 767,
+                "name": "Role Group - Manager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 768,
+                "name": "Role Group - HiringManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 769,
+                "name": "Role Group - Recruiter",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 770,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 771,
+                "name": "Role Group - Configurator, Architect",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T16:50:12.313",
+                "updatedAt": "2025-02-21T16:50:12.313",
+                "tenantId": null
+            },
+            {
+                "id": 772,
+                "name": "Role Group - Administrator",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 773,
+                "name": "Role Group - FeedbackManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 774,
+                "name": "Role Group - RESTDevServiceUser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 775,
+                "name": "Role Group - SecurityUtilsUser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 776,
+                "name": "Role Group - SOAPDevServiceUser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 777,
+                "name": "Role Group - SupportStaff",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 778,
+                "name": "Role Group - SupportManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 779,
+                "name": "Role Group - Manager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 780,
+                "name": "Role Group - Accountant",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 781,
+                "name": "Role Group - Admin",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 782,
+                "name": "Role Group - Client",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 783,
+                "name": "Role Group - ConnectSecurityManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 784,
+                "name": "Role Group - L1Support",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 785,
+                "name": "Role Group - FieldTeam",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 786,
+                "name": "Role Group - L2Support",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 787,
+                "name": "Role Group - Requester",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 788,
+                "name": "Role Group - BillPayEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 789,
+                "name": "Role Group - BillPayReporter",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 790,
+                "name": "Role Group - BillPayProcessor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 791,
+                "name": "Role Group - testUser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 792,
+                "name": "Role Group - UserViewer",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 793,
+                "name": "Role Group - UserEditor",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 794,
+                "name": "Role Group - CamelCaseUser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 795,
+                "name": "Role Group - Role1",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 796,
+                "name": "Role Group - EventMananger",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 797,
+                "name": "Role Group - ConnectInstitution_Create",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 798,
+                "name": "Role Group - ConnectInstitutionURLs_Read",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 799,
+                "name": "Role Group - ConnectInstitutionURLs_Update",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 800,
+                "name": "Role Group - ConnectInstitutionURLs_Create",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 801,
+                "name": "Role Group - ConnectSecurityGroups_canSyncToClients",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 802,
+                "name": "Role Group - ConnectSecurityGroups_Create",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 803,
+                "name": "Role Group - ConnectSecurityGroups_Delete",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 804,
+                "name": "Role Group - ConnectInstitutionURLs_Delete",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 805,
+                "name": "Role Group - CropperDemoUser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 806,
+                "name": "Role Group - GoogleMapsDemoUser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 807,
+                "name": "Role Group - Employee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 808,
+                "name": "Role Group - OutSystemsNativeUserRole",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 809,
+                "name": "Role Group - OutSystemsNowServiceUser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 810,
+                "name": "Role Group - DirectoryManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 811,
+                "name": "Role Group - FileSystemDemoUser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 812,
+                "name": "Role Group - BillPayManualProcessing_canRun",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 813,
+                "name": "Role Group - BillPayManagePendingPayments_Update",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 814,
+                "name": "Role Group - BillPayManagePendingPayments_Cancel",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 815,
+                "name": "Role Group - TimerAdministrator",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 816,
+                "name": "Role Group - MoneyDesktopInactiveUsers_Read",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 817,
+                "name": "Role Group - MoneyDesktopInactiveUsers_Purge",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 818,
+                "name": "Role Group - MoneyDesktopInactiveUsers_Configure",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 819,
+                "name": "Role Group - SortRecordList_DemoUser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 820,
+                "name": "Role Group - ConnectBillPayBPConvertPayee_Read",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 821,
+                "name": "Role Group - ConnectBillPayBPConvertPayee_canRollbackConversion",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 822,
+                "name": "Role Group - ConnectBillPayBPConvertPayee_canConvertPayee",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 823,
+                "name": "Role Group - MoneyDesktopDeletedUsers_Read",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 824,
+                "name": "Role Group - BillPayFISExceptionHandling_Update",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 825,
+                "name": "Role Group - SecurityGroups_Create",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 826,
+                "name": "Role Group - SecurityGroups_Delete",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 827,
+                "name": "Role Group - Recruiter",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 828,
+                "name": "Role Group - BillPayCBRBillingReports_Read",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 829,
+                "name": "Role Group - BillPayCBRBillingReports_canExport",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 830,
+                "name": "Role Group - IdP_Administrator",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 831,
+                "name": "Role Group - IdPExample_CloneUser",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 832,
+                "name": "Role Group - User",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            },
+            {
+                "id": 833,
+                "name": "Role Group - HiringManager",
+                "description": null,
+                "clientId": 2,
+                "createdAt": "2025-02-21T17:01:48.65",
+                "updatedAt": "2025-02-21T17:01:48.65",
+                "tenantId": null
+            }
+        ]
+    }
+}

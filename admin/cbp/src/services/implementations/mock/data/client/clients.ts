@@ -3,12 +3,8 @@ import {
   Environment, 
   ClientStatus, 
   Client, 
-  ClientType,
-  ClientSettings,
-  GeneralSettings,
-  SecuritySettings
+  ClientType
 } from '../../../../../types/client.types';
-import { mockClients as mockClientData } from './mockClientData';
 
 export const paymentMethodOptions: PaymentMethod[] = [
   'ACH',
@@ -16,9 +12,10 @@ export const paymentMethodOptions: PaymentMethod[] = [
   'RTP',
   'Check'
 ];
+
 export const environmentOptions: Environment[] = [
-  Environment.Production,
-  Environment.Staging,
-  Environment.Development
+  'PRODUCTION',
+  'DEVELOPMENT'
 ];
-export const mockClients = mockClientData;
+
+export { mockClients } from './mockClientData';

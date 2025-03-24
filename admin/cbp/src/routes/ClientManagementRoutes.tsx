@@ -1,20 +1,23 @@
-import React from 'react';
-import { lazy } from 'react';
+import React, { lazy } from 'react';
 import { useParams } from 'react-router-dom';
-import { RouteConfig } from '@/types/route.types';
+import { RouteConfig } from '../types/route.types';
+import { ResourceId } from '../types/permissions.types';
 import BusinessIcon from '@mui/icons-material/Business';
 import ListIcon from '@mui/icons-material/List';
 
 // Lazy load components
+const ClientManagementHeader = lazy(() => import('../components/client-management/ClientManagementHeader'));
 const ClientList = lazy(() => import('../components/client-management/ClientList'));
 const ClientManagementWrapper = lazy(() => import('../components/client-management/wrappers/ClientManagementWrapper'));
 const ContactInformation = lazy(() => import('../components/client-management/ContactInformation'));
 const UsersWrapper = lazy(() => import('../components/client-management/wrappers/UsersWrapper'));
 const UserEditWrapper = lazy(() => import('../components/client-management/wrappers/UserEditWrapper'));
 const GroupsWrapper = lazy(() => import('../components/client-management/wrappers/GroupsWrapper'));
-const SecuritySettingsWrapper = lazy(() => import('../components/client-management/wrappers/SecuritySettingsWrapper'));
-const AuditSearch = lazy(() => import('../components/client-management/security/AuditSearch'));
-const ClientManagementHeader = lazy(() => import('../components/client-management/ClientManagementHeader'));
+const SecuritySettings = lazy(() => import('../components/client-management/security/SecuritySettings'));
+const ClientManagement = lazy(() => import('../components/client-management/ClientManagement'));
+const ClientManagementRedirect = lazy(() => import('../components/client-management/ClientManagementRedirect'));
+const ClientInformation = lazy(() => import('../components/client-management/ClientInformation'));
+
 interface RouteParams {
   clientId?: string;
   userId?: string;
@@ -23,12 +26,12 @@ interface RouteParams {
 // Route configuration
 const clientManagementRoutes: RouteConfig[] = [
   {
-    id: 'client-management',
-    path: '',  // Empty path for the base route
-    title: 'Client Management',
-    element: ClientManagementHeader,
+    id: 'client-management-root',
+    path: '',
+    element: ClientManagementRedirect,
     icon: BusinessIcon,
-    sectionId: 'clientManagement',
+    title: 'Client Management',
+    resourceId: 'route:client-management-root' as ResourceId
   },
   {
     id: 'client-list',
@@ -37,21 +40,30 @@ const clientManagementRoutes: RouteConfig[] = [
     element: ClientList,
     icon: ListIcon,
     sectionId: 'clientManagement',
+    resourceId: 'route:client-management.list' as ResourceId
   },
   {
     id: 'client-edit',
-    path: 'edit/:clientId/*',  // Added wildcard to match all child routes
+    path: 'edit/:clientId/*',
     title: 'Client Details',
     element: ClientManagementWrapper,
     hideFromSidebar: true,
     sectionId: 'clientManagement',
+    resourceId: 'route:client-management.edit' as ResourceId,
     children: [
       {
+        id: 'client-info',
+        path: 'info',
+        title: 'Client Information',
+        element: ClientInformation,
+        resourceId: 'route:client-management.edit.info' as ResourceId
+      },
+      {
         id: 'client-contact',
-        path: '',  // Default tab
+        path: 'contact',
         title: 'Contact Information',
         element: ContactInformation,
-        sectionId: 'clientManagement',
+        resourceId: 'route:client-management.edit.contact' as ResourceId
       },
       {
         id: 'client-users',
@@ -59,6 +71,7 @@ const clientManagementRoutes: RouteConfig[] = [
         title: 'Users',
         element: UsersWrapper,
         sectionId: 'clientManagement',
+        resourceId: 'route:client-management.edit.users' as ResourceId,
         children: [
           {
             id: 'client-user-edit',
@@ -67,6 +80,7 @@ const clientManagementRoutes: RouteConfig[] = [
             element: UserEditWrapper,
             hideFromSidebar: true,
             sectionId: 'clientManagement',
+            resourceId: 'route:client-management.edit.users.edit' as ResourceId
           }
         ]
       },
@@ -76,20 +90,29 @@ const clientManagementRoutes: RouteConfig[] = [
         title: 'Groups',
         element: GroupsWrapper,
         sectionId: 'clientManagement',
+        resourceId: 'route:client-management.edit.groups' as ResourceId
       },
       {
         id: 'client-security',
         path: 'security',
         title: 'Security Settings',
-        element: SecuritySettingsWrapper,
-        sectionId: 'clientManagement',
-      },
-      {
-        id: 'client-audit',
-        path: 'audit-log',
-        title: 'Audit History',
-        element: AuditSearch,
-        sectionId: 'clientManagement',
+        element: SecuritySettings,
+        children: [
+          {
+            id: 'client-security-settings',
+            path: '',
+            title: 'Security Settings',
+            element: SecuritySettings,
+            resourceId: 'route:client-management.edit.security' as ResourceId
+          },
+          {
+            id: 'client-login-security',
+            path: 'member-security',
+            title: 'Login Security Settings',
+            element: SecuritySettings,
+            resourceId: 'route:client-management.edit.member-security' as ResourceId
+          }
+        ]
       }
     ]
   }

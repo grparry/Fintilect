@@ -1,74 +1,125 @@
 import { IReportService } from '../../interfaces/IReportService';
-import { PaginatedResponse } from '../../../types/common.types';
+import { ReportResponse, ErrorRecapRequest, ErrorRecapItemPagedResponse, PaymentActivityRequest, PaymentActivityItemPagedResponse } from '../../../types/report.types';
 import { BaseService } from './BaseService';
-import {
-    ReportType,
-    ReportData,
-    ReportFilters,
-    ExportOptions,
-    AuditRecord,
-    TransactionRecord,
-    UserRecord
-} from '../../../types/report.types';
-import {
-    BaseReportArguments,
-    ExportReportArguments,
-    ScheduleReportArguments,
-    ReportRunRequest,
-    ReportResponse
-} from '../../../types/report-api.types';
+import logger from '../../../utils/logger';
 
 export class ReportService extends BaseService implements IReportService {
-    constructor(basePath: string = '/api/v1/reports') {
+    constructor(basePath: string = '/api/v1/Report') {
         super(basePath);
     }
-    async getReportTypes(): Promise<ReportType[]> {
-        return this.get<ReportType[]>('/types');
-    }
-    async getReportData(type: ReportType, filters?: ReportFilters): Promise<ReportData> {
-        return this.get<ReportData>(`/${type}`, { params: filters });
-    }
-    async exportReport(request: ReportRunRequest<ExportReportArguments>): Promise<string> {
-        const response = await this.post<{ url: string }>(`/${request.arguments.reportType}/export`, request.arguments);
-        return response.url;
-    }
-    async scheduleReport(request: ReportRunRequest<ScheduleReportArguments>): Promise<string> {
-        const response = await this.post<{ id: string }>(`/${request.arguments.reportType}/schedule`, request.arguments);
-        return response.id;
-    }
-    async runReport(request: ReportRunRequest<BaseReportArguments>): Promise<ReportResponse<ReportData>> {
-        return this.post<ReportResponse<ReportData>>(`/${request.arguments.reportType}/run`, request);
-    }
-    async getAuditRecords(filters?: ReportFilters): Promise<PaginatedResponse<AuditRecord>> {
-        return this.get<PaginatedResponse<AuditRecord>>('/audit', { params: filters });
-    }
-    async getTransactionRecords(filters?: ReportFilters): Promise<PaginatedResponse<TransactionRecord>> {
-        return this.get<PaginatedResponse<TransactionRecord>>('/transactions', { params: filters });
-    }
-    async getUserRecords(filters?: ReportFilters): Promise<PaginatedResponse<UserRecord>> {
-        return this.get<PaginatedResponse<UserRecord>>('/users', { params: filters });
-    }
-    async getReport(reportId: string): Promise<ReportData> {
-        return this.get<ReportData>(`/${reportId}`);
-    }
-    async searchReports(filters: ReportFilters): Promise<PaginatedResponse<ReportData>> {
-        return this.get<PaginatedResponse<ReportData>>('/search', { params: filters });
-    }
-    async cancelScheduledReport(reportId: string): Promise<void> {
-        await this.delete(`/schedule/${reportId}`);
-    }
-    async getExportOptions(): Promise<ExportOptions> {
-        return this.get<ExportOptions>('/export/options');
-    }
-    async getReportErrors(reportId: string): Promise<string[]> {
-        return this.get<string[]>(`/${reportId}/errors`);
-    }
-    async validateReportArgs(args: BaseReportArguments): Promise<boolean> {
-        try {
-            await this.post('/validate', args);
-            return true;
-        } catch {
-            return false;
+
+    async runReport(name: string | null, args: string | null): Promise<ReportResponse> {
+        // Clean up empty parameter values in the arguments string to avoid double-escaping
+        let cleanedArgs = args;
+        if (args) {
+            // Replace empty parameters (param=) with param="" to ensure proper formatting
+            cleanedArgs = args.replace(/([^=,]+)=(?=,|$)/g, '$1=""');
         }
+        
+        return this.post<ReportResponse>('/run', { name, arguments: cleanedArgs });
+    }
+
+    async runReportWithParams(name: string, params: Record<string, string | number | Date>): Promise<ReportResponse> {
+        // Validate report name follows convention (starts with "rpt" and ends with "JSON")
+        if (!name.startsWith('rpt') || !name.endsWith('JSON')) {
+            throw new Error(`Invalid report name: ${name}. Report names must start with "rpt" and end with "JSON"`);
+        }
+
+        const formattedArgs = this.formatReportParams(params);
+        return this.runReport(name, formattedArgs);
+    }
+
+    async getErrorRecap(params: ErrorRecapRequest): Promise<ErrorRecapItemPagedResponse> {
+        if (!params.searchType || !params.searchValue) {
+            throw new Error('SearchType and SearchValue are required parameters');
+        }
+
+        // Build the query string directly with PascalCase parameter names
+        // This ensures the parameters are included in the URL as expected by the API
+        const searchParams = new URLSearchParams();
+        searchParams.append('SearchType', params.searchType);
+        searchParams.append('SearchValue', params.searchValue);
+        searchParams.append('PageNumber', (params.pageNumber || 1).toString());
+        searchParams.append('PageSize', (params.pageSize || 20).toString());
+        
+        const queryString = searchParams.toString();
+        logger.info(`ErrorRecap request with query string: ${queryString}`);
+        
+        // Append the query string directly to the URL
+        return this.get<ErrorRecapItemPagedResponse>(`/ErrorRecap?${queryString}`);
+    }
+
+    async getPaymentActivity(params: PaymentActivityRequest): Promise<PaymentActivityItemPagedResponse> {
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+
+        // Build the query string with PascalCase parameter names to match API expectations
+        const searchParams = new URLSearchParams();
+        searchParams.append('SearchType', params.searchType);
+        
+        // Add parameters based on search type
+        if (params.searchValue) {
+            // Map searchValue to the appropriate parameter based on search type
+            if (params.searchType.includes('MemberID')) {
+                searchParams.append('MemberID', params.searchValue);
+            } else if (params.searchType.includes('PaymentID')) {
+                searchParams.append('PaymentID', params.searchValue);
+            } else if (params.searchType.includes('PayeeName')) {
+                searchParams.append('PayeeName', params.searchValue);
+            }
+        }
+        
+        // Add optional parameters only if they have values
+        if (params.startDate) {
+            searchParams.append('StartDate', params.startDate);
+        }
+        
+        if (params.endDate) {
+            searchParams.append('EndDate', params.endDate);
+        }
+        
+        if (params.payeeName) {
+            searchParams.append('PayeeName', params.payeeName);
+        }
+        
+        searchParams.append('PageNumber', (params.pageNumber || 1).toString());
+        searchParams.append('PageSize', (params.pageSize || 20).toString());
+        
+        const queryString = searchParams.toString();
+        logger.info(`PaymentActivity request with query string: ${queryString}`);
+        
+        // Call the new endpoint with the query string
+        return this.get<PaymentActivityItemPagedResponse>(`/PaymentActivity?${queryString}`);
+    }
+
+    formatReportParams(params: Record<string, string | number | Date>): string {
+        return Object.entries(params)
+            .map(([key, value]) => this.formatReportParam(key, value))
+            .join(',');
+    }
+
+    formatReportParam(key: string, value: string | number | Date): string {
+        // Format Date objects as YYYY-MM-DD
+        if (value instanceof Date) {
+            const year = value.getFullYear();
+            const month = String(value.getMonth() + 1).padStart(2, '0');
+            const day = String(value.getDate()).padStart(2, '0');
+            return `${key}=${year}-${month}-${day}`;
+        }
+        
+        return `${key}=${value}`;
+    }
+
+    parseReportParams(params: string): Record<string, string> {
+        if (!params) return {};
+        
+        return params.split(',').reduce((acc, param) => {
+            const [key, value] = param.split('=');
+            if (key) {
+                acc[key] = value || '';
+            }
+            return acc;
+        }, {} as Record<string, string>);
     }
 }

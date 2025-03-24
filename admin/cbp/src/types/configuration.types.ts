@@ -1,6 +1,6 @@
 
 
-// Configuration API Types
+// System Configuration API Types
 export interface SystemConfigurationItem {
   key: string;
   value: string | number | boolean;
@@ -10,6 +10,24 @@ export interface SystemConfigurationItem {
 }
 export interface SystemConfiguration {
   configurations: SystemConfigurationItem[];
+}
+
+// AdminCu Configuration API Types
+export interface ConfigurationSetting {
+  id: string;
+  configName: string;
+  configValue: string;
+  lastChangeDate: string;
+  description: string;
+  dataType: string;
+  creditUnionAccess: string;
+  connectSupportAccess: string;
+  connectManagerAccess: string;
+  friendlyName: string;
+}
+
+export interface ConfigurationResponse {
+  configurations: ConfigurationSetting[];
 }
 // Configuration Categories
 export enum ConfigurationCategory {

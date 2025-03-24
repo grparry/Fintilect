@@ -1,165 +1,86 @@
-import { NotificationType, NotificationCategory, NotificationVariable, NotificationTemplate } from '../../../../../types/bill-pay.types';
+import { NotificationResponse } from '../../../../../types/notification.types';
+import { v4 as uuidv4 } from 'uuid';
 
-export const mockNotificationTypes: NotificationType[] = [
-    NotificationType.PAYMENT_COMPLETED,
-    NotificationType.PAYMENT_FAILED,
-    NotificationType.PAYMENT_APPROVAL_REQUIRED,
-    NotificationType.PAYMENT_CANCELLED,
-    NotificationType.PAYMENT_EXPIRED
-];
-export const mockNotificationCategories: NotificationCategory[] = [
-    NotificationCategory.PAYMENT,
-    NotificationCategory.ACCOUNT,
-    NotificationCategory.SYSTEM
-];
-export const mockTemplateVariables: Record<NotificationType, NotificationVariable[]> = {
-    [NotificationType.PAYMENT_COMPLETED]: [
-        {
-            name: 'paymentId',
-            description: 'The unique identifier of the payment',
-            example: 'PAY-123456'
-        },
-        {
-            name: 'amount',
-            description: 'The payment amount',
-            example: '$1,000.00'
-        }
-    ],
-    [NotificationType.PAYMENT_FAILED]: [
-        {
-            name: 'paymentId',
-            description: 'The unique identifier of the payment',
-            example: 'PAY-123456'
-        },
-        {
-            name: 'errorMessage',
-            description: 'The error message explaining why the payment failed',
-            example: 'Insufficient funds'
-        }
-    ],
-    [NotificationType.PAYMENT_APPROVAL_REQUIRED]: [
-        {
-            name: 'paymentId',
-            description: 'The unique identifier of the payment',
-            example: 'PAY-123456'
-        },
-        {
-            name: 'amount',
-            description: 'The payment amount',
-            example: '$1,000.00'
-        },
-        {
-            name: 'approvalLink',
-            description: 'Link to approve the payment',
-            example: 'https://example.com/approve/PAY-123456'
-        }
-    ],
-    [NotificationType.PAYMENT_CANCELLED]: [
-        {
-            name: 'paymentId',
-            description: 'The unique identifier of the payment',
-            example: 'PAY-123456'
-        },
-        {
-            name: 'cancelReason',
-            description: 'The reason for cancellation',
-            example: 'User requested cancellation'
-        }
-    ],
-    [NotificationType.PAYMENT_EXPIRED]: [
-        {
-            name: 'paymentId',
-            description: 'The unique identifier of the payment',
-            example: 'PAY-123456'
-        },
-        {
-            name: 'expirationDate',
-            description: 'The date when the payment expired',
-            example: '2025-01-11'
-        }
-    ]
-};
-export const mockTemplates: NotificationTemplate[] = [
-  {
-    id: 1,
-    name: 'Payment Completed',
-    type: NotificationType.PAYMENT_COMPLETED,
-    category: NotificationCategory.PAYMENT,
-    subject: 'Payment Successfully Processed',
-    content: 'Your payment {{paymentId}} for {{amount}} has been successfully processed.',
-    active: true,
-    lastModified: new Date().toISOString(),
-    variables: mockTemplateVariables[NotificationType.PAYMENT_COMPLETED]
-  },
-  {
-    id: 2,
-    name: 'Payment Failed',
-    type: NotificationType.PAYMENT_FAILED,
-    category: NotificationCategory.PAYMENT,
-    subject: 'Payment Processing Failed',
-    content: 'Your payment {{paymentId}} failed to process. Error: {{errorMessage}}',
-    active: true,
-    lastModified: new Date().toISOString(),
-    variables: mockTemplateVariables[NotificationType.PAYMENT_FAILED]
-  }
-];
-export const mockTemplateCategories = mockNotificationCategories;
-export const mockTemplateVersions = [
-  {
-    id: 1,
-    templateId: 1,
-    version: 1,
-    content: 'Your payment {{paymentId}} for {{amount}} has been successfully processed.',
-    createdAt: new Date().toISOString(),
-    active: false
-  },
-  {
-    id: 2,
-    templateId: 1,
-    version: 2,
-    content: 'Payment {{paymentId}} for {{amount}} has been processed successfully.',
-    createdAt: new Date().toISOString(),
-    active: true
-  }
-];
-export const mockNotificationTemplates = [
+// Mock notification data aligned with the API specification
+export const mockNotifications: NotificationResponse[] = [
     {
-        id: 1,
-        name: 'Payment Completed Notification',
-        type: NotificationType.PAYMENT_COMPLETED,
-        category: NotificationCategory.PAYMENT,
-        subject: 'Payment Successfully Completed',
-        content: 'Your payment {{paymentId}} for {{amount}} has been successfully processed.',
-        active: true,
-        lastModified: '2025-01-11T16:42:24-07:00',
-        createdAt: '2025-01-11T16:42:24-07:00',
-        updatedAt: '2025-01-11T16:42:24-07:00',
-        variables: mockTemplateVariables[NotificationType.PAYMENT_COMPLETED]
+        id: uuidv4(),
+        errorNumber: 1001,
+        statusCode: 400,
+        matchMode: 1,
+        matchOrder: 1,
+        matchText: "Payment failed",
+        messageSubject: "Payment Processing Error",
+        messageBody: "There was an error processing your payment. Please try again.",
+        emailMember: true,
+        emailMemberServices: true,
+        emailSysOp: false,
+        notes: "Standard payment failure notification",
+        symmetry: true,
+        emerge: false
     },
     {
-        id: 2,
-        name: 'Payment Failed Notification',
-        type: NotificationType.PAYMENT_FAILED,
-        category: NotificationCategory.PAYMENT,
-        subject: 'Payment Failed',
-        content: 'Your payment {{paymentId}} has failed. Reason: {{errorMessage}}',
-        active: true,
-        lastModified: '2025-01-11T16:42:24-07:00',
-        createdAt: '2025-01-11T16:42:24-07:00',
-        updatedAt: '2025-01-11T16:42:24-07:00',
-        variables: mockTemplateVariables[NotificationType.PAYMENT_FAILED]
+        id: uuidv4(),
+        errorNumber: 1002,
+        statusCode: 404,
+        matchMode: 2,
+        matchOrder: 2,
+        matchText: "Payee not found",
+        messageSubject: "Payee Not Found",
+        messageBody: "The payee you attempted to pay could not be found in our system.",
+        emailMember: true,
+        emailMemberServices: false,
+        emailSysOp: true,
+        notes: "Notification for missing payee",
+        symmetry: false,
+        emerge: true
     },
     {
-        id: 3,
-        name: 'Payment Approval Required',
-        type: NotificationType.PAYMENT_APPROVAL_REQUIRED,
-        category: NotificationCategory.PAYMENT,
-        subject: 'Payment Requires Your Approval',
-        content: 'A payment {{paymentId}} for {{amount}} requires your approval. Click here to review: {{approvalLink}}',
-        active: true,
-        lastModified: '2025-01-11T16:42:24-07:00',
-        createdAt: '2025-01-11T16:42:24-07:00',
-        updatedAt: '2025-01-11T16:42:24-07:00',
-        variables: mockTemplateVariables[NotificationType.PAYMENT_APPROVAL_REQUIRED]
+        id: uuidv4(),
+        errorNumber: 1003,
+        statusCode: 500,
+        matchMode: 1,
+        matchOrder: 3,
+        matchText: "System error",
+        messageSubject: "System Error",
+        messageBody: "A system error occurred. Our team has been notified.",
+        emailMember: true,
+        emailMemberServices: true,
+        emailSysOp: true,
+        notes: "Critical system error notification",
+        symmetry: false,
+        emerge: true
+    },
+    {
+        id: uuidv4(),
+        errorNumber: 1004,
+        statusCode: 200,
+        matchMode: 1,
+        matchOrder: 1,
+        matchText: "Payment successful",
+        messageSubject: "Payment Successful",
+        messageBody: "Your payment has been processed successfully.",
+        emailMember: true,
+        emailMemberServices: false,
+        emailSysOp: false,
+        notes: "Standard success notification",
+        symmetry: true,
+        emerge: false
+    },
+    {
+        id: uuidv4(),
+        errorNumber: 1005,
+        statusCode: 202,
+        matchMode: 1,
+        matchOrder: 1,
+        matchText: "Payment pending",
+        messageSubject: "Payment Pending",
+        messageBody: "Your payment is being processed and is currently pending.",
+        emailMember: true,
+        emailMemberServices: false,
+        emailSysOp: false,
+        notes: "Pending payment notification",
+        symmetry: true,
+        emerge: false
     }
 ];

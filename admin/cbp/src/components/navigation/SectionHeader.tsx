@@ -25,7 +25,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title, color, icon }) => 
   return (
     <HeaderContainer backgroundColor={color}>
       <Icon>{icon}</Icon>
-      <Typography variant="h6" component="h2" sx={{ flexGrow: 1 }}>
+      <Typography variant="h6" color="text.primary" component="h2" sx={{ flexGrow: 1 }}>
         {title}
       </Typography>
     </HeaderContainer>

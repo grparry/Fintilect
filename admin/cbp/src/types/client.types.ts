@@ -1,80 +1,95 @@
-import { Dayjs } from 'dayjs';
-import type { ApiResponse } from './api.types';
-import { PaginationOptions } from './common.types';
-import { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';
+import type { Dayjs } from 'dayjs';
+import type { PaginationOptions, PaginatedResponse } from './common.types';
+import type { PasswordPolicy, SecuritySettings } from './security.types';
 
 // Payment Types
 export type PaymentMethod = 'ACH' | 'Wire' | 'RTP' | 'Check';
 
 // Environment Types
-export enum Environment {
-  Production = 'PRODUCTION',
-  Staging = 'STAGING',
-  Development = 'DEVELOPMENT'
-}
+export type Environment = 'PRODUCTION' | 'STAGING' | 'DEVELOPMENT';
 
 // Client Types
-export enum ClientType {
-  Enterprise = 'ENTERPRISE',
-  SMB = 'SMB',
-  Startup = 'STARTUP',
-  Business = 'business',
-  Personal = 'personal',
-  Standard = 'STANDARD',
-  Premium = 'PREMIUM'
-}
+export type ClientType = 'ENTERPRISE' | 'SMB' | 'STARTUP' | 'STANDARD';
 
-export enum ClientStatus {
-  Active = 'ACTIVE',
-  Inactive = 'INACTIVE',
-  Suspended = 'SUSPENDED',
-  active = 'active',
-  inactive = 'inactive',
-  pending = 'pending',
-  Pending = 'PENDING'
-}
-
-// Date and Time Format Types
-export type DateFormat = 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD';
-export type TimeFormat = '12h' | '24h';
-export type NotificationFrequency = 'realtime' | 'daily' | 'weekly' | 'monthly';
-export type AlertType = 'payment' | 'security' | 'system';
+// Client Status Types
+export type ClientStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
 
 export interface Client {
-  id: string;
+  id: number;
+  name: string | null;
+  tenantId: number;
+  isActive: boolean;
+  createdOn: string;
+  updatedOn: string | null;
+  type: string | null;
+  status: string | null;
+  environment: string | null;
+  domain: string | null;
+  sponsorId: number | null;
+  routingId: string | null;
+  require2FA: boolean;
+  logoUrl: string | null;
+}
+
+export interface ClientUpdateRequest {
+  /** @maxLength 255 @minLength 0 */
   name: string;
-  type: ClientType;
-  status: ClientStatus;
-  environment: Environment;
-  domain?: string;
-  contactName?: string;
-  contactEmail?: string;
-  contactPhone?: string;
-  settings: ClientSettings;
-  createdAt?: string;
-  updatedAt?: string;
+  /** @maxLength 255 @minLength 0 */
+  domain: string;
+  /** @maxLength 50 @minLength 0 */
+  environment: string;
+  /** @maxLength 50 @minLength 0 */
+  type: string;
+  /** @maxLength 50 @minLength 0 */
+  status: string;
+  isActive?: boolean;
+  tenantId?: number;
 }
 
-export interface GeneralSettings {
-  timezone: string;
-  dateFormat: DateFormat;
-  timeFormat: TimeFormat;
-  currency: string;
-  language: string;
+export interface ClientAddRequest {
+  /** @maxLength 255 @minLength 0 */
+  name: string;
+  /** @maxLength 255 @minLength 0 */
+  domain: string;
+  /** @maxLength 50 @minLength 0 */
+  environment: string;
+  /** @maxLength 50 @minLength 0 */
+  type: string;
+  /** @maxLength 50 @minLength 0 */
+  status: string;
+  tenantId?: number;
+  isActive?: boolean;
 }
 
-export interface ClientSettings {
-  general: GeneralSettings;
-  security: SecuritySettings;
-  notifications: NotificationSettings;
+export interface ClientAuthenticationRequest {
+  username: string;
+  password: string;
+  clientId: number;
 }
 
-export interface NotificationSettings {
-  emailEnabled: boolean;
-  smsEnabled: boolean;
-  pushEnabled: boolean;
-  frequency: NotificationFrequency;
-  alertTypes: AlertType[];
+/**
+ * User model that maps to the database Users table
+ */
+export interface User {
+  id: number;
+  username: string;
+  email?: string;
+  mobilePhone?: string;
+  tenantId: number;
+  isActive: boolean;
+  creationDate: string;
+  lastLogin?: string;
+  externalId?: string;
+  clientId: number;
+  firstName?: string;
+  lastName?: string;
+  department?: string;
+  isLocked: boolean;
+  password?: string;
+  invalidAttempts?: number;
+  forcePasswordChange?: boolean;
+  outSystemsPassword?: string;
+  clientName?: string;
 }
 
 // Client Configuration Types
@@ -87,6 +102,7 @@ export interface ClientConfiguration {
   requireDualApproval: boolean;
   notificationEmail: string;
   lastModified: string;
+  security?: SecuritySettings;
 }
 
 // Client API Types
@@ -105,12 +121,30 @@ export interface ClientApiKey {
 export interface ClientContact {
   id: number;
   clientId: number;
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  isPrimary: boolean;
+  createdOn: string;
+  updatedOn: string | null;
+  isActive: boolean;
+}
+
+export interface ClientContactAddRequest {
+  clientId: number;
   name: string;
   email: string;
-  phone: string;
-  role: string;
+  phone?: string;
   isPrimary: boolean;
-  lastModified: string;
+}
+
+export interface ClientContactUpdateRequest {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  isPrimary: boolean;
+  isActive: boolean;
 }
 
 // Client Service Types
@@ -143,24 +177,6 @@ export enum UserStatus {
   PendingActivation = 'PENDING_ACTIVATION'
 }
 
-export interface User {
-  id: string;
-  clientId: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  roles: string[];
-  status: UserStatus;
-  department: string;
-  lastLogin: string | null;
-  locked: boolean;
-  password?: string;
-  createdAt: string;
-  updatedAt: string;
-  groups: UserGroup[];
-}
-
 export interface UserFormData {
   firstName: string;
   lastName: string;
@@ -175,85 +191,45 @@ export interface UserFormData {
 }
 
 export interface Role {
-  id: string;
+  id: number;
   name: string;
-  description: string;
-  permissions: string[];
-  createdAt: string;
-  updatedAt: string;
 }
 
-export type PermissionCategoryType = 
-  | 'user'
-  | 'client'
-  | 'system'
-  | 'security'
-  | 'settings'
-  | 'reports'
-  | 'billpay'
-  | 'moneydesktop';
+export interface Group {
+  id: number;
+  name?: string;
+  description?: string;
+  clientId: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
-export const PERMISSION_CATEGORIES: PermissionCategoryType[] = [
-  'user',
-  'client',
-  'system',
-  'security',
-  'settings',
-  'reports',
-  'billpay',
-  'moneydesktop'
-];
+export interface GroupRole {
+  groupId: number;
+  roleId: number;
+}
 
-export interface Permission {
-  id: string;
-  name: string;
-  description: string;
-  category: PermissionCategoryType;
-  actions: string[];
+export interface UserGroup {
+  userId: number;
+  groupId: number;
 }
 
 export interface SecurityRole {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   permissions: Permission[];
   isSystem?: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface UserGroup {
+export interface Permission {
   id: string;
   name: string;
-  description: string;
-  clientId: string;
-  roles: SecurityRole[];
-  permissions: Permission[];
-  members: string[];
-  users: User[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Group {
-  id: string;
-  name: string;
-  description: string;
-  clientId: string;
-  roles: SecurityRole[];
-  permissions: Permission[];
-  members: string[];
-  users: User[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface GroupInput {
-  name: string;
-  description: string;
-  roles: string[];
-  permissions: string[];
-  members: string[];
+  description?: string;
+  category?: string;
+  actions: string[];
 }
 
 export interface Address {
@@ -291,69 +267,42 @@ export interface Contact {
 }
 
 // List Response Types
-export interface PaginatedResponse<T> {
-  items: T[];
-  pagination: {
-    total: number;
-    page: number;
-    limit: number;
-    pages: number;
-  };
+export interface ClientListResponse {
+  clients: Client[] | null;
+}
+export type _ClientListResponse = PaginatedResponse<Client>;
+export interface UserListResponse {
+  users: User[];
+}
+export interface GroupListResponse {
+  groups: Group[];
+}
+export interface RoleListResponse {
+  roles: Role[];
 }
 
-export type ClientListResponse = PaginatedResponse<Client>;
-export type UserListResponse = PaginatedResponse<User>;
-export type GroupListResponse = PaginatedResponse<UserGroup>;
-export type RoleListResponse = PaginatedResponse<SecurityRole>;
+export interface UserGroupListResponse {
+  userGroups: UserGroup[];
+}
+
+export interface GroupRoleListResponse {
+  groupRoles: GroupRole[];
+}
 
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'system';
-  notifications: {
-    email: boolean;
-    push: boolean;
-    sms: boolean;
-  };
-  language: string;
-  timezone: string;
-  dateFormat: string;
-  displayDensity: 'comfortable' | 'compact';
 }
 
-export interface UserFilters extends PaginationOptions {
-  status?: UserStatus;
-  role?: UserRole;
-  groupId?: string;
-  search?: string;
-  lastLoginAfter?: string;
-  lastLoginBefore?: string;
-}
-
-export interface UserStats {
-  totalLogins: number;
-  lastActiveDate: string;
-  failedLoginAttempts: number;
-  accountCreatedAt: string;
-  lastPasswordChange: string;
-  groupCount: number;
-  activeSessionCount: number;
-}
-
-export type UsersResponse = PaginatedResponse<User>;
-
-// Audit Log Types
-export interface AuditSearchRequest {
-  startDate?: string;
-  endDate?: string;
-  userId?: string;
-  action?: string;
-  resourceType?: string;
-  resourceId?: string;
-  page?: number;
-  limit?: number;
-}
-
-// Re-export ApiResponse type for backwards compatibility
-export type { ApiResponse } from './api.types';
+// Re-export PaginatedResponse for backward compatibility
+export type { PaginatedResponse };
 
 // Re-export security types
-export type { PasswordPolicy, SecuritySettings, AuditLog } from './security.types';
+export type { PasswordPolicy, SecuritySettings } from './security.types';
+
+/**
+ * Derived type that represents a flattened view of a user's roles and groups
+ * This is returned by the permission service but not stored in the database
+ */
+export type UserPermissions = {
+  roles: Role[];
+}

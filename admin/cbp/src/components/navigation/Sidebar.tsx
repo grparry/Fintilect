@@ -26,12 +26,14 @@ const Sidebar: React.FC<SidebarProps> = ({
   const handleSectionClick = (sectionId: string) => {
     // Find the section in the navigation config
     const section = navigationConfig.find(s => s.id === sectionId);
-    if (!section) return;
-
-    // Match admin landing page behavior: toggle section first, then navigate
-    toggleSection(sectionId);
-    if (section.path) {
-      navigate(section.path);
+    if (section) {
+      // If clicking the active section, toggle it
+      if (state.activeSection === sectionId) {
+        toggleSection(sectionId);
+      } else {
+        // Otherwise, set it as active
+        setActiveSection(sectionId);
+      }
     }
   };
 
@@ -132,28 +134,18 @@ const Sidebar: React.FC<SidebarProps> = ({
                       key={section.id}
                       onClick={() => handleSectionClick(section.id)}
                       sx={{
-                        minHeight: 48,
-                        px: 2.5,
+                        py: 1.5,
+                        px: 3,
+                        borderRadius: 1,
                         '&:hover': {
-                          backgroundColor: theme.palette.mode === 'dark' 
-                            ? 'rgba(255, 255, 255, 0.08)' 
-                            : 'rgba(255, 255, 255, 0.1)'
+                          bgcolor: 'action.hover'
                         }
                       }}
                     >
-                      <ListItemIcon sx={{ 
-                        minWidth: 40,
-                        color: theme.palette.mode === 'dark' ? 'inherit' : '#fff'
-                      }}>
+                      <ListItemIcon sx={{ minWidth: 36 }}>
                         {React.createElement(section.icon || FolderIcon)}
                       </ListItemIcon>
-                      <ListItemText
-                        primary={section.title}
-                        primaryTypographyProps={{
-                          variant: 'body2',
-                          color: theme.palette.mode === 'dark' ? 'text.primary' : '#fff'
-                        }}
-                      />
+                      <ListItemText primary={section.title} />
                     </ListItemButton>
                   ))}
                 </List>

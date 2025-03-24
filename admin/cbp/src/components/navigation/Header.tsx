@@ -7,15 +7,15 @@ import {
   useTheme,
   Box,
   Link,
-  Tooltip,
+  Chip,
 } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '../../context/AuthContext';
-import { User } from '../../types/index';
+import { useHost } from '../../context/HostContext';
+import { User } from '../../types/client.types';
+import UserMenu from './UserMenu';
+import { getCurrentClientConfig } from '../../config/host.config';
 
 interface HeaderProps {
   drawerWidth: number;
@@ -34,16 +34,8 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const theme = useTheme();
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
+  const { environment } = useHost();
+  const clientConfig = getCurrentClientConfig();
 
   return (
     <AppBar
@@ -80,27 +72,29 @@ const Header: React.FC<HeaderProps> = ({
           underline="none"
           sx={{ flexGrow: 1 }}
         >
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" color="text.primary" noWrap component="div">
             Admin Portal
           </Typography>
         </Link>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton sx={{ ml: 1 }} onClick={toggleTheme} color="inherit">
-            {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>
-          <Typography variant="body2" sx={{ ml: 2, mr: 2 }}>
-            {user?.email || 'Guest'}
-          </Typography>
-          <Tooltip title="Logout">
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={handleLogout}
-              sx={{ ml: 1 }}
-            >
-              <LogoutIcon />
-            </IconButton>
-          </Tooltip>
+          <Chip
+            label={environment.toUpperCase()}
+            variant="outlined"
+            size="small"
+            color={environment === 'production' ? 'error' : 'default'}
+            sx={{ 
+              color: 'white',
+              borderColor: 'white',
+              mr: 2
+            }}
+          />
+          <UserMenu 
+            user={user} 
+            logout={logout} 
+            toggleTheme={toggleTheme} 
+            isDarkMode={isDarkMode} 
+            clientName={clientConfig.name}
+          />
         </Box>
       </Toolbar>
     </AppBar>

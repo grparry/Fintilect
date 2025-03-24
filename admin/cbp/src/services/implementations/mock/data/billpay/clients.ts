@@ -1,21 +1,41 @@
-import { Client, Payee } from '@/types/bill-pay.types';
+import { Client } from '../../../../../types/client.types';
+import { Payee } from '../../../../../types/bill-pay.types';
 
 export const mockClients: Client[] = [
     {
-        id: 'client_1',
+        id: 1,
         name: 'ACME Corp',
-        status: 'active',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        tenantId: 1,
+        isActive: true,
+        createdOn: new Date().toISOString(),
+        updatedOn: new Date().toISOString(),
+        type: 'ENTERPRISE',
+        status: 'ACTIVE',
+        environment: 'PRODUCTION',
+        require2FA: true,
+        domain: 'acme.com',
+        sponsorId: null,
+        routingId: null,
+        logoUrl: null
     },
     {
-        id: 'client_2',
+        id: 2,
         name: 'TechCorp',
-        status: 'active',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        tenantId: 2,
+        isActive: true,
+        createdOn: new Date().toISOString(),
+        updatedOn: new Date().toISOString(),
+        type: 'ENTERPRISE',
+        status: 'ACTIVE',
+        environment: 'PRODUCTION',
+        require2FA: true,
+        domain: 'acme.com',
+        sponsorId: null,
+        routingId: null,
+        logoUrl: null
     }
 ];
+
 export const mockPayees: Payee[] = [
     {
         id: 'payee_1',

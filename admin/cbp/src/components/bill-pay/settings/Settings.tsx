@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link as RouterLink, Outlet } from 'react-router-dom';
 import {
   Box,
   Tabs,
@@ -12,16 +13,10 @@ import {
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import GroupIcon from '@mui/icons-material/Group';
-import SecurityIcon from '@mui/icons-material/Security';
 import EventIcon from '@mui/icons-material/Event';
-import HistoryIcon from '@mui/icons-material/History';
 import NotificationTemplates from './NotificationTemplates';
 import BillPayConfig from './BillPayConfig';
-import PermissionGroups from './PermissionGroups';
-import BillPaySecuritySettings from './security/BillPaySecuritySettings';
 import Holidays from './Holidays';
-import AuditLog from './AuditLog';
 import { TabPanelProps, SettingsState } from '../../../types/bill-pay.types';
 
 const TabPanel: React.FC<TabPanelProps> = ({
@@ -60,35 +55,38 @@ const Settings: React.FC = () => {
   };
   // Load last active tab from local storage
   useEffect(() => {
-    const savedTab = localStorage.getItem('billPaySettingsTab');
+    const savedTab = sessionStorage.getItem('billPaySettingsTab');
     if (savedTab !== null) {
+      // Convert the saved tab index, ensuring it's valid for our current tab structure
+      const parsedTab = parseInt(savedTab, 10);
+      // If the saved tab was 0 (General), default to 0 (now Notifications)
+      // If it was 1 or 2, adjust to the new index (0 or 1)
+      const adjustedTab = parsedTab >= 1 ? Math.min(parsedTab - 1, 1) : 0;
+      
       setState((prev) => ({
         ...prev,
-        activeTab: parseInt(savedTab, 10),
+        activeTab: adjustedTab,
       }));
     }
   }, []);
   // Save active tab to local storage
   useEffect(() => {
-    localStorage.setItem('billPaySettingsTab', state.activeTab.toString());
+    sessionStorage.setItem('billPaySettingsTab', state.activeTab.toString());
   }, [state.activeTab]);
   return (
     <Box sx={{ width: '100%' }}>
       {/* Breadcrumbs */}
       <Breadcrumbs sx={{ mb: 2 }}>
         <Link
+          component={RouterLink}
+          to="/admin/bill-pay"
           color="inherit"
-          href="#"
-          onClick={(e: React.MouseEvent) => {
-            e.preventDefault();
-            // Navigate to dashboard
-          }}
         >
           Bill Pay
         </Link>
         <Typography color="text.primary">Settings</Typography>
       </Breadcrumbs>
-      <Typography variant="h4" sx={{ mb: 3 }}>
+      <Typography variant="h4" sx={{ mb: 3 }} color="text.primary">
         Bill Pay Settings
       </Typography>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -108,55 +106,27 @@ const Settings: React.FC = () => {
           }}
         >
           <Tab
-            icon={<SettingsIcon />}
-            label={isMobile ? undefined : 'General'}
-            {...a11yProps(0)}
-          />
-          <Tab
             icon={<NotificationsIcon />}
             label={isMobile ? undefined : 'Notifications'}
-            {...a11yProps(1)}
-          />
-          <Tab
-            icon={<GroupIcon />}
-            label={isMobile ? undefined : 'Permissions'}
-            {...a11yProps(2)}
-          />
-          <Tab
-            icon={<SecurityIcon />}
-            label={isMobile ? undefined : 'Security'}
-            {...a11yProps(3)}
+            {...a11yProps(0)}
           />
           <Tab
             icon={<EventIcon />}
             label={isMobile ? undefined : 'Holidays'}
-            {...a11yProps(4)}
-          />
-          <Tab
-            icon={<HistoryIcon />}
-            label={isMobile ? undefined : 'Audit Log'}
-            {...a11yProps(5)}
+            {...a11yProps(1)}
           />
         </Tabs>
         <TabPanel value={state.activeTab} index={0}>
-          <BillPayConfig />
-        </TabPanel>
-        <TabPanel value={state.activeTab} index={1}>
           <NotificationTemplates />
         </TabPanel>
-        <TabPanel value={state.activeTab} index={2}>
-          <PermissionGroups />
-        </TabPanel>
-        <TabPanel value={state.activeTab} index={3}>
-          <BillPaySecuritySettings />
-        </TabPanel>
-        <TabPanel value={state.activeTab} index={4}>
+        <TabPanel value={state.activeTab} index={1}>
           <Holidays />
         </TabPanel>
-        <TabPanel value={state.activeTab} index={5}>
-          <AuditLog />
-        </TabPanel>
       </Paper>
+      {/* Outlet for rendering nested routes */}
+      <Box sx={{ mt: 4 }}>
+        <Outlet />
+      </Box>
     </Box>
   );
 };

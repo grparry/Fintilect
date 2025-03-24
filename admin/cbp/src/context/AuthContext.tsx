@@ -1,127 +1,178 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { ServiceFactory } from '../services/factory/ServiceFactory';
 import { LoginCredentials, AuthState, SessionInfo, AuthContextType } from '../types/auth.types';
-import { User } from '../types/client.types';
+import { User, Role } from '../types/client.types';
+import logger from '../utils/logger';
 
 interface AuthProviderProps {
   children: ReactNode;
 }
+
 export const AuthContext = createContext<AuthContextType | null>(null);
+
+// Path for the password change page
+export const PASSWORD_CHANGE_PATH = '/admin/change-password';
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const authService = ServiceFactory.getInstance().getAuthService();
+
   const [state, setState] = useState<AuthState>({
     isAuthenticated: false,
     user: null,
     loading: true,
     error: null,
-    permissions: [],
+    userPermissions: null,
+    forcePasswordChange: false
   });
-  useEffect(() => {
-    const initializeAuth = async () => {
-      console.log('=== AuthContext Initialization ===');
-      console.log('Starting auth initialization');
-      try {
-        const session = await authService.getCurrentSession();
-        console.log('Session retrieved:', { hasSession: !!session, user: session?.user });
-        setState({
-          isAuthenticated: !!session,
-          user: session?.user || null,
-          permissions: session?.permissions || [],
-          loading: false,
-          error: null,
-        });
-        console.log('Auth state updated:', {
-          isAuthenticated: !!session,
-          hasUser: !!session?.user,
-          permissions: session?.permissions || [],
-        });
-      } catch (error) {
-        console.error('Auth initialization error:', error);
-        setState({
-          isAuthenticated: false,
-          user: null,
-          permissions: [],
-          loading: false,
-          error: error instanceof Error ? error.message : 'An error occurred',
-        });
-      }
-    };
-    initializeAuth();
-  }, [authService]);
-  const login = useCallback(async (credentials: LoginCredentials): Promise<void> => {
-    console.log('=== Login Attempt ===');
-    setState(prev => ({ ...prev, loading: true, error: null }));
+
+  const login = useCallback(async (credentials: LoginCredentials) => {
     try {
+      setState(prev => ({ ...prev, loading: true, error: null }));
       const response = await authService.login(credentials);
-      console.log('Login successful:', { hasUser: !!response.user });
-      setState({
-        isAuthenticated: true,
-        user: response.user,
-        permissions: response.permissions,
-        loading: false,
-        error: null,
+      
+      // Store auth session in session storage
+      sessionStorage.setItem('auth_session', JSON.stringify({
+        token: response.token,
+        expiresIn: response.expiresIn
+      }));
+      
+      console.log('AuthContext: Processing roles from login response:', {
+        rawRoles: response.roles,
+        transformedRoles: (response.roles || []).map(roleName => ({
+          id: 0,
+          name: roleName
+        }))
       });
-    } catch (error) {
-      console.error('Login error:', error);
+      const forcePasswordChange = response.user?.forcePasswordChange === true;
+      console.log('AuthContext: Setting forcePasswordChange flag:', forcePasswordChange);
+      
+      // Transform roles for state
+      const roles = (response.roles || []).map(roleName => ({
+        id: 0, // Since we only have the role name
+        name: roleName
+      }));
+      
       setState(prev => ({
         ...prev,
+        isAuthenticated: true,
+        user: response.user,
         loading: false,
-        error: error instanceof Error ? error.message : 'An error occurred during login',
+        error: null,
+        forcePasswordChange: forcePasswordChange,
+        userPermissions: {
+          roles: roles
+        }
+      }));
+      
+      // Log user login and permissions information
+      logger.info('User authentication successful', JSON.stringify({
+        username: response.user?.username || 'unknown',
+        userID: response.user?.id || 'unknown',
+        clientId: response.user?.clientId || 'unknown'
+      }));
+      
+      // Log detailed role information
+      logger.info('User roles and permissions', JSON.stringify({
+        rawRoles: response.roles || [],
+        mappedRoles: roles.map(r => r.name),
+        isSuperuser: (response.roles || []).includes('ClientSuperuser'),
+        isAdmin: (response.roles || []).includes('ClientAdmin'),
+        isOperator: (response.roles || []).includes('ClientOperator'),
+        isReadOnly: (response.roles || []).includes('ClientReadOnly')
+      }));
+      
+      return { forcePasswordChange };
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        isAuthenticated: false,
+        user: null,
+        loading: false,
+        error: error instanceof Error ? error.message : 'Login failed',
+        userPermissions: null
       }));
       throw error;
     }
   }, [authService]);
+
   const logout = useCallback(async () => {
-    setState(prev => ({ ...prev, loading: true }));
     try {
       await authService.logout();
+    } finally {
+      // Clear auth session and state on logout
+      sessionStorage.removeItem('auth_session');
       setState({
         isAuthenticated: false,
         user: null,
-        permissions: [],
         loading: false,
         error: null,
+        userPermissions: null,
+        forcePasswordChange: false
       });
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error.message : 'An error occurred',
-        loading: false,
-      }));
     }
   }, [authService]);
+
   const refreshToken = useCallback(async () => {
     try {
-      await authService.refreshToken();
-      const session = await authService.getCurrentSession();
-      if (session) {
-        setState(prev => ({
-          ...prev,
-          isAuthenticated: true,
-          user: session.user,
-          permissions: session.permissions,
-        }));
-      }
+      const tokens = await authService.refreshToken();
+      // Token refresh successful, maintain current state
+      setState(prev => ({ ...prev, error: null }));
     } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error.message : 'An error occurred',
-      }));
+      // Token refresh failed, log out user
+      await logout();
+      throw error;
     }
-  }, [authService]);
+  }, [authService, logout]);
+
   const clearError = useCallback(() => {
     setState(prev => ({ ...prev, error: null }));
   }, []);
-  const value: AuthContextType = {
-    ...state,
+
+  const updateForcePasswordChange = useCallback((value: boolean) => {
+    console.log('AuthContext: Updating forcePasswordChange flag to:', value);
+    setState(prev => {
+      if (prev.user) {
+        return {
+          ...prev,
+          forcePasswordChange: value,
+          user: { ...prev.user, forcePasswordChange: value }
+        };
+      }
+      return { ...prev, forcePasswordChange: value };
+    });
+  }, []);
+
+  // Initialize auth state without checking for existing sessions
+  useEffect(() => {
+    // Set initial state to not authenticated and not loading
+    setState({
+      isAuthenticated: false,
+      user: null,
+      loading: false,
+      error: null,
+      userPermissions: null,
+      forcePasswordChange: false
+    });
+  }, []);
+
+  const value = {
+    isAuthenticated: state.isAuthenticated,
+    user: state.user,
+    loading: state.loading,
+    error: state.error,
+    userPermissions: state.userPermissions,
+    forcePasswordChange: state.forcePasswordChange,
     login,
     logout,
     refreshToken,
     clearError,
+    updateForcePasswordChange
   };
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-export const useAuth = (): AuthContextType => {
+
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');

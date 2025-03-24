@@ -8,9 +8,10 @@ import {
   Alert,
 } from '@mui/material';
 import Form, { FormField } from '../../components/common/Form';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth, PASSWORD_CHANGE_PATH } from '../../context/AuthContext';
 import { LoginFormData, LoginCredentials } from '../../types/auth.types';
-import { ApiError } from '../../types/index';
+import { ApiError } from '../../types/exception.types';
+import { getTenantFromHostname } from '../../config/host.config';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -45,24 +46,46 @@ const LoginPage: React.FC = () => {
     }
   ];
   const handleSubmit = async (data: LoginFormData) => {
-    console.log('LoginPage: Submitting form with data:', { ...data, password: '[REDACTED]' });
+    console.log('LoginPage: Starting login process');
+    console.log('LoginPage: Form data:', { ...data, password: '[REDACTED]' });
     setLoading(true);
     setError(null);
     try {
+      console.log('LoginPage: Getting tenant ID from hostname:', window.location.hostname);
+      const tenantId = getTenantFromHostname();
+      console.log('LoginPage: Raw tenant ID from hostname:', tenantId);
+      if (!tenantId) {
+        throw new Error('Invalid tenant ID from hostname');
+      }
+      console.log('LoginPage: Converting tenant ID to number:', { raw: tenantId, parsed: parseInt(tenantId) });
       const credentials: LoginCredentials = {
         username: data.username,
         password: data.password,
-        clientId: '1' // Default clientId
+        tenantId: parseInt(tenantId)
       };
-      console.log('LoginPage: Calling login with credentials:', { ...credentials, password: '[REDACTED]' });
-      await login(credentials);
-      // Get the return URL from location state or default to home
-      const from = location.state?.from?.pathname || '/';
-      navigate(from);
+      console.log('LoginPage: Prepared credentials:', { ...credentials, password: '[REDACTED]' });
+      console.log('LoginPage: Calling login function');
+      const { forcePasswordChange } = await login(credentials);
+      console.log('LoginPage: Login successful, forcePasswordChange:', forcePasswordChange);
+      
+      // Check if user needs to change password
+      if (forcePasswordChange) {
+        console.log('LoginPage: User must change password, redirecting to password change page');
+        navigate(PASSWORD_CHANGE_PATH);
+      } else {
+        console.log('LoginPage: Navigating to: /admin');
+        navigate('/admin');
+      }
     } catch (err) {
-      console.error('LoginPage: Login failed:', err);
+      console.error('LoginPage: Login failed with error:', err);
+      console.error('LoginPage: Error details:', {
+        name: err.name,
+        message: err.message,
+        stack: err.stack
+      });
       setError(err as ApiError);
     } finally {
+      console.log('LoginPage: Login process complete');
       setLoading(false);
     }
   };
@@ -70,12 +93,12 @@ const LoginPage: React.FC = () => {
     <Container maxWidth="sm">
       <Box sx={{ mt: 8 }}>
         <Paper sx={{ p: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom align="center">
+          <Typography variant="h4" component="h1" gutterBottom align="center" color="text.primary">
             Login
           </Typography>
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
-              {error.message}
+              {error.details?.message || 'Authentication failed. Please check your credentials.'}
             </Alert>
           )}
           <Form

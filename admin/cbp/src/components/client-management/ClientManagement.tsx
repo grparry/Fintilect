@@ -7,18 +7,18 @@ import {
   Tabs,
   CircularProgress,
   Alert,
-  Chip,
 } from '@mui/material';
 import { Client, Environment, ClientStatus, ClientType } from '../../types/client.types';
-import { IpAddress } from '../../types/security.types';
 import { clientService } from '../../services/factory/ServiceFactory';
 import ContactInformation from './ContactInformation';
+import ClientInformation from './ClientInformation';
 import GroupsWrapper from './wrappers/GroupsWrapper';
 import UsersWrapper from './wrappers/UsersWrapper';
-import MemberSecuritySettingsWrapper from './wrappers/MemberSecuritySettingsWrapper';
-import AuditSearchWrapper from './wrappers/AuditSearchWrapper';
+import SecuritySettings from './security/SecuritySettings';
+import Configuration from './Configuration';
 import { encodeId } from '../../utils/idEncoder';
 import logger from '../../utils/logger';
+import { useHost } from '../../context/HostContext';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -64,8 +64,7 @@ const DEFAULT_SETTINGS = {
       lockoutDuration: 30,
     },
     sessionTimeout: 30,
-    mfaEnabled: false,
-    ipWhitelist: [] as IpAddress[],
+    mfaEnabled: false
   },
   notifications: {
     emailEnabled: true,
@@ -78,6 +77,7 @@ const DEFAULT_SETTINGS = {
 const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { environment } = useHost();
   const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,7 +91,7 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
     try {
       setLoading(true);
       setError(null);
-      const clientData = await clientService.getClient(clientId);
+      const clientData = await clientService.getClient(Number(clientId));
       if (!clientData) {
         throw new Error('Client not found');
       }
@@ -113,15 +113,23 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
   const getCurrentTab = () => {
     const path = location.pathname;
     console.log('Getting current tab for path:', path);
-    // Extract the last segment of the path
+    // Extract the segments of the path
     const segments = path.split('/');
+    console.log('Path analysis:', { segments });
+    
+    // Check if the path contains 'users' segment
+    if (segments.includes('users')) {
+      return 2; // Users tab
+    }
+    
+    // Check other segments
     const lastSegment = segments[segments.length - 1];
-    console.log('Path analysis:', { segments, lastSegment });
     switch (lastSegment) {
-      case 'users': return 1;
-      case 'groups': return 2;
-      case 'security': return 3;
-      case 'audit-log': return 4;
+      case 'contacts': return 1;
+      case 'groups': return 3;
+      case 'security': return 4;
+      case 'configuration': return 5;
+      case 'info': return 0;
       default: return 0;
     }
   };
@@ -131,34 +139,26 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
     console.log('Tab change:', { newValue, basePath });
     switch (newValue) {
       case 0:
-        navigate(`${basePath}/contact`);
+        navigate(`${basePath}/info`);
         break;
       case 1:
-        navigate(`${basePath}/users`);
+        navigate(`${basePath}/contacts`);
         break;
       case 2:
-        navigate(`${basePath}/groups`);
+        navigate(`${basePath}/users`);
         break;
       case 3:
-        navigate(`${basePath}/security`);
+        navigate(`${basePath}/groups`);
         break;
       case 4:
-        navigate(`${basePath}/audit-log`);
+        navigate(`${basePath}/security`);
+        break;
+      case 5:
+        navigate(`${basePath}/configuration`);
         break;
     }
   };
-  const getStatusColor = (status: ClientStatus) => {
-    switch (status) {
-      case ClientStatus.Active:
-        return 'success';
-      case ClientStatus.Inactive:
-        return 'error';
-      case ClientStatus.Suspended:
-        return 'warning';
-      default:
-        return 'default';
-    }
-  };
+  // Status color function removed
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -183,32 +183,37 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
   return (
     <Box>
       <Box display="flex" alignItems="center" mb={3}>
-        <Typography variant="h5" component="h1">
+        <Typography variant="h5" component="h1" color="text.primary">
           {client.name}
         </Typography>
-        <Chip
-          label={client.status}
-          color={getStatusColor(client.status)}
-          size="small"
-          sx={{ ml: 2 }}
-        />
-        <Chip
-          label={client.environment}
-          variant="outlined"
-          size="small"
-          sx={{ ml: 1 }}
-        />
       </Box>
       <Tabs value={getCurrentTab()} onChange={handleTabChange}>
-        <Tab label="Contact Information" />
+        <Tab label="Client Information" />
+        <Tab label="Contacts" />
         <Tab label="Users" />
         <Tab label="Groups" />
-        <Tab label="Security Settings" />
-        <Tab label="Audit Log" />
+        <Tab label="Login Security" />
+        <Tab label="Configuration" />
       </Tabs>
-      <Box mt={3}>
-        {children}
-      </Box>
+
+      <TabPanel value={getCurrentTab()} index={0}>
+        <ClientInformation clientId={clientId} />
+      </TabPanel>
+      <TabPanel value={getCurrentTab()} index={1}>
+        <ContactInformation clientId={clientId} mode="contacts" />
+      </TabPanel>
+      <TabPanel value={getCurrentTab()} index={2}>
+        <UsersWrapper />
+      </TabPanel>
+      <TabPanel value={getCurrentTab()} index={3}>
+        <GroupsWrapper />
+      </TabPanel>
+      <TabPanel value={getCurrentTab()} index={4}>
+        <SecuritySettings />
+      </TabPanel>
+      <TabPanel value={getCurrentTab()} index={5}>
+        <Configuration clientId={clientId} />
+      </TabPanel>
     </Box>
   );
 };

@@ -332,7 +332,7 @@ const APITesting: React.FC = () => {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h5" component="h2" gutterBottom>
+        <Typography variant="h5" component="h2" gutterBottom color="text.primary">
           API Testing
         </Typography>
         <FormControl fullWidth variant="outlined" sx={{ mb: 3 }}>
@@ -361,10 +361,10 @@ const APITesting: React.FC = () => {
         )}
         {apiSpec && !loading && (
           <Box>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" color="text.primary" gutterBottom>
               {apiSpec.info.title} - v{apiSpec.info.version}
             </Typography>
-            <Typography variant="body2" color="textSecondary" paragraph>
+            <Typography variant="body2" color="text.primary" paragraph>
               {apiSpec.info.description}
             </Typography>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>

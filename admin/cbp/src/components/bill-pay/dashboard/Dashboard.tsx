@@ -13,6 +13,7 @@ import {
   Alert,
   Skeleton,
   SelectChangeEvent,
+  Paper
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
@@ -24,6 +25,9 @@ import {
   ResponsiveContainer,
   Legend,
   Tooltip,
+  PieChart,
+  Pie,
+  Cell
 } from 'recharts';
 import DashboardCard from '../../../components/common/DashboardCard';
 import {
@@ -43,9 +47,14 @@ import { TimeRange } from '../../../types/index';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { IBillPayService } from '../../../services/interfaces/IBillPayService';
 import { IPaymentProcessorService } from '../../../services/interfaces/IPaymentProcessorService';
-import { BillPayStats, PaymentFilters } from '../../../types/bill-pay.types';
-import { ProcessorMetrics, TransactionSummary, DateRange } from '../../../types/payment.types';
-import { PaymentStatus } from '../../../types/bill-pay.types';
+import { BillPayStats } from '../../../types/bill-pay.types';
+import { 
+  ProcessorMetrics, 
+  TransactionSummary, 
+  DateRange, 
+  PaymentStatus,
+  PaymentFilters
+} from '../../../types/payment.types';
 
 interface DashboardState {
   billPayStats: BillPayStats | null;
@@ -85,7 +94,7 @@ const CustomTooltip = ({ active, payload, label, isAmount }: CustomTooltipProps)
   return (
     <Card>
       <CardContent>
-        <Typography variant="body2">{label}</Typography>
+        <Typography variant="body2" color="text.primary">{label}</Typography>
         <Typography variant="body2" color="textSecondary">
           {formatValue(payload[0].value, isAmount)}
         </Typography>
@@ -112,7 +121,7 @@ const Dashboard: React.FC = () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
       // Convert timeRange to service format
-      const serviceTimeRange = (() => {
+      const timeframe = (() => {
         switch (timeRange) {
           case '7d': return 'week';
           case '30d': return 'month';
@@ -143,21 +152,31 @@ const Dashboard: React.FC = () => {
         // Set end to end of day
         now.setHours(23, 59, 59, 999);
         return {
-          startDate: start.toISOString(),
-          endDate: now.toISOString()
+          startDate: start.toISOString().split('T')[0],
+          endDate: now.toISOString().split('T')[0]
         };
       };
       const dateRange = getDateRange();
-      const [billPayStats, processorMetrics, transactionSummary] = await Promise.all([
-        billPayService.getStats(serviceTimeRange),
-        processorService.getProcessorMetrics({ dateRange }),
-        processorService.getTransactionSummary({ dateRange })
+      const [billPayStats, processorMetrics] = await Promise.all([
+        billPayService.getStats(timeframe),
+        processorService.getProcessorMetrics({ dateRange })
       ]);
+      const statusCounts = {
+        [PaymentStatus.PENDING]: processorMetrics.inProcessPayments || 0,
+        [PaymentStatus.COMPLETED]: processorMetrics.completedPayments || 0,
+        [PaymentStatus.FAILED]: processorMetrics.failedPayments || 0,
+        [PaymentStatus.CANCELLED]: processorMetrics.cancelledPayments || 0,
+        [PaymentStatus.PROCESSING]: 0,
+        [PaymentStatus.PENDING_APPROVAL]: 0,
+        [PaymentStatus.ON_HOLD]: 0,
+        [PaymentStatus.REJECTED]: 0,
+        [PaymentStatus.EXPIRED]: 0
+      } as Record<PaymentStatus, number>;
       setState(prev => ({ 
         ...prev, 
         billPayStats: billPayStats,
         processorMetrics: processorMetrics,
-        transactionSummary: transactionSummary,
+        transactionSummary: null,
         loading: false 
       }));
     } catch (error) {
@@ -228,9 +247,7 @@ const Dashboard: React.FC = () => {
       PaymentStatus.PENDING,
       PaymentStatus.PENDING_APPROVAL,
       PaymentStatus.PROCESSING,
-      PaymentStatus.DRAFT,
-      PaymentStatus.SUBMITTED,
-      PaymentStatus.SCHEDULED
+      PaymentStatus.ON_HOLD
     ];
     const pendingCounts = pendingStatuses.map(status => ({
       status,
@@ -442,12 +459,10 @@ const Dashboard: React.FC = () => {
                   mb: 2
                 }}
               >
-                <Typography variant="h6" component="div">
-                  {card.title}
-                </Typography>
+                <Typography variant="h6" color="text.primary">{card.title}</Typography>
                 <card.icon />
               </Box>
-              <Typography variant="h4" component="div">
+              <Typography variant="h4" color="text.primary" component="div">
                 {card.formatter ? card.formatter(value) : value}
               </Typography>
             </CardContent>
@@ -470,6 +485,80 @@ const Dashboard: React.FC = () => {
     );
   };
 
+  const renderPaymentStatusChart = () => {
+    const statusData = [
+      {
+        id: 'Pending',
+        value: state.billPayStats?.transactionsByStatus?.[PaymentStatus.PENDING] || 0,
+        color: '#FFC107'
+      },
+      {
+        id: 'Processing',
+        value: state.billPayStats?.transactionsByStatus?.[PaymentStatus.PROCESSING] || 0,
+        color: '#2196F3'
+      },
+      {
+        id: 'Completed',
+        value: state.billPayStats?.transactionsByStatus?.[PaymentStatus.COMPLETED] || 0,
+        color: '#34C759'
+      },
+      {
+        id: 'Failed',
+        value: state.billPayStats?.transactionsByStatus?.[PaymentStatus.FAILED] || 0,
+        color: '#FF0000'
+      },
+      {
+        id: 'Cancelled',
+        value: state.billPayStats?.transactionsByStatus?.[PaymentStatus.CANCELLED] || 0,
+        color: '#FF0000'
+      },
+      {
+        id: 'Pending Approval',
+        value: state.billPayStats?.transactionsByStatus?.[PaymentStatus.PENDING_APPROVAL] || 0,
+        color: '#FFC107'
+      },
+      {
+        id: 'On Hold',
+        value: state.billPayStats?.transactionsByStatus?.[PaymentStatus.ON_HOLD] || 0,
+        color: '#808080'
+      },
+      {
+        id: 'Rejected',
+        value: state.billPayStats?.transactionsByStatus?.[PaymentStatus.REJECTED] || 0,
+        color: '#FF0000'
+      },
+      {
+        id: 'Expired',
+        value: state.billPayStats?.transactionsByStatus?.[PaymentStatus.EXPIRED] || 0,
+        color: '#808080'
+      }
+    ];
+
+    return (
+      <Box sx={{ height: 300 }}>
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart>
+            <Pie
+              data={statusData}
+              dataKey="value"
+              nameKey="id"
+              cx="50%"
+              cy="50%"
+              outerRadius={120}
+              fill="#8884d8"
+              label={(entry: { name: string }) => entry.name}
+              labelLine={false}
+            >
+              {statusData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      </Box>
+    );
+  };
+
   if (state.error) {
     return <Alert severity="error">{state.error}</Alert>;
   }
@@ -478,7 +567,7 @@ const Dashboard: React.FC = () => {
     <Box sx={{ p: 3 }}>
       {state.error && (
         <Alert severity="error" sx={{ mb: 3 }}>
-          <Typography>{state.error}</Typography>
+          <Typography color="text.primary">{state.error}</Typography>
         </Alert>
       )}
       {renderMetricCards()}
@@ -492,7 +581,7 @@ const Dashboard: React.FC = () => {
               mb: 3,
             }}
           >
-            <Typography variant="h6">Transaction Trends</Typography>
+            <Typography variant="h6" color="text.primary">Transaction Trends</Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <FormControl size="small">
                 <InputLabel>Time Range</InputLabel>
@@ -528,6 +617,12 @@ const Dashboard: React.FC = () => {
             </Box>
           </Box>
           {renderChart()}
+        </CardContent>
+      </Card>
+      <Card sx={{ mt: 3 }}>
+        <CardContent>
+          <Typography variant="h6" color="text.primary">Payment Status</Typography>
+          {renderPaymentStatusChart()}
         </CardContent>
       </Card>
     </Box>

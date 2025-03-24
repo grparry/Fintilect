@@ -149,7 +149,7 @@ const BillPayConfig: React.FC = () => {
   }
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom color="text.primary">
         Bill Pay Configuration
       </Typography>
       {error && (
@@ -224,7 +224,7 @@ const BillPayConfig: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <Divider sx={{ my: 2 }} />
-              <Typography variant="subtitle1" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom color="text.primary">
                 Processing Options
               </Typography>
               <Stack spacing={2}>
@@ -268,7 +268,7 @@ const BillPayConfig: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <Divider sx={{ my: 2 }} />
-              <Typography variant="subtitle1" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom color="text.primary">
                 Notification Settings
               </Typography>
               <Stack spacing={2}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams, Outlet } from 'react-router-dom';
 import { Box, Typography, Grid, Paper, Link, Alert, CircularProgress } from '@mui/material';
 import { getAllRoutes } from '../../routes';
 import PeopleIcon from '@mui/icons-material/People';
@@ -44,7 +44,7 @@ const ClientManagementHeader: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const decodedClientId = decodeId(clientId);
+        const decodedClientId = Number(decodeId(clientId));
         const clientData = await clientService.getClient(decodedClientId);
         setClient(clientData);
         logger.info('Client data loaded successfully');
@@ -66,12 +66,12 @@ const ClientManagementHeader: React.FC = () => {
     );
   }
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom color="text.primary">
           Client Management
         </Typography>
-        <Typography variant="body1" color="text.secondary" paragraph>
+        <Typography variant="body1" color="text.primary" paragraph>
           Welcome to Client Management. Here you can manage client accounts, users, and access settings.
         </Typography>
       </Box>
@@ -80,37 +80,40 @@ const ClientManagementHeader: React.FC = () => {
           {error}
         </Alert>
       )}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={4}>
-          <Paper 
-            sx={{ 
-              p: 3, 
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              '&:hover': {
-                bgcolor: 'action.hover'
-              }
-            }}
-          >
-            <Link
-              component={RouterLink}
-              to="list"
-              color="inherit"
-              underline="none"
-              sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
+      {!clientId && (
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid item xs={12} sm={6} md={4}>
+            <Paper 
+              sx={{ 
+                p: 3, 
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                '&:hover': {
+                  bgcolor: 'action.hover'
+                }
+              }}
             >
-              <PeopleIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" gutterBottom>
-                Client List
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                View and manage all client accounts
-              </Typography>
-            </Link>
-          </Paper>
+              <Link
+                component={RouterLink}
+                to="list"
+                color="inherit"
+                underline="none"
+                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
+              >
+                <PeopleIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
+                <Typography variant="h6" gutterBottom color="text.primary">
+                  Client List
+                </Typography>
+                <Typography variant="body2" color="text.primary">
+                  View and manage all client accounts
+                </Typography>
+              </Link>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
+      <Outlet />
     </Box>
   );
 };

@@ -1,112 +1,59 @@
-import {
-  Permission,
-  SecurityRole,
-  UserGroup,
-  PermissionCategoryType
-} from '../../../../../types/client.types';
+import { Role, Group, UserGroup, GroupRole } from '../../../../../types/client.types';
 
-export const mockPermissions: Permission[] = [
+// Define roles
+export const mockRoles: Role[] = [
   {
-    id: '1',
-    name: 'Bill Pay Management',
-    description: 'Manage bill pay operations',
-    category: 'billpay' as PermissionCategoryType,
-    actions: ['view', 'edit', 'process', 'approve']
+    id: 1,
+    name: 'Administrator'
   },
   {
-    id: '2',
-    name: 'Client Management',
-    description: 'Manage client information',
-    category: 'client' as PermissionCategoryType,
-    actions: ['view', 'edit', 'create', 'delete']
+    id: 2,
+    name: 'Bill Pay Operator'
   },
   {
-    id: '3',
-    name: 'User Management',
-    description: 'Manage system users',
-    category: 'user' as PermissionCategoryType,
-    actions: ['view', 'edit', 'create', 'delete']
-  },
-  {
-    id: '4',
-    name: 'Report Access',
-    description: 'Access and generate reports',
-    category: 'reports' as PermissionCategoryType,
-    actions: ['view', 'export', 'create']
+    id: 3,
+    name: 'Report Viewer'
   }
 ];
-export const mockRoles: SecurityRole[] = [
+
+// Define groups
+export const mockGroups: Group[] = [
   {
-    id: '1',
-    name: 'Administrator',
-    description: 'Full system access',
-    permissions: mockPermissions,
-    isSystem: true,
+    id: 1,
+    name: 'Administrator Group',
+    clientId: 1,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
   {
-    id: '2',
-    name: 'Bill Pay Operator',
-    description: 'Bill pay operations access',
-    permissions: [mockPermissions[0], mockPermissions[3]],
-    isSystem: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  },
-  {
-    id: '3',
-    name: 'Report Viewer',
-    description: 'Report viewing access',
-    permissions: [mockPermissions[3]],
-    isSystem: true,
+    id: 2,
+    name: 'Bill Pay Group',
+    clientId: 1,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   }
 ];
-export const mockPermissionGroups: UserGroup[] = [
+
+// Define which roles each group has
+export const mockGroupRoles: GroupRole[] = [
   {
-    id: '1',
-    name: 'Administrator',
-    description: 'Full system access',
-    clientId: 'client1',
-    roles: [mockRoles[0]],
-    permissions: mockPermissions,
-    members: ['user1'],
-    users: [],
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
+    groupId: 1,
+    roleId: 1 // Administrator group has Administrator role
   },
   {
-    id: '2',
-    name: 'Bill Pay Operator',
-    description: 'Bill pay operations access',
-    clientId: 'client1',
-    roles: [mockRoles[1]],
-    permissions: [mockPermissions[0], mockPermissions[3]],
-    members: ['user2'],
-    users: [],
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: '3',
-    name: 'Report Viewer',
-    description: 'Report viewing access',
-    clientId: 'client1',
-    roles: [],
-    permissions: [mockPermissions[3]],
-    members: ['user3'],
-    users: [],
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
+    groupId: 2,
+    roleId: 2 // Bill Pay group has Bill Pay Operator role
   }
 ];
-// Mock user-permission group assignments
-export const mockUserPermissionGroups: Record<string, string[]> = {
-  'user1': ['1'], // Administrator
-  'user2': ['2'], // Bill Pay Operator
-  'user3': ['2', '3'] // Bill Pay Operator + Report Viewer
-};
-export const mockUserPermissions = mockPermissions;
-export const mockGroupPermissions = mockPermissionGroups;
+
+// Define which users belong to which groups
+export const mockUserGroups: UserGroup[] = [
+  {
+    userId: 1,
+    groupId: 1 // User 1 is in Administrator group
+  },
+  {
+    userId: 2,
+    groupId: 2 // User 2 is in Bill Pay group
+  }
+];
