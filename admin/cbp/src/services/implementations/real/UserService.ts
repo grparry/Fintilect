@@ -62,15 +62,12 @@ export class UserService extends BaseService implements IUserService {
   async resetPassword(params: {
     userId: number;
     newPassword: string;
-    forcePasswordChange?: boolean;
   }): Promise<void> {
-    // Use query parameters instead of a JSON body
-    // Note: According to the OpenAPI spec, only newPassword is supported as a query parameter
-    const queryParams = {
+    // Send password in the request body as per the API specification
+    const requestBody = {
       newPassword: params.newPassword
-      // forcePasswordChange is set automatically by the API
     };
     
-    await this.put(`/User/${params.userId}/reset-password`, null, { params: queryParams });
+    await this.put(`/User/${params.userId}/reset-password`, requestBody);
   }
 }

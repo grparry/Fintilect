@@ -224,12 +224,11 @@ export class MockUserService extends BaseMockService implements IUserService {
   async resetPassword(params: {
     userId: number;
     newPassword: string;
-    forcePasswordChange?: boolean;
   }): Promise<void> {
     const user = await this.getUser(params.userId);
     
     // Update password and set forcePasswordChange flag
-    // In the real implementation, only newPassword is passed as a query parameter
+    // In the real implementation, only newPassword is passed in the request body
     // forcePasswordChange is automatically set by the API
     const updatedUser: User = {
       ...user,

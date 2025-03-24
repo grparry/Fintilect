@@ -2944,16 +2944,33 @@
               "type": "integer",
               "format": "int64"
             }
-          },
-          {
-            "name": "newPassword",
-            "in": "query",
-            "description": "The new password for the user",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
+        "requestBody": {
+          "description": "Object containing the new password",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordResetRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordResetRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordResetRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordResetRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The password was reset",
@@ -4857,6 +4874,19 @@
         },
         "additionalProperties": false
       },
+      "PasswordResetRequest": {
+        "required": [
+          "newPassword"
+        ],
+        "type": "object",
+        "properties": {
+          "newPassword": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "PaymentInformationReport": {
         "type": "object",
         "properties": {
@@ -5537,6 +5567,12 @@
             "minLength": 0,
             "type": "string",
             "format": "email"
+          },
+          "mobilePhone": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           },
           "department": {
             "maxLength": 255,

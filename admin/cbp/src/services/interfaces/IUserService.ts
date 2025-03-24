@@ -88,13 +88,11 @@ export interface IUserService extends IBaseService {
      * Reset user password (admin function)
      * @param userId User identifier
      * @param newPassword New password to set
-     * @param forcePasswordChange Whether to force password change on next login is set automatically by the API
      * @returns Success status
      * @remarks According to the OpenAPI spec, only newPassword is sent as a query parameter
      */
     resetPassword(params: {
         userId: number;
         newPassword: string;
-        forcePasswordChange?: boolean;
     }): Promise<void>;
 }

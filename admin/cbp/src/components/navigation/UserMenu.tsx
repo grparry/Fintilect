@@ -19,7 +19,9 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BusinessIcon from '@mui/icons-material/Business';
+import LockIcon from '@mui/icons-material/Lock';
 import { useNavigate } from 'react-router-dom';
+import UserPasswordChangeDialog from '../dialogs/UserPasswordChangeDialog';
 
 interface UserMenuProps {
   user: User | null;
@@ -31,6 +33,7 @@ interface UserMenuProps {
 
 const UserMenu: React.FC<UserMenuProps> = ({ user, logout, toggleTheme, isDarkMode, clientName }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [passwordChangeDialogOpen, setPasswordChangeDialogOpen] = useState(false);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const theme = useTheme();
@@ -56,6 +59,11 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, logout, toggleTheme, isDarkMo
   const handleThemeToggle = () => {
     toggleTheme();
     handleClose();
+  };
+
+  const handlePasswordChange = () => {
+    handleClose();
+    setPasswordChangeDialogOpen(true);
   };
 
   // Get user initials for the avatar
@@ -148,6 +156,14 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, logout, toggleTheme, isDarkMo
           </ListItemIcon>
           <ListItemText>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</ListItemText>
         </MenuItem>
+        {user && !user.isLocked && (
+          <MenuItem onClick={handlePasswordChange}>
+            <ListItemIcon>
+              <LockIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Change Password</ListItemText>
+          </MenuItem>
+        )}
         {user?.isLocked && (
           <MenuItem disabled>
             <ListItemIcon>
@@ -163,6 +179,13 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, logout, toggleTheme, isDarkMo
           <ListItemText primaryTypographyProps={{ color: 'error' }}>Logout</ListItemText>
         </MenuItem>
       </Menu>
+      
+      {user && (
+        <UserPasswordChangeDialog
+          open={passwordChangeDialogOpen}
+          onClose={() => setPasswordChangeDialogOpen(false)}
+        />
+      )}
     </Box>
   );
 };
