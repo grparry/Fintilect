@@ -19,11 +19,6 @@ export interface IAuthService extends IBaseService {
      */
     login(credentials: LoginCredentials): Promise<AuthenticationResponse>;
     /**
-     * End current user session
-     * @returns Promise resolving when logout is complete
-     */
-    logout(): Promise<void>;
-    /**
      * Refresh the current authentication token
      * @returns New token response
      */

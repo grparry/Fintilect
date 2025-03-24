@@ -62,11 +62,6 @@ export class MockAuthService implements IAuthService {
     };
   }
 
-  async logout(): Promise<void> {
-    this.currentSession = null;
-    this.activeSessions = [];
-  }
-
   async refreshToken(): Promise<TokenResponse> {
     if (!this.currentSession) {
       throw new AuthError('No active session', 'AUTH_002');

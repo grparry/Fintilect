@@ -25,7 +25,7 @@ import UserPasswordChangeDialog from '../dialogs/UserPasswordChangeDialog';
 
 interface UserMenuProps {
   user: User | null;
-  logout: () => Promise<void>;
+  logout: () => void;
   toggleTheme: () => void;
   isDarkMode: boolean;
   clientName: string;
@@ -46,14 +46,10 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, logout, toggleTheme, isDarkMo
     setAnchorEl(null);
   };
 
-  const handleLogout = async () => {
-    try {
-      handleClose();
-      await logout();
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+  const handleLogout = () => {
+    handleClose();
+    logout();
+    navigate('/login');
   };
 
   const handleThemeToggle = () => {

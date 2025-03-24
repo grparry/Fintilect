@@ -33,7 +33,7 @@ export interface AuthContextType {
   userPermissions: UserPermissions | null;
   forcePasswordChange: boolean;
   login: (credentials: LoginCredentials) => Promise<{ forcePasswordChange: boolean }>;
-  logout: () => Promise<void>;
+  logout: () => void;
   refreshToken: () => Promise<void>;
   clearError: () => void;
   updateForcePasswordChange: (value: boolean) => void;

@@ -95,12 +95,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [authService]);
 
-  const logout = useCallback(async () => {
+  const logout = useCallback(() => {
     try {
-      await authService.logout();
-    } finally {
-      // Clear auth session and state on logout
+      logger.info('AuthContext: Performing logout');
+      
+      // Clear JWT token from localStorage
+      localStorage.removeItem('jwt_token');
+      
+      // Clear auth session from sessionStorage
       sessionStorage.removeItem('auth_session');
+      
+      // Reset auth state
+      setState({
+        isAuthenticated: false,
+        user: null,
+        loading: false,
+        error: null,
+        userPermissions: null,
+        forcePasswordChange: false
+      });
+      
+      logger.info('AuthContext: Logout completed successfully');
+    } catch (error) {
+      logger.error(`AuthContext: Error during logout: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      
+      // Even if there's an error, we still want to reset the local state
       setState({
         isAuthenticated: false,
         user: null,
@@ -110,7 +129,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         forcePasswordChange: false
       });
     }
-  }, [authService]);
+  }, []);
 
   const refreshToken = useCallback(async () => {
     try {
@@ -119,7 +138,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setState(prev => ({ ...prev, error: null }));
     } catch (error) {
       // Token refresh failed, log out user
-      await logout();
+      logout();
       throw error;
     }
   }, [authService, logout]);

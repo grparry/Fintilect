@@ -45,16 +45,6 @@ export class AuthService extends BaseService implements IAuthService {
             throw error;
         }
     }
-    async logout(): Promise<void> {
-        try {
-            await this.post<void>('/logout');
-            // Clear the JWT token on logout
-            localStorage.removeItem('jwt_token');
-        } catch (error) {
-            logger.error(`Logout failed: ${error}`);
-            throw error;
-        }
-    }
     async refreshToken(): Promise<TokenResponse> {
         try {
             return await this.post<TokenResponse>('/refresh');
