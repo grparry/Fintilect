@@ -175,7 +175,28 @@ export const isClientHostname = (): boolean => {
  * Extract tenant ID from hostname if present
  */
 export const getTenantFromHostname = (): string => {
-  return getCurrentClientConfig().tenantId.toString();
+  try {
+    const config = getCurrentClientConfig();
+    console.log('[getTenantFromHostname] Current client config:', {
+      hostname: config.hostname,
+      name: config.name,
+      tenantId: config.tenantId,
+      clientId: config.clientId,
+      environment: config.environment
+    });
+    
+    if (config.tenantId === undefined || config.tenantId === null) {
+      console.error('[getTenantFromHostname] No tenant ID found in client configuration');
+      console.error('[getTenantFromHostname] Full config:', config);
+      throw new Error('No tenant ID found in client configuration');
+    }
+    
+    return config.tenantId.toString();
+  } catch (error) {
+    console.error('[getTenantFromHostname] Error getting tenant ID:', error);
+    console.error('[getTenantFromHostname] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
+    throw error;
+  }
 };
 
 /**
