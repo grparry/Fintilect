@@ -26,13 +26,19 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({
   disabled = false,
 }) => {
   return (
-    <>
+    <Grid container spacing={2} sx={{ mb: 1 }}>
       <Grid item xs={12} md={6} lg={3}>
         <DatePicker
           label={startLabel}
           value={startDate}
           onChange={onStartDateChange}
-          slotProps={{ textField: { fullWidth: true } }}
+          slotProps={{ 
+            textField: { 
+              fullWidth: true,
+              size: "small",
+              margin: "dense"
+            } 
+          }}
           disabled={disabled}
         />
       </Grid>
@@ -41,11 +47,17 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({
           label={endLabel}
           value={endDate}
           onChange={onEndDateChange}
-          slotProps={{ textField: { fullWidth: true } }}
+          slotProps={{ 
+            textField: { 
+              fullWidth: true,
+              size: "small",
+              margin: "dense"
+            } 
+          }}
           disabled={disabled}
         />
       </Grid>
-    </>
+    </Grid>
   );
 };
 

@@ -4,7 +4,13 @@ import dayjs from 'dayjs';
 
 import ReportContainer from '../components/ReportContainer';
 import ReportTable from '../components/ReportTable';
-import { ERROR_RECAP_SEARCH_TYPES, ErrorRecapReportData, getErrorRecap } from '../../../../utils/reports/errorRecap';
+import { 
+  ERROR_RECAP_SEARCH_TYPES, 
+  ErrorRecapSearchType,
+  ErrorRecapParams,
+  ErrorRecapItem,
+  getErrorRecap 
+} from '../../../../utils/reports/errorRecap';
 import useClientApi from '../../../../hooks/useClientApi';
 
 const DEFAULT_PAGE_SIZE = 20;
@@ -14,12 +20,19 @@ const ErrorRecapReport: React.FC = () => {
   useClientApi(true);
   
   // State for report parameters
-  const [searchType, setSearchType] = useState<keyof typeof ERROR_RECAP_SEARCH_TYPES>('MemberID');
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchType, setSearchType] = useState<ErrorRecapSearchType>(ErrorRecapSearchType.MemberID);
+  const [memberId, setMemberId] = useState<string>('');
+  const [paymentId, setPaymentId] = useState<string>('');
+  const [userPayeeListId, setUserPayeeListId] = useState<string>('');
+  const [statusCode, setStatusCode] = useState<string>('');
+  const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(dayjs().subtract(7, 'day'));
+  const [endDate, setEndDate] = useState<dayjs.Dayjs | null>(dayjs());
+  const [payeeId, setPayeeId] = useState<string>('');
+  const [payeeName, setPayeeName] = useState<string>('');
   const [page, setPage] = useState(1);
   
   // State for report results
-  const [reportData, setReportData] = useState<ErrorRecapReportData[] | null>(null);
+  const [reportData, setReportData] = useState<ErrorRecapItem[] | null>(null);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -27,21 +40,102 @@ const ErrorRecapReport: React.FC = () => {
 
   // Handle search type change
   const handleSearchTypeChange = (event: SelectChangeEvent) => {
-    setSearchType(event.target.value as keyof typeof ERROR_RECAP_SEARCH_TYPES);
+    setSearchType(Number(event.target.value) as ErrorRecapSearchType);
+    // Reset search values when changing search type
+    setMemberId('');
+    setPaymentId('');
+    setUserPayeeListId('');
+    setStatusCode('');
+    setPayeeId('');
+    setPayeeName('');
   };
 
   // Handle page change
   const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
-    if (searchValue) {
+    
+    // Check if required parameters are available based on search type
+    let hasRequiredParams = false;
+    
+    switch (searchType) {
+      case ErrorRecapSearchType.MemberID:
+        hasRequiredParams = !!memberId;
+        break;
+      case ErrorRecapSearchType.PaymentID:
+        hasRequiredParams = !!paymentId;
+        break;
+      case ErrorRecapSearchType.UserPayeeListID:
+        hasRequiredParams = !!userPayeeListId;
+        break;
+      case ErrorRecapSearchType.StatusCode:
+        hasRequiredParams = !!statusCode;
+        break;
+      case ErrorRecapSearchType.DateRange:
+        hasRequiredParams = !!startDate && !!endDate;
+        if (!hasRequiredParams) setError('Start Date and End Date are required');
+        else if (startDate && endDate && startDate.isAfter(endDate)) {
+          setError('Start Date must be before End Date');
+          hasRequiredParams = false;
+        }
+        break;
+      case ErrorRecapSearchType.PayeeID:
+        hasRequiredParams = !!payeeId;
+        break;
+      case ErrorRecapSearchType.PayeeName:
+        hasRequiredParams = !!payeeName;
+        break;
+    }
+    
+    if (hasRequiredParams) {
       runReport(value);
     }
   };
 
   // Run the error recap report
   const runReport = useCallback(async (currentPage: number = 1) => {
-    if (!searchValue) {
-      setError('Search value is required');
+    // Validate required parameters based on search type
+    let hasRequiredParams = false;
+    
+    switch (searchType) {
+      case ErrorRecapSearchType.MemberID:
+        hasRequiredParams = !!memberId;
+        if (!hasRequiredParams) setError('Member ID is required');
+        break;
+      case ErrorRecapSearchType.PaymentID:
+        hasRequiredParams = !!paymentId;
+        if (!hasRequiredParams) setError('Payment ID is required');
+        break;
+      case ErrorRecapSearchType.UserPayeeListID:
+        hasRequiredParams = !!userPayeeListId;
+        if (!hasRequiredParams) setError('User Payee List ID is required');
+        break;
+      case ErrorRecapSearchType.StatusCode:
+        hasRequiredParams = !!statusCode;
+        if (!hasRequiredParams) setError('Status Code is required');
+        break;
+      case ErrorRecapSearchType.DateRange:
+        hasRequiredParams = !!startDate && !!endDate;
+        if (!hasRequiredParams) {
+          setError('Start Date and End Date are required');
+        } else if (startDate && endDate && startDate.isAfter(endDate)) {
+          setError('Start Date must be before End Date');
+          hasRequiredParams = false;
+        }
+        break;
+      case ErrorRecapSearchType.PayeeID:
+        hasRequiredParams = !!payeeId;
+        if (!hasRequiredParams) setError('Payee ID is required');
+        break;
+      case ErrorRecapSearchType.PayeeName:
+        hasRequiredParams = !!payeeName;
+        if (!hasRequiredParams) setError('Payee Name is required');
+        break;
+      default:
+        setError('Invalid search type');
+        return;
+    }
+    
+    if (!hasRequiredParams) {
       return;
     }
     
@@ -50,27 +144,60 @@ const ErrorRecapReport: React.FC = () => {
     setError(null);
     
     try {
-      const result = await getErrorRecap({
-        searchType,
-        searchValue,
+      // Prepare report parameters with specific fields based on search type
+      const params: ErrorRecapParams = {
+        searchType: searchType,
         pageNumber: currentPage,
         pageSize: DEFAULT_PAGE_SIZE
-      });
+      };
       
-      setReportData(result.items);
-      setTotalPages(result.totalPages);
-      setTotalCount(result.totalCount);
+      // Add specific parameters based on search type
+      switch (searchType) {
+        case ErrorRecapSearchType.MemberID:
+          params.memberId = memberId;
+          break;
+        case ErrorRecapSearchType.PaymentID:
+          params.paymentId = paymentId;
+          break;
+        case ErrorRecapSearchType.UserPayeeListID:
+          params.userPayeeListId = userPayeeListId;
+          break;
+        case ErrorRecapSearchType.StatusCode:
+          params.statusCode = statusCode;
+          break;
+        case ErrorRecapSearchType.DateRange:
+          params.startDate = startDate?.format('YYYY-MM-DD');
+          params.endDate = endDate?.format('YYYY-MM-DD');
+          console.log('Date search parameters:', { startDate: params.startDate, endDate: params.endDate });
+          break;
+        case ErrorRecapSearchType.PayeeID:
+          params.payeeId = payeeId;
+          break;
+        case ErrorRecapSearchType.PayeeName:
+          params.payeeName = payeeName;
+          break;
+      }
       
-      if (result.items.length === 0) {
-        setError('No error records found for the specified criteria');
+      // Call the error recap API
+      const response = await getErrorRecap(params);
+      
+      // Update state with response data
+      if (response.items) {
+        setReportData(response.items);
+        setTotalPages(response.totalPages);
+        setTotalCount(response.totalCount);
+      } else {
+        setReportData([]);
+        setTotalPages(1);
+        setTotalCount(0);
       }
     } catch (err) {
       console.error('Error running error recap report:', err);
-      setError(`Failed to run report: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      setError('Failed to load error recap data. Please try again.');
     } finally {
       setLoading(false);
     }
-  }, [searchType, searchValue]);
+  }, [searchType, memberId, paymentId, userPayeeListId, statusCode, startDate, endDate, payeeId, payeeName]);
 
   // Export report data to CSV
   const handleExportCsv = useCallback(() => {
@@ -78,51 +205,82 @@ const ErrorRecapReport: React.FC = () => {
     
     // Define CSV columns
     const header = [
-      'failedDate', 'memberID', 'paymentID', 'amount', 'payeeID', 
-      'payeeName', 'userPayeeListID', 'usersAccountAtPayee', 'nameOnAccount', 
+      'failedDate', 'memberId', 'paymentId', 'amount', 'payeeId', 
+      'payeeName', 'userPayeeListId', 'usersAccountAtPayee', 'nameOnAccount', 
       'status', 'hostCode', 'error'
     ].join(',');
     
     // Convert data to CSV rows
     const rows = reportData.map(row => {
       return [
-        row.failedDate || '',
-        row.memberID || '',
-        row.paymentID || '',
+        row.failedDate ? dayjs(row.failedDate).format('MM/DD/YYYY HH:mm:ss') : '',
+        row.memberId || '',
+        row.paymentId || '',
         row.amount || 0,
-        row.payeeID || '',
-        `"${(row.payeeName || '').replace(/"/g, '""')}"`, // Escape quotes in payee name
-        row.userPayeeListID || '',
-        `"${(row.usersAccountAtPayee || '').replace(/"/g, '""')}"`, // Escape quotes
-        `"${(row.nameOnAccount || '').replace(/"/g, '""')}"`, // Escape quotes
+        row.payeeId || '',
+        row.payeeName || '',
+        row.userPayeeListId || '',
+        row.usersAccountAtPayee || '',
+        row.nameOnAccount || '',
         row.status || '',
         row.hostCode || '',
-        `"${(row.error || '').replace(/"/g, '""')}"` // Escape quotes in error message
+        row.error ? `"${row.error.replace(/"/g, '""')}"` : ''
       ].join(',');
     });
     
     // Combine header and rows
     const csv = [header, ...rows].join('\n');
     
-    // Create and trigger download
+    // Create and download CSV file
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `error_recap_${dayjs().format('YYYY-MM-DD')}.csv`);
+    link.setAttribute('download', `error-recap-${dayjs().format('YYYY-MM-DD')}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   }, [reportData]);
 
+  // Get the label for the search value field based on search type
+  const getSearchValueLabel = () => {
+    switch (searchType) {
+      case ErrorRecapSearchType.MemberID:
+        return 'Member ID';
+      case ErrorRecapSearchType.PaymentID:
+        return 'Payment ID';
+      case ErrorRecapSearchType.PayeeID:
+        return 'Payee ID';
+      case ErrorRecapSearchType.PayeeName:
+        return 'Payee Name';
+      case ErrorRecapSearchType.UserPayeeListID:
+        return 'User Payee List ID';
+      case ErrorRecapSearchType.StatusCode:
+        return 'Status Code';
+      case ErrorRecapSearchType.DateRange:
+        return 'Date';
+      default:
+        return 'Search Value';
+    }
+  };
+
   // Define table columns
   const columns = [
-    { key: 'failedDate', label: 'Failed Date' },
-    { key: 'memberID', label: 'Member ID' },
-    { key: 'paymentID', label: 'Payment ID' },
-    { key: 'amount', label: 'Amount', render: (value: number) => `$${value.toFixed(2)}` },
+    { 
+      key: 'failedDate', 
+      label: 'Failed Date',
+      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY HH:mm:ss') : '' 
+    },
+    { key: 'memberId', label: 'Member ID' },
+    { key: 'paymentId', label: 'Payment ID' },
+    { 
+      key: 'amount', 
+      label: 'Amount',
+      render: (value: number) => value ? `$${value.toFixed(2)}` : '$0.00'
+    },
     { key: 'payeeName', label: 'Payee Name' },
+    { key: 'userPayeeListId', label: 'User Payee List ID' },
     { key: 'status', label: 'Status' },
     { key: 'hostCode', label: 'Host Code' },
     { key: 'error', label: 'Error' }
@@ -131,64 +289,119 @@ const ErrorRecapReport: React.FC = () => {
   return (
     <ReportContainer
       title="Error Recap Report"
-      description="View error history records by various search criteria"
       onRunReport={() => runReport(1)}
       onExportCsv={handleExportCsv}
       loading={loading}
       error={error}
-      hasResults={!!reportData && reportData.length > 0}
-      resultsComponent={
-        <>
-          {reportData && (
-            <>
-              <ReportTable data={reportData} columns={columns} />
-              {totalPages > 1 && (
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Pagination 
-                      count={totalPages} 
-                      page={page} 
-                      onChange={handlePageChange} 
-                      color="primary" 
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      {`Showing ${reportData.length} of ${totalCount} results`}
-                    </Typography>
-                  </Box>
-                </Box>
-              )}
-            </>
-          )}
-        </>
-      }
+      hasData={!!reportData && reportData.length > 0}
     >
-      <Grid container spacing={3}>
+      <Grid container spacing={2} sx={{ mb: 1 }}>
         <Grid item xs={12} md={6} lg={3}>
-          <FormControl fullWidth>
+          <FormControl fullWidth size="small" margin="dense">
             <InputLabel>Search Type</InputLabel>
             <Select
-              value={searchType}
+              value={searchType.toString()}
               label="Search Type"
               onChange={handleSearchTypeChange}
+              size="small"
             >
-              {Object.entries(ERROR_RECAP_SEARCH_TYPES).map(([key, label]) => (
-                <MenuItem key={key} value={key}>{label}</MenuItem>
+              {Object.entries(ERROR_RECAP_SEARCH_TYPES).map(([key, value]) => (
+                <MenuItem key={key} value={key}>{value}</MenuItem>
               ))}
             </Select>
           </FormControl>
         </Grid>
 
         <Grid item xs={12} md={6} lg={3}>
-          <TextField
-            fullWidth
-            label="Search Value"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder={`Enter ${ERROR_RECAP_SEARCH_TYPES[searchType]}`}
-            required
-          />
+          {searchType === ErrorRecapSearchType.DateRange ? (
+            <Grid container spacing={1}>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  margin="dense"
+                  label="Start Date"
+                  type="date"
+                  value={startDate?.format('YYYY-MM-DD')}
+                  onChange={(e) => setStartDate(dayjs(e.target.value))}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  margin="dense"
+                  label="End Date"
+                  type="date"
+                  value={endDate?.format('YYYY-MM-DD')}
+                  onChange={(e) => setEndDate(dayjs(e.target.value))}
+                />
+              </Grid>
+            </Grid>
+          ) : (
+            <TextField
+              fullWidth
+              size="small"
+              margin="dense"
+              label={getSearchValueLabel()}
+              value={
+                searchType === ErrorRecapSearchType.MemberID ? memberId :
+                searchType === ErrorRecapSearchType.PaymentID ? paymentId :
+                searchType === ErrorRecapSearchType.PayeeID ? payeeId :
+                searchType === ErrorRecapSearchType.PayeeName ? payeeName :
+                searchType === ErrorRecapSearchType.UserPayeeListID ? userPayeeListId :
+                searchType === ErrorRecapSearchType.StatusCode ? statusCode : ''
+              }
+              onChange={(e) => {
+                switch (searchType) {
+                  case ErrorRecapSearchType.MemberID:
+                    setMemberId(e.target.value);
+                    break;
+                  case ErrorRecapSearchType.PaymentID:
+                    setPaymentId(e.target.value);
+                    break;
+                  case ErrorRecapSearchType.PayeeID:
+                    setPayeeId(e.target.value);
+                    break;
+                  case ErrorRecapSearchType.PayeeName:
+                    setPayeeName(e.target.value);
+                    break;
+                  case ErrorRecapSearchType.UserPayeeListID:
+                    setUserPayeeListId(e.target.value);
+                    break;
+                  case ErrorRecapSearchType.StatusCode:
+                    setStatusCode(e.target.value);
+                    break;
+                  default:
+                    break;
+                }
+              }}
+              placeholder={`Enter ${getSearchValueLabel().toLowerCase()}`}
+            />
+          )}
         </Grid>
       </Grid>
+
+      {reportData && reportData.length > 0 ? (
+        <>
+          <ReportTable
+            data={reportData}
+            columns={columns}
+          />
+          
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+            <Typography variant="body2">
+              Showing {reportData.length} of {totalCount} results
+            </Typography>
+            <Pagination 
+              count={totalPages} 
+              page={page} 
+              onChange={handlePageChange} 
+              color="primary" 
+            />
+          </Box>
+        </>
+      ) : null}
     </ReportContainer>
   );
 };

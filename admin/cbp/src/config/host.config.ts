@@ -227,8 +227,32 @@ export const getAdminApiUrl = (): string => {
  */
 export const getClientApiUrl = (): string => {
   console.log('[getClientApiUrl] Getting client API URL...');
+  
+  // Check if we have a selected client in sessionStorage
+  const selectedClientId = sessionStorage.getItem('selectedClientId');
+  
+  if (selectedClientId) {
+    const clientId = parseInt(selectedClientId, 10);
+    const currentEnvironment = getCurrentClientConfig().environment;
+    const key = `${clientId}_${currentEnvironment}`;
+    
+    console.log(`[getClientApiUrl] Found selected client ID: ${clientId}, looking for key: ${key}`);
+    
+    if (CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT[key]) {
+      const selectedClientConfig = CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT[key];
+      console.log('[getClientApiUrl] Using selected client config:', {
+        name: selectedClientConfig.name,
+        environment: selectedClientConfig.environment,
+        clientApiUrl: selectedClientConfig.clientApiUrl
+      });
+      console.log('[getClientApiUrl] Resolved client API URL:', selectedClientConfig.clientApiUrl);
+      return selectedClientConfig.clientApiUrl;
+    }
+  }
+  
+  // Fall back to hostname-based config if no selected client
   const config = getCurrentClientConfig();
-  console.log('[getClientApiUrl] Using config:', {
+  console.log('[getClientApiUrl] Using hostname-based config:', {
     hostname: config.hostname,
     environment: config.environment,
     clientApiUrl: config.clientApiUrl

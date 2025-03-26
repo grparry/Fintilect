@@ -1,4 +1,5 @@
-import { ReportResponse, ErrorRecapRequest, ErrorRecapItemPagedResponse, ErrorRecapItem, PaymentActivityRequest, PaymentActivityItemPagedResponse, PaymentActivityItem, SearchType } from '../../../types/report.types';
+import { PaymentActivityRequest, PaymentActivityItemPagedResponse, PaymentActivityItem, PaymentActivitySearchType } from '../../../utils/reports/paymentActivity';
+import { ErrorRecapRequest, ErrorRecapItemPagedResponse, ErrorRecapItem, ErrorRecapSearchType } from '../../../utils/reports/errorRecap';
 import { IReportService } from '../../interfaces/IReportService';
 import { BaseMockService } from './BaseMockService';
 import logger from '../../../utils/logger';
@@ -8,100 +9,122 @@ export class MockReportService extends BaseMockService implements IReportService
         super(basePath);
     }
 
-    async runReport(name: string | null, args: string | null): Promise<ReportResponse> {
-        await this.delay();
-        // Return an object with jsonResponse property to match the API specification
-        return {
-            jsonResponse: JSON.stringify({
-                message: 'Mock report response',
-                name,
-                args: args ? this.parseReportParams(args) : null
-            })
-        };
-    }
-
-    async runReportWithParams(name: string, params: Record<string, string | number | Date>): Promise<ReportResponse> {
-        // Validate report name follows convention (starts with "rpt" and ends with "JSON")
-        if (!name.startsWith('rpt') || !name.endsWith('JSON')) {
-            throw new Error(`Invalid report name: ${name}. Report names must start with "rpt" and end with "JSON"`);
-        }
-
-        const formattedArgs = this.formatReportParams(params);
-        return this.runReport(name, formattedArgs);
-    }
-
     async getErrorRecap(params: ErrorRecapRequest): Promise<ErrorRecapItemPagedResponse> {
         await this.delay();
         
-        if (!params.searchType || !params.searchValue) {
-            throw new Error('SearchType and SearchValue are required parameters');
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+        
+        // Validate required parameters based on search type
+        switch (params.searchType) {
+            case ErrorRecapSearchType.PaymentID:
+                if (!params.paymentId) throw new Error('PaymentID is required for this search type');
+                break;
+            case ErrorRecapSearchType.MemberID:
+                if (!params.memberId) throw new Error('MemberID is required for this search type');
+                break;
+            case ErrorRecapSearchType.UserPayeeListID:
+                if (!params.userPayeeListId) throw new Error('UserPayeeListID is required for this search type');
+                break;
+            case ErrorRecapSearchType.StatusCode:
+                if (!params.statusCode) throw new Error('StatusCode is required for this search type');
+                break;
+            case ErrorRecapSearchType.DateRange:
+                if (!params.startDate || !params.endDate) throw new Error('StartDate and EndDate are required for this search type');
+                break;
+            case ErrorRecapSearchType.PayeeID:
+                if (!params.payeeId) throw new Error('PayeeID is required for this search type');
+                break;
+            case ErrorRecapSearchType.PayeeName:
+                if (!params.payeeName) throw new Error('PayeeName is required for this search type');
+                break;
+            default:
+                throw new Error(`Unsupported search type: ${params.searchType}`);
         }
         
         // Log the parameters being sent for debugging
         const searchParams = new URLSearchParams();
-        searchParams.append('SearchType', params.searchType);
-        searchParams.append('SearchValue', params.searchValue);
+        searchParams.append('SearchType', params.searchType.toString());
+        
+        // Add specific parameters based on search type
+        switch (params.searchType) {
+            case ErrorRecapSearchType.PaymentID:
+                searchParams.append('PaymentID', params.paymentId!);
+                break;
+            case ErrorRecapSearchType.MemberID:
+                searchParams.append('MemberID', params.memberId!);
+                break;
+            case ErrorRecapSearchType.UserPayeeListID:
+                searchParams.append('UserPayeeListID', params.userPayeeListId!);
+                break;
+            case ErrorRecapSearchType.StatusCode:
+                searchParams.append('StatusCode', params.statusCode!);
+                break;
+            case ErrorRecapSearchType.DateRange:
+                searchParams.append('StartDate', params.startDate!);
+                searchParams.append('EndDate', params.endDate!);
+                break;
+            case ErrorRecapSearchType.PayeeID:
+                searchParams.append('PayeeID', params.payeeId!);
+                break;
+            case ErrorRecapSearchType.PayeeName:
+                searchParams.append('PayeeName', params.payeeName!);
+                break;
+        }
+        
         searchParams.append('PageNumber', (params.pageNumber || 1).toString());
         searchParams.append('PageSize', (params.pageSize || 20).toString());
+        
+        // Add sorting parameters if provided
+        if (params.sortColumn) {
+            searchParams.append('SortColumn', params.sortColumn);
+        }
+        if (params.sortDirection) {
+            searchParams.append('SortDirection', params.sortDirection);
+        }
         
         const queryString = searchParams.toString();
         logger.info(`Mock ErrorRecap request with query string: ${queryString}`);
         
-        // Create mock data based on search parameters
-        const mockItems: ErrorRecapItem[] = Array(10).fill(null).map((_, index) => ({
-            failedDate: new Date(Date.now() - index * 86400000).toISOString(),
-            memberId: `M${100000 + index}`,
-            paymentId: `P${200000 + index}`,
-            amount: 100 + (index * 10),
-            userPayeeListId: `UPL${300000 + index}`,
-            payeeId: `PY${400000 + index}`,
-            payeeName: `Mock Payee ${index + 1}`,
-            usersAccountAtPayee: `ACCT-${500000 + index}`,
-            nameOnAccount: `Mock User ${index + 1}`,
-            status: index % 2 === 0 ? 'Failed' : 'Error',
-            hostCode: `HC-${index}`,
-            error: `Mock error message for ${params.searchType}=${params.searchValue} (${index + 1})`
-        }));
-        
-        // Filter mock data based on search parameters if needed
-        let filteredItems = [...mockItems];
-        if (params.searchType && params.searchValue) {
-            const searchValue = params.searchValue.toLowerCase();
-            
-            switch(params.searchType) {
-                case 'MemberID':
-                    filteredItems = mockItems.filter(item => 
-                        item.memberId?.toLowerCase().includes(searchValue));
-                    break;
-                case 'PaymentID':
-                    filteredItems = mockItems.filter(item => 
-                        item.paymentId?.toLowerCase().includes(searchValue));
-                    break;
-                case 'UserPayeeListID':
-                    filteredItems = mockItems.filter(item => 
-                        item.userPayeeListId?.toLowerCase().includes(searchValue));
-                    break;
-                case 'StatusCode':
-                    filteredItems = mockItems.filter(item => 
-                        item.hostCode?.toLowerCase().includes(searchValue));
-                    break;
-            }
-        }
-        
-        // Handle pagination
+        // Generate mock data based on search parameters
+        const totalItems = 100;
         const pageNumber = params.pageNumber || 1;
         const pageSize = params.pageSize || 20;
-        const startIndex = (pageNumber - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        const paginatedItems = filteredItems.slice(startIndex, endIndex);
+        const totalPages = Math.ceil(totalItems / pageSize);
         
+        // Generate items for the current page
+        const items: ErrorRecapItem[] = [];
+        const startIndex = (pageNumber - 1) * pageSize;
+        const endIndex = Math.min(startIndex + pageSize, totalItems);
+        
+        for (let i = startIndex; i < endIndex; i++) {
+            const item: ErrorRecapItem = {
+                failedDate: new Date(Date.now() - i * 86400000).toISOString(),
+                memberId: `M${100000 + i}`,
+                paymentId: `P${200000 + i}`,
+                amount: 100 + (i * 10),
+                userPayeeListId: `UPL${300000 + i}`,
+                payeeId: `PY${400000 + i}`,
+                payeeName: `Mock Payee ${i + 1}`,
+                usersAccountAtPayee: `ACCT-${500000 + i}`,
+                nameOnAccount: `Mock User ${i + 1}`,
+                status: 'Failed',
+                hostCode: `ERR-${i % 5}`,
+                error: `Mock error message ${i + 1}`
+            };
+            items.push(item);
+        }
+        
+        // Return the paged response
         return {
-            items: paginatedItems,
-            pageNumber: pageNumber,
-            pageSize: pageSize,
-            totalCount: filteredItems.length,
-            totalPages: Math.ceil(filteredItems.length / pageSize),
-            hasNext: endIndex < filteredItems.length
+            items,
+            pageNumber,
+            pageSize,
+            totalCount: totalItems,
+            totalPages,
+            hasNext: pageNumber < totalPages,
+            hasPrevious: pageNumber > 1
         };
     }
 
@@ -114,16 +137,14 @@ export class MockReportService extends BaseMockService implements IReportService
         
         // Log the parameters being sent for debugging
         const searchParams = new URLSearchParams();
-        searchParams.append('SearchType', params.searchType);
+        searchParams.append('SearchType', params.searchType.toString());
         
-        // Add parameters based on search type
-        if (params.searchValue) {
-            // Map searchValue to the appropriate parameter based on search type
-            if (params.searchType.includes('MemberID')) {
-                searchParams.append('MemberID', params.searchValue);
-            } else if (params.searchType.includes('PaymentID')) {
-                searchParams.append('PaymentID', params.searchValue);
-            }
+        if (params.memberId) {
+            searchParams.append('MemberId', params.memberId);
+        }
+        
+        if (params.paymentId) {
+            searchParams.append('PaymentId', params.paymentId);
         }
         
         if (params.startDate) {
@@ -141,164 +162,53 @@ export class MockReportService extends BaseMockService implements IReportService
         searchParams.append('PageNumber', (params.pageNumber || 1).toString());
         searchParams.append('PageSize', (params.pageSize || 20).toString());
         
+        if (params.sortColumn) {
+            searchParams.append('SortColumn', params.sortColumn);
+            searchParams.append('SortDirection', params.sortDirection || 'ASC');
+        }
+        
         const queryString = searchParams.toString();
         logger.info(`Mock PaymentActivity request with query string: ${queryString}`);
         
-        // Create mock payment activity data
-        const mockItems: PaymentActivityItem[] = Array(15).fill(null).map((_, index) => ({
-            memberID: `M${100000 + index}`,
-            paymentID: `P${200000 + index}`,
-            payeeID: `PY${400000 + index}`,
-            payeeName: `Mock Payee ${index + 1}`,
-            dateProcessed: new Date(Date.now() - index * 86400000).toISOString(),
-            dueDate: new Date(Date.now() + (7 - index) * 86400000).toISOString(),
-            status: index % 3 === 0 ? 'Processed' : (index % 3 === 1 ? 'Pending' : 'Canceled'),
-            paymentMethod: index % 2 === 0 ? 'Check' : 'Electronic',
-            amount: 100 + (index * 25)
-        }));
-        
-        // Filter mock data based on search parameters
-        let filteredItems = [...mockItems];
-        
-        switch(params.searchType) {
-            case SearchType.MemberID:
-                if (params.searchValue) {
-                    filteredItems = mockItems.filter(item => 
-                        item.memberID?.includes(params.searchValue));
-                }
-                break;
-            case SearchType.PaymentID:
-                if (params.searchValue) {
-                    filteredItems = mockItems.filter(item => 
-                        item.paymentID?.includes(params.searchValue));
-                }
-                break;
-            case SearchType.PayeeName:
-                if (params.payeeName) {
-                    filteredItems = mockItems.filter(item => 
-                        item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
-                }
-                break;
-            case SearchType.DateRange:
-                // Filter by date range if provided
-                if (params.startDate && params.endDate) {
-                    const startDate = new Date(params.startDate).getTime();
-                    const endDate = new Date(params.endDate).getTime();
-                    
-                    filteredItems = mockItems.filter(item => {
-                        const processedDate = new Date(item.dateProcessed || '').getTime();
-                        return processedDate >= startDate && processedDate <= endDate;
-                    });
-                }
-                
-                // Additional filter by payee name if provided
-                if (params.payeeName) {
-                    filteredItems = filteredItems.filter(item => 
-                        item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
-                }
-                break;
-            case SearchType.MemberIDAndDate:
-                // Filter by member ID
-                if (params.searchValue) {
-                    filteredItems = mockItems.filter(item => 
-                        item.memberID?.includes(params.searchValue));
-                }
-                
-                // Additional filter by date range
-                if (params.startDate && params.endDate) {
-                    const startDate = new Date(params.startDate).getTime();
-                    const endDate = new Date(params.endDate).getTime();
-                    
-                    filteredItems = filteredItems.filter(item => {
-                        const processedDate = new Date(item.dateProcessed || '').getTime();
-                        return processedDate >= startDate && processedDate <= endDate;
-                    });
-                }
-                break;
-            case SearchType.MemberIDAndPayeeName:
-                // Filter by member ID
-                if (params.searchValue) {
-                    filteredItems = mockItems.filter(item => 
-                        item.memberID?.includes(params.searchValue));
-                }
-                
-                // Additional filter by payee name
-                if (params.payeeName) {
-                    filteredItems = filteredItems.filter(item => 
-                        item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
-                }
-                break;
-            case SearchType.MemberIDAndDateAndPayeeName:
-                // Filter by member ID
-                if (params.searchValue) {
-                    filteredItems = mockItems.filter(item => 
-                        item.memberID?.includes(params.searchValue));
-                }
-                
-                // Additional filter by date range
-                if (params.startDate && params.endDate) {
-                    const startDate = new Date(params.startDate).getTime();
-                    const endDate = new Date(params.endDate).getTime();
-                    
-                    filteredItems = filteredItems.filter(item => {
-                        const processedDate = new Date(item.dateProcessed || '').getTime();
-                        return processedDate >= startDate && processedDate <= endDate;
-                    });
-                }
-                
-                // Additional filter by payee name
-                if (params.payeeName) {
-                    filteredItems = filteredItems.filter(item => 
-                        item.payeeName?.toLowerCase().includes(params.payeeName.toLowerCase()));
-                }
-                break;
-        }
-        
-        // Handle pagination
+        // Generate mock data based on search parameters
+        const totalItems = 100;
         const pageNumber = params.pageNumber || 1;
         const pageSize = params.pageSize || 20;
-        const startIndex = (pageNumber - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        const paginatedItems = filteredItems.slice(startIndex, endIndex);
+        const totalPages = Math.ceil(totalItems / pageSize);
         
-        return {
-            items: paginatedItems,
-            pageNumber: pageNumber,
-            pageSize: pageSize,
-            totalCount: filteredItems.length,
-            totalPages: Math.ceil(filteredItems.length / pageSize),
-            hasNext: endIndex < filteredItems.length,
-            hasPrevious: pageNumber > 1
-        };
-    }
-
-    formatReportParams(params: Record<string, string | number | Date>): string {
-        return Object.entries(params)
-            .map(([key, value]) => this.formatReportParam(key, value))
-            .join(',');
-    }
-
-    formatReportParam(key: string, value: string | number | Date): string {
-        // Format Date objects as YYYY-MM-DD
-        if (value instanceof Date) {
-            const year = value.getFullYear();
-            const month = String(value.getMonth() + 1).padStart(2, '0');
-            const day = String(value.getDate()).padStart(2, '0');
-            return `${key}=${year}-${month}-${day}`;
+        // Generate items for the current page
+        const items: PaymentActivityItem[] = [];
+        const startIndex = (pageNumber - 1) * pageSize;
+        const endIndex = Math.min(startIndex + pageSize, totalItems);
+        
+        // Determine the search type and generate appropriate data
+        const searchTypeValue = params.searchType;
+        
+        for (let i = startIndex; i < endIndex; i++) {
+            const item: PaymentActivityItem = {
+                id: `ID-${i + 1}`,
+                memberId: `M${100000 + i}`,
+                paymentId: `P${200000 + i}`,
+                payeeId: `PY${400000 + i}`,
+                payeeName: `Mock Payee ${i + 1}`,
+                dateProcessed: new Date(Date.now() - i * 86400000).toISOString(),
+                dueDate: new Date(Date.now() + (30 - i) * 86400000).toISOString(),
+                status: i % 5 === 0 ? 'Failed' : 'Completed',
+                paymentMethod: i % 2 === 0 ? 'ACH' : 'Check',
+                amount: 100 + (i * 10)
+            };
+            items.push(item);
         }
         
-        return `${key}=${value}`;
-    }
-
-    parseReportParams(params: string): Record<string, string> {
-        if (!params) return {};
-        
-        return params.split(',').reduce((acc, param) => {
-            const [key, value] = param.split('=');
-            if (key) {
-                acc[key] = value || '';
-            }
-            return acc;
-        }, {} as Record<string, string>);
+        // Return the paged response
+        return {
+            items,
+            pageNumber,
+            pageSize,
+            totalCount: totalItems,
+            totalPages,
+            hasNext: pageNumber < totalPages,
+            hasPrevious: pageNumber > 1
+        };
     }
 }

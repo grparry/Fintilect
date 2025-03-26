@@ -1,5 +1,6 @@
 import { IReportService } from '../../interfaces/IReportService';
-import { ReportResponse, ErrorRecapRequest, ErrorRecapItemPagedResponse, PaymentActivityRequest, PaymentActivityItemPagedResponse } from '../../../types/report.types';
+import { PaymentActivityRequest, PaymentActivityItemPagedResponse } from '../../../utils/reports/paymentActivity';
+import { ErrorRecapRequest, ErrorRecapItemPagedResponse, ErrorRecapSearchType } from '../../../utils/reports/errorRecap';
 import { BaseService } from './BaseService';
 import logger from '../../../utils/logger';
 
@@ -8,45 +9,67 @@ export class ReportService extends BaseService implements IReportService {
         super(basePath);
     }
 
-    async runReport(name: string | null, args: string | null): Promise<ReportResponse> {
-        // Clean up empty parameter values in the arguments string to avoid double-escaping
-        let cleanedArgs = args;
-        if (args) {
-            // Replace empty parameters (param=) with param="" to ensure proper formatting
-            cleanedArgs = args.replace(/([^=,]+)=(?=,|$)/g, '$1=""');
-        }
-        
-        return this.post<ReportResponse>('/run', { name, arguments: cleanedArgs });
-    }
-
-    async runReportWithParams(name: string, params: Record<string, string | number | Date>): Promise<ReportResponse> {
-        // Validate report name follows convention (starts with "rpt" and ends with "JSON")
-        if (!name.startsWith('rpt') || !name.endsWith('JSON')) {
-            throw new Error(`Invalid report name: ${name}. Report names must start with "rpt" and end with "JSON"`);
-        }
-
-        const formattedArgs = this.formatReportParams(params);
-        return this.runReport(name, formattedArgs);
-    }
-
     async getErrorRecap(params: ErrorRecapRequest): Promise<ErrorRecapItemPagedResponse> {
-        if (!params.searchType || !params.searchValue) {
-            throw new Error('SearchType and SearchValue are required parameters');
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
         }
 
         // Build the query string directly with PascalCase parameter names
         // This ensures the parameters are included in the URL as expected by the API
         const searchParams = new URLSearchParams();
-        searchParams.append('SearchType', params.searchType);
-        searchParams.append('SearchValue', params.searchValue);
+        searchParams.append('SearchType', params.searchType.toString());
+        
+        // Add specific parameters based on search type
+        switch (params.searchType) {
+            case ErrorRecapSearchType.PaymentID:
+                if (!params.paymentId) throw new Error('PaymentID is required for this search type');
+                searchParams.append('PaymentID', params.paymentId);
+                break;
+            case ErrorRecapSearchType.MemberID:
+                if (!params.memberId) throw new Error('MemberID is required for this search type');
+                searchParams.append('MemberID', params.memberId);
+                break;
+            case ErrorRecapSearchType.UserPayeeListID:
+                if (!params.userPayeeListId) throw new Error('UserPayeeListID is required for this search type');
+                searchParams.append('UserPayeeListID', params.userPayeeListId);
+                break;
+            case ErrorRecapSearchType.StatusCode:
+                if (!params.statusCode) throw new Error('StatusCode is required for this search type');
+                searchParams.append('StatusCode', params.statusCode);
+                break;
+            case ErrorRecapSearchType.DateRange:
+                if (!params.startDate || !params.endDate) throw new Error('StartDate and EndDate are required for this search type');
+                searchParams.append('StartDate', params.startDate);
+                searchParams.append('EndDate', params.endDate);
+                break;
+            case ErrorRecapSearchType.PayeeID:
+                if (!params.payeeId) throw new Error('PayeeID is required for this search type');
+                searchParams.append('PayeeID', params.payeeId);
+                break;
+            case ErrorRecapSearchType.PayeeName:
+                if (!params.payeeName) throw new Error('PayeeName is required for this search type');
+                searchParams.append('PayeeName', params.payeeName);
+                break;
+            default:
+                throw new Error(`Unsupported search type: ${params.searchType}`);
+        }
+        
+        // Add pagination parameters
         searchParams.append('PageNumber', (params.pageNumber || 1).toString());
         searchParams.append('PageSize', (params.pageSize || 20).toString());
+        
+        // Add sorting parameters if provided
+        if (params.sortColumn) {
+            searchParams.append('SortColumn', params.sortColumn);
+        }
+        if (params.sortDirection) {
+            searchParams.append('SortDirection', params.sortDirection);
+        }
         
         const queryString = searchParams.toString();
         logger.info(`ErrorRecap request with query string: ${queryString}`);
         
-        // Append the query string directly to the URL
-        return this.get<ErrorRecapItemPagedResponse>(`/ErrorRecap?${queryString}`);
+        return this.get<ErrorRecapItemPagedResponse>(`/errorRecap?${queryString}`);
     }
 
     async getPaymentActivity(params: PaymentActivityRequest): Promise<PaymentActivityItemPagedResponse> {
@@ -54,23 +77,20 @@ export class ReportService extends BaseService implements IReportService {
             throw new Error('SearchType is a required parameter');
         }
 
-        // Build the query string with PascalCase parameter names to match API expectations
+        // Build the query string directly with PascalCase parameter names
+        // This ensures the parameters are included in the URL as expected by the API
         const searchParams = new URLSearchParams();
-        searchParams.append('SearchType', params.searchType);
+        searchParams.append('SearchType', params.searchType.toString());
         
-        // Add parameters based on search type
-        if (params.searchValue) {
-            // Map searchValue to the appropriate parameter based on search type
-            if (params.searchType.includes('MemberID')) {
-                searchParams.append('MemberID', params.searchValue);
-            } else if (params.searchType.includes('PaymentID')) {
-                searchParams.append('PaymentID', params.searchValue);
-            } else if (params.searchType.includes('PayeeName')) {
-                searchParams.append('PayeeName', params.searchValue);
-            }
+        // Add optional parameters if provided
+        if (params.memberId) {
+            searchParams.append('MemberId', params.memberId);
         }
         
-        // Add optional parameters only if they have values
+        if (params.paymentId) {
+            searchParams.append('PaymentId', params.paymentId);
+        }
+        
         if (params.startDate) {
             searchParams.append('StartDate', params.startDate);
         }
@@ -86,40 +106,15 @@ export class ReportService extends BaseService implements IReportService {
         searchParams.append('PageNumber', (params.pageNumber || 1).toString());
         searchParams.append('PageSize', (params.pageSize || 20).toString());
         
+        // Add sorting parameters if provided
+        if (params.sortColumn) {
+            searchParams.append('SortColumn', params.sortColumn);
+            searchParams.append('SortDirection', params.sortDirection || 'ASC');
+        }
+        
         const queryString = searchParams.toString();
         logger.info(`PaymentActivity request with query string: ${queryString}`);
         
-        // Call the new endpoint with the query string
-        return this.get<PaymentActivityItemPagedResponse>(`/PaymentActivity?${queryString}`);
-    }
-
-    formatReportParams(params: Record<string, string | number | Date>): string {
-        return Object.entries(params)
-            .map(([key, value]) => this.formatReportParam(key, value))
-            .join(',');
-    }
-
-    formatReportParam(key: string, value: string | number | Date): string {
-        // Format Date objects as YYYY-MM-DD
-        if (value instanceof Date) {
-            const year = value.getFullYear();
-            const month = String(value.getMonth() + 1).padStart(2, '0');
-            const day = String(value.getDate()).padStart(2, '0');
-            return `${key}=${year}-${month}-${day}`;
-        }
-        
-        return `${key}=${value}`;
-    }
-
-    parseReportParams(params: string): Record<string, string> {
-        if (!params) return {};
-        
-        return params.split(',').reduce((acc, param) => {
-            const [key, value] = param.split('=');
-            if (key) {
-                acc[key] = value || '';
-            }
-            return acc;
-        }, {} as Record<string, string>);
+        return this.get<PaymentActivityItemPagedResponse>(`/paymentActivity?${queryString}`);
     }
 }

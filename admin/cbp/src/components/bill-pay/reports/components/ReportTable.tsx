@@ -26,6 +26,8 @@ interface ReportTableProps<T> {
     key: string;
     label: string;
     render?: (value: any, row: T) => React.ReactNode;
+    renderHeader?: () => React.ReactNode;
+    sortable?: boolean;
   }[];
   pagination?: PaginationProps;
 }
@@ -59,7 +61,12 @@ function ReportTable<T>({ data, columns, pagination }: ReportTableProps<T>): Rea
           <TableHead>
             <TableRow>
               {columns.map((column) => (
-                <TableCell key={column.key}>{column.label}</TableCell>
+                <TableCell 
+                  key={column.key}
+                  sx={column.sortable ? { cursor: 'pointer' } : undefined}
+                >
+                  {column.renderHeader ? column.renderHeader() : column.label}
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
@@ -72,7 +79,7 @@ function ReportTable<T>({ data, columns, pagination }: ReportTableProps<T>): Rea
                       ? column.render((row as any)[column.key], row)
                       : (row as any)[column.key] !== undefined && (row as any)[column.key] !== null
                       ? typeof (row as any)[column.key] === 'object'
-                        ? JSON.stringify((row as any)[column.key])
+                        ? '' 
                         : String((row as any)[column.key])
                       : ''}
                   </TableCell>

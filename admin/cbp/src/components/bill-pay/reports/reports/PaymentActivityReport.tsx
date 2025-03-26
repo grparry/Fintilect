@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Box, Typography } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 import ReportContainer from '../components/ReportContainer';
 import DateRangeSelector from '../components/DateRangeSelector';
@@ -8,9 +10,11 @@ import ReportTable from '../components/ReportTable';
 import { 
   PAYMENT_ACTIVITY_SEARCH_TYPES, 
   PaymentActivityParams,
+  PaymentActivityItem,
+  PaymentActivityItemPagedResponse,
+  PaymentActivitySearchType,
   getPaymentActivity
 } from '../../../../utils/reports/paymentActivity';
-import { PaymentActivityItem, PaymentActivityItemPagedResponse } from '../../../../types/report.types';
 import useClientApi from '../../../../hooks/useClientApi';
 
 const PaymentActivityReport: React.FC = () => {
@@ -20,9 +24,14 @@ const PaymentActivityReport: React.FC = () => {
   // State for report parameters
   const [startDate, setStartDate] = useState<Dayjs>(dayjs().subtract(7, 'day'));
   const [endDate, setEndDate] = useState<Dayjs>(dayjs());
-  const [searchType, setSearchType] = useState<keyof typeof PAYMENT_ACTIVITY_SEARCH_TYPES>('DateRange');
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchType, setSearchType] = useState<PaymentActivitySearchType>(PaymentActivitySearchType.DateRange);
+  const [memberId, setMemberId] = useState<string>('');
+  const [paymentId, setPaymentId] = useState<string>('');
   const [payeeName, setPayeeName] = useState<string>('');
+  
+  // State for sorting - default to dateProcessed DESC for initial sort
+  const [sortColumn, setSortColumn] = useState<string>('dateProcessed');
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
   
   // State for report results
   const [reportData, setReportData] = useState<PaymentActivityItem[] | null>(null);
@@ -34,9 +43,11 @@ const PaymentActivityReport: React.FC = () => {
 
   // Handle search type change
   const handleSearchTypeChange = (event: SelectChangeEvent) => {
-    setSearchType(event.target.value as keyof typeof PAYMENT_ACTIVITY_SEARCH_TYPES);
-    // Reset search value when changing search type
-    setSearchValue('');
+    const selectedKey = event.target.value as keyof typeof PAYMENT_ACTIVITY_SEARCH_TYPES;
+    setSearchType(PAYMENT_ACTIVITY_SEARCH_TYPES[selectedKey]);
+    // Reset search values when changing search type
+    setMemberId('');
+    setPaymentId('');
   };
 
   // Handle page change
@@ -52,219 +63,373 @@ const PaymentActivityReport: React.FC = () => {
     runReport(1, newPageSize);
   };
 
-  // Run the payment activity report
-  const runReport = useCallback(async (page: number = 1, size: number = pageSize) => {
+  // Handle sort change
+  const handleSortChange = (column: string) => {
+    // Store current values before state updates
+    const currentColumn = sortColumn;
+    const currentDirection = sortDirection;
+    
+    let newColumn = column;
+    let newDirection: 'ASC' | 'DESC';
+    
+    if (currentColumn === column) {
+      // Toggle direction if already sorting by this column
+      newDirection = currentDirection === 'ASC' ? 'DESC' : 'ASC';
+    } else {
+      // Default to ascending for new sort column
+      newDirection = 'ASC';
+    }
+    
+    // Update state
+    setSortColumn(newColumn);
+    setSortDirection(newDirection);
+    
+    // Run report with the new sort parameters directly
+    // Use the new values directly rather than relying on state updates
+    runReportWithSort(pageNumber, pageSize, newColumn, newDirection);
+  };
+
+  // Helper function to run report with specific sort parameters
+  const runReportWithSort = async (page: number, size: number, column: string, direction: 'ASC' | 'DESC') => {
     setLoading(true);
-    setReportData(null);
     setError(null);
     
     try {
-      console.log(`Running Payment Activity Report with search type: ${searchType}`);
-      
-      // Create parameters object based on search type
-      const params: PaymentActivityParams = {
-        searchType,
-        pageNumber: page,
-        pageSize: size
-      };
-      
-      // Add appropriate parameters based on search type
-      switch (searchType) {
-        case 'MemberID':
-        case 'PaymentID':
-          if (!searchValue) {
-            throw new Error(`${searchType} is required for this search type`);
-          }
-          params.searchValue = searchValue;
-          break;
-          
-        case 'DateRange':
-          params.startDate = startDate.toDate();
-          params.endDate = endDate.toDate();
-          
-          // Optional payee name filter for date range search
-          if (payeeName) {
-            params.payeeName = payeeName;
-          }
-          break;
-        case 'MemberIDAndDate':
-          params.startDate = startDate.toDate();
-          params.endDate = endDate.toDate();
-          if (!searchValue) {
-            throw new Error('Member ID is required for this search type');
-          }
-          params.searchValue = searchValue;
-          break;
-        case 'MemberIDAndPayeeName':
-          if (!searchValue) {
-            throw new Error('Member ID is required for this search type');
-          }
-          params.searchValue = searchValue;
-          if (!payeeName) {
-            throw new Error('Payee Name is required for this search type');
-          }
-          params.payeeName = payeeName;
-          break;
-        case 'MemberIDAndDateAndPayeeName':
-          params.startDate = startDate.toDate();
-          params.endDate = endDate.toDate();
-          if (!searchValue) {
-            throw new Error('Member ID is required for this search type');
-          }
-          params.searchValue = searchValue;
-          if (!payeeName) {
-            throw new Error('Payee Name is required for this search type');
-          }
-          params.payeeName = payeeName;
-          break;
-        case 'PayeeName':
-          if (!payeeName) {
-            throw new Error('Payee Name is required for this search type');
-          }
-          params.payeeName = payeeName;
-          break;
+      // Validate inputs based on search type
+      if ([
+        PaymentActivitySearchType.MemberID,
+        PaymentActivitySearchType.MemberIDAndDate,
+        PaymentActivitySearchType.MemberIDAndPayeeName,
+        PaymentActivitySearchType.MemberIDAndDateAndPayeeName,
+        PaymentActivitySearchType.PaymentID
+      ].includes(searchType) && (!memberId && !paymentId)) {
+        setError('Search value is required for the selected search type');
+        setLoading(false);
+        return;
       }
       
-      console.log('Payment Activity Report parameters:', params);
+      if ([
+        PaymentActivitySearchType.MemberIDAndPayeeName,
+        PaymentActivitySearchType.MemberIDAndDateAndPayeeName,
+        PaymentActivitySearchType.PayeeName
+      ].includes(searchType) && !payeeName) {
+        setError('Payee name is required for the selected search type');
+        setLoading(false);
+        return;
+      }
       
+      if ([
+        PaymentActivitySearchType.DateRange,
+        PaymentActivitySearchType.MemberIDAndDate,
+        PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+      ].includes(searchType) && (!startDate || !endDate)) {
+        setError('Date range is required for the selected search type');
+        setLoading(false);
+        return;
+      }
+      
+      // Prepare report parameters
+      const params: PaymentActivityParams = {
+        searchType: searchType,
+        pageNumber: page,
+        pageSize: size,
+        sortColumn: column,
+        sortDirection: direction
+      };
+      
+      // Add conditional parameters based on search type
+      if ([
+        PaymentActivitySearchType.MemberID,
+        PaymentActivitySearchType.MemberIDAndDate,
+        PaymentActivitySearchType.MemberIDAndPayeeName,
+        PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+      ].includes(searchType)) {
+        params.memberId = memberId;
+      }
+      
+      if ([
+        PaymentActivitySearchType.PaymentID
+      ].includes(searchType)) {
+        params.paymentId = paymentId;
+      }
+      
+      // Always include date parameters for date-related search types
+      if ([
+        PaymentActivitySearchType.DateRange,
+        PaymentActivitySearchType.MemberIDAndDate,
+        PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+      ].includes(searchType)) {
+        params.startDate = startDate.format('YYYY-MM-DD');
+        params.endDate = endDate.format('YYYY-MM-DD');
+      }
+      
+      // Always include payee name for payee-related search types
+      if ([
+        PaymentActivitySearchType.PayeeName,
+        PaymentActivitySearchType.MemberIDAndPayeeName,
+        PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+      ].includes(searchType)) {
+        params.payeeName = payeeName;
+      }
+      
+      // Debug log to verify parameters
+      console.log('Running report with parameters:', params);
+      
+      // Call the payment activity API
       const result: PaymentActivityItemPagedResponse = await getPaymentActivity(params);
       
+      // Update state with response data
       if (result.items) {
-        setReportData(result.items);
+        // Map API response properties to our interface
+        const mappedItems = result.items.map(item => {
+          // Use type assertion to handle API response format
+          const apiItem = item as any;
+          return {
+            memberId: apiItem.memberID || null,
+            paymentId: apiItem.paymentID || null,
+            payeeId: apiItem.payeeID || null,
+            payeeName: apiItem.payeeName || null,
+            dateProcessed: apiItem.dateProcessed || null,
+            dueDate: apiItem.dueDate || null,
+            status: apiItem.status ? apiItem.status.trim() : null,
+            paymentMethod: apiItem.paymentMethod ? apiItem.paymentMethod.trim() : null,
+            amount: typeof apiItem.amount === 'number' ? apiItem.amount : 0
+          };
+        });
+        
+        setReportData(mappedItems);
         setTotalCount(result.totalCount);
-        setPageNumber(result.pageNumber);
-        setPageSize(result.pageSize);
       } else {
         setReportData([]);
         setTotalCount(0);
       }
     } catch (err) {
       console.error('Error running payment activity report:', err);
-      setError(`Failed to run report: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      setError('Failed to load payment activity data. Please try again.');
     } finally {
       setLoading(false);
     }
-  }, [searchType, startDate, endDate, searchValue, payeeName, pageSize]);
+  };
+
+  // Run the payment activity report
+  const runReport = useCallback(async (page: number = pageNumber, size: number = pageSize) => {
+    // Use the current sort column and direction from state
+    runReportWithSort(page, size, sortColumn, sortDirection);
+  }, [searchType, memberId, paymentId, startDate, endDate, payeeName, sortColumn, sortDirection, pageNumber, pageSize]);
+
+  // Get sort icon for column
+  const getSortIcon = (column: string) => {
+    if (sortColumn === column) {
+      return sortDirection === 'ASC' ? <ArrowUpwardIcon fontSize="small" /> : <ArrowDownwardIcon fontSize="small" />;
+    }
+    return null;
+  };
 
   // Export report data to CSV
   const handleExportCsv = useCallback(() => {
     if (!reportData || reportData.length === 0) return;
     
     // Define CSV columns
-    const header = ['paymentID', 'memberID', 'payeeID', 'payeeName', 'amount', 'status', 'dateProcessed', 'dueDate', 'paymentMethod'].join(',');
+    const header = [
+      'Member ID',
+      'Payment ID',
+      'Payee ID',
+      'Payee Name',
+      'Date Processed',
+      'Due Date',
+      'Status',
+      'Payment Method',
+      'Amount'
+    ].join(',');
     
     // Convert data to CSV rows
     const rows = reportData.map(row => {
       return [
-        row.paymentID || '',
-        row.memberID || '',
-        row.payeeID || '',
-        `"${(row.payeeName || '').replace(/"/g, '""')}"`, // Escape quotes in payee name
-        row.amount || 0,
+        row.memberId || '',
+        row.paymentId || '',
+        row.payeeId || '',
+        row.payeeName ? `"${row.payeeName.replace(/"/g, '""')}"` : '',
+        row.dateProcessed ? dayjs(row.dateProcessed).format('MM/DD/YYYY') : '',
+        row.dueDate ? dayjs(row.dueDate).format('MM/DD/YYYY') : '',
         row.status || '',
-        row.dateProcessed || '',
-        row.dueDate || '',
-        row.paymentMethod || ''
+        row.paymentMethod || '',
+        row.amount ? row.amount.toFixed(2) : '0.00'
       ].join(',');
     });
     
     // Combine header and rows
     const csv = [header, ...rows].join('\n');
     
-    // Create and trigger download
+    // Create and download CSV file
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `payment_activity_${dayjs().format('YYYY-MM-DD')}.csv`);
+    link.setAttribute('download', `payment-activity-${dayjs().format('YYYY-MM-DD')}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   }, [reportData]);
 
-  // Define table columns
+  // Define columns for the report table
   const columns = [
-    { key: 'paymentID', label: 'Payment ID' },
-    { key: 'memberID', label: 'Member ID' },
-    { key: 'payeeID', label: 'Payee ID' },
-    { key: 'payeeName', label: 'Payee Name' },
-    { key: 'amount', label: 'Amount', render: (value: number) => `$${value.toFixed(2)}` },
-    { key: 'status', label: 'Status' },
-    { key: 'dateProcessed', label: 'Date Processed' },
-    { key: 'dueDate', label: 'Due Date' },
-    { key: 'paymentMethod', label: 'Payment Method' }
+    {
+      key: 'memberId',
+      label: 'Member ID',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('memberId')}>
+          Member ID {getSortIcon('memberId')}
+        </Box>
+      )
+    },
+    {
+      key: 'paymentId',
+      label: 'Payment ID',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('paymentId')}>
+          Payment ID {getSortIcon('paymentId')}
+        </Box>
+      )
+    },
+    {
+      key: 'payeeName',
+      label: 'Payee Name',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('payeeName')}>
+          Payee Name {getSortIcon('payeeName')}
+        </Box>
+      )
+    },
+    {
+      key: 'dateProcessed',
+      label: 'Date Processed',
+      render: (value: string) => value || '',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('dateProcessed')}>
+          Date Processed {getSortIcon('dateProcessed')}
+        </Box>
+      )
+    },
+    {
+      key: 'dueDate',
+      label: 'Due Date',
+      render: (value: string) => value || '',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('dueDate')}>
+          Due Date {getSortIcon('dueDate')}
+        </Box>
+      )
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('status')}>
+          Status {getSortIcon('status')}
+        </Box>
+      )
+    },
+    {
+      key: 'amount',
+      label: 'Amount',
+      render: (value: number) => value ? `$${value.toFixed(2)}` : '',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('amount')}>
+          Amount {getSortIcon('amount')}
+        </Box>
+      )
+    }
   ];
 
-  // Determine which fields to show based on search type
-  const showDateRange = searchType === 'DateRange' || searchType === 'MemberIDAndDate' || searchType === 'MemberIDAndDateAndPayeeName';
-  const showMemberID = searchType === 'MemberID' || searchType === 'MemberIDAndDate' || searchType === 'MemberIDAndPayeeName' || searchType === 'MemberIDAndDateAndPayeeName';
-  const showPaymentID = searchType === 'PaymentID';
-  const showPayeeName = searchType === 'PayeeName' || searchType === 'MemberIDAndPayeeName' || searchType === 'MemberIDAndDateAndPayeeName';
+  // Determine if search value field should be shown
+  const showMemberId = [
+    PaymentActivitySearchType.MemberID,
+    PaymentActivitySearchType.MemberIDAndDate,
+    PaymentActivitySearchType.MemberIDAndPayeeName,
+    PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+  ].includes(searchType);
 
-  // Get the label for the search value field based on search type
-  const getSearchValueLabel = () => {
-    switch (searchType) {
-      case 'MemberID':
-      case 'MemberIDAndDate':
-      case 'MemberIDAndPayeeName':
-      case 'MemberIDAndDateAndPayeeName':
-        return 'Member ID';
-      case 'PaymentID':
-        return 'Payment ID';
-      default:
-        return 'Search Value';
-    }
+  const showPaymentId = [
+    PaymentActivitySearchType.PaymentID
+  ].includes(searchType);
+
+  // Determine if date range should be shown
+  const showDateRange = [
+    PaymentActivitySearchType.DateRange,
+    PaymentActivitySearchType.MemberIDAndDate,
+    PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+  ].includes(searchType);
+
+  // Determine if payee name field should be shown
+  const showPayeeName = [
+    PaymentActivitySearchType.PayeeName,
+    PaymentActivitySearchType.MemberIDAndPayeeName,
+    PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+  ].includes(searchType);
+
+  const handleRunReport = () => {
+    runReport(1);
   };
 
   return (
     <ReportContainer
       title="Payment Activity Report"
-      description="View payment activity based on various search criteria"
-      onRunReport={() => runReport(1)}
+      onRunReport={handleRunReport}
       onExportCsv={handleExportCsv}
       loading={loading}
       error={error}
-      hasResults={!!reportData && reportData.length > 0}
-      resultsComponent={
-        reportData ? (
-          <ReportTable 
-            data={reportData} 
-            columns={columns} 
-            pagination={{
-              pageNumber,
-              pageSize,
-              totalCount,
-              onPageChange: handlePageChange,
-              onPageSizeChange: handlePageSizeChange
-            }}
-          />
-        ) : null
-      }
+      hasData={!!reportData && reportData.length > 0}
     >
-      <Grid container spacing={3}>
+      <Grid container spacing={2} sx={{ mb: 1 }}>
         <Grid item xs={12} md={6} lg={3}>
-          <FormControl fullWidth>
+          <FormControl fullWidth size="small" margin="dense">
             <InputLabel>Search Type</InputLabel>
             <Select
-              value={searchType}
+              value={Object.keys(PAYMENT_ACTIVITY_SEARCH_TYPES).find(
+                key => PAYMENT_ACTIVITY_SEARCH_TYPES[key as keyof typeof PAYMENT_ACTIVITY_SEARCH_TYPES] === searchType
+              ) || 'DateRange'}
               label="Search Type"
               onChange={handleSearchTypeChange}
+              size="small"
             >
               {Object.entries(PAYMENT_ACTIVITY_SEARCH_TYPES).map(([key, value]) => (
-                <MenuItem key={key} value={key}>{key}</MenuItem>
+                <MenuItem key={key} value={key}>
+                  {key
+                    .replace(/([A-Z][a-z]+)/g, ' $1')  // Add space before capital letters followed by lowercase
+                    .replace(/^./, match => match.toUpperCase())  // Capitalize first letter
+                    .replace(/\sID/g, ' ID')  // Fix ID splitting
+                    .trim()}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Grid>
 
-        {(showMemberID || showPaymentID) && (
+        {showMemberId && (
           <Grid item xs={12} md={6} lg={3}>
             <TextField
-              label={getSearchValueLabel()}
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
               fullWidth
+              size="small"
+              margin="dense"
+              label="Member ID"
+              value={memberId}
+              onChange={(e) => setMemberId(e.target.value)}
+              placeholder="Enter member ID"
+            />
+          </Grid>
+        )}
+
+        {showPaymentId && (
+          <Grid item xs={12} md={6} lg={3}>
+            <TextField
+              fullWidth
+              size="small"
+              margin="dense"
+              label="Payment ID"
+              value={paymentId}
+              onChange={(e) => setPaymentId(e.target.value)}
+              placeholder="Enter payment ID"
             />
           </Grid>
         )}
@@ -272,23 +437,48 @@ const PaymentActivityReport: React.FC = () => {
         {showPayeeName && (
           <Grid item xs={12} md={6} lg={3}>
             <TextField
+              fullWidth
+              size="small"
+              margin="dense"
               label="Payee Name"
               value={payeeName}
               onChange={(e) => setPayeeName(e.target.value)}
-              fullWidth
+              placeholder="Enter payee name"
             />
           </Grid>
         )}
-
-        {showDateRange && (
-          <DateRangeSelector
-            startDate={startDate}
-            endDate={endDate}
-            onStartDateChange={setStartDate}
-            onEndDateChange={setEndDate}
-          />
-        )}
       </Grid>
+
+      {showDateRange && (
+        <DateRangeSelector
+          startDate={startDate}
+          endDate={endDate}
+          onStartDateChange={setStartDate}
+          onEndDateChange={setEndDate}
+        />
+      )}
+
+      {reportData && reportData.length > 0 ? (
+        <>
+          <ReportTable
+            data={reportData}
+            columns={columns}
+            pagination={{
+              pageNumber: pageNumber,
+              pageSize: pageSize,
+              totalCount: totalCount,
+              onPageChange: handlePageChange,
+              onPageSizeChange: handlePageSizeChange
+            }}
+          />
+          
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+            <Typography variant="body2">
+              Showing {reportData.length} of {totalCount} results
+            </Typography>
+          </Box>
+        </>
+      ) : null}
     </ReportContainer>
   );
 };
