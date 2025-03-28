@@ -1,12 +1,15 @@
 import React, { useState, useCallback } from 'react';
 import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Pagination, Box, Typography } from '@mui/material';
 import dayjs from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import ReportContainer from '../components/ReportContainer';
 import ReportTable from '../components/ReportTable';
 import { 
   ERROR_RECAP_SEARCH_TYPES, 
   ErrorRecapSearchType,
+  ErrorRecapSortColumn,
   ErrorRecapParams,
   ErrorRecapItem,
   getErrorRecap 
@@ -30,6 +33,8 @@ const ErrorRecapReport: React.FC = () => {
   const [payeeId, setPayeeId] = useState<string>('');
   const [payeeName, setPayeeName] = useState<string>('');
   const [page, setPage] = useState(1);
+  const [sortColumn, setSortColumn] = useState<ErrorRecapSortColumn | undefined>(undefined);
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('ASC');
   
   // State for report results
   const [reportData, setReportData] = useState<ErrorRecapItem[] | null>(null);
@@ -40,7 +45,7 @@ const ErrorRecapReport: React.FC = () => {
 
   // Handle search type change
   const handleSearchTypeChange = (event: SelectChangeEvent) => {
-    setSearchType(Number(event.target.value) as ErrorRecapSearchType);
+    setSearchType(event.target.value as ErrorRecapSearchType);
     // Reset search values when changing search type
     setMemberId('');
     setPaymentId('');
@@ -48,6 +53,32 @@ const ErrorRecapReport: React.FC = () => {
     setStatusCode('');
     setPayeeId('');
     setPayeeName('');
+  };
+
+  // Handle sort change
+  const handleSort = (columnKey: string) => {
+    // Check if the column key is a valid ErrorRecapSortColumn
+    const isValidSortColumn = Object.values(ErrorRecapSortColumn).includes(columnKey as ErrorRecapSortColumn);
+    
+    if (isValidSortColumn) {
+      const newSortColumn = columnKey as ErrorRecapSortColumn;
+      
+      if (sortColumn === newSortColumn) {
+        // Toggle sort direction if clicking the same column
+        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
+      } else {
+        // Set new sort column and default to ascending
+        setSortColumn(newSortColumn);
+        setSortDirection('ASC');
+      }
+      
+      // Re-run report with new sort
+      if (page === 1) {
+        runReport(1);
+      } else {
+        setPage(1);
+      }
+    }
   };
 
   // Handle page change
@@ -148,7 +179,9 @@ const ErrorRecapReport: React.FC = () => {
       const params: ErrorRecapParams = {
         searchType: searchType,
         pageNumber: currentPage,
-        pageSize: DEFAULT_PAGE_SIZE
+        pageSize: DEFAULT_PAGE_SIZE,
+        sortColumn: sortColumn,
+        sortDirection: sortDirection
       };
       
       // Add specific parameters based on search type
@@ -197,7 +230,7 @@ const ErrorRecapReport: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchType, memberId, paymentId, userPayeeListId, statusCode, startDate, endDate, payeeId, payeeName]);
+  }, [searchType, memberId, paymentId, userPayeeListId, statusCode, startDate, endDate, payeeId, payeeName, sortColumn, sortDirection]);
 
   // Export report data to CSV
   const handleExportCsv = useCallback(() => {
@@ -270,139 +303,147 @@ const ErrorRecapReport: React.FC = () => {
     { 
       key: 'failedDate', 
       label: 'Failed Date',
-      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY HH:mm:ss') : '' 
+      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY HH:mm:ss') : '',
+      sortable: true
     },
-    { key: 'memberId', label: 'Member ID' },
-    { key: 'paymentId', label: 'Payment ID' },
+    { key: 'memberId', label: 'Member ID', sortable: true },
+    { key: 'paymentId', label: 'Payment ID', sortable: true },
     { 
       key: 'amount', 
       label: 'Amount',
-      render: (value: number) => value ? `$${value.toFixed(2)}` : '$0.00'
+      render: (value: number) => value ? `$${value.toFixed(2)}` : '$0.00',
+      sortable: true
     },
-    { key: 'payeeName', label: 'Payee Name' },
-    { key: 'userPayeeListId', label: 'User Payee List ID' },
-    { key: 'status', label: 'Status' },
+    { key: 'userPayeeListId', label: 'User Payee List ID', sortable: true },
+    { key: 'payeeId', label: 'Payee ID', sortable: true },
+    { key: 'payeeName', label: 'Payee Name', sortable: true },
+    { key: 'usersAccountAtPayee', label: 'Account At Payee' },
+    { key: 'nameOnAccount', label: 'Name On Account' },
+    { key: 'status', label: 'Status', sortable: true },
     { key: 'hostCode', label: 'Host Code' },
     { key: 'error', label: 'Error' }
   ];
 
   return (
-    <ReportContainer
-      title="Error Recap Report"
-      onRunReport={() => runReport(1)}
-      onExportCsv={handleExportCsv}
-      loading={loading}
-      error={error}
-      hasData={!!reportData && reportData.length > 0}
-    >
-      <Grid container spacing={2} sx={{ mb: 1 }}>
-        <Grid item xs={12} md={6} lg={3}>
-          <FormControl fullWidth size="small" margin="dense">
-            <InputLabel>Search Type</InputLabel>
-            <Select
-              value={searchType.toString()}
-              label="Search Type"
-              onChange={handleSearchTypeChange}
-              size="small"
-            >
-              {Object.entries(ERROR_RECAP_SEARCH_TYPES).map(([key, value]) => (
-                <MenuItem key={key} value={key}>{value}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <ReportContainer
+        title="Error Recap Report"
+        onRunReport={() => runReport(1)}
+        onExportCsv={handleExportCsv}
+        loading={loading}
+        error={error}
+        hasData={!!reportData && reportData.length > 0}
+      >
+        <Grid container spacing={2} sx={{ mb: 1 }}>
+          <Grid item xs={12} md={6} lg={3}>
+            <FormControl fullWidth size="small" margin="dense">
+              <InputLabel>Search Type</InputLabel>
+              <Select
+                value={searchType.toString()}
+                label="Search Type"
+                onChange={handleSearchTypeChange}
+                size="small"
+              >
+                {Object.entries(ERROR_RECAP_SEARCH_TYPES).map(([key, value]) => (
+                  <MenuItem key={key} value={key}>{value}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={12} md={6} lg={3}>
-          {searchType === ErrorRecapSearchType.DateRange ? (
-            <Grid container spacing={1}>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  margin="dense"
-                  label="Start Date"
-                  type="date"
-                  value={startDate?.format('YYYY-MM-DD')}
-                  onChange={(e) => setStartDate(dayjs(e.target.value))}
-                />
+          <Grid item xs={12} md={6} lg={3}>
+            {searchType === ErrorRecapSearchType.DateRange ? (
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    margin="dense"
+                    label="Start Date"
+                    type="date"
+                    value={startDate?.format('YYYY-MM-DD')}
+                    onChange={(e) => setStartDate(dayjs(e.target.value))}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    margin="dense"
+                    label="End Date"
+                    type="date"
+                    value={endDate?.format('YYYY-MM-DD')}
+                    onChange={(e) => setEndDate(dayjs(e.target.value))}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  margin="dense"
-                  label="End Date"
-                  type="date"
-                  value={endDate?.format('YYYY-MM-DD')}
-                  onChange={(e) => setEndDate(dayjs(e.target.value))}
-                />
-              </Grid>
-            </Grid>
-          ) : (
-            <TextField
-              fullWidth
-              size="small"
-              margin="dense"
-              label={getSearchValueLabel()}
-              value={
-                searchType === ErrorRecapSearchType.MemberID ? memberId :
-                searchType === ErrorRecapSearchType.PaymentID ? paymentId :
-                searchType === ErrorRecapSearchType.PayeeID ? payeeId :
-                searchType === ErrorRecapSearchType.PayeeName ? payeeName :
-                searchType === ErrorRecapSearchType.UserPayeeListID ? userPayeeListId :
-                searchType === ErrorRecapSearchType.StatusCode ? statusCode : ''
-              }
-              onChange={(e) => {
-                switch (searchType) {
-                  case ErrorRecapSearchType.MemberID:
-                    setMemberId(e.target.value);
-                    break;
-                  case ErrorRecapSearchType.PaymentID:
-                    setPaymentId(e.target.value);
-                    break;
-                  case ErrorRecapSearchType.PayeeID:
-                    setPayeeId(e.target.value);
-                    break;
-                  case ErrorRecapSearchType.PayeeName:
-                    setPayeeName(e.target.value);
-                    break;
-                  case ErrorRecapSearchType.UserPayeeListID:
-                    setUserPayeeListId(e.target.value);
-                    break;
-                  case ErrorRecapSearchType.StatusCode:
-                    setStatusCode(e.target.value);
-                    break;
-                  default:
-                    break;
+            ) : (
+              <TextField
+                fullWidth
+                size="small"
+                margin="dense"
+                label={getSearchValueLabel()}
+                value={
+                  searchType === ErrorRecapSearchType.MemberID ? memberId :
+                  searchType === ErrorRecapSearchType.PaymentID ? paymentId :
+                  searchType === ErrorRecapSearchType.PayeeID ? payeeId :
+                  searchType === ErrorRecapSearchType.PayeeName ? payeeName :
+                  searchType === ErrorRecapSearchType.UserPayeeListID ? userPayeeListId :
+                  searchType === ErrorRecapSearchType.StatusCode ? statusCode : ''
                 }
-              }}
-              placeholder={`Enter ${getSearchValueLabel().toLowerCase()}`}
-            />
-          )}
+                onChange={(e) => {
+                  switch (searchType) {
+                    case ErrorRecapSearchType.MemberID:
+                      setMemberId(e.target.value);
+                      break;
+                    case ErrorRecapSearchType.PaymentID:
+                      setPaymentId(e.target.value);
+                      break;
+                    case ErrorRecapSearchType.PayeeID:
+                      setPayeeId(e.target.value);
+                      break;
+                    case ErrorRecapSearchType.PayeeName:
+                      setPayeeName(e.target.value);
+                      break;
+                    case ErrorRecapSearchType.UserPayeeListID:
+                      setUserPayeeListId(e.target.value);
+                      break;
+                    case ErrorRecapSearchType.StatusCode:
+                      setStatusCode(e.target.value);
+                      break;
+                    default:
+                      break;
+                  }
+                }}
+                placeholder={`Enter ${getSearchValueLabel().toLowerCase()}`}
+              />
+            )}
+          </Grid>
         </Grid>
-      </Grid>
 
-      {reportData && reportData.length > 0 ? (
-        <>
-          <ReportTable
-            data={reportData}
-            columns={columns}
-          />
-          
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-            <Typography variant="body2">
-              Showing {reportData.length} of {totalCount} results
-            </Typography>
-            <Pagination 
-              count={totalPages} 
-              page={page} 
-              onChange={handlePageChange} 
-              color="primary" 
+        {reportData && reportData.length > 0 ? (
+          <>
+            <ReportTable
+              data={reportData}
+              columns={columns}
+              onSort={handleSort}
             />
-          </Box>
-        </>
-      ) : null}
-    </ReportContainer>
+            
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+              <Typography variant="body2">
+                Showing {reportData.length} of {totalCount} results
+              </Typography>
+              <Pagination 
+                count={totalPages} 
+                page={page} 
+                onChange={handlePageChange} 
+                color="primary" 
+              />
+            </Box>
+          </>
+        ) : null}
+      </ReportContainer>
+    </LocalizationProvider>
   );
 };
 

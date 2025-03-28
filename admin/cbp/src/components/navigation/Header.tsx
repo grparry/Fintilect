@@ -70,8 +70,24 @@ const Header: React.FC<HeaderProps> = ({
           to="/admin"
           color="inherit"
           underline="none"
-          sx={{ flexGrow: 1 }}
+          sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}
         >
+          {clientConfig.logoUrl && (
+            <Box 
+              component="img"
+              src={clientConfig.logoUrl}
+              alt={`${clientConfig.name} Logo`}
+              sx={{ 
+                height: 40, 
+                maxWidth: 180, 
+                mr: 2,
+                objectFit: 'contain',
+                backgroundColor: 'white',
+                padding: '4px',
+                borderRadius: '4px'
+              }}
+            />
+          )}
           <Typography variant="h6" color="text.primary" noWrap component="div">
             Admin Portal
           </Typography>

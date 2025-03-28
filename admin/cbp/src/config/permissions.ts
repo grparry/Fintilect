@@ -147,6 +147,96 @@ export const permissionRegistry: PermissionRegistry = {
     adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'View existing reports'
   },
+  'route:billPay.reports.paymentActivity': {
+    resourceId: 'route:billPay.reports.paymentActivity',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Payment Activity Report'
+  },
+  'route:billPay.reports.errorRecap': {
+    resourceId: 'route:billPay.reports.errorRecap',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Error Recap Report'
+  },
+  'route:billPay.reports.billPaySearch': {
+    resourceId: 'route:billPay.reports.billPaySearch',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View BillPay Search Report'
+  },
+  'route:billPay.reports.activeUserCount': {
+    resourceId: 'route:billPay.reports.activeUserCount',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Active User Count Report'
+  },
+  'route:billPay.reports.failedOnUs': {
+    resourceId: 'route:billPay.reports.failedOnUs',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Failed On Us Report'
+  },
+  'route:billPay.reports.globalHolidays': {
+    resourceId: 'route:billPay.reports.globalHolidays',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Global Holidays Report'
+  },
+  'route:billPay.reports.monthlyUsers': {
+    resourceId: 'route:billPay.reports.monthlyUsers',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Monthly Users Report'
+  },
+  'route:billPay.reports.pendingPayments': {
+    resourceId: 'route:billPay.reports.pendingPayments',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Pending Payments Report'
+  },
+  'route:billPay.reports.recurringPaymentChangeHistory': {
+    resourceId: 'route:billPay.reports.recurringPaymentChangeHistory',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Recurring Payment Change History Report'
+  },
+  'route:billPay.reports.userPayeeChangeHistory': {
+    resourceId: 'route:billPay.reports.userPayeeChangeHistory',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View User Payee Change History Report'
+  },
+  'route:billPay.reports.onUsPostings': {
+    resourceId: 'route:billPay.reports.onUsPostings',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View On Us Postings Report'
+  },
+  'route:billPay.reports.statusesWithNotifications': {
+    resourceId: 'route:billPay.reports.statusesWithNotifications',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Statuses with Notifications Report'
+  },
+  'route:billPay.reports.largePayment': {
+    resourceId: 'route:billPay.reports.largePayment',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Large Payment Report'
+  },
+  'route:billPay.reports.processingConfirmation': {
+    resourceId: 'route:billPay.reports.processingConfirmation',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Processing Confirmation Report'
+  },
+  'route:billPay.reports.scheduledPaymentChangeHistory': {
+    resourceId: 'route:billPay.reports.scheduledPaymentChangeHistory',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Scheduled Payment Change History Report'
+  },
 
   // Client Management Section
   'navigation:client-management': {

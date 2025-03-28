@@ -20,8 +20,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BusinessIcon from '@mui/icons-material/Business';
 import LockIcon from '@mui/icons-material/Lock';
+import InfoIcon from '@mui/icons-material/Info';
 import { useNavigate } from 'react-router-dom';
 import UserPasswordChangeDialog from '../dialogs/UserPasswordChangeDialog';
+import AboutDialog from '../dialogs/AboutDialog';
 
 interface UserMenuProps {
   user: User | null;
@@ -34,6 +36,7 @@ interface UserMenuProps {
 const UserMenu: React.FC<UserMenuProps> = ({ user, logout, toggleTheme, isDarkMode, clientName }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [passwordChangeDialogOpen, setPasswordChangeDialogOpen] = useState(false);
+  const [aboutDialogOpen, setAboutDialogOpen] = useState(false);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const theme = useTheme();
@@ -60,6 +63,11 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, logout, toggleTheme, isDarkMo
   const handlePasswordChange = () => {
     handleClose();
     setPasswordChangeDialogOpen(true);
+  };
+
+  const handleAboutClick = () => {
+    handleClose();
+    setAboutDialogOpen(true);
   };
 
   // Get user initials for the avatar
@@ -167,6 +175,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, logout, toggleTheme, isDarkMo
             </ListItemIcon>
           </MenuItem>
         )}
+        <MenuItem onClick={handleAboutClick}>
+          <ListItemIcon>
+            <InfoIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>About</ListItemText>
+        </MenuItem>
         <Divider />
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
@@ -182,6 +196,11 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, logout, toggleTheme, isDarkMo
           onClose={() => setPasswordChangeDialogOpen(false)}
         />
       )}
+
+      <AboutDialog
+        open={aboutDialogOpen}
+        onClose={() => setAboutDialogOpen(false)}
+      />
     </Box>
   );
 };

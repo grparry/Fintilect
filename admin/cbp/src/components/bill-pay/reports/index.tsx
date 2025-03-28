@@ -17,6 +17,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // Import report components as they are created
 import PaymentActivityReport from './reports/PaymentActivityReport';
 import ErrorRecapReport from './reports/ErrorRecapReport';
+import BillPaySearchReport from './reports/BillPaySearchReport';
 
 // Define the available report types
 type ReportType = 
@@ -122,6 +123,8 @@ const Reports: React.FC = () => {
         return <PaymentActivityReport />;
       case 'errorRecap':
         return <ErrorRecapReport />;
+      case 'billpaySearch':
+        return <BillPaySearchReport />;
       // Add other report components as they are created
       default:
         return (

@@ -3,6 +3,8 @@ import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChang
 import dayjs, { Dayjs } from 'dayjs';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import ReportContainer from '../components/ReportContainer';
 import DateRangeSelector from '../components/DateRangeSelector';
@@ -13,6 +15,7 @@ import {
   PaymentActivityItem,
   PaymentActivityItemPagedResponse,
   PaymentActivitySearchType,
+  PaymentActivitySortColumn,
   getPaymentActivity
 } from '../../../../utils/reports/paymentActivity';
 import useClientApi from '../../../../hooks/useClientApi';
@@ -30,7 +33,7 @@ const PaymentActivityReport: React.FC = () => {
   const [payeeName, setPayeeName] = useState<string>('');
   
   // State for sorting - default to dateProcessed DESC for initial sort
-  const [sortColumn, setSortColumn] = useState<string>('dateProcessed');
+  const [sortColumn, setSortColumn] = useState<PaymentActivitySortColumn>(PaymentActivitySortColumn.DateProcessed);
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
   
   // State for report results
@@ -43,8 +46,7 @@ const PaymentActivityReport: React.FC = () => {
 
   // Handle search type change
   const handleSearchTypeChange = (event: SelectChangeEvent) => {
-    const selectedKey = event.target.value as keyof typeof PAYMENT_ACTIVITY_SEARCH_TYPES;
-    setSearchType(PAYMENT_ACTIVITY_SEARCH_TYPES[selectedKey]);
+    setSearchType(event.target.value as PaymentActivitySearchType);
     // Reset search values when changing search type
     setMemberId('');
     setPaymentId('');
@@ -64,7 +66,10 @@ const PaymentActivityReport: React.FC = () => {
   };
 
   // Handle sort change
-  const handleSortChange = (column: string) => {
+  const handleSortChange = (columnKey: string) => {
+    // Convert the string column key to PaymentActivitySortColumn if valid
+    const column = columnKey as PaymentActivitySortColumn;
+    
     // Store current values before state updates
     const currentColumn = sortColumn;
     const currentDirection = sortDirection;
@@ -90,7 +95,7 @@ const PaymentActivityReport: React.FC = () => {
   };
 
   // Helper function to run report with specific sort parameters
-  const runReportWithSort = async (page: number, size: number, column: string, direction: 'ASC' | 'DESC') => {
+  const runReportWithSort = async (page: number, size: number, column: PaymentActivitySortColumn, direction: 'ASC' | 'DESC') => {
     setLoading(true);
     setError(null);
     
@@ -218,7 +223,7 @@ const PaymentActivityReport: React.FC = () => {
   }, [searchType, memberId, paymentId, startDate, endDate, payeeName, sortColumn, sortDirection, pageNumber, pageSize]);
 
   // Get sort icon for column
-  const getSortIcon = (column: string) => {
+  const getSortIcon = (column: PaymentActivitySortColumn) => {
     if (sortColumn === column) {
       return sortDirection === 'ASC' ? <ArrowUpwardIcon fontSize="small" /> : <ArrowDownwardIcon fontSize="small" />;
     }
@@ -277,68 +282,40 @@ const PaymentActivityReport: React.FC = () => {
     {
       key: 'memberId',
       label: 'Member ID',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('memberId')}>
-          Member ID {getSortIcon('memberId')}
-        </Box>
-      )
+      sortable: true
     },
     {
       key: 'paymentId',
       label: 'Payment ID',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('paymentId')}>
-          Payment ID {getSortIcon('paymentId')}
-        </Box>
-      )
+      sortable: true
     },
     {
       key: 'payeeName',
       label: 'Payee Name',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('payeeName')}>
-          Payee Name {getSortIcon('payeeName')}
-        </Box>
-      )
+      sortable: true
     },
     {
       key: 'dateProcessed',
       label: 'Date Processed',
       render: (value: string) => value || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('dateProcessed')}>
-          Date Processed {getSortIcon('dateProcessed')}
-        </Box>
-      )
+      sortable: true
     },
     {
       key: 'dueDate',
       label: 'Due Date',
       render: (value: string) => value || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('dueDate')}>
-          Due Date {getSortIcon('dueDate')}
-        </Box>
-      )
+      sortable: true
     },
     {
       key: 'status',
       label: 'Status',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('status')}>
-          Status {getSortIcon('status')}
-        </Box>
-      )
+      sortable: true
     },
     {
       key: 'amount',
       label: 'Amount',
       render: (value: number) => value ? `$${value.toFixed(2)}` : '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('amount')}>
-          Amount {getSortIcon('amount')}
-        </Box>
-      )
+      sortable: true
     }
   ];
 
@@ -373,113 +350,110 @@ const PaymentActivityReport: React.FC = () => {
   };
 
   return (
-    <ReportContainer
-      title="Payment Activity Report"
-      onRunReport={handleRunReport}
-      onExportCsv={handleExportCsv}
-      loading={loading}
-      error={error}
-      hasData={!!reportData && reportData.length > 0}
-    >
-      <Grid container spacing={2} sx={{ mb: 1 }}>
-        <Grid item xs={12} md={6} lg={3}>
-          <FormControl fullWidth size="small" margin="dense">
-            <InputLabel>Search Type</InputLabel>
-            <Select
-              value={Object.keys(PAYMENT_ACTIVITY_SEARCH_TYPES).find(
-                key => PAYMENT_ACTIVITY_SEARCH_TYPES[key as keyof typeof PAYMENT_ACTIVITY_SEARCH_TYPES] === searchType
-              ) || 'DateRange'}
-              label="Search Type"
-              onChange={handleSearchTypeChange}
-              size="small"
-            >
-              {Object.entries(PAYMENT_ACTIVITY_SEARCH_TYPES).map(([key, value]) => (
-                <MenuItem key={key} value={key}>
-                  {key
-                    .replace(/([A-Z][a-z]+)/g, ' $1')  // Add space before capital letters followed by lowercase
-                    .replace(/^./, match => match.toUpperCase())  // Capitalize first letter
-                    .replace(/\sID/g, ' ID')  // Fix ID splitting
-                    .trim()}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <ReportContainer
+        title="Payment Activity Report"
+        onRunReport={handleRunReport}
+        onExportCsv={handleExportCsv}
+        loading={loading}
+        error={error}
+        hasData={!!reportData && reportData.length > 0}
+      >
+        <Grid container spacing={2} sx={{ mb: 1 }}>
+          <Grid item xs={12} md={6} lg={3}>
+            <FormControl fullWidth size="small" margin="dense">
+              <InputLabel>Search Type</InputLabel>
+              <Select
+                value={searchType}
+                label="Search Type"
+                onChange={handleSearchTypeChange}
+                size="small"
+              >
+                {Object.entries(PaymentActivitySearchType).map(([key, value]) => (
+                  <MenuItem key={key} value={value}>
+                    {PAYMENT_ACTIVITY_SEARCH_TYPES[value]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {showMemberId && (
+            <Grid item xs={12} md={6} lg={3}>
+              <TextField
+                fullWidth
+                size="small"
+                margin="dense"
+                label="Member ID"
+                value={memberId}
+                onChange={(e) => setMemberId(e.target.value)}
+                placeholder="Enter member ID"
+              />
+            </Grid>
+          )}
+
+          {showPaymentId && (
+            <Grid item xs={12} md={6} lg={3}>
+              <TextField
+                fullWidth
+                size="small"
+                margin="dense"
+                label="Payment ID"
+                value={paymentId}
+                onChange={(e) => setPaymentId(e.target.value)}
+                placeholder="Enter payment ID"
+              />
+            </Grid>
+          )}
+
+          {showPayeeName && (
+            <Grid item xs={12} md={6} lg={3}>
+              <TextField
+                fullWidth
+                size="small"
+                margin="dense"
+                label="Payee Name"
+                value={payeeName}
+                onChange={(e) => setPayeeName(e.target.value)}
+                placeholder="Enter payee name"
+              />
+            </Grid>
+          )}
         </Grid>
 
-        {showMemberId && (
-          <Grid item xs={12} md={6} lg={3}>
-            <TextField
-              fullWidth
-              size="small"
-              margin="dense"
-              label="Member ID"
-              value={memberId}
-              onChange={(e) => setMemberId(e.target.value)}
-              placeholder="Enter member ID"
-            />
-          </Grid>
-        )}
-
-        {showPaymentId && (
-          <Grid item xs={12} md={6} lg={3}>
-            <TextField
-              fullWidth
-              size="small"
-              margin="dense"
-              label="Payment ID"
-              value={paymentId}
-              onChange={(e) => setPaymentId(e.target.value)}
-              placeholder="Enter payment ID"
-            />
-          </Grid>
-        )}
-
-        {showPayeeName && (
-          <Grid item xs={12} md={6} lg={3}>
-            <TextField
-              fullWidth
-              size="small"
-              margin="dense"
-              label="Payee Name"
-              value={payeeName}
-              onChange={(e) => setPayeeName(e.target.value)}
-              placeholder="Enter payee name"
-            />
-          </Grid>
-        )}
-      </Grid>
-
-      {showDateRange && (
-        <DateRangeSelector
-          startDate={startDate}
-          endDate={endDate}
-          onStartDateChange={setStartDate}
-          onEndDateChange={setEndDate}
-        />
-      )}
-
-      {reportData && reportData.length > 0 ? (
-        <>
-          <ReportTable
-            data={reportData}
-            columns={columns}
-            pagination={{
-              pageNumber: pageNumber,
-              pageSize: pageSize,
-              totalCount: totalCount,
-              onPageChange: handlePageChange,
-              onPageSizeChange: handlePageSizeChange
-            }}
+        {showDateRange && (
+          <DateRangeSelector
+            startDate={startDate}
+            endDate={endDate}
+            onStartDateChange={setStartDate}
+            onEndDateChange={setEndDate}
           />
-          
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-            <Typography variant="body2">
-              Showing {reportData.length} of {totalCount} results
-            </Typography>
-          </Box>
-        </>
-      ) : null}
-    </ReportContainer>
+        )}
+
+        {reportData && reportData.length > 0 ? (
+          <>
+            <ReportTable
+              data={reportData}
+              columns={columns}
+              onSort={handleSortChange}
+              pagination={{
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+                totalCount: totalCount,
+                onPageChange: handlePageChange,
+                onPageSizeChange: handlePageSizeChange
+              }}
+            />
+            
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+              <Typography variant="body2">
+                Showing {reportData.length} of {totalCount} results
+              </Typography>
+            </Box>
+          </>
+        ) : null}
+      </ReportContainer>
+    </LocalizationProvider>
   );
 };
 

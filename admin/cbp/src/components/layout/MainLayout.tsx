@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, useTheme } from '@mui/material';
+import { Box, useTheme, Paper } from '@mui/material';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useNavigation } from '../../context/NavigationContext';
 import { useClient } from '../../context/ClientContext';
@@ -59,10 +59,20 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, toggleTheme }) => {
             bgcolor: 'background.paper'
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Paper 
+            elevation={0} 
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              mb: 3, 
+              p: 1.5,
+              borderRadius: 1,
+              borderBottom: `1px solid ${theme.palette.divider}`
+            }}
+          >
             <Breadcrumbs />
             {isAdmin && <Box sx={{ ml: 'auto' }}><ClientSelector /></Box>}
-          </Box>
+          </Paper>
           {children || <Outlet />}
         </Box>
       </Box>

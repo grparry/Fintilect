@@ -14,6 +14,14 @@ import WarningIcon from '@mui/icons-material/Warning';
 import TransformIcon from '@mui/icons-material/Transform';
 import LockIcon from '@mui/icons-material/Lock';
 import HistoryIcon from '@mui/icons-material/History';
+import SearchIcon from '@mui/icons-material/Search';
+import GroupIcon from '@mui/icons-material/Group';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import RepeatIcon from '@mui/icons-material/Repeat';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import PeopleIcon from '@mui/icons-material/People';
+import PaymentsIcon from '@mui/icons-material/Payments';
 
 // Lazy load components
 const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
@@ -23,7 +31,23 @@ const PaymentManagement = lazy(() => import('../components/bill-pay/payments/Pay
 const PaymentManagementHeader = lazy(() => import('../components/bill-pay/payments/PaymentManagementHeader'));
 const PendingPayments = lazy(() => import('../components/bill-pay/payments/ManagePayments'));
 const ExceptionTool = lazy(() => import('../components/bill-pay/payments/ExceptionTool'));
-const Reports = lazy(() => import('../components/bill-pay/reports/index'));
+const ReportsLanding = lazy(() => import('../components/bill-pay/reports/ReportsLanding'));
+const ReportsHeader = lazy(() => import('../components/bill-pay/reports/ReportsHeader'));
+const PaymentActivityReport = lazy(() => import('../components/bill-pay/reports/reports/PaymentActivityReport'));
+const ErrorRecapReport = lazy(() => import('../components/bill-pay/reports/reports/ErrorRecapReport'));
+const BillPaySearchReport = lazy(() => import('../components/bill-pay/reports/reports/BillPaySearchReport'));
+const ActiveUserCountReport = lazy(() => import('../components/bill-pay/reports/reports/ActiveUserCountReport'));
+const FailedOnUsReport = lazy(() => import('../components/bill-pay/reports/reports/FailedOnUsReport'));
+const GlobalHolidaysReport = lazy(() => import('../components/bill-pay/reports/reports/GlobalHolidaysReport'));
+const MonthlyUsersReport = lazy(() => import('../components/bill-pay/reports/reports/MonthlyUsersReport'));
+const PendingPaymentsReport = lazy(() => import('../components/bill-pay/reports/reports/PendingPaymentsReport'));
+const RecurringPaymentChangeHistoryReport = lazy(() => import('../components/bill-pay/reports/reports/RecurringPaymentChangeHistoryReport'));
+const UserPayeeChangeHistoryReport = lazy(() => import('../components/bill-pay/reports/reports/UserPayeeChangeHistoryReport'));
+const OnUsPostingsReport = lazy(() => import('../components/bill-pay/reports/reports/OnUsPostingsReport'));
+const StatusesWithNotificationsReport = lazy(() => import('../components/bill-pay/reports/reports/StatusesWithNotificationsReport'));
+const LargePaymentReport = lazy(() => import('../components/bill-pay/reports/reports/LargePaymentReport'));
+const ProcessingConfirmationReport = lazy(() => import('../components/bill-pay/reports/reports/ProcessingConfirmationReport'));
+const ScheduledPaymentChangeHistoryReport = lazy(() => import('../components/bill-pay/reports/reports/ScheduledPaymentChangeHistoryReport'));
 const Settings = lazy(() => import('../components/bill-pay/settings/Settings'));
 const BillPayConfig = lazy(() => import('../components/bill-pay/settings/BillPayConfig'));
 const Holidays = lazy(() => import('../components/bill-pay/settings/Holidays'));
@@ -148,10 +172,155 @@ const billPayRoutes: RouteConfig[] = [
         id: 'reports',
         path: 'reports',
         title: 'Reports',
-        element: Reports,
+        element: ReportsHeader,
         icon: AssessmentIcon,
         sectionId: 'billPay',
-        resourceId: 'route:billPay.reports' as ResourceId
+        resourceId: 'route:billPay.reports' as ResourceId,
+        children: [
+          {
+            id: 'reportsIndex',
+            path: '',
+            title: 'Reports',
+            element: ReportsLanding,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.index' as ResourceId
+          },
+          {
+            id: 'paymentActivityReport',
+            path: 'payment-activity',
+            title: 'Payment Activity Report',
+            element: PaymentActivityReport,
+            icon: PaymentIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.paymentActivity' as ResourceId
+          },
+          {
+            id: 'errorRecapReport',
+            path: 'error-recap',
+            title: 'Error Recap Report',
+            element: ErrorRecapReport,
+            icon: ErrorIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.errorRecap' as ResourceId
+          },
+          {
+            id: 'billPaySearchReport',
+            path: 'billpay-search',
+            title: 'BillPay Search Report',
+            element: BillPaySearchReport,
+            icon: SearchIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.billPaySearch' as ResourceId
+          },
+          {
+            id: 'activeUserCountReport',
+            path: 'active-user-count',
+            title: 'Active User Count Report',
+            element: ActiveUserCountReport,
+            icon: GroupIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.activeUserCount' as ResourceId
+          },
+          {
+            id: 'failedOnUsReport',
+            path: 'failed-on-us',
+            title: 'Failed On Us Report',
+            element: FailedOnUsReport,
+            icon: ReportProblemIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.failedOnUs' as ResourceId
+          },
+          {
+            id: 'globalHolidaysReport',
+            path: 'global-holidays',
+            title: 'Global Holidays Report',
+            element: GlobalHolidaysReport,
+            icon: EventIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.globalHolidays' as ResourceId
+          },
+          {
+            id: 'monthlyUsersReport',
+            path: 'monthly-users',
+            title: 'Monthly Users Report',
+            element: MonthlyUsersReport,
+            icon: PeopleIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.monthlyUsers' as ResourceId
+          },
+          {
+            id: 'pendingPaymentsReport',
+            path: 'pending-payments',
+            title: 'Pending Payments Report',
+            element: PendingPaymentsReport,
+            icon: PaymentIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.pendingPayments' as ResourceId
+          },
+          {
+            id: 'recurringPaymentChangeHistoryReport',
+            path: 'recurring-payment-change-history',
+            title: 'Recurring Payment Change History Report',
+            element: RecurringPaymentChangeHistoryReport,
+            icon: HistoryIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.recurringPaymentChangeHistory' as ResourceId
+          },
+          {
+            id: 'userPayeeChangeHistoryReport',
+            path: 'user-payee-change-history',
+            title: 'User Payee Change History Report',
+            element: UserPayeeChangeHistoryReport,
+            icon: HistoryIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.userPayeeChangeHistory' as ResourceId
+          },
+          {
+            id: 'onUsPostingsReport',
+            path: 'on-us-postings',
+            title: 'On Us Postings Report',
+            element: OnUsPostingsReport,
+            icon: AccountBalanceIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.onUsPostings' as ResourceId
+          },
+          {
+            id: 'statusesWithNotificationsReport',
+            path: 'statuses-with-notifications',
+            title: 'Statuses with Notifications Report',
+            element: StatusesWithNotificationsReport,
+            icon: NotificationsIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.statusesWithNotifications' as ResourceId
+          },
+          {
+            id: 'largePaymentReport',
+            path: 'large-payment',
+            title: 'Large Payment Report',
+            element: LargePaymentReport,
+            icon: PaymentsIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.largePayment' as ResourceId
+          },
+          {
+            id: 'processingConfirmationReport',
+            path: 'processing-confirmation',
+            title: 'Processing Confirmation Report',
+            element: ProcessingConfirmationReport,
+            icon: ConfirmationNumberIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.processingConfirmation' as ResourceId
+          },
+          {
+            id: 'scheduledPaymentChangeHistoryReport',
+            path: 'scheduled-payment-change-history',
+            title: 'Scheduled Payment Change History Report',
+            element: ScheduledPaymentChangeHistoryReport,
+            icon: HistoryIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.scheduledPaymentChangeHistory' as ResourceId
+          }
+        ]
       },
       {
         id: 'settings',

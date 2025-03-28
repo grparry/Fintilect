@@ -2,16 +2,16 @@ import { reportService } from '../../services/factory/ServiceFactory';
 
 /**
  * Search Type enum for Error Recap
- * Maps UI-friendly names to API expected numeric values (0-6)
+ * Maps UI-friendly names to API expected string values
  */
 export enum ErrorRecapSearchType {
-  PaymentID = 0,
-  MemberID = 1,
-  UserPayeeListID = 2,
-  StatusCode = 3,
-  DateRange = 4,
-  PayeeID = 5,
-  PayeeName = 6
+  PaymentID = 'PaymentID',
+  MemberID = 'MemberID',
+  UserPayeeListID = 'UserPayeeListID',
+  StatusCode = 'StatusCode',
+  DateRange = 'DateRange',
+  PayeeID = 'PayeeID',
+  PayeeName = 'PayeeName'
 }
 
 /**
@@ -26,6 +26,20 @@ export const ERROR_RECAP_SEARCH_TYPES = {
   [ErrorRecapSearchType.PayeeID]: 'Payee ID',
   [ErrorRecapSearchType.PayeeName]: 'Payee Name'
 };
+
+/**
+ * Sort Column enum for Error Recap
+ */
+export enum ErrorRecapSortColumn {
+  FailedDate = 'FailedDate',
+  MemberID = 'MemberID',
+  PaymentID = 'PaymentID',
+  Amount = 'Amount',
+  UserPayeeListID = 'UserPayeeListID',
+  PayeeID = 'PayeeID',
+  PayeeName = 'PayeeName',
+  Status = 'Status'
+}
 
 /**
  * Error Recap Item interface matching C# API
@@ -71,10 +85,10 @@ export interface ErrorRecapRequest {
   endDate?: string;
   payeeId?: string;
   payeeName?: string;
-  pageNumber?: number;
-  pageSize?: number;
   sortColumn?: string;
   sortDirection?: 'ASC' | 'DESC';
+  pageNumber?: number;
+  pageSize?: number;
 }
 
 /**
@@ -92,7 +106,7 @@ export interface ErrorRecapParams {
   payeeName?: string;
   pageNumber?: number;
   pageSize?: number;
-  sortColumn?: string;
+  sortColumn?: ErrorRecapSortColumn;
   sortDirection?: 'ASC' | 'DESC';
 }
 

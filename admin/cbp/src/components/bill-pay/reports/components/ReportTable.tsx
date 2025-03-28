@@ -30,12 +30,13 @@ interface ReportTableProps<T> {
     sortable?: boolean;
   }[];
   pagination?: PaginationProps;
+  onSort?: (columnKey: string) => void;
 }
 
 /**
  * A generic table component for displaying report results
  */
-function ReportTable<T>({ data, columns, pagination }: ReportTableProps<T>): React.ReactElement {
+function ReportTable<T>({ data, columns, pagination, onSort }: ReportTableProps<T>): React.ReactElement {
   if (!data || data.length === 0) {
     return <Alert severity="info">No data available</Alert>;
   }
@@ -64,6 +65,7 @@ function ReportTable<T>({ data, columns, pagination }: ReportTableProps<T>): Rea
                 <TableCell 
                   key={column.key}
                   sx={column.sortable ? { cursor: 'pointer' } : undefined}
+                  onClick={() => column.sortable && onSort && onSort(column.key)}
                 >
                   {column.renderHeader ? column.renderHeader() : column.label}
                 </TableCell>

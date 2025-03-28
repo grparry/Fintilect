@@ -6,27 +6,41 @@ import { format } from 'date-fns';
  * Maps UI-friendly names to API expected values
  */
 export enum PaymentActivitySearchType {
-    MemberID = 0,
-    MemberIDAndDate = 1,
-    MemberIDAndPayeeName = 2,
-    MemberIDAndDateAndPayeeName = 3,
-    DateRange = 5,
-    PaymentID = 6,
-    PayeeName = 7
+    MemberID = 'PaymentActivity_MemberID',
+    MemberIDAndDate = 'PaymentActivity_MemberIDAndDate',
+    MemberIDAndPayeeName = 'PaymentActivity_MemberIDAndPayeeName',
+    MemberIDAndDateAndPayeeName = 'PaymentActivity_MemberIDAndDateAndPayeeName',
+    DateRange = 'PaymentActivity_Date',
+    PaymentID = 'PaymentActivity_PaymentID',
+    PayeeName = 'PaymentActivity_PayeeName'
 }
 
 /**
- * Payment Activity search type mapping to API string values
+ * Payment Activity search type display names
  */
 export const PAYMENT_ACTIVITY_SEARCH_TYPES = {
-  'MemberID': PaymentActivitySearchType.MemberID,
-  'MemberIDAndDate': PaymentActivitySearchType.MemberIDAndDate,
-  'MemberIDAndPayeeName': PaymentActivitySearchType.MemberIDAndPayeeName,
-  'MemberIDAndDateAndPayeeName': PaymentActivitySearchType.MemberIDAndDateAndPayeeName,
-  'DateRange': PaymentActivitySearchType.DateRange,
-  'PaymentID': PaymentActivitySearchType.PaymentID,
-  'PayeeName': PaymentActivitySearchType.PayeeName
+  [PaymentActivitySearchType.MemberID]: 'Member ID',
+  [PaymentActivitySearchType.MemberIDAndDate]: 'Member ID and Date',
+  [PaymentActivitySearchType.MemberIDAndPayeeName]: 'Member ID and Payee Name',
+  [PaymentActivitySearchType.MemberIDAndDateAndPayeeName]: 'Member ID, Date, and Payee Name',
+  [PaymentActivitySearchType.DateRange]: 'Date Range',
+  [PaymentActivitySearchType.PaymentID]: 'Payment ID',
+  [PaymentActivitySearchType.PayeeName]: 'Payee Name'
 };
+
+/**
+ * Sort Column enum for Payment Activity
+ */
+export enum PaymentActivitySortColumn {
+  MemberID = 'MemberID',
+  PaymentID = 'PaymentID',
+  PayeeName = 'PayeeName',
+  DateProcessed = 'DateProcessed',
+  DueDate = 'DueDate',
+  Status = 'Status',
+  PaymentMethod = 'PaymentMethod',
+  Amount = 'Amount'
+}
 
 /**
  * Payment Activity Item interface matching C# API
@@ -66,7 +80,7 @@ export interface PaymentActivityItemPagedResponse {
  * Note: SearchType is a numeric enum value matching the API expectations
  */
 export interface PaymentActivityRequest {
-    searchType: number;
+    searchType: string;
     memberId?: string;  // Used for member ID related search types
     paymentId?: string; // Used for payment ID search type
     startDate?: string;
@@ -90,7 +104,7 @@ export interface PaymentActivityParams {
     payeeName?: string;
     pageNumber?: number;
     pageSize?: number;
-    sortColumn?: string;
+    sortColumn?: PaymentActivitySortColumn;
     sortDirection?: 'ASC' | 'DESC';
 }
 
@@ -112,7 +126,7 @@ export const getPaymentActivity = async (
     searchType: searchTypeValue,
     pageNumber: params.pageNumber || 1,
     pageSize: params.pageSize || 20,
-    sortColumn: params.sortColumn,
+    sortColumn: sortColumn,
     sortDirection: params.sortDirection,
   };
 

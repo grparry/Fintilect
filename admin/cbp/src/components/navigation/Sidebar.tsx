@@ -112,7 +112,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             {/* Active Section Area */}
             <Box
               sx={{
-                height: 'calc(100vh - 64px - 160px)', // Increased space for active section, reduced space for inactive items
+                height: 'calc(100vh - 64px - 60px)', 
                 overflowY: 'auto',
                 '&::-webkit-scrollbar': {
                   width: '4px',
@@ -168,7 +168,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   position: 'fixed',
                   bottom: 0,
                   width: width,
-                  maxHeight: '160px',
+                  maxHeight: '60px', 
                   overflowY: 'auto',
                   borderTop: `1px solid ${theme.palette.divider}`,
                   backgroundColor: theme.palette.mode === 'dark' 
