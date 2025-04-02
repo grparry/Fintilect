@@ -55,7 +55,11 @@
             "schema": {
               "enum": [
                 "MemberID",
-                "LastActivityDate"
+                "LastActivityDate",
+                "FirstName",
+                "LastName",
+                "Email",
+                "PaymentCount"
               ],
               "type": "string",
               "allOf": [
@@ -128,91 +132,6 @@
           },
           "500": {
             "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/v1/report/billpaysearch": {
-      "post": {
-        "tags": [
-          "BillPaySearch"
-        ],
-        "summary": "Gets a paged list of bill pay search results based on the provided request parameters.",
-        "requestBody": {
-          "description": "The request parameters.",
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.BillPaySearchRequest"
-                  }
-                ],
-                "description": "Request model for the Bill Pay Search report."
-              }
-            },
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.BillPaySearchRequest"
-                  }
-                ],
-                "description": "Request model for the Bill Pay Search report."
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.BillPaySearchRequest"
-                  }
-                ],
-                "description": "Request model for the Bill Pay Search report."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.BillPaySearchRequest"
-                  }
-                ],
-                "description": "Request model for the Bill Pay Search report."
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Returns the bill pay search results.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfBillPaySearchItem"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "If the request is invalid.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "If an error occurred while processing the request.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -3717,6 +3636,91 @@
         }
       }
     },
+    "/api/v1/report/payee": {
+      "post": {
+        "tags": [
+          "Payee"
+        ],
+        "summary": "Gets a paged list of payees based on the provided request parameters.",
+        "requestBody": {
+          "description": "The request parameters.",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PayeeRequest"
+                  }
+                ],
+                "description": "Request model for the Payee report."
+              }
+            },
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PayeeRequest"
+                  }
+                ],
+                "description": "Request model for the Payee report."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PayeeRequest"
+                  }
+                ],
+                "description": "Request model for the Payee report."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PayeeRequest"
+                  }
+                ],
+                "description": "Request model for the Payee report."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the payees.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfPayeeItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "If an error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/payment/change-history": {
       "post": {
         "tags": [
@@ -4295,6 +4299,91 @@
         }
       }
     },
+    "/api/v1/report/payment": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Gets a paged list of payments based on the provided request parameters.",
+        "requestBody": {
+          "description": "The request parameters.",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PaymentRequest"
+                  }
+                ],
+                "description": "Request model for the Payment report."
+              }
+            },
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PaymentRequest"
+                  }
+                ],
+                "description": "Request model for the Payment report."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PaymentRequest"
+                  }
+                ],
+                "description": "Request model for the Payment report."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PaymentRequest"
+                  }
+                ],
+                "description": "Request model for the Payment report."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the payments.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfPaymentItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "If an error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/report/paymentactivity": {
       "get": {
         "tags": [
@@ -4454,6 +4543,91 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/report/paymentclear": {
+      "post": {
+        "tags": [
+          "PaymentClear"
+        ],
+        "summary": "Gets a paged list of payment clear records based on the provided request parameters.",
+        "requestBody": {
+          "description": "The request parameters.",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PaymentClearRequest"
+                  }
+                ],
+                "description": "Request model for the Payment Clear report."
+              }
+            },
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PaymentClearRequest"
+                  }
+                ],
+                "description": "Request model for the Payment Clear report."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PaymentClearRequest"
+                  }
+                ],
+                "description": "Request model for the Payment Clear report."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.PaymentClearRequest"
+                  }
+                ],
+                "description": "Request model for the Payment Clear report."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the payment clear records.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfPaymentClearItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "If an error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4791,6 +4965,91 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/report/recurringpayment": {
+      "post": {
+        "tags": [
+          "RecurringPayment"
+        ],
+        "summary": "Gets a paged list of recurring payments based on the provided request parameters.",
+        "requestBody": {
+          "description": "The request parameters.",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.RecurringPaymentRequest"
+                  }
+                ],
+                "description": "Request model for the Recurring Payment report."
+              }
+            },
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.RecurringPaymentRequest"
+                  }
+                ],
+                "description": "Request model for the Recurring Payment report."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.RecurringPaymentRequest"
+                  }
+                ],
+                "description": "Request model for the Recurring Payment report."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.RecurringPaymentRequest"
+                  }
+                ],
+                "description": "Request model for the Recurring Payment report."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the recurring payments.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfRecurringPaymentItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "If an error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -5855,57 +6114,76 @@
         }
       }
     },
-    "/api/statuseswithnotifications": {
-      "post": {
+    "/api/v1/report/statuseswithnotifications": {
+      "get": {
         "tags": [
           "StatusesWithNotifications"
         ],
         "summary": "Gets a paged list of statuses with notifications based on the provided request parameters.",
-        "requestBody": {
-          "description": "The request parameters.",
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.StatusesWithNotificationsRequest"
-                  }
-                ],
-                "description": "Request model for the Statuses With Notifications report."
-              }
+        "parameters": [
+          {
+            "name": "SortColumn",
+            "in": "query",
+            "description": "The column to sort by.",
+            "required": true,
+            "schema": {
+              "enum": [
+                "StatusCode",
+                "StatusDescription",
+                "StatusFriendlyName",
+                "StatusHostCode",
+                "NotificationId"
+              ],
+              "type": "string",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/StatusesWithNotificationsSortColumn"
+                }
+              ],
+              "example": "StatusDescription"
             },
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.StatusesWithNotificationsRequest"
-                  }
-                ],
-                "description": "Request model for the Statuses With Notifications report."
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.StatusesWithNotificationsRequest"
-                  }
-                ],
-                "description": "Request model for the Statuses With Notifications report."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.StatusesWithNotificationsRequest"
-                  }
-                ],
-                "description": "Request model for the Statuses With Notifications report."
-              }
+            "example": "StatusDescription"
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "schema": {
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SortDirection"
+                }
+              ]
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Returns the statuses with notifications.",
@@ -5913,6 +6191,91 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PagedResponseOfStatusesWithNotificationsItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "If an error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/report/userpayee": {
+      "post": {
+        "tags": [
+          "UserPayee"
+        ],
+        "summary": "Gets a paged list of user payees based on the provided request parameters.",
+        "requestBody": {
+          "description": "The request parameters.",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.UserPayeeRequest"
+                  }
+                ],
+                "description": "Request model for the User Payee report."
+              }
+            },
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.UserPayeeRequest"
+                  }
+                ],
+                "description": "Request model for the User Payee report."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.UserPayeeRequest"
+                  }
+                ],
+                "description": "Request model for the User Payee report."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Requests.Report.UserPayeeRequest"
+                  }
+                ],
+                "description": "Request model for the User Payee report."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the user payees.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfUserPayeeItem"
                 }
               }
             }
@@ -6068,6 +6431,23 @@
           "lastActivityDate": {
             "type": "string",
             "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -6082,310 +6462,14 @@
       "ActiveUserCountSortColumn": {
         "enum": [
           "MemberID",
-          "LastActivityDate"
+          "LastActivityDate",
+          "FirstName",
+          "LastName",
+          "Email",
+          "PaymentCount"
         ],
         "type": "string",
-        "description": "Defines the available sort columns for the Active User Count API. Allowed values: 'MemberID', 'LastActivityDate'"
-      },
-      "BillPayReportType": {
-        "enum": [
-          "PaymentHistory",
-          "PendingPayments",
-          "Payment",
-          "RecurringPayment",
-          "ErrorRecap",
-          "PaymentClear",
-          "UserPayee",
-          "NickNames",
-          "Payee"
-        ],
-        "type": "string",
-        "description": "Defines the available report types for the Bill Pay Search API.. Allowed values: 'PaymentHistory', 'PendingPayments', 'Payment', 'RecurringPayment', 'ErrorRecap', 'PaymentClear', 'UserPayee', 'NickNames', 'Payee'"
-      },
-      "BillPaySearchItem": {
-        "type": "object",
-        "properties": {
-          "paymentID": {
-            "type": "string",
-            "nullable": true
-          },
-          "recurringPaymentID": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberID": {
-            "type": "string",
-            "nullable": true
-          },
-          "account": {
-            "type": "string",
-            "nullable": true
-          },
-          "amount": {
-            "type": "number",
-            "format": "double"
-          },
-          "checkNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "dateProcessed": {
-            "type": "string",
-            "nullable": true
-          },
-          "willProcessDate": {
-            "type": "string",
-            "nullable": true
-          },
-          "dueDate": {
-            "type": "string",
-            "nullable": true
-          },
-          "failedDate": {
-            "type": "string",
-            "nullable": true
-          },
-          "cancelledDate": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "string",
-            "nullable": true
-          },
-          "userPayeeListID": {
-            "type": "string",
-            "nullable": true
-          },
-          "payeeID": {
-            "type": "string",
-            "nullable": true
-          },
-          "accountAtPayee": {
-            "type": "string",
-            "nullable": true
-          },
-          "nameOnAccount": {
-            "type": "string",
-            "nullable": true
-          },
-          "paymentMethod": {
-            "type": "string",
-            "nullable": true
-          },
-          "memo": {
-            "type": "string",
-            "nullable": true
-          },
-          "sourceApplication": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberFirstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberMiddleName": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberLastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberAddress1": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberAddress2": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberCity": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberState": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberZipCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberCountry": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberHomePhone": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberWorkPhone": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberWorkPhoneExt": {
-            "type": "string",
-            "nullable": true
-          },
-          "memberEmail": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "BillPaySearchSortColumn": {
-        "enum": [
-          "MemberID",
-          "PaymentID",
-          "DateProcessed",
-          "Amount",
-          "Status"
-        ],
-        "type": "string",
-        "description": "Defines the available sort columns for the Bill Pay Search API.. Allowed values: 'MemberID', 'PaymentID', 'DateProcessed', 'Amount', 'Status'"
-      },
-      "BillPaySearchType": {
-        "enum": [
-          "Member",
-          "Payee",
-          "Payment",
-          "UserPayeeList"
-        ],
-        "type": "string",
-        "description": "Defines the available search types for the Bill Pay Search API.\r\nEach search type requires specific parameters to be provided in the request.. Allowed values: 'Member', 'Payee', 'Payment', 'UserPayeeList'"
-      },
-      "ConnectBillPay.AdminCuApi.Requests.Report.BillPaySearchRequest": {
-        "required": [
-          "reportType",
-          "searchType",
-          "sortColumn"
-        ],
-        "type": "object",
-        "properties": {
-          "searchType": {
-            "enum": [
-              "Member",
-              "Payee",
-              "Payment",
-              "UserPayeeList"
-            ],
-            "type": "string",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BillPaySearchType"
-              }
-            ],
-            "description": "The type of search to perform.. Allowed values: 'Member', 'Payee', 'Payment', 'UserPayeeList'",
-            "example": "Member"
-          },
-          "memberID": {
-            "type": "string",
-            "description": "The Member ID to search for when SearchType is Member.",
-            "nullable": true,
-            "example": "12345"
-          },
-          "paymentID": {
-            "type": "string",
-            "description": "The Payment ID to search for when SearchType is Payment.",
-            "nullable": true,
-            "example": "P12345"
-          },
-          "recurringPaymentID": {
-            "type": "string",
-            "description": "The Recurring Payment ID to search for when SearchType is Payment.",
-            "nullable": true,
-            "example": "RP12345"
-          },
-          "userPayeeListID": {
-            "type": "string",
-            "description": "The User Payee List ID to search for when SearchType is UserPayeeList.",
-            "nullable": true,
-            "example": "UPL12345"
-          },
-          "payeeID": {
-            "type": "string",
-            "description": "The Payee ID to search for when SearchType is Payee.",
-            "nullable": true,
-            "example": "PAY12345"
-          },
-          "days": {
-            "type": "integer",
-            "description": "The number of days to include in the search (optional).",
-            "format": "int32",
-            "nullable": true,
-            "example": 30
-          },
-          "reportType": {
-            "enum": [
-              "PaymentHistory",
-              "PendingPayments",
-              "Payment",
-              "RecurringPayment",
-              "ErrorRecap",
-              "PaymentClear",
-              "UserPayee",
-              "NickNames",
-              "Payee"
-            ],
-            "type": "string",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BillPayReportType"
-              }
-            ],
-            "description": "The type of report to generate.. Allowed values: 'PaymentHistory', 'PendingPayments', 'Payment', 'RecurringPayment', 'ErrorRecap', 'PaymentClear', 'UserPayee', 'NickNames', 'Payee'",
-            "example": "PaymentHistory"
-          },
-          "sortColumn": {
-            "enum": [
-              "MemberID",
-              "PaymentID",
-              "DateProcessed",
-              "Amount",
-              "Status"
-            ],
-            "type": "string",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BillPaySearchSortColumn"
-              }
-            ],
-            "description": "The column to sort by.. Allowed values: 'MemberID', 'PaymentID', 'DateProcessed', 'Amount', 'Status'",
-            "example": "DateProcessed"
-          },
-          "pageNumber": {
-            "maximum": 2147483647,
-            "minimum": 1,
-            "type": "integer",
-            "description": "Page number (1-based)",
-            "format": "int32"
-          },
-          "pageSize": {
-            "maximum": 100,
-            "minimum": 1,
-            "type": "integer",
-            "description": "Page size",
-            "format": "int32"
-          },
-          "sortDirection": {
-            "enum": [
-              "ASC",
-              "DESC"
-            ],
-            "type": "string",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SortDirection"
-              }
-            ],
-            "description": "Sort direction. Allowed values: 'ASC', 'DESC'"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Request model for the Bill Pay Search report."
+        "description": "Defines the available sort columns for the Active User Count API. Allowed values: 'MemberID', 'LastActivityDate', 'FirstName', 'LastName', 'Email', 'PaymentCount'"
       },
       "ConnectBillPay.AdminCuApi.Requests.Report.LargePaymentRequest": {
         "required": [
@@ -6446,6 +6530,340 @@
         },
         "additionalProperties": false,
         "description": "Request model for the Large Payment report."
+      },
+      "ConnectBillPay.AdminCuApi.Requests.Report.PayeeRequest": {
+        "required": [
+          "days",
+          "searchType",
+          "sortColumn"
+        ],
+        "type": "object",
+        "properties": {
+          "searchType": {
+            "enum": [
+              "Member",
+              "Payment",
+              "RecurringPayment",
+              "UserPayeeList",
+              "Payee"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReportSearchType"
+              }
+            ],
+            "description": "The type of search to perform.. Allowed values: 'Member', 'Payment', 'RecurringPayment', 'UserPayeeList', 'Payee'",
+            "example": "Member"
+          },
+          "memberID": {
+            "type": "string",
+            "description": "The member ID to search for (when SearchType is Member).",
+            "nullable": true,
+            "example": "12345"
+          },
+          "paymentID": {
+            "type": "string",
+            "description": "The payment ID to search for (when SearchType is Payment).",
+            "nullable": true,
+            "example": "P12345"
+          },
+          "recurringPaymentID": {
+            "type": "string",
+            "description": "The recurring payment ID to search for (when SearchType is RecurringPayment).",
+            "nullable": true,
+            "example": "RP12345"
+          },
+          "userPayeeListID": {
+            "type": "string",
+            "description": "The user payee list ID to search for (when SearchType is UserPayeeList).",
+            "nullable": true,
+            "example": "UPL12345"
+          },
+          "payeeID": {
+            "type": "string",
+            "description": "The payee ID to search for (when SearchType is Payee).",
+            "nullable": true,
+            "example": "PAY12345"
+          },
+          "days": {
+            "maximum": 3650,
+            "minimum": 1,
+            "type": "integer",
+            "description": "The number of days to include in the search.",
+            "format": "int32",
+            "example": 30
+          },
+          "sortColumn": {
+            "enum": [
+              "PayeeName",
+              "PayeeID",
+              "Address",
+              "City",
+              "State"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PayeeSortColumn"
+              }
+            ],
+            "description": "The column to sort by.. Allowed values: 'PayeeName', 'PayeeID', 'Address', 'City', 'State'",
+            "example": "PayeeName"
+          },
+          "pageNumber": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Page number (1-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Page size",
+            "format": "int32"
+          },
+          "sortDirection": {
+            "enum": [
+              "ASC",
+              "DESC"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            ],
+            "description": "Sort direction. Allowed values: 'ASC', 'DESC'"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request model for the Payee report."
+      },
+      "ConnectBillPay.AdminCuApi.Requests.Report.PaymentClearRequest": {
+        "required": [
+          "days",
+          "searchType",
+          "sortColumn"
+        ],
+        "type": "object",
+        "properties": {
+          "searchType": {
+            "enum": [
+              "Member",
+              "Payment",
+              "RecurringPayment",
+              "UserPayeeList",
+              "Payee"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReportSearchType"
+              }
+            ],
+            "description": "The type of search to perform.. Allowed values: 'Member', 'Payment', 'RecurringPayment', 'UserPayeeList', 'Payee'",
+            "example": "Member"
+          },
+          "memberID": {
+            "type": "string",
+            "description": "The member ID to search for (when SearchType is Member).",
+            "nullable": true,
+            "example": "12345"
+          },
+          "paymentID": {
+            "type": "string",
+            "description": "The payment ID to search for (when SearchType is Payment).",
+            "nullable": true,
+            "example": "P12345"
+          },
+          "recurringPaymentID": {
+            "type": "string",
+            "description": "The recurring payment ID to search for (when SearchType is RecurringPayment).",
+            "nullable": true,
+            "example": "RP12345"
+          },
+          "userPayeeListID": {
+            "type": "string",
+            "description": "The user payee list ID to search for (when SearchType is UserPayeeList).",
+            "nullable": true,
+            "example": "UPL12345"
+          },
+          "payeeID": {
+            "type": "string",
+            "description": "The payee ID to search for (when SearchType is Payee).",
+            "nullable": true,
+            "example": "PAY12345"
+          },
+          "days": {
+            "maximum": 3650,
+            "minimum": 1,
+            "type": "integer",
+            "description": "The number of days to include in the search.",
+            "format": "int32",
+            "example": 30
+          },
+          "sortColumn": {
+            "enum": [
+              "ClearedDate",
+              "PaymentID",
+              "MemberID",
+              "Amount",
+              "PayeeName"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PaymentClearSortColumn"
+              }
+            ],
+            "description": "The column to sort by.. Allowed values: 'ClearedDate', 'PaymentID', 'MemberID', 'Amount', 'PayeeName'",
+            "example": "ClearedDate"
+          },
+          "pageNumber": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Page number (1-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Page size",
+            "format": "int32"
+          },
+          "sortDirection": {
+            "enum": [
+              "ASC",
+              "DESC"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            ],
+            "description": "Sort direction. Allowed values: 'ASC', 'DESC'"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request model for the Payment Clear report."
+      },
+      "ConnectBillPay.AdminCuApi.Requests.Report.PaymentRequest": {
+        "required": [
+          "days",
+          "searchType",
+          "sortColumn"
+        ],
+        "type": "object",
+        "properties": {
+          "searchType": {
+            "enum": [
+              "Member",
+              "Payment",
+              "RecurringPayment",
+              "UserPayeeList",
+              "Payee"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReportSearchType"
+              }
+            ],
+            "description": "The type of search to perform.. Allowed values: 'Member', 'Payment', 'RecurringPayment', 'UserPayeeList', 'Payee'",
+            "example": "Member"
+          },
+          "memberID": {
+            "type": "string",
+            "description": "The member ID to search for (when SearchType is Member).",
+            "nullable": true,
+            "example": "12345"
+          },
+          "paymentID": {
+            "type": "string",
+            "description": "The payment ID to search for (when SearchType is Payment).",
+            "nullable": true,
+            "example": "P12345"
+          },
+          "recurringPaymentID": {
+            "type": "string",
+            "description": "The recurring payment ID to search for (when SearchType is RecurringPayment).",
+            "nullable": true,
+            "example": "RP12345"
+          },
+          "userPayeeListID": {
+            "type": "string",
+            "description": "The user payee list ID to search for (when SearchType is UserPayeeList).",
+            "nullable": true,
+            "example": "UPL12345"
+          },
+          "payeeID": {
+            "type": "string",
+            "description": "The payee ID to search for (when SearchType is Payee).",
+            "nullable": true,
+            "example": "PAY12345"
+          },
+          "days": {
+            "maximum": 3650,
+            "minimum": 1,
+            "type": "integer",
+            "description": "The number of days to include in the search.",
+            "format": "int32",
+            "example": 30
+          },
+          "sortColumn": {
+            "enum": [
+              "DateProcessed",
+              "PaymentID",
+              "MemberID",
+              "Amount",
+              "PayeeName",
+              "Status"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PaymentSortColumn"
+              }
+            ],
+            "description": "The column to sort by.. Allowed values: 'DateProcessed', 'PaymentID', 'MemberID', 'Amount', 'PayeeName', 'Status'",
+            "example": "DateProcessed"
+          },
+          "pageNumber": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Page number (1-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Page size",
+            "format": "int32"
+          },
+          "sortDirection": {
+            "enum": [
+              "ASC",
+              "DESC"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            ],
+            "description": "Sort direction. Allowed values: 'ASC', 'DESC'"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request model for the Payment report."
       },
       "ConnectBillPay.AdminCuApi.Requests.Report.PendingPaymentsRequest": {
         "required": [
@@ -6612,6 +7030,118 @@
         "additionalProperties": false,
         "description": "Request model for the Recurring Payment Change History report."
       },
+      "ConnectBillPay.AdminCuApi.Requests.Report.RecurringPaymentRequest": {
+        "required": [
+          "days",
+          "searchType",
+          "sortColumn"
+        ],
+        "type": "object",
+        "properties": {
+          "searchType": {
+            "enum": [
+              "Member",
+              "Payment",
+              "RecurringPayment",
+              "UserPayeeList",
+              "Payee"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReportSearchType"
+              }
+            ],
+            "description": "The type of search to perform.. Allowed values: 'Member', 'Payment', 'RecurringPayment', 'UserPayeeList', 'Payee'",
+            "example": "Member"
+          },
+          "memberID": {
+            "type": "string",
+            "description": "The member ID to search for (when SearchType is Member).",
+            "nullable": true,
+            "example": "12345"
+          },
+          "paymentID": {
+            "type": "string",
+            "description": "The payment ID to search for (when SearchType is Payment).",
+            "nullable": true,
+            "example": "P12345"
+          },
+          "recurringPaymentID": {
+            "type": "string",
+            "description": "The recurring payment ID to search for (when SearchType is RecurringPayment).",
+            "nullable": true,
+            "example": "RP12345"
+          },
+          "userPayeeListID": {
+            "type": "string",
+            "description": "The user payee list ID to search for (when SearchType is UserPayeeList).",
+            "nullable": true,
+            "example": "UPL12345"
+          },
+          "payeeID": {
+            "type": "string",
+            "description": "The payee ID to search for (when SearchType is Payee).",
+            "nullable": true,
+            "example": "PAY12345"
+          },
+          "days": {
+            "maximum": 3650,
+            "minimum": 1,
+            "type": "integer",
+            "description": "The number of days to include in the search.",
+            "format": "int32",
+            "example": 30
+          },
+          "sortColumn": {
+            "enum": [
+              "NextPaymentDate",
+              "RecurringPaymentID",
+              "MemberID",
+              "Amount",
+              "PayeeName",
+              "Frequency"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RecurringPaymentSortColumn"
+              }
+            ],
+            "description": "The column to sort by.. Allowed values: 'NextPaymentDate', 'RecurringPaymentID', 'MemberID', 'Amount', 'PayeeName', 'Frequency'",
+            "example": "NextPaymentDate"
+          },
+          "pageNumber": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Page number (1-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Page size",
+            "format": "int32"
+          },
+          "sortDirection": {
+            "enum": [
+              "ASC",
+              "DESC"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            ],
+            "description": "Sort direction. Allowed values: 'ASC', 'DESC'"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request model for the Recurring Payment report."
+      },
       "ConnectBillPay.AdminCuApi.Requests.Report.ScheduledPaymentChangeHistoryRequest": {
         "required": [
           "endDate",
@@ -6723,60 +7253,6 @@
         "additionalProperties": false,
         "description": "Request model for the Scheduled Payment Change History report."
       },
-      "ConnectBillPay.AdminCuApi.Requests.Report.StatusesWithNotificationsRequest": {
-        "required": [
-          "sortColumn"
-        ],
-        "type": "object",
-        "properties": {
-          "sortColumn": {
-            "enum": [
-              "StatusCode",
-              "StatusDescription",
-              "StatusFriendlyName",
-              "StatusHostCode",
-              "NotificationId"
-            ],
-            "type": "string",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StatusesWithNotificationsSortColumn"
-              }
-            ],
-            "description": "The column to sort by.. Allowed values: 'StatusCode', 'StatusDescription', 'StatusFriendlyName', 'StatusHostCode', 'NotificationId'",
-            "example": "StatusDescription"
-          },
-          "pageNumber": {
-            "maximum": 2147483647,
-            "minimum": 1,
-            "type": "integer",
-            "description": "Page number (1-based)",
-            "format": "int32"
-          },
-          "pageSize": {
-            "maximum": 100,
-            "minimum": 1,
-            "type": "integer",
-            "description": "Page size",
-            "format": "int32"
-          },
-          "sortDirection": {
-            "enum": [
-              "ASC",
-              "DESC"
-            ],
-            "type": "string",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SortDirection"
-              }
-            ],
-            "description": "Sort direction. Allowed values: 'ASC', 'DESC'"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Request model for the Statuses With Notifications report."
-      },
       "ConnectBillPay.AdminCuApi.Requests.Report.UserPayeeChangeHistoryRequest": {
         "required": [
           "endDate",
@@ -6878,6 +7354,117 @@
         },
         "additionalProperties": false,
         "description": "Request model for the User Payee Change History report."
+      },
+      "ConnectBillPay.AdminCuApi.Requests.Report.UserPayeeRequest": {
+        "required": [
+          "days",
+          "searchType",
+          "sortColumn"
+        ],
+        "type": "object",
+        "properties": {
+          "searchType": {
+            "enum": [
+              "Member",
+              "Payment",
+              "RecurringPayment",
+              "UserPayeeList",
+              "Payee"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReportSearchType"
+              }
+            ],
+            "description": "The type of search to perform.. Allowed values: 'Member', 'Payment', 'RecurringPayment', 'UserPayeeList', 'Payee'",
+            "example": "Member"
+          },
+          "memberID": {
+            "type": "string",
+            "description": "The member ID to search for (when SearchType is Member).",
+            "nullable": true,
+            "example": "12345"
+          },
+          "paymentID": {
+            "type": "string",
+            "description": "The payment ID to search for (when SearchType is Payment).",
+            "nullable": true,
+            "example": "P12345"
+          },
+          "recurringPaymentID": {
+            "type": "string",
+            "description": "The recurring payment ID to search for (when SearchType is RecurringPayment).",
+            "nullable": true,
+            "example": "RP12345"
+          },
+          "userPayeeListID": {
+            "type": "string",
+            "description": "The user payee list ID to search for (when SearchType is UserPayeeList).",
+            "nullable": true,
+            "example": "UPL12345"
+          },
+          "payeeID": {
+            "type": "string",
+            "description": "The payee ID to search for (when SearchType is Payee).",
+            "nullable": true,
+            "example": "PAY12345"
+          },
+          "days": {
+            "maximum": 3650,
+            "minimum": 1,
+            "type": "integer",
+            "description": "The number of days to include in the search.",
+            "format": "int32",
+            "example": 30
+          },
+          "sortColumn": {
+            "enum": [
+              "PayeeName",
+              "MemberID",
+              "UserPayeeListID",
+              "AccountNumber",
+              "Status"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserPayeeSortColumn"
+              }
+            ],
+            "description": "The column to sort by.. Allowed values: 'PayeeName', 'MemberID', 'UserPayeeListID', 'AccountNumber', 'Status'",
+            "example": "PayeeName"
+          },
+          "pageNumber": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Page number (1-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Page size",
+            "format": "int32"
+          },
+          "sortDirection": {
+            "enum": [
+              "ASC",
+              "DESC"
+            ],
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            ],
+            "description": "Sort direction. Allowed values: 'ASC', 'DESC'"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request model for the User Payee report."
       },
       "ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse": {
         "type": "object",
@@ -7705,49 +8292,6 @@
         },
         "additionalProperties": false
       },
-      "PagedResponseOfBillPaySearchItem": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BillPaySearchItem"
-            },
-            "nullable": true
-          },
-          "pageNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasNext": {
-            "type": "boolean"
-          },
-          "hasPrevious": {
-            "type": "boolean"
-          },
-          "sortColumn": {
-            "type": "string",
-            "nullable": true
-          },
-          "sortDirection": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "PagedResponseOfErrorRecapItem": {
         "type": "object",
         "properties": {
@@ -8006,6 +8550,49 @@
         },
         "additionalProperties": false
       },
+      "PagedResponseOfPayeeItem": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PayeeItem"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          },
+          "sortColumn": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortDirection": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PagedResponseOfPaymentActivityItem": {
         "type": "object",
         "properties": {
@@ -8013,6 +8600,92 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PaymentActivityItem"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          },
+          "sortColumn": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortDirection": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagedResponseOfPaymentClearItem": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentClearItem"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          },
+          "sortColumn": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortDirection": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagedResponseOfPaymentItem": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentItem"
             },
             "nullable": true
           },
@@ -8178,6 +8851,49 @@
         },
         "additionalProperties": false
       },
+      "PagedResponseOfRecurringPaymentItem": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecurringPaymentItem"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          },
+          "sortColumn": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortDirection": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PagedResponseOfScheduledPaymentChangeHistoryItem": {
         "type": "object",
         "properties": {
@@ -8307,6 +9023,49 @@
         },
         "additionalProperties": false
       },
+      "PagedResponseOfUserPayeeItem": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserPayeeItem"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          },
+          "sortColumn": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortDirection": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Payee": {
         "type": "object",
         "properties": {
@@ -8343,6 +9102,65 @@
             "nullable": true
           },
           "payeeType": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PayeeItem": {
+        "type": "object",
+        "properties": {
+          "payeeID": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "zipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "memberID": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberName": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentMethod": {
             "type": "string",
             "nullable": true
           }
@@ -8421,6 +9239,17 @@
         },
         "additionalProperties": false
       },
+      "PayeeSortColumn": {
+        "enum": [
+          "PayeeName",
+          "PayeeID",
+          "Address",
+          "City",
+          "State"
+        ],
+        "type": "string",
+        "description": "Defines the available sort columns for the Payee report.. Allowed values: 'PayeeName', 'PayeeID', 'Address', 'City', 'State'"
+      },
       "PaymentActivityItem": {
         "type": "object",
         "properties": {
@@ -8490,6 +9319,50 @@
         "type": "string",
         "description": "Defines the available sort columns for the Payment Activity API. Allowed values: 'MemberID', 'PaymentID', 'PayeeName', 'DateProcessed', 'DueDate', 'Status', 'PaymentMethod', 'Amount'"
       },
+      "PaymentClearItem": {
+        "type": "object",
+        "properties": {
+          "paymentID": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberID": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "clearedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "dateProcessed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "paymentMethod": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PaymentClearSearchReport": {
         "type": "object",
         "properties": {
@@ -8517,6 +9390,17 @@
           }
         },
         "additionalProperties": false
+      },
+      "PaymentClearSortColumn": {
+        "enum": [
+          "ClearedDate",
+          "PaymentID",
+          "MemberID",
+          "Amount",
+          "PayeeName"
+        ],
+        "type": "string",
+        "description": "Defines the available sort columns for the Payment Clear report.. Allowed values: 'ClearedDate', 'PaymentID', 'MemberID', 'Amount', 'PayeeName'"
       },
       "PaymentHistorySearchReport": {
         "type": "object",
@@ -8739,6 +9623,50 @@
         },
         "additionalProperties": false
       },
+      "PaymentItem": {
+        "type": "object",
+        "properties": {
+          "paymentID": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberID": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateProcessed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "dateScheduled": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentMethod": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PaymentSearchReport": {
         "type": "object",
         "properties": {
@@ -8812,6 +9740,18 @@
           }
         },
         "additionalProperties": false
+      },
+      "PaymentSortColumn": {
+        "enum": [
+          "DateProcessed",
+          "PaymentID",
+          "MemberID",
+          "Amount",
+          "PayeeName",
+          "Status"
+        ],
+        "type": "string",
+        "description": "Defines the available sort columns for the Payment report.. Allowed values: 'DateProcessed', 'PaymentID', 'MemberID', 'Amount', 'PayeeName', 'Status'"
       },
       "PendingPaymentsItem": {
         "type": "object",
@@ -9061,6 +10001,50 @@
         "type": "string",
         "description": "Defines the available sort columns for the Recurring Payment Change History API.. Allowed values: 'MemberID', 'UpdatedBy', 'UpdatedOn', 'ChangeType', 'RecurringPaymentId', 'PayeeName', 'Amount', 'Frequency'"
       },
+      "RecurringPaymentItem": {
+        "type": "object",
+        "properties": {
+          "recurringPaymentID": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberID": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextPaymentDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "frequency": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "RecurringPaymentSearchReport": {
         "type": "object",
         "properties": {
@@ -9169,6 +10153,29 @@
           }
         },
         "additionalProperties": false
+      },
+      "RecurringPaymentSortColumn": {
+        "enum": [
+          "NextPaymentDate",
+          "RecurringPaymentID",
+          "MemberID",
+          "Amount",
+          "PayeeName",
+          "Frequency"
+        ],
+        "type": "string",
+        "description": "Defines the available sort columns for the Recurring Payment report.. Allowed values: 'NextPaymentDate', 'RecurringPaymentID', 'MemberID', 'Amount', 'PayeeName', 'Frequency'"
+      },
+      "ReportSearchType": {
+        "enum": [
+          "Member",
+          "Payment",
+          "RecurringPayment",
+          "UserPayeeList",
+          "Payee"
+        ],
+        "type": "string",
+        "description": "Defines the available search types for report requests.. Allowed values: 'Member', 'Payment', 'RecurringPayment', 'UserPayeeList', 'Payee'"
       },
       "Requests.Calendar.HolidayCreateRequest": {
         "type": "object",
@@ -11630,6 +12637,46 @@
         },
         "additionalProperties": false
       },
+      "UserPayeeItem": {
+        "type": "object",
+        "properties": {
+          "userPayeeListID": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberID": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastModifiedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "nickname": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "UserPayeeList": {
         "type": "object",
         "properties": {
@@ -11701,6 +12748,17 @@
           }
         },
         "additionalProperties": false
+      },
+      "UserPayeeSortColumn": {
+        "enum": [
+          "PayeeName",
+          "MemberID",
+          "UserPayeeListID",
+          "AccountNumber",
+          "Status"
+        ],
+        "type": "string",
+        "description": "Defines the available sort columns for the User Payee report.. Allowed values: 'PayeeName', 'MemberID', 'UserPayeeListID', 'AccountNumber', 'Status'"
       }
     }
   }

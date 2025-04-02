@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -14,6 +14,8 @@ import {
   PendingPaymentsItem,
   getPendingPayments
 } from '../../../../utils/reports/pendingPayments';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 const PendingPaymentsReport: React.FC = () => {
   // State for search parameters
@@ -21,47 +23,124 @@ const PendingPaymentsReport: React.FC = () => {
   
   // State for sorting
   const [sortColumn, setSortColumn] = useState<PendingPaymentsSortColumn>(PendingPaymentsSortColumn.WillProcessDate);
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('ASC');
 
   // Column definitions for the report table
   const columns = [
     { 
       key: 'paymentID', 
       label: 'Payment ID',
-      sortable: true
+      sortable: true,
+      sortKey: PendingPaymentsSortColumn.PaymentID,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Payment ID
+          {sortColumn === PendingPaymentsSortColumn.PaymentID && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'recurringID', 
       label: 'Recurring ID',
-      sortable: true
+      sortable: true,
+      sortKey: PendingPaymentsSortColumn.RecurringID,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Recurring ID
+          {sortColumn === PendingPaymentsSortColumn.RecurringID && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'memberID', 
       label: 'Member ID',
-      sortable: true
+      sortable: true,
+      sortKey: PendingPaymentsSortColumn.MemberID,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Member ID
+          {sortColumn === PendingPaymentsSortColumn.MemberID && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'payeeName', 
       label: 'Payee Name',
-      sortable: true
+      sortable: true,
+      sortKey: PendingPaymentsSortColumn.PayeeName,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Payee Name
+          {sortColumn === PendingPaymentsSortColumn.PayeeName && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'amount', 
       label: 'Amount',
       sortable: true,
-      render: (value: any) => `$${(value as number).toFixed(2)}`
+      sortKey: PendingPaymentsSortColumn.Amount,
+      render: (value: any) => `$${(value as number).toFixed(2)}`,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Amount
+          {sortColumn === PendingPaymentsSortColumn.Amount && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'willProcessDate', 
       label: 'Process Date',
       sortable: true,
-      render: (value: any) => dayjs(value as string).format('MM/DD/YYYY')
+      sortKey: PendingPaymentsSortColumn.WillProcessDate,
+      render: (value: any) => dayjs(value as string).format('MM/DD/YYYY'),
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Process Date
+          {sortColumn === PendingPaymentsSortColumn.WillProcessDate && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'deliveryDate', 
       label: 'Delivery Date',
       sortable: true,
-      render: (value: any) => value ? dayjs(value as string).format('MM/DD/YYYY') : 'N/A'
+      sortKey: PendingPaymentsSortColumn.DeliveryDate,
+      render: (value: any) => value ? dayjs(value as string).format('MM/DD/YYYY') : 'N/A',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Delivery Date
+          {sortColumn === PendingPaymentsSortColumn.DeliveryDate && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'status', 
@@ -78,6 +157,13 @@ const PendingPaymentsReport: React.FC = () => {
   const [data, setData] = useState<PendingPaymentsResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Run report when sort parameters change
+  useEffect(() => {
+    if (data) {
+      runReport(pageNumber);
+    }
+  }, [sortColumn, sortDirection]);
 
   /**
    * Run the report with the current parameters
@@ -131,32 +217,26 @@ const PendingPaymentsReport: React.FC = () => {
 
   /**
    * Handle sort change
-   * @param column Column to sort by
+   * @param columnKey Column key to sort by
    */
-  const handleSortChange = (column: string) => {
-    // Map the column key to the sort column enum
-    const columnToSortFieldMap: Record<string, PendingPaymentsSortColumn> = {
-      'paymentID': PendingPaymentsSortColumn.PaymentID,
-      'recurringID': PendingPaymentsSortColumn.RecurringID,
-      'memberID': PendingPaymentsSortColumn.MemberID,
-      'payeeName': PendingPaymentsSortColumn.PayeeName,
-      'amount': PendingPaymentsSortColumn.Amount,
-      'willProcessDate': PendingPaymentsSortColumn.WillProcessDate,
-      'deliveryDate': PendingPaymentsSortColumn.DeliveryDate
-    };
-    
-    const sortField = columnToSortFieldMap[column];
-    if (sortField) {
-      // If already sorting by this column, toggle direction
-      if (sortColumn === sortField) {
-        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  const handleSort = (columnKey: string) => {
+    const columnDef = columns.find(col => col.key === columnKey);
+    if (columnDef && columnDef.sortKey) {
+      const newSortColumn = columnDef.sortKey;
+      // If clicking the same column, toggle direction
+      if (sortColumn === newSortColumn) {
+        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
       } else {
-        // Otherwise, set new sort column and default to ascending
-        setSortColumn(sortField);
-        setSortDirection('asc');
+        setSortColumn(newSortColumn);
+        setSortDirection('DESC'); // Initial sort is descending
       }
-      // Refresh report with new sort
-      runReport(1);
+      
+      // Reset to page 1 when sort changes
+      if (pageNumber === 1) {
+        runReport(1);
+      } else {
+        setPageNumber(1);
+      }
     }
   };
 
@@ -235,7 +315,7 @@ const PendingPaymentsReport: React.FC = () => {
             onPageChange: handlePageChange,
             onPageSizeChange: (newPageSize) => setPageSize(newPageSize)
           }}
-          onSort={handleSortChange}
+          onSort={handleSort}
         />
       )}
     </ReportContainer>

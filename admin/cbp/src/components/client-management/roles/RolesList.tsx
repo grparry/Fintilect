@@ -42,7 +42,7 @@ interface RolesListState {
   deleteDialogOpen: boolean;
   roleToDelete: Role | null;
   sortBy: 'name';
-  sortDirection: 'asc' | 'desc';
+  sortDirection: 'ASC' | 'DESC';
   filterText: string;
 }
 
@@ -55,7 +55,7 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
     deleteDialogOpen: false,
     roleToDelete: null,
     sortBy: 'name',
-    sortDirection: 'asc',
+    sortDirection: 'ASC',
     filterText: ''
   });
 
@@ -130,7 +130,7 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
       ...prev,
       sortBy: field,
       sortDirection:
-        prev.sortBy === field && prev.sortDirection === 'asc' ? 'desc' : 'asc'
+        prev.sortBy === field && prev.sortDirection === 'ASC' ? 'DESC' : 'ASC'
     }));
   };
 
@@ -148,7 +148,7 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
   );
 
   const sortedRoles = [...filteredRoles].sort((a, b) => {
-    const direction = sortDirection === 'asc' ? 1 : -1;
+    const direction = sortDirection === 'ASC' ? 1 : -1;
     return a.name.localeCompare(b.name) * direction;
   });
 
@@ -197,7 +197,7 @@ const RolesList: React.FC<RolesListProps> = ({ clientId }) => {
                 onClick={() => handleSort('name')}
                 style={{ cursor: 'pointer' }}
               >
-                Name {sortBy === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+                Name {sortBy === 'name' && (sortDirection === 'ASC' ? '↑' : '↓')}
               </TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>

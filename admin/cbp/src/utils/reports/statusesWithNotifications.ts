@@ -49,8 +49,13 @@ export interface StatusesWithNotificationsItem {
   notificationErrorNumber?: number;
   notificationMatchMode?: number;
   notificationMatchOrder?: number;
-  notificationDescription?: string;
-  notificationText?: string;
+  notificationMatchText?: string;
+  notificationMessageSubject?: string;
+  notificationMessageBody?: string;
+  notificationEmailMember?: boolean;
+  notificationEmailMemberServices?: boolean;
+  notificationEmailSysOp?: boolean;
+  notificationNotes?: string;
   notificationCreatedOn?: string;
   notificationModifiedOn?: string;
 }

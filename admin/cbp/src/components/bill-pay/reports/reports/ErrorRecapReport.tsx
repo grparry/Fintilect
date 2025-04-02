@@ -1,8 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Pagination, Box, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 import ReportContainer from '../components/ReportContainer';
 import ReportTable from '../components/ReportTable';
@@ -57,24 +59,76 @@ const ErrorRecapReport: React.FC = () => {
 
   // Handle sort change
   const handleSort = (columnKey: string) => {
-    // Check if the column key is a valid ErrorRecapSortColumn
-    const isValidSortColumn = Object.values(ErrorRecapSortColumn).includes(columnKey as ErrorRecapSortColumn);
-    
-    if (isValidSortColumn) {
-      const newSortColumn = columnKey as ErrorRecapSortColumn;
+    // Find the column definition to get the sortKey
+    const columnDef = columns.find(col => col.key === columnKey);
+    if (columnDef && columnDef.sortKey) {
+      const newSortColumn = columnDef.sortKey;
+      let newDirection: 'ASC' | 'DESC';
       
+      // If clicking the same column, toggle direction
       if (sortColumn === newSortColumn) {
-        // Toggle sort direction if clicking the same column
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
+        newDirection = sortDirection === 'ASC' ? 'DESC' : 'ASC';
       } else {
-        // Set new sort column and default to ascending
-        setSortColumn(newSortColumn);
-        setSortDirection('ASC');
+        newDirection = 'DESC'; // Start with descending sort on first click
       }
       
-      // Re-run report with new sort
+      // Update state
+      setSortColumn(newSortColumn);
+      setSortDirection(newDirection);
+      
+      // Reset to page 1 when sort changes
       if (page === 1) {
-        runReport(1);
+        // Force immediate report run with the new sort parameters
+        const params: ErrorRecapParams = {
+          searchType: searchType,
+          pageNumber: 1,
+          pageSize: DEFAULT_PAGE_SIZE,
+          sortColumn: newSortColumn,
+          sortDirection: newDirection
+        };
+        
+        // Add specific parameters based on search type
+        switch (searchType) {
+          case ErrorRecapSearchType.MemberID:
+            params.memberId = memberId;
+            break;
+          case ErrorRecapSearchType.PaymentID:
+            params.paymentId = paymentId;
+            break;
+          case ErrorRecapSearchType.UserPayeeListID:
+            params.userPayeeListId = userPayeeListId;
+            break;
+          case ErrorRecapSearchType.StatusCode:
+            params.statusCode = statusCode;
+            break;
+          case ErrorRecapSearchType.DateRange:
+            if (startDate) params.startDate = startDate.format('YYYY-MM-DD');
+            if (endDate) params.endDate = endDate.format('YYYY-MM-DD');
+            break;
+          case ErrorRecapSearchType.PayeeID:
+            params.payeeId = payeeId;
+            break;
+          case ErrorRecapSearchType.PayeeName:
+            params.payeeName = payeeName;
+            break;
+        }
+        
+        setLoading(true);
+        setError(null);
+        
+        getErrorRecap(params)
+          .then(response => {
+            setReportData(response.items);
+            setTotalPages(response.totalPages);
+            setTotalCount(response.totalCount);
+          })
+          .catch(err => {
+            setError('Failed to load error recap data. Please try again.');
+            console.error('Error fetching error recap data:', err);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       } else {
         setPage(1);
       }
@@ -304,25 +358,144 @@ const ErrorRecapReport: React.FC = () => {
       key: 'failedDate', 
       label: 'Failed Date',
       render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY HH:mm:ss') : '',
-      sortable: true
+      sortable: true,
+      sortKey: ErrorRecapSortColumn.FailedDate,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Failed Date
+          {sortColumn === ErrorRecapSortColumn.FailedDate && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
-    { key: 'memberId', label: 'Member ID', sortable: true },
-    { key: 'paymentId', label: 'Payment ID', sortable: true },
+    { 
+      key: 'memberId', 
+      label: 'Member ID', 
+      sortable: true,
+      sortKey: ErrorRecapSortColumn.MemberID,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Member ID
+          {sortColumn === ErrorRecapSortColumn.MemberID && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
+    },
+    { 
+      key: 'paymentId', 
+      label: 'Payment ID', 
+      sortable: true,
+      sortKey: ErrorRecapSortColumn.PaymentID,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Payment ID
+          {sortColumn === ErrorRecapSortColumn.PaymentID && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
+    },
     { 
       key: 'amount', 
       label: 'Amount',
       render: (value: number) => value ? `$${value.toFixed(2)}` : '$0.00',
-      sortable: true
+      sortable: true,
+      sortKey: ErrorRecapSortColumn.Amount,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Amount
+          {sortColumn === ErrorRecapSortColumn.Amount && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
-    { key: 'userPayeeListId', label: 'User Payee List ID', sortable: true },
-    { key: 'payeeId', label: 'Payee ID', sortable: true },
-    { key: 'payeeName', label: 'Payee Name', sortable: true },
+    { 
+      key: 'userPayeeListId', 
+      label: 'User Payee List ID', 
+      sortable: true,
+      sortKey: ErrorRecapSortColumn.UserPayeeListID,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          User Payee List ID
+          {sortColumn === ErrorRecapSortColumn.UserPayeeListID && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
+    },
+    { 
+      key: 'payeeId', 
+      label: 'Payee ID', 
+      sortable: true,
+      sortKey: ErrorRecapSortColumn.PayeeID,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Payee ID
+          {sortColumn === ErrorRecapSortColumn.PayeeID && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
+    },
+    { 
+      key: 'payeeName', 
+      label: 'Payee Name', 
+      sortable: true,
+      sortKey: ErrorRecapSortColumn.PayeeName,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Payee Name
+          {sortColumn === ErrorRecapSortColumn.PayeeName && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
+    },
     { key: 'usersAccountAtPayee', label: 'Account At Payee' },
     { key: 'nameOnAccount', label: 'Name On Account' },
-    { key: 'status', label: 'Status', sortable: true },
+    { 
+      key: 'status', 
+      label: 'Status', 
+      sortable: true,
+      sortKey: ErrorRecapSortColumn.Status,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Status
+          {sortColumn === ErrorRecapSortColumn.Status && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
+    },
     { key: 'hostCode', label: 'Host Code' },
     { key: 'error', label: 'Error' }
   ];
+
+  // Run report when sort parameters change
+  useEffect(() => {
+    if (reportData) {
+      runReport(page);
+    }
+  }, [sortColumn, sortDirection]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

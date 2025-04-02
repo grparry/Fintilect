@@ -103,46 +103,18 @@ For each report, the following items must be implemented:
 
 ## Report Specifications
 
-### 1. BillPay Search Report
-
-- **API**: `/api/v1/BillPaySearch` (POST)
-- **Types**:
-  - `BillPaySearchType`: `Member`, `Payee`, `Payment`, `UserPayeeList`
-  - `BillPaySearchSortColumn`: `MemberID`, `PaymentID`, `DateProcessed`, `Amount`, `Status`
-  - Response and request interfaces with proper camelCase and ID conventions
-
-- **Component**:
-  - Search form with type selector and ID input
-  - Sortable results table
-  - Pagination and CSV export
-
-- **Routes and Navigation**:
-  - Route path: `/admin/bill-pay/reports/billpay-search`
-  - Resource ID: `route:billPay.reports.billPaySearch`
-  - Icon: `SearchIcon`
-
-- **Permissions Registry**:
-  ```typescript
-  'route:billPay.reports.billPaySearch': {
-    resourceId: 'route:billPay.reports.billPaySearch',
-    permissions: ['BillPayViewer', 'BillPayReports_Read'],
-    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
-    description: 'View BillPay Search Report'
-  }
-  ```
-
-### 2. Error Recap Report
+### 1. Error Recap Report
 
 - **API**: `/api/v1/ErrorHistoryReport` (POST)
 - **Types**:
-  - `ErrorRecapSearchType`: Various search criteria
-  - `ErrorRecapSortColumn`: Sortable columns
+  - `ErrorHistorySearchType`: Search criteria options
+  - `ErrorHistorySortColumn`: Sortable columns
   - Response and request interfaces with proper camelCase and ID conventions
 
 - **Component**:
-  - Search form with appropriate inputs
-  - Date range picker when needed
-  - Error details table with export
+  - Search form with member ID input
+  - Error history table with sorting
+  - Pagination and export
 
 - **Routes and Navigation**:
   - Route path: `/admin/bill-pay/reports/error-recap`
@@ -159,7 +131,16 @@ For each report, the following items must be implemented:
   }
   ```
 
-### 3. Payment Activity Report
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 2. Payment Activity Report
 
 - **API**: `/api/v1/PaymentActivity` (POST)
 - **Types**:
@@ -170,7 +151,7 @@ For each report, the following items must be implemented:
 - **Component**:
   - Search form with type-specific inputs
   - Payment details table with sorting
-  - Pagination and export
+  - Pagination and export functionality
 
 - **Routes and Navigation**:
   - Route path: `/admin/bill-pay/reports/payment-activity`
@@ -187,7 +168,16 @@ For each report, the following items must be implemented:
   }
   ```
 
-### 4. Active User Count Report
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 3. Active User Count Report
 
 - **API**: `/api/v1/ActiveUserCount` (GET)
 - **Types**:
@@ -215,7 +205,16 @@ For each report, the following items must be implemented:
   }
   ```
 
-### 5. Failed On Us Report
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 4. Failed On Us Report
 
 - **API**: `/api/v1/FailedOnUs` (GET)
 - **Types**:
@@ -243,7 +242,16 @@ For each report, the following items must be implemented:
   }
   ```
 
-### 6. Global Holidays Report
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 5. Global Holidays Report
 
 - **API**: `/api/v1/report/globalholidays` (GET)
 - **Types**:
@@ -282,7 +290,7 @@ For each report, the following items must be implemented:
   - [x] Pagination controls
   - [x] Routes and permissions configured
 
-### 7. Monthly Users Report
+### 6. Monthly Users Report
 
 - **API**: `/api/v1/report/monthlyusers` (GET)
 - **Types**:
@@ -319,12 +327,12 @@ For each report, the following items must be implemented:
   - [x] Pagination controls
   - [x] Routes and permissions configured
 
-### 8. Pending Payments Report
+### 7. Pending Payments Report
 
 - **API**: `/api/v1/PendingPayments` (POST)
 - **Types**:
-  - `PendingPaymentsSearchType`: Search criteria options (DateRange)
-  - `PendingPaymentsSortColumn`: Sortable columns (PaymentID, MemberID, Amount, ScheduledDate, Status)
+  - `PendingPaymentsSearchType`: Search criteria options (`DateRange`)
+  - `PendingPaymentsSortColumn`: Sortable columns (`PaymentID`, `MemberID`, `Amount`, `ScheduledDate`, `Status`)
   - Response and request interfaces with proper camelCase and ID conventions
 
 - **Component**:
@@ -334,8 +342,9 @@ For each report, the following items must be implemented:
 
 - **Routes and Navigation**:
   - Route: `/admin/bill-pay/reports/pending-payments`
-  - Sidebar navigation item with PaymentIcon
+  - Icon: `PaymentsIcon`
   - Permission: `route:billPay.reports.pendingPayments`
+  - Sidebar navigation entry under Reports section
 
 - **Implementation Status**:
   - [x] Types defined
@@ -346,7 +355,7 @@ For each report, the following items must be implemented:
   - [x] Pagination controls
   - [x] Routes and permissions configured
 
-### 9. Recurring Payment Change History Report
+### 8. Recurring Payment Change History Report
 
 - **API**: `/api/v1/RecurringPaymentChangeHistory` (POST)
 - **Types**:
@@ -374,7 +383,16 @@ For each report, the following items must be implemented:
   }
   ```
 
-### 10. User Payee Change History Report
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 9. User Payee Change History Report
 
 - **API**: `/api/v1/UserPayeeChangeHistory` (POST)
 - **Types**:
@@ -401,6 +419,400 @@ For each report, the following items must be implemented:
     description: 'View User Payee Change History Report'
   }
   ```
+
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 10. On Us Postings Report
+
+- **API**: `/api/v1/OnUsPostings` (POST)
+- **Types**:
+  - `OnUsPostingsSearchType`: Search criteria options (`DateRange`)
+  - `OnUsPostingsSortColumn`: Sortable columns (`MemberID`, `PaymentID`, `Amount`, `PostingDate`, `Status`)
+  - Response and request interfaces with proper camelCase and ID conventions
+
+- **Component**:
+  - Search form with date range picker
+  - Postings table with sorting on all columns
+  - Pagination and export functionality
+
+- **Routes and Navigation**:
+  - Route: `/admin/bill-pay/reports/on-us-postings`
+  - Icon: `AccountBalanceIcon`
+  - Permission: `route:billPay.reports.onUsPostings`
+  - Sidebar navigation entry under Reports section
+
+- **Permissions Registry**:
+  ```typescript
+  'route:billPay.reports.onUsPostings': {
+    resourceId: 'route:billPay.reports.onUsPostings',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View On Us Postings Report'
+  }
+  ```
+
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 11. Statuses with Notifications Report
+
+- **API**: `/api/v1/StatusesWithNotifications` (POST)
+- **Types**:
+  - `StatusesWithNotificationsSearchType`: Search criteria options (no specific search types required)
+  - `StatusesWithNotificationsSortColumn`: Sortable columns (`StatusCode`, `StatusDescription`, `NotificationType`)
+  - Response and request interfaces with proper camelCase and ID conventions
+
+- **Component**:
+  - Simple search form with minimal controls
+  - Status table with sorting on all columns
+  - Pagination and export functionality
+
+- **Routes and Navigation**:
+  - Route: `/admin/bill-pay/reports/statuses-with-notifications`
+  - Icon: `NotificationsIcon`
+  - Permission: `route:billPay.reports.statusesWithNotifications`
+  - Sidebar navigation entry under Reports section
+
+- **Permissions Registry**:
+  ```typescript
+  'route:billPay.reports.statusesWithNotifications': {
+    resourceId: 'route:billPay.reports.statusesWithNotifications',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Statuses with Notifications Report'
+  }
+  ```
+
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 12. Large Payment Report
+
+- **API**: `/api/v1/LargePayment` (POST)
+- **Types**:
+  - `LargePaymentSearchType`: Search criteria options (`DateRange`)
+  - `LargePaymentSortColumn`: Sortable columns (`MemberID`, `PaymentID`, `Amount`, `DateProcessed`, `Status`)
+  - Response and request interfaces with proper camelCase and ID conventions
+
+- **Component**:
+  - Search form with date range picker
+  - Payment table with sorting on all columns
+  - Pagination and export functionality
+
+- **Routes and Navigation**:
+  - Route: `/admin/bill-pay/reports/large-payment`
+  - Icon: `PaymentsIcon`
+  - Permission: `route:billPay.reports.largePayment`
+  - Sidebar navigation entry under Reports section
+
+- **Permissions Registry**:
+  ```typescript
+  'route:billPay.reports.largePayment': {
+    resourceId: 'route:billPay.reports.largePayment',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Large Payment Report'
+  }
+  ```
+
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 13. Payee Report
+
+- **API**: `/api/v1/Report/Payee` (GET)
+- **Types**:
+  - `PayeeSearchType`: Search criteria options (`Payee`, `Member`, `Payment`, `RecurringPayment`, `UserPayeeList`)
+  - `PayeeSortColumn`: Sortable columns (`PayeeName`, `PayeeID`, `DateAdded`)
+  - Response and request interfaces with proper camelCase and ID conventions
+
+- **Component**:
+  - Search form with type selector and ID input
+  - Days input for date range
+  - Payee table with sorting on all columns
+  - Pagination and export functionality
+
+- **Routes and Navigation**:
+  - Route: `/admin/bill-pay/reports/payee`
+  - Icon: `BusinessIcon`
+  - Permission: `route:billPay.reports.payee`
+  - Sidebar navigation entry under Reports section
+
+- **Permissions Registry**:
+  ```typescript
+  'route:billPay.reports.payee': {
+    resourceId: 'route:billPay.reports.payee',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Payee Report'
+  }
+  ```
+
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 14. Payment Clear Report
+
+- **API**: `/api/v1/Report/PaymentClear` (GET)
+- **Types**:
+  - `PaymentClearSearchType`: Search criteria options (`Member`, `Payment`, `RecurringPayment`, `UserPayeeList`, `Payee`)
+  - `PaymentClearSortColumn`: Sortable columns (`ClearedDate`, `PaymentID`, `Amount`)
+  - Response and request interfaces with proper camelCase and ID conventions
+
+- **Component**:
+  - Search form with type selector and ID input
+  - Days input for date range
+  - Payment clear table with sorting on all columns
+  - Pagination and export functionality
+
+- **Routes and Navigation**:
+  - Route: `/admin/bill-pay/reports/payment-clear`
+  - Icon: `ConfirmationNumberIcon`
+  - Permission: `route:billPay.reports.paymentClear`
+  - Sidebar navigation entry under Reports section
+
+- **Permissions Registry**:
+  ```typescript
+  'route:billPay.reports.paymentClear': {
+    resourceId: 'route:billPay.reports.paymentClear',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Payment Clear Report'
+  }
+  ```
+
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 15. Recurring Payment Report
+
+- **API**: `/api/v1/Report/RecurringPayment` (GET)
+- **Types**:
+  - `RecurringPaymentSearchType`: Search criteria options (`Member`, `Payment`, `RecurringPayment`, `UserPayeeList`, `Payee`)
+  - `RecurringPaymentSortColumn`: Sortable columns (`NextPaymentDate`, `Amount`, `Frequency`)
+  - Response and request interfaces with proper camelCase and ID conventions
+
+- **Component**:
+  - Search form with type selector and ID input
+  - Days input for date range
+  - Recurring payment table with sorting on all columns
+  - Pagination and export functionality
+
+- **Routes and Navigation**:
+  - Route: `/admin/bill-pay/reports/recurring-payment`
+  - Icon: `RepeatIcon`
+  - Permission: `route:billPay.reports.recurringPayment`
+  - Sidebar navigation entry under Reports section
+
+- **Permissions Registry**:
+  ```typescript
+  'route:billPay.reports.recurringPayment': {
+    resourceId: 'route:billPay.reports.recurringPayment',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Recurring Payment Report'
+  }
+  ```
+
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 16. User Payee Report
+
+- **API**: `/api/v1/Report/UserPayee` (GET)
+- **Types**:
+  - `UserPayeeSearchType`: Search criteria options (`Member`, `Payment`, `RecurringPayment`, `UserPayeeList`, `Payee`)
+  - `UserPayeeSortColumn`: Sortable columns (`PayeeName`, `DateAdded`)
+  - Response and request interfaces with proper camelCase and ID conventions
+
+- **Component**:
+  - Search form with type selector and ID input
+  - Days input for date range
+  - User payee table with sorting on all columns
+  - Pagination and export functionality
+
+- **Routes and Navigation**:
+  - Route: `/admin/bill-pay/reports/user-payee`
+  - Icon: `ContactsIcon`
+  - Permission: `route:billPay.reports.userPayee`
+  - Sidebar navigation entry under Reports section
+
+- **Permissions Registry**:
+  ```typescript
+  'route:billPay.reports.userPayee': {
+    resourceId: 'route:billPay.reports.userPayee',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View User Payee Report'
+  }
+  ```
+
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 17. Payment Report
+
+- **API**: `/api/v1/Report/Payment` (GET)
+- **Types**:
+  - `PaymentSearchType`: Search criteria options (`Member`, `Payment`, `RecurringPayment`, `UserPayeeList`, `Payee`)
+  - `PaymentSortColumn`: Sortable columns (`ScheduledDate`, `Amount`, `Status`)
+  - Response and request interfaces with proper camelCase and ID conventions
+
+- **Component**:
+  - Search form with type selector and ID input
+  - Days input for date range
+  - Payment table with sorting on all columns
+  - Pagination and export functionality
+
+- **Routes and Navigation**:
+  - Route: `/admin/bill-pay/reports/payment`
+  - Icon: `PaymentIcon`
+  - Permission: `route:billPay.reports.payment`
+  - Sidebar navigation entry under Reports section
+
+- **Permissions Registry**:
+  ```typescript
+  'route:billPay.reports.payment': {
+    resourceId: 'route:billPay.reports.payment',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Payment Report'
+  }
+  ```
+
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 18. Processing Confirmation Report
+
+- **API**: `/api/v1/Report/ProcessingConfirmation` (GET)
+- **Types**:
+  - `ProcessingConfirmationSearchType`: Search criteria options (`DateRange`)
+  - `ProcessingConfirmationSortColumn`: Sortable columns (`ProcessingDate`, `PaymentCount`, `TotalAmount`)
+  - Response and request interfaces with proper camelCase and ID conventions
+
+- **Component**:
+  - Search form with date range picker
+  - Processing confirmation table with sorting on all columns
+  - Pagination and export functionality
+
+- **Routes and Navigation**:
+  - Route: `/admin/bill-pay/reports/processing-confirmation`
+  - Icon: `VerifiedUserIcon`
+  - Permission: `route:billPay.reports.processingConfirmation`
+  - Sidebar navigation entry under Reports section
+
+- **Permissions Registry**:
+  ```typescript
+  'route:billPay.reports.processingConfirmation': {
+    resourceId: 'route:billPay.reports.processingConfirmation',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Processing Confirmation Report'
+  }
+  ```
+
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
+
+### 19. Scheduled Payment Change History Report
+
+- **API**: `/api/ScheduledPaymentChangeHistory` (POST)
+- **Types**:
+  - `ScheduledPaymentChangeHistorySearchType`: Search criteria options (`DateRange`, `MemberID`, `PaymentID`)
+  - `ScheduledPaymentChangeHistorySortColumn`: Sortable columns (`ChangeDate`, `MemberID`, `PaymentID`, `ChangeType`)
+  - Response and request interfaces with proper camelCase and ID conventions
+
+- **Component**:
+  - Search form with type selector and date range picker
+  - Change history table with sorting on all columns
+  - Pagination and export functionality
+
+- **Routes and Navigation**:
+  - Route: `/admin/bill-pay/reports/scheduled-payment-change-history`
+  - Icon: `HistoryIcon`
+  - Permission: `route:billPay.reports.scheduledPaymentChangeHistory`
+  - Sidebar navigation entry under Reports section
+
+- **Permissions Registry**:
+  ```typescript
+  'route:billPay.reports.scheduledPaymentChangeHistory': {
+    resourceId: 'route:billPay.reports.scheduledPaymentChangeHistory',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Scheduled Payment Change History Report'
+  }
+  ```
+
+- **Implementation Status**:
+  - [x] Types defined
+  - [x] Service methods implemented
+  - [x] UI component created
+  - [x] Search form implemented
+  - [x] Results table with sorting
+  - [x] Pagination controls
+  - [x] Routes and permissions configured
 
 ## Best Practices for Sort Handling
 

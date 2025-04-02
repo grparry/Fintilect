@@ -77,7 +77,7 @@ interface FilterState {
   page: number;
   limit: number;
   sortBy: string;
-  sortOrder: 'asc' | 'desc';
+  sortOrder: 'ASC' | 'DESC';
 }
 
 interface PaymentDialogState {
@@ -97,7 +97,7 @@ const initialFilterState: FilterState = {
   page: 1,
   limit: 10,
   sortBy: 'paymentID',
-  sortOrder: 'desc'
+  sortOrder: 'DESC'
 };
 
 export const ManagePayments: React.FC = () => {

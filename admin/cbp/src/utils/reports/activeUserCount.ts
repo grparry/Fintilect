@@ -6,16 +6,14 @@ import { format } from 'date-fns';
  * Maps UI-friendly names to API expected string values
  */
 export enum ActiveUserCountSearchType {
-  DateRange = 'DateRange',
-  MemberID = 'MemberID'
+  DateRange = 'DateRange'
 }
 
 /**
  * Active User Count search type display names
  */
 export const ACTIVE_USER_COUNT_SEARCH_TYPES = {
-  [ActiveUserCountSearchType.DateRange]: 'Date Range',
-  [ActiveUserCountSearchType.MemberID]: 'Member ID'
+  [ActiveUserCountSearchType.DateRange]: 'Date Range'
 };
 
 /**
@@ -24,6 +22,9 @@ export const ACTIVE_USER_COUNT_SEARCH_TYPES = {
 export enum ActiveUserCountSortColumn {
   MemberID = 'MemberID',
   LastActivityDate = 'LastActivityDate',
+  FirstName = 'FirstName',
+  LastName = 'LastName',
+  Email = 'Email',
   PaymentCount = 'PaymentCount'
 }
 
@@ -33,6 +34,9 @@ export enum ActiveUserCountSortColumn {
 export const ACTIVE_USER_COUNT_SORT_COLUMNS = {
   [ActiveUserCountSortColumn.MemberID]: 'Member ID',
   [ActiveUserCountSortColumn.LastActivityDate]: 'Last Activity Date',
+  [ActiveUserCountSortColumn.FirstName]: 'First Name',
+  [ActiveUserCountSortColumn.LastName]: 'Last Name',
+  [ActiveUserCountSortColumn.Email]: 'Email',
   [ActiveUserCountSortColumn.PaymentCount]: 'Payment Count'
 };
 
@@ -67,7 +71,6 @@ export interface ActiveUserCountItemPagedResponse {
  */
 export interface ActiveUserCountRequest {
   searchType: string;
-  memberID?: string;
   startDate?: string;
   endDate?: string;
   sortColumn?: string;
@@ -81,7 +84,6 @@ export interface ActiveUserCountRequest {
  */
 export interface ActiveUserCountParams {
   searchType: ActiveUserCountSearchType;
-  memberID?: string;
   startDate?: string;
   endDate?: string;
   sortColumn?: ActiveUserCountSortColumn;
@@ -106,16 +108,12 @@ export const getActiveUserCount = async (
       pageSize: params.pageSize || 20
     };
 
-    // Add optional parameters based on search type
-    if (params.searchType === ActiveUserCountSearchType.MemberID && params.memberID) {
-      requestParams.memberID = params.memberID;
-    } else if (params.searchType === ActiveUserCountSearchType.DateRange) {
-      if (params.startDate) {
-        requestParams.startDate = params.startDate;
-      }
-      if (params.endDate) {
-        requestParams.endDate = params.endDate;
-      }
+    // Add date range parameters
+    if (params.startDate) {
+      requestParams.startDate = params.startDate;
+    }
+    if (params.endDate) {
+      requestParams.endDate = params.endDate;
     }
 
     // Add sorting parameters if provided

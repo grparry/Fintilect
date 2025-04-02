@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Pagination, Box, Typography } from '@mui/material';
+import { Grid, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Pagination, Box, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -28,7 +28,6 @@ const ActiveUserCountReport: React.FC = () => {
   
   // State for report parameters
   const [searchType, setSearchType] = useState<ActiveUserCountSearchType>(ActiveUserCountSearchType.DateRange);
-  const [memberID, setMemberID] = useState<string>('');
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs().subtract(30, 'day'));
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());
   const [page, setPage] = useState(1);
@@ -46,14 +45,8 @@ const ActiveUserCountReport: React.FC = () => {
   const handleSearchTypeChange = (event: SelectChangeEvent) => {
     setSearchType(event.target.value as ActiveUserCountSearchType);
     // Reset search values when changing search type
-    setMemberID('');
     setStartDate(dayjs().subtract(30, 'day'));
     setEndDate(dayjs());
-  };
-
-  // Handle MemberID input change
-  const handleMemberIDChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMemberID(event.target.value);
   };
 
   // Handle start date change
@@ -100,6 +93,12 @@ const ActiveUserCountReport: React.FC = () => {
         return ActiveUserCountSortColumn.MemberID;
       case 'lastActivityDate':
         return ActiveUserCountSortColumn.LastActivityDate;
+      case 'firstName':
+        return ActiveUserCountSortColumn.FirstName;
+      case 'lastName':
+        return ActiveUserCountSortColumn.LastName;
+      case 'email':
+        return ActiveUserCountSortColumn.Email;
       case 'paymentCount':
         return ActiveUserCountSortColumn.PaymentCount;
       default:
@@ -117,21 +116,14 @@ const ActiveUserCountReport: React.FC = () => {
       sortDirection: direction
     };
 
-    // Add parameters based on search type
-    if (searchType === ActiveUserCountSearchType.MemberID) {
-      if (!memberID) {
-        setError('Please enter a Member ID');
-        return;
-      }
-      params.memberID = memberID;
-    } else if (searchType === ActiveUserCountSearchType.DateRange) {
-      if (!startDate || !endDate) {
-        setError('Please select both start and end dates');
-        return;
-      }
-      params.startDate = startDate.format('YYYY-MM-DD');
-      params.endDate = endDate.format('YYYY-MM-DD');
+    // Add date range parameters
+    if (!startDate || !endDate) {
+      setError('Please select both start and end dates');
+      return;
     }
+    
+    params.startDate = startDate.format('YYYY-MM-DD');
+    params.endDate = endDate.format('YYYY-MM-DD');
 
     setLoading(true);
     setError(null);
@@ -155,11 +147,8 @@ const ActiveUserCountReport: React.FC = () => {
 
   // Run the report
   const runReport = useCallback(async (pageNumber: number = 1) => {
-    // Validate required parameters based on search type
-    if (searchType === ActiveUserCountSearchType.MemberID && !memberID) {
-      setError('Please enter a Member ID');
-      return;
-    } else if (searchType === ActiveUserCountSearchType.DateRange && (!startDate || !endDate)) {
+    // Validate required parameters
+    if (!startDate || !endDate) {
       setError('Please select both start and end dates');
       return;
     }
@@ -176,13 +165,9 @@ const ActiveUserCountReport: React.FC = () => {
         sortDirection: sortDirection
       };
 
-      // Add parameters based on search type
-      if (searchType === ActiveUserCountSearchType.MemberID) {
-        params.memberID = memberID;
-      } else if (searchType === ActiveUserCountSearchType.DateRange) {
-        params.startDate = startDate ? startDate.format('YYYY-MM-DD') : undefined;
-        params.endDate = endDate ? endDate.format('YYYY-MM-DD') : undefined;
-      }
+      // Add date range parameters
+      params.startDate = startDate ? startDate.format('YYYY-MM-DD') : undefined;
+      params.endDate = endDate ? endDate.format('YYYY-MM-DD') : undefined;
 
       const response = await getActiveUserCount(params);
       
@@ -197,7 +182,7 @@ const ActiveUserCountReport: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchType, memberID, startDate, endDate, sortColumn, sortDirection]);
+  }, [searchType, startDate, endDate, sortColumn, sortDirection]);
 
   // Export report data to CSV
   const handleExportCsv = useCallback(() => {
@@ -261,17 +246,47 @@ const ActiveUserCountReport: React.FC = () => {
     { 
       key: 'firstName', 
       label: 'First Name', 
-      sortable: false 
+      sortable: true,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          First Name
+          {sortColumn === ActiveUserCountSortColumn.FirstName && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'lastName', 
       label: 'Last Name', 
-      sortable: false 
+      sortable: true,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Last Name
+          {sortColumn === ActiveUserCountSortColumn.LastName && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'email', 
       label: 'Email', 
-      sortable: false 
+      sortable: true,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Email
+          {sortColumn === ActiveUserCountSortColumn.Email && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'lastActivityDate', 
@@ -343,55 +358,36 @@ const ActiveUserCountReport: React.FC = () => {
               </FormControl>
             </Grid>
 
-            {searchType === ActiveUserCountSearchType.MemberID && (
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  id="member-id-input"
-                  label="Member ID"
-                  value={memberID}
-                  onChange={handleMemberIDChange}
-                  required
-                  size="small"
-                  margin="dense"
-                />
-              </Grid>
-            )}
-
-            {searchType === ActiveUserCountSearchType.DateRange && (
-              <>
-                <Grid item xs={12} md={4}>
-                  <DatePicker
-                    label="Start Date"
-                    value={startDate}
-                    onChange={handleStartDateChange}
-                    slotProps={{ 
-                      textField: { 
-                        fullWidth: true,
-                        size: "small",
-                        margin: "dense",
-                        required: true
-                      } 
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <DatePicker
-                    label="End Date"
-                    value={endDate}
-                    onChange={handleEndDateChange}
-                    slotProps={{ 
-                      textField: { 
-                        fullWidth: true,
-                        size: "small",
-                        margin: "dense",
-                        required: true
-                      } 
-                    }}
-                  />
-                </Grid>
-              </>
-            )}
+            <Grid item xs={12} md={4}>
+              <DatePicker
+                label="Start Date"
+                value={startDate}
+                onChange={handleStartDateChange}
+                slotProps={{ 
+                  textField: { 
+                    fullWidth: true,
+                    size: "small",
+                    margin: "dense",
+                    required: true
+                  } 
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <DatePicker
+                label="End Date"
+                value={endDate}
+                onChange={handleEndDateChange}
+                slotProps={{ 
+                  textField: { 
+                    fullWidth: true,
+                    size: "small",
+                    margin: "dense",
+                    required: true
+                  } 
+                }}
+              />
+            </Grid>
           </Grid>
         </form>
 

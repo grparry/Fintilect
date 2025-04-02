@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Box, Typography } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -67,32 +67,128 @@ const PaymentActivityReport: React.FC = () => {
 
   // Handle sort change
   const handleSortChange = (columnKey: string) => {
-    // Convert the string column key to PaymentActivitySortColumn if valid
-    const column = columnKey as PaymentActivitySortColumn;
-    
-    // Store current values before state updates
-    const currentColumn = sortColumn;
-    const currentDirection = sortDirection;
-    
-    let newColumn = column;
-    let newDirection: 'ASC' | 'DESC';
-    
-    if (currentColumn === column) {
-      // Toggle direction if already sorting by this column
-      newDirection = currentDirection === 'ASC' ? 'DESC' : 'ASC';
-    } else {
-      // Default to ascending for new sort column
-      newDirection = 'ASC';
+    // Find the column definition to get the sortKey
+    const columnDef = columns.find(col => col.key === columnKey);
+    if (columnDef && columnDef.sortKey) {
+      const newSortColumn = columnDef.sortKey;
+      
+      // If clicking the same column, toggle direction
+      if (sortColumn === newSortColumn) {
+        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
+      } else {
+        setSortColumn(newSortColumn);
+        setSortDirection('DESC'); // Initial sort is descending
+      }
+      
+      // Reset to page 1 when sort changes
+      if (pageNumber === 1) {
+        runReport(1);
+      } else {
+        setPageNumber(1);
+      }
     }
-    
-    // Update state
-    setSortColumn(newColumn);
-    setSortDirection(newDirection);
-    
-    // Run report with the new sort parameters directly
-    // Use the new values directly rather than relying on state updates
-    runReportWithSort(pageNumber, pageSize, newColumn, newDirection);
   };
+
+  // Determine if search value field should be shown
+  const showMemberId = [
+    PaymentActivitySearchType.MemberID,
+    PaymentActivitySearchType.MemberIDAndDate,
+    PaymentActivitySearchType.MemberIDAndPayeeName,
+    PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+  ].includes(searchType);
+
+  const showPaymentId = [
+    PaymentActivitySearchType.PaymentID
+  ].includes(searchType);
+
+  // Determine if date range should be shown
+  const showDateRange = [
+    PaymentActivitySearchType.DateRange,
+    PaymentActivitySearchType.MemberIDAndDate,
+    PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+  ].includes(searchType);
+
+  // Determine if payee name field should be shown
+  const showPayeeName = [
+    PaymentActivitySearchType.PayeeName,
+    PaymentActivitySearchType.MemberIDAndPayeeName,
+    PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+  ].includes(searchType);
+
+  // Run the payment activity report
+  const runReport = useCallback(async (page: number = pageNumber, size: number = pageSize) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // Build report parameters
+      const params: PaymentActivityParams = {
+        searchType,
+        pageNumber: page,
+        pageSize: size,
+        sortColumn,
+        sortDirection
+      };
+      
+      // Add conditional parameters based on search type
+      if (showMemberId) {
+        params.memberId = memberId;
+      }
+      
+      if (showPaymentId) {
+        params.paymentId = paymentId;
+      }
+      
+      if (showDateRange) {
+        params.startDate = startDate.format('YYYY-MM-DD');
+        params.endDate = endDate.format('YYYY-MM-DD');
+      }
+      
+      if (showPayeeName) {
+        params.payeeName = payeeName;
+      }
+      
+      // Call API
+      const result = await getPaymentActivity(params);
+      
+      if (result && result.items) {
+        // Map API response to UI model
+        const mappedItems = result.items.map(apiItem => {
+          return {
+            id: apiItem.id || '',
+            memberId: apiItem.memberId || '',
+            paymentId: apiItem.paymentId || '',
+            payeeId: apiItem.payeeId || '',
+            payeeName: apiItem.payeeName || '',
+            dateProcessed: apiItem.dateProcessed || '',
+            dueDate: apiItem.dueDate || '',
+            status: apiItem.status || '',
+            paymentMethod: apiItem.paymentMethod || '',
+            amount: typeof apiItem.amount === 'number' ? apiItem.amount : 0
+          };
+        });
+        
+        setReportData(mappedItems);
+        setTotalCount(result.totalCount);
+        setPageNumber(page);
+      } else {
+        setReportData([]);
+        setTotalCount(0);
+      }
+    } catch (err) {
+      console.error('Error running payment activity report:', err);
+      setError('Failed to load payment activity data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, [searchType, memberId, paymentId, startDate, endDate, payeeName, sortColumn, sortDirection, pageSize, showMemberId, showPaymentId, showDateRange, showPayeeName]);
+
+  // Effect to run report when sort parameters change
+  useEffect(() => {
+    if (reportData) {
+      runReport(pageNumber);
+    }
+  }, [sortColumn, sortDirection]);
 
   // Helper function to run report with specific sort parameters
   const runReportWithSort = async (page: number, size: number, column: PaymentActivitySortColumn, direction: 'ASC' | 'DESC') => {
@@ -216,12 +312,6 @@ const PaymentActivityReport: React.FC = () => {
     }
   };
 
-  // Run the payment activity report
-  const runReport = useCallback(async (page: number = pageNumber, size: number = pageSize) => {
-    // Use the current sort column and direction from state
-    runReportWithSort(page, size, sortColumn, sortDirection);
-  }, [searchType, memberId, paymentId, startDate, endDate, payeeName, sortColumn, sortDirection, pageNumber, pageSize]);
-
   // Get sort icon for column
   const getSortIcon = (column: PaymentActivitySortColumn) => {
     if (sortColumn === column) {
@@ -282,68 +372,119 @@ const PaymentActivityReport: React.FC = () => {
     {
       key: 'memberId',
       label: 'Member ID',
-      sortable: true
+      sortable: true,
+      sortKey: PaymentActivitySortColumn.MemberID,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Member ID
+          {sortColumn === PaymentActivitySortColumn.MemberID && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     {
       key: 'paymentId',
       label: 'Payment ID',
-      sortable: true
+      sortable: true,
+      sortKey: PaymentActivitySortColumn.PaymentID,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Payment ID
+          {sortColumn === PaymentActivitySortColumn.PaymentID && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     {
       key: 'payeeName',
       label: 'Payee Name',
-      sortable: true
+      sortable: true,
+      sortKey: PaymentActivitySortColumn.PayeeName,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Payee Name
+          {sortColumn === PaymentActivitySortColumn.PayeeName && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     {
       key: 'dateProcessed',
       label: 'Date Processed',
       render: (value: string) => value || '',
-      sortable: true
+      sortable: true,
+      sortKey: PaymentActivitySortColumn.DateProcessed,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Date Processed
+          {sortColumn === PaymentActivitySortColumn.DateProcessed && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     {
       key: 'dueDate',
       label: 'Due Date',
       render: (value: string) => value || '',
-      sortable: true
+      sortable: true,
+      sortKey: PaymentActivitySortColumn.DueDate,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Due Date
+          {sortColumn === PaymentActivitySortColumn.DueDate && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     {
       key: 'status',
       label: 'Status',
-      sortable: true
+      sortable: true,
+      sortKey: PaymentActivitySortColumn.Status,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Status
+          {sortColumn === PaymentActivitySortColumn.Status && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     {
       key: 'amount',
       label: 'Amount',
       render: (value: number) => value ? `$${value.toFixed(2)}` : '',
-      sortable: true
+      sortable: true,
+      sortKey: PaymentActivitySortColumn.Amount,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Amount
+          {sortColumn === PaymentActivitySortColumn.Amount && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     }
   ];
-
-  // Determine if search value field should be shown
-  const showMemberId = [
-    PaymentActivitySearchType.MemberID,
-    PaymentActivitySearchType.MemberIDAndDate,
-    PaymentActivitySearchType.MemberIDAndPayeeName,
-    PaymentActivitySearchType.MemberIDAndDateAndPayeeName
-  ].includes(searchType);
-
-  const showPaymentId = [
-    PaymentActivitySearchType.PaymentID
-  ].includes(searchType);
-
-  // Determine if date range should be shown
-  const showDateRange = [
-    PaymentActivitySearchType.DateRange,
-    PaymentActivitySearchType.MemberIDAndDate,
-    PaymentActivitySearchType.MemberIDAndDateAndPayeeName
-  ].includes(searchType);
-
-  // Determine if payee name field should be shown
-  const showPayeeName = [
-    PaymentActivitySearchType.PayeeName,
-    PaymentActivitySearchType.MemberIDAndPayeeName,
-    PaymentActivitySearchType.MemberIDAndDateAndPayeeName
-  ].includes(searchType);
 
   const handleRunReport = () => {
     runReport(1);

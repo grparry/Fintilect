@@ -45,7 +45,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
   const [sortColumn, setSortColumn] = useState<ScheduledPaymentChangeHistorySortColumn>(
     ScheduledPaymentChangeHistorySortColumn.UpdatedOn
   );
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   
@@ -134,10 +134,10 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
       
       // If clicking the same column, toggle direction
       if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
       } else {
         setSortColumn(newSortColumn);
-        setSortDirection('asc');
+        setSortDirection('ASC');
       }
     }
   };
@@ -214,7 +214,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Member ID
           {sortColumn === ScheduledPaymentChangeHistorySortColumn.MemberID && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -231,7 +231,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Updated By
           {sortColumn === ScheduledPaymentChangeHistorySortColumn.UpdatedBy && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -248,7 +248,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Updated On
           {sortColumn === ScheduledPaymentChangeHistorySortColumn.UpdatedOn && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -265,7 +265,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Change Type
           {sortColumn === ScheduledPaymentChangeHistorySortColumn.ChangeType && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -282,7 +282,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Recurring Payment ID
           {sortColumn === ScheduledPaymentChangeHistorySortColumn.RecurringPaymentId && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -299,7 +299,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Payee Name
           {sortColumn === ScheduledPaymentChangeHistorySortColumn.PayeeName && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -316,7 +316,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Amount
           {sortColumn === ScheduledPaymentChangeHistorySortColumn.Amount && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -333,7 +333,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Frequency
           {sortColumn === ScheduledPaymentChangeHistorySortColumn.Frequency && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}

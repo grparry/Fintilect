@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ReportContainer from '../components/ReportContainer';
 import ReportTable from '../components/ReportTable';
 import {
@@ -31,40 +33,106 @@ const RecurringPaymentChangeHistoryReport: React.FC = () => {
   const [sortColumn, setSortColumn] = useState<RecurringPaymentChangeHistorySortColumn>(
     RecurringPaymentChangeHistorySortColumn.UpdatedOn
   );
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
 
   // Column definitions for the report table
   const columns = [
     { 
       key: 'recurringPaymentId', 
       label: 'Recurring Payment ID',
-      sortable: true
+      sortable: true,
+      sortKey: RecurringPaymentChangeHistorySortColumn.RecurringPaymentId,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Recurring Payment ID
+          {sortColumn === RecurringPaymentChangeHistorySortColumn.RecurringPaymentId && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'memberID', 
       label: 'Member ID',
-      sortable: true
+      sortable: true,
+      sortKey: RecurringPaymentChangeHistorySortColumn.MemberID,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Member ID
+          {sortColumn === RecurringPaymentChangeHistorySortColumn.MemberID && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'payeeName', 
       label: 'Payee Name',
-      sortable: true
+      sortable: true,
+      sortKey: RecurringPaymentChangeHistorySortColumn.PayeeName,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Payee Name
+          {sortColumn === RecurringPaymentChangeHistorySortColumn.PayeeName && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'updatedOn', 
       label: 'Updated On',
       sortable: true,
-      render: (value: any) => value ? dayjs(value).format('MM/DD/YYYY') : 'N/A'
+      sortKey: RecurringPaymentChangeHistorySortColumn.UpdatedOn,
+      render: (value: any) => value ? dayjs(value).format('MM/DD/YYYY') : 'N/A',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Updated On
+          {sortColumn === RecurringPaymentChangeHistorySortColumn.UpdatedOn && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'changeType', 
       label: 'Change Type',
-      sortable: true
+      sortable: true,
+      sortKey: RecurringPaymentChangeHistorySortColumn.ChangeType,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Change Type
+          {sortColumn === RecurringPaymentChangeHistorySortColumn.ChangeType && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'updatedBy', 
       label: 'Updated By',
-      sortable: true
+      sortable: true,
+      sortKey: RecurringPaymentChangeHistorySortColumn.UpdatedBy,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Updated By
+          {sortColumn === RecurringPaymentChangeHistorySortColumn.UpdatedBy && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'fieldName', 
@@ -88,13 +156,35 @@ const RecurringPaymentChangeHistoryReport: React.FC = () => {
       key: 'amount', 
       label: 'Amount',
       sortable: true,
-      render: (value: any) => value ? `$${value.toFixed(2)}` : 'N/A'
+      sortKey: RecurringPaymentChangeHistorySortColumn.Amount,
+      render: (value: any) => value ? `$${value.toFixed(2)}` : 'N/A',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Amount
+          {sortColumn === RecurringPaymentChangeHistorySortColumn.Amount && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'frequency', 
       label: 'Frequency',
       sortable: true,
-      render: (value: any) => value || 'N/A'
+      sortKey: RecurringPaymentChangeHistorySortColumn.Frequency,
+      render: (value: any) => value || 'N/A',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Frequency
+          {sortColumn === RecurringPaymentChangeHistorySortColumn.Frequency && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     }
   ];
 
@@ -106,6 +196,13 @@ const RecurringPaymentChangeHistoryReport: React.FC = () => {
   const [data, setData] = useState<RecurringPaymentChangeHistoryResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Run report when sort parameters change
+  useEffect(() => {
+    if (data) {
+      runReport(pageNumber);
+    }
+  }, [sortColumn, sortDirection]);
 
   /**
    * Format date as YYYY-MM-DD
@@ -190,24 +287,26 @@ const RecurringPaymentChangeHistoryReport: React.FC = () => {
 
   /**
    * Handle sort change
-   * @param column Column to sort by
+   * @param columnKey Column key to sort by
    */
-  const handleSortChange = (column: string) => {
-    if (column in RecurringPaymentChangeHistorySortColumn) {
-      const newSortColumn = column as RecurringPaymentChangeHistorySortColumn;
-      
+  const handleSort = (columnKey: string) => {
+    const columnDef = columns.find(col => col.key === columnKey);
+    if (columnDef && columnDef.sortKey) {
+      const newSortColumn = columnDef.sortKey;
       // If clicking the same column, toggle direction
       if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
       } else {
-        // Default to descending for date columns, ascending for others
-        const isDateColumn = newSortColumn === RecurringPaymentChangeHistorySortColumn.UpdatedOn;
-        setSortDirection(isDateColumn ? 'desc' : 'asc');
         setSortColumn(newSortColumn);
+        setSortDirection('DESC'); // Initial sort is descending
       }
       
-      // Re-run report with new sort
-      runReport(pageNumber);
+      // Reset to page 1 when sort changes
+      if (pageNumber === 1) {
+        runReport(1);
+      } else {
+        setPageNumber(1);
+      }
     }
   };
 
@@ -362,7 +461,7 @@ const RecurringPaymentChangeHistoryReport: React.FC = () => {
               onPageChange: handlePageChange,
               onPageSizeChange: (newPageSize) => setPageSize(newPageSize)
             }}
-            onSort={handleSortChange}
+            onSort={handleSort}
           />
         </Box>
       )}

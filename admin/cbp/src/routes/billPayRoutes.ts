@@ -22,6 +22,7 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import PeopleIcon from '@mui/icons-material/People';
 import PaymentsIcon from '@mui/icons-material/Payments';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 
 // Lazy load components
 const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
@@ -35,7 +36,6 @@ const ReportsLanding = lazy(() => import('../components/bill-pay/reports/Reports
 const ReportsHeader = lazy(() => import('../components/bill-pay/reports/ReportsHeader'));
 const PaymentActivityReport = lazy(() => import('../components/bill-pay/reports/reports/PaymentActivityReport'));
 const ErrorRecapReport = lazy(() => import('../components/bill-pay/reports/reports/ErrorRecapReport'));
-const BillPaySearchReport = lazy(() => import('../components/bill-pay/reports/reports/BillPaySearchReport'));
 const ActiveUserCountReport = lazy(() => import('../components/bill-pay/reports/reports/ActiveUserCountReport'));
 const FailedOnUsReport = lazy(() => import('../components/bill-pay/reports/reports/FailedOnUsReport'));
 const GlobalHolidaysReport = lazy(() => import('../components/bill-pay/reports/reports/GlobalHolidaysReport'));
@@ -48,7 +48,11 @@ const StatusesWithNotificationsReport = lazy(() => import('../components/bill-pa
 const LargePaymentReport = lazy(() => import('../components/bill-pay/reports/reports/LargePaymentReport'));
 const ProcessingConfirmationReport = lazy(() => import('../components/bill-pay/reports/reports/ProcessingConfirmationReport'));
 const ScheduledPaymentChangeHistoryReport = lazy(() => import('../components/bill-pay/reports/reports/ScheduledPaymentChangeHistoryReport'));
-const Settings = lazy(() => import('../components/bill-pay/settings/Settings'));
+const PayeeReport = lazy(() => import('../components/bill-pay/reports/reports/PayeeReport'));
+const PaymentReport = lazy(() => import('../components/bill-pay/reports/reports/PaymentReport'));
+const PaymentClearReport = lazy(() => import('../components/bill-pay/reports/reports/PaymentClearReport'));
+const RecurringPaymentReport = lazy(() => import('../components/bill-pay/reports/reports/RecurringPaymentReport'));
+const UserPayeeReport = lazy(() => import('../components/bill-pay/reports/reports/UserPayeeReport'));
 const BillPayConfig = lazy(() => import('../components/bill-pay/settings/BillPayConfig'));
 const Holidays = lazy(() => import('../components/bill-pay/settings/Holidays'));
 const NotificationTemplates = lazy(() => import('../components/bill-pay/settings/NotificationTemplates'));
@@ -57,6 +61,7 @@ const FisPayeeCheck = lazy(() => import('../components/bill-pay/payments/FisPaye
 const FISExceptionHandling = lazy(() => import('../components/bill-pay/payments/FISExceptionHandling'));
 const CopyMemberPayees = lazy(() => import('../components/bill-pay/payments/CopyMemberPayees'));
 const ChangeHistory = lazy(() => import('../components/bill-pay/payments/ChangeHistory'));
+const Settings = lazy(() => import('../components/bill-pay/settings/Settings'));
 
 const billPayRoutes: RouteConfig[] = [
   {
@@ -204,15 +209,6 @@ const billPayRoutes: RouteConfig[] = [
             resourceId: 'route:billPay.reports.errorRecap' as ResourceId
           },
           {
-            id: 'billPaySearchReport',
-            path: 'billpay-search',
-            title: 'BillPay Search Report',
-            element: BillPaySearchReport,
-            icon: SearchIcon,
-            sectionId: 'billPay',
-            resourceId: 'route:billPay.reports.billPaySearch' as ResourceId
-          },
-          {
             id: 'activeUserCountReport',
             path: 'active-user-count',
             title: 'Active User Count Report',
@@ -319,6 +315,51 @@ const billPayRoutes: RouteConfig[] = [
             icon: HistoryIcon,
             sectionId: 'billPay',
             resourceId: 'route:billPay.reports.scheduledPaymentChangeHistory' as ResourceId
+          },
+          {
+            id: 'payeeReport',
+            path: 'payee',
+            title: 'Payee Report',
+            element: PayeeReport,
+            icon: SearchIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.payee' as ResourceId
+          },
+          {
+            id: 'paymentReport',
+            path: 'payment',
+            title: 'Payment Report',
+            element: PaymentReport,
+            icon: PaymentsIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.payment' as ResourceId
+          },
+          {
+            id: 'paymentClearReport',
+            path: 'payment-clear',
+            title: 'Payment Clear Report',
+            element: PaymentClearReport,
+            icon: ConfirmationNumberIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.paymentClear' as ResourceId
+          },
+          {
+            id: 'recurringPaymentReport',
+            path: 'recurring-payment',
+            title: 'Recurring Payment Report',
+            element: RecurringPaymentReport,
+            icon: RepeatIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.recurringPayment' as ResourceId
+          },
+          {
+            id: 'userPayeeReport',
+            path: 'user-payee',
+            title: 'User Payee Report',
+            element: UserPayeeReport,
+            icon: SearchIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.userPayee' as ResourceId
           }
         ]
       },

@@ -35,7 +35,7 @@ export interface ProcessingConfirmationParams {
   startDate: string;
   endDate: string;
   sortColumn?: ProcessingConfirmationSortColumn;
-  sortDirection?: 'asc' | 'desc';
+  sortDirection?: 'ASC' | 'DESC';
   pageNumber?: number;
   pageSize?: number;
 }

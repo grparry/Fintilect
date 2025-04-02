@@ -8,10 +8,6 @@ import {
     ErrorRecapItemPagedResponse
 } from '../../utils/reports/errorRecap';
 import {
-    BillPaySearchRequest,
-    BillPaySearchItemPagedResponse
-} from '../../utils/reports/billPaySearch';
-import {
     ActiveUserCountRequest,
     ActiveUserCountItemPagedResponse
 } from '../../utils/reports/activeUserCount';
@@ -59,6 +55,26 @@ import {
     ScheduledPaymentChangeHistoryParams,
     ScheduledPaymentChangeHistoryResponse
 } from '../../utils/reports/scheduledPaymentChangeHistory';
+import {
+    PayeeRequest,
+    PayeeItemPagedResponse
+} from '../../utils/reports/payee';
+import {
+    PaymentRequest,
+    PaymentItemPagedResponse
+} from '../../utils/reports/payment';
+import {
+    PaymentClearRequest,
+    PaymentClearItemPagedResponse
+} from '../../utils/reports/paymentClear';
+import {
+    RecurringPaymentParams,
+    RecurringPaymentItemPagedResponse
+} from '../../utils/reports/recurringPayment';
+import {
+    UserPayeeParams,
+    UserPayeeItemPagedResponse
+} from '../../utils/reports/userPayee';
 
 /**
  * Interface for report management
@@ -79,13 +95,6 @@ export interface IReportService extends IBaseService {
      */
     getPaymentActivity(params: PaymentActivityRequest): Promise<PaymentActivityItemPagedResponse>;
     
-    /**
-     * Get BillPay search data using the dedicated endpoint
-     * @param params BillPay search parameters
-     * @returns Paged response with BillPay search items
-     */
-    getBillPaySearch(params: BillPaySearchRequest): Promise<BillPaySearchItemPagedResponse>;
-
     /**
      * Get active user count data using the dedicated endpoint
      * @param params Active user count search parameters
@@ -169,4 +178,39 @@ export interface IReportService extends IBaseService {
      * @returns Paged response with scheduled payment change history items
      */
     getScheduledPaymentChangeHistory(params: ScheduledPaymentChangeHistoryParams): Promise<ScheduledPaymentChangeHistoryResponse>;
+
+    /**
+     * Get payee report data using the dedicated endpoint
+     * @param params Payee report search parameters
+     * @returns Paged response with payee report items
+     */
+    getPayeeReport(params: PayeeRequest): Promise<PayeeItemPagedResponse>;
+
+    /**
+     * Get payment report data using the dedicated endpoint
+     * @param params Payment report search parameters
+     * @returns Paged response with payment report items
+     */
+    getPaymentReport(params: PaymentRequest): Promise<PaymentItemPagedResponse>;
+
+    /**
+     * Get payment clear report data using the dedicated endpoint
+     * @param params Payment clear report search parameters
+     * @returns Paged response with payment clear report items
+     */
+    getPaymentClearReport(params: PaymentClearRequest): Promise<PaymentClearItemPagedResponse>;
+
+    /**
+     * Get recurring payment report data using the dedicated endpoint
+     * @param params Recurring payment report search parameters
+     * @returns Paged response with recurring payment report items
+     */
+    getRecurringPaymentReport(params: RecurringPaymentParams): Promise<RecurringPaymentItemPagedResponse>;
+
+    /**
+     * Get user payee report data using the dedicated endpoint
+     * @param params User payee report search parameters
+     * @returns Paged response with user payee report items
+     */
+    getUserPayeeReport(params: UserPayeeParams): Promise<UserPayeeItemPagedResponse>;
 }

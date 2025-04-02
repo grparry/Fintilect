@@ -43,7 +43,7 @@ interface GroupsListState {
   deleteDialogOpen: boolean;
   groupToDelete: Group | null;
   sortBy: 'name';
-  sortDirection: 'asc' | 'desc';
+  sortDirection: 'ASC' | 'DESC';
   filterText: string;
 }
 
@@ -56,7 +56,7 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
     deleteDialogOpen: false,
     groupToDelete: null,
     sortBy: 'name',
-    sortDirection: 'asc',
+    sortDirection: 'ASC',
     filterText: ''
   });
 
@@ -134,7 +134,7 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
       ...prev,
       sortBy: field,
       sortDirection:
-        prev.sortBy === field && prev.sortDirection === 'asc' ? 'desc' : 'asc'
+        prev.sortBy === field && prev.sortDirection === 'ASC' ? 'DESC' : 'ASC'
     }));
   };
 
@@ -148,7 +148,7 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
   const { groups, loading, error, deleteDialogOpen, sortBy, sortDirection, filterText } = state;
 
   const sortedGroups = [...groups].sort((a, b) => {
-    const direction = sortDirection === 'asc' ? 1 : -1;
+    const direction = sortDirection === 'ASC' ? 1 : -1;
     return a.name.localeCompare(b.name) * direction;
   });
 
@@ -197,7 +197,7 @@ const GroupsList: React.FC<GroupsListProps> = ({ clientId }) => {
                 onClick={() => handleSort('name')}
                 style={{ cursor: 'pointer' }}
               >
-                Name {sortBy === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+                Name {sortBy === 'name' && (sortDirection === 'ASC' ? '↑' : '↓')}
               </TableCell>
               <TableCell>Created At</TableCell>
               <TableCell>Updated At</TableCell>

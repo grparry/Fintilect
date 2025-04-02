@@ -26,7 +26,7 @@ export const LARGE_PAYMENT_SORT_COLUMNS = [
 export interface LargePaymentParams {
   runDate: string;
   sortColumn: LargePaymentSortColumn;
-  sortDirection?: 'asc' | 'desc';
+  sortDirection?: 'ASC' | 'DESC';
   pageNumber: number;
   pageSize: number;
 }

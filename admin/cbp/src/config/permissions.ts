@@ -159,12 +159,6 @@ export const permissionRegistry: PermissionRegistry = {
     adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'View Error Recap Report'
   },
-  'route:billPay.reports.billPaySearch': {
-    resourceId: 'route:billPay.reports.billPaySearch',
-    permissions: ['BillPayViewer', 'BillPayReports_Read'],
-    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
-    description: 'View BillPay Search Report'
-  },
   'route:billPay.reports.activeUserCount': {
     resourceId: 'route:billPay.reports.activeUserCount',
     permissions: ['BillPayViewer', 'BillPayReports_Read'],
@@ -182,6 +176,36 @@ export const permissionRegistry: PermissionRegistry = {
     permissions: ['BillPayViewer', 'BillPayReports_Read'],
     adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'View Global Holidays Report'
+  },
+  'route:billPay.reports.payee': {
+    resourceId: 'route:billPay.reports.payee',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Payee Report'
+  },
+  'route:billPay.reports.payment': {
+    resourceId: 'route:billPay.reports.payment',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Payment Report'
+  },
+  'route:billPay.reports.paymentClear': {
+    resourceId: 'route:billPay.reports.paymentClear',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Payment Clear Report'
+  },
+  'route:billPay.reports.recurringPayment': {
+    resourceId: 'route:billPay.reports.recurringPayment',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Recurring Payment Report'
+  },
+  'route:billPay.reports.userPayee': {
+    resourceId: 'route:billPay.reports.userPayee',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View User Payee Report'
   },
   'route:billPay.reports.monthlyUsers': {
     resourceId: 'route:billPay.reports.monthlyUsers',

@@ -35,7 +35,7 @@ export interface DataTableProps<T = any> extends BaseComponentProps {
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
   onRowClick?: (row: T) => void;
-  onSortChange?: (field: keyof T, direction: 'asc' | 'desc') => void;
+  onSortChange?: (field: keyof T, direction: 'ASC' | 'DESC') => void;
   selectedRows?: T[];
   onSelectionChange?: (selectedRows: T[]) => void;
 }
@@ -75,7 +75,7 @@ export interface TableProps<T> {
   loading?: boolean;
   pageSize?: number;
   onPageChange?: (page: number) => void;
-  onSortChange?: (field: keyof T, direction: 'asc' | 'desc') => void;
+  onSortChange?: (field: keyof T, direction: 'ASC' | 'DESC') => void;
 }
 // Button props
 export interface ButtonProps {

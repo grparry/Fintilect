@@ -26,11 +26,11 @@ export const FAILED_ON_US_SEARCH_TYPES = {
 export enum FailedOnUsSortColumn {
   FailedDate = 'FailedDate',
   ProcessedDate = 'ProcessedDate',
-  MemberID = 'MemberID',
-  PaymentID = 'PaymentID',
+  MemberId = 'MemberID',
+  PaymentId = 'PaymentID',
   Amount = 'Amount',
-  UserPayeeListID = 'UserPayeeListID',
-  PayeeID = 'PayeeID',
+  UserPayeeListId = 'UserPayeeListID',
+  PayeeId = 'PayeeID',
   PayeeName = 'PayeeName',
   Status = 'Status',
   StatusCode = 'StatusCode'
@@ -42,11 +42,11 @@ export enum FailedOnUsSortColumn {
 export const FAILED_ON_US_SORT_COLUMNS = {
   [FailedOnUsSortColumn.FailedDate]: 'Failed Date',
   [FailedOnUsSortColumn.ProcessedDate]: 'Processed Date',
-  [FailedOnUsSortColumn.MemberID]: 'Member ID',
-  [FailedOnUsSortColumn.PaymentID]: 'Payment ID',
+  [FailedOnUsSortColumn.MemberId]: 'Member ID',
+  [FailedOnUsSortColumn.PaymentId]: 'Payment ID',
   [FailedOnUsSortColumn.Amount]: 'Amount',
-  [FailedOnUsSortColumn.UserPayeeListID]: 'User Payee List ID',
-  [FailedOnUsSortColumn.PayeeID]: 'Payee ID',
+  [FailedOnUsSortColumn.UserPayeeListId]: 'User Payee List ID',
+  [FailedOnUsSortColumn.PayeeId]: 'Payee ID',
   [FailedOnUsSortColumn.PayeeName]: 'Payee Name',
   [FailedOnUsSortColumn.Status]: 'Status',
   [FailedOnUsSortColumn.StatusCode]: 'Status Code'
@@ -57,15 +57,23 @@ export const FAILED_ON_US_SORT_COLUMNS = {
  * Note: Property names use camelCase to match API response format
  */
 export interface FailedOnUsItem {
-  paymentID: string;
-  memberID: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  paymentDate: string;
+  paymentId: string;
+  memberId: string;
+  memberFirstName: string | null;
+  memberLastName: string | null;
+  email: string | null;
+  failedDate: string;
+  processedDate: string;
   amount: number;
   status: string;
-  errorMessage: string;
+  statusCode: number;
+  fundingAccount: string;
+  userPayeeListId: string;
+  payeeId: string;
+  payeeName: string | null;
+  usersAccountAtPayee: string;
+  nameOnAccount: string;
+  recurringPaymentId: string | null;
 }
 
 /**
@@ -92,8 +100,8 @@ export interface FailedOnUsParams {
   sortDirection?: 'ASC' | 'DESC';
   startDate?: string;
   endDate?: string;
-  memberID?: string;
-  paymentID?: string;
+  memberId?: string;
+  paymentId?: string;
 }
 
 /**

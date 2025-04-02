@@ -1,6 +1,5 @@
 import { PaymentActivityRequest, PaymentActivityItemPagedResponse, PaymentActivityItem, PaymentActivitySearchType } from '../../../utils/reports/paymentActivity';
 import { ErrorRecapRequest, ErrorRecapItemPagedResponse, ErrorRecapItem, ErrorRecapSearchType } from '../../../utils/reports/errorRecap';
-import { BillPaySearchRequest, BillPaySearchItemPagedResponse, BillPaySearchItem, BillPaySearchType } from '../../../utils/reports/billPaySearch';
 import { ActiveUserCountRequest, ActiveUserCountItemPagedResponse, ActiveUserCountItem, ActiveUserCountSearchType } from '../../../utils/reports/activeUserCount';
 import { FailedOnUsParams, FailedOnUsResponse, FailedOnUsItem, FailedOnUsSearchType } from '../../../utils/reports/failedOnUs';
 import { GlobalHolidaysParams, GlobalHolidaysResponse, GlobalHolidaysSearchType } from '../../../utils/reports/globalHolidays';
@@ -13,6 +12,11 @@ import { StatusesWithNotificationsParams, StatusesWithNotificationsResponse, Sta
 import { LargePaymentParams, LargePaymentResponse, LargePaymentItem } from '../../../utils/reports/largePayment';
 import { ProcessingConfirmationParams, ProcessingConfirmationResponse } from '../../../utils/reports/processingConfirmation';
 import { ScheduledPaymentChangeHistoryParams, ScheduledPaymentChangeHistoryResponse, ScheduledPaymentChangeHistoryItem, ScheduledPaymentChangeHistorySearchType } from '../../../utils/reports/scheduledPaymentChangeHistory';
+import { PayeeRequest, PayeeItemPagedResponse, PayeeItem, PayeeSearchType } from '../../../utils/reports/payee';
+import { PaymentRequest, PaymentItemPagedResponse, PaymentSearchType, PaymentItem } from '../../../utils/reports/payment';
+import { PaymentClearRequest, PaymentClearItemPagedResponse, PaymentClearSearchType, PaymentClearItem } from '../../../utils/reports/paymentClear';
+import { RecurringPaymentParams, RecurringPaymentItemPagedResponse, RecurringPaymentSearchType, RecurringPaymentSortColumn } from '../../../utils/reports/recurringPayment';
+import { UserPayeeParams, UserPayeeItemPagedResponse, UserPayeeSearchType } from '../../../utils/reports/userPayee';
 import { IReportService } from '../../interfaces/IReportService';
 import { BaseMockService } from './BaseMockService';
 import logger from '../../../utils/logger';
@@ -227,100 +231,6 @@ export class MockReportService extends BaseMockService implements IReportService
         };
     }
 
-    async getBillPaySearch(params: BillPaySearchRequest): Promise<BillPaySearchItemPagedResponse> {
-        await this.delay();
-        
-        if (params.searchType === undefined) {
-            throw new Error('SearchType is a required parameter');
-        }
-        
-        if (!params.id) {
-            throw new Error('ID is a required parameter');
-        }
-        
-        if (params.reportType === undefined) {
-            throw new Error('ReportType is a required parameter');
-        }
-        
-        logger.info(`Mock BillPaySearch request with params: ${JSON.stringify({
-            SearchType: params.searchType,
-            Id: params.id,
-            Days: params.days,
-            ReportType: params.reportType,
-            SortColumn: params.sortColumn,
-            PageNumber: params.pageNumber || 1,
-            PageSize: params.pageSize || 20,
-            SortDirection: params.sortDirection || 'ASC'
-        })}`);
-        
-        // Pagination parameters
-        const pageNumber = params.pageNumber || 1;
-        const pageSize = params.pageSize || 20;
-        const totalItems = 120; // Mock total count
-        const totalPages = Math.ceil(totalItems / pageSize);
-        
-        // Generate items for the current page
-        const items: BillPaySearchItem[] = [];
-        const startIndex = (pageNumber - 1) * pageSize;
-        const endIndex = Math.min(startIndex + pageSize, totalItems);
-        
-        for (let i = startIndex; i < endIndex; i++) {
-            const today = new Date();
-            const processedDate = new Date(today);
-            processedDate.setDate(today.getDate() - (i % 30));
-            
-            const dueDate = new Date(processedDate);
-            dueDate.setDate(processedDate.getDate() - 3);
-            
-            const item: BillPaySearchItem = {
-                paymentID: `P${200000 + i}`,
-                recurringPaymentID: i % 3 === 0 ? `RP${300000 + i}` : null,
-                memberID: `M${100000 + i}`,
-                account: `ACCT-${i % 5}`,
-                amount: 100 + (i * 10.25),
-                checkNumber: i % 2 === 0 ? `CHK-${1000 + i}` : null,
-                dateProcessed: processedDate.toISOString(),
-                willProcessDate: null,
-                dueDate: dueDate.toISOString(),
-                failedDate: null,
-                cancelledDate: null,
-                status: i % 5 === 0 ? 'Pending' : (i % 5 === 1 ? 'Processed' : (i % 5 === 2 ? 'Failed' : (i % 5 === 3 ? 'Cancelled' : 'Scheduled'))),
-                userPayeeListID: `UPL${300000 + i}`,
-                payeeID: `PY${400000 + i}`,
-                accountAtPayee: `ACCT-${500000 + i}`,
-                nameOnAccount: `Mock User ${i + 1}`,
-                paymentMethod: i % 3 === 0 ? 'Check' : 'Electronic',
-                memo: i % 2 === 0 ? `Payment memo ${i}` : null,
-                sourceApplication: 'Web',
-                memberFirstName: `FirstName${i}`,
-                memberMiddleName: i % 2 === 0 ? `M` : null,
-                memberLastName: `LastName${i}`,
-                memberAddress1: `${1000 + i} Main St`,
-                memberAddress2: i % 3 === 0 ? `Apt ${i}` : null,
-                memberCity: 'Mockville',
-                memberState: 'MO',
-                memberZipCode: `${10000 + i}`,
-                memberCountry: 'US',
-                memberHomePhone: `555-${100 + i}-${1000 + i}`,
-                memberWorkPhone: i % 2 === 0 ? `555-${200 + i}-${2000 + i}` : null,
-                memberWorkPhoneExt: i % 4 === 0 ? `${i % 100}` : null,
-                memberEmail: `user${i}@example.com`
-            };
-            items.push(item);
-        }
-        
-        // Return the paged response
-        return {
-            items,
-            pageNumber,
-            pageSize,
-            totalCount: totalItems,
-            totalPages,
-            hasNext: pageNumber < totalPages,
-            hasPrevious: pageNumber > 1
-        };
-    }
-
     async getActiveUserCount(params: ActiveUserCountRequest): Promise<ActiveUserCountItemPagedResponse> {
         await this.delay();
         
@@ -330,9 +240,6 @@ export class MockReportService extends BaseMockService implements IReportService
         
         // Validate required parameters based on search type
         switch (params.searchType) {
-            case ActiveUserCountSearchType.MemberID:
-                if (!params.memberID) throw new Error('MemberID is required for this search type');
-                break;
             case ActiveUserCountSearchType.DateRange:
                 if (!params.startDate || !params.endDate) throw new Error('StartDate and EndDate are required for this search type');
                 break;
@@ -364,7 +271,7 @@ export class MockReportService extends BaseMockService implements IReportService
                 lastName: `LastName${i}`,
                 email: `user${i}@example.com`,
                 lastActivityDate: lastActivityDate.toISOString(),
-                paymentCount: 5 + (i % 20)
+                paymentCount: 5 + (i % 20) // Random number of payments between 5 and 24
             };
             items.push(item);
         }
@@ -391,10 +298,10 @@ export class MockReportService extends BaseMockService implements IReportService
         // Validate required parameters based on search type
         switch (params.searchType) {
             case FailedOnUsSearchType.MemberID:
-                if (!params.memberID) throw new Error('MemberID is required for this search type');
+                if (!params.memberId) throw new Error('MemberID is required for this search type');
                 break;
             case FailedOnUsSearchType.PaymentID:
-                if (!params.paymentID) throw new Error('PaymentID is required for this search type');
+                if (!params.paymentId) throw new Error('PaymentID is required for this search type');
                 break;
             case FailedOnUsSearchType.DateRange:
                 if (!params.startDate || !params.endDate) throw new Error('StartDate and EndDate are required for this search type');
@@ -422,15 +329,23 @@ export class MockReportService extends BaseMockService implements IReportService
             paymentDate.setDate(today.getDate() - (i % 30));
             
             const item: FailedOnUsItem = {
-                paymentID: `P${200000 + i}`,
-                memberID: `M${100000 + i}`,
-                firstName: `FirstName${i}`,
-                lastName: `LastName${i}`,
+                paymentId: `P${200000 + i}`,
+                memberId: `M${100000 + i}`,
+                memberFirstName: `FirstName${i}`,
+                memberLastName: `LastName${i}`,
                 email: `user${i}@example.com`,
-                paymentDate: paymentDate.toISOString(),
+                failedDate: paymentDate.toISOString(),
+                processedDate: new Date(paymentDate.getTime() - 24 * 60 * 60 * 1000).toISOString(),
                 amount: 100 + (i * 10.25),
                 status: i % 3 === 0 ? 'Failed' : (i % 3 === 1 ? 'Rejected' : 'Returned'),
-                errorMessage: i % 3 === 0 ? 'Insufficient funds' : (i % 3 === 1 ? 'Invalid account number' : 'Account closed')
+                statusCode: i % 3 === 0 ? 201 : (i % 3 === 1 ? 202 : 203),
+                fundingAccount: `${100000 + i}-S80`,
+                userPayeeListId: `UPL${300000 + i}`,
+                payeeId: `PY${400000 + i}`,
+                payeeName: `Payee Name ${i}`,
+                usersAccountAtPayee: `${500000 + i}-L18`,
+                nameOnAccount: `Account Name ${i}`,
+                recurringPaymentId: i % 2 === 0 ? `RP${600000 + i}` : null
             };
             items.push(item);
         }
@@ -607,7 +522,7 @@ export class MockReportService extends BaseMockService implements IReportService
         // Sort the items if sort parameters are provided
         if (params.sortColumn) {
             const sortField = params.sortColumn.charAt(0).toLowerCase() + params.sortColumn.slice(1);
-            const sortDirection = params.sortDirection || 'asc';
+            const sortDirection = params.sortDirection || 'ASC';
             
             items.sort((a, b) => {
                 const aValue = a[sortField as keyof PendingPaymentsItem];
@@ -615,14 +530,14 @@ export class MockReportService extends BaseMockService implements IReportService
                 
                 // Handle undefined values
                 if (aValue === undefined && bValue === undefined) return 0;
-                if (aValue === undefined) return sortDirection.toLowerCase() === 'asc' ? -1 : 1;
-                if (bValue === undefined) return sortDirection.toLowerCase() === 'asc' ? 1 : -1;
+                if (aValue === undefined) return sortDirection.toLowerCase() === 'ASC' ? -1 : 1;
+                if (bValue === undefined) return sortDirection.toLowerCase() === 'ASC' ? 1 : -1;
                 
                 if (aValue < bValue) {
-                    return sortDirection.toLowerCase() === 'asc' ? -1 : 1;
+                    return sortDirection.toLowerCase() === 'ASC' ? -1 : 1;
                 }
                 if (aValue > bValue) {
-                    return sortDirection.toLowerCase() === 'asc' ? 1 : -1;
+                    return sortDirection.toLowerCase() === 'ASC' ? 1 : -1;
                 }
                 return 0;
             });
@@ -709,53 +624,6 @@ export class MockReportService extends BaseMockService implements IReportService
             // Select change type
             const changeType = changeTypes[i % changeTypes.length];
             
-            // Generate field name, old value, and new value for modifications
-            let fieldName: string | undefined;
-            let oldValue: string | undefined;
-            let newValue: string | undefined;
-            let amount: number | undefined;
-            let frequency: string | undefined;
-            
-            if (changeType === 'Modified') {
-                fieldName = fieldNames[i % fieldNames.length];
-                
-                // Generate appropriate old and new values based on field name
-                switch (fieldName) {
-                    case 'Amount':
-                        oldValue = `$${(50 + (i % 10) * 10).toFixed(2)}`;
-                        newValue = `$${(100 + (i % 10) * 10).toFixed(2)}`;
-                        amount = 100 + (i % 10) * 10;
-                        break;
-                    case 'Frequency':
-                        oldValue = frequencies[i % frequencies.length];
-                        newValue = frequencies[(i + 1) % frequencies.length];
-                        frequency = frequencies[(i + 1) % frequencies.length];
-                        break;
-                    case 'NextPaymentDate':
-                        const oldDate = new Date();
-                        oldDate.setDate(oldDate.getDate() + 15);
-                        const newDate = new Date();
-                        newDate.setDate(newDate.getDate() + 30);
-                        oldValue = oldDate.toISOString().split('T')[0];
-                        newValue = newDate.toISOString().split('T')[0];
-                        break;
-                    case 'PayeeName':
-                        oldValue = payeeNames[i % payeeNames.length];
-                        newValue = `New ${payeeNames[i % payeeNames.length]}`;
-                        break;
-                    case 'DeliveryMethod':
-                        oldValue = 'Check';
-                        newValue = 'Electronic';
-                        break;
-                    default:
-                        oldValue = 'Old Value';
-                        newValue = 'New Value';
-                }
-            } else if (changeType === 'Created') {
-                amount = 100 + (i % 10) * 25;
-                frequency = frequencies[i % frequencies.length];
-            }
-            
             const item: RecurringPaymentChangeHistoryItem = {
                 recurringPaymentId: `R${100000 + (i % 50)}`,
                 memberID: `M${200000 + (i % 30)}`,
@@ -763,11 +631,11 @@ export class MockReportService extends BaseMockService implements IReportService
                 updatedOn: updatedOn.toISOString().split('T')[0], // Format as YYYY-MM-DD
                 changeType,
                 updatedBy: userNames[i % userNames.length],
-                fieldName,
-                oldValue,
-                newValue,
-                amount,
-                frequency
+                fieldName: changeType === 'Modified' ? fieldNames[i % fieldNames.length] : undefined,
+                oldValue: changeType === 'Modified' ? `Old ${fieldNames[i % fieldNames.length]}` : undefined,
+                newValue: changeType === 'Modified' ? `New ${fieldNames[i % fieldNames.length]}` : undefined,
+                amount: changeType === 'Created' ? 100 + (i % 10) * 10 : undefined,
+                frequency: changeType === 'Created' ? frequencies[i % frequencies.length] : undefined
             };
             items.push(item);
         }
@@ -775,7 +643,7 @@ export class MockReportService extends BaseMockService implements IReportService
         // Sort the items if sort parameters are provided
         if (params.sortColumn) {
             const sortField = params.sortColumn.charAt(0).toLowerCase() + params.sortColumn.slice(1);
-            const sortDirection = params.sortDirection || 'asc';
+            const sortDirection = params.sortDirection || 'ASC';
             
             items.sort((a, b) => {
                 const aValue = a[sortField as keyof RecurringPaymentChangeHistoryItem];
@@ -783,14 +651,14 @@ export class MockReportService extends BaseMockService implements IReportService
                 
                 // Handle undefined values
                 if (aValue === undefined && bValue === undefined) return 0;
-                if (aValue === undefined) return sortDirection.toLowerCase() === 'asc' ? -1 : 1;
-                if (bValue === undefined) return sortDirection.toLowerCase() === 'asc' ? 1 : -1;
+                if (aValue === undefined) return sortDirection.toLowerCase() === 'ASC' ? -1 : 1;
+                if (bValue === undefined) return sortDirection.toLowerCase() === 'ASC' ? 1 : -1;
                 
                 if (aValue < bValue) {
-                    return sortDirection.toLowerCase() === 'asc' ? -1 : 1;
+                    return sortDirection.toLowerCase() === 'ASC' ? -1 : 1;
                 }
                 if (aValue > bValue) {
-                    return sortDirection.toLowerCase() === 'asc' ? 1 : -1;
+                    return sortDirection.toLowerCase() === 'ASC' ? 1 : -1;
                 }
                 return 0;
             });
@@ -898,7 +766,7 @@ export class MockReportService extends BaseMockService implements IReportService
         // Sort the items if sort parameters are provided
         if (params.sortColumn) {
             const sortField = params.sortColumn.charAt(0).toLowerCase() + params.sortColumn.slice(1);
-            const sortDirection = params.sortDirection || 'asc';
+            const sortDirection = params.sortDirection || 'ASC';
             
             items.sort((a, b) => {
                 const aValue = a[sortField as keyof UserPayeeChangeHistoryItem];
@@ -906,14 +774,14 @@ export class MockReportService extends BaseMockService implements IReportService
                 
                 // Handle undefined values
                 if (aValue === undefined && bValue === undefined) return 0;
-                if (aValue === undefined) return sortDirection.toLowerCase() === 'asc' ? -1 : 1;
-                if (bValue === undefined) return sortDirection.toLowerCase() === 'asc' ? 1 : -1;
+                if (aValue === undefined) return sortDirection.toLowerCase() === 'ASC' ? -1 : 1;
+                if (bValue === undefined) return sortDirection.toLowerCase() === 'ASC' ? 1 : -1;
                 
                 if (aValue < bValue) {
-                    return sortDirection.toLowerCase() === 'asc' ? -1 : 1;
+                    return sortDirection.toLowerCase() === 'ASC' ? -1 : 1;
                 }
                 if (aValue > bValue) {
-                    return sortDirection.toLowerCase() === 'asc' ? 1 : -1;
+                    return sortDirection.toLowerCase() === 'ASC' ? 1 : -1;
                 }
                 return 0;
             });
@@ -1011,7 +879,7 @@ export class MockReportService extends BaseMockService implements IReportService
                 comment: i % 5 === 0 ? `Comment for posting ${i}` : undefined,
                 glCode: `GL${1000 + (i % 5)}`,
                 runID: `RUN${600000 + (i % 8)}`,
-                errorCode: i % 10 === 0 ? `ERR${i % 5}` : undefined,
+                errorCode: i % 10 === 0 ? `ERR-${i % 5}` : undefined,
                 errorDesc: i % 10 === 0 ? `Error description ${i}` : undefined,
                 sourceApp: i % 2 === 0 ? 'BillPay' : 'CoreBanking',
                 entryDate: entryDate.toISOString(),
@@ -1025,7 +893,7 @@ export class MockReportService extends BaseMockService implements IReportService
         // Sort the items if sort parameters are provided
         if (params.sortColumn) {
             const sortField = params.sortColumn.charAt(0).toLowerCase() + params.sortColumn.slice(1);
-            const sortDirection = params.sortDirection || 'asc';
+            const sortDirection = params.sortDirection || 'ASC';
             
             items.sort((a, b) => {
                 const aValue = a[sortField as keyof OnUsPostingsItem];
@@ -1033,14 +901,14 @@ export class MockReportService extends BaseMockService implements IReportService
                 
                 // Handle undefined values
                 if (aValue === undefined && bValue === undefined) return 0;
-                if (aValue === undefined) return sortDirection.toLowerCase() === 'asc' ? -1 : 1;
-                if (bValue === undefined) return sortDirection.toLowerCase() === 'asc' ? 1 : -1;
+                if (aValue === undefined) return sortDirection.toLowerCase() === 'ASC' ? -1 : 1;
+                if (bValue === undefined) return sortDirection.toLowerCase() === 'ASC' ? 1 : -1;
                 
                 if (aValue < bValue) {
-                    return sortDirection.toLowerCase() === 'asc' ? -1 : 1;
+                    return sortDirection.toLowerCase() === 'ASC' ? -1 : 1;
                 }
                 if (aValue > bValue) {
-                    return sortDirection.toLowerCase() === 'asc' ? 1 : -1;
+                    return sortDirection.toLowerCase() === 'ASC' ? 1 : -1;
                 }
                 return 0;
             });
@@ -1092,17 +960,18 @@ export class MockReportService extends BaseMockService implements IReportService
                 const aValue = a[params.sortColumn.toLowerCase() as keyof StatusesWithNotificationsItem];
                 const bValue = b[params.sortColumn.toLowerCase() as keyof StatusesWithNotificationsItem];
                 
+                // Handle undefined values
                 if (aValue === null || aValue === undefined) return 1;
                 if (bValue === null || bValue === undefined) return -1;
                 
                 if (typeof aValue === 'string' && typeof bValue === 'string') {
-                    return params.sortDirection === 'asc' 
+                    return params.sortDirection === 'ASC' 
                         ? aValue.localeCompare(bValue) 
                         : bValue.localeCompare(aValue);
                 }
                 
                 if (typeof aValue === 'number' && typeof bValue === 'number') {
-                    return params.sortDirection === 'asc' 
+                    return params.sortDirection === 'ASC' 
                         ? aValue - bValue 
                         : bValue - aValue;
                 }
@@ -1153,13 +1022,13 @@ export class MockReportService extends BaseMockService implements IReportService
                 if (bValue === null || bValue === undefined) return -1;
                 
                 if (typeof aValue === 'string' && typeof bValue === 'string') {
-                    return params.sortDirection === 'asc' 
+                    return params.sortDirection === 'ASC' 
                         ? aValue.localeCompare(bValue) 
                         : bValue.localeCompare(aValue);
                 }
                 
                 if (typeof aValue === 'number' && typeof bValue === 'number') {
-                    return params.sortDirection === 'asc' 
+                    return params.sortDirection === 'ASC' 
                         ? aValue - bValue 
                         : bValue - aValue;
                 }
@@ -1273,6 +1142,393 @@ export class MockReportService extends BaseMockService implements IReportService
             totalCount: items.length,
             totalPages: Math.ceil(items.length / pageSize),
             hasNext: pageNumber < Math.ceil(items.length / pageSize),
+            hasPrevious: pageNumber > 1
+        };
+    }
+
+    async getPayeeReport(params: PayeeRequest): Promise<PayeeItemPagedResponse> {
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+        
+        // Validate required parameters based on search type
+        switch (params.searchType) {
+            case PayeeSearchType.Member:
+                if (!params.memberID) throw new Error('MemberID is required for this search type');
+                break;
+            case PayeeSearchType.Payment:
+                if (!params.paymentID) throw new Error('PaymentID is required for this search type');
+                break;
+            case PayeeSearchType.RecurringPayment:
+                if (!params.recurringPaymentID) throw new Error('RecurringPaymentID is required for this search type');
+                break;
+            case PayeeSearchType.UserPayeeList:
+                if (!params.userPayeeListID) throw new Error('UserPayeeListID is required for this search type');
+                break;
+            case PayeeSearchType.Payee:
+                if (!params.payeeID) throw new Error('PayeeID is required for this search type');
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+        
+        // Generate mock data
+        const mockItems: PayeeItem[] = Array.from({ length: 25 }, (_, i) => ({
+            payeeID: `PAY${3000 + i}`,
+            payeeName: `Payee ${3000 + i}`,
+            memberID: `MEM${2000 + i}`,
+            memberName: `Member ${2000 + i}`,
+            accountNumber: `ACCT${5000 + i}`,
+            dateAdded: new Date(2023, 0, i + 1).toISOString(),
+            status: i % 3 === 0 ? 'Active' : i % 3 === 1 ? 'Inactive' : 'Pending',
+            paymentMethod: i % 2 === 0 ? 'Electronic' : 'Check',
+            address: `${1000 + i} Main St`,
+            city: `City ${i}`,
+            state: `State ${i % 50}`,
+            zipCode: `${10000 + i}`,
+            phoneNumber: `(555) ${100 + i}-${1000 + i}`
+        }));
+        
+        return {
+            items: mockItems,
+            pageNumber: params.pageNumber || 1,
+            pageSize: params.pageSize || 20,
+            totalCount: 100,
+            totalPages: 5,
+            hasNext: (params.pageNumber || 1) < 5,
+            hasPrevious: (params.pageNumber || 1) > 1
+        };
+    }
+
+    async getPaymentReport(params: PaymentRequest): Promise<PaymentItemPagedResponse> {
+        // Validate required parameters based on search type
+        switch (params.searchType) {
+            case PaymentSearchType.Member:
+                if (!params.memberID) throw new Error('MemberID is required for this search type');
+                break;
+            case PaymentSearchType.Payment:
+                if (!params.paymentID) throw new Error('PaymentID is required for this search type');
+                break;
+            case PaymentSearchType.RecurringPayment:
+                if (!params.recurringPaymentID) throw new Error('RecurringPaymentID is required for this search type');
+                break;
+            case PaymentSearchType.UserPayeeList:
+                if (!params.userPayeeListID) throw new Error('UserPayeeListID is required for this search type');
+                break;
+            case PaymentSearchType.Payee:
+                if (!params.payeeID) throw new Error('PayeeID is required for this search type');
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+
+        // Mock data
+        const mockPayments: PaymentItem[] = [
+            {
+                paymentID: 'P12345',
+                memberID: '54321',
+                amount: 125.50,
+                payeeName: 'Electric Company',
+                dateProcessed: '2023-01-15T10:30:00Z',
+                dateScheduled: '2023-01-15T00:00:00Z',
+                status: 'Processed',
+                paymentMethod: 'ACH',
+                accountNumber: '****1234'
+            },
+            {
+                paymentID: 'P12346',
+                memberID: '54321',
+                amount: 75.25,
+                payeeName: 'Water Utility',
+                dateProcessed: '2023-01-20T14:45:00Z',
+                dateScheduled: '2023-01-20T00:00:00Z',
+                status: 'Processed',
+                paymentMethod: 'ACH',
+                accountNumber: '****5678'
+            },
+            {
+                paymentID: 'P12347',
+                memberID: '54322',
+                amount: 1200.00,
+                payeeName: 'Mortgage Company',
+                dateProcessed: '2023-01-25T09:15:00Z',
+                dateScheduled: '2023-01-25T00:00:00Z',
+                status: 'Processed',
+                paymentMethod: 'ACH',
+                accountNumber: '****9012'
+            },
+            {
+                paymentID: 'P12348',
+                memberID: '54323',
+                amount: 45.99,
+                payeeName: 'Internet Provider',
+                dateProcessed: '2023-01-30T16:20:00Z',
+                dateScheduled: '2023-01-30T00:00:00Z',
+                status: 'Processed',
+                paymentMethod: 'ACH',
+                accountNumber: '****3456'
+            },
+            {
+                paymentID: 'P12349',
+                memberID: '54324',
+                amount: 89.75,
+                payeeName: 'Cell Phone Company',
+                dateProcessed: '2023-02-05T11:10:00Z',
+                dateScheduled: '2023-02-05T00:00:00Z',
+                status: 'Processed',
+                paymentMethod: 'ACH',
+                accountNumber: '****7890'
+            }
+        ];
+
+        // Calculate pagination
+        const pageSize = params.pageSize || 20;
+        const pageNumber = params.pageNumber || 1;
+        const startIndex = (pageNumber - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const totalCount = mockPayments.length;
+        const totalPages = Math.ceil(totalCount / pageSize);
+
+        // Return paginated response
+        return {
+            items: mockPayments.slice(startIndex, endIndex),
+            pageNumber,
+            pageSize,
+            totalCount,
+            totalPages,
+            hasNext: pageNumber < totalPages,
+            hasPrevious: pageNumber > 1,
+            sortColumn: params.sortColumn,
+            sortDirection: params.sortDirection
+        };
+    }
+
+    async getPaymentClearReport(params: PaymentClearRequest): Promise<PaymentClearItemPagedResponse> {
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+
+        // Validate required parameters based on search type
+        switch (params.searchType) {
+            case PaymentClearSearchType.Member:
+                if (!params.memberID) throw new Error('MemberID is required for this search type');
+                break;
+            case PaymentClearSearchType.Payment:
+                if (!params.paymentID) throw new Error('PaymentID is required for this search type');
+                break;
+            case PaymentClearSearchType.RecurringPayment:
+                if (!params.recurringPaymentID) throw new Error('RecurringPaymentID is required for this search type');
+                break;
+            case PaymentClearSearchType.UserPayeeList:
+                if (!params.userPayeeListID) throw new Error('UserPayeeListID is required for this search type');
+                break;
+            case PaymentClearSearchType.Payee:
+                if (!params.payeeID) throw new Error('PayeeID is required for this search type');
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+
+        // Mock data
+        const mockPaymentClears: PaymentClearItem[] = [
+            {
+                paymentID: 'P12345',
+                memberID: '54321',
+                amount: 125.50,
+                payeeName: 'Electric Company',
+                clearedDate: '2023-01-17T10:30:00Z',
+                dateProcessed: '2023-01-15T10:30:00Z',
+                paymentMethod: 'ACH',
+                accountNumber: '****1234',
+                checkNumber: 'C001'
+            },
+            {
+                paymentID: 'P12346',
+                memberID: '54321',
+                amount: 75.25,
+                payeeName: 'Water Utility',
+                clearedDate: '2023-01-22T14:45:00Z',
+                dateProcessed: '2023-01-20T14:45:00Z',
+                paymentMethod: 'ACH',
+                accountNumber: '****5678',
+                checkNumber: 'C002'
+            },
+            {
+                paymentID: 'P12347',
+                memberID: '54322',
+                amount: 1200.00,
+                payeeName: 'Mortgage Company',
+                clearedDate: '2023-01-27T09:15:00Z',
+                dateProcessed: '2023-01-25T09:15:00Z',
+                paymentMethod: 'ACH',
+                accountNumber: '****9012',
+                checkNumber: 'C003'
+            },
+            {
+                paymentID: 'P12348',
+                memberID: '54323',
+                amount: 45.99,
+                payeeName: 'Internet Provider',
+                clearedDate: '2023-02-01T16:20:00Z',
+                dateProcessed: '2023-01-30T16:20:00Z',
+                paymentMethod: 'ACH',
+                accountNumber: '****3456',
+                checkNumber: 'C004'
+            },
+            {
+                paymentID: 'P12349',
+                memberID: '54324',
+                amount: 89.75,
+                payeeName: 'Cell Phone Company',
+                clearedDate: '2023-02-07T11:10:00Z',
+                dateProcessed: '2023-02-05T11:10:00Z',
+                paymentMethod: 'ACH',
+                accountNumber: '****7890',
+                checkNumber: 'C005'
+            }
+        ];
+
+        // Calculate pagination
+        const pageSize = params.pageSize || 20;
+        const pageNumber = params.pageNumber || 1;
+        const startIndex = (pageNumber - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const totalCount = mockPaymentClears.length;
+        const totalPages = Math.ceil(totalCount / pageSize);
+
+        // Return paginated response
+        return {
+            items: mockPaymentClears.slice(startIndex, endIndex),
+            pageNumber,
+            pageSize,
+            totalCount,
+            totalPages,
+            hasNext: pageNumber < totalPages,
+            hasPrevious: pageNumber > 1,
+            sortColumn: params.sortColumn,
+            sortDirection: params.sortDirection
+        };
+    }
+
+    async getRecurringPaymentReport(params: RecurringPaymentParams): Promise<RecurringPaymentItemPagedResponse> {
+        await this.delay();
+        return this.generateMockRecurringPaymentResponse(params);
+    }
+
+    async getUserPayeeReport(params: UserPayeeParams): Promise<UserPayeeItemPagedResponse> {
+        await this.delay();
+        return this.generateMockUserPayeeResponse(params);
+    }
+
+    // Private helper methods
+    private generateMockRecurringPaymentResponse(params: RecurringPaymentParams): RecurringPaymentItemPagedResponse {
+        // Create mock data based on search parameters
+        const totalItems = 25;
+        const pageSize = params.pageSize || 10;
+        const pageNumber = params.pageNumber || 1;
+        const totalPages = Math.ceil(totalItems / pageSize);
+        
+        // Generate items for the current page
+        const startIndex = (pageNumber - 1) * pageSize;
+        const endIndex = Math.min(startIndex + pageSize, totalItems);
+        const items = [];
+        
+        for (let i = startIndex; i < endIndex; i++) {
+            const mockItem = {
+                recurringPaymentID: `RP-${100000 + i}`,
+                memberID: params.searchType === RecurringPaymentSearchType.Member ? params.memberID : `M-${200000 + i}`,
+                payeeID: params.searchType === RecurringPaymentSearchType.Payee ? params.payeeID : `P-${300000 + i}`,
+                payeeName: `Mock Payee ${i + 1}`,
+                amount: 100 + (i * 5.25),
+                frequency: ['Weekly', 'Biweekly', 'Monthly', 'Quarterly'][i % 4],
+                nextPaymentDate: new Date(Date.now() + ((i + 1) * 24 * 60 * 60 * 1000)).toISOString(),
+                accountID: `ACC-${400000 + i}`,
+                accountName: `Account ${i + 1}`,
+                status: ['Active', 'Pending', 'Completed'][i % 3]
+            };
+            items.push(mockItem);
+        }
+        
+        // Apply sorting if specified
+        if (params.sortColumn && params.sortDirection) {
+            items.sort((a, b) => {
+                let comparison = 0;
+                
+                switch (params.sortColumn) {
+                    case RecurringPaymentSortColumn.RecurringPaymentID:
+                        comparison = a.recurringPaymentID.localeCompare(b.recurringPaymentID);
+                        break;
+                    case RecurringPaymentSortColumn.Amount:
+                        comparison = a.amount - b.amount;
+                        break;
+                    case RecurringPaymentSortColumn.Frequency:
+                        comparison = a.frequency.localeCompare(b.frequency);
+                        break;
+                    case RecurringPaymentSortColumn.NextPaymentDate:
+                        comparison = new Date(a.nextPaymentDate).getTime() - new Date(b.nextPaymentDate).getTime();
+                        break;
+                    default:
+                        // Default to sorting by nextPaymentDate
+                        comparison = new Date(a.nextPaymentDate).getTime() - new Date(b.nextPaymentDate).getTime();
+                }
+                
+                // Apply sort direction
+                return params.sortDirection === 'ASC' ? comparison : -comparison;
+            });
+        }
+        
+        // Return paged response
+        return {
+            items,
+            pageNumber,
+            pageSize,
+            totalCount: totalItems,
+            totalPages,
+            hasNext: pageNumber < totalPages,
+            hasPrevious: pageNumber > 1,
+            sortColumn: params.sortColumn,
+            sortDirection: params.sortDirection
+        };
+    }
+
+    private generateMockUserPayeeResponse(params: UserPayeeParams): UserPayeeItemPagedResponse {
+        // Create mock data based on search parameters
+        const totalItems = 25;
+        const pageSize = params.pageSize || 10;
+        const pageNumber = params.pageNumber || 1;
+        const totalPages = Math.ceil(totalItems / pageSize);
+        
+        // Generate items for the current page
+        const startIndex = (pageNumber - 1) * pageSize;
+        const endIndex = Math.min(startIndex + pageSize, totalItems);
+        const items = [];
+        
+        for (let i = startIndex; i < endIndex; i++) {
+            const mockItem = {
+                userPayeeListID: `UPL-${100000 + i}`,
+                memberID: params.searchType === UserPayeeSearchType.Member ? params.memberID : `M-${200000 + i}`,
+                payeeID: params.searchType === UserPayeeSearchType.Payee ? params.payeeID : `P-${300000 + i}`,
+                payeeName: `Mock Payee ${i + 1}`,
+                dateAdded: new Date(Date.now() - ((i + 1) * 24 * 60 * 60 * 1000)).toISOString(),
+                accountID: `ACC-${400000 + i}`,
+                accountName: `Account ${i + 1}`,
+                status: ['Active', 'Inactive'][i % 2],
+                address: `${1000 + i} Main St`,
+                city: `City ${i}`,
+                state: `ST`,
+                zipCode: `${10000 + i}`
+            };
+            items.push(mockItem);
+        }
+        
+        // Return paged response
+        return {
+            items,
+            pageNumber,
+            pageSize,
+            totalCount: totalItems,
+            totalPages,
+            hasNext: pageNumber < totalPages,
             hasPrevious: pageNumber > 1
         };
     }

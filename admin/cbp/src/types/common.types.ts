@@ -23,7 +23,7 @@ export type Status = 'active' | 'inactive' | 'pending' | 'suspended';
 /**
  * Common sort direction type
  */
-export type SortDirection = 'asc' | 'desc';
+export type SortDirection = 'ASC' | 'DESC';
 /**
  * Common sort options interface
  */

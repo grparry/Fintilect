@@ -66,6 +66,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import GroupIcon from '@mui/icons-material/Group';
 import EventIcon from '@mui/icons-material/Event';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import RepeatIcon from '@mui/icons-material/Repeat';
+import ContactsIcon from '@mui/icons-material/Contacts';
 
 export const navigationConfig: NavigationConfig = {
   sections: [
@@ -158,13 +161,6 @@ export const navigationConfig: NavigationConfig = {
               resourceId: 'route:billPay.reports.activeUserCount' as ResourceId
             },
             {
-              id: 'billpay-search-report',
-              title: 'BillPay Search',
-              path: '/admin/bill-pay/reports/billpay-search',
-              icon: SearchIcon,
-              resourceId: 'route:billPay.reports.billPaySearch' as ResourceId
-            },
-            {
               id: 'error-recap-report',
               title: 'Error Recap',
               path: '/admin/bill-pay/reports/error-recap',
@@ -184,6 +180,20 @@ export const navigationConfig: NavigationConfig = {
               path: '/admin/bill-pay/reports/global-holidays',
               icon: EventIcon,
               resourceId: 'route:billPay.reports.globalHolidays' as ResourceId
+            },
+            {
+              id: 'payee-report',
+              title: 'Payee Report',
+              path: '/admin/bill-pay/reports/payee',
+              icon: SearchIcon,
+              resourceId: 'route:billPay.reports.payee' as ResourceId
+            },
+            {
+              id: 'payment-report',
+              title: 'Payment Report',
+              path: '/admin/bill-pay/reports/payment',
+              icon: PaymentIcon,
+              resourceId: 'route:billPay.reports.payment' as ResourceId
             },
             {
               id: 'large-payment-report',
@@ -254,6 +264,27 @@ export const navigationConfig: NavigationConfig = {
               path: '/admin/bill-pay/reports/user-payee-change-history',
               icon: HistoryIcon,
               resourceId: 'route:billPay.reports.userPayeeChangeHistory' as ResourceId
+            },
+            {
+              id: 'payment-clear-report',
+              title: 'Payment Clear Report',
+              path: '/admin/bill-pay/reports/payment-clear',
+              icon: ConfirmationNumberIcon,
+              resourceId: 'route:billPay.reports.paymentClear' as ResourceId
+            },
+            {
+              id: 'recurring-payment-report',
+              title: 'Recurring Payment Report',
+              path: '/admin/bill-pay/reports/recurring-payment',
+              icon: RepeatIcon,
+              resourceId: 'route:billPay.reports.recurringPayment' as ResourceId
+            },
+            {
+              id: 'user-payee-report',
+              title: 'User Payee Report',
+              path: '/admin/bill-pay/reports/user-payee',
+              icon: ContactsIcon,
+              resourceId: 'route:billPay.reports.userPayee' as ResourceId
             }
           ]
         },

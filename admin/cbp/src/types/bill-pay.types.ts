@@ -102,7 +102,7 @@ export interface ExceptionFilters {
   page?: number;
   limit?: number;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: 'ASC' | 'DESC';
 }
 
 export interface FISExceptionFilters extends ExceptionFilters {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -6,6 +6,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import ReportContainer from '../components/ReportContainer';
 import ReportTable from '../components/ReportTable';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import {
   UserPayeeChangeHistorySearchType,
   USER_PAYEE_CHANGE_HISTORY_SEARCH_TYPES,
@@ -31,56 +33,155 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
   const [sortColumn, setSortColumn] = useState<UserPayeeChangeHistorySortColumn>(
     UserPayeeChangeHistorySortColumn.UpdatedOn
   );
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('ASC');
 
   // Column definitions for the report table
   const columns = [
     { 
       key: 'memberID', 
       label: 'Member ID',
-      sortable: true
+      sortable: true,
+      sortKey: UserPayeeChangeHistorySortColumn.MemberID,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Member ID
+          {sortColumn === UserPayeeChangeHistorySortColumn.MemberID && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'userPayeeListId', 
       label: 'User Payee List ID',
-      sortable: true
+      sortable: true,
+      sortKey: UserPayeeChangeHistorySortColumn.UserPayeeListId,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          User Payee List ID
+          {sortColumn === UserPayeeChangeHistorySortColumn.UserPayeeListId && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'payeeName', 
       label: 'Payee Name',
-      sortable: true
+      sortable: true,
+      sortKey: UserPayeeChangeHistorySortColumn.PayeeName,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Payee Name
+          {sortColumn === UserPayeeChangeHistorySortColumn.PayeeName && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'payeeId', 
       label: 'Payee ID',
-      sortable: true
+      sortable: true,
+      sortKey: UserPayeeChangeHistorySortColumn.PayeeId,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Payee ID
+          {sortColumn === UserPayeeChangeHistorySortColumn.PayeeId && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'updatedOn', 
       label: 'Updated On',
       sortable: true,
+      sortKey: UserPayeeChangeHistorySortColumn.UpdatedOn,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Updated On
+          {sortColumn === UserPayeeChangeHistorySortColumn.UpdatedOn && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      ),
       render: (value: any) => value ? dayjs(value).format('MM/DD/YYYY') : 'N/A'
     },
     { 
       key: 'changeType', 
       label: 'Change Type',
-      sortable: true
+      sortable: true,
+      sortKey: UserPayeeChangeHistorySortColumn.ChangeType,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Change Type
+          {sortColumn === UserPayeeChangeHistorySortColumn.ChangeType && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'updatedBy', 
       label: 'Updated By',
-      sortable: true
+      sortable: true,
+      sortKey: UserPayeeChangeHistorySortColumn.UpdatedBy,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Updated By
+          {sortColumn === UserPayeeChangeHistorySortColumn.UpdatedBy && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
     },
     { 
       key: 'paymentMethod', 
       label: 'Payment Method',
       sortable: true,
+      sortKey: UserPayeeChangeHistorySortColumn.PaymentMethod,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Payment Method
+          {sortColumn === UserPayeeChangeHistorySortColumn.PaymentMethod && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      ),
       render: (value: any) => value || 'N/A'
     },
     { 
       key: 'active', 
       label: 'Active',
       sortable: true,
+      sortKey: UserPayeeChangeHistorySortColumn.Active,
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Active
+          {sortColumn === UserPayeeChangeHistorySortColumn.Active && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      ),
       render: (value: any) => value === true ? 'Yes' : value === false ? 'No' : 'N/A'
     },
     { 
@@ -177,24 +278,26 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
 
   /**
    * Handle sort change
-   * @param column Column to sort by
+   * @param columnKey Column key to sort by
    */
-  const handleSortChange = (column: string) => {
-    if (column in UserPayeeChangeHistorySortColumn) {
-      const newSortColumn = column as UserPayeeChangeHistorySortColumn;
-      
+  const handleSort = (columnKey: string) => {
+    const columnDef = columns.find(col => col.key === columnKey);
+    if (columnDef && columnDef.sortKey) {
+      const newSortColumn = columnDef.sortKey;
       // If clicking the same column, toggle direction
       if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
       } else {
-        // Default to descending for date columns, ascending for others
-        const isDateColumn = newSortColumn === UserPayeeChangeHistorySortColumn.UpdatedOn;
-        setSortDirection(isDateColumn ? 'desc' : 'asc');
         setSortColumn(newSortColumn);
+        setSortDirection('DESC'); // Initial sort is descending
       }
       
-      // Re-run report with new sort
-      runReport(pageNumber);
+      // Reset to page 1 when sort changes
+      if (pageNumber === 1) {
+        runReport(1);
+      } else {
+        setPageNumber(1);
+      }
     }
   };
 
@@ -298,6 +401,12 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
     );
   };
 
+  useEffect(() => {
+    if (data) {
+      runReport(pageNumber);
+    }
+  }, [sortColumn, sortDirection]);
+
   return (
     <ReportContainer
       title="User Payee Change History Report"
@@ -349,7 +458,7 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
               onPageChange: handlePageChange,
               onPageSizeChange: (newPageSize) => setPageSize(newPageSize)
             }}
-            onSort={handleSortChange}
+            onSort={handleSort}
           />
         </Box>
       )}

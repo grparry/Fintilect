@@ -1,7 +1,6 @@
 import { IReportService } from '../../interfaces/IReportService';
 import { PaymentActivityRequest, PaymentActivityItemPagedResponse } from '../../../utils/reports/paymentActivity';
 import { ErrorRecapRequest, ErrorRecapItemPagedResponse, ErrorRecapSearchType } from '../../../utils/reports/errorRecap';
-import { BillPaySearchRequest, BillPaySearchItemPagedResponse, BillPaySearchType } from '../../../utils/reports/billPaySearch';
 import { ActiveUserCountRequest, ActiveUserCountItemPagedResponse, ActiveUserCountSearchType } from '../../../utils/reports/activeUserCount';
 import { FailedOnUsParams, FailedOnUsResponse, FailedOnUsSearchType } from '../../../utils/reports/failedOnUs';
 import { GlobalHolidaysParams, GlobalHolidaysResponse } from '../../../utils/reports/globalHolidays';
@@ -14,6 +13,11 @@ import { StatusesWithNotificationsParams, StatusesWithNotificationsResponse } fr
 import { LargePaymentParams, LargePaymentResponse } from '../../../utils/reports/largePayment';
 import { ProcessingConfirmationParams, ProcessingConfirmationResponse, ProcessingConfirmationSearchType } from '../../../utils/reports/processingConfirmation';
 import { ScheduledPaymentChangeHistoryParams, ScheduledPaymentChangeHistoryResponse, ScheduledPaymentChangeHistorySearchType } from '../../../utils/reports/scheduledPaymentChangeHistory';
+import { PayeeRequest, PayeeItemPagedResponse, PayeeSearchType } from '../../../utils/reports/payee';
+import { PaymentRequest, PaymentItemPagedResponse, PaymentSearchType } from '../../../utils/reports/payment';
+import { PaymentClearRequest, PaymentClearItemPagedResponse, PaymentClearSearchType } from '../../../utils/reports/paymentClear';
+import { RecurringPaymentParams, RecurringPaymentItemPagedResponse, RecurringPaymentSearchType } from '../../../utils/reports/recurringPayment';
+import { UserPayeeParams, UserPayeeItemPagedResponse, UserPayeeSearchType } from '../../../utils/reports/userPayee';
 import { BaseService } from './BaseService';
 import logger from '../../../utils/logger';
 
@@ -131,36 +135,6 @@ export class ReportService extends BaseService implements IReportService {
         return this.get<PaymentActivityItemPagedResponse>(`/PaymentActivity?${queryString}`);
     }
 
-    async getBillPaySearch(params: BillPaySearchRequest): Promise<BillPaySearchItemPagedResponse> {
-        if (params.searchType === undefined) {
-            throw new Error('SearchType is a required parameter');
-        }
-
-        if (!params.id) {
-            throw new Error('ID is a required parameter');
-        }
-
-        if (params.reportType === undefined) {
-            throw new Error('ReportType is a required parameter');
-        }
-
-        // For BillPay Search, we need to use POST with a request body
-        const requestBody = {
-            SearchType: params.searchType,
-            Id: params.id,
-            Days: params.days,
-            ReportType: params.reportType,
-            SortColumn: params.sortColumn,
-            PageNumber: params.pageNumber || 1,
-            PageSize: params.pageSize || 20,
-            SortDirection: params.sortDirection || 'ASC'
-        };
-
-        logger.info(`BillPaySearch request with body: ${JSON.stringify(requestBody)}`);
-        
-        return this.post<BillPaySearchItemPagedResponse>('/BillPaySearch', requestBody);
-    }
-
     async getActiveUserCount(params: ActiveUserCountRequest): Promise<ActiveUserCountItemPagedResponse> {
         if (params.searchType === undefined) {
             throw new Error('SearchType is a required parameter');
@@ -172,10 +146,6 @@ export class ReportService extends BaseService implements IReportService {
         
         // Add specific parameters based on search type
         switch (params.searchType) {
-            case ActiveUserCountSearchType.MemberID:
-                if (!params.memberID) throw new Error('MemberID is required for this search type');
-                searchParams.append('MemberID', params.memberID);
-                break;
             case ActiveUserCountSearchType.DateRange:
                 if (!params.startDate || !params.endDate) {
                     throw new Error('StartDate and EndDate are required for DateRange search type');
@@ -213,12 +183,12 @@ export class ReportService extends BaseService implements IReportService {
         searchParams.append('PageNumber', params.pageNumber.toString());
         searchParams.append('PageSize', params.pageSize.toString());
         
-        if (params.memberID) {
-            searchParams.append('MemberID', params.memberID);
+        if (params.memberId) {
+            searchParams.append('MemberId', params.memberId);
         }
         
-        if (params.paymentID) {
-            searchParams.append('PaymentID', params.paymentID);
+        if (params.paymentId) {
+            searchParams.append('PaymentId', params.paymentId);
         }
         
         if (params.startDate) {
@@ -315,6 +285,7 @@ export class ReportService extends BaseService implements IReportService {
         
         logger.info(`PendingPayments request with body: ${JSON.stringify(requestBody)}`);
         
+        // Use POST method with the request body
         return this.post<PendingPaymentsResponse>('/PendingPayments', requestBody);
     }
 
@@ -690,6 +661,304 @@ export class ReportService extends BaseService implements IReportService {
         } catch (error) {
             logger.error('Error getting scheduled payment change history data', error);
             throw error;
+        }
+    }
+
+    async getPayeeReport(params: PayeeRequest): Promise<PayeeItemPagedResponse> {
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+
+        // Validate required parameters based on search type
+        switch (params.searchType) {
+            case PayeeSearchType.Member:
+                if (!params.memberID) throw new Error('MemberID is required for this search type');
+                break;
+            case PayeeSearchType.Payment:
+                if (!params.paymentID) throw new Error('PaymentID is required for this search type');
+                break;
+            case PayeeSearchType.RecurringPayment:
+                if (!params.recurringPaymentID) throw new Error('RecurringPaymentID is required for this search type');
+                break;
+            case PayeeSearchType.UserPayeeList:
+                if (!params.userPayeeListID) throw new Error('UserPayeeListID is required for this search type');
+                break;
+            case PayeeSearchType.Payee:
+                if (!params.payeeID) throw new Error('PayeeID is required for this search type');
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+        
+        // Create request body with all parameters
+        const requestBody = {
+            searchType: params.searchType,
+            memberID: params.memberID,
+            paymentID: params.paymentID,
+            recurringPaymentID: params.recurringPaymentID,
+            userPayeeListID: params.userPayeeListID,
+            payeeID: params.payeeID,
+            days: params.days,
+            pageNumber: params.pageNumber,
+            pageSize: params.pageSize,
+            sortColumn: params.sortColumn || 'PayeeName',
+            sortDirection: params.sortDirection || 'ASC'
+        };
+        
+        logger.info(`Payee report request with params: ${JSON.stringify(requestBody)}`);
+        
+        try {
+            // Use POST method with request body
+            return await this.post<PayeeItemPagedResponse>('/Payee', requestBody);
+        } catch (error) {
+            logger.error('Error fetching payee report', error);
+            throw error;
+        }
+    }
+
+    async getPaymentReport(params: PaymentRequest): Promise<PaymentItemPagedResponse> {
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+
+        // Validate required parameters based on search type
+        switch (params.searchType) {
+            case PaymentSearchType.Member:
+                if (!params.memberID) throw new Error('MemberID is required for this search type');
+                break;
+            case PaymentSearchType.Payment:
+                if (!params.paymentID) throw new Error('PaymentID is required for this search type');
+                break;
+            case PaymentSearchType.RecurringPayment:
+                if (!params.recurringPaymentID) throw new Error('RecurringPaymentID is required for this search type');
+                break;
+            case PaymentSearchType.UserPayeeList:
+                if (!params.userPayeeListID) throw new Error('UserPayeeListID is required for this search type');
+                break;
+            case PaymentSearchType.Payee:
+                if (!params.payeeID) throw new Error('PayeeID is required for this search type');
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+        
+        // Create request body with all parameters
+        const requestBody = {
+            searchType: params.searchType,
+            memberID: params.memberID,
+            paymentID: params.paymentID,
+            recurringPaymentID: params.recurringPaymentID,
+            userPayeeListID: params.userPayeeListID,
+            payeeID: params.payeeID,
+            days: params.days,
+            pageNumber: params.pageNumber,
+            pageSize: params.pageSize,
+            sortColumn: params.sortColumn || 'DateProcessed',
+            sortDirection: params.sortDirection || 'DESC'
+        };
+        
+        logger.info(`Payment report request with params: ${JSON.stringify(requestBody)}`);
+        
+        try {
+            // Use POST method with request body
+            return await this.post<PaymentItemPagedResponse>('/Payment', requestBody);
+        } catch (error) {
+            logger.error('Error fetching payment report', error);
+            throw error;
+        }
+    }
+
+    async getPaymentClearReport(params: PaymentClearRequest): Promise<PaymentClearItemPagedResponse> {
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+
+        // Validate required parameters based on search type
+        switch (params.searchType) {
+            case PaymentClearSearchType.Member:
+                if (!params.memberID) throw new Error('MemberID is required for this search type');
+                break;
+            case PaymentClearSearchType.Payment:
+                if (!params.paymentID) throw new Error('PaymentID is required for this search type');
+                break;
+            case PaymentClearSearchType.RecurringPayment:
+                if (!params.recurringPaymentID) throw new Error('RecurringPaymentID is required for this search type');
+                break;
+            case PaymentClearSearchType.UserPayeeList:
+                if (!params.userPayeeListID) throw new Error('UserPayeeListID is required for this search type');
+                break;
+            case PaymentClearSearchType.Payee:
+                if (!params.payeeID) throw new Error('PayeeID is required for this search type');
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+        
+        // Create request body with all parameters
+        const requestBody = {
+            searchType: params.searchType,
+            memberID: params.memberID,
+            paymentID: params.paymentID,
+            recurringPaymentID: params.recurringPaymentID,
+            userPayeeListID: params.userPayeeListID,
+            payeeID: params.payeeID,
+            days: params.days,
+            pageNumber: params.pageNumber,
+            pageSize: params.pageSize,
+            sortColumn: params.sortColumn || 'ClearedDate',
+            sortDirection: params.sortDirection || 'DESC'
+        };
+        
+        logger.info(`Payment clear report request with params: ${JSON.stringify(requestBody)}`);
+        
+        try {
+            // Use POST method with request body
+            return await this.post<PaymentClearItemPagedResponse>('/PaymentClear', requestBody);
+        } catch (error) {
+            logger.error('Error fetching payment clear report', error);
+            throw error;
+        }
+    }
+
+    async getRecurringPaymentReport(params: RecurringPaymentParams): Promise<RecurringPaymentItemPagedResponse> {
+        this.validateRecurringPaymentParams(params);
+        
+        // Create request body with all parameters
+        const requestBody = {
+            searchType: params.searchType,
+            memberID: params.memberID,
+            paymentID: params.paymentID,
+            recurringPaymentID: params.recurringPaymentID,
+            userPayeeListID: params.userPayeeListID,
+            payeeID: params.payeeID,
+            days: params.days,
+            pageNumber: params.pageNumber,
+            pageSize: params.pageSize,
+            sortColumn: params.sortColumn || 'NextPaymentDate',
+            sortDirection: params.sortDirection || 'DESC'
+        };
+        
+        logger.info(`Recurring payment report request with params: ${JSON.stringify(requestBody)}`);
+        
+        try {
+            // Use POST method with request body
+            return await this.post<RecurringPaymentItemPagedResponse>('/RecurringPayment', requestBody);
+        } catch (error) {
+            logger.error('Error fetching recurring payment report', error);
+            throw error;
+        }
+    }
+
+    async getUserPayeeReport(params: UserPayeeParams): Promise<UserPayeeItemPagedResponse> {
+        this.validateUserPayeeParams(params);
+        
+        // Create request body with all parameters
+        const requestBody = {
+            searchType: params.searchType,
+            memberID: params.memberID,
+            paymentID: params.paymentID,
+            recurringPaymentID: params.recurringPaymentID,
+            userPayeeListID: params.userPayeeListID,
+            payeeID: params.payeeID,
+            days: params.days,
+            pageNumber: params.pageNumber,
+            pageSize: params.pageSize,
+            sortColumn: params.sortColumn || 'DateAdded',
+            sortDirection: params.sortDirection || 'DESC'
+        };
+        
+        logger.info(`User payee report request with params: ${JSON.stringify(requestBody)}`);
+        
+        try {
+            // Use POST method with request body
+            return await this.post<UserPayeeItemPagedResponse>('/UserPayee', requestBody);
+        } catch (error) {
+            logger.error('Error fetching user payee report', error);
+            throw error;
+        }
+    }
+
+    private validateRecurringPaymentParams(params: RecurringPaymentParams): void {
+        if (!params.searchType) {
+            throw new Error('SearchType is required');
+        }
+
+        // Validate required parameters based on search type
+        switch (params.searchType) {
+            case RecurringPaymentSearchType.Member:
+                if (!params.memberID) {
+                    throw new Error('Member ID is required for Member search type');
+                }
+                break;
+            case RecurringPaymentSearchType.Payment:
+                if (!params.paymentID) {
+                    throw new Error('Payment ID is required for Payment search type');
+                }
+                break;
+            case RecurringPaymentSearchType.RecurringPayment:
+                if (!params.recurringPaymentID) {
+                    throw new Error('Recurring Payment ID is required for Recurring Payment search type');
+                }
+                break;
+            case RecurringPaymentSearchType.UserPayeeList:
+                if (!params.userPayeeListID) {
+                    throw new Error('User Payee List ID is required for User Payee List search type');
+                }
+                break;
+            case RecurringPaymentSearchType.Payee:
+                if (!params.payeeID) {
+                    throw new Error('Payee ID is required for Payee search type');
+                }
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+
+        // Validate days
+        if (params.days < 1 || params.days > 3650) {
+            throw new Error('Days must be between 1 and 3650');
+        }
+    }
+
+    private validateUserPayeeParams(params: UserPayeeParams): void {
+        if (!params.searchType) {
+            throw new Error('SearchType is required');
+        }
+
+        // Validate required parameters based on search type
+        switch (params.searchType) {
+            case UserPayeeSearchType.Member:
+                if (!params.memberID) {
+                    throw new Error('Member ID is required for Member search type');
+                }
+                break;
+            case UserPayeeSearchType.Payment:
+                if (!params.paymentID) {
+                    throw new Error('Payment ID is required for Payment search type');
+                }
+                break;
+            case UserPayeeSearchType.RecurringPayment:
+                if (!params.recurringPaymentID) {
+                    throw new Error('Recurring Payment ID is required for Recurring Payment search type');
+                }
+                break;
+            case UserPayeeSearchType.UserPayeeList:
+                if (!params.userPayeeListID) {
+                    throw new Error('User Payee List ID is required for User Payee List search type');
+                }
+                break;
+            case UserPayeeSearchType.Payee:
+                if (!params.payeeID) {
+                    throw new Error('Payee ID is required for Payee search type');
+                }
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+
+        // Validate days
+        if (params.days < 1 || params.days > 3650) {
+            throw new Error('Days must be between 1 and 3650');
         }
     }
 }

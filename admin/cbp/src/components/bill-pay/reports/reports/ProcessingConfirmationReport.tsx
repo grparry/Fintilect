@@ -35,7 +35,7 @@ const ProcessingConfirmationReport: React.FC = () => {
   const [sortColumn, setSortColumn] = useState<ProcessingConfirmationSortColumn>(
     ProcessingConfirmationSortColumn.Start
   );
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('ASC');
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   
@@ -113,10 +113,10 @@ const ProcessingConfirmationReport: React.FC = () => {
       
       // If clicking the same column, toggle direction
       if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
       } else {
         setSortColumn(newSortColumn);
-        setSortDirection('asc');
+        setSortDirection('ASC');
       }
     }
   };
@@ -172,7 +172,7 @@ const ProcessingConfirmationReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Start Time
           {sortColumn === ProcessingConfirmationSortColumn.Start && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -189,7 +189,7 @@ const ProcessingConfirmationReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           End Time
           {sortColumn === ProcessingConfirmationSortColumn.End && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -206,7 +206,7 @@ const ProcessingConfirmationReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Message
           {sortColumn === ProcessingConfirmationSortColumn.Message && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}

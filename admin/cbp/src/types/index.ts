@@ -72,7 +72,7 @@ export interface PendingPayment {
 }
 export type PaymentStatus = 'pending' | 'completed' | 'failed';
 // Common utility types
-export type SortDirection = 'asc' | 'desc';
+export type SortDirection = 'ASC' | 'DESC';
 export interface SortOptions {
   field: string;
   direction: SortDirection;

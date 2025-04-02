@@ -33,7 +33,7 @@ const LargePaymentReport: React.FC = () => {
   const [sortColumn, setSortColumn] = useState<LargePaymentSortColumn>(
     LargePaymentSortColumn.Amount
   );
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
   
   // State for data
   const [data, setData] = useState<LargePaymentResponse | null>(null);
@@ -51,7 +51,7 @@ const LargePaymentReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Member ID
           {sortColumn === LargePaymentSortColumn.MemberID && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -68,7 +68,7 @@ const LargePaymentReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Amount
           {sortColumn === LargePaymentSortColumn.Amount && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -85,7 +85,7 @@ const LargePaymentReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Payee Name
           {sortColumn === LargePaymentSortColumn.PayeeName && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -102,7 +102,7 @@ const LargePaymentReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Status
           {sortColumn === LargePaymentSortColumn.Status && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -173,10 +173,10 @@ const LargePaymentReport: React.FC = () => {
       
       // If clicking the same column, toggle direction
       if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
       } else {
         setSortColumn(newSortColumn);
-        setSortDirection('asc');
+        setSortDirection('ASC');
       }
     }
   };

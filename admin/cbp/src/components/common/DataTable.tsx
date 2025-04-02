@@ -31,7 +31,7 @@ export interface DataTableProps<T extends GridValidRowModel> {
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
   onRowClick?: (row: T) => void;
-  onSortChange?: (field: keyof T, sort: 'asc' | 'desc') => void;
+  onSortChange?: (field: keyof T, sort: 'ASC' | 'DESC') => void;
   getRowId?: (row: T) => string | number;
   selectionModel?: GridRowSelectionModel;
   onSelectionModelChange?: (model: GridRowSelectionModel) => void;
@@ -111,7 +111,7 @@ const DataTable = <T extends GridValidRowModel>({
         field,
         sort
       });
-      onSortChange(field as keyof T, sort === 'desc' ? 'desc' : 'asc');
+      onSortChange(field as keyof T, sort === 'desc' ? 'DESC' : 'ASC');
     }
   };
 

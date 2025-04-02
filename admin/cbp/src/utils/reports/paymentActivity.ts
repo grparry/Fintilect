@@ -126,9 +126,16 @@ export const getPaymentActivity = async (
     searchType: searchTypeValue,
     pageNumber: params.pageNumber || 1,
     pageSize: params.pageSize || 20,
-    sortColumn: sortColumn,
-    sortDirection: params.sortDirection,
+    sortColumn: sortColumn
   };
+  
+  // Set sort direction as a separate property to avoid any encoding issues
+  // The API expects either 'ASC' or 'DESC' without any additional characters
+  if (sortDirection === 'ASC') {
+    request.sortDirection = 'ASC';
+  } else {
+    request.sortDirection = 'DESC';
+  }
 
   // Add specific parameters based on search type
   if ([
@@ -169,6 +176,10 @@ export const getPaymentActivity = async (
 
   // Log the request for debugging
   console.log('Payment Activity Request:', request);
+  console.log('Sort parameters being sent to API:', { 
+    sortColumn: request.sortColumn, 
+    sortDirection: request.sortDirection 
+  });
 
   return reportService.getPaymentActivity(request);
 };

@@ -62,7 +62,7 @@ export interface RecurringPaymentChangeHistoryParams {
     pageNumber: number;
     pageSize: number;
     sortColumn?: RecurringPaymentChangeHistorySortColumn;
-    sortDirection?: 'asc' | 'desc';
+    sortDirection?: 'ASC' | 'DESC';
 }
 
 /**

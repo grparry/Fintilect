@@ -96,7 +96,7 @@ export interface OnUsPostingsParams {
   pageNumber?: number;
   pageSize?: number;
   sortColumn?: OnUsPostingsSortColumn;
-  sortDirection?: 'asc' | 'desc';
+  sortDirection?: 'ASC' | 'DESC';
 }
 
 /**

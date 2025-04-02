@@ -66,7 +66,7 @@ export interface PendingPaymentsParams {
   pageNumber: number;
   pageSize: number;
   sortColumn?: PendingPaymentsSortColumn;
-  sortDirection?: 'asc' | 'desc';
+  sortDirection?: 'ASC' | 'DESC';
 }
 
 /**

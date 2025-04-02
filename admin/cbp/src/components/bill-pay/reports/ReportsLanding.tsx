@@ -23,6 +23,7 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import PeopleIcon from '@mui/icons-material/People';
+import ContactsIcon from '@mui/icons-material/Contacts';
 
 // Define report card interface
 interface ReportCardProps {
@@ -80,13 +81,6 @@ const ReportsLanding: React.FC = () => {
       implemented: true
     },
     {
-      title: 'BillPay Search',
-      description: 'Search for bill payments by various criteria',
-      icon: <SearchIcon />,
-      to: '/admin/bill-pay/reports/billpay-search',
-      implemented: true
-    },
-    {
       title: 'Error Recap',
       description: 'View error recap information',
       icon: <ErrorIcon />,
@@ -126,6 +120,34 @@ const ReportsLanding: React.FC = () => {
       description: 'View on us postings information',
       icon: <AccountBalanceIcon />,
       to: '/admin/bill-pay/reports/on-us-postings',
+      implemented: true
+    },
+    {
+      title: 'Payee Report',
+      description: 'View payee information',
+      icon: <SearchIcon />,
+      to: '/admin/bill-pay/reports/payee',
+      implemented: true
+    },
+    {
+      title: 'Payment Report',
+      description: 'View payment information',
+      icon: <PaymentIcon />,
+      to: '/admin/bill-pay/reports/payment',
+      implemented: true
+    },
+    {
+      title: 'Payment Clear Report',
+      description: 'View payment clear information',
+      icon: <ConfirmationNumberIcon />,
+      to: '/admin/bill-pay/reports/payment-clear',
+      implemented: true
+    },
+    {
+      title: 'Recurring Payment Report',
+      description: 'View recurring payment information',
+      icon: <RepeatIcon />,
+      to: '/admin/bill-pay/reports/recurring-payment',
       implemented: true
     },
     {
@@ -175,6 +197,13 @@ const ReportsLanding: React.FC = () => {
       description: 'View user payee change history',
       icon: <HistoryIcon />,
       to: '/admin/bill-pay/reports/user-payee-change-history',
+      implemented: true
+    },
+    {
+      title: 'User Payee Report',
+      description: 'View user payee information',
+      icon: <ContactsIcon />,
+      to: '/admin/bill-pay/reports/user-payee',
       implemented: true
     }
   ];

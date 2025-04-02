@@ -82,7 +82,7 @@ export interface UserPayeeChangeHistoryParams {
     pageNumber: number;
     pageSize: number;
     sortColumn?: UserPayeeChangeHistorySortColumn;
-    sortDirection?: 'asc' | 'desc';
+    sortDirection?: 'ASC' | 'DESC';
 }
 
 /**

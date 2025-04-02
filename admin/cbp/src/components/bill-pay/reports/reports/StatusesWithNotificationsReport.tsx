@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, Tooltip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import ReportContainer from '../components/ReportContainer';
 import ReportTable from '../components/ReportTable';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
   StatusesWithNotificationsSortColumn,
   STATUSES_WITH_NOTIFICATIONS_SORT_COLUMNS,
@@ -22,12 +23,16 @@ const StatusesWithNotificationsReport: React.FC = () => {
   const [sortColumn, setSortColumn] = useState<StatusesWithNotificationsSortColumn>(
     StatusesWithNotificationsSortColumn.StatusDescription
   );
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('ASC');
   
   // State for data
   const [data, setData] = useState<StatusesWithNotificationsResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  // State for notification text dialog
+  const [notificationTextDialogOpen, setNotificationTextDialogOpen] = useState<boolean>(false);
+  const [selectedNotificationText, setSelectedNotificationText] = useState<string>('');
 
   // Column definitions for the report table
   const columns = [
@@ -40,7 +45,7 @@ const StatusesWithNotificationsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Status Code
           {sortColumn === StatusesWithNotificationsSortColumn.StatusCode && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -56,7 +61,7 @@ const StatusesWithNotificationsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Status Description
           {sortColumn === StatusesWithNotificationsSortColumn.StatusDescription && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -73,7 +78,7 @@ const StatusesWithNotificationsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Status Friendly Name
           {sortColumn === StatusesWithNotificationsSortColumn.StatusFriendlyName && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -90,7 +95,7 @@ const StatusesWithNotificationsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Status Host Code
           {sortColumn === StatusesWithNotificationsSortColumn.StatusHostCode && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -107,7 +112,7 @@ const StatusesWithNotificationsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Notification ID
           {sortColumn === StatusesWithNotificationsSortColumn.NotificationId && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -132,12 +137,38 @@ const StatusesWithNotificationsReport: React.FC = () => {
     { 
       key: 'notificationDescription', 
       label: 'Notification Description',
-      render: (value: any) => value || 'N/A'
+      render: (value: any, row: any) => row.notificationMessageSubject || 'N/A'
     },
     { 
       key: 'notificationText', 
       label: 'Notification Text',
-      render: (value: any) => value || 'N/A'
+      render: (value: any, row: any) => {
+        const text = row.notificationMessageBody || 'N/A';
+        if (text === 'N/A') return text;
+        
+        // Truncate text if it's longer than 50 characters
+        const truncatedText = text.length > 50 ? `${text.substring(0, 50)}...` : text;
+        
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Tooltip title="Click to view full text">
+              <span>{truncatedText}</span>
+            </Tooltip>
+            {text.length > 50 && (
+              <IconButton 
+                size="small" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedNotificationText(text);
+                  setNotificationTextDialogOpen(true);
+                }}
+              >
+                <VisibilityIcon fontSize="small" />
+              </IconButton>
+            )}
+          </Box>
+        );
+      }
     }
   ];
 
@@ -202,10 +233,10 @@ const StatusesWithNotificationsReport: React.FC = () => {
       
       // If clicking the same column, toggle direction
       if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
       } else {
         setSortColumn(newSortColumn);
-        setSortDirection('asc');
+        setSortDirection('ASC');
       }
     }
   };
@@ -235,7 +266,7 @@ const StatusesWithNotificationsReport: React.FC = () => {
         
         // Format value if render function exists
         if (col.render && value !== undefined) {
-          return `"${col.render(value).toString().replace(/"/g, '""')}"`;
+          return `"${col.render(value, item).toString().replace(/"/g, '""')}"`;
         }
         
         // Handle different value types
@@ -296,6 +327,31 @@ const StatusesWithNotificationsReport: React.FC = () => {
             onSort={handleSortChange}
           />
         )}
+
+        {/* Notification Text Dialog */}
+        <Dialog
+          open={notificationTextDialogOpen}
+          onClose={() => setNotificationTextDialogOpen(false)}
+          maxWidth="md"
+          fullWidth
+        >
+          <DialogTitle>Notification Text</DialogTitle>
+          <DialogContent>
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                whiteSpace: 'pre-wrap', 
+                wordBreak: 'break-word',
+                fontFamily: 'monospace'
+              }}
+            >
+              {selectedNotificationText}
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setNotificationTextDialogOpen(false)}>Close</Button>
+          </DialogActions>
+        </Dialog>
       </ReportContainer>
     </Box>
   );

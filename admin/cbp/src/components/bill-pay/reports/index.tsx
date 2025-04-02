@@ -17,14 +17,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // Import report components as they are created
 import PaymentActivityReport from './reports/PaymentActivityReport';
 import ErrorRecapReport from './reports/ErrorRecapReport';
-import BillPaySearchReport from './reports/BillPaySearchReport';
 
 // Define the available report types
 type ReportType = 
   | 'paymentActivity'
   | 'errorRecap'
   | 'activeUserCount'
-  | 'billpaySearch'
   | 'failedOnUs'
   | 'globalHolidays'
   | 'onUsPostings'
@@ -56,10 +54,6 @@ const reportMetadata: Record<ReportType, ReportMetadata> = {
   activeUserCount: {
     label: 'Active User Count',
     description: 'View active user counts within a date range',
-  },
-  billpaySearch: {
-    label: 'Billpay Search',
-    description: 'Search billpay items by various criteria',
   },
   failedOnUs: {
     label: 'Failed On-Us Transactions',
@@ -123,8 +117,6 @@ const Reports: React.FC = () => {
         return <PaymentActivityReport />;
       case 'errorRecap':
         return <ErrorRecapReport />;
-      case 'billpaySearch':
-        return <BillPaySearchReport />;
       // Add other report components as they are created
       default:
         return (

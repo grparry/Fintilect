@@ -28,8 +28,8 @@ const FailedOnUsReport: React.FC = () => {
   
   // State for report parameters
   const [searchType, setSearchType] = useState<FailedOnUsSearchType>(FailedOnUsSearchType.DateRange);
-  const [memberID, setMemberID] = useState<string>('');
-  const [paymentID, setPaymentID] = useState<string>('');
+  const [memberId, setMemberId] = useState<string>('');
+  const [paymentId, setPaymentId] = useState<string>('');
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs().subtract(30, 'day'));
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());
   const [page, setPage] = useState(1);
@@ -47,20 +47,20 @@ const FailedOnUsReport: React.FC = () => {
   const handleSearchTypeChange = (event: SelectChangeEvent) => {
     setSearchType(event.target.value as FailedOnUsSearchType);
     // Reset search values when changing search type
-    setMemberID('');
-    setPaymentID('');
+    setMemberId('');
+    setPaymentId('');
     setStartDate(dayjs().subtract(30, 'day'));
     setEndDate(dayjs());
   };
 
   // Handle MemberID input change
-  const handleMemberIDChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMemberID(event.target.value);
+  const handleMemberIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMemberId(event.target.value);
   };
 
   // Handle PaymentID input change
-  const handlePaymentIDChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPaymentID(event.target.value);
+  const handlePaymentIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPaymentId(event.target.value);
   };
 
   // Handle start date change
@@ -80,113 +80,41 @@ const FailedOnUsReport: React.FC = () => {
   };
 
   // Handle sort change
-  const handleSortChange = (column: string) => {
-    // Map the column key to the enum value
-    const columnEnum = mapColumnKeyToEnum(column);
-    let newDirection = sortDirection;
-    
-    if (sortColumn === columnEnum) {
-      // Toggle sort direction if clicking the same column
-      newDirection = sortDirection === 'ASC' ? 'DESC' : 'ASC';
-      setSortDirection(newDirection);
-    } else {
-      // Set new sort column and default to ASC
-      setSortColumn(columnEnum);
-      newDirection = 'ASC';
-      setSortDirection(newDirection);
-    }
-    
-    // Run report with the updated sort settings
-    runReportWithSort(columnEnum, newDirection);
-  };
-
-  // Helper function to map column keys to enum values
-  const mapColumnKeyToEnum = (key: string): FailedOnUsSortColumn => {
-    switch (key) {
-      case 'paymentID':
-        return FailedOnUsSortColumn.PaymentID;
-      case 'memberID':
-        return FailedOnUsSortColumn.MemberID;
-      case 'failedDate':
-        return FailedOnUsSortColumn.FailedDate;
-      case 'processedDate':
-        return FailedOnUsSortColumn.ProcessedDate;
-      case 'amount':
-        return FailedOnUsSortColumn.Amount;
-      case 'userPayeeListID':
-        return FailedOnUsSortColumn.UserPayeeListID;
-      case 'payeeID':
-        return FailedOnUsSortColumn.PayeeID;
-      case 'payeeName':
-        return FailedOnUsSortColumn.PayeeName;
-      case 'status':
-        return FailedOnUsSortColumn.Status;
-      case 'statusCode':
-        return FailedOnUsSortColumn.StatusCode;
-      default:
-        return FailedOnUsSortColumn.FailedDate;
-    }
-  };
-
-  // Run report with specific sort settings
-  const runReportWithSort = (column: FailedOnUsSortColumn, direction: 'ASC' | 'DESC') => {
-    const params: FailedOnUsParams = {
-      searchType: searchType,
-      pageNumber: 1,
-      pageSize: DEFAULT_PAGE_SIZE,
-      sortColumn: column,
-      sortDirection: direction
-    };
-
-    // Add parameters based on search type
-    if (searchType === FailedOnUsSearchType.MemberID) {
-      if (!memberID) {
-        setError('Please enter a Member ID');
-        return;
+  const handleSort = (columnKey: string) => {
+    const columnDef = columns.find(col => col.key === columnKey);
+    if (columnDef && columnDef.sortKey) {
+      const newSortColumn = columnDef.sortKey;
+      // If clicking the same column, toggle direction
+      if (sortColumn === newSortColumn) {
+        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
+      } else {
+        setSortColumn(newSortColumn);
+        setSortDirection('DESC'); // Initial sort is descending
       }
-      params.memberID = memberID;
-    } else if (searchType === FailedOnUsSearchType.PaymentID) {
-      if (!paymentID) {
-        setError('Please enter a Payment ID');
-        return;
-      }
-      params.paymentID = paymentID;
-    } else if (searchType === FailedOnUsSearchType.DateRange) {
-      if (!startDate || !endDate) {
-        setError('Please select both start and end dates');
-        return;
-      }
-      params.startDate = startDate.format('YYYY-MM-DD');
-      params.endDate = endDate.format('YYYY-MM-DD');
-    }
-
-    setLoading(true);
-    setError(null);
-    
-    getFailedOnUs(params)
-      .then(response => {
-        setReportData(response.items || []);
-        setTotalPages(response.totalPages);
-        setTotalCount(response.totalCount);
+      
+      // Reset to page 1 when sort changes
+      if (page === 1) {
+        runReport(1);
+      } else {
         setPage(1);
-      })
-      .catch(err => {
-        console.error('Error fetching Failed On Us data:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred while fetching the report');
-        setReportData(null);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      }
+    }
   };
+
+  // Run report with updated sort parameters
+  useEffect(() => {
+    if (reportData) {
+      runReport(page);
+    }
+  }, [sortColumn, sortDirection]);
 
   // Run the report
   const runReport = useCallback(async (pageNumber: number = 1) => {
     // Validate required parameters based on search type
-    if (searchType === FailedOnUsSearchType.MemberID && !memberID) {
+    if (searchType === FailedOnUsSearchType.MemberID && !memberId) {
       setError('Please enter a Member ID');
       return;
-    } else if (searchType === FailedOnUsSearchType.PaymentID && !paymentID) {
+    } else if (searchType === FailedOnUsSearchType.PaymentID && !paymentId) {
       setError('Please enter a Payment ID');
       return;
     } else if (searchType === FailedOnUsSearchType.DateRange && (!startDate || !endDate)) {
@@ -208,9 +136,9 @@ const FailedOnUsReport: React.FC = () => {
 
       // Add parameters based on search type
       if (searchType === FailedOnUsSearchType.MemberID) {
-        params.memberID = memberID;
+        params.memberId = memberId;
       } else if (searchType === FailedOnUsSearchType.PaymentID) {
-        params.paymentID = paymentID;
+        params.paymentId = paymentId;
       } else if (searchType === FailedOnUsSearchType.DateRange) {
         params.startDate = startDate ? startDate.format('YYYY-MM-DD') : undefined;
         params.endDate = endDate ? endDate.format('YYYY-MM-DD') : undefined;
@@ -229,7 +157,7 @@ const FailedOnUsReport: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchType, memberID, paymentID, startDate, endDate, sortColumn, sortDirection]);
+  }, [searchType, memberId, paymentId, startDate, endDate, sortColumn, sortDirection]);
 
   // Handle form submit
   const handleSubmit = (event?: React.FormEvent) => {
@@ -239,16 +167,69 @@ const FailedOnUsReport: React.FC = () => {
     runReport(1);
   };
 
+  // Export to CSV
+  const exportToCsv = useCallback(() => {
+    if (!reportData || reportData.length === 0) {
+      return;
+    }
+    
+    // Define CSV columns
+    const header = [
+      'paymentId', 'memberId', 'memberFirstName', 'memberLastName', 'email', 
+      'failedDate', 'processedDate', 'amount', 'fundingAccount', 'userPayeeListId', 
+      'payeeId', 'payeeName', 'usersAccountAtPayee', 'nameOnAccount', 
+      'status', 'statusCode', 'recurringPaymentId'
+    ].join(',');
+    
+    // Convert data to CSV rows
+    const rows = reportData.map(row => {
+      return [
+        row.paymentId || '',
+        row.memberId || '',
+        row.memberFirstName || '',
+        row.memberLastName || '',
+        row.email || '',
+        row.failedDate ? dayjs(row.failedDate).format('MM/DD/YYYY') : '',
+        row.processedDate ? dayjs(row.processedDate).format('MM/DD/YYYY') : '',
+        row.amount || 0,
+        row.fundingAccount || '',
+        row.userPayeeListId || '',
+        row.payeeId || '',
+        row.payeeName || '',
+        row.usersAccountAtPayee || '',
+        row.nameOnAccount || '',
+        row.status || '',
+        row.statusCode || '',
+        row.recurringPaymentId || ''
+      ].join(',');
+    });
+    
+    // Combine header and rows
+    const csv = [header, ...rows].join('\n');
+    
+    // Create and download CSV file
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `failed-on-us-${dayjs().format('YYYY-MM-DD')}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, [reportData]);
+
   // Define columns for the report table
   const columns = [
     { 
-      key: 'paymentID', 
+      key: 'paymentId', 
       label: 'Payment ID', 
       sortable: true,
+      sortKey: FailedOnUsSortColumn.PaymentId,
       renderHeader: () => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Payment ID
-          {sortColumn === FailedOnUsSortColumn.PaymentID && (
+          {sortColumn === FailedOnUsSortColumn.PaymentId && (
             sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
@@ -257,13 +238,14 @@ const FailedOnUsReport: React.FC = () => {
       )
     },
     { 
-      key: 'memberID', 
+      key: 'memberId', 
       label: 'Member ID', 
       sortable: true,
+      sortKey: FailedOnUsSortColumn.MemberId,
       renderHeader: () => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Member ID
-          {sortColumn === FailedOnUsSortColumn.MemberID && (
+          {sortColumn === FailedOnUsSortColumn.MemberId && (
             sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
@@ -272,12 +254,12 @@ const FailedOnUsReport: React.FC = () => {
       )
     },
     { 
-      key: 'firstName', 
+      key: 'memberFirstName', 
       label: 'First Name', 
       sortable: false 
     },
     { 
-      key: 'lastName', 
+      key: 'memberLastName', 
       label: 'Last Name', 
       sortable: false 
     },
@@ -290,6 +272,7 @@ const FailedOnUsReport: React.FC = () => {
       key: 'failedDate', 
       label: 'Failed Date', 
       sortable: true,
+      sortKey: FailedOnUsSortColumn.FailedDate,
       render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY') : '',
       renderHeader: () => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -303,9 +286,27 @@ const FailedOnUsReport: React.FC = () => {
       )
     },
     { 
+      key: 'processedDate', 
+      label: 'Processed Date', 
+      sortable: true,
+      sortKey: FailedOnUsSortColumn.ProcessedDate,
+      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY') : '',
+      renderHeader: () => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          Processed Date
+          {sortColumn === FailedOnUsSortColumn.ProcessedDate && (
+            sortDirection === 'ASC' ? 
+            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
+            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
+          )}
+        </Box>
+      )
+    },
+    { 
       key: 'amount', 
       label: 'Amount', 
       sortable: true,
+      sortKey: FailedOnUsSortColumn.Amount,
       render: (value: number) => `$${value.toFixed(2)}`,
       renderHeader: () => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -318,14 +319,20 @@ const FailedOnUsReport: React.FC = () => {
         </Box>
       )
     },
+    {
+      key: 'fundingAccount',
+      label: 'Funding Account',
+      sortable: false
+    },
     { 
-      key: 'userPayeeListID', 
+      key: 'userPayeeListId', 
       label: 'User Payee List ID', 
       sortable: true,
+      sortKey: FailedOnUsSortColumn.UserPayeeListId,
       renderHeader: () => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           User Payee List ID
-          {sortColumn === FailedOnUsSortColumn.UserPayeeListID && (
+          {sortColumn === FailedOnUsSortColumn.UserPayeeListId && (
             sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
@@ -334,13 +341,14 @@ const FailedOnUsReport: React.FC = () => {
       )
     },
     { 
-      key: 'payeeID', 
+      key: 'payeeId', 
       label: 'Payee ID', 
       sortable: true,
+      sortKey: FailedOnUsSortColumn.PayeeId,
       renderHeader: () => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Payee ID
-          {sortColumn === FailedOnUsSortColumn.PayeeID && (
+          {sortColumn === FailedOnUsSortColumn.PayeeId && (
             sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
@@ -352,6 +360,7 @@ const FailedOnUsReport: React.FC = () => {
       key: 'payeeName', 
       label: 'Payee Name', 
       sortable: true,
+      sortKey: FailedOnUsSortColumn.PayeeName,
       renderHeader: () => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Payee Name
@@ -363,10 +372,21 @@ const FailedOnUsReport: React.FC = () => {
         </Box>
       )
     },
+    {
+      key: 'usersAccountAtPayee',
+      label: 'Account At Payee',
+      sortable: false
+    },
+    {
+      key: 'nameOnAccount',
+      label: 'Name On Account',
+      sortable: false
+    },
     { 
       key: 'status', 
       label: 'Status', 
       sortable: true,
+      sortKey: FailedOnUsSortColumn.Status,
       renderHeader: () => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Status
@@ -382,6 +402,7 @@ const FailedOnUsReport: React.FC = () => {
       key: 'statusCode', 
       label: 'Status Code', 
       sortable: true,
+      sortKey: FailedOnUsSortColumn.StatusCode,
       renderHeader: () => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Status Code
@@ -393,10 +414,10 @@ const FailedOnUsReport: React.FC = () => {
         </Box>
       )
     },
-    { 
-      key: 'errorMessage', 
-      label: 'Error Message', 
-      sortable: false 
+    {
+      key: 'recurringPaymentId',
+      label: 'Recurring Payment ID',
+      sortable: false
     }
   ];
 
@@ -411,13 +432,10 @@ const FailedOnUsReport: React.FC = () => {
       <ReportContainer
         title="Failed On Us Report"
         onRunReport={handleSubmit}
+        onExportCsv={exportToCsv}
         loading={loading}
         error={error}
         hasData={!!reportData && reportData.length > 0}
-        onExportCsv={() => {
-          // CSV export functionality is handled by the ReportContainer
-          // This is just a placeholder for the required prop
-        }}
       >
         {/* Search Form */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -445,8 +463,8 @@ const FailedOnUsReport: React.FC = () => {
                 fullWidth
                 id="member-id-input"
                 label="Member ID"
-                value={memberID}
-                onChange={handleMemberIDChange}
+                value={memberId}
+                onChange={handleMemberIdChange}
                 required
                 size="small"
                 margin="dense"
@@ -460,8 +478,8 @@ const FailedOnUsReport: React.FC = () => {
                 fullWidth
                 id="payment-id-input"
                 label="Payment ID"
-                value={paymentID}
-                onChange={handlePaymentIDChange}
+                value={paymentId}
+                onChange={handlePaymentIdChange}
                 required
                 size="small"
                 margin="dense"
@@ -497,7 +515,7 @@ const FailedOnUsReport: React.FC = () => {
             <ReportTable
               data={reportData}
               columns={columns}
-              onSort={handleSortChange}
+              onSort={handleSort}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
               <Typography variant="body2">

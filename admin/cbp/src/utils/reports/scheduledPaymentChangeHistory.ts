@@ -56,7 +56,7 @@ export interface ScheduledPaymentChangeHistoryParams {
   memberID?: string;
   recurringPaymentID?: string;
   sortColumn?: ScheduledPaymentChangeHistorySortColumn;
-  sortDirection?: 'asc' | 'desc';
+  sortDirection?: 'ASC' | 'DESC';
   pageNumber: number;
   pageSize: number;
 }

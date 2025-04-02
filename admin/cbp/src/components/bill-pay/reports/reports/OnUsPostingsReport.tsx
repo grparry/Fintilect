@@ -36,7 +36,7 @@ const OnUsPostingsReport: React.FC = () => {
   const [sortColumn, setSortColumn] = useState<OnUsPostingsSortColumn>(
     OnUsPostingsSortColumn.EntryDate
   );
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
 
   // Column definitions for the report table
   const columns = [
@@ -49,7 +49,7 @@ const OnUsPostingsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Payment ID
           {sortColumn === OnUsPostingsSortColumn.PaymentID && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -65,7 +65,7 @@ const OnUsPostingsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Member ID
           {sortColumn === OnUsPostingsSortColumn.MemberID && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -81,7 +81,7 @@ const OnUsPostingsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Account ID
           {sortColumn === OnUsPostingsSortColumn.AccountID && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -98,7 +98,7 @@ const OnUsPostingsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Loan ID
           {sortColumn === OnUsPostingsSortColumn.LoanID && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -115,7 +115,7 @@ const OnUsPostingsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Amount
           {sortColumn === OnUsPostingsSortColumn.Amount && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -132,7 +132,7 @@ const OnUsPostingsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Entry Date
           {sortColumn === OnUsPostingsSortColumn.EntryDate && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -149,7 +149,7 @@ const OnUsPostingsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Modified Date
           {sortColumn === OnUsPostingsSortColumn.ModifiedDate && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -165,7 +165,7 @@ const OnUsPostingsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Run ID
           {sortColumn === OnUsPostingsSortColumn.RunID && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -182,7 +182,7 @@ const OnUsPostingsReport: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           Error Code
           {sortColumn === OnUsPostingsSortColumn.ErrorCode && (
-            sortDirection === 'asc' ? 
+            sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
           )}
@@ -329,11 +329,11 @@ const OnUsPostingsReport: React.FC = () => {
       
       // If clicking the same column, toggle direction
       if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
       } else {
         // New column selected, set it and default to ascending
         setSortColumn(newSortColumn);
-        setSortDirection('asc');
+        setSortDirection('ASC');
       }
     }
   };
