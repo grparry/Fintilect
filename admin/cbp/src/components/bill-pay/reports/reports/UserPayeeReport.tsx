@@ -104,30 +104,24 @@ const UserPayeeReport: React.FC = () => {
       )
     },
     { 
-      key: 'dateAdded', 
-      label: 'Date Added',
-      sortable: false,
-      render: (value: any) => value ? dayjs(value).format('MM/DD/YYYY') : 'N/A'
-    },
-    { 
-      key: 'accountID', 
-      label: 'Account ID',
+      key: 'nickName', 
+      label: 'Nickname',
       sortable: false
     },
     { 
-      key: 'accountName', 
-      label: 'Account Name',
+      key: 'payeeType', 
+      label: 'Payee Type',
       sortable: false
     },
     { 
-      key: 'status', 
-      label: 'Status',
+      key: 'accountNumber', 
+      label: 'Account Number',
       sortable: true,
-      sortKey: UserPayeeSortColumn.Status,
+      sortKey: UserPayeeSortColumn.AccountNumber,
       renderHeader: () => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Status
-          {sortColumn === UserPayeeSortColumn.Status && (
+          Account Number
+          {sortColumn === UserPayeeSortColumn.AccountNumber && (
             sortDirection === 'ASC' ? 
             <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
             <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
@@ -136,9 +130,27 @@ const UserPayeeReport: React.FC = () => {
       )
     },
     { 
+      key: 'entryDate', 
+      label: 'Entry Date',
+      sortable: false,
+      render: (value: any) => value ? dayjs(value).format('MM/DD/YYYY') : 'N/A'
+    },
+    { 
+      key: 'lastUpdated', 
+      label: 'Last Updated',
+      sortable: false,
+      render: (value: any) => value ? dayjs(value).format('MM/DD/YYYY') : 'N/A'
+    },
+    { 
       key: 'address', 
       label: 'Address',
-      sortable: false
+      sortable: false,
+      render: (value: any, row: UserPayeeItem) => {
+        const parts = [];
+        if (row.address1) parts.push(row.address1);
+        if (row.address2) parts.push(row.address2);
+        return parts.join(', ') || 'N/A';
+      }
     },
     { 
       key: 'city', 
@@ -153,6 +165,11 @@ const UserPayeeReport: React.FC = () => {
     { 
       key: 'zipCode', 
       label: 'Zip Code',
+      sortable: false
+    },
+    { 
+      key: 'phone', 
+      label: 'Phone',
       sortable: false
     }
   ];
@@ -271,22 +288,29 @@ const UserPayeeReport: React.FC = () => {
     // Format data for CSV
     const csvContent = [
       // Header row
-      ['User Payee List ID', 'Member ID', 'Payee ID', 'Payee Name', 'Date Added', 'Account ID', 'Account Name', 'Status', 'Address', 'City', 'State', 'Zip Code'].join(','),
+      ['User Payee List ID', 'Member ID', 'Payee ID', 'Payee Name', 'Nickname', 'Payee Type', 'Account Number', 'Entry Date', 'Last Updated', 'Address', 'City', 'State', 'Zip Code', 'Phone'].join(','),
       // Data rows
-      ...data.items.map((item: UserPayeeItem) => [
-        item.userPayeeListID || '',
-        item.memberID || '',
-        item.payeeID || '',
-        item.payeeName || '',
-        item.dateAdded ? dayjs(item.dateAdded).format('MM/DD/YYYY') : '',
-        item.accountID || '',
-        item.accountName || '',
-        item.status || '',
-        item.address || '',
-        item.city || '',
-        item.state || '',
-        item.zipCode || ''
-      ].join(','))
+      ...data.items.map((item: UserPayeeItem) => {
+        // Format address from address1 and address2
+        const address = [item.address1, item.address2].filter(Boolean).join(', ');
+        
+        return [
+          item.userPayeeListID || '',
+          item.memberID || '',
+          item.payeeID || '',
+          item.payeeName || '',
+          item.nickName || '',
+          item.payeeType || '',
+          item.accountNumber || '',
+          item.entryDate ? dayjs(item.entryDate).format('MM/DD/YYYY') : '',
+          item.lastUpdated ? dayjs(item.lastUpdated).format('MM/DD/YYYY') : '',
+          address || '',
+          item.city || '',
+          item.state || '',
+          item.zipCode || '',
+          item.phone || ''
+        ].join(',');
+      })
     ].join('\n');
     
     // Create and download CSV file

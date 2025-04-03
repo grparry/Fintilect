@@ -65,14 +65,18 @@ export interface UserPayeeItem {
   memberID: string;
   payeeID: string;
   payeeName: string;
-  dateAdded: string;
-  accountID: string;
-  accountName: string;
-  status: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
+  nickName?: string;
+  payeeType?: string;
+  address1?: string;
+  address2?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  phone?: string;
+  memberName?: string;
+  accountNumber?: string;
+  entryDate?: string;
+  lastUpdated?: string;
 }
 
 /**
