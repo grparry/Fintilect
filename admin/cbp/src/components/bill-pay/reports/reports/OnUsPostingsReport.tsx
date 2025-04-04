@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ReportTableV2 from '../components/ReportTableV2';
 import {
   OnUsPostingsSearchType,
   ON_US_POSTINGS_SEARCH_TYPES,
@@ -44,150 +42,60 @@ const OnUsPostingsReport: React.FC = () => {
       key: 'paymentID', 
       label: 'Payment ID',
       sortable: true,
-      sortKey: OnUsPostingsSortColumn.PaymentID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payment ID
-          {sortColumn === OnUsPostingsSortColumn.PaymentID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: OnUsPostingsSortColumn.PaymentID
     },
     { 
       key: 'memberID', 
       label: 'Member ID',
       sortable: true,
-      sortKey: OnUsPostingsSortColumn.MemberID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Member ID
-          {sortColumn === OnUsPostingsSortColumn.MemberID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: OnUsPostingsSortColumn.MemberID
     },
     { 
       key: 'accountID', 
       label: 'Account ID',
       sortable: true,
-      sortKey: OnUsPostingsSortColumn.AccountID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Account ID
-          {sortColumn === OnUsPostingsSortColumn.AccountID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: OnUsPostingsSortColumn.AccountID
     },
     { 
       key: 'loanID', 
       label: 'Loan ID',
       sortable: true,
       sortKey: OnUsPostingsSortColumn.LoanID,
-      render: (value: any) => value || 'N/A',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Loan ID
-          {sortColumn === OnUsPostingsSortColumn.LoanID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any) => value || 'N/A'
     },
     { 
       key: 'amount', 
       label: 'Amount',
       sortable: true,
       sortKey: OnUsPostingsSortColumn.Amount,
-      render: (value: any) => value ? `$${value.toFixed(2)}` : '$0.00',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Amount
-          {sortColumn === OnUsPostingsSortColumn.Amount && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any) => value ? `$${value.toFixed(2)}` : '$0.00'
     },
     { 
       key: 'entryDate', 
       label: 'Entry Date',
       sortable: true,
       sortKey: OnUsPostingsSortColumn.EntryDate,
-      render: (value: any) => value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : 'N/A',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Entry Date
-          {sortColumn === OnUsPostingsSortColumn.EntryDate && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any) => value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : 'N/A'
     },
     { 
       key: 'modifiedDate', 
       label: 'Modified Date',
       sortable: true,
       sortKey: OnUsPostingsSortColumn.ModifiedDate,
-      render: (value: any) => value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : 'N/A',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Modified Date
-          {sortColumn === OnUsPostingsSortColumn.ModifiedDate && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any) => value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : 'N/A'
     },
     { 
       key: 'runID', 
       label: 'Run ID',
       sortable: true,
-      sortKey: OnUsPostingsSortColumn.RunID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Run ID
-          {sortColumn === OnUsPostingsSortColumn.RunID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: OnUsPostingsSortColumn.RunID
     },
     { 
       key: 'errorCode', 
       label: 'Error Code',
       sortable: true,
       sortKey: OnUsPostingsSortColumn.ErrorCode,
-      render: (value: any) => value || 'N/A',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Error Code
-          {sortColumn === OnUsPostingsSortColumn.ErrorCode && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any) => value || 'N/A'
     },
     { 
       key: 'sourceApp', 
@@ -311,78 +219,34 @@ const OnUsPostingsReport: React.FC = () => {
   /**
    * Handle page change
    * @param page New page number
+   * @param newPageSize New page size
    */
-  const handlePageChange = (page: number) => {
+  const handlePageChange = (page: number, newPageSize?: number) => {
     setPageNumber(page);
+    if (newPageSize && newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+    }
     runReport(page);
   };
 
   /**
-   * Handle sort change
-   * @param column Column to sort by
+   * Handle sort change for ReportTableV2
+   * @param newSortColumn Column to sort by
+   * @param newSortDirection Direction to sort
    */
-  const handleSortChange = (column: string) => {
-    // Find the column definition to get the sortKey
-    const columnDef = columns.find(col => col.key === column);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
-      } else {
-        // New column selected, set it and default to ascending
-        setSortColumn(newSortColumn);
-        setSortDirection('ASC');
-      }
+  const handleSortChange = (newSortColumn: OnUsPostingsSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
+    
+    // Reset to page 1 when sort changes
+    if (pageNumber === 1) {
+      runReport(1);
+    } else {
+      setPageNumber(1);
     }
   };
 
-  /**
-   * Export data as CSV
-   */
-  const handleExportCsv = () => {
-    if (!data || !data.items.length) return;
-    
-    // Create CSV header row
-    const headers = columns.map(col => col.label);
-    const csvContent = [headers.join(',')];
-    
-    // Add data rows
-    data.items.forEach(item => {
-      const row = columns.map(col => {
-        const key = col.key as keyof OnUsPostingsItem;
-        const value = item[key];
-        
-        // Format value if render function exists
-        if (col.render && value !== undefined) {
-          return `"${col.render(value).toString().replace(/"/g, '""')}"`;
-        }
-        
-        // Handle different value types
-        if (value === undefined || value === null) {
-          return '';
-        } else if (typeof value === 'string') {
-          return `"${value.replace(/"/g, '""')}"`;
-        } else {
-          return `"${value}"`;
-        }
-      });
-      
-      csvContent.push(row.join(','));
-    });
-    
-    // Create and download CSV file
-    const blob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `on-us-postings-${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+
 
   // Run report when sort parameters change
   useEffect(() => {
@@ -488,7 +352,6 @@ const OnUsPostingsReport: React.FC = () => {
       loading={loading}
       error={error}
       hasData={!!data?.items.length}
-      onExportCsv={handleExportCsv}
     >
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 2 }}>
         <Grid container spacing={3}>
@@ -522,17 +385,63 @@ const OnUsPostingsReport: React.FC = () => {
           <Typography variant="h6" gutterBottom>
             Results
           </Typography>
-          <ReportTable
+          <ReportTableV2
             columns={columns}
             data={data.items}
             pagination={{
               pageNumber: data.pageNumber,
-              pageSize: data.pageSize,
               totalCount: data.totalCount,
-              onPageChange: handlePageChange,
-              onPageSizeChange: (newPageSize) => setPageSize(newPageSize)
+              onPageChange: handlePageChange
             }}
-            onSort={handleSortChange}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            onSortChange={handleSortChange}
+            enableExport={{
+              getPagedData: async (request) => {
+                // Format dates
+                const formattedStartDate = formatDate(startDate);
+                const formattedEndDate = formatDate(endDate);
+                
+                // Build parameters based on search type
+                const params: OnUsPostingsParams = {
+                  searchType,
+                  pageNumber: request.page,
+                  pageSize: request.pageSize,
+                  sortColumn: request.sortColumn,
+                  sortDirection: request.sortDirection,
+                  startDate: formattedStartDate,
+                  endDate: formattedEndDate
+                };
+                
+                // Add parameters based on search type
+                switch (searchType) {
+                  case OnUsPostingsSearchType.PaymentID:
+                    params.paymentID = paymentID;
+                    break;
+                  case OnUsPostingsSearchType.MemberID:
+                    params.memberID = memberID;
+                    break;
+                  case OnUsPostingsSearchType.AccountID:
+                    params.accountID = accountID;
+                    break;
+                  case OnUsPostingsSearchType.LoanID:
+                    params.loanID = loanID;
+                    break;
+                  case OnUsPostingsSearchType.RunID:
+                    params.runID = runID;
+                    break;
+                }
+                
+                const response = await getOnUsPostings(params);
+                return {
+                  items: response.items,
+                  pageNumber: response.pageNumber,
+                  totalCount: response.totalCount
+                };
+              },
+              maxPageSize: 100
+            }}
+            exportFileName={`on-us-postings-${dayjs().format('YYYY-MM-DD')}`}
           />
         </Box>
       )}

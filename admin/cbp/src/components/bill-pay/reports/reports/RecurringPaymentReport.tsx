@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 import { 
   RecurringPaymentSearchType, 
   RECURRING_PAYMENT_SEARCH_TYPES, 
@@ -114,32 +112,24 @@ const RecurringPaymentReport: React.FC = () => {
     runReport(1); // Reset to first page on new search
   };
   
-  // Handle sort change
-  const handleSortChange = (columnKey: string) => {
-    // Find the column definition to get the sortKey
-    const columnDef = columns.find(col => col.key === columnKey);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
-      } else {
-        setSortColumn(newSortColumn);
-        setSortDirection('DESC'); // Initial sort is descending
-      }
-      
-      // Reset to page 1 when sort changes
-      if (pageNumber === 1) {
-        runReport(1);
-      } else {
-        setPageNumber(1);
-      }
+  // Handle sort change for ReportTableV2
+  const handleSortChange = (newSortColumn: RecurringPaymentSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
+    
+    // Reset to page 1 when sort changes
+    if (pageNumber === 1) {
+      runReport(1);
+    } else {
+      setPageNumber(1);
     }
   };
   
-  // Handle page change
-  const handlePageChange = (page: number) => {
+  // Handle page change for ReportTableV2
+  const handlePageChange = (page: number, newPageSize: number) => {
+    if (newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+    }
     runReport(page);
   };
   
@@ -157,38 +147,43 @@ const RecurringPaymentReport: React.FC = () => {
     });
   };
   
-  // Handle export to CSV
-  const handleExportCsv = () => {
-    if (!data || !data.items || !data.items.length) return;
-    
-    // Format data for CSV
-    const csvContent = [
-      // Header row
-      ['Recurring Payment ID', 'Member ID', 'Payee ID', 'Payee Name', 'Amount', 'Frequency', 'Next Payment Date', 'Account ID', 'Account Name', 'Status'].join(','),
-      // Data rows
-      ...data.items.map((item: RecurringPaymentItem) => [
-        item.recurringPaymentID || '',
-        item.memberID || '',
-        item.payeeID || '',
-        item.payeeName || '',
-        item.amount || '',
-        item.frequency || '',
-        item.nextPaymentDate || '',
-        item.accountID || '',
-        item.accountName || '',
-        item.status || ''
-      ].join(','))
-    ].join('\n');
-    
-    // Create and download CSV file
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `recurring-payment-report-${dayjs().format('YYYY-MM-DD')}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // Function to get paged data for CSV export
+  const getPagedData = async (request: { page: number; pageSize: number; sortColumn: RecurringPaymentSortColumn; sortDirection: 'ASC' | 'DESC' }) => {
+    try {
+      // Prepare request parameters
+      const params: RecurringPaymentParams = {
+        searchType,
+        days,
+        sortColumn: request.sortColumn,
+        sortDirection: request.sortDirection,
+        pageNumber: request.page,
+        pageSize: request.pageSize
+      };
+      
+      // Add conditional parameters based on search type
+      if (searchType === RecurringPaymentSearchType.Member) {
+        params.memberID = memberID;
+      } else if (searchType === RecurringPaymentSearchType.Payment) {
+        params.paymentID = paymentID;
+      } else if (searchType === RecurringPaymentSearchType.RecurringPayment) {
+        params.recurringPaymentID = recurringPaymentID;
+      } else if (searchType === RecurringPaymentSearchType.UserPayeeList) {
+        params.userPayeeListID = userPayeeListID;
+      } else if (searchType === RecurringPaymentSearchType.Payee) {
+        params.payeeID = payeeID;
+      }
+      
+      // Call API
+      const response = await getRecurringPaymentReport(params);
+      return {
+        items: response.items || [],
+        pageNumber: response.pageNumber,
+        totalCount: response.totalCount
+      };
+    } catch (error) {
+      console.error('Error fetching recurring payment data for export:', error);
+      throw error;
+    }
   };
   
   // Run report when sort parameters change
@@ -198,24 +193,14 @@ const RecurringPaymentReport: React.FC = () => {
     }
   }, [sortColumn, sortDirection]);
   
-  // Define table columns
+  // Define table columns for ReportTableV2
   const columns = [
     {
       key: 'recurringPaymentID',
       label: 'Recurring Payment ID',
       sortable: true,
       sortKey: RecurringPaymentSortColumn.RecurringPaymentID,
-      render: (value: any, item: RecurringPaymentItem) => (item && item.recurringPaymentID) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Recurring Payment ID
-          {sortColumn === RecurringPaymentSortColumn.RecurringPaymentID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: RecurringPaymentItem) => (item && item.recurringPaymentID) || ''
     },
     {
       key: 'memberID',
@@ -239,34 +224,14 @@ const RecurringPaymentReport: React.FC = () => {
           return `$${item.amount.toFixed(2)}`;
         }
         return '';
-      },
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Amount
-          {sortColumn === RecurringPaymentSortColumn.Amount && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      }
     },
     {
       key: 'frequency',
       label: 'Frequency',
       sortable: true,
       sortKey: RecurringPaymentSortColumn.Frequency,
-      render: (value: any, item: RecurringPaymentItem) => (item && item.frequency) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Frequency
-          {sortColumn === RecurringPaymentSortColumn.Frequency && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: RecurringPaymentItem) => (item && item.frequency) || ''
     },
     {
       key: 'nextPaymentDate',
@@ -278,17 +243,7 @@ const RecurringPaymentReport: React.FC = () => {
           return dayjs(item.nextPaymentDate).format('MM/DD/YYYY');
         }
         return '';
-      },
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Next Payment Date
-          {sortColumn === RecurringPaymentSortColumn.NextPaymentDate && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      }
     },
     {
       key: 'accountName',
@@ -311,7 +266,6 @@ const RecurringPaymentReport: React.FC = () => {
       loading={loading}
       error={error}
       hasData={!!(data && data.items && data.items.length > 0)}
-      onExportCsv={handleExportCsv}
     >
       <Paper sx={{ p: 2, mb: 2 }}>
         <form onSubmit={handleSubmit}>
@@ -421,17 +375,22 @@ const RecurringPaymentReport: React.FC = () => {
       </Paper>
       
       {data && data.items && data.items.length > 0 ? (
-        <ReportTable
+        <ReportTableV2
           columns={columns}
           data={data.items}
           pagination={{
             pageNumber: data.pageNumber,
-            pageSize: data.pageSize,
             totalCount: data.totalCount,
-            onPageChange: handlePageChange,
-            onPageSizeChange: setPageSize
+            onPageChange: handlePageChange
           }}
-          onSort={handleSortChange}
+          sortColumn={sortColumn}
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
+          enableExport={{
+            getPagedData,
+            maxPageSize: 100
+          }}
+          exportFileName={`recurring-payment-report-${dayjs().format('YYYY-MM-DD')}`}
         />
       ) : data && data.items && data.items.length === 0 ? (
         <Typography variant="body1">No recurring payment data found for the selected criteria.</Typography>

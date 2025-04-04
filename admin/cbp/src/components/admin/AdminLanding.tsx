@@ -8,6 +8,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PaymentIcon from '@mui/icons-material/Payment';
 import GroupIcon from '@mui/icons-material/Group';
 import SettingsIcon from '@mui/icons-material/Settings';
+import TableChartIcon from '@mui/icons-material/TableChart';
 
 interface AdminRoute {
   id: string;
@@ -51,6 +52,12 @@ const AdminLanding: React.FC = () => {
       title: routes.billPay.title,
       description: getRouteDescription(routes.billPay),
     },
+    {
+      id: 'development',
+      path: routes.development.basePath,
+      title: routes.development.title,
+      description: 'Development tools and utilities for testing and debugging.',
+    },
   ];
   const handleCardClick = (route: AdminRoute) => {
     // Update navigation state first
@@ -78,6 +85,8 @@ const AdminLanding: React.FC = () => {
             Welcome to the CBP Admin Dashboard. Select a section below to manage different aspects of the system.
           </Typography>
         </Box>
+        
+        {/* Main Sections */}
         <Grid container spacing={3}>
           {adminRoutes.map((route) => (
             <Grid item xs={12} sm={6} md={4} key={route.id}>

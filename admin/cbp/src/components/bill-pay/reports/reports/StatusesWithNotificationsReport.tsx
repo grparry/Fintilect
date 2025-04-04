@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Grid, Typography, Tooltip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import dayjs from 'dayjs';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ReportTableV2 from '../components/ReportTableV2';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
   StatusesWithNotificationsSortColumn,
@@ -40,84 +39,34 @@ const StatusesWithNotificationsReport: React.FC = () => {
       key: 'statusCode', 
       label: 'Status Code',
       sortable: true,
-      sortKey: StatusesWithNotificationsSortColumn.StatusCode,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Status Code
-          {sortColumn === StatusesWithNotificationsSortColumn.StatusCode && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: StatusesWithNotificationsSortColumn.StatusCode
     },
     { 
       key: 'statusDescription', 
       label: 'Status Description',
       sortable: true,
-      sortKey: StatusesWithNotificationsSortColumn.StatusDescription,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Status Description
-          {sortColumn === StatusesWithNotificationsSortColumn.StatusDescription && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: StatusesWithNotificationsSortColumn.StatusDescription
     },
     { 
       key: 'statusFriendlyName', 
       label: 'Status Friendly Name',
       sortable: true,
       sortKey: StatusesWithNotificationsSortColumn.StatusFriendlyName,
-      render: (value: any) => value || 'N/A',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Status Friendly Name
-          {sortColumn === StatusesWithNotificationsSortColumn.StatusFriendlyName && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any) => value || 'N/A'
     },
     { 
       key: 'statusHostCode', 
       label: 'Status Host Code',
       sortable: true,
       sortKey: StatusesWithNotificationsSortColumn.StatusHostCode,
-      render: (value: any) => value || 'N/A',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Status Host Code
-          {sortColumn === StatusesWithNotificationsSortColumn.StatusHostCode && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any) => value || 'N/A'
     },
     { 
       key: 'notificationId', 
       label: 'Notification ID',
       sortable: true,
       sortKey: StatusesWithNotificationsSortColumn.NotificationId,
-      render: (value: any) => value || 'N/A',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Notification ID
-          {sortColumn === StatusesWithNotificationsSortColumn.NotificationId && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any) => value || 'N/A'
     },
     { 
       key: 'notificationErrorNumber', 
@@ -213,31 +162,32 @@ const StatusesWithNotificationsReport: React.FC = () => {
   };
 
   /**
-   * Handle page change
+   * Handle page change for ReportTableV2
    * @param page New page number
+   * @param newPageSize New page size
    */
-  const handlePageChange = (page: number) => {
+  const handlePageChange = (page: number, newPageSize: number) => {
+    if (newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+    }
     setPageNumber(page);
     runReport(page);
   };
 
   /**
-   * Handle sort change
-   * @param column Column to sort by
+   * Handle sort change for ReportTableV2
+   * @param newSortColumn Column to sort by
+   * @param newSortDirection Direction to sort
    */
-  const handleSortChange = (column: string) => {
-    // Find the column definition to get the sortKey
-    const columnDef = columns.find(col => col.key === column);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
-      } else {
-        setSortColumn(newSortColumn);
-        setSortDirection('ASC');
-      }
+  const handleSortChange = (newSortColumn: StatusesWithNotificationsSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
+    
+    // Reset to page 1 when sort changes
+    if (pageNumber === 1) {
+      runReport(1);
+    } else {
+      setPageNumber(1);
     }
   };
 
@@ -249,48 +199,30 @@ const StatusesWithNotificationsReport: React.FC = () => {
   }, [sortColumn, sortDirection]);
 
   /**
-   * Export data as CSV
+   * Function to get paged data for CSV export
+   * @param request Export request parameters
    */
-  const handleExportCsv = () => {
-    if (!data || !data.items.length) return;
-    
-    // Create CSV header row
-    const headers = columns.map(col => col.label);
-    const csvContent = [headers.join(',')];
-    
-    // Add data rows
-    data.items.forEach(item => {
-      const row = columns.map(col => {
-        const key = col.key as keyof StatusesWithNotificationsItem;
-        const value = item[key];
-        
-        // Format value if render function exists
-        if (col.render && value !== undefined) {
-          return `"${col.render(value, item).toString().replace(/"/g, '""')}"`;
-        }
-        
-        // Handle different value types
-        if (value === undefined || value === null) {
-          return '';
-        } else if (typeof value === 'string') {
-          return `"${value.replace(/"/g, '""')}"`;
-        } else {
-          return `"${value}"`;
-        }
-      });
+  const getPagedData = async (request: { page: number; pageSize: number; sortColumn: StatusesWithNotificationsSortColumn; sortDirection: 'ASC' | 'DESC' }) => {
+    try {
+      // Build parameters
+      const params: StatusesWithNotificationsParams = {
+        pageNumber: request.page,
+        pageSize: request.pageSize,
+        sortColumn: request.sortColumn,
+        sortDirection: request.sortDirection
+      };
       
-      csvContent.push(row.join(','));
-    });
-    
-    // Create and download CSV file
-    const blob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'statuses-with-notifications.csv';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      // Call API
+      const response = await getStatusesWithNotifications(params);
+      return {
+        items: response.items || [],
+        pageNumber: response.pageNumber,
+        totalCount: response.totalCount
+      };
+    } catch (error) {
+      console.error('Error fetching statuses with notifications data for export:', error);
+      throw error;
+    }
   };
 
   return (
@@ -301,7 +233,6 @@ const StatusesWithNotificationsReport: React.FC = () => {
         loading={loading}
         error={error}
         hasData={!!data?.items.length}
-        onExportCsv={handleExportCsv}
       >
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2} sx={{ mb: 2 }}>
@@ -314,17 +245,22 @@ const StatusesWithNotificationsReport: React.FC = () => {
         </form>
 
         {data && data.items.length > 0 && (
-          <ReportTable
+          <ReportTableV2
             data={data.items}
             columns={columns}
             pagination={{
               pageNumber: data.pageNumber,
-              pageSize: data.pageSize,
               totalCount: data.totalCount,
-              onPageChange: handlePageChange,
-              onPageSizeChange: setPageSize
+              onPageChange: handlePageChange
             }}
-            onSort={handleSortChange}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            onSortChange={handleSortChange}
+            enableExport={{
+              getPagedData,
+              maxPageSize: 100
+            }}
+            exportFileName={`statuses-with-notifications-${dayjs().format('YYYY-MM-DD')}`}
           />
         )}
 

@@ -44,13 +44,13 @@ export enum PaymentActivitySortColumn {
 
 /**
  * Payment Activity Item interface matching C# API
- * Note: Property names use camelCase to match API response format
+ * Note: Property names match API response format with uppercase 'ID'
  */
 export interface PaymentActivityItem {
     id?: string;
-    memberId: string | null;
-    paymentId: string | null;
-    payeeId: string | null;
+    memberID: string | null;
+    paymentID: string | null;
+    payeeID: string | null;
     payeeName: string | null;
     paymentDate?: string | null;
     processedDate?: string | null;
@@ -81,8 +81,8 @@ export interface PaymentActivityItemPagedResponse {
  */
 export interface PaymentActivityRequest {
     searchType: string;
-    memberId?: string;  // Used for member ID related search types
-    paymentId?: string; // Used for payment ID search type
+    memberID?: string;  // Used for member ID related search types
+    paymentID?: string; // Used for payment ID search type
     startDate?: string;
     endDate?: string;
     payeeName?: string;
@@ -97,8 +97,8 @@ export interface PaymentActivityRequest {
  */
 export interface PaymentActivityParams {
     searchType: PaymentActivitySearchType;
-    memberId?: string;
-    paymentId?: string;
+    memberID?: string;
+    paymentID?: string;
     startDate?: string;
     endDate?: string;
     payeeName?: string;
@@ -116,7 +116,7 @@ export interface PaymentActivityParams {
 export const getPaymentActivity = async (
   params: PaymentActivityParams
 ): Promise<PaymentActivityItemPagedResponse> => {
-  const { searchType, memberId, paymentId, startDate, endDate, payeeName, pageNumber, pageSize, sortColumn, sortDirection } = params;
+  const { searchType, memberID, paymentID, startDate, endDate, payeeName, pageNumber, pageSize, sortColumn, sortDirection } = params;
 
   // Get the enum value for the search type
   const searchTypeValue = searchType;
@@ -143,12 +143,12 @@ export const getPaymentActivity = async (
     PaymentActivitySearchType.MemberIDAndDate,
     PaymentActivitySearchType.MemberIDAndPayeeName,
     PaymentActivitySearchType.MemberIDAndDateAndPayeeName
-  ].includes(searchType) && memberId) {
-    request.memberId = memberId;
+  ].includes(searchType) && memberID) {
+    request.memberID = memberID;
   }
 
-  if (searchType === PaymentActivitySearchType.PaymentID && paymentId) {
-    request.paymentId = paymentId;
+  if (searchType === PaymentActivitySearchType.PaymentID && paymentID) {
+    request.paymentID = paymentID;
   }
 
   // Add date parameters if applicable for date-related search types

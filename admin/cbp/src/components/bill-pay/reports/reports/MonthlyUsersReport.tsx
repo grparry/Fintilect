@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box,
   Grid,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   Typography,
-  Pagination,
-  FormHelperText,
-  Paper,
-  TextField
+  FormHelperText
 } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import dayjs, { Dayjs } from 'dayjs';
 
 // Import services and utilities
@@ -29,7 +23,7 @@ import {
   getMonthlyUsers
 } from '../../../../utils/reports/monthlyUsers';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 
 // Constants
 const DEFAULT_PAGE_SIZE = 20;
@@ -81,23 +75,17 @@ const MonthlyUsersReport: React.FC = () => {
     fetchReport(params);
   };
 
-  // Handle column sort
-  const handleSort = (columnKey: string) => {
-    const columnEnum = mapColumnKeyToEnum(columnKey);
+  // Handle sort change for ReportTableV2
+  const handleSortChange = (newSortColumn: MonthlyUsersSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
     
-    // Determine new sort direction
-    let newDirection: 'ASC' | 'DESC' = 'ASC';
-    if (columnEnum === sortColumn) {
-      // Toggle direction if same column
-      newDirection = sortDirection === 'ASC' ? 'DESC' : 'ASC';
+    // Reset to page 1 when sort changes
+    if (page === 1) {
+      runReport(1);
+    } else {
+      setPage(1);
     }
-    
-    // Update state
-    setSortColumn(columnEnum);
-    setSortDirection(newDirection);
-    
-    // Run report with new sort settings
-    runReportWithSort(columnEnum, newDirection);
   };
 
   // Handle form submit
@@ -153,9 +141,9 @@ const MonthlyUsersReport: React.FC = () => {
   };
 
   // Handle page change
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-    runReport(value);
+  const handlePageChange = (pageNumber: number, pageSize?: number) => {
+    setPage(pageNumber);
+    runReport(pageNumber);
   };
 
   // Column definitions for the report table
@@ -164,39 +152,17 @@ const MonthlyUsersReport: React.FC = () => {
       key: 'memberID', 
       label: 'Member ID', 
       sortable: true,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Member ID
-          {sortColumn === MonthlyUsersSortColumn.MemberID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: MonthlyUsersSortColumn.MemberID
     },
     { 
       key: 'numberOfPayments', 
       label: 'Number of Payments', 
       sortable: true,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Number of Payments
-          {sortColumn === MonthlyUsersSortColumn.NumberOfPayments && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: MonthlyUsersSortColumn.NumberOfPayments
     }
   ];
 
-  // Export CSV data
-  const handleExportCsv = () => {
-    // This function is handled by the ReportContainer
-    // Just a placeholder for the required prop
-  };
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -206,7 +172,6 @@ const MonthlyUsersReport: React.FC = () => {
         loading={loading}
         error={error}
         hasData={!!reportData && reportData.length > 0}
-        onExportCsv={handleExportCsv}
       >
         {/* Search Form */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -259,30 +224,40 @@ const MonthlyUsersReport: React.FC = () => {
 
         {/* Results Table */}
         {reportData && reportData.length > 0 ? (
-          <>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-              <ReportTable
-                columns={columns}
-                data={reportData}
-                onSort={handleSort}
-              />
-            </Paper>
-            
-            {/* Pagination */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <Typography variant="body2" sx={{ mr: 2 }}>
-                Total: {totalCount} items
-              </Typography>
-              <Pagination 
-                count={totalPages}
-                page={page}
-                onChange={handlePageChange}
-                color="primary"
-                showFirstButton
-                showLastButton
-              />
-            </Box>
-          </>
+          <ReportTableV2
+            data={reportData}
+            columns={columns}
+            pagination={{
+              pageNumber: page,
+              totalCount: totalCount,
+              onPageChange: handlePageChange
+            }}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            onSortChange={handleSortChange}
+            enableExport={{
+              getPagedData: async (request) => {
+                const params: MonthlyUsersParams = {
+                  searchType: MonthlyUsersSearchType.DateRange,
+                  pageNumber: request.page,
+                  pageSize: request.pageSize,
+                  sortColumn: request.sortColumn,
+                  sortDirection: request.sortDirection,
+                  startDate: startDate ? startDate.format('YYYY-MM-DD') : undefined,
+                  endDate: endDate ? endDate.format('YYYY-MM-DD') : undefined
+                };
+                
+                const response = await getMonthlyUsers(params);
+                return {
+                  items: response.items,
+                  pageNumber: response.pageNumber,
+                  totalCount: response.totalCount
+                };
+              },
+              maxPageSize: 100
+            }}
+            exportFileName={`monthly-users-${dayjs().format('YYYY-MM-DD')}`}
+          />
         ) : !loading && (
           <Typography variant="body1" sx={{ textAlign: 'center', my: 4 }}>
             No data to display. Please adjust your search criteria and try again.

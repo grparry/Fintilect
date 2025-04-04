@@ -348,6 +348,12 @@ export const permissionRegistry: PermissionRegistry = {
     adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     allowedEnvironments: ['development', 'test'],
     description: 'Access to API Testing tools'
+  },
+  'route:development.report-table-test-harness': {
+    resourceId: 'route:development.report-table-test-harness',
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    allowedEnvironments: ['development', 'test'],
+    description: 'Access to Report Table Test Harness'
   }
 };
 

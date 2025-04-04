@@ -14,8 +14,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import {
   ScheduledPaymentChangeHistoryParams,
   ScheduledPaymentChangeHistoryResponse,
@@ -27,7 +25,7 @@ import {
   getScheduledPaymentChangeHistory
 } from '../../../../utils/reports/scheduledPaymentChangeHistory';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 
 /**
  * Scheduled Payment Change History Report Component
@@ -125,25 +123,24 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
     runReport(1); // Reset to first page on new search
   };
   
-  // Handle sort change
-  const handleSortChange = (column: string) => {
-    // Find the column definition to get the sortKey
-    const columnDef = columns.find(col => col.key === column);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
-      } else {
-        setSortColumn(newSortColumn);
-        setSortDirection('ASC');
-      }
+  // Handle sort change for ReportTableV2
+  const handleSortChange = (newSortColumn: ScheduledPaymentChangeHistorySortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
+    
+    // Reset to page 1 when sort changes
+    if (pageNumber === 1) {
+      runReport(1);
+    } else {
+      setPageNumber(1);
     }
   };
   
-  // Handle page change
-  const handlePageChange = (page: number) => {
+  // Handle page change for ReportTableV2
+  const handlePageChange = (page: number, newPageSize: number) => {
+    if (newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+    }
     runReport(page);
   };
   
@@ -159,40 +156,42 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
     });
   };
   
-  // Handle export to CSV
-  const handleExportCsv = () => {
-    if (!data || !data.items.length) return;
-    
-    // Format data for CSV
-    const csvContent = [
-      // Header row
-      ['Member ID', 'Updated By', 'Updated On', 'Reason', 'Change Type', 'Recurring Payment ID', 
-       'Payee Name', 'Amount', 'Frequency', 'Active', 'Next Process Date'].join(','),
-      // Data rows
-      ...data.items.map(item => [
-        item.memberID || '',
-        item.updatedBy || '',
-        item.updatedOn || '',
-        item.reason || '',
-        item.changeType || '',
-        item.recurringPaymentId || '',
-        item.payeeName || '',
-        item.amount || '',
-        item.frequency || '',
-        item.active || '',
-        item.nextProcessDate || ''
-      ].join(','))
-    ].join('\n');
-    
-    // Create and download CSV file
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `scheduled-payment-change-history-${dayjs().format('YYYY-MM-DD')}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // Function to get paged data for CSV export
+  const getPagedData = async (request: { page: number; pageSize: number; sortColumn: ScheduledPaymentChangeHistorySortColumn; sortDirection: 'ASC' | 'DESC' }) => {
+    try {
+      // Format dates for API request
+      const formattedStartDate = startDate ? startDate.format('YYYY-MM-DD') : '';
+      const formattedEndDate = endDate ? endDate.format('YYYY-MM-DD') : '';
+      
+      // Prepare request parameters
+      const params: ScheduledPaymentChangeHistoryParams = {
+        searchType,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        sortColumn: request.sortColumn,
+        sortDirection: request.sortDirection,
+        pageNumber: request.page,
+        pageSize: request.pageSize
+      };
+      
+      // Add conditional parameters based on search type
+      if (searchType === ScheduledPaymentChangeHistorySearchType.MemberID) {
+        params.memberID = memberID;
+      } else if (searchType === ScheduledPaymentChangeHistorySearchType.RecurringPaymentID) {
+        params.recurringPaymentID = recurringPaymentID;
+      }
+      
+      // Call API
+      const response = await getScheduledPaymentChangeHistory(params);
+      return {
+        items: response.items || [],
+        pageNumber: response.pageNumber,
+        totalCount: response.totalCount
+      };
+    } catch (error) {
+      console.error('Error fetching scheduled payment change history data for export:', error);
+      throw error;
+    }
   };
   
   // Run report when sort parameters change
@@ -202,143 +201,81 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
     }
   }, [sortColumn, sortDirection]);
   
-  // Define table columns
+  // Define table columns for ReportTableV2
   const columns = [
     {
       key: 'memberID',
       label: 'Member ID',
       sortable: true,
       sortKey: ScheduledPaymentChangeHistorySortColumn.MemberID,
-      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.memberID) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Member ID
-          {sortColumn === ScheduledPaymentChangeHistorySortColumn.MemberID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.memberID) || ''
     },
     {
       key: 'updatedBy',
       label: 'Updated By',
       sortable: true,
       sortKey: ScheduledPaymentChangeHistorySortColumn.UpdatedBy,
-      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.updatedBy) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Updated By
-          {sortColumn === ScheduledPaymentChangeHistorySortColumn.UpdatedBy && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.updatedBy) || ''
     },
     {
       key: 'updatedOn',
       label: 'Updated On',
       sortable: true,
       sortKey: ScheduledPaymentChangeHistorySortColumn.UpdatedOn,
-      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.updatedOn) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Updated On
-          {sortColumn === ScheduledPaymentChangeHistorySortColumn.UpdatedOn && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.updatedOn) || ''
+    },
+    {
+      key: 'reason',
+      label: 'Reason',
+      sortable: false,
+      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.reason) || ''
     },
     {
       key: 'changeType',
       label: 'Change Type',
       sortable: true,
       sortKey: ScheduledPaymentChangeHistorySortColumn.ChangeType,
-      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.changeType) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Change Type
-          {sortColumn === ScheduledPaymentChangeHistorySortColumn.ChangeType && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.changeType) || ''
     },
     {
       key: 'recurringPaymentId',
       label: 'Recurring Payment ID',
       sortable: true,
       sortKey: ScheduledPaymentChangeHistorySortColumn.RecurringPaymentId,
-      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.recurringPaymentId) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Recurring Payment ID
-          {sortColumn === ScheduledPaymentChangeHistorySortColumn.RecurringPaymentId && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.recurringPaymentId) || ''
     },
     {
       key: 'payeeName',
       label: 'Payee Name',
       sortable: true,
       sortKey: ScheduledPaymentChangeHistorySortColumn.PayeeName,
-      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.payeeName) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payee Name
-          {sortColumn === ScheduledPaymentChangeHistorySortColumn.PayeeName && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.payeeName) || ''
     },
     {
       key: 'amount',
       label: 'Amount',
       sortable: true,
       sortKey: ScheduledPaymentChangeHistorySortColumn.Amount,
-      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.amount !== undefined) ? `$${item.amount.toFixed(2)}` : '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Amount
-          {sortColumn === ScheduledPaymentChangeHistorySortColumn.Amount && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.amount !== undefined) ? `$${item.amount.toFixed(2)}` : ''
     },
     {
       key: 'frequency',
       label: 'Frequency',
       sortable: true,
       sortKey: ScheduledPaymentChangeHistorySortColumn.Frequency,
-      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.frequency) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Frequency
-          {sortColumn === ScheduledPaymentChangeHistorySortColumn.Frequency && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.frequency) || ''
+    },
+    {
+      key: 'active',
+      label: 'Active',
+      sortable: false,
+      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.active) || ''
+    },
+    {
+      key: 'nextProcessDate',
+      label: 'Next Process Date',
+      sortable: false,
+      render: (value: any, item: ScheduledPaymentChangeHistoryItem) => (item && item.nextProcessDate) || ''
     }
   ];
   
@@ -349,7 +286,6 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
       loading={loading}
       error={error}
       hasData={!!data && data.items.length > 0}
-      onExportCsv={data && data.items.length > 0 ? handleExportCsv : undefined}
     >
       <Box component="form" onSubmit={handleSubmit} sx={{ mb: 4 }}>
         <Grid container spacing={3}>
@@ -453,17 +389,22 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
       </Box>
       
       {data && data.items.length > 0 ? (
-        <ReportTable
+        <ReportTableV2
           columns={columns}
           data={data.items}
           pagination={{
             pageNumber: data.pageNumber,
-            pageSize: data.pageSize,
             totalCount: data.totalCount,
-            onPageChange: handlePageChange,
-            onPageSizeChange: setPageSize
+            onPageChange: handlePageChange
           }}
-          onSort={handleSortChange}
+          sortColumn={sortColumn}
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
+          enableExport={{
+            getPagedData,
+            maxPageSize: 100
+          }}
+          exportFileName={`scheduled-payment-change-history-${dayjs().format('YYYY-MM-DD')}`}
         />
       ) : !loading && !error && (
         <Typography variant="body1" sx={{ mt: 2 }}>

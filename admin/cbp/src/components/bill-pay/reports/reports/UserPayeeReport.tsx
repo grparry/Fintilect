@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 import { 
   UserPayeeSearchType, 
   USER_PAYEE_SEARCH_TYPES, 
@@ -54,33 +52,13 @@ const UserPayeeReport: React.FC = () => {
       key: 'memberID', 
       label: 'Member ID',
       sortable: true,
-      sortKey: UserPayeeSortColumn.MemberID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Member ID
-          {sortColumn === UserPayeeSortColumn.MemberID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: UserPayeeSortColumn.MemberID
     },
     { 
       key: 'userPayeeListID', 
       label: 'User Payee List ID',
       sortable: true,
-      sortKey: UserPayeeSortColumn.UserPayeeListID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          User Payee List ID
-          {sortColumn === UserPayeeSortColumn.UserPayeeListID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: UserPayeeSortColumn.UserPayeeListID
     },
     { 
       key: 'payeeID', 
@@ -91,17 +69,7 @@ const UserPayeeReport: React.FC = () => {
       key: 'payeeName', 
       label: 'Payee Name',
       sortable: true,
-      sortKey: UserPayeeSortColumn.PayeeName,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payee Name
-          {sortColumn === UserPayeeSortColumn.PayeeName && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: UserPayeeSortColumn.PayeeName
     },
     { 
       key: 'nickName', 
@@ -117,17 +85,7 @@ const UserPayeeReport: React.FC = () => {
       key: 'accountNumber', 
       label: 'Account Number',
       sortable: true,
-      sortKey: UserPayeeSortColumn.AccountNumber,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Account Number
-          {sortColumn === UserPayeeSortColumn.AccountNumber && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: UserPayeeSortColumn.AccountNumber
     },
     { 
       key: 'entryDate', 
@@ -240,30 +198,33 @@ const UserPayeeReport: React.FC = () => {
     runReport(1); // Reset to first page on new search
   };
   
-  // Handle sort change
-  const handleSort = (columnKey: string) => {
-    const columnDef = columns.find(col => col.key === columnKey);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
-      } else {
-        setSortColumn(newSortColumn);
-        setSortDirection('DESC'); // Initial sort is descending
-      }
-      
-      // Reset to page 1 when sort changes
-      if (pageNumber === 1) {
-        runReport(1);
-      } else {
-        setPageNumber(1);
-      }
+  /**
+   * Handle sort change for ReportTableV2
+   * @param newSortColumn Column to sort by
+   * @param newSortDirection Direction to sort
+   */
+  const handleSortChange = (newSortColumn: UserPayeeSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
+    
+    // Reset to page 1 when sort changes
+    if (pageNumber === 1) {
+      runReport(1);
+    } else {
+      setPageNumber(1);
     }
   };
   
-  // Handle page change
-  const handlePageChange = (page: number) => {
+  /**
+   * Handle page change for ReportTableV2
+   * @param page New page number
+   * @param newPageSize New page size
+   */
+  const handlePageChange = (page: number, newPageSize: number) => {
+    if (newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+    }
+    setPageNumber(page);
     runReport(page);
   };
   
@@ -281,47 +242,46 @@ const UserPayeeReport: React.FC = () => {
     });
   };
   
-  // Handle export to CSV
-  const handleExportCsv = () => {
-    if (!data || !data.items || !data.items.length) return;
-    
-    // Format data for CSV
-    const csvContent = [
-      // Header row
-      ['User Payee List ID', 'Member ID', 'Payee ID', 'Payee Name', 'Nickname', 'Payee Type', 'Account Number', 'Entry Date', 'Last Updated', 'Address', 'City', 'State', 'Zip Code', 'Phone'].join(','),
-      // Data rows
-      ...data.items.map((item: UserPayeeItem) => {
-        // Format address from address1 and address2
-        const address = [item.address1, item.address2].filter(Boolean).join(', ');
-        
-        return [
-          item.userPayeeListID || '',
-          item.memberID || '',
-          item.payeeID || '',
-          item.payeeName || '',
-          item.nickName || '',
-          item.payeeType || '',
-          item.accountNumber || '',
-          item.entryDate ? dayjs(item.entryDate).format('MM/DD/YYYY') : '',
-          item.lastUpdated ? dayjs(item.lastUpdated).format('MM/DD/YYYY') : '',
-          address || '',
-          item.city || '',
-          item.state || '',
-          item.zipCode || '',
-          item.phone || ''
-        ].join(',');
-      })
-    ].join('\n');
-    
-    // Create and download CSV file
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `user-payee-report-${dayjs().format('YYYY-MM-DD')}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  /**
+   * Function to get paged data for CSV export
+   * @param request Export request parameters
+   */
+  const getPagedData = async (request: { page: number; pageSize: number; sortColumn: UserPayeeSortColumn; sortDirection: 'ASC' | 'DESC' }) => {
+    try {
+      // Build parameters
+      const params: UserPayeeParams = {
+        searchType,
+        days,
+        sortColumn: request.sortColumn,
+        sortDirection: request.sortDirection,
+        pageNumber: request.page,
+        pageSize: request.pageSize
+      };
+      
+      // Add conditional parameters based on search type
+      if (searchType === UserPayeeSearchType.Member) {
+        params.memberID = memberID;
+      } else if (searchType === UserPayeeSearchType.Payment) {
+        params.paymentID = paymentID;
+      } else if (searchType === UserPayeeSearchType.RecurringPayment) {
+        params.recurringPaymentID = recurringPaymentID;
+      } else if (searchType === UserPayeeSearchType.UserPayeeList) {
+        params.userPayeeListID = userPayeeListID;
+      } else if (searchType === UserPayeeSearchType.Payee) {
+        params.payeeID = payeeID;
+      }
+      
+      // Call API
+      const response = await getUserPayeeReport(params);
+      return {
+        items: response.items || [],
+        pageNumber: response.pageNumber,
+        totalCount: response.totalCount
+      };
+    } catch (error) {
+      console.error('Error fetching user payee data for export:', error);
+      throw error;
+    }
   };
   
   // Effect to run report when sort parameters change
@@ -338,7 +298,6 @@ const UserPayeeReport: React.FC = () => {
       loading={loading}
       error={error}
       hasData={!!(data && data.items && data.items.length > 0)}
-      onExportCsv={handleExportCsv}
     >
       <Paper sx={{ p: 2, mb: 2 }}>
         <form onSubmit={handleSubmit}>
@@ -448,17 +407,22 @@ const UserPayeeReport: React.FC = () => {
       </Paper>
       
       {data && data.items && data.items.length > 0 ? (
-        <ReportTable
+        <ReportTableV2
           columns={columns}
           data={data.items}
           pagination={{
             pageNumber: data.pageNumber,
-            pageSize: data.pageSize,
             totalCount: data.totalCount,
-            onPageChange: handlePageChange,
-            onPageSizeChange: (newPageSize) => setPageSize(newPageSize)
+            onPageChange: handlePageChange
           }}
-          onSort={handleSort}
+          sortColumn={sortColumn}
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
+          enableExport={{
+            getPagedData,
+            maxPageSize: 100
+          }}
+          exportFileName={`user-payee-report-${dayjs().format('YYYY-MM-DD')}`}
         />
       ) : data && data.items && data.items.length === 0 ? (
         <Typography variant="body1">No user payee data found for the selected criteria.</Typography>

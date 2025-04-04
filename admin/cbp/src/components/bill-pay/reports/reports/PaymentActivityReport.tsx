@@ -1,14 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Box, Typography } from '@mui/material';
+import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import ReportContainer from '../components/ReportContainer';
 import DateRangeSelector from '../components/DateRangeSelector';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 import { 
   PAYMENT_ACTIVITY_SEARCH_TYPES, 
   PaymentActivityParams,
@@ -52,40 +50,29 @@ const PaymentActivityReport: React.FC = () => {
     setPaymentId('');
   };
 
-  // Handle page change
-  const handlePageChange = (newPage: number) => {
-    setPageNumber(newPage);
-    runReport(newPage);
+  // Handle page change for ReportTableV2
+  const handlePageChange = (newPage: number, newPageSize?: number) => {
+    if (newPageSize && newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+      setPageNumber(1); // Reset to first page when changing page size
+      runReport(1, newPageSize);
+    } else {
+      setPageNumber(newPage);
+      runReport(newPage, pageSize);
+    }
   };
 
-  // Handle page size change
-  const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize);
-    setPageNumber(1); // Reset to first page when changing page size
-    runReport(1, newPageSize);
-  };
-
-  // Handle sort change
-  const handleSortChange = (columnKey: string) => {
-    // Find the column definition to get the sortKey
-    const columnDef = columns.find(col => col.key === columnKey);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
-      } else {
-        setSortColumn(newSortColumn);
-        setSortDirection('DESC'); // Initial sort is descending
-      }
-      
-      // Reset to page 1 when sort changes
-      if (pageNumber === 1) {
-        runReport(1);
-      } else {
-        setPageNumber(1);
-      }
+  // Handle sort change for ReportTableV2
+  const handleSortChange = (newSortColumn: PaymentActivitySortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
+    
+    // Reset to page 1 when sort changes
+    if (pageNumber === 1) {
+      runReport(1);
+    } else {
+      setPageNumber(1);
+      runReport(1);
     }
   };
 
@@ -132,11 +119,11 @@ const PaymentActivityReport: React.FC = () => {
       
       // Add conditional parameters based on search type
       if (showMemberId) {
-        params.memberId = memberId;
+        params.memberID = memberId;
       }
       
       if (showPaymentId) {
-        params.paymentId = paymentId;
+        params.paymentID = paymentId;
       }
       
       if (showDateRange) {
@@ -153,12 +140,12 @@ const PaymentActivityReport: React.FC = () => {
       
       if (result && result.items) {
         // Map API response to UI model
-        const mappedItems = result.items.map(apiItem => {
+        const mappedItems: PaymentActivityItem[] = result.items.map(apiItem => {
           return {
             id: apiItem.id || '',
-            memberId: apiItem.memberId || '',
-            paymentId: apiItem.paymentId || '',
-            payeeId: apiItem.payeeId || '',
+            memberID: apiItem.memberID || '',
+            paymentID: apiItem.paymentID || '',
+            payeeID: apiItem.payeeID || '',
             payeeName: apiItem.payeeName || '',
             dateProcessed: apiItem.dateProcessed || '',
             dueDate: apiItem.dueDate || '',
@@ -245,13 +232,13 @@ const PaymentActivityReport: React.FC = () => {
         PaymentActivitySearchType.MemberIDAndPayeeName,
         PaymentActivitySearchType.MemberIDAndDateAndPayeeName
       ].includes(searchType)) {
-        params.memberId = memberId;
+        params.memberID = memberId;
       }
       
       if ([
         PaymentActivitySearchType.PaymentID
       ].includes(searchType)) {
-        params.paymentId = paymentId;
+        params.paymentID = paymentId;
       }
       
       // Always include date parameters for date-related search types
@@ -282,13 +269,13 @@ const PaymentActivityReport: React.FC = () => {
       // Update state with response data
       if (result.items) {
         // Map API response properties to our interface
-        const mappedItems = result.items.map(item => {
+        const mappedItems: PaymentActivityItem[] = result.items.map(item => {
           // Use type assertion to handle API response format
           const apiItem = item as any;
           return {
-            memberId: apiItem.memberID || null,
-            paymentId: apiItem.paymentID || null,
-            payeeId: apiItem.payeeID || null,
+            memberID: apiItem.memberID || null,
+            paymentID: apiItem.paymentID || null,
+            payeeID: apiItem.payeeID || null,
             payeeName: apiItem.payeeName || null,
             dateProcessed: apiItem.dateProcessed || null,
             dueDate: apiItem.dueDate || null,
@@ -312,177 +299,56 @@ const PaymentActivityReport: React.FC = () => {
     }
   };
 
-  // Get sort icon for column
-  const getSortIcon = (column: PaymentActivitySortColumn) => {
-    if (sortColumn === column) {
-      return sortDirection === 'ASC' ? <ArrowUpwardIcon fontSize="small" /> : <ArrowDownwardIcon fontSize="small" />;
-    }
-    return null;
-  };
 
-  // Export report data to CSV
-  const handleExportCsv = useCallback(() => {
-    if (!reportData || reportData.length === 0) return;
-    
-    // Define CSV columns
-    const header = [
-      'Member ID',
-      'Payment ID',
-      'Payee ID',
-      'Payee Name',
-      'Date Processed',
-      'Due Date',
-      'Status',
-      'Payment Method',
-      'Amount'
-    ].join(',');
-    
-    // Convert data to CSV rows
-    const rows = reportData.map(row => {
-      return [
-        row.memberId || '',
-        row.paymentId || '',
-        row.payeeId || '',
-        row.payeeName ? `"${row.payeeName.replace(/"/g, '""')}"` : '',
-        row.dateProcessed ? dayjs(row.dateProcessed).format('MM/DD/YYYY') : '',
-        row.dueDate ? dayjs(row.dueDate).format('MM/DD/YYYY') : '',
-        row.status || '',
-        row.paymentMethod || '',
-        row.amount ? row.amount.toFixed(2) : '0.00'
-      ].join(',');
-    });
-    
-    // Combine header and rows
-    const csv = [header, ...rows].join('\n');
-    
-    // Create and download CSV file
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `payment-activity-${dayjs().format('YYYY-MM-DD')}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }, [reportData]);
+
+
 
   // Define columns for the report table
   const columns = [
     {
-      key: 'memberId',
+      key: 'memberID',
       label: 'Member ID',
       sortable: true,
-      sortKey: PaymentActivitySortColumn.MemberID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Member ID
-          {sortColumn === PaymentActivitySortColumn.MemberID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: PaymentActivitySortColumn.MemberID
     },
     {
-      key: 'paymentId',
+      key: 'paymentID',
       label: 'Payment ID',
       sortable: true,
-      sortKey: PaymentActivitySortColumn.PaymentID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payment ID
-          {sortColumn === PaymentActivitySortColumn.PaymentID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: PaymentActivitySortColumn.PaymentID
     },
     {
       key: 'payeeName',
       label: 'Payee Name',
       sortable: true,
-      sortKey: PaymentActivitySortColumn.PayeeName,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payee Name
-          {sortColumn === PaymentActivitySortColumn.PayeeName && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: PaymentActivitySortColumn.PayeeName
     },
     {
       key: 'dateProcessed',
       label: 'Date Processed',
-      render: (value: string) => value || '',
+      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY') : '',
       sortable: true,
-      sortKey: PaymentActivitySortColumn.DateProcessed,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Date Processed
-          {sortColumn === PaymentActivitySortColumn.DateProcessed && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: PaymentActivitySortColumn.DateProcessed
     },
     {
       key: 'dueDate',
       label: 'Due Date',
-      render: (value: string) => value || '',
+      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY') : '',
       sortable: true,
-      sortKey: PaymentActivitySortColumn.DueDate,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Due Date
-          {sortColumn === PaymentActivitySortColumn.DueDate && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: PaymentActivitySortColumn.DueDate
     },
     {
       key: 'status',
       label: 'Status',
       sortable: true,
-      sortKey: PaymentActivitySortColumn.Status,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Status
-          {sortColumn === PaymentActivitySortColumn.Status && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: PaymentActivitySortColumn.Status
     },
     {
       key: 'amount',
       label: 'Amount',
       render: (value: number) => value ? `$${value.toFixed(2)}` : '',
       sortable: true,
-      sortKey: PaymentActivitySortColumn.Amount,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Amount
-          {sortColumn === PaymentActivitySortColumn.Amount && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: PaymentActivitySortColumn.Amount
     }
   ];
 
@@ -495,7 +361,6 @@ const PaymentActivityReport: React.FC = () => {
       <ReportContainer
         title="Payment Activity Report"
         onRunReport={handleRunReport}
-        onExportCsv={handleExportCsv}
         loading={loading}
         error={error}
         hasData={!!reportData && reportData.length > 0}
@@ -572,26 +437,59 @@ const PaymentActivityReport: React.FC = () => {
         )}
 
         {reportData && reportData.length > 0 ? (
-          <>
-            <ReportTable
-              data={reportData}
-              columns={columns}
-              onSort={handleSortChange}
-              pagination={{
-                pageNumber: pageNumber,
-                pageSize: pageSize,
-                totalCount: totalCount,
-                onPageChange: handlePageChange,
-                onPageSizeChange: handlePageSizeChange
-              }}
-            />
-            
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-              <Typography variant="body2">
-                Showing {reportData.length} of {totalCount} results
-              </Typography>
-            </Box>
-          </>
+          <ReportTableV2
+            data={reportData}
+            columns={columns}
+            pagination={{
+              pageNumber: pageNumber,
+              totalCount: totalCount,
+              onPageChange: handlePageChange
+            }}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            onSortChange={handleSortChange}
+            enableExport={{
+              getPagedData: async (request) => {
+                // Build parameters for the API call
+                const params: PaymentActivityParams = {
+                  searchType,
+                  pageNumber: request.page,
+                  pageSize: request.pageSize,
+                  sortColumn: request.sortColumn,
+                  sortDirection: request.sortDirection
+                };
+
+                // Add conditional parameters based on search type
+                if (showMemberId) {
+                  params.memberID = memberId;
+                }
+                
+                if (showPaymentId) {
+                  params.paymentID = paymentId;
+                }
+                
+                if (showDateRange) {
+                  params.startDate = startDate.format('YYYY-MM-DD');
+                  params.endDate = endDate.format('YYYY-MM-DD');
+                }
+                
+                if (showPayeeName) {
+                  params.payeeName = payeeName;
+                }
+
+                // Call the API
+                const response = await getPaymentActivity(params);
+                
+                return {
+                  items: response.items || [],
+                  pageNumber: response.pageNumber,
+                  totalCount: response.totalCount
+                };
+              },
+              maxPageSize: 100
+            }}
+            exportFileName={`payment-activity-${dayjs().format('YYYY-MM-DD')}`}
+          />
         ) : null}
       </ReportContainer>
     </LocalizationProvider>

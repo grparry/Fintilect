@@ -4,10 +4,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 import {
   LargePaymentSortColumn,
   LARGE_PAYMENT_SORT_COLUMNS,
@@ -46,68 +44,28 @@ const LargePaymentReport: React.FC = () => {
       key: 'memberID', 
       label: 'Member ID',
       sortable: true,
-      sortKey: LargePaymentSortColumn.MemberID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Member ID
-          {sortColumn === LargePaymentSortColumn.MemberID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: LargePaymentSortColumn.MemberID
     },
     { 
       key: 'amount', 
       label: 'Amount',
       sortable: true,
       sortKey: LargePaymentSortColumn.Amount,
-      render: (value: number) => value ? `$${value.toFixed(2)}` : '$0.00',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Amount
-          {sortColumn === LargePaymentSortColumn.Amount && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: number) => value ? `$${value.toFixed(2)}` : '$0.00'
     },
     { 
       key: 'payeeName', 
       label: 'Payee Name',
       sortable: true,
       sortKey: LargePaymentSortColumn.PayeeName,
-      render: (value: any) => value || 'N/A',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payee Name
-          {sortColumn === LargePaymentSortColumn.PayeeName && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any) => value || 'N/A'
     },
     { 
       key: 'status', 
       label: 'Status',
       sortable: true,
       sortKey: LargePaymentSortColumn.Status,
-      render: (value: any) => value || 'N/A',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Status
-          {sortColumn === LargePaymentSortColumn.Status && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any) => value || 'N/A'
     }
   ];
 
@@ -155,29 +113,30 @@ const LargePaymentReport: React.FC = () => {
   /**
    * Handle page change
    * @param page New page number
+   * @param newPageSize Optional new page size
    */
-  const handlePageChange = (page: number) => {
+  const handlePageChange = (page: number, newPageSize?: number) => {
     setPageNumber(page);
+    if (newPageSize !== undefined) {
+      setPageSize(newPageSize);
+    }
     runReport(page);
   };
 
   /**
-   * Handle sort change
-   * @param column Column to sort by
+   * Handle sort change for ReportTableV2
+   * @param newSortColumn Column to sort by
+   * @param newSortDirection Sort direction
    */
-  const handleSortChange = (column: string) => {
-    // Find the column definition to get the sortKey
-    const columnDef = columns.find(col => col.key === column);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
-      } else {
-        setSortColumn(newSortColumn);
-        setSortDirection('ASC');
-      }
+  const handleSortChange = (newSortColumn: LargePaymentSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
+    
+    // Reset to page 1 when sort changes
+    if (pageNumber === 1) {
+      runReport(1);
+    } else {
+      setPageNumber(1);
     }
   };
 
@@ -188,42 +147,13 @@ const LargePaymentReport: React.FC = () => {
     }
   }, [sortColumn, sortDirection]);
 
-  /**
-   * Export data as CSV
-   */
-  const handleExportCsv = () => {
-    if (!data || !data.items.length) return;
-    
-    // Format data for CSV
-    const csvContent = [
-      // Header row
-      ['Member ID', 'Amount', 'Payee Name', 'Status'].join(','),
-      // Data rows
-      ...data.items.map(item => [
-        item.memberID || '',
-        item.amount ? `$${item.amount.toFixed(2)}` : '$0.00',
-        item.payeeName || '',
-        item.status || ''
-      ].join(','))
-    ].join('\n');
-    
-    // Create and download CSV file
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `large-payments-${runDate ? runDate.format('YYYY-MM-DD') : 'report'}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+
 
   return (
     <Box>
       <ReportContainer
         title="Large Payment Report"
         onRunReport={handleSubmit}
-        onExportCsv={data && data.items.length > 0 ? handleExportCsv : undefined}
         loading={loading}
         error={error}
         hasData={!!data && data.items.length > 0}
@@ -253,17 +183,37 @@ const LargePaymentReport: React.FC = () => {
         </form>
 
         {data && data.items.length > 0 && (
-          <ReportTable
+          <ReportTableV2
             data={data.items}
             columns={columns}
             pagination={{
               pageNumber: data.pageNumber,
-              pageSize: data.pageSize,
               totalCount: data.totalCount,
-              onPageChange: handlePageChange,
-              onPageSizeChange: setPageSize
+              onPageChange: handlePageChange
             }}
-            onSort={handleSortChange}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            onSortChange={handleSortChange}
+            enableExport={{
+              getPagedData: async (request) => {
+                const params = {
+                  runDate: runDate ? runDate.format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD'),
+                  pageNumber: request.page,
+                  pageSize: request.pageSize,
+                  sortColumn: request.sortColumn,
+                  sortDirection: request.sortDirection
+                };
+                
+                const response = await getLargePayment(params);
+                return {
+                  items: response.items,
+                  pageNumber: response.pageNumber,
+                  totalCount: response.totalCount
+                };
+              },
+              maxPageSize: 100
+            }}
+            exportFileName={`large-payments-${runDate ? runDate.format('YYYY-MM-DD') : 'report'}`}
           />
         )}
       </ReportContainer>

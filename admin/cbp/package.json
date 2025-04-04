@@ -6,6 +6,7 @@
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "start": "react-scripts start",
+    "test": "jest",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
   },
@@ -51,6 +52,8 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^8.35.0",
     "eslint-config-next": "^13.2.1",
+    "jest-canvas-mock": "^2.5.2",
+    "jest-environment-jsdom": "^29.7.0",
     "react-scripts": "^5.0.1",
     "typescript": "^4.9.5",
     "uuid": "^11.0.5"

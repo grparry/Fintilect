@@ -7,14 +7,11 @@ import {
   MenuItem,
   Select,
   Typography,
-  Pagination,
   FormHelperText,
   Paper
 } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import dayjs from 'dayjs';
 
 // Import services and utilities
@@ -27,7 +24,7 @@ import {
   getGlobalHolidays
 } from '../../../../utils/reports/globalHolidays';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 
 // Constants
 const DEFAULT_PAGE_SIZE = 20;
@@ -84,23 +81,21 @@ const GlobalHolidaysReport: React.FC = () => {
     fetchReport(params);
   };
 
-  // Handle column sort
-  const handleSort = (columnKey: string) => {
-    const columnEnum = mapColumnKeyToEnum(columnKey);
+  /**
+   * Handle sort change for ReportTableV2
+   * @param newSortColumn Column to sort by
+   * @param newSortDirection Direction to sort
+   */
+  const handleSortChange = (newSortColumn: GlobalHolidaysSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
     
-    // Determine new sort direction
-    let newDirection: 'ASC' | 'DESC' = 'ASC';
-    if (columnEnum === sortColumn) {
-      // Toggle direction if same column
-      newDirection = sortDirection === 'ASC' ? 'DESC' : 'ASC';
+    // Reset to page 1 when sort changes
+    if (page === 1) {
+      runReport(1);
+    } else {
+      setPage(1);
     }
-    
-    // Update state
-    setSortColumn(columnEnum);
-    setSortDirection(newDirection);
-    
-    // Run report with new sort settings
-    runReportWithSort(columnEnum, newDirection);
   };
 
   // Handle form submit
@@ -147,10 +142,17 @@ const GlobalHolidaysReport: React.FC = () => {
     }
   };
 
-  // Handle page change
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-    runReport(value);
+  /**
+   * Handle page change for ReportTableV2
+   * @param pageNumber New page number
+   * @param newPageSize New page size
+   */
+  const handlePageChange = (pageNumber: number, newPageSize: number) => {
+    if (newPageSize !== DEFAULT_PAGE_SIZE) {
+      // If we need to handle page size changes in the future
+    }
+    setPage(pageNumber);
+    runReport(pageNumber);
   };
 
   // Column definitions for the report table
@@ -159,69 +161,55 @@ const GlobalHolidaysReport: React.FC = () => {
       key: 'id', 
       label: 'ID', 
       sortable: true,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          ID
-          {sortColumn === GlobalHolidaysSortColumn.Id && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: GlobalHolidaysSortColumn.Id
     },
     { 
       key: 'date', 
       label: 'Date', 
       sortable: true,
-      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY') : '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Date
-          {sortColumn === GlobalHolidaysSortColumn.Date && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: GlobalHolidaysSortColumn.Date,
+      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY') : ''
     },
     { 
       key: 'description', 
       label: 'Description', 
       sortable: true,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Description
-          {sortColumn === GlobalHolidaysSortColumn.Description && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: GlobalHolidaysSortColumn.Description
     },
     { 
       key: 'holidayType', 
       label: 'Holiday Type', 
       sortable: true,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Holiday Type
-          {sortColumn === GlobalHolidaysSortColumn.HolidayType && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: GlobalHolidaysSortColumn.HolidayType
     }
   ];
 
-  // Export CSV data
-  const handleExportCsv = () => {
-    // This function is handled by the ReportContainer
-    // Just a placeholder for the required prop
+  /**
+   * Function to get paged data for CSV export
+   * @param request Export request parameters
+   */
+  const getPagedData = async (request: { page: number; pageSize: number; sortColumn: GlobalHolidaysSortColumn; sortDirection: 'ASC' | 'DESC' }) => {
+    try {
+      // Build parameters
+      const params: GlobalHolidaysParams = {
+        searchType: searchType,
+        pageNumber: request.page,
+        pageSize: request.pageSize,
+        sortColumn: request.sortColumn,
+        sortDirection: request.sortDirection
+      };
+      
+      // Call API
+      const response = await getGlobalHolidays(params);
+      return {
+        items: response.items || [],
+        pageNumber: response.pageNumber,
+        totalCount: response.totalCount
+      };
+    } catch (error) {
+      console.error('Error fetching global holidays data for export:', error);
+      throw error;
+    }
   };
 
   return (
@@ -232,7 +220,7 @@ const GlobalHolidaysReport: React.FC = () => {
         loading={loading}
         error={error}
         hasData={!!reportData && reportData.length > 0}
-        onExportCsv={handleExportCsv}
+
       >
         {/* Search Form */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -260,28 +248,23 @@ const GlobalHolidaysReport: React.FC = () => {
         {/* Results Table */}
         {reportData && reportData.length > 0 ? (
           <>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-              <ReportTable
-                columns={columns}
-                data={reportData}
-                onSort={handleSort}
-              />
-            </Paper>
-            
-            {/* Pagination */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <Typography variant="body2" sx={{ mr: 2 }}>
-                Total: {totalCount} items
-              </Typography>
-              <Pagination 
-                count={totalPages}
-                page={page}
-                onChange={handlePageChange}
-                color="primary"
-                showFirstButton
-                showLastButton
-              />
-            </Box>
+            <ReportTableV2
+              columns={columns}
+              data={reportData}
+              pagination={{
+                pageNumber: page,
+                totalCount: totalCount,
+                onPageChange: handlePageChange
+              }}
+              sortColumn={sortColumn}
+              sortDirection={sortDirection}
+              onSortChange={handleSortChange}
+              enableExport={{
+                getPagedData,
+                maxPageSize: 100
+              }}
+              exportFileName={`global-holidays-${dayjs().format('YYYY-MM-DD')}`}
+            />
           </>
         ) : !loading && (
           <Typography variant="body1" sx={{ textAlign: 'center', my: 4 }}>

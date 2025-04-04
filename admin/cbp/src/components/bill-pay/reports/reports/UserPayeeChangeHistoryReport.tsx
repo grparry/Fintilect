@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, MenuItem, TextField, Typography, CircularProgress } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ReportTableV2 from '../components/ReportTableV2';
 import {
   UserPayeeChangeHistorySearchType,
   USER_PAYEE_CHANGE_HISTORY_SEARCH_TYPES,
@@ -41,130 +39,50 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
       key: 'memberID', 
       label: 'Member ID',
       sortable: true,
-      sortKey: UserPayeeChangeHistorySortColumn.MemberID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Member ID
-          {sortColumn === UserPayeeChangeHistorySortColumn.MemberID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: UserPayeeChangeHistorySortColumn.MemberID
     },
     { 
       key: 'userPayeeListId', 
       label: 'User Payee List ID',
       sortable: true,
-      sortKey: UserPayeeChangeHistorySortColumn.UserPayeeListId,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          User Payee List ID
-          {sortColumn === UserPayeeChangeHistorySortColumn.UserPayeeListId && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: UserPayeeChangeHistorySortColumn.UserPayeeListId
     },
     { 
       key: 'payeeName', 
       label: 'Payee Name',
       sortable: true,
-      sortKey: UserPayeeChangeHistorySortColumn.PayeeName,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payee Name
-          {sortColumn === UserPayeeChangeHistorySortColumn.PayeeName && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: UserPayeeChangeHistorySortColumn.PayeeName
     },
     { 
       key: 'payeeId', 
       label: 'Payee ID',
       sortable: true,
-      sortKey: UserPayeeChangeHistorySortColumn.PayeeId,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payee ID
-          {sortColumn === UserPayeeChangeHistorySortColumn.PayeeId && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: UserPayeeChangeHistorySortColumn.PayeeId
     },
     { 
       key: 'updatedOn', 
       label: 'Updated On',
       sortable: true,
       sortKey: UserPayeeChangeHistorySortColumn.UpdatedOn,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Updated On
-          {sortColumn === UserPayeeChangeHistorySortColumn.UpdatedOn && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      ),
       render: (value: any) => value ? dayjs(value).format('MM/DD/YYYY') : 'N/A'
     },
     { 
       key: 'changeType', 
       label: 'Change Type',
       sortable: true,
-      sortKey: UserPayeeChangeHistorySortColumn.ChangeType,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Change Type
-          {sortColumn === UserPayeeChangeHistorySortColumn.ChangeType && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: UserPayeeChangeHistorySortColumn.ChangeType
     },
     { 
       key: 'updatedBy', 
       label: 'Updated By',
       sortable: true,
-      sortKey: UserPayeeChangeHistorySortColumn.UpdatedBy,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Updated By
-          {sortColumn === UserPayeeChangeHistorySortColumn.UpdatedBy && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      sortKey: UserPayeeChangeHistorySortColumn.UpdatedBy
     },
     { 
       key: 'paymentMethod', 
       label: 'Payment Method',
       sortable: true,
       sortKey: UserPayeeChangeHistorySortColumn.PaymentMethod,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payment Method
-          {sortColumn === UserPayeeChangeHistorySortColumn.PaymentMethod && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      ),
       render: (value: any) => value || 'N/A'
     },
     { 
@@ -172,16 +90,6 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
       label: 'Active',
       sortable: true,
       sortKey: UserPayeeChangeHistorySortColumn.Active,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Active
-          {sortColumn === UserPayeeChangeHistorySortColumn.Active && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      ),
       render: (value: any) => value === true ? 'Yes' : value === false ? 'No' : 'N/A'
     },
     { 
@@ -212,7 +120,9 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
    * Run the report with the current parameters
    * @param page Page number to fetch
    */
-  const runReport = async (page: number) => {
+  const runReport = async (page: number, newPageSize?: number) => {
+    // Use provided page size if specified, otherwise use state value
+    const effectivePageSize = newPageSize !== undefined ? newPageSize : pageSize;
     setLoading(true);
     setError(null);
     
@@ -221,7 +131,7 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
       const params: UserPayeeChangeHistoryParams = {
         searchType,
         pageNumber: page,
-        pageSize,
+        pageSize: effectivePageSize,
         sortColumn,
         sortDirection,
         startDate: formatDate(startDate),
@@ -268,136 +178,73 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
   };
 
   /**
-   * Handle page change
+   * Handle page or page size change
    * @param page New page number
+   * @param newPageSize New page size (optional)
    */
-  const handlePageChange = (page: number) => {
+  const handlePageChange = (page: number, newPageSize?: number) => {
+    // If page size changed, update it
+    if (newPageSize !== undefined && newPageSize !== pageSize) {
+      console.log(`Page size changed from ${pageSize} to ${newPageSize}`);
+      setPageSize(newPageSize);
+    }
+    
+    // Always update the page number
     setPageNumber(page);
-    runReport(page);
+    
+    // Run the report with updated values
+    runReport(page, newPageSize);
   };
 
   /**
    * Handle sort change
    * @param columnKey Column key to sort by
    */
-  const handleSort = (columnKey: string) => {
-    const columnDef = columns.find(col => col.key === columnKey);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
-      } else {
-        setSortColumn(newSortColumn);
-        setSortDirection('DESC'); // Initial sort is descending
-      }
-      
-      // Reset to page 1 when sort changes
-      if (pageNumber === 1) {
-        runReport(1);
-      } else {
-        setPageNumber(1);
-      }
-    }
-  };
+  // handleSort function removed - now handled by ReportTableV2
 
-  /**
-   * Export data as CSV
-   */
-  const handleExportCsv = () => {
-    if (!data || !data.items.length) return;
-    
-    // Create CSV header row
-    const headers = columns.map(col => col.label);
-    const csvContent = [headers.join(',')];
-    
-    // Add data rows
-    data.items.forEach(item => {
-      const row = columns.map(col => {
-        const key = col.key as keyof UserPayeeChangeHistoryItem;
-        const value = item[key];
-        
-        // Format value if render function exists
-        if (col.render && value !== undefined) {
-          return `"${col.render(value).toString().replace(/"/g, '""')}"`;
-        }
-        
-        // Handle different value types
-        if (value === undefined || value === null) {
-          return '';
-        } else if (typeof value === 'string') {
-          return `"${value.replace(/"/g, '""')}"`;
-        } else {
-          return `"${value}"`;
-        }
-      });
-      
-      csvContent.push(row.join(','));
-    });
-    
-    // Create and download CSV file
-    const blob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `user-payee-change-history-${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  // CSV export functionality now handled by ReportTableV2
 
   // Render search form based on search type
   const renderSearchForm = () => {
     return (
-      <Grid container spacing={3}>
-        {/* Date Range Pickers - Always visible for all search types */}
-        <Grid item xs={12} md={6}>
+      <>
+        {/* Date Range Pickers */}
+        <Grid item xs={12} sm={4}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Start Date"
               value={startDate}
               onChange={(newValue) => newValue && setStartDate(newValue)}
-              slotProps={{ textField: { fullWidth: true } }}
+              slotProps={{ textField: { size: 'small', fullWidth: true } }}
             />
           </LocalizationProvider>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} sm={3}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="End Date"
               value={endDate}
               onChange={(newValue) => newValue && setEndDate(newValue)}
-              slotProps={{ textField: { fullWidth: true } }}
+              slotProps={{ textField: { size: 'small', fullWidth: true } }}
             />
           </LocalizationProvider>
         </Grid>
         
-        {/* Conditional Fields based on search type */}
-        {searchType === UserPayeeChangeHistorySearchType.UserPayeeListID && (
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="User Payee List ID"
-              value={userPayeeListID}
-              onChange={(e) => setUserPayeeListID(e.target.value)}
-              fullWidth
-              required
-            />
-          </Grid>
-        )}
-        
-        {searchType === UserPayeeChangeHistorySearchType.MemberID && (
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Member ID"
-              value={memberID}
-              onChange={(e) => setMemberID(e.target.value)}
-              fullWidth
-              required
-            />
-          </Grid>
-        )}
-      </Grid>
+        {/* ID Field */}
+        <Grid item xs={12} sm={5}>
+          <TextField
+            size="small"
+            label={searchType === UserPayeeChangeHistorySearchType.MemberID ? "Member ID" : "User Payee List ID"}
+            value={searchType === UserPayeeChangeHistorySearchType.MemberID ? memberID : userPayeeListID}
+            onChange={(e) => searchType === UserPayeeChangeHistorySearchType.MemberID ? 
+              setMemberID(e.target.value) : 
+              setUserPayeeListID(e.target.value)
+            }
+            fullWidth
+            required
+          />
+        </Grid>
+      </>
     );
   };
 
@@ -414,14 +261,14 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
       loading={loading}
       error={error}
       hasData={!!data?.items.length}
-      onExportCsv={handleExportCsv}
     >
-      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 2 }}>
-        <Grid container spacing={3}>
+      <Box sx={{ mt: 1, mb: 2 }}>
+        <Grid container spacing={2} alignItems="center">
           {/* Search Type */}
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} sm={2}>
             <TextField
               select
+              size="small"
               fullWidth
               label="Search Type"
               value={searchType}
@@ -436,8 +283,10 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
           </Grid>
           
           {/* Dynamic search fields based on search type */}
-          <Grid item xs={12}>
-            {renderSearchForm()}
+          <Grid item xs={12} sm={10}>
+            <Grid container spacing={2} alignItems="center">
+              {renderSearchForm()}
+            </Grid>
           </Grid>
         </Grid>
       </Box>
@@ -448,17 +297,67 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
           <Typography variant="h6" gutterBottom>
             Results
           </Typography>
-          <ReportTable
+          <ReportTableV2
             columns={columns}
             data={data.items}
             pagination={{
               pageNumber: data.pageNumber,
-              pageSize: data.pageSize,
               totalCount: data.totalCount,
-              onPageChange: handlePageChange,
-              onPageSizeChange: (newPageSize) => setPageSize(newPageSize)
+              onPageChange: handlePageChange
             }}
-            onSort={handleSort}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            onSortChange={(newColumn, newDirection) => {
+              setSortColumn(newColumn);
+              setSortDirection(newDirection);
+              
+              // Reset to page 1 when sort changes
+              if (pageNumber === 1) {
+                runReport(1);
+              } else {
+                setPageNumber(1);
+              }
+            }}
+            enableExport={{
+              getPagedData: async (request) => {
+                // Build params for the API call
+                const params: UserPayeeChangeHistoryParams = {
+                  pageNumber: request.page,
+                  pageSize: request.pageSize,
+                  sortColumn: request.sortColumn,
+                  sortDirection: request.sortDirection,
+                  startDate: startDate.toISOString(),
+                  endDate: endDate.toISOString(),
+                  searchType: searchType
+                };
+
+                // Add search parameter based on search type
+                switch (searchType) {
+                  case UserPayeeChangeHistorySearchType.UserPayeeListID:
+                    if (!userPayeeListID) {
+                      throw new Error('User Payee List ID is required');
+                    }
+                    params.userPayeeListID = userPayeeListID;
+                    break;
+                  case UserPayeeChangeHistorySearchType.MemberID:
+                    if (!memberID) {
+                      throw new Error('Member ID is required');
+                    }
+                    params.memberID = memberID;
+                    break;
+                }
+
+                // Call API and return in the format expected by ReportTableV2
+                const response = await getUserPayeeChangeHistory(params);
+                return {
+                  items: response.items,
+                  pageNumber: response.pageNumber,
+                  totalCount: response.totalCount
+                };
+              },
+              maxPageSize: 100
+            }}
+            exportFileName={`user-payee-change-history-${new Date().toISOString().split('T')[0]}`}
           />
         </Box>
       )}

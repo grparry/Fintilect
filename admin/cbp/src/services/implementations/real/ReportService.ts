@@ -100,12 +100,12 @@ export class ReportService extends BaseService implements IReportService {
         searchParams.append('SearchType', params.searchType.toString());
         
         // Add optional parameters if provided
-        if (params.memberId) {
-            searchParams.append('MemberId', params.memberId);
+        if (params.memberID) {
+            searchParams.append('MemberID', params.memberID);
         }
         
-        if (params.paymentId) {
-            searchParams.append('PaymentId', params.paymentId);
+        if (params.paymentID) {
+            searchParams.append('PaymentID', params.paymentID);
         }
         
         if (params.startDate) {
@@ -184,11 +184,11 @@ export class ReportService extends BaseService implements IReportService {
         searchParams.append('PageSize', params.pageSize.toString());
         
         if (params.memberId) {
-            searchParams.append('MemberId', params.memberId);
+            searchParams.append('MemberID', params.memberId);
         }
         
         if (params.paymentId) {
-            searchParams.append('PaymentId', params.paymentId);
+            searchParams.append('PaymentID', params.paymentId);
         }
         
         if (params.startDate) {

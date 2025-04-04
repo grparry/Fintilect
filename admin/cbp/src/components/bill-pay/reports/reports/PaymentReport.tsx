@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
-import dayjs, { Dayjs } from 'dayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
+import dayjs from 'dayjs';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 import { 
   PaymentSearchType, 
   PAYMENT_SEARCH_TYPES, 
@@ -115,25 +112,24 @@ const PaymentReport: React.FC = () => {
     runReport(1); // Reset to first page on new search
   };
   
-  // Handle sort change
-  const handleSortChange = (columnKey: string) => {
-    // Find the column definition to get the sortKey
-    const columnDef = columns.find(col => col.key === columnKey);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
-      } else {
-        setSortColumn(newSortColumn);
-        setSortDirection('ASC');
-      }
+  // Handle sort change for ReportTableV2
+  const handleSortChange = (newSortColumn: PaymentSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
+    
+    // Reset to page 1 when sort changes
+    if (pageNumber === 1) {
+      runReport(1);
+    } else {
+      setPageNumber(1);
     }
   };
   
-  // Handle page change
-  const handlePageChange = (page: number) => {
+  // Handle page change for ReportTableV2
+  const handlePageChange = (page: number, newPageSize: number) => {
+    if (newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+    }
     runReport(page);
   };
   
@@ -151,34 +147,43 @@ const PaymentReport: React.FC = () => {
     });
   };
   
-  // Handle export to CSV
-  const handleExportCsv = () => {
-    if (!data || !data.items || !data.items.length) return;
-    
-    // Format data for CSV
-    const csvContent = [
-      // Header row
-      ['Payment ID', 'Member ID', 'Amount', 'Date Processed', 'Payee Name', 'Status'].join(','),
-      // Data rows
-      ...data.items.map((item: PaymentItem) => [
-        item.paymentID || '',
-        item.memberID || '',
-        item.amount || '',
-        item.dateProcessed || '',
-        item.payeeName || '',
-        item.status || ''
-      ].join(','))
-    ].join('\n');
-    
-    // Create and download CSV file
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `payment-report-${dayjs().format('YYYY-MM-DD')}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // Function to get paged data for CSV export
+  const getPagedData = async (request: { page: number; pageSize: number; sortColumn: PaymentSortColumn; sortDirection: 'ASC' | 'DESC' }) => {
+    try {
+      // Prepare request parameters
+      const params: PaymentParams = {
+        searchType,
+        days,
+        sortColumn: request.sortColumn,
+        sortDirection: request.sortDirection,
+        pageNumber: request.page,
+        pageSize: request.pageSize
+      };
+      
+      // Add conditional parameters based on search type
+      if (searchType === PaymentSearchType.Member) {
+        params.memberID = memberID;
+      } else if (searchType === PaymentSearchType.Payment) {
+        params.paymentID = paymentID;
+      } else if (searchType === PaymentSearchType.RecurringPayment) {
+        params.recurringPaymentID = recurringPaymentID;
+      } else if (searchType === PaymentSearchType.UserPayeeList) {
+        params.userPayeeListID = userPayeeListID;
+      } else if (searchType === PaymentSearchType.Payee) {
+        params.payeeID = payeeID;
+      }
+      
+      // Call API
+      const response = await getPaymentReport(params);
+      return {
+        items: response.items || [],
+        pageNumber: response.pageNumber,
+        totalCount: response.totalCount
+      };
+    } catch (error) {
+      console.error('Error fetching payment data for export:', error);
+      throw error;
+    }
   };
   
   // Run report when sort parameters change
@@ -188,109 +193,52 @@ const PaymentReport: React.FC = () => {
     }
   }, [sortColumn, sortDirection]);
   
-  // Define table columns
+  // Define table columns for ReportTableV2
   const columns = [
     {
       key: 'paymentID',
       label: 'Payment ID',
       sortable: true,
       sortKey: PaymentSortColumn.PaymentID,
-      render: (value: any, item: PaymentItem) => (item && item.paymentID) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payment ID
-          {sortColumn === PaymentSortColumn.PaymentID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: PaymentItem) => (item && item.paymentID) || ''
     },
     {
       key: 'memberID',
       label: 'Member ID',
       sortable: true,
       sortKey: PaymentSortColumn.MemberID,
-      render: (value: any, item: PaymentItem) => (item && item.memberID) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Member ID
-          {sortColumn === PaymentSortColumn.MemberID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: PaymentItem) => (item && item.memberID) || ''
     },
     {
       key: 'amount',
       label: 'Amount',
       sortable: true,
       sortKey: PaymentSortColumn.Amount,
-      render: (value: any, item: PaymentItem) => (item && item.amount !== undefined) ? `$${item.amount.toFixed(2)}` : '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Amount
-          {sortColumn === PaymentSortColumn.Amount && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: PaymentItem) => (item && item.amount !== undefined) ? `$${item.amount.toFixed(2)}` : ''
     },
     {
       key: 'dateProcessed',
       label: 'Date Processed',
       sortable: true,
       sortKey: PaymentSortColumn.DateProcessed,
-      render: (value: any, item: PaymentItem) => (item && item.dateProcessed) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Date Processed
-          {sortColumn === PaymentSortColumn.DateProcessed && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: PaymentItem) => {
+        if (!item || !item.dateProcessed) return '';
+        return dayjs(item.dateProcessed).format('MM/DD/YYYY hh:mm A');
+      }
     },
     {
       key: 'payeeName',
       label: 'Payee Name',
       sortable: true,
       sortKey: PaymentSortColumn.PayeeName,
-      render: (value: any, item: PaymentItem) => (item && item.payeeName) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payee Name
-          {sortColumn === PaymentSortColumn.PayeeName && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: PaymentItem) => (item && item.payeeName) || ''
     },
     {
       key: 'status',
       label: 'Status',
       sortable: true,
       sortKey: PaymentSortColumn.Status,
-      render: (value: any, item: PaymentItem) => (item && item.status) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Status
-          {sortColumn === PaymentSortColumn.Status && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: PaymentItem) => (item && item.status) || ''
     }
   ];
   
@@ -301,7 +249,6 @@ const PaymentReport: React.FC = () => {
       loading={loading}
       error={error}
       hasData={!!(data && data.items && data.items.length > 0)}
-      onExportCsv={handleExportCsv}
     >
       <Paper sx={{ p: 2, mb: 2 }}>
         <form onSubmit={handleSubmit}>
@@ -411,17 +358,22 @@ const PaymentReport: React.FC = () => {
       </Paper>
       
       {data && data.items && data.items.length > 0 ? (
-        <ReportTable
+        <ReportTableV2
           columns={columns}
           data={data.items}
           pagination={{
             pageNumber: data.pageNumber,
-            pageSize: data.pageSize,
             totalCount: data.totalCount,
-            onPageChange: handlePageChange,
-            onPageSizeChange: setPageSize
+            onPageChange: handlePageChange
           }}
-          onSort={handleSortChange}
+          sortColumn={sortColumn}
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
+          enableExport={{
+            getPagedData,
+            maxPageSize: 100
+          }}
+          exportFileName={`payment-report-${dayjs().format('YYYY-MM-DD')}`}
         />
       ) : data && data.items && data.items.length === 0 ? (
         <Typography variant="body1">No payment data found for the selected criteria.</Typography>

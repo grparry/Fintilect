@@ -156,12 +156,12 @@ export class MockReportService extends BaseMockService implements IReportService
         const searchParams = new URLSearchParams();
         searchParams.append('SearchType', params.searchType.toString());
         
-        if (params.memberId) {
-            searchParams.append('MemberId', params.memberId);
+        if (params.memberID) {
+            searchParams.append('MemberID', params.memberID);
         }
         
-        if (params.paymentId) {
-            searchParams.append('PaymentId', params.paymentId);
+        if (params.paymentID) {
+            searchParams.append('PaymentID', params.paymentID);
         }
         
         if (params.startDate) {
@@ -206,9 +206,9 @@ export class MockReportService extends BaseMockService implements IReportService
         for (let i = startIndex; i < endIndex; i++) {
             const item: PaymentActivityItem = {
                 id: `ID-${i + 1}`,
-                memberId: `M${100000 + i}`,
-                paymentId: `P${200000 + i}`,
-                payeeId: `PY${400000 + i}`,
+                memberID: `M${100000 + i}`,
+                paymentID: `P${200000 + i}`,
+                payeeID: `PY${400000 + i}`,
                 payeeName: `Mock Payee ${i + 1}`,
                 dateProcessed: new Date(Date.now() - i * 86400000).toISOString(),
                 dueDate: new Date(Date.now() + (30 - i) * 86400000).toISOString(),

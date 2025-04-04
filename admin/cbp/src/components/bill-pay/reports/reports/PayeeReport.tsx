@@ -1,23 +1,19 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import {
-  Box,
   Grid,
   TextField,
   MenuItem,
-  Typography,
-  Pagination,
   FormControl,
   InputLabel,
   Select,
   SelectChangeEvent
 } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 import {
   PayeeSearchType,
   PAYEE_SEARCH_TYPES,
@@ -83,19 +79,23 @@ const PayeeReport: React.FC = () => {
   }, [searchType]);
 
   // Handle page change
-  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-    runReport(value);
+  const handlePageChange = (pageNumber: number, newPageSize?: number) => {
+    setPage(pageNumber);
+    runReport(pageNumber);
   };
 
-  // Handle sort column change
-  const handleSort = (columnKey: string) => {
-    const newSortDirection = 
-      sortColumn === columnKey && sortDirection === 'ASC' ? 'DESC' : 'ASC';
-    
-    setSortColumn(columnKey as PayeeSortColumn);
+  // Handle sort column change for ReportTableV2
+  const handleSortChange = (newSortColumn: PayeeSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
-    runReport(1, columnKey as PayeeSortColumn, newSortDirection);
+    
+    // Reset to page 1 when sort changes
+    if (page === 1) {
+      runReport(1, newSortColumn, newSortDirection);
+    } else {
+      setPage(1);
+      runReport(1, newSortColumn, newSortDirection);
+    }
   };
 
   // Run the report
@@ -199,66 +199,21 @@ const PayeeReport: React.FC = () => {
     runReport(1);
   };
 
-  // Export to CSV
-  const handleExportCsv = useCallback(() => {
-    if (reportData.length === 0) return;
-    
-    const headers = [
-      'Payee ID',
-      'Payee Name',
-      'Member ID',
-      'Member Name',
-      'Account Number',
-      'Date Added',
-      'Status',
-      'Payment Method',
-      'Address',
-      'City',
-      'State',
-      'Zip Code',
-      'Phone Number'
-    ];
-    
-    const rows = reportData.map(item => [
-      item.payeeID,
-      item.payeeName,
-      item.memberID,
-      item.memberName,
-      item.accountNumber,
-      item.dateAdded,
-      item.status,
-      item.paymentMethod,
-      item.address,
-      item.city,
-      item.state,
-      item.zipCode,
-      item.phoneNumber
-    ]);
 
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.join(','))
-    ].join('\n');
-
-    const csvBlob = new Blob([csvContent], { type: 'text/csv' });
-    const csvUrl = URL.createObjectURL(csvBlob);
-    const csvLink = document.createElement('a');
-    csvLink.href = csvUrl;
-    csvLink.download = 'payee_report.csv';
-    csvLink.click();
-  }, [reportData]);
 
   // Table columns definition
   const columns = [
     {
       key: 'payeeID',
       label: 'Payee ID',
-      sortable: true
+      sortable: true,
+      sortKey: PayeeSortColumn.PayeeID
     },
     {
       key: 'payeeName',
       label: 'Payee Name',
-      sortable: true
+      sortable: true,
+      sortKey: PayeeSortColumn.PayeeName
     },
     {
       key: 'memberID',
@@ -299,7 +254,6 @@ const PayeeReport: React.FC = () => {
         title="Payee Report"
         description="Search for payee information by member ID, payment ID, recurring payment ID, user payee list ID, or payee ID."
         onRunReport={handleSubmit}
-        onExportCsv={handleExportCsv}
         loading={loading}
         error={error}
         hasData={reportData.length > 0}
@@ -368,25 +322,61 @@ const PayeeReport: React.FC = () => {
         </Grid>
 
         {reportData && reportData.length > 0 ? (
-          <>
-            <ReportTable
-              data={reportData}
-              columns={columns}
-              onSort={handleSort}
-            />
-            
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-              <Typography variant="body2">
-                Showing {reportData.length} of {totalCount} results
-              </Typography>
-              <Pagination 
-                count={totalPages} 
-                page={page} 
-                onChange={handlePageChange} 
-                color="primary" 
-              />
-            </Box>
-          </>
+          <ReportTableV2
+            data={reportData}
+            columns={columns}
+            pagination={{
+              pageNumber: page,
+              totalCount: totalCount,
+              onPageChange: handlePageChange
+            }}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            onSortChange={handleSortChange}
+            enableExport={{
+              getPagedData: async (request) => {
+                // Build parameters for the API call
+                const params: PayeeParams = {
+                  searchType,
+                  pageNumber: request.page,
+                  pageSize: request.pageSize,
+                  sortColumn: request.sortColumn,
+                  sortDirection: request.sortDirection,
+                  days: 3650 // Add default Days parameter for historical data
+                };
+
+                // Add specific parameters based on search type
+                switch (searchType) {
+                  case PayeeSearchType.Member:
+                    params.memberID = memberId;
+                    break;
+                  case PayeeSearchType.Payment:
+                    params.paymentID = paymentId;
+                    break;
+                  case PayeeSearchType.RecurringPayment:
+                    params.recurringPaymentID = recurringPaymentId;
+                    break;
+                  case PayeeSearchType.UserPayeeList:
+                    params.userPayeeListID = userPayeeListId;
+                    break;
+                  case PayeeSearchType.Payee:
+                    params.payeeID = payeeId;
+                    break;
+                }
+
+                // Call the API
+                const response = await getPayeeReport(params);
+                
+                return {
+                  items: response.items || [],
+                  pageNumber: response.pageNumber,
+                  totalCount: response.totalCount
+                };
+              },
+              maxPageSize: 100
+            }}
+            exportFileName={`payee-report-${dayjs().format('YYYY-MM-DD')}`}
+          />
         ) : null}
       </ReportContainer>
     </LocalizationProvider>

@@ -297,6 +297,32 @@ export const navigationConfig: NavigationConfig = {
         }
       ]
     }
+  ,
+    {
+      id: 'development',
+      title: 'Development',
+      icon: CodeIcon,
+      color: '#0288d1',
+      description: 'Development tools and utilities',
+      path: '/admin/development',
+      resourceId: 'navigation:development' as ResourceId,
+      items: [
+        {
+          id: 'api-testing',
+          title: 'API Testing',
+          path: '/admin/development/api-testing',
+          icon: ApiIcon,
+          resourceId: 'route:development.api-testing' as ResourceId
+        },
+        {
+          id: 'report-table-test-harness',
+          title: 'Report Table Test Harness',
+          path: '/admin/development/report-table-test-harness',
+          icon: AssessmentIcon,
+          resourceId: 'route:development.report-table-test-harness' as ResourceId
+        }
+      ]
+    }
   ],
   defaultSection: 'clientManagement'
 };

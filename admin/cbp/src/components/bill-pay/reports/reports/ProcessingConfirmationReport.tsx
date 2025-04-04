@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box,
   Grid,
-  MenuItem,
-  TextField,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  FormHelperText
+  Box
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import {
   ProcessingConfirmationParams,
   ProcessingConfirmationResponse,
@@ -26,7 +18,7 @@ import {
   getProcessingConfirmation
 } from '../../../../utils/reports/processingConfirmation';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 
 const ProcessingConfirmationReport: React.FC = () => {
   // State for form inputs
@@ -104,53 +96,56 @@ const ProcessingConfirmationReport: React.FC = () => {
     runReport(1); // Reset to first page on new search
   };
   
-  // Handle sort change
-  const handleSortChange = (column: string) => {
-    // Find the column definition to get the sortKey
-    const columnDef = columns.find(col => col.key === column);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
-      } else {
-        setSortColumn(newSortColumn);
-        setSortDirection('ASC');
-      }
+  // Handle sort change for ReportTableV2
+  const handleSortChange = (newSortColumn: ProcessingConfirmationSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
+    
+    // Reset to page 1 when sort changes
+    if (pageNumber === 1) {
+      runReport(1);
+    } else {
+      setPageNumber(1);
     }
   };
   
-  // Handle page change
-  const handlePageChange = (page: number) => {
+  // Handle page change for ReportTableV2
+  const handlePageChange = (page: number, newPageSize: number) => {
+    if (newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+    }
     runReport(page);
   };
   
-  // Handle export to CSV
-  const handleExportCsv = () => {
-    if (!data || !data.items.length) return;
-    
-    // Format data for CSV
-    const csvContent = [
-      // Header row
-      ['Start Time', 'End Time', 'Message'].join(','),
-      // Data rows
-      ...data.items.map(item => [
-        item.start || '',
-        item.end || '',
-        item.message || ''
-      ].join(','))
-    ].join('\n');
-    
-    // Create and download CSV file
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `processing-confirmation-${dayjs().format('YYYY-MM-DD')}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // Function to get paged data for CSV export
+  const getPagedData = async (request: { page: number; pageSize: number; sortColumn: ProcessingConfirmationSortColumn; sortDirection: 'ASC' | 'DESC' }) => {
+    try {
+      // Format dates for API request
+      const formattedStartDate = startDate ? startDate.format('YYYY-MM-DD') : '';
+      const formattedEndDate = endDate ? endDate.format('YYYY-MM-DD') : '';
+      
+      // Prepare request parameters
+      const params: ProcessingConfirmationParams = {
+        searchType: ProcessingConfirmationSearchType.DateRange,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        sortColumn: request.sortColumn,
+        sortDirection: request.sortDirection,
+        pageNumber: request.page,
+        pageSize: request.pageSize
+      };
+      
+      // Call API
+      const response = await getProcessingConfirmation(params);
+      return {
+        items: response.items || [],
+        pageNumber: response.pageNumber,
+        totalCount: response.totalCount
+      };
+    } catch (error) {
+      console.error('Error fetching processing confirmation data for export:', error);
+      throw error;
+    }
   };
   
   // Run report when sort parameters change
@@ -160,58 +155,34 @@ const ProcessingConfirmationReport: React.FC = () => {
     }
   }, [sortColumn, sortDirection]);
   
-  // Define table columns
+  // Define table columns for ReportTableV2
   const columns = [
     {
       key: 'start',
       label: 'Start Time',
       sortable: true,
       sortKey: ProcessingConfirmationSortColumn.Start,
-      render: (value: any, item: ProcessingConfirmationItem) => (item && item.start) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Start Time
-          {sortColumn === ProcessingConfirmationSortColumn.Start && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: ProcessingConfirmationItem) => {
+        if (!item || !item.start) return '';
+        return dayjs(item.start).format('MM/DD/YYYY hh:mm:ss A');
+      }
     },
     {
       key: 'end',
       label: 'End Time',
       sortable: true,
       sortKey: ProcessingConfirmationSortColumn.End,
-      render: (value: any, item: ProcessingConfirmationItem) => (item && item.end) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          End Time
-          {sortColumn === ProcessingConfirmationSortColumn.End && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: ProcessingConfirmationItem) => {
+        if (!item || !item.end) return '';
+        return dayjs(item.end).format('MM/DD/YYYY hh:mm:ss A');
+      }
     },
     {
       key: 'message',
       label: 'Message',
       sortable: true,
       sortKey: ProcessingConfirmationSortColumn.Message,
-      render: (value: any, item: ProcessingConfirmationItem) => (item && item.message) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Message
-          {sortColumn === ProcessingConfirmationSortColumn.Message && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: any, item: ProcessingConfirmationItem) => (item && item.message) || ''
     }
   ];
   
@@ -222,7 +193,6 @@ const ProcessingConfirmationReport: React.FC = () => {
       loading={loading}
       error={error}
       hasData={!!data && data.items.length > 0}
-      onExportCsv={data && data.items.length > 0 ? handleExportCsv : undefined}
     >
       <Box component="form" onSubmit={handleSubmit} sx={{ mb: 4 }}>
         <Grid container spacing={3}>
@@ -272,17 +242,22 @@ const ProcessingConfirmationReport: React.FC = () => {
       </Box>
       
       {data && data.items.length > 0 ? (
-        <ReportTable
+        <ReportTableV2
           columns={columns}
           data={data.items}
           pagination={{
             pageNumber: data.pageNumber,
-            pageSize: data.pageSize,
             totalCount: data.totalCount,
-            onPageChange: handlePageChange,
-            onPageSizeChange: setPageSize
+            onPageChange: handlePageChange
           }}
-          onSort={handleSortChange}
+          sortColumn={sortColumn}
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
+          enableExport={{
+            getPagedData,
+            maxPageSize: 100
+          }}
+          exportFileName={`processing-confirmation-${dayjs().format('YYYY-MM-DD')}`}
         />
       ) : !loading && !error && (
         <Typography variant="body1" sx={{ mt: 2 }}>

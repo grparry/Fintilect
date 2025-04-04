@@ -1,13 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Pagination, Box, Typography } from '@mui/material';
+import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 import { 
   ERROR_RECAP_SEARCH_TYPES, 
   ErrorRecapSearchType,
@@ -35,6 +33,7 @@ const ErrorRecapReport: React.FC = () => {
   const [payeeId, setPayeeId] = useState<string>('');
   const [payeeName, setPayeeName] = useState<string>('');
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [sortColumn, setSortColumn] = useState<ErrorRecapSortColumn | undefined>(undefined);
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('ASC');
   
@@ -58,122 +57,23 @@ const ErrorRecapReport: React.FC = () => {
   };
 
   // Handle sort change
-  const handleSort = (columnKey: string) => {
-    // Find the column definition to get the sortKey
-    const columnDef = columns.find(col => col.key === columnKey);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      let newDirection: 'ASC' | 'DESC';
-      
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        newDirection = sortDirection === 'ASC' ? 'DESC' : 'ASC';
-      } else {
-        newDirection = 'DESC'; // Start with descending sort on first click
-      }
-      
-      // Update state
-      setSortColumn(newSortColumn);
-      setSortDirection(newDirection);
-      
-      // Reset to page 1 when sort changes
-      if (page === 1) {
-        // Force immediate report run with the new sort parameters
-        const params: ErrorRecapParams = {
-          searchType: searchType,
-          pageNumber: 1,
-          pageSize: DEFAULT_PAGE_SIZE,
-          sortColumn: newSortColumn,
-          sortDirection: newDirection
-        };
-        
-        // Add specific parameters based on search type
-        switch (searchType) {
-          case ErrorRecapSearchType.MemberID:
-            params.memberId = memberId;
-            break;
-          case ErrorRecapSearchType.PaymentID:
-            params.paymentId = paymentId;
-            break;
-          case ErrorRecapSearchType.UserPayeeListID:
-            params.userPayeeListId = userPayeeListId;
-            break;
-          case ErrorRecapSearchType.StatusCode:
-            params.statusCode = statusCode;
-            break;
-          case ErrorRecapSearchType.DateRange:
-            if (startDate) params.startDate = startDate.format('YYYY-MM-DD');
-            if (endDate) params.endDate = endDate.format('YYYY-MM-DD');
-            break;
-          case ErrorRecapSearchType.PayeeID:
-            params.payeeId = payeeId;
-            break;
-          case ErrorRecapSearchType.PayeeName:
-            params.payeeName = payeeName;
-            break;
-        }
-        
-        setLoading(true);
-        setError(null);
-        
-        getErrorRecap(params)
-          .then(response => {
-            setReportData(response.items);
-            setTotalPages(response.totalPages);
-            setTotalCount(response.totalCount);
-          })
-          .catch(err => {
-            setError('Failed to load error recap data. Please try again.');
-            console.error('Error fetching error recap data:', err);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      } else {
-        setPage(1);
-      }
+  const handleSortChange = (newSortColumn: ErrorRecapSortColumn, newDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newDirection);
+    if (page === 1) {
+      runReport(1);
+    } else {
+      setPage(1);
     }
   };
 
   // Handle page change
-  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-    
-    // Check if required parameters are available based on search type
-    let hasRequiredParams = false;
-    
-    switch (searchType) {
-      case ErrorRecapSearchType.MemberID:
-        hasRequiredParams = !!memberId;
-        break;
-      case ErrorRecapSearchType.PaymentID:
-        hasRequiredParams = !!paymentId;
-        break;
-      case ErrorRecapSearchType.UserPayeeListID:
-        hasRequiredParams = !!userPayeeListId;
-        break;
-      case ErrorRecapSearchType.StatusCode:
-        hasRequiredParams = !!statusCode;
-        break;
-      case ErrorRecapSearchType.DateRange:
-        hasRequiredParams = !!startDate && !!endDate;
-        if (!hasRequiredParams) setError('Start Date and End Date are required');
-        else if (startDate && endDate && startDate.isAfter(endDate)) {
-          setError('Start Date must be before End Date');
-          hasRequiredParams = false;
-        }
-        break;
-      case ErrorRecapSearchType.PayeeID:
-        hasRequiredParams = !!payeeId;
-        break;
-      case ErrorRecapSearchType.PayeeName:
-        hasRequiredParams = !!payeeName;
-        break;
+  const handlePageChange = (newPage: number, newPageSize?: number) => {
+    setPage(newPage);
+    if (newPageSize) {
+      setPageSize(newPageSize);
     }
-    
-    if (hasRequiredParams) {
-      runReport(value);
-    }
+    runReport(newPage);
   };
 
   // Run the error recap report
@@ -233,7 +133,7 @@ const ErrorRecapReport: React.FC = () => {
       const params: ErrorRecapParams = {
         searchType: searchType,
         pageNumber: currentPage,
-        pageSize: DEFAULT_PAGE_SIZE,
+        pageSize: pageSize,
         sortColumn: sortColumn,
         sortDirection: sortDirection
       };
@@ -253,9 +153,8 @@ const ErrorRecapReport: React.FC = () => {
           params.statusCode = statusCode;
           break;
         case ErrorRecapSearchType.DateRange:
-          params.startDate = startDate?.format('YYYY-MM-DD');
-          params.endDate = endDate?.format('YYYY-MM-DD');
-          console.log('Date search parameters:', { startDate: params.startDate, endDate: params.endDate });
+          if (startDate) params.startDate = startDate.toISOString();
+          if (endDate) params.endDate = endDate.toISOString();
           break;
         case ErrorRecapSearchType.PayeeID:
           params.payeeId = payeeId;
@@ -284,51 +183,16 @@ const ErrorRecapReport: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchType, memberId, paymentId, userPayeeListId, statusCode, startDate, endDate, payeeId, payeeName, sortColumn, sortDirection]);
+  }, [searchType, memberId, paymentId, userPayeeListId, statusCode, startDate, endDate, payeeId, payeeName, sortColumn, sortDirection, pageSize]);
 
-  // Export report data to CSV
-  const handleExportCsv = useCallback(() => {
-    if (!reportData || reportData.length === 0) return;
-    
-    // Define CSV columns
-    const header = [
-      'failedDate', 'memberId', 'paymentId', 'amount', 'payeeId', 
-      'payeeName', 'userPayeeListId', 'usersAccountAtPayee', 'nameOnAccount', 
-      'status', 'hostCode', 'error'
-    ].join(',');
-    
-    // Convert data to CSV rows
-    const rows = reportData.map(row => {
-      return [
-        row.failedDate ? dayjs(row.failedDate).format('MM/DD/YYYY HH:mm:ss') : '',
-        row.memberId || '',
-        row.paymentId || '',
-        row.amount || 0,
-        row.payeeId || '',
-        row.payeeName || '',
-        row.userPayeeListId || '',
-        row.usersAccountAtPayee || '',
-        row.nameOnAccount || '',
-        row.status || '',
-        row.hostCode || '',
-        row.error ? `"${row.error.replace(/"/g, '""')}"` : ''
-      ].join(',');
-    });
-    
-    // Combine header and rows
-    const csv = [header, ...rows].join('\n');
-    
-    // Create and download CSV file
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `error-recap-${dayjs().format('YYYY-MM-DD')}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }, [reportData]);
+
+
+  // Run report when sort parameters change
+  useEffect(() => {
+    if (reportData) {
+      runReport(page);
+    }
+  }, [sortColumn, sortDirection]);
 
   // Get the label for the search value field based on search type
   const getSearchValueLabel = () => {
@@ -360,48 +224,21 @@ const ErrorRecapReport: React.FC = () => {
       render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY HH:mm:ss') : '',
       sortable: true,
       sortKey: ErrorRecapSortColumn.FailedDate,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Failed Date
-          {sortColumn === ErrorRecapSortColumn.FailedDate && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+
     },
     { 
-      key: 'memberId', 
+      key: 'memberID', 
       label: 'Member ID', 
       sortable: true,
       sortKey: ErrorRecapSortColumn.MemberID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Member ID
-          {sortColumn === ErrorRecapSortColumn.MemberID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+
     },
     { 
-      key: 'paymentId', 
+      key: 'paymentID', 
       label: 'Payment ID', 
       sortable: true,
       sortKey: ErrorRecapSortColumn.PaymentID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payment ID
-          {sortColumn === ErrorRecapSortColumn.PaymentID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+
     },
     { 
       key: 'amount', 
@@ -409,85 +246,56 @@ const ErrorRecapReport: React.FC = () => {
       render: (value: number) => value ? `$${value.toFixed(2)}` : '$0.00',
       sortable: true,
       sortKey: ErrorRecapSortColumn.Amount,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Amount
-          {sortColumn === ErrorRecapSortColumn.Amount && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+
     },
     { 
-      key: 'userPayeeListId', 
+      key: 'userPayeeListID', 
       label: 'User Payee List ID', 
       sortable: true,
       sortKey: ErrorRecapSortColumn.UserPayeeListID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          User Payee List ID
-          {sortColumn === ErrorRecapSortColumn.UserPayeeListID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+
     },
     { 
-      key: 'payeeId', 
+      key: 'payeeID', 
       label: 'Payee ID', 
       sortable: true,
       sortKey: ErrorRecapSortColumn.PayeeID,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payee ID
-          {sortColumn === ErrorRecapSortColumn.PayeeID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+
     },
     { 
       key: 'payeeName', 
       label: 'Payee Name', 
       sortable: true,
       sortKey: ErrorRecapSortColumn.PayeeName,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payee Name
-          {sortColumn === ErrorRecapSortColumn.PayeeName && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+
     },
-    { key: 'usersAccountAtPayee', label: 'Account At Payee' },
-    { key: 'nameOnAccount', label: 'Name On Account' },
+    { 
+      key: 'usersAccountAtPayee', 
+      label: 'Account at Payee', 
+      sortable: false
+    },
+    { 
+      key: 'nameOnAccount', 
+      label: 'Name on Account', 
+      sortable: false
+    },
     { 
       key: 'status', 
       label: 'Status', 
       sortable: true,
       sortKey: ErrorRecapSortColumn.Status,
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Status
-          {sortColumn === ErrorRecapSortColumn.Status && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+
     },
-    { key: 'hostCode', label: 'Host Code' },
-    { key: 'error', label: 'Error' }
+    { 
+      key: 'hostCode', 
+      label: 'Host Code', 
+      sortable: false
+    },
+    { 
+      key: 'error', 
+      label: 'Error', 
+      sortable: false
+    }
   ];
 
   // Run report when sort parameters change
@@ -502,7 +310,6 @@ const ErrorRecapReport: React.FC = () => {
       <ReportContainer
         title="Error Recap Report"
         onRunReport={() => runReport(1)}
-        onExportCsv={handleExportCsv}
         loading={loading}
         error={error}
         hasData={!!reportData && reportData.length > 0}
@@ -595,25 +402,63 @@ const ErrorRecapReport: React.FC = () => {
         </Grid>
 
         {reportData && reportData.length > 0 ? (
-          <>
-            <ReportTable
-              data={reportData}
-              columns={columns}
-              onSort={handleSort}
-            />
-            
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-              <Typography variant="body2">
-                Showing {reportData.length} of {totalCount} results
-              </Typography>
-              <Pagination 
-                count={totalPages} 
-                page={page} 
-                onChange={handlePageChange} 
-                color="primary" 
-              />
-            </Box>
-          </>
+          <ReportTableV2
+            columns={columns}
+            data={reportData}
+            pagination={{
+              pageNumber: page,
+              totalCount: totalCount,
+              onPageChange: handlePageChange
+            }}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            onSortChange={handleSortChange}
+            enableExport={{
+              getPagedData: async (request) => {
+                const params: ErrorRecapParams = {
+                  pageNumber: request.page,
+                  pageSize: request.pageSize,
+                  sortColumn: request.sortColumn,
+                  sortDirection: request.sortDirection,
+                  searchType
+                };
+
+                switch (searchType) {
+                  case ErrorRecapSearchType.MemberID:
+                    params.memberId = memberId;
+                    break;
+                  case ErrorRecapSearchType.PaymentID:
+                    params.paymentId = paymentId;
+                    break;
+                  case ErrorRecapSearchType.UserPayeeListID:
+                    params.userPayeeListId = userPayeeListId;
+                    break;
+                  case ErrorRecapSearchType.StatusCode:
+                    params.statusCode = statusCode;
+                    break;
+                  case ErrorRecapSearchType.DateRange:
+                    if (startDate) params.startDate = startDate.toISOString();
+                    if (endDate) params.endDate = endDate.toISOString();
+                    break;
+                  case ErrorRecapSearchType.PayeeID:
+                    params.payeeId = payeeId;
+                    break;
+                  case ErrorRecapSearchType.PayeeName:
+                    params.payeeName = payeeName;
+                    break;
+                }
+
+                const response = await getErrorRecap(params);
+                return {
+                  items: response.items,
+                  pageNumber: response.pageNumber,
+                  totalCount: response.totalCount
+                };
+              },
+              maxPageSize: 100
+            }}
+            exportFileName={`error-recap-${dayjs().format('YYYY-MM-DD')}`}
+          />
         ) : null}
       </ReportContainer>
     </LocalizationProvider>

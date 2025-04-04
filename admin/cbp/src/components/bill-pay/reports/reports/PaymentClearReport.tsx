@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
+import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ReportContainer from '../components/ReportContainer';
-import ReportTable from '../components/ReportTable';
+import ReportTableV2 from '../components/ReportTableV2';
 import { 
   PaymentClearSearchType, 
   PAYMENT_CLEAR_SEARCH_TYPES, 
@@ -114,26 +112,30 @@ const PaymentClearReport: React.FC = () => {
     runReport(1); // Reset to first page on new search
   };
   
-  // Handle sort change
-  const handleSortChange = (columnKey: string) => {
-    // Find the column definition to get the sortKey
-    const columnDef = columns.find(col => col.key === columnKey);
-    if (columnDef && columnDef.sortKey) {
-      const newSortColumn = columnDef.sortKey;
-      
-      // If clicking the same column, toggle direction
-      if (sortColumn === newSortColumn) {
-        setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
-      } else {
-        setSortColumn(newSortColumn);
-        setSortDirection('ASC');
-      }
+  // Handle sort change for ReportTableV2
+  const handleSortChange = (newSortColumn: PaymentClearSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    setSortColumn(newSortColumn);
+    setSortDirection(newSortDirection);
+    
+    // Reset to page 1 when sort changes
+    if (pageNumber === 1) {
+      runReport(1);
+    } else {
+      setPageNumber(1);
+      runReport(1);
     }
   };
   
-  // Handle page change
-  const handlePageChange = (page: number) => {
-    runReport(page);
+  // Handle page change for ReportTableV2
+  const handlePageChange = (page: number, newPageSize?: number) => {
+    if (newPageSize && newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+      setPageNumber(1); // Reset to first page when changing page size
+      runReport(1);
+    } else {
+      setPageNumber(page);
+      runReport(page);
+    }
   };
   
   // Handle search type change
@@ -150,37 +152,7 @@ const PaymentClearReport: React.FC = () => {
     });
   };
   
-  // Handle export to CSV
-  const handleExportCsv = () => {
-    if (!data || !data.items || !data.items.length) return;
-    
-    // Format data for CSV
-    const csvContent = [
-      // Header row
-      ['Payment ID', 'Member ID', 'Amount', 'Cleared Date', 'Date Processed', 'Payee Name', 'Payment Method', 'Check Number'].join(','),
-      // Data rows
-      ...data.items.map((item: PaymentClearItem) => [
-        item.paymentID || '',
-        item.memberID || '',
-        item.amount || '',
-        item.clearedDate || '',
-        item.dateProcessed || '',
-        item.payeeName || '',
-        item.paymentMethod || '',
-        item.checkNumber || ''
-      ].join(','))
-    ].join('\n');
-    
-    // Create and download CSV file
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `payment-clear-report-${dayjs().format('YYYY-MM-DD')}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+
   
   // Run report when sort parameters change
   useEffect(() => {
@@ -196,103 +168,53 @@ const PaymentClearReport: React.FC = () => {
       label: 'Payment ID',
       sortable: true,
       sortKey: PaymentClearSortColumn.PaymentID,
-      render: (value: any, item: PaymentClearItem) => (item && item.paymentID) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payment ID
-          {sortColumn === PaymentClearSortColumn.PaymentID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: string) => value || ''
     },
     {
       key: 'memberID',
       label: 'Member ID',
       sortable: true,
       sortKey: PaymentClearSortColumn.MemberID,
-      render: (value: any, item: PaymentClearItem) => (item && item.memberID) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Member ID
-          {sortColumn === PaymentClearSortColumn.MemberID && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: string) => value || ''
     },
     {
       key: 'amount',
       label: 'Amount',
       sortable: true,
       sortKey: PaymentClearSortColumn.Amount,
-      render: (value: any, item: PaymentClearItem) => (item && item.amount !== undefined) ? `$${item.amount.toFixed(2)}` : '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Amount
-          {sortColumn === PaymentClearSortColumn.Amount && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: number) => value !== undefined ? `$${value.toFixed(2)}` : ''
     },
     {
       key: 'clearedDate',
       label: 'Cleared Date',
       sortable: true,
       sortKey: PaymentClearSortColumn.ClearedDate,
-      render: (value: any, item: PaymentClearItem) => (item && item.clearedDate) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Cleared Date
-          {sortColumn === PaymentClearSortColumn.ClearedDate && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY') : ''
     },
     {
       key: 'dateProcessed',
       label: 'Date Processed',
       sortable: false,
-      render: (value: any, item: PaymentClearItem) => (item && item.dateProcessed) || ''
+      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY') : ''
     },
     {
       key: 'payeeName',
       label: 'Payee Name',
       sortable: true,
       sortKey: PaymentClearSortColumn.PayeeName,
-      render: (value: any, item: PaymentClearItem) => (item && item.payeeName) || '',
-      renderHeader: () => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          Payee Name
-          {sortColumn === PaymentClearSortColumn.PayeeName && (
-            sortDirection === 'ASC' ? 
-            <ArrowUpwardIcon fontSize="small" sx={{ ml: 0.5 }} /> : 
-            <ArrowDownwardIcon fontSize="small" sx={{ ml: 0.5 }} />
-          )}
-        </Box>
-      )
+      render: (value: string) => value || ''
     },
     {
       key: 'paymentMethod',
       label: 'Payment Method',
       sortable: false,
-      render: (value: any, item: PaymentClearItem) => (item && item.paymentMethod) || ''
+      render: (value: string) => value || ''
     },
     {
       key: 'checkNumber',
       label: 'Check Number',
       sortable: false,
-      render: (value: any, item: PaymentClearItem) => (item && item.checkNumber) || ''
+      render: (value: string) => value || ''
     }
   ];
   
@@ -303,7 +225,6 @@ const PaymentClearReport: React.FC = () => {
       loading={loading}
       error={error}
       hasData={!!(data && data.items && data.items.length > 0)}
-      onExportCsv={handleExportCsv}
     >
       <Paper sx={{ p: 2, mb: 2 }}>
         <form onSubmit={handleSubmit}>
@@ -413,17 +334,54 @@ const PaymentClearReport: React.FC = () => {
       </Paper>
       
       {data && data.items && data.items.length > 0 ? (
-        <ReportTable
+        <ReportTableV2
           columns={columns}
           data={data.items}
           pagination={{
             pageNumber: data.pageNumber,
-            pageSize: data.pageSize,
             totalCount: data.totalCount,
-            onPageChange: handlePageChange,
-            onPageSizeChange: setPageSize
+            onPageChange: handlePageChange
           }}
-          onSort={handleSortChange}
+          sortColumn={sortColumn}
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
+          enableExport={{
+            getPagedData: async (request) => {
+              // Build parameters for the API call
+              const params: PaymentClearParams = {
+                searchType,
+                days,
+                pageNumber: request.page,
+                pageSize: request.pageSize,
+                sortColumn: request.sortColumn,
+                sortDirection: request.sortDirection
+              };
+              
+              // Add conditional parameters based on search type
+              if (searchType === PaymentClearSearchType.Member) {
+                params.memberID = memberID;
+              } else if (searchType === PaymentClearSearchType.Payment) {
+                params.paymentID = paymentID;
+              } else if (searchType === PaymentClearSearchType.RecurringPayment) {
+                params.recurringPaymentID = recurringPaymentID;
+              } else if (searchType === PaymentClearSearchType.UserPayeeList) {
+                params.userPayeeListID = userPayeeListID;
+              } else if (searchType === PaymentClearSearchType.Payee) {
+                params.payeeID = payeeID;
+              }
+
+              // Call the API
+              const response = await getPaymentClearReport(params);
+              
+              return {
+                items: response.items || [],
+                pageNumber: response.pageNumber,
+                totalCount: response.totalCount
+              };
+            },
+            maxPageSize: 100
+          }}
+          exportFileName={`payment-clear-report-${dayjs().format('YYYY-MM-DD')}`}
         />
       ) : data && data.items && data.items.length === 0 ? (
         <Typography variant="body1">No payment clear data found for the selected criteria.</Typography>
