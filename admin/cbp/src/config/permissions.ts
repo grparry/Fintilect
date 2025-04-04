@@ -319,7 +319,7 @@ export const permissionRegistry: PermissionRegistry = {
   },
   'route:client-management.edit.users': {
     resourceId: 'route:client-management.edit.users',
-    permissions: ['ClientManager', 'Users_Manage'],
+    permissions: ['ClientManager', 'UserManager'],
     adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'Manage client users'
   },

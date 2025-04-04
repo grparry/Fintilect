@@ -31,6 +31,7 @@ import { encodeId } from '../../utils/idEncoder';
 import logger from '../../utils/logger';
 import { UserFormData } from './users/UserForm';
 
+
 interface UsersState {
   users: User[];
   groups: UserGroup[];
@@ -54,8 +55,11 @@ interface UsersProps {
   clientId: string;
   loading?: boolean;
 }
+
+
 const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
   const navigate = useNavigate();
+  const [clientTenantId, setClientTenantId] = useState<number>(1);
   const [state, setState] = useState<UsersState>({
     users: [],
     groups: [],
@@ -151,22 +155,41 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       }));
     }
   }, [clientId, state.limit, state.searchTerm, state.page, state.showInactive]);
+  // Load client details to get tenant ID
   useEffect(() => {
+    const fetchClientDetails = async () => {
+      try {
+        if (clientId) {
+          const client = await clientService.getClient(Number(clientId));
+          if (client && client.tenantId) {
+            setClientTenantId(client.tenantId);
+            logger.info(`Loaded client details for client ID ${clientId}: Tenant ID ${client.tenantId}`);
+          }
+        }
+      } catch (error) {
+        logger.error('Error loading client details:', error);
+      }
+    };
+    
+    fetchClientDetails();
     loadData();
-  }, [loadData]);
+  }, [clientId, loadData]);
   const handleCreateUser = async (formData: Partial<UserFormData>) => {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
+      // Create user object that matches the UserAddRequest schema
       const newUser = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         username: `${formData.firstName.toLowerCase()}.${formData.lastName.toLowerCase()}`,
         clientId: Number(clientId),
         isActive: true,
-        creationDate: new Date().toISOString(),
-        tenantId: 1, // TODO: Get from context
+        tenantId: clientTenantId, // Use tenant ID from state directly
         isLocked: false,
         department: formData.department || '',
+        email: formData.email,
+        password: formData.password,
+        forcePasswordChange: true // This is a valid field in the API schema
       };
       await userService.createUser(newUser);
       setState(prev => ({
@@ -177,14 +200,46 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
       }));
       loadData();
       logger.info('User created successfully');
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to create user';
-      logger.error('Error creating user:' + message);
+    } catch (error: any) {
+      // Don't close the modal, let the UserForm handle the error display
+      logger.error('Error creating user:', error);
+      
+      // Extract error message
+      let errorMessage = '';
+      
+      if (error?.response?.data?.errors) {
+        const validationErrors = error.response.data.errors;
+        const errorMessages: string[] = [];
+        
+        Object.keys(validationErrors).forEach(field => {
+          const fieldErrors = validationErrors[field];
+          if (Array.isArray(fieldErrors)) {
+            errorMessages.push(...fieldErrors);
+          } else if (typeof fieldErrors === 'string') {
+            errorMessages.push(fieldErrors);
+          }
+        });
+        
+        if (errorMessages.length > 0) {
+          errorMessage = errorMessages.join('\n');
+        }
+      } else if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = 'An unexpected error occurred';
+      }
+      
+      // Set both the parent error and keep the modal open
       setState(prev => ({ 
         ...prev, 
-        saving: false, 
-        error: message 
+        saving: false,
+        error: errorMessage
       }));
+      
+      // Re-throw the error with the extracted message
+      throw new Error(errorMessage);
     }
   };
   const handleUpdateUser = useCallback(async (userData: Partial<User>) => {
@@ -395,6 +450,7 @@ const Users: React.FC<UsersProps> = ({ clientId, loading: parentLoading }) => {
             onSubmit={state.selectedUser ? handleSubmitForm : handleCreateUser}
             onCancel={() => setState(prev => ({ ...prev, isFormOpen: false, selectedUser: undefined }))}
             saving={state.saving}
+            parentError={state.error}
           />
         </DialogContent>
       </Dialog>

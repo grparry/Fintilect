@@ -17,7 +17,7 @@ interface AboutDialogProps {
   onClose: () => void;
 }
 
-const APP_VERSION = '0.7';
+const APP_VERSION = '0.8';
 
 const AboutDialog: React.FC<AboutDialogProps> = ({ open, onClose }) => {
   const theme = useTheme();

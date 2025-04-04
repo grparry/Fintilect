@@ -217,6 +217,7 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ clientId }) => 
                 value={selectedContact.phone}
                 onChange={handleInputChange('phone')}
                 disabled={saving}
+                required
               />
             </Grid>
             <Grid item xs={12}>

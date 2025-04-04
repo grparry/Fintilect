@@ -24,35 +24,36 @@ export interface UserFormData {
   firstName: string;
   lastName: string;
   email: string;
-  mobilePhone: string;
-  role: UserRole;
   department: string;
   forcePasswordChange: boolean;
   isActive: boolean;
   isLocked: boolean;
+  password?: string;
 }
 interface UserFormProps {
   user?: User;
   onSubmit: (user: Partial<User>) => void;
   onCancel: () => void;
   saving?: boolean;
+  parentError?: string | null;
 }
 const UserForm: React.FC<UserFormProps> = ({
   user,
   onSubmit,
   onCancel,
   saving = false,
+  parentError = null,
 }) => {
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<UserFormData>({
     firstName: '',
     lastName: '',
     email: '',
-    mobilePhone: '',
-    role: UserRole.User,
     department: '',
     forcePasswordChange: false,
     isActive: true,
     isLocked: false,
+    password: '',
   });
   useEffect(() => {
     if (user) {
@@ -60,12 +61,11 @@ const UserForm: React.FC<UserFormProps> = ({
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         email: user.email || '',
-        mobilePhone: user.mobilePhone || '',
-        role: UserRole.User,
         department: user.department || '',
         forcePasswordChange: user.forcePasswordChange || false,
         isActive: user.isActive,
         isLocked: user.isLocked || false,
+        password: '',
       });
     } else {
       // Reset form when adding new user
@@ -73,15 +73,21 @@ const UserForm: React.FC<UserFormProps> = ({
         firstName: '',
         lastName: '',
         email: '',
-        mobilePhone: '',
-        role: UserRole.User,
         department: '',
         forcePasswordChange: false,
         isActive: true,
         isLocked: false,
+        password: '',
       });
     }
   }, [user]);
+  
+  // Effect to handle parent error updates
+  useEffect(() => {
+    if (parentError) {
+      setError(parentError);
+    }
+  }, [parentError]);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
   ) => {
@@ -103,25 +109,109 @@ const UserForm: React.FC<UserFormProps> = ({
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null); // Clear any previous errors
     try {
       // Convert form data to user data
+      // Prepare the base user data
       const userData: Partial<User> = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        mobilePhone: formData.mobilePhone,
         department: formData.department,
         isLocked: formData.isLocked,
         isActive: formData.isActive,
-        // Don't include password or forcePasswordChange in edits
       };
+      
+      // For new users, include password and force password change
+      if (!user && formData.password) {
+        userData.password = formData.password;
+        userData.forcePasswordChange = true; // Force password change for new users
+      } else if (user) {
+        // For existing users, maintain the current forcePasswordChange setting
+        userData.forcePasswordChange = formData.forcePasswordChange;
+      }
       await onSubmit(userData);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving user:', error);
+      
+      // Try to extract validation errors from the API response
+      let errorMessage = 'An unexpected error occurred while saving the user';
+      
+      try {
+        // Check if this is an axios error with a response
+        if (error?.response?.data) {
+          // Direct API error response
+          if (error.response.data.errors) {
+            // Format validation errors
+            const validationErrors = error.response.data.errors;
+            const errorMessages: string[] = [];
+            
+            // Collect all validation error messages
+            Object.keys(validationErrors).forEach(field => {
+              const fieldErrors = validationErrors[field];
+              if (Array.isArray(fieldErrors)) {
+                errorMessages.push(...fieldErrors);
+              } else if (typeof fieldErrors === 'string') {
+                errorMessages.push(fieldErrors);
+              }
+            });
+            
+            if (errorMessages.length > 0) {
+              errorMessage = errorMessages.join('\n');
+            }
+          } else if (error.response.data.message) {
+            errorMessage = error.response.data.message;
+          }
+        } 
+        // Check for nested payload structure (as seen in your example)
+        else if (error?.payload) {
+          try {
+            const payloadData = typeof error.payload === 'string' ? JSON.parse(error.payload) : error.payload;
+            if (payloadData.response?.data?.errors) {
+              // Format validation errors
+              const validationErrors = payloadData.response.data.errors;
+              const errorMessages: string[] = [];
+              
+              // Collect all validation error messages
+              Object.keys(validationErrors).forEach(field => {
+                const fieldErrors = validationErrors[field];
+                if (Array.isArray(fieldErrors)) {
+                  errorMessages.push(...fieldErrors);
+                } else if (typeof fieldErrors === 'string') {
+                  errorMessages.push(fieldErrors);
+                }
+              });
+              
+              if (errorMessages.length > 0) {
+                errorMessage = errorMessages.join('\n');
+              }
+            }
+          } catch (parseError) {
+            console.error('Error parsing payload:', parseError);
+          }
+        }
+        // Fallback to standard error message
+        else if (error instanceof Error) {
+          errorMessage = error.message;
+        } else if (typeof error === 'string') {
+          errorMessage = error;
+        }
+      } catch (parseError) {
+        console.error('Error parsing error response:', parseError);
+      }
+      
+      setError(errorMessage);
     }
   };
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+      {error && (
+        <Alert severity="error" sx={{ mb: 2, whiteSpace: 'pre-line' }}>
+          {error.split('\n').map((line, index) => (
+            <div key={index}>{line}</div>
+          ))}
+        </Alert>
+      )}
       <Paper sx={{ p: 3, mb: 3 }}>
         {/* Read-only information section */}
         {user && (
@@ -180,16 +270,10 @@ const UserForm: React.FC<UserFormProps> = ({
               value={formData.email}
               onChange={handleChange}
               fullWidth
+              required
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              name="mobilePhone"
-              label="Mobile Phone"
-              value={formData.mobilePhone}
-              onChange={handleChange}
-              fullWidth
-            />
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -205,23 +289,28 @@ const UserForm: React.FC<UserFormProps> = ({
 
         <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>Account Settings</Typography>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Role</InputLabel>
-              <Select
-                name="role"
-                value={formData.role}
-                label="Role"
-                onChange={handleChange}
-              >
-                {Object.values(UserRole).map(role => (
-                  <MenuItem key={role} value={role}>
-                    {role}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          {/* Only show temporary password field when creating a new user */}
+          {!user && (
+            <>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="password"
+                  label="Temporary Password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  helperText="User will be required to change this password on first login"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Alert severity="info" sx={{ mt: 1 }}>
+                  New users will be required to change their password on first login.
+                </Alert>
+              </Grid>
+            </>
+          )}
           <Grid item xs={12} sm={6}>
             <FormControlLabel
               control={

@@ -26,7 +26,15 @@ const ClientLoginSecuritySettings: React.FC<ClientLoginSecuritySettingsProps> = 
   settings,
   onRefresh
 }) => {
-  const [formData, setFormData] = useState<ClientLoginSecurityResponse>({
+  // Define a type that allows string values during input
+  type FormDataType = Omit<ClientLoginSecurityResponse, 'minPasswordLength' | 'maxLoginAttempts' | 'sessionTimeoutMinutes' | 'preventPasswordReuse'> & {
+    minPasswordLength: number | string;
+    maxLoginAttempts: number | string;
+    sessionTimeoutMinutes: number | string;
+    preventPasswordReuse: number | string;
+  };
+
+  const [formData, setFormData] = useState<FormDataType>({
     ...settings,
     twoFactorAuthRequired: false // Always ensure twoFactorAuthRequired is false
   });
@@ -48,12 +56,29 @@ const ClientLoginSecuritySettings: React.FC<ClientLoginSecuritySettingsProps> = 
 
   // Helper function to validate and handle numeric input changes
   const handleNumericChange = (field: keyof ClientLoginSecurityUpdateRequest, value: string, min: number, max: number) => {
-    // Only allow numeric input
-    if (value === '' || /^\d+$/.test(value)) {
-      const numValue = value === '' ? min : parseInt(value, 10);
-      // Ensure value is within min-max range
-      const boundedValue = Math.max(min, Math.min(max, numValue));
-      handleChange(field, boundedValue);
+    // Allow empty input temporarily during typing
+    if (value === '') {
+      setFormData({
+        ...formData,
+        [field]: value
+      });
+      return;
+    }
+    
+    // Only proceed if input is numeric
+    if (/^\d+$/.test(value)) {
+      const numValue = parseInt(value, 10);
+      
+      // If the value is within range, update it directly
+      if (numValue >= min && numValue <= max) {
+        handleChange(field, numValue);
+      } else if (numValue < min) {
+        // If below minimum, set to minimum
+        handleChange(field, min);
+      } else if (numValue > max) {
+        // If above maximum, set to maximum
+        handleChange(field, max);
+      }
     }
   };
 
@@ -63,17 +88,22 @@ const ClientLoginSecuritySettings: React.FC<ClientLoginSecuritySettingsProps> = 
       setError(null);
       setSuccess(null);
       
+      // Ensure all numeric values are properly converted to numbers
       const updateRequest: ClientLoginSecurityUpdateRequest = {
         id: formData.id,
-        minPasswordLength: formData.minPasswordLength,
+        minPasswordLength: typeof formData.minPasswordLength === 'string' ? 
+          parseInt(formData.minPasswordLength, 10) || 6 : formData.minPasswordLength,
         requireUppercase: formData.requireUppercase,
         requireLowercase: formData.requireLowercase,
         requireNumbers: formData.requireNumbers,
         requireSpecialCharacters: formData.requireSpecialCharacters,
         passwordExpiryDays: formData.passwordExpiryDays,
-        maxLoginAttempts: formData.maxLoginAttempts,
-        sessionTimeoutMinutes: formData.sessionTimeoutMinutes,
-        preventPasswordReuse: formData.preventPasswordReuse,
+        maxLoginAttempts: typeof formData.maxLoginAttempts === 'string' ? 
+          parseInt(formData.maxLoginAttempts, 10) || 1 : formData.maxLoginAttempts,
+        sessionTimeoutMinutes: typeof formData.sessionTimeoutMinutes === 'string' ? 
+          parseInt(formData.sessionTimeoutMinutes, 10) || 1 : formData.sessionTimeoutMinutes,
+        preventPasswordReuse: typeof formData.preventPasswordReuse === 'string' ?
+          parseInt(formData.preventPasswordReuse, 10) || 0 : formData.preventPasswordReuse,
         twoFactorAuthRequired: false // Always set to false as per requirements
       };
       
@@ -131,8 +161,18 @@ const ClientLoginSecuritySettings: React.FC<ClientLoginSecuritySettingsProps> = 
                 label="Minimum Password Length"
                 value={formData.minPasswordLength}
                 onChange={(e) => handleNumericChange('minPasswordLength', e.target.value, 6, 30)}
+                onBlur={() => {
+                  // Ensure empty value is set to minimum on blur
+                  if (formData.minPasswordLength === '' || formData.minPasswordLength === null) {
+                    handleChange('minPasswordLength', 6);
+                  } else if (typeof formData.minPasswordLength === 'string') {
+                    // Convert string to number on blur
+                    const numValue = parseInt(formData.minPasswordLength, 10);
+                    handleChange('minPasswordLength', numValue || 6);
+                  }
+                }}
                 sx={{ mb: 2 }}
-                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                inputProps={{ inputMode: 'numeric' }}
                 helperText={`Value must be between 6 and 30`}
               />
             </Grid>
@@ -152,10 +192,20 @@ const ClientLoginSecuritySettings: React.FC<ClientLoginSecuritySettingsProps> = 
                 fullWidth
                 label="Prevent Password Reuse (count)"
                 value={formData.preventPasswordReuse}
-                onChange={(e) => handleNumericChange('preventPasswordReuse', e.target.value, 0, 24)}
+                onChange={(e) => handleNumericChange('preventPasswordReuse', e.target.value, 0, 10)}
+                onBlur={() => {
+                  // Ensure empty value is set to minimum on blur
+                  if (formData.preventPasswordReuse === '' || formData.preventPasswordReuse === null) {
+                    handleChange('preventPasswordReuse', 0);
+                  } else if (typeof formData.preventPasswordReuse === 'string') {
+                    // Convert string to number on blur
+                    const numValue = parseInt(formData.preventPasswordReuse, 10);
+                    handleChange('preventPasswordReuse', numValue || 0);
+                  }
+                }}
                 sx={{ mb: 2 }}
-                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                helperText={`Value must be between 0 and 24`}
+                inputProps={{ inputMode: 'numeric' }}
+                helperText={`Value must be between 0 and 10`}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -221,8 +271,18 @@ const ClientLoginSecuritySettings: React.FC<ClientLoginSecuritySettingsProps> = 
                 label="Maximum Login Attempts"
                 value={formData.maxLoginAttempts}
                 onChange={(e) => handleNumericChange('maxLoginAttempts', e.target.value, 1, 10)}
+                onBlur={() => {
+                  // Ensure empty value is set to minimum on blur
+                  if (formData.maxLoginAttempts === '' || formData.maxLoginAttempts === null) {
+                    handleChange('maxLoginAttempts', 1);
+                  } else if (typeof formData.maxLoginAttempts === 'string') {
+                    // Convert string to number on blur
+                    const numValue = parseInt(formData.maxLoginAttempts, 10);
+                    handleChange('maxLoginAttempts', numValue || 1);
+                  }
+                }}
                 sx={{ mb: 2 }}
-                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                inputProps={{ inputMode: 'numeric' }}
                 helperText={`Value must be between 1 and 10`}
               />
             </Grid>
@@ -233,8 +293,18 @@ const ClientLoginSecuritySettings: React.FC<ClientLoginSecuritySettingsProps> = 
                 label="Session Timeout (minutes)"
                 value={formData.sessionTimeoutMinutes}
                 onChange={(e) => handleNumericChange('sessionTimeoutMinutes', e.target.value, 1, 1440)}
+                onBlur={() => {
+                  // Ensure empty value is set to minimum on blur
+                  if (formData.sessionTimeoutMinutes === '' || formData.sessionTimeoutMinutes === null) {
+                    handleChange('sessionTimeoutMinutes', 1);
+                  } else if (typeof formData.sessionTimeoutMinutes === 'string') {
+                    // Convert string to number on blur
+                    const numValue = parseInt(formData.sessionTimeoutMinutes, 10);
+                    handleChange('sessionTimeoutMinutes', numValue || 1);
+                  }
+                }}
                 sx={{ mb: 2 }}
-                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                inputProps={{ inputMode: 'numeric' }}
                 helperText={`Value must be between 1 and 1440`}
               />
             </Grid>

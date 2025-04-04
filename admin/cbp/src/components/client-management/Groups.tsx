@@ -90,6 +90,7 @@ export default function Groups({ clientId }: GroupsProps) {
   const [state, setState] = useState(initialState);
   const [membersDialogOpen, setMembersDialogOpen] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+  const [userSearchTerm, setUserSearchTerm] = useState('');
   const [roles, setRoles] = useState<Role[]>([]);
   const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
   const [rolesDialogOpen, setRolesDialogOpen] = useState(false);
@@ -355,6 +356,7 @@ export default function Groups({ clientId }: GroupsProps) {
   const handleCloseMembersDialog = () => {
     setMembersDialogOpen(false);
     setSelectedUsers([]);
+    setUserSearchTerm('');
     setState(prev => ({ ...prev, selectedGroup: null }));
   };
 
@@ -364,7 +366,24 @@ export default function Groups({ clientId }: GroupsProps) {
     try {
       setState(prev => ({ ...prev, saving: true, error: null }));
       
-      await permissionService.assignUserGroups(state.selectedGroup.id, selectedUsers);
+      // Get the current users in the group
+      const response = await permissionService.getGroupUsers(state.selectedGroup.id);
+      const currentUserIds = response.userGroups.map((userGroup: UserGroup) => userGroup.userId);
+      
+      // Determine which users to add and which to remove
+      const usersToAdd = selectedUsers.filter(userId => !currentUserIds.includes(userId));
+      const usersToRemove = currentUserIds.filter(userId => !selectedUsers.includes(userId));
+      
+      // Process removals first, then additions (sequentially)
+      // Remove users first
+      for (const userId of usersToRemove) {
+        await permissionService.removeUserGroups(userId, [state.selectedGroup!.id]);
+      }
+      
+      // Then add users
+      for (const userId of usersToAdd) {
+        await permissionService.assignUserGroups(userId, [state.selectedGroup!.id]);
+      }
       
       setState(prev => ({ 
         ...prev, 
@@ -383,13 +402,29 @@ export default function Groups({ clientId }: GroupsProps) {
     }
   };
 
-  const handleUserToggle = (userId: number) => {
-    setSelectedUsers(prev => 
-      prev.includes(userId) 
-        ? prev.filter(id => id !== userId)
-        : [...prev, userId]
-    );
+  const handleAddUser = (userId: number) => {
+    if (!selectedUsers.includes(userId)) {
+      setSelectedUsers(prev => [...prev, userId]);
+    }
   };
+
+  const handleRemoveUser = (userId: number) => {
+    setSelectedUsers(prev => prev.filter(id => id !== userId));
+  };
+  
+  // Filter users based on search term and active status
+  const filteredUsers = useMemo(() => {
+    return state.users.filter(user => {
+      // Only include active users
+      if (!user.isActive) return false;
+      
+      // Filter by search term
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+      const email = user.email.toLowerCase();
+      const searchTerm = userSearchTerm.toLowerCase();
+      return fullName.includes(searchTerm) || email.includes(searchTerm);
+    });
+  }, [state.users, userSearchTerm]);
 
   const handleOpenRoles = async (group: Group) => {
     try {
@@ -708,7 +743,7 @@ export default function Groups({ clientId }: GroupsProps) {
       <Dialog 
         open={membersDialogOpen} 
         onClose={handleCloseMembersDialog}
-        maxWidth="md"
+        maxWidth="lg"
         fullWidth
       >
         <DialogTitle>
@@ -717,18 +752,92 @@ export default function Groups({ clientId }: GroupsProps) {
         <DialogContent>
           {state.users.length > 0 ? (
             <Box sx={{ mt: 2 }}>
-              {state.users.map(user => (
-                <FormControlLabel
-                  key={user.id}
-                  control={
-                    <Checkbox
-                      checked={selectedUsers.includes(user.id)}
-                      onChange={() => handleUserToggle(user.id)}
+              <Grid container spacing={2}>
+                {/* Left side - Available Users */}
+                <Grid item xs={12} md={6}>
+                  <Paper sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    <Typography variant="h6" gutterBottom>Available Users</Typography>
+                    <TextField
+                      label="Search Users"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      value={userSearchTerm}
+                      onChange={(e) => setUserSearchTerm(e.target.value)}
+                      sx={{ mb: 2 }}
                     />
-                  }
-                  label={`${user.firstName} ${user.lastName} (${user.email})`}
-                />
-              ))}
+                    <Box sx={{ flexGrow: 1, overflow: 'auto', maxHeight: '400px' }}>
+                      <List dense>
+                        {filteredUsers
+                          .filter(user => !selectedUsers.includes(user.id))
+                          .map(user => (
+                            <ListItem 
+                              key={user.id}
+                              secondaryAction={
+                                <IconButton 
+                                  edge="end" 
+                                  aria-label="add"
+                                  onClick={() => handleAddUser(user.id)}
+                                  color="primary"
+                                >
+                                  <AddIcon />
+                                </IconButton>
+                              }
+                            >
+                              <ListItemText 
+                                primary={`${user.firstName} ${user.lastName}`}
+                                secondary={user.email}
+                              />
+                            </ListItem>
+                          ))}
+                        {filteredUsers.filter(user => !selectedUsers.includes(user.id)).length === 0 && (
+                          <Typography variant="body2" sx={{ p: 2, color: 'text.secondary' }}>
+                            No available users found
+                          </Typography>
+                        )}
+                      </List>
+                    </Box>
+                  </Paper>
+                </Grid>
+                
+                {/* Right side - Assigned Users */}
+                <Grid item xs={12} md={6}>
+                  <Paper sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    <Typography variant="h6" gutterBottom>Assigned Users</Typography>
+                    <Box sx={{ flexGrow: 1, overflow: 'auto', maxHeight: '400px' }}>
+                      <List dense>
+                        {state.users
+                          .filter(user => selectedUsers.includes(user.id) && user.isActive)
+                          .map(user => (
+                            <ListItem 
+                              key={user.id}
+                              secondaryAction={
+                                <IconButton 
+                                  edge="end" 
+                                  aria-label="remove"
+                                  onClick={() => handleRemoveUser(user.id)}
+                                  color="error"
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              }
+                            >
+                              <ListItemText 
+                                primary={`${user.firstName} ${user.lastName}`}
+                                secondary={user.email}
+                              />
+                            </ListItem>
+                          ))}
+                        {selectedUsers.length === 0 && (
+                          <Typography variant="body2" sx={{ p: 2, color: 'text.secondary' }}>
+                            No users assigned to this group
+                          </Typography>
+                        )}
+                      </List>
+                    </Box>
+                  </Paper>
+                </Grid>
+              </Grid>
             </Box>
           ) : (
             <Typography>No users available</Typography>

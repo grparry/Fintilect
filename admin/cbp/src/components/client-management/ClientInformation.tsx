@@ -26,8 +26,6 @@ interface ClientInfo {
   sponsorId: string;
   routingId: string;
   domain: string;
-  environment: 'PRODUCTION' | 'STAGING' | 'DEVELOPMENT';
-  type: 'ENTERPRISE' | 'SMB' | 'STARTUP' | 'STANDARD';
   status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
 }
 
@@ -37,8 +35,6 @@ const ClientInformation: React.FC<ClientInformationProps> = ({ clientId }) => {
     sponsorId: '',
     routingId: '',
     domain: '',
-    environment: 'DEVELOPMENT',
-    type: 'STANDARD',
     status: 'ACTIVE',
   });
   const [loading, setLoading] = useState(true);
@@ -59,8 +55,6 @@ const ClientInformation: React.FC<ClientInformationProps> = ({ clientId }) => {
         sponsorId: client.sponsorId?.toString() || '',
         routingId: client.routingId || '',
         domain: client.domain || '',
-        environment: (client.environment || 'DEVELOPMENT') as 'PRODUCTION' | 'STAGING' | 'DEVELOPMENT',
-        type: (client.type || 'STANDARD') as 'ENTERPRISE' | 'SMB' | 'STARTUP' | 'STANDARD',
         status: (client.status || 'ACTIVE') as 'ACTIVE' | 'INACTIVE' | 'SUSPENDED',
       });
       logger.info(`Client information loaded for client ${clientId}`);
@@ -105,8 +99,6 @@ const ClientInformation: React.FC<ClientInformationProps> = ({ clientId }) => {
         sponsorId: parseInt(clientInfo.sponsorId, 10) || null,
         routingId: clientInfo.routingId || null,
         domain: clientInfo.domain || null,
-        environment: clientInfo.environment,
-        type: clientInfo.type,
         status: clientInfo.status,
         id: Number(clientId)
       };
@@ -160,38 +152,8 @@ const ClientInformation: React.FC<ClientInformationProps> = ({ clientId }) => {
             disabled={saving}
           />
         </Grid>
-        <Grid item xs={12}>
-          <FormControl fullWidth required>
-            <InputLabel>Environment</InputLabel>
-            <Select
-              value={clientInfo.environment}
-              label="Environment"
-              onChange={(e) => handleInputChange('environment')(e as React.ChangeEvent<HTMLInputElement>)}
-              disabled={saving}
-            >
-              {(['PRODUCTION', 'STAGING', 'DEVELOPMENT'] as const).map((env) => (
-                <MenuItem key={env} value={env}>{env}</MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>Select the client's environment</FormHelperText>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12}>
-          <FormControl fullWidth required>
-            <InputLabel>Type</InputLabel>
-            <Select
-              value={clientInfo.type}
-              label="Type"
-              onChange={(e) => handleInputChange('type')(e as React.ChangeEvent<HTMLInputElement>)}
-              disabled={saving}
-            >
-              {(['ENTERPRISE', 'SMB', 'STARTUP', 'STANDARD'] as const).map((type) => (
-                <MenuItem key={type} value={type}>{type}</MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>Select the client type</FormHelperText>
-          </FormControl>
-        </Grid>
+
+
         <Grid item xs={12}>
           <FormControl fullWidth required>
             <InputLabel>Status</InputLabel>
