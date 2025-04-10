@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Card, CardContent, Grid, Typography, Button, Stack, useTheme, alpha } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import routes from '../../routes';
 import { RouteSection } from '../../types/route.types';
 import { useNavigation } from '../../context/NavigationContext';
+import { usePermissions } from '../../hooks/usePermissions';
+import { ResourceId } from '../../types/permissions.types';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PaymentIcon from '@mui/icons-material/Payment';
 import GroupIcon from '@mui/icons-material/Group';
@@ -15,6 +17,8 @@ interface AdminRoute {
   path: string;
   title: string;
   description: string;
+  requiredPermission?: string;
+  resourceId?: ResourceId;
 }
 const getIconForRoute = (routeId: string) => {
   switch (routeId) {
@@ -38,27 +42,80 @@ const AdminLanding: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { toggleSection } = useNavigation();
-  // Get all main sections from routes object
-  const adminRoutes: AdminRoute[] = [
+  const { permissionContext } = usePermissions();
+  const [visibleRoutes, setVisibleRoutes] = useState<AdminRoute[]>([]);
+
+  // Define all possible routes - memoize to prevent recreation on every render
+  const allRoutes = React.useMemo<AdminRoute[]>(() => [
     {
       id: 'clientManagement',
       path: routes.clientManagement.basePath,
       title: routes.clientManagement.title,
       description: getRouteDescription(routes.clientManagement),
+      requiredPermission: 'ClientManager',
+      resourceId: 'navigation:client-management' as ResourceId
     },
     {
       id: 'billPay',
       path: routes.billPay.basePath,
       title: routes.billPay.title,
       description: getRouteDescription(routes.billPay),
+      requiredPermission: 'BillPayRead',
+      resourceId: 'navigation:billPay' as ResourceId
     },
-    {
-      id: 'development',
-      path: routes.development.basePath,
-      title: routes.development.title,
-      description: 'Development tools and utilities for testing and debugging.',
-    },
-  ];
+  ], []);
+
+  const { checkPermission } = usePermissions();
+
+  // Filter routes based on user permissions
+  useEffect(() => {
+    const filterRoutes = async () => {
+      const filteredRoutes = [];
+      
+      for (const route of allRoutes) {
+        let hasAccess = false;
+        
+        // If the route has a resourceId, use that for permission check (includes admin permissions)
+        if (route.resourceId) {
+          try {
+            const result = await checkPermission(route.resourceId);
+            hasAccess = result.hasAccess;
+            console.log(`[AdminLanding] Resource ID check for ${route.title}:`, {
+              resourceId: route.resourceId,
+              hasAccess
+            });
+          } catch (error) {
+            console.error(`Error checking permission for ${route.resourceId}:`, error);
+          }
+        }
+        // Only if no resourceId is specified, fall back to direct role check
+        else if (route.requiredPermission) {
+          hasAccess = permissionContext.roles.includes(route.requiredPermission);
+          console.log(`[AdminLanding] Direct role check for ${route.title}:`, {
+            requiredPermission: route.requiredPermission,
+            hasAccess,
+            userRoles: permissionContext.roles
+          });
+        }
+        else {
+          // If no permissions required, grant access
+          hasAccess = true;
+          console.log(`[AdminLanding] No permission requirements for ${route.title}, granting access`);
+        }
+        
+        if (hasAccess) {
+          console.log(`[AdminLanding] Adding accessible route: ${route.title}`);
+          filteredRoutes.push(route);
+        } else {
+          console.log(`[AdminLanding] Route not accessible: ${route.title}`);
+        }
+      }
+      
+      setVisibleRoutes(filteredRoutes);
+    };
+    
+    filterRoutes();
+  }, [allRoutes, permissionContext, checkPermission]);
   const handleCardClick = (route: AdminRoute) => {
     // Update navigation state first
     toggleSection(route.id);
@@ -88,7 +145,7 @@ const AdminLanding: React.FC = () => {
         
         {/* Main Sections */}
         <Grid container spacing={3}>
-          {adminRoutes.map((route) => (
+          {visibleRoutes.map((route) => (
             <Grid item xs={12} sm={6} md={4} key={route.id}>
               <Card 
                 sx={{ 

@@ -19,6 +19,7 @@ export interface NavigationItem {
   hideFromSidebar?: boolean;
   children?: NavigationItem[];
   items?: NavigationItem[];
+  requiredPermission?: string;
 }
 
 export interface NavigationSection {
@@ -30,6 +31,7 @@ export interface NavigationSection {
   basePath?: string;
   path?: string;
   resourceId?: ResourceId;
+  requiredPermission?: string;
   items?: NavigationItem[];
   badge?: number;
   fallbackPath?: string;

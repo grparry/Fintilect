@@ -78,10 +78,11 @@ export const navigationConfig: NavigationConfig = {
       id: 'clientManagement',
       title: 'Client Management',
       icon: BusinessIcon,
+      requiredPermission: 'ClientManager',
       color: '#2e7d32',
       description: 'Manage clients, users, and permissions',
       path: '/admin/client-management',
-      resourceId: 'navigation:clientManagement' as ResourceId,
+      resourceId: 'navigation:client-management' as ResourceId,
       // The root path will handle redirection based on admin status
       // For admin users: redirects to /admin/client-management/list
       // For non-admin users: redirects to /admin/client-management/edit/:clientId/info
@@ -102,6 +103,7 @@ export const navigationConfig: NavigationConfig = {
       color: '#ed6c02',
       description: 'Manage bill pay features and settings',
       path: '/admin/bill-pay',
+      requiredPermission: 'BillPayRead',
       resourceId: 'navigation:billPay' as ResourceId,
       items: [
         {
@@ -137,7 +139,8 @@ export const navigationConfig: NavigationConfig = {
               title: 'Copy Member Payees',
               path: '/admin/bill-pay/payments/copy-payees',
               icon: TransformIcon,
-              resourceId: 'route:billPay.payments.copy-payees' as ResourceId
+              resourceId: 'route:billPay.payments.copy-payees' as ResourceId,
+              requiredPermission: 'BillPayWrite'
             },
             {
               id: 'change-history',
@@ -156,158 +159,195 @@ export const navigationConfig: NavigationConfig = {
           resourceId: 'route:billPay.reports' as ResourceId,
           items: [
             {
-              id: 'active-user-count-report',
-              title: 'Active User Count',
-              path: '/admin/bill-pay/reports/active-user-count',
-              icon: GroupIcon,
-              resourceId: 'route:billPay.reports.activeUserCount' as ResourceId
-            },
-            {
-              id: 'error-recap-report',
-              title: 'Error Recap',
-              path: '/admin/bill-pay/reports/error-recap',
-              icon: ErrorIcon,
-              resourceId: 'route:billPay.reports.errorRecap' as ResourceId
-            },
-            {
-              id: 'failed-on-us-report',
-              title: 'Failed On Us',
-              path: '/admin/bill-pay/reports/failed-on-us',
-              icon: ReportProblemIcon,
-              resourceId: 'route:billPay.reports.failedOnUs' as ResourceId
-            },
-            {
-              id: 'global-holidays-report',
-              title: 'Global Holidays',
-              path: '/admin/bill-pay/reports/global-holidays',
-              icon: EventIcon,
-              resourceId: 'route:billPay.reports.globalHolidays' as ResourceId
-            },
-            {
-              id: 'payee-report',
-              title: 'Payee Report',
-              path: '/admin/bill-pay/reports/payee',
-              icon: SearchIcon,
-              resourceId: 'route:billPay.reports.payee' as ResourceId
-            },
-            {
-              id: 'payment-report',
-              title: 'Payment Report',
-              path: '/admin/bill-pay/reports/payment',
+              id: 'payment-reports',
+              title: 'Payment Reports',
+              path: '/admin/bill-pay/reports/payment-reports',
               icon: PaymentIcon,
-              resourceId: 'route:billPay.reports.payment' as ResourceId
+              resourceId: 'route:billPay.reports' as ResourceId,
+              items: [
+                {
+                  id: 'failed-on-us-report',
+                  title: 'Failed On Us',
+                  path: '/admin/bill-pay/reports/failed-on-us',
+                  icon: ReportProblemIcon,
+                  resourceId: 'route:billPay.reports.failedOnUs' as ResourceId
+                },
+                {
+                  id: 'large-payment-report',
+                  title: 'Large Payment',
+                  path: '/admin/bill-pay/reports/large-payment',
+                  icon: PaymentsIcon,
+                  resourceId: 'route:billPay.reports.largePayment' as ResourceId
+                },
+                {
+                  id: 'on-us-postings-report',
+                  title: 'On Us Postings',
+                  path: '/admin/bill-pay/reports/on-us-postings',
+                  icon: AccountBalanceIcon,
+                  resourceId: 'route:billPay.reports.onUsPostings' as ResourceId
+                },
+                {
+                  id: 'payment-activity-report',
+                  title: 'Payment Activity',
+                  path: '/admin/bill-pay/reports/payment-activity',
+                  icon: PaymentIcon,
+                  resourceId: 'route:billPay.reports.paymentActivity' as ResourceId
+                },
+                {
+                  id: 'payment-clear-report',
+                  title: 'Payment Clear Report',
+                  path: '/admin/bill-pay/reports/payment-clear',
+                  icon: ConfirmationNumberIcon,
+                  resourceId: 'route:billPay.reports.paymentClear' as ResourceId
+                },
+                {
+                  id: 'payment-report',
+                  title: 'Payment Report',
+                  path: '/admin/bill-pay/reports/payment',
+                  icon: PaymentIcon,
+                  resourceId: 'route:billPay.reports.payment' as ResourceId
+                },
+                {
+                  id: 'pending-payments-report',
+                  title: 'Pending Payments',
+                  path: '/admin/bill-pay/reports/pending-payments',
+                  icon: PaymentIcon,
+                  resourceId: 'route:billPay.reports.pendingPayments' as ResourceId
+                },
+
+                {
+                  id: 'suspended-payment-report',
+                  title: 'Suspended Payment Report',
+                  path: '/admin/bill-pay/reports/suspended-payment',
+                  icon: PauseCircleOutlineIcon,
+                  resourceId: 'route:billPay.reports.suspendedPayment' as ResourceId
+                }
+              ]
             },
             {
-              id: 'large-payment-report',
-              title: 'Large Payment',
-              path: '/admin/bill-pay/reports/large-payment',
-              icon: PaymentsIcon,
-              resourceId: 'route:billPay.reports.largePayment' as ResourceId
-            },
-            {
-              id: 'monthly-users-report',
-              title: 'Monthly Users',
-              path: '/admin/bill-pay/reports/monthly-users',
-              icon: PeopleIcon,
-              resourceId: 'route:billPay.reports.monthlyUsers' as ResourceId
-            },
-            {
-              id: 'on-us-postings-report',
-              title: 'On Us Postings',
-              path: '/admin/bill-pay/reports/on-us-postings',
-              icon: AccountBalanceIcon,
-              resourceId: 'route:billPay.reports.onUsPostings' as ResourceId
-            },
-            {
-              id: 'payment-activity-report',
-              title: 'Payment Activity',
-              path: '/admin/bill-pay/reports/payment-activity',
-              icon: PaymentIcon,
-              resourceId: 'route:billPay.reports.paymentActivity' as ResourceId
-            },
-            {
-              id: 'pending-payments-report',
-              title: 'Pending Payments',
-              path: '/admin/bill-pay/reports/pending-payments',
-              icon: PaymentIcon,
-              resourceId: 'route:billPay.reports.pendingPayments' as ResourceId
-            },
-            {
-              id: 'processing-confirmation-report',
-              title: 'Processing Confirmation',
-              path: '/admin/bill-pay/reports/processing-confirmation',
-              icon: PaymentIcon,
-              resourceId: 'route:billPay.reports.processingConfirmation' as ResourceId
-            },
-            {
-              id: 'recurring-payment-change-history-report',
-              title: 'Recurring Payment Change History',
-              path: '/admin/bill-pay/reports/recurring-payment-change-history',
-              icon: HistoryIcon,
-              resourceId: 'route:billPay.reports.recurringPaymentChangeHistory' as ResourceId
-            },
-            {
-              id: 'scheduled-payment-change-history-report',
-              title: 'Scheduled Payment Change History',
-              path: '/admin/bill-pay/reports/scheduled-payment-change-history',
-              icon: HistoryIcon,
-              resourceId: 'route:billPay.reports.scheduledPaymentChangeHistory' as ResourceId
-            },
-            {
-              id: 'statuses-with-notifications-report',
-              title: 'Statuses with Notifications',
-              path: '/admin/bill-pay/reports/statuses-with-notifications',
-              icon: NotificationsIcon,
-              resourceId: 'route:billPay.reports.statusesWithNotifications' as ResourceId
-            },
-            {
-              id: 'user-payee-change-history-report',
-              title: 'User Payee Change History',
-              path: '/admin/bill-pay/reports/user-payee-change-history',
-              icon: HistoryIcon,
-              resourceId: 'route:billPay.reports.userPayeeChangeHistory' as ResourceId
-            },
-            {
-              id: 'payment-clear-report',
-              title: 'Payment Clear Report',
-              path: '/admin/bill-pay/reports/payment-clear',
-              icon: ConfirmationNumberIcon,
-              resourceId: 'route:billPay.reports.paymentClear' as ResourceId
-            },
-            {
-              id: 'recurring-payment-report',
-              title: 'Recurring Payment Report',
-              path: '/admin/bill-pay/reports/recurring-payment',
+              id: 'recurring-payment-reports',
+              title: 'Recurring Payment Reports',
+              path: '/admin/bill-pay/reports/recurring-payment-reports',
               icon: RepeatIcon,
-              resourceId: 'route:billPay.reports.recurringPayment' as ResourceId
+              resourceId: 'route:billPay.reports' as ResourceId,
+              items: [
+                {
+                  id: 'recurring-payment-change-history-report',
+                  title: 'Recurring Payment Change History',
+                  path: '/admin/bill-pay/reports/recurring-payment-change-history',
+                  icon: HistoryIcon,
+                  resourceId: 'route:billPay.reports.recurringPaymentChangeHistory' as ResourceId
+                },
+                {
+                  id: 'recurring-payment-report',
+                  title: 'Recurring Payment Report',
+                  path: '/admin/bill-pay/reports/recurring-payment',
+                  icon: RepeatIcon,
+                  resourceId: 'route:billPay.reports.recurringPayment' as ResourceId
+                },
+                {
+                  id: 'scheduled-payment-change-history-report',
+                  title: 'Scheduled Payment Change History',
+                  path: '/admin/bill-pay/reports/scheduled-payment-change-history',
+                  icon: HistoryIcon,
+                  resourceId: 'route:billPay.reports.scheduledPaymentChangeHistory' as ResourceId
+                }
+              ]
             },
             {
-              id: 'user-payee-report',
-              title: 'User Payee Report',
-              path: '/admin/bill-pay/reports/user-payee',
+              id: 'user-payee-reports',
+              title: 'User & Payee Reports',
+              path: '/admin/bill-pay/reports/user-payee-reports',
               icon: ContactsIcon,
-              resourceId: 'route:billPay.reports.userPayee' as ResourceId
+              resourceId: 'route:billPay.reports' as ResourceId,
+              items: [
+                {
+                  id: 'active-user-count-report',
+                  title: 'Active User Count',
+                  path: '/admin/bill-pay/reports/active-user-count',
+                  icon: GroupIcon,
+                  resourceId: 'route:billPay.reports.activeUserCount' as ResourceId
+                },
+                {
+                  id: 'monthly-users-report',
+                  title: 'Monthly Users',
+                  path: '/admin/bill-pay/reports/monthly-users',
+                  icon: PeopleIcon,
+                  resourceId: 'route:billPay.reports.monthlyUsers' as ResourceId
+                },
+                {
+                  id: 'payee-report',
+                  title: 'Payee Report',
+                  path: '/admin/bill-pay/reports/payee',
+                  icon: SearchIcon,
+                  resourceId: 'route:billPay.reports.payee' as ResourceId
+                },
+                {
+                  id: 'user-payee-change-history-report',
+                  title: 'User Payee Change History',
+                  path: '/admin/bill-pay/reports/user-payee-change-history',
+                  icon: HistoryIcon,
+                  resourceId: 'route:billPay.reports.userPayeeChangeHistory' as ResourceId
+                },
+                {
+                  id: 'user-payee-report',
+                  title: 'User Payee Report',
+                  path: '/admin/bill-pay/reports/user-payee',
+                  icon: ContactsIcon,
+                  resourceId: 'route:billPay.reports.userPayee' as ResourceId
+                }
+              ]
             },
             {
-              id: 'ofac-exceptions-report',
-              title: 'OFAC Exceptions Report',
-              path: '/admin/bill-pay/reports/ofac-exceptions',
-              icon: BlockIcon,
-              resourceId: 'route:billPay.reports.ofacExceptions' as ResourceId
-            },
-            {
-              id: 'suspended-payment-report',
-              title: 'Suspended Payment Report',
-              path: '/admin/bill-pay/reports/suspended-payment',
-              icon: PauseCircleOutlineIcon,
-              resourceId: 'route:billPay.reports.suspendedPayment' as ResourceId
-            },
-            {
-              id: 'settlement-summary-report',
-              title: 'Settlement Summary Report',
-              path: '/admin/bill-pay/reports/settlement-summary',
-              icon: AccountBalanceIcon,
-              resourceId: 'route:billPay.reports.settlementSummary' as ResourceId
+              id: 'system-compliance-reports',
+              title: 'System & Compliance Reports',
+              path: '/admin/bill-pay/reports/system-compliance-reports',
+              icon: SecurityIcon,
+              resourceId: 'route:billPay.reports' as ResourceId,
+              items: [
+                {
+                  id: 'error-recap-report',
+                  title: 'Error Recap',
+                  path: '/admin/bill-pay/reports/error-recap',
+                  icon: ErrorIcon,
+                  resourceId: 'route:billPay.reports.errorRecap' as ResourceId
+                },
+                {
+                  id: 'global-holidays-report',
+                  title: 'Global Holidays',
+                  path: '/admin/bill-pay/reports/global-holidays',
+                  icon: EventIcon,
+                  resourceId: 'route:billPay.reports.globalHolidays' as ResourceId
+                },
+                {
+                  id: 'ofac-exceptions-report',
+                  title: 'OFAC Exceptions Report',
+                  path: '/admin/bill-pay/reports/ofac-exceptions',
+                  icon: BlockIcon,
+                  resourceId: 'route:billPay.reports.ofacExceptions' as ResourceId
+                },
+                {
+                  id: 'settlement-summary-report',
+                  title: 'Settlement Summary Report',
+                  path: '/admin/bill-pay/reports/settlement-summary',
+                  icon: AccountBalanceIcon,
+                  resourceId: 'route:billPay.reports.settlementSummary' as ResourceId
+                },
+                {
+                  id: 'processing-confirmation-report',
+                  title: 'Processing Confirmation',
+                  path: '/admin/bill-pay/reports/processing-confirmation',
+                  icon: ConfirmationNumberIcon,
+                  resourceId: 'route:billPay.reports.processingConfirmation' as ResourceId
+                },
+                {
+                  id: 'statuses-with-notifications-report',
+                  title: 'Statuses with Notifications',
+                  path: '/admin/bill-pay/reports/statuses-with-notifications',
+                  icon: NotificationsIcon,
+                  resourceId: 'route:billPay.reports.statusesWithNotifications' as ResourceId
+                }
+              ]
             }
           ]
         },
@@ -317,32 +357,6 @@ export const navigationConfig: NavigationConfig = {
           path: '/admin/bill-pay/settings',
           icon: SettingsIcon,
           resourceId: 'route:billPay.settings' as ResourceId
-        }
-      ]
-    }
-  ,
-    {
-      id: 'development',
-      title: 'Development',
-      icon: CodeIcon,
-      color: '#0288d1',
-      description: 'Development tools and utilities',
-      path: '/admin/development',
-      resourceId: 'navigation:development' as ResourceId,
-      items: [
-        {
-          id: 'api-testing',
-          title: 'API Testing',
-          path: '/admin/development/api-testing',
-          icon: ApiIcon,
-          resourceId: 'route:development.api-testing' as ResourceId
-        },
-        {
-          id: 'report-table-test-harness',
-          title: 'Report Table Test Harness',
-          path: '/admin/development/report-table-test-harness',
-          icon: AssessmentIcon,
-          resourceId: 'route:development.report-table-test-harness' as ResourceId
         }
       ]
     }

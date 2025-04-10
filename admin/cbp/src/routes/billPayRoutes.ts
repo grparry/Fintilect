@@ -25,6 +25,7 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import BlockIcon from '@mui/icons-material/Block';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
+import SecurityIcon from '@mui/icons-material/Security';
 
 // Lazy load components
 const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
@@ -36,6 +37,10 @@ const PendingPayments = lazy(() => import('../components/bill-pay/payments/Manag
 const ExceptionTool = lazy(() => import('../components/bill-pay/payments/ExceptionTool'));
 const ReportsLanding = lazy(() => import('../components/bill-pay/reports/ReportsLanding'));
 const ReportsHeader = lazy(() => import('../components/bill-pay/reports/ReportsHeader'));
+const PaymentReportsLanding = lazy(() => import('../components/bill-pay/reports/PaymentReportsLanding'));
+const RecurringPaymentReportsLanding = lazy(() => import('../components/bill-pay/reports/RecurringPaymentReportsLanding'));
+const UserPayeeReportsLanding = lazy(() => import('../components/bill-pay/reports/UserPayeeReportsLanding'));
+const SystemComplianceReportsLanding = lazy(() => import('../components/bill-pay/reports/SystemComplianceReportsLanding'));
 const PaymentActivityReport = lazy(() => import('../components/bill-pay/reports/reports/PaymentActivityReport'));
 const ErrorRecapReport = lazy(() => import('../components/bill-pay/reports/reports/ErrorRecapReport'));
 const ActiveUserCountReport = lazy(() => import('../components/bill-pay/reports/reports/ActiveUserCountReport'));
@@ -194,6 +199,42 @@ const billPayRoutes: RouteConfig[] = [
             element: ReportsLanding,
             sectionId: 'billPay',
             resourceId: 'route:billPay.reports.index' as ResourceId
+          },
+          {
+            id: 'paymentReportsLanding',
+            path: 'payment-reports',
+            title: 'Payment Reports',
+            element: PaymentReportsLanding,
+            icon: PaymentIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports' as ResourceId
+          },
+          {
+            id: 'recurringPaymentReportsLanding',
+            path: 'recurring-payment-reports',
+            title: 'Recurring Payment Reports',
+            element: RecurringPaymentReportsLanding,
+            icon: RepeatIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports' as ResourceId
+          },
+          {
+            id: 'userPayeeReportsLanding',
+            path: 'user-payee-reports',
+            title: 'User & Payee Reports',
+            element: UserPayeeReportsLanding,
+            icon: GroupIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports' as ResourceId
+          },
+          {
+            id: 'systemComplianceReportsLanding',
+            path: 'system-compliance-reports',
+            title: 'System & Compliance Reports',
+            element: SystemComplianceReportsLanding,
+            icon: SecurityIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports' as ResourceId
           },
           {
             id: 'paymentActivityReport',

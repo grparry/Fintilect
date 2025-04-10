@@ -41,7 +41,7 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
   const [state, setState] = useState<NavigationState>(initialState);
   const navigate = useNavigate();
   const location = useLocation();
-  const { checkPermission } = usePermissions();
+  const { checkPermission, permissionContext } = usePermissions();
 
   const hasPermission = useCallback(async (section: NavigationSection): Promise<boolean> => {
     if (!section.resourceId) return true;
@@ -51,15 +51,47 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
 
   const getAccessibleSections = useCallback(async (): Promise<NavigationSection[]> => {
     const accessibleSections: NavigationSection[] = [];
+    
+    console.log('[NavigationContext] Getting accessible sections with roles:', permissionContext.roles);
 
     for (const section of config.sections) {
-      if (!section.resourceId || await hasPermission(section)) {
+      // If the section has a resourceId, use that for permission check (includes admin permissions)
+      // Otherwise, fall back to direct role check
+      let hasAccess = false;
+      
+      if (section.resourceId) {
+        // This will properly check both regular permissions and admin permissions
+        hasAccess = await hasPermission(section);
+        console.log(`[NavigationContext] Section ${section.title} resourceId check:`, {
+          resourceId: section.resourceId,
+          hasAccess
+        });
+      } 
+      else if (section.requiredPermission) {
+        // Only do direct role check if no resourceId is specified
+        hasAccess = permissionContext.roles.includes(section.requiredPermission);
+        console.log(`[NavigationContext] Section ${section.title} direct role check:`, {
+          requiredPermission: section.requiredPermission,
+          hasAccess
+        });
+      }
+      else {
+        // If no permissions required, grant access
+        hasAccess = true;
+        console.log(`[NavigationContext] Section ${section.title} has no permission requirements, granting access`);
+      }
+      
+      if (hasAccess) {
+        console.log(`[NavigationContext] Adding accessible section: ${section.title}`);
         accessibleSections.push(section);
+      } else {
+        console.log(`[NavigationContext] Section not accessible: ${section.title}`);
       }
     }
 
+    console.log('[NavigationContext] Accessible sections:', accessibleSections.map(s => s.title));
     return accessibleSections;
-  }, [config.sections, hasPermission]);
+  }, [config.sections, hasPermission, permissionContext]);
 
   const setActiveSection = useCallback((sectionId: string | null): void => {
     setState(prev => ({
@@ -234,8 +266,46 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
           
           // Keep only items that aren't other parents
           newExpandedItems = prev.expandedItems.filter(id => !otherParents.includes(id));
+        } 
+        // Special handling for report section headers (checking by ID pattern)
+        else if (sectionId.includes('-reports')) {
+          console.log('[toggleSection] Detected report section header:', sectionId);
+          
+          // Find all report section headers in the navigation config
+          const reportSectionIds: string[] = [];
+          
+          // Look through all sections to find report section headers
+          config.sections.forEach(section => {
+            if (section.items) {
+              section.items.forEach(item => {
+                if (item.id === 'reports' && item.items) {
+                  // Found the reports section, now get all report category headers
+                  item.items.forEach(reportItem => {
+                    if (reportItem.id.includes('-reports') && reportItem.id !== sectionId) {
+                      reportSectionIds.push(reportItem.id);
+                    }
+                  });
+                }
+              });
+            }
+          });
+          
+          console.log('[toggleSection] Other report sections to close:', reportSectionIds);
+          
+          // Keep only items that aren't other report section headers
+          newExpandedItems = prev.expandedItems.filter(id => !reportSectionIds.includes(id));
+          
+          // Make sure 'reports' parent remains expanded
+          if (!newExpandedItems.includes('reports')) {
+            newExpandedItems.push('reports');
+          }
+          
+          // Make sure 'billPay' parent remains expanded
+          if (!newExpandedItems.includes('billPay')) {
+            newExpandedItems.push('billPay');
+          }
         } else {
-          // For non-parent items, preserve existing state
+          // For other non-parent items, preserve existing state
           newExpandedItems = [...prev.expandedItems];
         }
         

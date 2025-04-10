@@ -18,7 +18,7 @@ const Breadcrumbs: React.FC = () => {
   // Find all breadcrumb items for the current path
   const findBreadcrumbPath = (): BreadcrumbItem[] => {
     const breadcrumbs: BreadcrumbItem[] = [
-      { title: 'Home', path: '/', isLast: false }
+      { title: 'Home', path: '/admin', isLast: false }
     ];
     
     // Find the matching section and items
@@ -84,6 +84,33 @@ const Breadcrumbs: React.FC = () => {
                   isLast: true
                 });
                 return true;
+              }
+            }
+            // Special handling for report categories and their children
+            else if (item.path && item.items && item.path.includes('/reports/') && 
+                    currentPath.startsWith('/admin/bill-pay/reports/')) {
+              
+              // Check if this is a report category (like system-compliance-reports)
+              const isCategoryMatch = item.path.includes('-reports');
+              
+              // Check if any child item matches the current path
+              const hasMatchingChild = item.items.some(child => 
+                child.path === currentPath || 
+                (child.path && currentPath.startsWith(child.path))
+              );
+              
+              if (isCategoryMatch && hasMatchingChild) {
+                // Add the category to breadcrumbs
+                breadcrumbs.push({
+                  title: item.title,
+                  path: item.path,
+                  isLast: false
+                });
+                
+                // Search in child items
+                if (findMatchingItems(item.items, item.path)) {
+                  return true;
+                }
               }
             }
             // Check if this is a parent of the current path

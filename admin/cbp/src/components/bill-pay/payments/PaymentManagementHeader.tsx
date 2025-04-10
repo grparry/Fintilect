@@ -8,8 +8,25 @@ import BuildIcon from '@mui/icons-material/Build';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import TransformIcon from '@mui/icons-material/Transform';
 import HistoryIcon from '@mui/icons-material/History';
+import { usePermissions } from '../../../hooks/usePermissions';
 
 const PaymentManagementHeader: React.FC = () => {
+  const { checkPermission } = usePermissions();
+  const [hasBillPayWritePermission, setHasBillPayWritePermission] = React.useState(false);
+  
+  React.useEffect(() => {
+    const checkWritePermission = async () => {
+      try {
+        const result = await checkPermission('route:billPay.payments.copy-payees');
+        setHasBillPayWritePermission(result.hasAccess);
+      } catch (error) {
+        console.error('Error checking permissions:', error);
+        setHasBillPayWritePermission(false);
+      }
+    };
+    
+    checkWritePermission();
+  }, [checkPermission]);
   return (
     <Box>
       <Box sx={{ mb: 4 }}>
@@ -112,35 +129,37 @@ const PaymentManagementHeader: React.FC = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
-          <Paper 
-            sx={{ 
-              p: 3, 
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              '&:hover': {
-                bgcolor: 'action.hover'
-              }
-            }}
-          >
-            <Link
-              component={RouterLink}
-              to="/admin/bill-pay/payments/copy-payees"
-              color="inherit"
-              underline="none"
-              sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
+        {hasBillPayWritePermission && (
+          <Grid item xs={12} sm={6} md={4}>
+            <Paper 
+              sx={{ 
+                p: 3, 
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                '&:hover': {
+                  bgcolor: 'action.hover'
+                }
+              }}
             >
-              <TransformIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
-              <Typography variant="h6" color="text.primary" gutterBottom>
-                Copy Member Payees
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Copy payees between members
-              </Typography>
-            </Link>
-          </Paper>
-        </Grid>
+              <Link
+                component={RouterLink}
+                to="/admin/bill-pay/payments/copy-payees"
+                color="inherit"
+                underline="none"
+                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
+              >
+                <TransformIcon sx={{ fontSize: 40, mb: 2, color: 'primary.main' }} />
+                <Typography variant="h6" color="text.primary" gutterBottom>
+                  Copy Member Payees
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Copy payees between members
+                </Typography>
+              </Link>
+            </Paper>
+          </Grid>
+        )}
 
         <Grid item xs={12} sm={6} md={4}>
           <Paper 

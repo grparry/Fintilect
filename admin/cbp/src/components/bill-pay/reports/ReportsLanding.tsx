@@ -8,36 +8,26 @@ import {
   CardContent,
   CardActionArea,
   Divider,
+  Paper,
 } from '@mui/material';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PaymentIcon from '@mui/icons-material/Payment';
-import ErrorIcon from '@mui/icons-material/Error';
-import SearchIcon from '@mui/icons-material/Search';
-import HistoryIcon from '@mui/icons-material/History';
-import EventIcon from '@mui/icons-material/Event';
-import GroupIcon from '@mui/icons-material/Group';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import RepeatIcon from '@mui/icons-material/Repeat';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import ReportProblemIcon from '@mui/icons-material/ReportProblem';
-import PeopleIcon from '@mui/icons-material/People';
 import ContactsIcon from '@mui/icons-material/Contacts';
-import BlockIcon from '@mui/icons-material/Block';
-import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
+import SecurityIcon from '@mui/icons-material/Security';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-// Define report card interface
-interface ReportCardProps {
+// Define category card interface
+interface CategoryCardProps {
   title: string;
   description: string;
   icon: React.ReactNode;
   to: string;
-  implemented?: boolean;
+  count: number;
 }
 
-// Report card component
-const ReportCard: React.FC<ReportCardProps> = ({ title, description, icon, to, implemented = false }) => (
+// Category card component
+const CategoryCard: React.FC<CategoryCardProps> = ({ title, description, icon, to, count }) => (
   <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
     <CardActionArea 
       component={Link} 
@@ -47,25 +37,24 @@ const ReportCard: React.FC<ReportCardProps> = ({ title, description, icon, to, i
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'flex-start',
-        opacity: implemented ? 1 : 0.6
       }}
-      disabled={!implemented}
     >
       <CardContent sx={{ width: '100%' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           <Box sx={{ mr: 1, color: 'primary.main' }}>{icon}</Box>
-          <Typography variant="h6" component="div">
+          <Typography variant="h5" component="div">
             {title}
           </Typography>
         </Box>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
           {description}
         </Typography>
-        {!implemented && (
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-            Coming soon
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          <Typography variant="subtitle2" color="primary">
+            {count} Reports
           </Typography>
-        )}
+          <ArrowForwardIcon color="primary" fontSize="small" />
+        </Box>
       </CardContent>
     </CardActionArea>
   </Card>
@@ -73,172 +62,57 @@ const ReportCard: React.FC<ReportCardProps> = ({ title, description, icon, to, i
 
 // Reports landing page component
 const ReportsLanding: React.FC = () => {
-  // Define available reports
-  const reports: ReportCardProps[] = [
+  // Define report categories
+  const categories: CategoryCardProps[] = [
     {
-      title: 'Active User Count',
-      description: 'View active user count statistics',
-      icon: <GroupIcon />,
-      to: '/admin/bill-pay/reports/active-user-count',
-      implemented: true
+      title: 'Payment Reports',
+      description: 'Access reports related to payment processing, status, and activity',
+      icon: <PaymentIcon fontSize="large" />,
+      to: '/admin/bill-pay/reports/payment-reports',
+      count: 9
     },
     {
-      title: 'Error Recap',
-      description: 'View error recap information',
-      icon: <ErrorIcon />,
-      to: '/admin/bill-pay/reports/error-recap',
-      implemented: true
+      title: 'Recurring Payment Reports',
+      description: 'Access reports related to recurring payments and their change history',
+      icon: <RepeatIcon fontSize="large" />,
+      to: '/admin/bill-pay/reports/recurring-payment-reports',
+      count: 3
     },
     {
-      title: 'Failed On Us',
-      description: 'View failed on-us payment information',
-      icon: <ReportProblemIcon />,
-      to: '/admin/bill-pay/reports/failed-on-us',
-      implemented: true
+      title: 'User & Payee Reports',
+      description: 'Access reports related to users, payees, and their relationships',
+      icon: <ContactsIcon fontSize="large" />,
+      to: '/admin/bill-pay/reports/user-payee-reports',
+      count: 5
     },
     {
-      title: 'Global Holidays',
-      description: 'View global holiday information',
-      icon: <EventIcon />,
-      to: '/admin/bill-pay/reports/global-holidays',
-      implemented: true
-    },
-    {
-      title: 'Large Payment',
-      description: 'View large payment information',
-      icon: <PaymentIcon />,
-      to: '/admin/bill-pay/reports/large-payment',
-      implemented: true
-    },
-    {
-      title: 'Monthly Users',
-      description: 'View monthly user statistics',
-      icon: <PeopleIcon />,
-      to: '/admin/bill-pay/reports/monthly-users',
-      implemented: true
-    },
-    {
-      title: 'On Us Postings',
-      description: 'View on us postings information',
-      icon: <AccountBalanceIcon />,
-      to: '/admin/bill-pay/reports/on-us-postings',
-      implemented: true
-    },
-    {
-      title: 'Payee Report',
-      description: 'View payee information',
-      icon: <SearchIcon />,
-      to: '/admin/bill-pay/reports/payee',
-      implemented: true
-    },
-    {
-      title: 'Payment Report',
-      description: 'View payment information',
-      icon: <PaymentIcon />,
-      to: '/admin/bill-pay/reports/payment',
-      implemented: true
-    },
-    {
-      title: 'Payment Clear Report',
-      description: 'View payment clear information',
-      icon: <ConfirmationNumberIcon />,
-      to: '/admin/bill-pay/reports/payment-clear',
-      implemented: true
-    },
-    {
-      title: 'Recurring Payment Report',
-      description: 'View recurring payment information',
-      icon: <RepeatIcon />,
-      to: '/admin/bill-pay/reports/recurring-payment',
-      implemented: true
-    },
-    {
-      title: 'Payment Activity',
-      description: 'View payment activity within a date range',
-      icon: <PaymentIcon />,
-      to: '/admin/bill-pay/reports/payment-activity',
-      implemented: true
-    },
-    {
-      title: 'Pending Payments',
-      description: 'View pending payment information',
-      icon: <PaymentIcon />,
-      to: '/admin/bill-pay/reports/pending-payments',
-      implemented: true
-    },
-    {
-      title: 'Processing Confirmation',
-      description: 'View processing confirmation information',
-      icon: <ConfirmationNumberIcon />,
-      to: '/admin/bill-pay/reports/processing-confirmation',
-      implemented: true
-    },
-    {
-      title: 'Recurring Payment Change History',
-      description: 'View recurring payment change history',
-      icon: <RepeatIcon />,
-      to: '/admin/bill-pay/reports/recurring-payment-change-history',
-      implemented: true
-    },
-    {
-      title: 'Scheduled Payment Change History',
-      description: 'View scheduled payment change history',
-      icon: <HistoryIcon />,
-      to: '/admin/bill-pay/reports/scheduled-payment-change-history',
-      implemented: true
-    },
-    {
-      title: 'Statuses with Notifications',
-      description: 'View statuses with notifications information',
-      icon: <NotificationsIcon />,
-      to: '/admin/bill-pay/reports/statuses-with-notifications',
-      implemented: true
-    },
-    {
-      title: 'User Payee Change History',
-      description: 'View user payee change history',
-      icon: <HistoryIcon />,
-      to: '/admin/bill-pay/reports/user-payee-change-history',
-      implemented: true
-    },
-    {
-      title: 'User Payee Report',
-      description: 'View user payee information',
-      icon: <ContactsIcon />,
-      to: '/admin/bill-pay/reports/user-payee',
-      implemented: true
-    },
-    {
-      title: 'OFAC Exceptions Report',
-      description: 'View OFAC exceptions information',
-      icon: <BlockIcon />,
-      to: '/admin/bill-pay/reports/ofac-exceptions',
-      implemented: true
-    },
-    {
-      title: 'Suspended Payment Report',
-      description: 'View suspended payment information',
-      icon: <PauseCircleOutlineIcon />,
-      to: '/admin/bill-pay/reports/suspended-payment',
-      implemented: true
-    },
-    {
-      title: 'Settlement Summary Report',
-      description: 'View settlement summary with processing, settlement account, and remittance processor data',
-      icon: <AccountBalanceIcon />,
-      to: '/admin/bill-pay/reports/settlement-summary',
-      implemented: true
+      title: 'System & Compliance Reports',
+      description: 'Access reports related to system operations, compliance, and regulatory requirements',
+      icon: <SecurityIcon fontSize="large" />,
+      to: '/admin/bill-pay/reports/system-compliance-reports',
+      count: 5
     }
   ];
 
   return (
-    <Grid container spacing={3}>
-      {reports.map((report) => (
-        <Grid item xs={12} sm={6} md={4} key={report.title}>
-          <ReportCard {...report} />
-        </Grid>
-      ))}
-    </Grid>
+    <>
+      <Paper elevation={0} sx={{ p: 3, mb: 4, backgroundColor: 'primary.light', color: 'primary.contrastText' }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          CBP Reports
+        </Typography>
+        <Typography variant="body1">
+          Access all reports organized by category. Select a category below to view available reports.
+        </Typography>
+      </Paper>
+      
+      <Grid container spacing={4}>
+        {categories.map((category) => (
+          <Grid item xs={12} md={6} key={category.title}>
+            <CategoryCard {...category} />
+          </Grid>
+        ))}
+      </Grid>
+    </>
   );
 };
 

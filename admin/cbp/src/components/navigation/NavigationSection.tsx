@@ -34,12 +34,22 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
   const location = useLocation();
   const navigate = useNavigate();
   const { state, toggleSection } = useNavigation();
-  const { checkPermissions } = usePermissions();
+  const { checkPermission, checkPermissions, permissionContext } = usePermissions();
   const [visibleItems, setVisibleItems] = useState<NavigationItem[]>([]);
 
   useEffect(() => {
     const checkSectionAndItemPermissions = async () => {
       if (!section) return;
+
+      console.log(`[NavigationSection] Starting permission check for section: ${section.title || 'unnamed'}`, {
+        sectionId: section.id,
+        userRoles: permissionContext.roles,
+        userInfo: {
+          clientId: permissionContext.clientId,
+          userId: permissionContext.userId,
+          isAuthenticated: permissionContext.isAuthenticated
+        }
+      });
 
       // Collect all resource IDs that need to be checked
       const resourceIds = [
@@ -47,28 +57,98 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
         ...(section.items?.map(item => item.resourceId).filter(Boolean) || [])
       ];
 
-      if (resourceIds.length === 0) {
+      // Collect all required permissions that need to be checked
+      const requiredPermissions = [
+        ...(section.requiredPermission ? [section.requiredPermission] : []),
+        ...(section.items?.map(item => item.requiredPermission).filter(Boolean) || [])
+      ];
+
+      console.log(`[NavigationSection] Resources and permissions for section: ${section.title || 'unnamed'}`, {
+        resourceIds,
+        requiredPermissions
+      });
+
+      if (resourceIds.length === 0 && requiredPermissions.length === 0) {
         // If no permissions to check, show all items
+        console.log(`[NavigationSection] No permissions to check for section: ${section.title || 'unnamed'}, showing all items`);
         setVisibleItems(section.items || []);
         return;
       }
 
       try {
-        const permissions = await checkPermissions(resourceIds);
-        const hasAccess = section.resourceId ? permissions[section.resourceId] : true;
+        // Check resource IDs
+        const permissions = resourceIds.length > 0 ? await checkPermissions(resourceIds) : {};
+        
+        console.log(`[NavigationSection] Checking permissions for section: ${section.title}`, {
+          sectionId: section.id,
+          resourceId: section.resourceId,
+          requiredPermission: section.requiredPermission,
+          userRoles: permissionContext.roles,
+          permissionResults: permissions
+        });
+        
+        // If section has a resourceId, use that for permission check
+        // This will properly handle both regular permissions and admin permissions
+        let hasAccess = true;
+        if (section.resourceId) {
+          hasAccess = permissions[section.resourceId]?.hasAccess === true;
+          console.log(`[NavigationSection] Resource ID check for ${section.title}:`, {
+            resourceId: section.resourceId,
+            hasAccess: hasAccess,
+            permissionResult: permissions[section.resourceId]
+          });
+        }
+        // Only if no resourceId is specified, fall back to direct role check
+        else if (section.requiredPermission) {
+          hasAccess = permissionContext.roles.includes(section.requiredPermission);
+          console.log(`[NavigationSection] Direct role check for ${section.title}:`, {
+            requiredPermission: section.requiredPermission,
+            hasAccess: hasAccess,
+            userRoles: permissionContext.roles
+          });
+        }
 
         if (!hasAccess) {
+          console.log(`[NavigationSection] Access denied for section: ${section.title}`);
           setVisibleItems([]);
           return;
         }
+        
+        console.log(`[NavigationSection] Access granted for section: ${section.title}`);
 
         // Filter items based on permissions
-        const filteredItems = (section.items || []).filter(item => {
-          if (!item.resourceId) return true;
-          return permissions[item.resourceId];
-        });
+        const filteredItems = await Promise.all((section.items || []).map(async (item) => {
+          // If item has a resourceId, use that for permission check
+          // This will properly handle both regular permissions and admin permissions
+          let hasItemAccess = true;
+          if (item.resourceId) {
+            hasItemAccess = permissions[item.resourceId]?.hasAccess === true;
+            console.log(`[NavigationSection] Item permission check for ${item.title} in ${section.title}:`, {
+              resourceId: item.resourceId,
+              hasAccess: hasItemAccess,
+              permissionResult: permissions[item.resourceId]
+            });
+          }
+          // Only if no resourceId is specified, fall back to direct role check
+          else if (item.requiredPermission) {
+            hasItemAccess = permissionContext.roles.includes(item.requiredPermission);
+            console.log(`[NavigationSection] Item direct role check for ${item.title} in ${section.title}:`, {
+              requiredPermission: item.requiredPermission,
+              hasAccess: hasItemAccess,
+              userRoles: permissionContext.roles
+            });
+          }
+          
+          return { item, hasAccess: hasItemAccess };
+        }));
 
-        setVisibleItems(filteredItems);
+        const visibleItemsList = filteredItems.filter(({ hasAccess }) => hasAccess).map(({ item }) => item);
+        console.log(`[NavigationSection] Filtered items for section: ${section.title}`, {
+          totalItems: section.items?.length || 0,
+          filteredItems: filteredItems.map(({ item, hasAccess }) => ({ title: item.title, hasAccess })),
+          visibleItems: visibleItemsList.map(item => item.title)
+        });
+        setVisibleItems(visibleItemsList);
       } catch (error) {
         console.error('Error checking permissions:', error);
         setVisibleItems([]);
@@ -76,18 +156,35 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
     };
 
     checkSectionAndItemPermissions();
-  }, [section, checkPermissions]);
+  }, [section, checkPermissions, checkPermission, permissionContext]);
 
-  const isActive = section.id ? state.activeSection === section.id : false;
-  const isSectionExpanded = level === 0 ? isActive : state.expandedItems.includes(section.id || '');
+  const isActive = section && section.id ? state.activeSection === section.id : false;
+  const isSectionExpanded = level === 0 ? isActive : (section && section.id ? state.expandedItems.includes(section.id) : false);
 
-  // Don't render if no visible items and no section path
-  if (visibleItems.length === 0 && !section.path) {
+  // Don't render if section is undefined or if no visible items and no section path
+  if (!section) {
+    console.log(`[NavigationSection] Not rendering - section is undefined`);
     return null;
   }
+  
+  if (visibleItems.length === 0 && !section.path) {
+    console.log(`[NavigationSection] Not rendering section: ${section.title || 'unnamed'}`, {
+      reason: 'No visible items and no section path',
+      sectionId: section.id,
+      visibleItemsCount: visibleItems.length,
+      hasPath: !!section.path
+    });
+    return null;
+  }
+  
+  console.log(`[NavigationSection] Rendering section: ${section.title || 'unnamed'}`, {
+    sectionId: section.id,
+    visibleItemsCount: visibleItems.length,
+    visibleItems: visibleItems.map(item => item.title)
+  });
 
   const handleSectionClick = () => {
-    if (!section?.id) return;
+    if (!section || !section.id) return;
     
     console.log('NavigationSection - Section clicked:', {
       id: section.id,
@@ -106,6 +203,11 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
 
   const renderNavigationItem = (item: NavigationItem, level: number = 1) => {
     if (!item) return null;
+    
+    // Check if the user has the required permission for this item
+    if (item.requiredPermission && !permissionContext.roles.includes(item.requiredPermission)) {
+      return null; // Skip rendering this item if the user doesn't have the required permission
+    }
     
     const itemPath = item.path;
     const isSelected = activePath === itemPath;
@@ -164,7 +266,10 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
         {hasChildren && (
           <Collapse in={isItemOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {(item.items || item.children || []).map((child) => 
+              {/* Filter out items that require permissions the user doesn't have */}
+              {(item.items || item.children || []).filter(child => 
+                !child.requiredPermission || permissionContext.roles.includes(child.requiredPermission)
+              ).map((child) => 
                 renderNavigationItem(child, level + 1)
               )}
             </List>

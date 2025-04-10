@@ -27,6 +27,8 @@ interface ClientInfo {
   routingId: string;
   domain: string;
   status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+  type: string;
+  environment: string;
 }
 
 const ClientInformation: React.FC<ClientInformationProps> = ({ clientId }) => {
@@ -36,6 +38,8 @@ const ClientInformation: React.FC<ClientInformationProps> = ({ clientId }) => {
     routingId: '',
     domain: '',
     status: 'ACTIVE',
+    type: 'STANDARD', // Default value
+    environment: 'PRODUCTION', // Default value
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -56,6 +60,8 @@ const ClientInformation: React.FC<ClientInformationProps> = ({ clientId }) => {
         routingId: client.routingId || '',
         domain: client.domain || '',
         status: (client.status || 'ACTIVE') as 'ACTIVE' | 'INACTIVE' | 'SUSPENDED',
+        type: client.type || 'STANDARD',
+        environment: client.environment || 'PRODUCTION',
       });
       logger.info(`Client information loaded for client ${clientId}`);
     } catch (err) {
@@ -100,8 +106,13 @@ const ClientInformation: React.FC<ClientInformationProps> = ({ clientId }) => {
         routingId: clientInfo.routingId || null,
         domain: clientInfo.domain || null,
         status: clientInfo.status,
+        // Include required fields that were removed from the UI
+        type: clientInfo.type || 'STANDARD',
+        environment: clientInfo.environment || 'PRODUCTION',
         id: Number(clientId)
       };
+      
+      console.log('Updating client with data:', clientUpdate);
       
       logger.info(`Updating client ${clientId} with full client data`);
       await clientService.updateClient(Number(clientId), clientUpdate);

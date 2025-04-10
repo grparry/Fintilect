@@ -123,7 +123,15 @@ export const usePermissions = () => {
       const userRoles = permissionContext.roles;
       const hasAdminRole = requirement.adminPermissions.some(role => userRoles.includes(role));
       
+      console.log(`[usePermissions] Checking admin permissions for ${resourceId}:`, {
+        adminPermissions: requirement.adminPermissions,
+        userRoles: userRoles,
+        hasAdminRole: hasAdminRole
+      });
+      
       if (hasAdminRole) {
+        console.log(`[usePermissions] Admin access granted for ${resourceId} via role:`, 
+          requirement.adminPermissions.find(role => userRoles.includes(role)));
         const result: PermissionResult = { hasAccess: true };
         if (cache.enabled) {
           cacheRef.current.set(resourceId, { result, timestamp: Date.now() });
@@ -150,12 +158,21 @@ export const usePermissions = () => {
 
     // Check permissions
     if (requirement.permissions && requirement.permissions.length > 0) {
-      const userRoles = permissionContext.roles.map(role => `role:${role}`);
+      // Don't add 'role:' prefix - directly check if the user has the required permission
+      const userRoles = permissionContext.roles;
       const missingPermissions = requirement.permissions.filter(
-        (permission: string) => !userRoles.includes(permission.toLowerCase())
+        (permission: string) => !userRoles.includes(permission)
       );
+      
+      console.log(`[usePermissions] Checking regular permissions for ${resourceId}:`, {
+        requiredPermissions: requirement.permissions,
+        userRoles: userRoles,
+        missingPermissions: missingPermissions,
+        requireAll: requirement.requireAll || false
+      });
 
       if (requirement.requireAll && missingPermissions.length > 0) {
+        console.log(`[usePermissions] Access denied for ${resourceId} - missing all required permissions`);
         const result: PermissionResult = { 
           hasAccess: false, 
           deniedReason: 'Missing required permissions',
@@ -166,6 +183,7 @@ export const usePermissions = () => {
       }
 
       if (!requirement.requireAll && missingPermissions.length === requirement.permissions.length) {
+        console.log(`[usePermissions] Access denied for ${resourceId} - missing any required permission`);
         const result: PermissionResult = { 
           hasAccess: false, 
           deniedReason: 'Missing required permissions',
@@ -174,6 +192,8 @@ export const usePermissions = () => {
         if (throwOnDenied) throw new Error(result.deniedReason);
         return result;
       }
+      
+      console.log(`[usePermissions] Regular permission access granted for ${resourceId}`);
     }
 
     // All checks passed

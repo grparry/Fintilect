@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, useTheme, IconButton } from '@mui/material';
 import { useNavigation } from '../../context/NavigationContext';
 import NavigationSection from './NavigationSection';
@@ -21,11 +21,22 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { state, setActiveSection, toggleSection } = useNavigation();
+  const { state, setActiveSection, toggleSection, getAccessibleSections } = useNavigation();
+  const [accessibleSections, setAccessibleSections] = useState<NavigationSectionType[]>([]);
+  
+  // Filter sections based on user permissions
+  useEffect(() => {
+    const loadAccessibleSections = async () => {
+      const sections = await getAccessibleSections();
+      setAccessibleSections(sections);
+    };
+    
+    loadAccessibleSections();
+  }, [getAccessibleSections]);
   
   const handleSectionClick = (sectionId: string) => {
-    // Find the section in the navigation config
-    const section = navigationConfig.find(s => s.id === sectionId);
+    // Find the section in the accessible sections
+    const section = accessibleSections.find(s => s.id === sectionId);
     if (section) {
       // If clicking the active section, toggle it
       if (state.activeSection === sectionId) {
@@ -129,7 +140,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               {!state.activeSection ? (
                 // When no section is active, show all sections as a list
                 <List component="nav" disablePadding>
-                  {navigationConfig.map((section) => (
+                  {accessibleSections.map((section) => (
                     <ListItemButton
                       key={section.id}
                       onClick={() => handleSectionClick(section.id)}
@@ -153,7 +164,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 // When a section is active, show that section with its children
                 <NavigationSection
                   key={state.activeSection}
-                  section={navigationConfig.find(s => s.id === state.activeSection)!}
+                  section={accessibleSections.find(s => s.id === state.activeSection)!}
                   level={0}
                   expandedItems={state.expandedItems}
                   activePath={state.activePath ?? ''}
@@ -190,7 +201,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 }}
               >
                 <List component="nav" disablePadding>
-                  {navigationConfig
+                  {accessibleSections
                     .filter(section => section.id !== state.activeSection)
                     .map((section) => (
                       <ListItemButton

@@ -1,173 +1,120 @@
-import React, { useState } from 'react';
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormHelperText,
-  SelectChangeEvent,
-} from '@mui/material';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
-// Import report components as they are created
+// Import landing pages
+import ReportsLanding from './ReportsLanding';
+import PaymentReportsLanding from './PaymentReportsLanding';
+import RecurringPaymentReportsLanding from './RecurringPaymentReportsLanding';
+import UserPayeeReportsLanding from './UserPayeeReportsLanding';
+import SystemComplianceReportsLanding from './SystemComplianceReportsLanding';
+
+// Import individual report components
 import PaymentActivityReport from './reports/PaymentActivityReport';
 import ErrorRecapReport from './reports/ErrorRecapReport';
+import ActiveUserCountReport from './reports/ActiveUserCountReport';
+import FailedOnUsReport from './reports/FailedOnUsReport';
+import GlobalHolidaysReport from './reports/GlobalHolidaysReport';
+import MonthlyUsersReport from './reports/MonthlyUsersReport';
+import OnUsPostingsReport from './reports/OnUsPostingsReport';
+import PayeeReport from './reports/PayeeReport';
+import PaymentReport from './reports/PaymentReport';
+import PaymentClearReport from './reports/PaymentClearReport';
+import RecurringPaymentReport from './reports/RecurringPaymentReport';
+import PendingPaymentsReport from './reports/PendingPaymentsReport';
+import ProcessingConfirmationReport from './reports/ProcessingConfirmationReport';
+import RecurringPaymentChangeHistoryReport from './reports/RecurringPaymentChangeHistoryReport';
+import ScheduledPaymentChangeHistoryReport from './reports/ScheduledPaymentChangeHistoryReport';
+import StatusesWithNotificationsReport from './reports/StatusesWithNotificationsReport';
+import UserPayeeChangeHistoryReport from './reports/UserPayeeChangeHistoryReport';
+import UserPayeeReport from './reports/UserPayeeReport';
+import OFACExceptionsReport from './reports/OFACExceptionsReport';
+import SuspendedPaymentReport from './reports/SuspendedPaymentReport';
 import SettlementSummaryReport from './reports/SettlementSummaryReport';
+import LargePaymentReport from './reports/LargePaymentReport';
 
-// Define the available report types
-type ReportType = 
-  | 'paymentActivity'
-  | 'errorRecap'
-  | 'activeUserCount'
-  | 'failedOnUs'
-  | 'globalHolidays'
-  | 'onUsPostings'
-  | 'statusesWithNotifications'
-  | 'largePayment'
-  | 'monthlyUsers'
-  | 'pendingPayments'
-  | 'processingConfirmation'
-  | 'recurringPaymentChangeHistory'
-  | 'scheduledPaymentChangeHistory'
-  | 'userPayeeChangeHistory'
-  | 'settlementSummary';
-
-// Interface for report metadata
-interface ReportMetadata {
-  label: string;
-  description: string;
-}
-
-// Report metadata for UI rendering
-const reportMetadata: Record<ReportType, ReportMetadata> = {
-  paymentActivity: {
-    label: 'Payment Activity',
-    description: 'View payment activity within a date range',
-  },
-  errorRecap: {
-    label: 'Error Recap',
-    description: 'View error history records',
-  },
-  activeUserCount: {
-    label: 'Active User Count',
-    description: 'View active user counts within a date range',
-  },
-  failedOnUs: {
-    label: 'Failed On-Us Transactions',
-    description: 'View failed on-us transactions within a date range',
-  },
-  globalHolidays: {
-    label: 'Global Holidays',
-    description: 'View global holidays',
-  },
-  onUsPostings: {
-    label: 'On-Us Postings',
-    description: 'View on-us postings within a date range',
-  },
-  statusesWithNotifications: {
-    label: 'Statuses With Notifications',
-    description: 'View statuses that have notifications',
-  },
-  largePayment: {
-    label: 'Large Payments',
-    description: 'View large payments for a specific date',
-  },
-  monthlyUsers: {
-    label: 'Monthly Users',
-    description: 'View monthly user counts within a date range',
-  },
-  pendingPayments: {
-    label: 'Pending Payments',
-    description: 'View pending payments for a specific date',
-  },
-  processingConfirmation: {
-    label: 'Processing Confirmation',
-    description: 'View processing confirmations within a date range',
-  },
-  recurringPaymentChangeHistory: {
-    label: 'Recurring Payment Change History',
-    description: 'View recurring payment change history',
-  },
-  scheduledPaymentChangeHistory: {
-    label: 'Scheduled Payment Change History',
-    description: 'View scheduled payment change history',
-  },
-  userPayeeChangeHistory: {
-    label: 'User Payee Change History',
-    description: 'View user payee change history',
-  },
-  settlementSummary: {
-    label: 'Settlement Summary',
-    description: 'View settlement summary report with processing, settlement account, and remittance processor data',
-  },
-};
-
-// Reports component
+/**
+ * Reports component that serves as the entry point for the reports section
+ * This component conditionally renders the appropriate report page based on the current URL path
+ */
 const Reports: React.FC = () => {
-  const [selectedReport, setSelectedReport] = useState<ReportType>('paymentActivity');
-
-  // Handle report type change
-  const handleReportChange = (event: SelectChangeEvent) => {
-    setSelectedReport(event.target.value as ReportType);
+  const location = useLocation();
+  const path = location.pathname;
+  
+  console.log('Current path:', path);
+  
+  // Helper function to check if path matches a pattern
+  const matchPath = (pattern: string): boolean => {
+    // Normalize paths by removing trailing slashes
+    const normalizedPath = path.replace(/\/$/, '');
+    const normalizedPattern = pattern.replace(/\/$/, '');
+    return normalizedPath.includes(normalizedPattern);
   };
-
-  // Render the selected report component
-  const renderReportComponent = () => {
-    switch (selectedReport) {
-      case 'paymentActivity':
-        return <PaymentActivityReport />;
-      case 'errorRecap':
-        return <ErrorRecapReport />;
-      case 'settlementSummary':
-        return <SettlementSummaryReport />;
-      // Add other report components as they are created
-      default:
-        return (
-          <Box sx={{ p: 3 }}>
-            <Typography variant="body1">
-              This report is not yet implemented in the new modular format.
-            </Typography>
-          </Box>
-        );
-    }
-  };
-
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box>
-        <Typography variant="h4" gutterBottom color="text.primary">
-          Reports
-        </Typography>
-
-        <Card sx={{ mb: 3 }}>
-          <CardContent>
-            <FormControl fullWidth sx={{ mb: 3 }}>
-              <InputLabel>Report Type</InputLabel>
-              <Select
-                value={selectedReport}
-                label="Report Type"
-                onChange={handleReportChange}
-              >
-                {Object.entries(reportMetadata).map(([key, meta]) => (
-                  <MenuItem key={key} value={key}>{meta.label}</MenuItem>
-                ))}
-              </Select>
-              <FormHelperText>
-                {reportMetadata[selectedReport].description}
-              </FormHelperText>
-            </FormControl>
-
-            {renderReportComponent()}
-          </CardContent>
-        </Card>
-      </Box>
-    </LocalizationProvider>
-  );
+  
+  // Category landing pages
+  if (matchPath('/admin/bill-pay/reports/payment-reports')) {
+    console.log('Rendering PaymentReportsLanding');
+    return <PaymentReportsLanding />;
+  } else if (matchPath('/admin/bill-pay/reports/recurring-payment-reports')) {
+    console.log('Rendering RecurringPaymentReportsLanding');
+    return <RecurringPaymentReportsLanding />;
+  } else if (matchPath('/admin/bill-pay/reports/user-payee-reports')) {
+    console.log('Rendering UserPayeeReportsLanding');
+    return <UserPayeeReportsLanding />;
+  } else if (matchPath('/admin/bill-pay/reports/system-compliance-reports')) {
+    console.log('Rendering SystemComplianceReportsLanding');
+    return <SystemComplianceReportsLanding />;
+  }
+  
+  // Individual report pages
+  else if (matchPath('/admin/bill-pay/reports/payment-activity')) {
+    return <PaymentActivityReport />;
+  } else if (matchPath('/admin/bill-pay/reports/error-recap')) {
+    return <ErrorRecapReport />;
+  } else if (matchPath('/admin/bill-pay/reports/active-user-count')) {
+    return <ActiveUserCountReport />;
+  } else if (matchPath('/admin/bill-pay/reports/failed-on-us')) {
+    return <FailedOnUsReport />;
+  } else if (matchPath('/admin/bill-pay/reports/global-holidays')) {
+    return <GlobalHolidaysReport />;
+  } else if (matchPath('/admin/bill-pay/reports/monthly-users')) {
+    return <MonthlyUsersReport />;
+  } else if (matchPath('/admin/bill-pay/reports/on-us-postings')) {
+    return <OnUsPostingsReport />;
+  } else if (matchPath('/admin/bill-pay/reports/payee')) {
+    return <PayeeReport />;
+  } else if (path.match(/\/admin\/bill-pay\/reports\/payment$|\/admin\/bill-pay\/reports\/payment\//)) {
+    return <PaymentReport />;
+  } else if (matchPath('/admin/bill-pay/reports/payment-clear')) {
+    return <PaymentClearReport />;
+  } else if (matchPath('/admin/bill-pay/reports/recurring-payment')) {
+    return <RecurringPaymentReport />;
+  } else if (matchPath('/admin/bill-pay/reports/pending-payments')) {
+    return <PendingPaymentsReport />;
+  } else if (matchPath('/admin/bill-pay/reports/processing-confirmation')) {
+    return <ProcessingConfirmationReport />;
+  } else if (matchPath('/admin/bill-pay/reports/recurring-payment-change-history')) {
+    return <RecurringPaymentChangeHistoryReport />;
+  } else if (matchPath('/admin/bill-pay/reports/scheduled-payment-change-history')) {
+    return <ScheduledPaymentChangeHistoryReport />;
+  } else if (matchPath('/admin/bill-pay/reports/statuses-with-notifications')) {
+    return <StatusesWithNotificationsReport />;
+  } else if (matchPath('/admin/bill-pay/reports/user-payee-change-history')) {
+    return <UserPayeeChangeHistoryReport />;
+  } else if (matchPath('/admin/bill-pay/reports/user-payee')) {
+    return <UserPayeeReport />;
+  } else if (matchPath('/admin/bill-pay/reports/ofac-exceptions')) {
+    return <OFACExceptionsReport />;
+  } else if (matchPath('/admin/bill-pay/reports/suspended-payment')) {
+    return <SuspendedPaymentReport />;
+  } else if (matchPath('/admin/bill-pay/reports/settlement-summary')) {
+    return <SettlementSummaryReport />;
+  } else if (matchPath('/admin/bill-pay/reports/large-payment')) {
+    return <LargePaymentReport />;
+  }
+  
+  // Default to the main reports landing page
+  console.log('Rendering default ReportsLanding');
+  return <ReportsLanding />;
 };
 
 export default Reports;
