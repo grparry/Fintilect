@@ -64,16 +64,81 @@ const PaymentActivityReport: React.FC = () => {
 
   // Handle sort change for ReportTableV2
   const handleSortChange = (newSortColumn: PaymentActivitySortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newSortDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
     
-    // Reset to page 1 when sort changes
-    if (pageNumber === 1) {
-      runReport(1);
-    } else {
-      setPageNumber(1);
-      runReport(1);
+    // Make API call with the new sort parameters directly
+    setLoading(true);
+    
+    // Create params with the new sort values
+    const params: PaymentActivityParams = {
+      searchType,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newSortDirection // Use the new sort direction directly
+    };
+    
+    // Add conditional parameters based on search type
+    if ([
+      PaymentActivitySearchType.MemberID,
+      PaymentActivitySearchType.MemberIDAndDate,
+      PaymentActivitySearchType.MemberIDAndPayeeName,
+      PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+    ].includes(searchType)) {
+      params.memberID = memberId;
     }
+    
+    if ([
+      PaymentActivitySearchType.PaymentID
+    ].includes(searchType)) {
+      params.paymentID = paymentId;
+    }
+    
+    if ([
+      PaymentActivitySearchType.PayeeName,
+      PaymentActivitySearchType.MemberIDAndPayeeName,
+      PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+    ].includes(searchType)) {
+      params.payeeName = payeeName;
+    }
+    
+    // Always include date parameters for date-related search types
+    if ([
+      PaymentActivitySearchType.DateRange,
+      PaymentActivitySearchType.MemberIDAndDate,
+      PaymentActivitySearchType.MemberIDAndDateAndPayeeName
+    ].includes(searchType)) {
+      params.startDate = startDate.format('YYYY-MM-DD');
+      params.endDate = endDate.format('YYYY-MM-DD');
+    }
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPageNumber(1);
+    
+    // Call API directly with new sort parameters
+    getPaymentActivity(params)
+      .then(response => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setReportData(response.items || []);
+        setTotalCount(response.totalCount);
+      })
+      .catch(error => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // Determine if search value field should be shown

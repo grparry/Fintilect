@@ -213,15 +213,79 @@ const RecurringPaymentChangeHistoryReport: React.FC = () => {
    * @param newSortDirection Sort direction
    */
   const handleSortChange = (newSortColumn: RecurringPaymentChangeHistorySortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newSortDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
     
-    // Reset to page 1 when sort changes
-    if (pageNumber === 1) {
-      runReport(1);
-    } else {
-      setPageNumber(1);
+    // Make API call with the new sort parameters directly
+    setLoading(true);
+    setError(null);
+    
+    // Create params with the new sort values
+    const params: RecurringPaymentChangeHistoryParams = {
+      searchType,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize: pageSize,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newSortDirection // Use the new sort direction directly
+    };
+    
+    // Add parameters based on search type
+    const formatDate = (date: Dayjs | null) => date ? date.format('YYYY-MM-DD') : '';
+    
+    switch (searchType) {
+      case RecurringPaymentChangeHistorySearchType.DateRange:
+        params.startDate = formatDate(startDate);
+        params.endDate = formatDate(endDate);
+        break;
+      case RecurringPaymentChangeHistorySearchType.RecurringPaymentID:
+        if (!recurringPaymentID) {
+          setError('Recurring Payment ID is required');
+          setLoading(false);
+          return;
+        }
+        params.recurringPaymentID = recurringPaymentID;
+        params.startDate = formatDate(startDate);
+        params.endDate = formatDate(endDate);
+        break;
+      case RecurringPaymentChangeHistorySearchType.MemberID:
+        if (!memberID) {
+          setError('Member ID is required');
+          setLoading(false);
+          return;
+        }
+        params.memberID = memberID;
+        params.startDate = formatDate(startDate);
+        params.endDate = formatDate(endDate);
+        break;
     }
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPageNumber(1);
+    
+    // Call API directly with new sort parameters
+    getRecurringPaymentChangeHistory(params)
+      .then(response => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setData(response);
+        setPageNumber(response.pageNumber);
+      })
+      .catch(error => {
+        console.error('Error sorting report:', error);
+        setError(error instanceof Error ? error.message : 'Failed to sort report. Please try again.');
+        setData(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   /**

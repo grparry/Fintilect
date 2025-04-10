@@ -734,8 +734,7 @@ describe('ReportTableV2', () => {
           pagination={{
             pageNumber: 1,
             totalCount: 30,
-            onPageChange,
-            onPageSizeChange: jest.fn()
+            onPageChange
           }}
           sortColumn={TestSortColumn.MemberID}
           sortDirection="ASC"

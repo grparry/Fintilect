@@ -75,6 +75,14 @@ import {
     UserPayeeParams,
     UserPayeeItemPagedResponse
 } from '../../utils/reports/userPayee';
+import {
+    OFACExceptionsRequest,
+    OFACExceptionsItemPagedResponse
+} from '../../utils/reports/ofacExceptions';
+import {
+    SuspendedPaymentRequest,
+    SuspendedPaymentItemPagedResponse
+} from '../../utils/reports/suspendedPayment';
 
 /**
  * Interface for report management
@@ -213,4 +221,18 @@ export interface IReportService extends IBaseService {
      * @returns Paged response with user payee report items
      */
     getUserPayeeReport(params: UserPayeeParams): Promise<UserPayeeItemPagedResponse>;
+
+    /**
+     * Get OFAC exceptions report data using the dedicated endpoint
+     * @param params OFAC exceptions report search parameters
+     * @returns Paged response with OFAC exceptions report items
+     */
+    getOFACExceptionsReport(params: OFACExceptionsRequest): Promise<OFACExceptionsItemPagedResponse>;
+
+    /**
+     * Get suspended payment report data using the dedicated endpoint
+     * @param params Suspended payment report search parameters
+     * @returns Paged response with suspended payment report items
+     */
+    getSuspendedPaymentReport(params: SuspendedPaymentRequest): Promise<SuspendedPaymentItemPagedResponse>;
 }

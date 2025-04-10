@@ -261,6 +261,18 @@ export const permissionRegistry: PermissionRegistry = {
     adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'View Scheduled Payment Change History Report'
   },
+  'route:billPay.reports.ofacExceptions': {
+    resourceId: 'route:billPay.reports.ofacExceptions',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View OFAC Exceptions Report'
+  },
+  'route:billPay.reports.suspendedPayment': {
+    resourceId: 'route:billPay.reports.suspendedPayment',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Suspended Payment Report'
+  },
 
   // Client Management Section
   'navigation:client-management': {

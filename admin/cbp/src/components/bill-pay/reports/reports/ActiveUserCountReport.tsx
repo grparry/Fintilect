@@ -65,15 +65,60 @@ const ActiveUserCountReport: React.FC = () => {
 
   // Handle sort change
   const handleSortChange = (newColumn: ActiveUserCountSortColumn, newDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newColumn, newDirection });
+    
+    // Update state
     setSortColumn(newColumn);
     setSortDirection(newDirection);
     
-    // Reset to page 1 when sort changes
-    if (page === 1) {
-      runReport(1);
-    } else {
-      setPage(1);
+    // Validate required parameters
+    if (!startDate || !endDate) {
+      setError('Please select both start and end dates');
+      return;
     }
+    
+    // Make API call with the new sort parameters directly
+    setLoading(true);
+    setError(null);
+    
+    // Create params with the new sort values
+    const params: ActiveUserCountParams = {
+      searchType: searchType,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize: DEFAULT_PAGE_SIZE,
+      sortColumn: newColumn, // Use the new sort column directly
+      sortDirection: newDirection // Use the new sort direction directly
+    };
+    
+    // Add date range parameters
+    params.startDate = startDate ? startDate.format('YYYY-MM-DD') : undefined;
+    params.endDate = endDate ? endDate.format('YYYY-MM-DD') : undefined;
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPage(1);
+    
+    // Call API directly with new sort parameters
+    getActiveUserCount(params)
+      .then(response => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setReportData(response.items || []);
+        setTotalPages(response.totalPages);
+        setTotalCount(response.totalCount);
+      })
+      .catch(error => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+        setReportData(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // Run the report

@@ -69,6 +69,8 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import ContactsIcon from '@mui/icons-material/Contacts';
+import BlockIcon from '@mui/icons-material/Block';
+import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 
 export const navigationConfig: NavigationConfig = {
   sections: [
@@ -285,6 +287,20 @@ export const navigationConfig: NavigationConfig = {
               path: '/admin/bill-pay/reports/user-payee',
               icon: ContactsIcon,
               resourceId: 'route:billPay.reports.userPayee' as ResourceId
+            },
+            {
+              id: 'ofac-exceptions-report',
+              title: 'OFAC Exceptions Report',
+              path: '/admin/bill-pay/reports/ofac-exceptions',
+              icon: BlockIcon,
+              resourceId: 'route:billPay.reports.ofacExceptions' as ResourceId
+            },
+            {
+              id: 'suspended-payment-report',
+              title: 'Suspended Payment Report',
+              path: '/admin/bill-pay/reports/suspended-payment',
+              icon: PauseCircleOutlineIcon,
+              resourceId: 'route:billPay.reports.suspendedPayment' as ResourceId
             }
           ]
         },

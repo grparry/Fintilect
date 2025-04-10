@@ -26,6 +26,8 @@ const PaymentReport: React.FC = () => {
   const [userPayeeListID, setUserPayeeListID] = useState<string>('');
   const [payeeID, setPayeeID] = useState<string>('');
   const [days, setDays] = useState<number>(30);
+  const [startDate, setStartDate] = useState<dayjs.Dayjs>(dayjs().subtract(30, 'day'));
+  const [endDate, setEndDate] = useState<dayjs.Dayjs>(dayjs());
   const [sortColumn, setSortColumn] = useState<PaymentSortColumn>(PaymentSortColumn.DateProcessed);
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
   const [pageNumber, setPageNumber] = useState(1);
@@ -114,15 +116,118 @@ const PaymentReport: React.FC = () => {
   
   // Handle sort change for ReportTableV2
   const handleSortChange = (newSortColumn: PaymentSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newSortDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
     
-    // Reset to page 1 when sort changes
-    if (pageNumber === 1) {
-      runReport(1);
-    } else {
-      setPageNumber(1);
+    // Make API call with the new sort parameters directly
+    setLoading(true);
+    setError(null);
+    
+    // Validate required parameters based on search type
+    let hasRequiredParams = false;
+    
+    switch (searchType) {
+      case PaymentSearchType.Member:
+        hasRequiredParams = !!memberID;
+        if (!hasRequiredParams) {
+          setError('Member ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      case PaymentSearchType.Payment:
+        hasRequiredParams = !!paymentID;
+        if (!hasRequiredParams) {
+          setError('Payment ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      case PaymentSearchType.RecurringPayment:
+        hasRequiredParams = !!recurringPaymentID;
+        if (!hasRequiredParams) {
+          setError('Recurring Payment ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      case PaymentSearchType.UserPayeeList:
+        hasRequiredParams = !!userPayeeListID;
+        if (!hasRequiredParams) {
+          setError('User Payee List ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      case PaymentSearchType.Payee:
+        hasRequiredParams = !!payeeID;
+        if (!hasRequiredParams) {
+          setError('Payee ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+
+      default:
+        setError('Invalid search type');
+        setLoading(false);
+        return;
     }
+    
+    // Create params with the new sort values
+    const params: PaymentParams = {
+      searchType,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newSortDirection // Use the new sort direction directly
+    };
+    
+    // Add parameters based on search type
+    switch (searchType) {
+      case PaymentSearchType.Member:
+        params.memberID = memberID;
+        break;
+      case PaymentSearchType.Payment:
+        params.paymentID = paymentID;
+        break;
+      case PaymentSearchType.RecurringPayment:
+        params.recurringPaymentID = recurringPaymentID;
+        break;
+      case PaymentSearchType.UserPayeeList:
+        params.userPayeeListID = userPayeeListID;
+        break;
+      case PaymentSearchType.Payee:
+        params.payeeID = payeeID;
+        break;
+
+    }
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPageNumber(1);
+    
+    // Call API directly with new sort parameters
+    getPaymentReport(params)
+      .then((response: PaymentItemPagedResponse) => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setData(response);
+      })
+      .catch((error: any) => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   
   // Handle page change for ReportTableV2
@@ -188,7 +293,7 @@ const PaymentReport: React.FC = () => {
   
   // Run report when sort parameters change
   useEffect(() => {
-    if (data) {
+    if (data && data.items && data.items.length > 0) {
       runReport(pageNumber);
     }
   }, [sortColumn, sortDirection]);

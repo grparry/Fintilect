@@ -85,23 +85,73 @@ const FailedOnUsReport: React.FC = () => {
 
   // Handle sort change
   const handleSortChange = (newSortColumn: FailedOnUsSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newSortDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
     
-    // Reset to page 1 when sort changes
-    if (page === 1) {
-      runReport(1);
-    } else {
-      setPage(1);
+    // Validate required parameters based on search type
+    if (searchType === FailedOnUsSearchType.MemberID && !memberId) {
+      setError('Please enter a Member ID');
+      return;
+    } else if (searchType === FailedOnUsSearchType.PaymentID && !paymentId) {
+      setError('Please enter a Payment ID');
+      return;
+    } else if (searchType === FailedOnUsSearchType.DateRange && (!startDate || !endDate)) {
+      setError('Please select both start and end dates');
+      return;
     }
+    
+    // Make API call with the new sort parameters directly
+    setLoading(true);
+    setError(null);
+    
+    // Create params with the new sort values
+    const params: FailedOnUsParams = {
+      searchType: searchType,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize: pageSize,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newSortDirection // Use the new sort direction directly
+    };
+    
+    // Add parameters based on search type
+    if (searchType === FailedOnUsSearchType.MemberID) {
+      params.memberId = memberId;
+    } else if (searchType === FailedOnUsSearchType.PaymentID) {
+      params.paymentId = paymentId;
+    } else if (searchType === FailedOnUsSearchType.DateRange) {
+      params.startDate = startDate ? startDate.toISOString() : undefined;
+      params.endDate = endDate ? endDate.toISOString() : undefined;
+    }
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPage(1);
+    
+    // Call API directly with new sort parameters
+    getFailedOnUs(params)
+      .then(response => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setReportData(response.items || []);
+        setTotalPages(response.totalPages);
+        setTotalCount(response.totalCount);
+      })
+      .catch(error => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+        setReportData(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
-
-  // Run report with updated sort parameters
-  useEffect(() => {
-    if (reportData) {
-      runReport(page);
-    }
-  }, [sortColumn, sortDirection]);
 
   // Run the report
   const runReport = useCallback(async (pageNumber: number = 1, pageSizeParam?: number) => {
@@ -196,14 +246,14 @@ const FailedOnUsReport: React.FC = () => {
       label: 'Failed Date', 
       sortable: true,
       sortKey: FailedOnUsSortColumn.FailedDate,
-      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY HH:mm:ss') : ''
+      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY') : ''
     },
     { 
       key: 'processedDate', 
       label: 'Processed Date', 
       sortable: true,
       sortKey: FailedOnUsSortColumn.ProcessedDate,
-      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY HH:mm:ss') : ''
+      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY') : ''
     },
     { 
       key: 'amount', 

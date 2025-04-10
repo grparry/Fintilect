@@ -24,6 +24,8 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import PeopleIcon from '@mui/icons-material/People';
 import ContactsIcon from '@mui/icons-material/Contacts';
+import BlockIcon from '@mui/icons-material/Block';
+import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 
 // Define report card interface
 interface ReportCardProps {
@@ -204,6 +206,20 @@ const ReportsLanding: React.FC = () => {
       description: 'View user payee information',
       icon: <ContactsIcon />,
       to: '/admin/bill-pay/reports/user-payee',
+      implemented: true
+    },
+    {
+      title: 'OFAC Exceptions Report',
+      description: 'View OFAC exceptions information',
+      icon: <BlockIcon />,
+      to: '/admin/bill-pay/reports/ofac-exceptions',
+      implemented: true
+    },
+    {
+      title: 'Suspended Payment Report',
+      description: 'View suspended payment information',
+      icon: <PauseCircleOutlineIcon />,
+      to: '/admin/bill-pay/reports/suspended-payment',
       implemented: true
     }
   ];

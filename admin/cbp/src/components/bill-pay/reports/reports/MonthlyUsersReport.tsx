@@ -77,15 +77,59 @@ const MonthlyUsersReport: React.FC = () => {
 
   // Handle sort change for ReportTableV2
   const handleSortChange = (newSortColumn: MonthlyUsersSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newSortDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
     
-    // Reset to page 1 when sort changes
-    if (page === 1) {
-      runReport(1);
-    } else {
-      setPage(1);
+    // Validate date range
+    if (!startDate || !endDate) {
+      setError('Please provide both start and end dates');
+      return;
     }
+    
+    // Make API call with the new sort parameters directly
+    const params: MonthlyUsersParams = {
+      searchType: searchType,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize: DEFAULT_PAGE_SIZE,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newSortDirection, // Use the new sort direction directly
+      startDate: startDate.format('YYYY-MM-DD'),
+      endDate: endDate.format('YYYY-MM-DD')
+    };
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPage(1);
+    
+    // Call API directly with new sort parameters
+    setLoading(true);
+    setError(null);
+    
+    getMonthlyUsers(params)
+      .then(response => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setReportData(response.items || []);
+        setTotalCount(response.totalCount);
+        setTotalPages(response.totalPages);
+      })
+      .catch(error => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+        setReportData([]);
+        setTotalCount(0);
+        setTotalPages(0);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // Handle form submit

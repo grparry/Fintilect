@@ -204,15 +204,95 @@ const UserPayeeReport: React.FC = () => {
    * @param newSortDirection Direction to sort
    */
   const handleSortChange = (newSortColumn: UserPayeeSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newSortDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
     
-    // Reset to page 1 when sort changes
-    if (pageNumber === 1) {
-      runReport(1);
-    } else {
-      setPageNumber(1);
+    // Make API call with the new sort parameters directly
+    setLoading(true);
+    setError(null);
+    
+    // Validate required parameters based on search type
+    let hasRequiredParams = false;
+    
+    switch (searchType) {
+      case UserPayeeSearchType.Member:
+        hasRequiredParams = !!memberID;
+        if (!hasRequiredParams) {
+          setError('Member ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      case UserPayeeSearchType.UserPayeeList:
+        hasRequiredParams = !!userPayeeListID;
+        if (!hasRequiredParams) {
+          setError('User Payee List ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      case UserPayeeSearchType.Payee:
+        hasRequiredParams = !!payeeID;
+        if (!hasRequiredParams) {
+          setError('Payee ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      default:
+        setError('Invalid search type');
+        setLoading(false);
+        return;
     }
+    
+    // Create params with the new sort values
+    const params: UserPayeeParams = {
+      searchType,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newSortDirection, // Use the new sort direction directly
+      days: days // Required parameter
+    };
+    
+    // Add parameters based on search type
+    switch (searchType) {
+      case UserPayeeSearchType.Member:
+        params.memberID = memberID;
+        break;
+      case UserPayeeSearchType.UserPayeeList:
+        params.userPayeeListID = userPayeeListID;
+        break;
+      case UserPayeeSearchType.Payee:
+        params.payeeID = payeeID;
+        break;
+    }
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPageNumber(1);
+    
+    // Call API directly with new sort parameters
+    getUserPayeeReport(params)
+      .then((response: UserPayeeItemPagedResponse) => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setData(response);
+      })
+      .catch((error: any) => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   
   /**
@@ -285,11 +365,7 @@ const UserPayeeReport: React.FC = () => {
   };
   
   // Effect to run report when sort parameters change
-  useEffect(() => {
-    if (data) {
-      runReport(pageNumber);
-    }
-  }, [sortColumn, sortDirection]);
+  // No longer need the useEffect hook for sort parameters as we're making the API call directly in handleSortChange
   
   return (
     <ReportContainer

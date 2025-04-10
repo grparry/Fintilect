@@ -87,15 +87,51 @@ const GlobalHolidaysReport: React.FC = () => {
    * @param newSortDirection Direction to sort
    */
   const handleSortChange = (newSortColumn: GlobalHolidaysSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newSortDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
     
-    // Reset to page 1 when sort changes
-    if (page === 1) {
-      runReport(1);
-    } else {
-      setPage(1);
-    }
+    // Make API call with the new sort parameters directly
+    const params: GlobalHolidaysParams = {
+      searchType: searchType,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize: DEFAULT_PAGE_SIZE,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newSortDirection // Use the new sort direction directly
+    };
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPage(1);
+    
+    // Call API directly with new sort parameters
+    setLoading(true);
+    setError(null);
+    
+    getGlobalHolidays(params)
+      .then(response => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setReportData(response.items || []);
+        setTotalCount(response.totalCount);
+        setTotalPages(response.totalPages);
+      })
+      .catch(error => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+        setReportData([]);
+        setTotalCount(0);
+        setTotalPages(0);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // Handle form submit

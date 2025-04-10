@@ -20,6 +20,7 @@ import {
   PayeeSortColumn,
   PayeeItem,
   PayeeParams,
+  PayeeItemPagedResponse,
   getPayeeReport
 } from '../../../../utils/reports/payee';
 import useClientApi from '../../../../hooks/useClientApi';
@@ -39,6 +40,7 @@ const PayeeReport: React.FC = () => {
   const [recurringPaymentId, setRecurringPaymentId] = useState<string>('');
   const [userPayeeListId, setUserPayeeListId] = useState<string>('');
   const [payeeId, setPayeeId] = useState<string>('');
+  const [payeeName, setPayeeName] = useState<string>('');
 
   // Report state
   const [loading, setLoading] = useState<boolean>(false);
@@ -58,6 +60,7 @@ const PayeeReport: React.FC = () => {
     setRecurringPaymentId('');
     setUserPayeeListId('');
     setPayeeId('');
+    setPayeeName('');
   }, [searchType]);
 
   // Get label for search value based on search type
@@ -86,16 +89,87 @@ const PayeeReport: React.FC = () => {
 
   // Handle sort column change for ReportTableV2
   const handleSortChange = (newSortColumn: PayeeSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newSortDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
     
-    // Reset to page 1 when sort changes
-    if (page === 1) {
-      runReport(1, newSortColumn, newSortDirection);
-    } else {
-      setPage(1);
-      runReport(1, newSortColumn, newSortDirection);
+    // Make API call with the new sort parameters directly
+    setLoading(true);
+    setError(null);
+    
+    // Validate required parameters based on search type
+    let hasRequiredParams = false;
+    
+    switch (searchType) {
+      case PayeeSearchType.Payee:
+        hasRequiredParams = !!payeeId;
+        if (!hasRequiredParams) {
+          setError('Payee ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+
+      case PayeeSearchType.Member:
+        hasRequiredParams = !!memberId;
+        if (!hasRequiredParams) {
+          setError('Member ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      default:
+        setError('Invalid search type');
+        setLoading(false);
+        return;
     }
+    
+    // Create params with the new sort values
+    const params: PayeeParams = {
+      searchType,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newSortDirection // Use the new sort direction directly
+    };
+    
+    // Add parameters based on search type
+    switch (searchType) {
+      case PayeeSearchType.Payee:
+        params.payeeID = payeeId;
+        break;
+
+      case PayeeSearchType.Member:
+        params.memberID = memberId;
+        break;
+    }
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPage(1);
+    
+    // Call API directly with new sort parameters
+    getPayeeReport(params)
+      .then((response: PayeeItemPagedResponse) => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setReportData(response.items || []);
+        setTotalCount(response.totalCount);
+        setTotalPages(response.totalPages);
+      })
+      .catch((error: any) => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // Run the report
@@ -200,6 +274,13 @@ const PayeeReport: React.FC = () => {
   };
 
 
+
+  // Run report when sort parameters change
+  useEffect(() => {
+    if (reportData && reportData.length > 0) {
+      runReport(page);
+    }
+  }, [sortColumn, sortDirection]);
 
   // Table columns definition
   const columns = [

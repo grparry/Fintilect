@@ -114,16 +114,85 @@ const PaymentClearReport: React.FC = () => {
   
   // Handle sort change for ReportTableV2
   const handleSortChange = (newSortColumn: PaymentClearSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newSortDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
     
-    // Reset to page 1 when sort changes
-    if (pageNumber === 1) {
-      runReport(1);
-    } else {
-      setPageNumber(1);
-      runReport(1);
+    // Make API call with the new sort parameters directly
+    setLoading(true);
+    setError(null);
+    
+    // Validate form inputs based on search type
+    const errors = {
+      memberID: searchType === PaymentClearSearchType.Member && !memberID ? 'Member ID is required' : '',
+      paymentID: searchType === PaymentClearSearchType.Payment && !paymentID ? 'Payment ID is required' : '',
+      recurringPaymentID: searchType === PaymentClearSearchType.RecurringPayment && !recurringPaymentID ? 'Recurring Payment ID is required' : '',
+      userPayeeListID: searchType === PaymentClearSearchType.UserPayeeList && !userPayeeListID ? 'User Payee List ID is required' : '',
+      payeeID: searchType === PaymentClearSearchType.Payee && !payeeID ? 'Payee ID is required' : '',
+      days: days < 1 || days > 3650 ? 'Days must be between 1 and 3650' : ''
+    };
+    
+    setFormErrors(errors);
+    
+    // If there are validation errors, don't run the report
+    if (Object.values(errors).some(error => error)) {
+      setLoading(false);
+      return;
     }
+    
+    // Create params with the new sort values
+    const params: PaymentClearParams = {
+      searchType,
+      days,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newSortDirection // Use the new sort direction directly
+    };
+    
+    // Add parameters based on search type
+    switch (searchType) {
+      case PaymentClearSearchType.Member:
+        params.memberID = memberID;
+        break;
+      case PaymentClearSearchType.Payment:
+        params.paymentID = paymentID;
+        break;
+      case PaymentClearSearchType.RecurringPayment:
+        params.recurringPaymentID = recurringPaymentID;
+        break;
+      case PaymentClearSearchType.UserPayeeList:
+        params.userPayeeListID = userPayeeListID;
+        break;
+      case PaymentClearSearchType.Payee:
+        params.payeeID = payeeID;
+        break;
+    }
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPageNumber(1);
+    
+    // Call API directly with new sort parameters
+    getPaymentClearReport(params)
+      .then((response: PaymentClearItemPagedResponse) => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setData(response);
+      })
+      .catch((error: any) => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   
   // Handle page change for ReportTableV2
@@ -155,11 +224,7 @@ const PaymentClearReport: React.FC = () => {
 
   
   // Run report when sort parameters change
-  useEffect(() => {
-    if (data) {
-      runReport(pageNumber);
-    }
-  }, [sortColumn, sortDirection]);
+  // No longer need the useEffect hook for sort parameters as we're making the API call directly in handleSortChange
   
   // Define table columns
   const columns = [

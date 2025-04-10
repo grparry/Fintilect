@@ -18,6 +18,8 @@ import { PaymentRequest, PaymentItemPagedResponse, PaymentSearchType } from '../
 import { PaymentClearRequest, PaymentClearItemPagedResponse, PaymentClearSearchType } from '../../../utils/reports/paymentClear';
 import { RecurringPaymentParams, RecurringPaymentItemPagedResponse, RecurringPaymentSearchType } from '../../../utils/reports/recurringPayment';
 import { UserPayeeParams, UserPayeeItemPagedResponse, UserPayeeSearchType } from '../../../utils/reports/userPayee';
+import { OFACExceptionsRequest, OFACExceptionsItemPagedResponse, OFACExceptionsSearchType } from '../../../utils/reports/ofacExceptions';
+import { SuspendedPaymentRequest, SuspendedPaymentItemPagedResponse } from '../../../utils/reports/suspendedPayment';
 import { BaseService } from './BaseService';
 import logger from '../../../utils/logger';
 
@@ -959,6 +961,111 @@ export class ReportService extends BaseService implements IReportService {
         // Validate days
         if (params.days < 1 || params.days > 3650) {
             throw new Error('Days must be between 1 and 3650');
+        }
+    }
+
+    /**
+     * Get OFAC exceptions report data using the dedicated endpoint
+     * @param params OFAC exceptions report search parameters
+     * @returns Promise with OFAC exceptions report data
+     */
+    async getOFACExceptionsReport(params: OFACExceptionsRequest): Promise<OFACExceptionsItemPagedResponse> {
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+
+        // Create request body with all parameters
+        const requestBody: Record<string, any> = {
+            SearchType: params.searchType,
+            PageNumber: params.pageNumber || 1,
+            PageSize: params.pageSize || 20
+        };
+
+        // Add parameters based on search type
+        switch (params.searchType) {
+            case OFACExceptionsSearchType.SingleDate:
+                if (!params.selectedSingleDate) {
+                    throw new Error('Selected single date is required for Single Date search type');
+                }
+                requestBody.SelectedSingleDate = params.selectedSingleDate;
+                break;
+            case OFACExceptionsSearchType.MonthYear:
+                if (params.monthSelected === undefined || params.yearSelected === undefined) {
+                    throw new Error('Month and year are required for Month/Year search type');
+                }
+                requestBody.MonthSelected = params.monthSelected;
+                requestBody.YearSelected = params.yearSelected;
+                break;
+            case OFACExceptionsSearchType.DateRange:
+                if (!params.selectedStartDate || !params.selectedEndDate) {
+                    throw new Error('Start date and end date are required for Date Range search type');
+                }
+                requestBody.SelectedStartDate = params.selectedStartDate;
+                requestBody.SelectedEndDate = params.selectedEndDate;
+                break;
+            case OFACExceptionsSearchType.All:
+                // No additional parameters needed for All search type
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+
+        // Add sort parameters if provided
+        if (params.sortColumn) {
+            requestBody.SortColumn = params.sortColumn;
+            requestBody.SortDirection = params.sortDirection || 'DESC';
+        }
+
+        logger.info(`OFAC Exceptions report request with params: ${JSON.stringify(requestBody)}`);
+
+        try {
+            // Use POST method with request body
+            return await this.post<OFACExceptionsItemPagedResponse>('/OFACExceptions', requestBody);
+        } catch (error) {
+            logger.error('Error fetching OFAC exceptions report', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Get suspended payment report data using the dedicated endpoint
+     * @param params Suspended payment report search parameters
+     * @returns Promise with suspended payment report data
+     */
+    async getSuspendedPaymentReport(params: SuspendedPaymentRequest): Promise<SuspendedPaymentItemPagedResponse> {
+        // Create request body with all parameters
+        const requestBody: Record<string, any> = {
+            PageNumber: params.pageNumber || 1,
+            PageSize: params.pageSize || 20
+        };
+
+        // Add sort parameters if provided
+        if (params.sortColumn) {
+            requestBody.SortColumn = params.sortColumn;
+            requestBody.SortDirection = params.sortDirection || 'DESC';
+        }
+
+        logger.info(`Suspended Payment report request with params: ${JSON.stringify(requestBody)}`);
+
+        try {
+            // Use GET method with query parameters
+            const searchParams = new URLSearchParams();
+            
+            searchParams.append('PageNumber', (params.pageNumber || 1).toString());
+            searchParams.append('PageSize', (params.pageSize || 20).toString());
+            
+            if (params.sortColumn) {
+                searchParams.append('SortColumn', params.sortColumn);
+                searchParams.append('SortDirection', params.sortDirection || 'DESC');
+            }
+            
+            const queryString = searchParams.toString();
+            logger.info(`Suspended Payment request with query string: ${queryString}`);
+            
+            return await this.get<SuspendedPaymentItemPagedResponse>(`/SuspendedPayment?${queryString}`);
+        } catch (error) {
+            logger.error('Error fetching suspended payment report', error);
+            throw error;
         }
     }
 }

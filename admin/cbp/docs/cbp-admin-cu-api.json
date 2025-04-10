@@ -2477,6 +2477,191 @@
         }
       }
     },
+    "/api/v1/report/ofacexceptions": {
+      "get": {
+        "tags": [
+          "OFACExceptions"
+        ],
+        "summary": "Gets a paged list of OFAC exceptions",
+        "parameters": [
+          {
+            "name": "SortColumn",
+            "in": "query",
+            "description": "Gets or sets the sort column.",
+            "schema": {
+              "enum": [
+                "SponsorTransactionId",
+                "SponsorId",
+                "SponsorName",
+                "CustomerId",
+                "PrimaryCustomerFirstName",
+                "PrimaryCustomerLastName",
+                "BusinessName",
+                "PayeeName",
+                "ConfirmationNumber",
+                "TransactionAmount",
+                "ServiceRequestNumber",
+                "ServiceRequestDate",
+                "CheckNumber",
+                "Created"
+              ],
+              "type": "string",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/OFACExceptionsSortColumn"
+                }
+              ]
+            }
+          },
+          {
+            "name": "SearchType",
+            "in": "query",
+            "description": "Gets or sets the search type.",
+            "required": true,
+            "schema": {
+              "enum": [
+                "SingleDate",
+                "MonthYear",
+                "DateRange",
+                "All"
+              ],
+              "type": "string",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/OFACExceptionsSearchType"
+                }
+              ]
+            }
+          },
+          {
+            "name": "SelectedSingleDate",
+            "in": "query",
+            "description": "Gets or sets the selected single date for filtering.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "MonthSelected",
+            "in": "query",
+            "description": "Gets or sets the selected month for filtering.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "YearSelected",
+            "in": "query",
+            "description": "Gets or sets the selected year for filtering.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "SelectedStartDate",
+            "in": "query",
+            "description": "Gets or sets the start date for date range filtering.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "SelectedEndDate",
+            "in": "query",
+            "description": "Gets or sets the end date for date range filtering.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "schema": {
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SortDirection"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfOFACExceptionsItem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfOFACExceptionsItem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfOFACExceptionsItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/onus/payment/{id}": {
       "get": {
         "tags": [
@@ -4756,6 +4941,196 @@
         }
       }
     },
+    "/api/v1/report/paymenthistory": {
+      "get": {
+        "tags": [
+          "PaymentHistory"
+        ],
+        "summary": "Gets a paged list of payment history records",
+        "parameters": [
+          {
+            "name": "SortColumn",
+            "in": "query",
+            "description": "Gets or sets the sort column.",
+            "schema": {
+              "enum": [
+                "PaymentID",
+                "RecurringPaymentID",
+                "MemberID",
+                "FundingAccount",
+                "Amount",
+                "PayeeID",
+                "PayeeName",
+                "UserPayeeListID",
+                "UsersAccountAtPayee",
+                "NameOnAccount",
+                "ProcessDate",
+                "DeliveryDate",
+                "StatusCode",
+                "StatusDescription",
+                "Memo",
+                "Source",
+                "EntryDate",
+                "LastUpdate",
+                "CheckNumber",
+                "ConfirmationNumber"
+              ],
+              "type": "string",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/PaymentHistorySortColumn"
+                }
+              ]
+            }
+          },
+          {
+            "name": "SearchType",
+            "in": "query",
+            "description": "Gets or sets the search type.",
+            "required": true,
+            "schema": {
+              "enum": [
+                "SingleDate",
+                "MonthYear",
+                "DateRange"
+              ],
+              "type": "string",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/PaymentHistorySearchType"
+                }
+              ]
+            }
+          },
+          {
+            "name": "SelectedSingleDate",
+            "in": "query",
+            "description": "Gets or sets the selected single date for filtering.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "MonthSelected",
+            "in": "query",
+            "description": "Gets or sets the selected month for filtering.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "YearSelected",
+            "in": "query",
+            "description": "Gets or sets the selected year for filtering.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "SelectedStartDate",
+            "in": "query",
+            "description": "Gets or sets the start date for date range filtering.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "SelectedEndDate",
+            "in": "query",
+            "description": "Gets or sets the end date for date range filtering.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "schema": {
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SortDirection"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfPaymentHistoryItem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfPaymentHistoryItem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfPaymentHistoryItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/report/pendingpayments": {
       "post": {
         "tags": [
@@ -6218,6 +6593,118 @@
         }
       }
     },
+    "/api/v1/report/suspendedpayment": {
+      "get": {
+        "tags": [
+          "SuspendedPayment"
+        ],
+        "summary": "Gets a paged list of suspended payments.",
+        "parameters": [
+          {
+            "name": "SortColumn",
+            "in": "query",
+            "description": "The sort column for the suspended payment report.",
+            "schema": {
+              "enum": [
+                "PaymentID",
+                "RecurringID",
+                "MemberID",
+                "Account",
+                "Amount",
+                "PayeeID",
+                "PayeeName",
+                "UserPayeeListID",
+                "UsersAccountAtPayee",
+                "NameOnAccount",
+                "ProcessDate",
+                "DeliveryDate",
+                "Comments",
+                "Source",
+                "EntryDate",
+                "LastUpdated"
+              ],
+              "type": "string",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SuspendedPaymentSortColumn"
+                }
+              ]
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "schema": {
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SortDirection"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the suspended payments.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseOfSuspendedPaymentItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "If an error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectBillPay.AdminCuApi.Responses.ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/report/userpayee": {
       "post": {
         "tags": [
@@ -7424,7 +7911,14 @@
               "MemberID",
               "UserPayeeListID",
               "AccountNumber",
-              "Status"
+              "NickName",
+              "PayeeType",
+              "City",
+              "State",
+              "MemberName",
+              "PayeeID",
+              "EntryDate",
+              "LastUpdated"
             ],
             "type": "string",
             "allOf": [
@@ -7432,7 +7926,7 @@
                 "$ref": "#/components/schemas/UserPayeeSortColumn"
               }
             ],
-            "description": "The column to sort by.. Allowed values: 'PayeeName', 'MemberID', 'UserPayeeListID', 'AccountNumber', 'Status'",
+            "description": "The column to sort by.. Allowed values: 'PayeeName', 'MemberID', 'UserPayeeListID', 'AccountNumber', 'NickName', 'PayeeType', 'City', 'State', 'MemberName', 'PayeeID', 'EntryDate', 'LastUpdated'",
             "example": "PayeeName"
           },
           "pageNumber": {
@@ -7998,6 +8492,10 @@
             "type": "string",
             "nullable": true
           },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
           "payeeName": {
             "type": "string",
             "nullable": true
@@ -8151,6 +8649,184 @@
           }
         },
         "additionalProperties": false
+      },
+      "OFACExceptionsItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sponsorTransactionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "sponsorId": {
+            "type": "string",
+            "nullable": true
+          },
+          "sponsorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryCustomerFirstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryCustomerLastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "businessName": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerAddress1": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerAddress2": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerState": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerZip": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "internalPayeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeAddress1": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeAddress2": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeState": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeZip": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerPayeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerPayeeAccountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "confirmationNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "memoLineInfo": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceRequestNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceRequestDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "serviceRequestType": {
+            "type": "string",
+            "nullable": true
+          },
+          "problemCauseType": {
+            "type": "string",
+            "nullable": true
+          },
+          "effectiveDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliverByDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OFACExceptionsSearchType": {
+        "enum": [
+          "SingleDate",
+          "MonthYear",
+          "DateRange",
+          "All"
+        ],
+        "type": "string",
+        "description": "Enum for the search types in the OFAC Exceptions report.. Allowed values: 'SingleDate', 'MonthYear', 'DateRange', 'All'"
+      },
+      "OFACExceptionsSortColumn": {
+        "enum": [
+          "SponsorTransactionId",
+          "SponsorId",
+          "SponsorName",
+          "CustomerId",
+          "PrimaryCustomerFirstName",
+          "PrimaryCustomerLastName",
+          "BusinessName",
+          "PayeeName",
+          "ConfirmationNumber",
+          "TransactionAmount",
+          "ServiceRequestNumber",
+          "ServiceRequestDate",
+          "CheckNumber",
+          "Created"
+        ],
+        "type": "string",
+        "description": "Enum for the sortable columns in the OFAC Exceptions report.. Allowed values: 'SponsorTransactionId', 'SponsorId', 'SponsorName', 'CustomerId', 'PrimaryCustomerFirstName', 'PrimaryCustomerLastName', 'BusinessName', 'PayeeName', 'ConfirmationNumber', 'TransactionAmount', 'ServiceRequestNumber', 'ServiceRequestDate', 'CheckNumber', 'Created'"
       },
       "OnUsPostingsItem": {
         "type": "object",
@@ -8507,6 +9183,49 @@
         },
         "additionalProperties": false
       },
+      "PagedResponseOfOFACExceptionsItem": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OFACExceptionsItem"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          },
+          "sortColumn": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortDirection": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PagedResponseOfOnUsPostingsItem": {
         "type": "object",
         "properties": {
@@ -8643,6 +9362,49 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PaymentClearItem"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          },
+          "sortColumn": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortDirection": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagedResponseOfPaymentHistoryItem": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentHistoryItem"
             },
             "nullable": true
           },
@@ -8944,6 +9706,49 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/StatusesWithNotificationsItem"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          },
+          "sortColumn": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortDirection": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagedResponseOfSuspendedPaymentItem": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SuspendedPaymentItem"
             },
             "nullable": true
           },
@@ -9402,6 +10207,96 @@
         "type": "string",
         "description": "Defines the available sort columns for the Payment Clear report.. Allowed values: 'ClearedDate', 'PaymentID', 'MemberID', 'Amount', 'PayeeName'"
       },
+      "PaymentHistoryItem": {
+        "type": "object",
+        "properties": {
+          "paymentID": {
+            "type": "string",
+            "nullable": true
+          },
+          "recurringID": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberID": {
+            "type": "string",
+            "nullable": true
+          },
+          "fundingAccount": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "payeeID": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "userPayeeListID": {
+            "type": "string",
+            "nullable": true
+          },
+          "usersAccountAtPayee": {
+            "type": "string",
+            "nullable": true
+          },
+          "nameOnAccount": {
+            "type": "string",
+            "nullable": true
+          },
+          "processDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "deliveryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "memo": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "entryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "checkNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "confirmationNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PaymentHistorySearchReport": {
         "type": "object",
         "properties": {
@@ -9547,6 +10442,41 @@
           }
         },
         "additionalProperties": false
+      },
+      "PaymentHistorySearchType": {
+        "enum": [
+          "SingleDate",
+          "MonthYear",
+          "DateRange"
+        ],
+        "type": "string",
+        "description": "Enum for the search types in the Payment History report.. Allowed values: 'SingleDate', 'MonthYear', 'DateRange'"
+      },
+      "PaymentHistorySortColumn": {
+        "enum": [
+          "PaymentID",
+          "RecurringPaymentID",
+          "MemberID",
+          "FundingAccount",
+          "Amount",
+          "PayeeID",
+          "PayeeName",
+          "UserPayeeListID",
+          "UsersAccountAtPayee",
+          "NameOnAccount",
+          "ProcessDate",
+          "DeliveryDate",
+          "StatusCode",
+          "StatusDescription",
+          "Memo",
+          "Source",
+          "EntryDate",
+          "LastUpdate",
+          "CheckNumber",
+          "ConfirmationNumber"
+        ],
+        "type": "string",
+        "description": "Enum for the sortable columns in the Payment History report.. Allowed values: 'PaymentID', 'RecurringPaymentID', 'MemberID', 'FundingAccount', 'Amount', 'PayeeID', 'PayeeName', 'UserPayeeListID', 'UsersAccountAtPayee', 'NameOnAccount', 'ProcessDate', 'DeliveryDate', 'StatusCode', 'StatusDescription', 'Memo', 'Source', 'EntryDate', 'LastUpdate', 'CheckNumber', 'ConfirmationNumber'"
       },
       "PaymentInformationReport": {
         "type": "object",
@@ -12482,6 +13412,102 @@
         "type": "string",
         "description": "Defines the available sort columns for the Statuses With Notifications API.. Allowed values: 'StatusCode', 'StatusDescription', 'StatusFriendlyName', 'StatusHostCode', 'NotificationId'"
       },
+      "SuspendedPaymentItem": {
+        "type": "object",
+        "properties": {
+          "paymentID": {
+            "type": "string",
+            "nullable": true
+          },
+          "recurringID": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberID": {
+            "type": "string",
+            "nullable": true
+          },
+          "account": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "payeeID": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "userPayeeListID": {
+            "type": "string",
+            "nullable": true
+          },
+          "usersAccountAtPayee": {
+            "type": "string",
+            "nullable": true
+          },
+          "nameOnAccount": {
+            "type": "string",
+            "nullable": true
+          },
+          "processDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "deliveryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "entryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SuspendedPaymentSortColumn": {
+        "enum": [
+          "PaymentID",
+          "RecurringID",
+          "MemberID",
+          "Account",
+          "Amount",
+          "PayeeID",
+          "PayeeName",
+          "UserPayeeListID",
+          "UsersAccountAtPayee",
+          "NameOnAccount",
+          "ProcessDate",
+          "DeliveryDate",
+          "Comments",
+          "Source",
+          "EntryDate",
+          "LastUpdated"
+        ],
+        "type": "string",
+        "description": "Enum for the sort columns in the Suspended Payment report.. Allowed values: 'PaymentID', 'RecurringID', 'MemberID', 'Account', 'Amount', 'PayeeID', 'PayeeName', 'UserPayeeListID', 'UsersAccountAtPayee', 'NameOnAccount', 'ProcessDate', 'DeliveryDate', 'Comments', 'Source', 'EntryDate', 'LastUpdated'"
+      },
       "UpdateAccountAndRefund": {
         "type": "object",
         "properties": {
@@ -12644,11 +13670,51 @@
             "type": "string",
             "nullable": true
           },
+          "payeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "nickName": {
+            "type": "string",
+            "nullable": true
+          },
+          "payeeType": {
+            "type": "string",
+            "nullable": true
+          },
+          "address1": {
+            "type": "string",
+            "nullable": true
+          },
+          "address2": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "zipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberName": {
+            "type": "string",
+            "nullable": true
+          },
           "memberID": {
             "type": "string",
             "nullable": true
           },
-          "payeeName": {
+          "payeeID": {
             "type": "string",
             "nullable": true
           },
@@ -12656,22 +13722,14 @@
             "type": "string",
             "nullable": true
           },
-          "status": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdDate": {
+          "entryDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "lastModifiedDate": {
+          "lastUpdated": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
-          },
-          "nickname": {
-            "type": "string",
             "nullable": true
           }
         },
@@ -12755,10 +13813,17 @@
           "MemberID",
           "UserPayeeListID",
           "AccountNumber",
-          "Status"
+          "NickName",
+          "PayeeType",
+          "City",
+          "State",
+          "MemberName",
+          "PayeeID",
+          "EntryDate",
+          "LastUpdated"
         ],
         "type": "string",
-        "description": "Defines the available sort columns for the User Payee report.. Allowed values: 'PayeeName', 'MemberID', 'UserPayeeListID', 'AccountNumber', 'Status'"
+        "description": "Defines the available sort columns for the User Payee report.. Allowed values: 'PayeeName', 'MemberID', 'UserPayeeListID', 'AccountNumber', 'NickName', 'PayeeType', 'City', 'State', 'MemberName', 'PayeeID', 'EntryDate', 'LastUpdated'"
       }
     }
   }

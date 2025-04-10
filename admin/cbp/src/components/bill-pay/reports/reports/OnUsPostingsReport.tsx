@@ -75,14 +75,14 @@ const OnUsPostingsReport: React.FC = () => {
       label: 'Entry Date',
       sortable: true,
       sortKey: OnUsPostingsSortColumn.EntryDate,
-      render: (value: any) => value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : 'N/A'
+      render: (value: any) => value ? dayjs(value).format('MM/DD/YYYY') : 'N/A'
     },
     { 
       key: 'modifiedDate', 
       label: 'Modified Date',
       sortable: true,
       sortKey: OnUsPostingsSortColumn.ModifiedDate,
-      render: (value: any) => value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : 'N/A'
+      render: (value: any) => value ? dayjs(value).format('MM/DD/YYYY') : 'N/A'
     },
     { 
       key: 'runID', 
@@ -235,25 +235,67 @@ const OnUsPostingsReport: React.FC = () => {
    * @param newSortDirection Direction to sort
    */
   const handleSortChange = (newSortColumn: OnUsPostingsSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newSortDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
     
-    // Reset to page 1 when sort changes
-    if (pageNumber === 1) {
-      runReport(1);
-    } else {
-      setPageNumber(1);
+    // Make API call with the new sort parameters directly
+    setLoading(true);
+    
+    // Create params with the new sort values
+    const params: any = {
+      searchType,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newSortDirection // Use the new sort direction directly
+    };
+    
+    // Add parameters based on search type
+    if (searchType === OnUsPostingsSearchType.PaymentID && paymentID) {
+      params.paymentID = paymentID;
+    } else if (searchType === OnUsPostingsSearchType.MemberID && memberID) {
+      params.memberID = memberID;
+    } else if (searchType === OnUsPostingsSearchType.AccountID && accountID) {
+      params.accountID = accountID;
+    } else if (searchType === OnUsPostingsSearchType.LoanID && loanID) {
+      params.loanID = loanID;
+    } else if (searchType === OnUsPostingsSearchType.RunID && runID) {
+      params.runID = runID;
+    } else if (searchType === OnUsPostingsSearchType.DateRange) {
+      params.startDate = startDate.format('YYYY-MM-DD');
+      params.endDate = endDate.format('YYYY-MM-DD');
     }
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPageNumber(1);
+    
+    // Call API directly with new sort parameters
+    getOnUsPostings(params)
+      .then(response => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setData(response);
+      })
+      .catch(error => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
 
 
-  // Run report when sort parameters change
-  useEffect(() => {
-    if (data) {
-      runReport(pageNumber);
-    }
-  }, [sortColumn, sortDirection]);
+  // No longer need the useEffect hook for sort parameters as we're making the API call directly in handleSortChange
 
   // Render search form based on search type
   const renderSearchForm = () => {

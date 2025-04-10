@@ -308,15 +308,70 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
             sortColumn={sortColumn}
             sortDirection={sortDirection}
             onSortChange={(newColumn, newDirection) => {
+              console.log('Sort change:', { newColumn, newDirection });
+              
+              // Update state
               setSortColumn(newColumn);
               setSortDirection(newDirection);
               
-              // Reset to page 1 when sort changes
-              if (pageNumber === 1) {
-                runReport(1);
-              } else {
-                setPageNumber(1);
+              // Make API call with the new sort parameters directly
+              setLoading(true);
+              setError(null);
+              
+              // Create params with the new sort values
+              const params: UserPayeeChangeHistoryParams = {
+                searchType,
+                pageNumber: 1, // Always reset to page 1 when sorting
+                pageSize: pageSize,
+                sortColumn: newColumn, // Use the new sort column directly
+                sortDirection: newDirection, // Use the new sort direction directly
+                startDate: formatDate(startDate),
+                endDate: formatDate(endDate)
+              };
+              
+              // Add parameters based on search type
+              switch (searchType) {
+                case UserPayeeChangeHistorySearchType.UserPayeeListID:
+                  if (!userPayeeListID) {
+                    setError('User Payee List ID is required');
+                    setLoading(false);
+                    return;
+                  }
+                  params.userPayeeListID = userPayeeListID;
+                  break;
+                case UserPayeeChangeHistorySearchType.MemberID:
+                  if (!memberID) {
+                    setError('Member ID is required');
+                    setLoading(false);
+                    return;
+                  }
+                  params.memberID = memberID;
+                  break;
               }
+              
+              console.log('Making API call with params:', params);
+              
+              // Reset to page 1
+              setPageNumber(1);
+              
+              // Call API directly with new sort parameters
+              getUserPayeeChangeHistory(params)
+                .then(response => {
+                  console.log('API response received:', { 
+                    totalCount: response.totalCount,
+                    totalPages: response.totalPages,
+                    itemCount: response.items?.length || 0 
+                  });
+                  setData(response);
+                })
+                .catch(error => {
+                  console.error('Error sorting report:', error);
+                  setError(error instanceof Error ? error.message : 'Failed to sort report. Please try again.');
+                  setData(null);
+                })
+                .finally(() => {
+                  setLoading(false);
+                });
             }}
             enableExport={{
               getPagedData: async (request) => {

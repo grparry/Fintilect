@@ -17,6 +17,8 @@ import { PaymentRequest, PaymentItemPagedResponse, PaymentSearchType, PaymentIte
 import { PaymentClearRequest, PaymentClearItemPagedResponse, PaymentClearSearchType, PaymentClearItem } from '../../../utils/reports/paymentClear';
 import { RecurringPaymentParams, RecurringPaymentItemPagedResponse, RecurringPaymentSearchType, RecurringPaymentSortColumn } from '../../../utils/reports/recurringPayment';
 import { UserPayeeParams, UserPayeeItemPagedResponse, UserPayeeSearchType } from '../../../utils/reports/userPayee';
+import { OFACExceptionsRequest, OFACExceptionsItemPagedResponse, OFACExceptionsSearchType } from '../../../utils/reports/ofacExceptions';
+import { SuspendedPaymentRequest, SuspendedPaymentItemPagedResponse } from '../../../utils/reports/suspendedPayment';
 import { IReportService } from '../../interfaces/IReportService';
 import { BaseMockService } from './BaseMockService';
 import logger from '../../../utils/logger';
@@ -1418,6 +1420,223 @@ export class MockReportService extends BaseMockService implements IReportService
     async getUserPayeeReport(params: UserPayeeParams): Promise<UserPayeeItemPagedResponse> {
         await this.delay();
         return this.generateMockUserPayeeResponse(params);
+    }
+
+    /**
+     * Get OFAC exceptions report data using the dedicated endpoint
+     * @param params OFAC exceptions report search parameters
+     * @returns Promise with OFAC exceptions report data
+     */
+    async getOFACExceptionsReport(params: OFACExceptionsRequest): Promise<OFACExceptionsItemPagedResponse> {
+        await this.delay();
+        
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+
+        // Validate required parameters based on search type
+        switch (params.searchType) {
+            case OFACExceptionsSearchType.SingleDate:
+                if (!params.selectedSingleDate) {
+                    throw new Error('Selected single date is required for Single Date search type');
+                }
+                break;
+            case OFACExceptionsSearchType.MonthYear:
+                if (params.monthSelected === undefined || params.yearSelected === undefined) {
+                    throw new Error('Month and year are required for Month/Year search type');
+                }
+                break;
+            case OFACExceptionsSearchType.DateRange:
+                if (!params.selectedStartDate || !params.selectedEndDate) {
+                    throw new Error('Start date and end date are required for Date Range search type');
+                }
+                break;
+            case OFACExceptionsSearchType.All:
+                // No additional parameters needed for All search type
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+
+        // Generate mock data
+        const mockItems = Array.from({ length: 25 }, (_, index) => ({
+            id: index + 1,
+            sponsorTransactionId: `ST-${10000 + index}`,
+            sponsorId: `S-${20000 + index}`,
+            sponsorName: `Sponsor ${index + 1}`,
+            customerId: `C-${30000 + index}`,
+            primaryCustomerFirstName: `First${index}`,
+            primaryCustomerLastName: `Last${index}`,
+            businessName: index % 2 === 0 ? `Business ${index}` : null,
+            customerAddress1: `123 Main St`,
+            customerAddress2: index % 3 === 0 ? `Apt ${index}` : null,
+            customerCity: `City${index}`,
+            customerState: `State${index % 50}`,
+            customerZip: `${10000 + index}`,
+            customerCountry: 'USA',
+            internalPayeeId: `IP-${40000 + index}`,
+            payeeName: `Payee ${index + 1}`,
+            payeeAddress1: `456 Oak St`,
+            payeeAddress2: index % 4 === 0 ? `Suite ${index}` : null,
+            payeeCity: `PayeeCity${index}`,
+            payeeState: `State${index % 50}`,
+            payeeZip: `${20000 + index}`,
+            payeeCountry: 'USA',
+            customerPayeeId: `CP-${50000 + index}`,
+            customerPayeeAccountNumber: `ACCT-${60000 + index}`,
+            confirmationNumber: `CN-${70000 + index}`,
+            transactionAmount: 100 + (index * 10.5),
+            memoLineInfo: `Memo for transaction ${index}`,
+            serviceRequestNumber: `SR-${80000 + index}`,
+            serviceRequestDate: new Date(Date.now() - (index * 24 * 60 * 60 * 1000)).toISOString(),
+            serviceRequestType: `Type${index % 5}`,
+            problemCauseType: `Problem${index % 3}`,
+            effectiveDate: new Date(Date.now() - (index * 12 * 60 * 60 * 1000)).toISOString(),
+            deliverByDate: new Date(Date.now() + (index * 24 * 60 * 60 * 1000)).toISOString(),
+            checkNumber: `CK-${90000 + index}`,
+            created: new Date(Date.now() - (index * 48 * 60 * 60 * 1000)).toISOString()
+        }));
+
+        // Apply pagination
+        const pageSize = params.pageSize || 20;
+        const pageNumber = params.pageNumber || 1;
+        const startIndex = (pageNumber - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const totalCount = mockItems.length;
+        const totalPages = Math.ceil(totalCount / pageSize);
+
+        // Apply sorting if specified
+        if (params.sortColumn) {
+            mockItems.sort((a, b) => {
+                const aValue = a[params.sortColumn.toLowerCase() as keyof typeof a];
+                const bValue = b[params.sortColumn.toLowerCase() as keyof typeof b];
+                
+                // Handle null values
+                if (aValue === null && bValue === null) return 0;
+                if (aValue === null) return 1;
+                if (bValue === null) return -1;
+                
+                // Compare based on data type
+                if (typeof aValue === 'string' && typeof bValue === 'string') {
+                    return params.sortDirection === 'ASC' ? 
+                        aValue.localeCompare(bValue) : 
+                        bValue.localeCompare(aValue);
+                }
+                
+                if (typeof aValue === 'number' && typeof bValue === 'number') {
+                    return params.sortDirection === 'ASC' ? 
+                        aValue - bValue : 
+                        bValue - aValue;
+                }
+                
+                // Handle date strings
+                if (typeof aValue === 'string' && typeof bValue === 'string' && 
+                    !isNaN(Date.parse(aValue)) && !isNaN(Date.parse(bValue))) {
+                    const aDate = new Date(aValue).getTime();
+                    const bDate = new Date(bValue).getTime();
+                    return params.sortDirection === 'ASC' ? 
+                        aDate - bDate : 
+                        bDate - aDate;
+                }
+                
+                return 0;
+            });
+        }
+
+        return {
+            items: mockItems.slice(startIndex, endIndex),
+            pageNumber,
+            pageSize,
+            totalCount,
+            totalPages,
+            hasNext: pageNumber < totalPages,
+            hasPrevious: pageNumber > 1
+        };
+    }
+
+    /**
+     * Get suspended payment report data using the dedicated endpoint
+     * @param params Suspended payment report search parameters
+     * @returns Promise with suspended payment report data
+     */
+    async getSuspendedPaymentReport(params: SuspendedPaymentRequest): Promise<SuspendedPaymentItemPagedResponse> {
+        await this.delay();
+        
+        // Generate mock data
+        const mockItems = Array.from({ length: 30 }, (_, index) => ({
+            paymentID: `P-${30000 + index}`,
+            recurringID: index % 3 === 0 ? `R-${40000 + index}` : null,
+            memberID: `M-${20000 + index}`,
+            account: `ACCT-${50000 + index}`,
+            amount: 150 + (index * 15.75),
+            payeeID: `PE-${40000 + index}`,
+            payeeName: `Payee ${index + 1}`,
+            userPayeeListID: `UPL-${60000 + index}`,
+            usersAccountAtPayee: `UAAP-${70000 + index}`,
+            nameOnAccount: `Name ${index + 1}`,
+            processDate: new Date(Date.now() - (index * 24 * 60 * 60 * 1000)).toISOString(),
+            deliveryDate: new Date(Date.now() + ((index + 1) * 24 * 60 * 60 * 1000)).toISOString(),
+            comments: index % 2 === 0 ? `Comment for payment ${index}` : null,
+            source: ['Web', 'Mobile', 'API'][index % 3],
+            entryDate: new Date(Date.now() - (index * 48 * 60 * 60 * 1000)).toISOString(),
+            lastUpdated: new Date(Date.now() - (index * 12 * 60 * 60 * 1000)).toISOString()
+        }));
+
+        // Apply pagination
+        const pageSize = params.pageSize || 20;
+        const pageNumber = params.pageNumber || 1;
+        const startIndex = (pageNumber - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const totalCount = mockItems.length;
+        const totalPages = Math.ceil(totalCount / pageSize);
+
+        // Apply sorting if specified
+        if (params.sortColumn) {
+            mockItems.sort((a, b) => {
+                const aValue = a[params.sortColumn.toLowerCase() as keyof typeof a];
+                const bValue = b[params.sortColumn.toLowerCase() as keyof typeof b];
+                
+                // Handle null values
+                if (aValue === null && bValue === null) return 0;
+                if (aValue === null) return 1;
+                if (bValue === null) return -1;
+                
+                // Compare based on data type
+                if (typeof aValue === 'string' && typeof bValue === 'string') {
+                    return params.sortDirection === 'ASC' ? 
+                        aValue.localeCompare(bValue) : 
+                        bValue.localeCompare(aValue);
+                }
+                
+                if (typeof aValue === 'number' && typeof bValue === 'number') {
+                    return params.sortDirection === 'ASC' ? 
+                        aValue - bValue : 
+                        bValue - aValue;
+                }
+                
+                // Handle date strings
+                if (typeof aValue === 'string' && typeof bValue === 'string' && 
+                    !isNaN(Date.parse(aValue)) && !isNaN(Date.parse(bValue))) {
+                    const aDate = new Date(aValue).getTime();
+                    const bDate = new Date(bValue).getTime();
+                    return params.sortDirection === 'ASC' ? 
+                        aDate - bDate : 
+                        bDate - aDate;
+                }
+                
+                return 0;
+            });
+        }
+
+        return {
+            items: mockItems.slice(startIndex, endIndex),
+            pageNumber,
+            pageSize,
+            totalCount,
+            totalPages,
+            hasNext: pageNumber < totalPages,
+            hasPrevious: pageNumber > 1
+        };
     }
 
     // Private helper methods

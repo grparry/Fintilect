@@ -23,6 +23,8 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import PeopleIcon from '@mui/icons-material/People';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import BlockIcon from '@mui/icons-material/Block';
+import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 
 // Lazy load components
 const BillPay = lazy(() => import('../components/bill-pay/BillPay'));
@@ -53,6 +55,8 @@ const PaymentReport = lazy(() => import('../components/bill-pay/reports/reports/
 const PaymentClearReport = lazy(() => import('../components/bill-pay/reports/reports/PaymentClearReport'));
 const RecurringPaymentReport = lazy(() => import('../components/bill-pay/reports/reports/RecurringPaymentReport'));
 const UserPayeeReport = lazy(() => import('../components/bill-pay/reports/reports/UserPayeeReport'));
+const OFACExceptionsReport = lazy(() => import('../components/bill-pay/reports/reports/OFACExceptionsReport'));
+const SuspendedPaymentReport = lazy(() => import('../components/bill-pay/reports/reports/SuspendedPaymentReport'));
 const BillPayConfig = lazy(() => import('../components/bill-pay/settings/BillPayConfig'));
 const Holidays = lazy(() => import('../components/bill-pay/settings/Holidays'));
 const NotificationTemplates = lazy(() => import('../components/bill-pay/settings/NotificationTemplates'));
@@ -306,6 +310,24 @@ const billPayRoutes: RouteConfig[] = [
             icon: ConfirmationNumberIcon,
             sectionId: 'billPay',
             resourceId: 'route:billPay.reports.processingConfirmation' as ResourceId
+          },
+          {
+            id: 'ofacExceptionsReport',
+            path: 'ofac-exceptions',
+            title: 'OFAC Exceptions Report',
+            element: OFACExceptionsReport,
+            icon: BlockIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.ofacExceptions' as ResourceId
+          },
+          {
+            id: 'suspendedPaymentReport',
+            path: 'suspended-payment',
+            title: 'Suspended Payment Report',
+            element: SuspendedPaymentReport,
+            icon: PauseCircleOutlineIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.suspendedPayment' as ResourceId
           },
           {
             id: 'scheduledPaymentChangeHistoryReport',

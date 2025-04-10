@@ -58,13 +58,145 @@ const ErrorRecapReport: React.FC = () => {
 
   // Handle sort change
   const handleSortChange = (newSortColumn: ErrorRecapSortColumn, newDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newDirection);
-    if (page === 1) {
-      runReport(1);
-    } else {
-      setPage(1);
+    
+    // Make API call with the new sort parameters directly
+    setLoading(true);
+    setError(null);
+    
+    // Validate required parameters based on search type
+    let hasRequiredParams = false;
+    
+    switch (searchType) {
+      case ErrorRecapSearchType.MemberID:
+        hasRequiredParams = !!memberId;
+        if (!hasRequiredParams) {
+          setError('Member ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      case ErrorRecapSearchType.PaymentID:
+        hasRequiredParams = !!paymentId;
+        if (!hasRequiredParams) {
+          setError('Payment ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      case ErrorRecapSearchType.UserPayeeListID:
+        hasRequiredParams = !!userPayeeListId;
+        if (!hasRequiredParams) {
+          setError('User Payee List ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      case ErrorRecapSearchType.StatusCode:
+        hasRequiredParams = !!statusCode;
+        if (!hasRequiredParams) {
+          setError('Status Code is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      case ErrorRecapSearchType.DateRange:
+        hasRequiredParams = !!startDate && !!endDate;
+        if (!hasRequiredParams) {
+          setError('Start Date and End Date are required');
+          setLoading(false);
+          return;
+        } else if (startDate && endDate && startDate.isAfter(endDate)) {
+          setError('Start Date must be before End Date');
+          setLoading(false);
+          return;
+        }
+        break;
+      case ErrorRecapSearchType.PayeeID:
+        hasRequiredParams = !!payeeId;
+        if (!hasRequiredParams) {
+          setError('Payee ID is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      case ErrorRecapSearchType.PayeeName:
+        hasRequiredParams = !!payeeName;
+        if (!hasRequiredParams) {
+          setError('Payee Name is required');
+          setLoading(false);
+          return;
+        }
+        break;
+      default:
+        setError('Invalid search type');
+        setLoading(false);
+        return;
     }
+    
+    // Create params with the new sort values
+    const params: ErrorRecapParams = {
+      searchType,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newDirection // Use the new sort direction directly
+    };
+    
+    // Add parameters based on search type
+    switch (searchType) {
+      case ErrorRecapSearchType.MemberID:
+        params.memberId = memberId;
+        break;
+      case ErrorRecapSearchType.PaymentID:
+        params.paymentId = paymentId;
+        break;
+      case ErrorRecapSearchType.UserPayeeListID:
+        params.userPayeeListId = userPayeeListId;
+        break;
+      case ErrorRecapSearchType.StatusCode:
+        params.statusCode = statusCode;
+        break;
+      case ErrorRecapSearchType.DateRange:
+        params.startDate = startDate.format('YYYY-MM-DD');
+        params.endDate = endDate.format('YYYY-MM-DD');
+        break;
+      case ErrorRecapSearchType.PayeeID:
+        params.payeeId = payeeId;
+        break;
+      case ErrorRecapSearchType.PayeeName:
+        params.payeeName = payeeName;
+        break;
+    }
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPage(1);
+    
+    // Call API directly with new sort parameters
+    getErrorRecap(params)
+      .then(response => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setReportData(response.items || []);
+        setTotalCount(response.totalCount);
+        setTotalPages(response.totalPages);
+      })
+      .catch(error => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // Handle page change
@@ -221,20 +353,20 @@ const ErrorRecapReport: React.FC = () => {
     { 
       key: 'failedDate', 
       label: 'Failed Date',
-      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY HH:mm:ss') : '',
+      render: (value: string) => value ? dayjs(value).format('MM/DD/YYYY') : '',
       sortable: true,
       sortKey: ErrorRecapSortColumn.FailedDate,
 
     },
     { 
-      key: 'memberID', 
+      key: 'memberId', 
       label: 'Member ID', 
       sortable: true,
       sortKey: ErrorRecapSortColumn.MemberID,
 
     },
     { 
-      key: 'paymentID', 
+      key: 'paymentId', 
       label: 'Payment ID', 
       sortable: true,
       sortKey: ErrorRecapSortColumn.PaymentID,
@@ -249,14 +381,14 @@ const ErrorRecapReport: React.FC = () => {
 
     },
     { 
-      key: 'userPayeeListID', 
+      key: 'userPayeeListId', 
       label: 'User Payee List ID', 
       sortable: true,
       sortKey: ErrorRecapSortColumn.UserPayeeListID,
 
     },
     { 
-      key: 'payeeID', 
+      key: 'payeeId', 
       label: 'Payee ID', 
       sortable: true,
       sortKey: ErrorRecapSortColumn.PayeeID,

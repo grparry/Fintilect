@@ -98,15 +98,60 @@ const ProcessingConfirmationReport: React.FC = () => {
   
   // Handle sort change for ReportTableV2
   const handleSortChange = (newSortColumn: ProcessingConfirmationSortColumn, newSortDirection: 'ASC' | 'DESC') => {
+    console.log('Sort change:', { newSortColumn, newSortDirection });
+    
+    // Update state
     setSortColumn(newSortColumn);
     setSortDirection(newSortDirection);
     
-    // Reset to page 1 when sort changes
-    if (pageNumber === 1) {
-      runReport(1);
-    } else {
-      setPageNumber(1);
+    // Format dates for API request
+    const formattedStartDate = startDate ? startDate.format('YYYY-MM-DD') : '';
+    const formattedEndDate = endDate ? endDate.format('YYYY-MM-DD') : '';
+    
+    // Validate required parameters
+    if (!formattedStartDate || !formattedEndDate) {
+      setError('Please provide both start and end dates');
+      return;
     }
+    
+    // Make API call with the new sort parameters directly
+    setLoading(true);
+    setError(null);
+    
+    // Create params with the new sort values
+    const params: ProcessingConfirmationParams = {
+      searchType: ProcessingConfirmationSearchType.DateRange,
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+      pageNumber: 1, // Always reset to page 1 when sorting
+      pageSize: pageSize,
+      sortColumn: newSortColumn, // Use the new sort column directly
+      sortDirection: newSortDirection // Use the new sort direction directly
+    };
+    
+    console.log('Making API call with params:', params);
+    
+    // Reset to page 1
+    setPageNumber(1);
+    
+    // Call API directly with new sort parameters
+    getProcessingConfirmation(params)
+      .then(response => {
+        console.log('API response received:', { 
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+          itemCount: response.items?.length || 0 
+        });
+        setData(response);
+      })
+      .catch(error => {
+        console.error('Error sorting report:', error);
+        setError('Failed to sort report. Please try again.');
+        setData(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   
   // Handle page change for ReportTableV2
@@ -148,12 +193,7 @@ const ProcessingConfirmationReport: React.FC = () => {
     }
   };
   
-  // Run report when sort parameters change
-  useEffect(() => {
-    if (data) {
-      runReport(pageNumber);
-    }
-  }, [sortColumn, sortDirection]);
+  // No longer need the useEffect hook for sort parameters as we're making the API call directly in handleSortChange
   
   // Define table columns for ReportTableV2
   const columns = [
