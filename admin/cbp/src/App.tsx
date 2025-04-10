@@ -116,10 +116,7 @@ const RootRedirect: React.FC = () => {
   return <Navigate to={isAdmin ? "/admin" : "/unauthorized"} replace />;
 };
 
-// Only import DevTools in development mode
-const DevTools: React.FC = process.env.NODE_ENV === 'development' 
-  ? lazy(() => import('./components/development/DevTools'))
-  : () => null;
+
 
 const App: React.FC = () => {
   const routes = useMemo(() => getAllRoutes(), []);
@@ -205,8 +202,7 @@ const App: React.FC = () => {
                           </Route>
 
                         </Routes>
-                        {/* Development Tools - only rendered in development mode */}
-                        {process.env.NODE_ENV === 'development' && <DevTools />}
+
                       </Suspense>
                     </Box>
                     </NavigationProvider>
