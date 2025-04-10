@@ -221,6 +221,13 @@ const ReportsLanding: React.FC = () => {
       icon: <PauseCircleOutlineIcon />,
       to: '/admin/bill-pay/reports/suspended-payment',
       implemented: true
+    },
+    {
+      title: 'Settlement Summary Report',
+      description: 'View settlement summary with processing, settlement account, and remittance processor data',
+      icon: <AccountBalanceIcon />,
+      to: '/admin/bill-pay/reports/settlement-summary',
+      implemented: true
     }
   ];
 

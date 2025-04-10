@@ -27,6 +27,8 @@ import {
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import DownloadIcon from '@mui/icons-material/Download';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import LastPageIcon from '@mui/icons-material/LastPage';
 
 interface PaginationProps {
   pageNumber: number;
@@ -255,6 +257,23 @@ function ReportTableV2<T, S extends string>({
     if (pagination) {
       // Convert from 0-based to 1-based and pass the current pageSize
       pagination.onPageChange(newPage + 1, pageSize);
+    }
+  };
+
+  // Handle navigation to first page
+  const handleFirstPage = () => {
+    if (pagination && pagination.pageNumber > 1) {
+      pagination.onPageChange(1, pageSize);
+    }
+  };
+
+  // Handle navigation to last page
+  const handleLastPage = () => {
+    if (pagination) {
+      const lastPage = Math.ceil(pagination.totalCount / pageSize);
+      if (pagination.pageNumber < lastPage) {
+        pagination.onPageChange(lastPage, pageSize);
+      }
     }
   };
 
@@ -735,15 +754,25 @@ function ReportTableV2<T, S extends string>({
             pageSize,
             isInitialized
           })}
-          <TablePagination
-            component="div"
-            count={pagination.totalCount}
-            page={pagination.pageNumber - 1} // Convert from 1-based to 0-based
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize} // Use the controlled pageSize state
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            rowsPerPageOptions={rowsPerPageOptions}
-          labelDisplayedRows={({ from, to, count }) => {
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <Button
+              onClick={handleFirstPage}
+              disabled={pagination.pageNumber <= 1}
+              size="small"
+              sx={{ minWidth: 'auto', p: 0.5, mr: 0.5 }}
+              aria-label="first page"
+            >
+              <FirstPageIcon fontSize="small" />
+            </Button>
+            <TablePagination
+              component="div"
+              count={pagination.totalCount}
+              page={pagination.pageNumber - 1} // Convert from 1-based to 0-based
+              onPageChange={handleChangePage}
+              rowsPerPage={pageSize} // Use the controlled pageSize state
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={rowsPerPageOptions}
+            labelDisplayedRows={({ from, to, count }) => {
             // Calculate the correct range based on our pagination props
             if (data.length === 0) {
               return `0–0 of ${count}`;
@@ -757,7 +786,17 @@ function ReportTableV2<T, S extends string>({
             
             return `${start}–${end} of ${count}`;
           }}
-        />
+            />
+            <Button
+              onClick={handleLastPage}
+              disabled={pagination.pageNumber >= Math.ceil(pagination.totalCount / pageSize)}
+              size="small"
+              sx={{ minWidth: 'auto', p: 0.5, ml: 0.5 }}
+              aria-label="last page"
+            >
+              <LastPageIcon fontSize="small" />
+            </Button>
+          </Box>
         </>
       )}
         </>

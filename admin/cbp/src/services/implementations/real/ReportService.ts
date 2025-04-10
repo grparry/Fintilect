@@ -20,6 +20,7 @@ import { RecurringPaymentParams, RecurringPaymentItemPagedResponse, RecurringPay
 import { UserPayeeParams, UserPayeeItemPagedResponse, UserPayeeSearchType } from '../../../utils/reports/userPayee';
 import { OFACExceptionsRequest, OFACExceptionsItemPagedResponse, OFACExceptionsSearchType } from '../../../utils/reports/ofacExceptions';
 import { SuspendedPaymentRequest, SuspendedPaymentItemPagedResponse } from '../../../utils/reports/suspendedPayment';
+import { SettlementSummaryParams, SettlementSummaryItem, SettlementSummarySearchType } from '../../../utils/reports/settlementSummary';
 import { BaseService } from './BaseService';
 import logger from '../../../utils/logger';
 
@@ -1065,6 +1066,64 @@ export class ReportService extends BaseService implements IReportService {
             return await this.get<SuspendedPaymentItemPagedResponse>(`/SuspendedPayment?${queryString}`);
         } catch (error) {
             logger.error('Error fetching suspended payment report', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Get settlement summary report data using the dedicated endpoint
+     * @param params Settlement summary report search parameters
+     * @returns Promise with settlement summary items
+     */
+    async getSettlementSummaryReport(params: SettlementSummaryParams): Promise<SettlementSummaryItem[]> {
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+
+        // Build the query string with PascalCase parameter names as expected by the API
+        const searchParams = new URLSearchParams();
+        searchParams.append('SearchType', params.searchType.toString());
+        
+        // Add specific parameters based on search type
+        switch (params.searchType) {
+            case SettlementSummarySearchType.SingleDate:
+                if (!params.selectedSingleDate) {
+                    throw new Error('Selected single date is required for Single Date search type');
+                }
+                searchParams.append('SelectedSingleDate', params.selectedSingleDate);
+                break;
+            case SettlementSummarySearchType.MonthYear:
+                if (params.monthSelected === undefined || params.yearSelected === undefined) {
+                    throw new Error('Month and year are required for Month/Year search type');
+                }
+                searchParams.append('MonthSelected', params.monthSelected.toString());
+                searchParams.append('YearSelected', params.yearSelected.toString());
+                break;
+            case SettlementSummarySearchType.Year:
+                if (params.yearSelected === undefined) {
+                    throw new Error('Year is required for Year search type');
+                }
+                searchParams.append('YearSelected', params.yearSelected.toString());
+                break;
+            case SettlementSummarySearchType.DateRange:
+                if (!params.selectedStartDate || !params.selectedEndDate) {
+                    throw new Error('Start date and end date are required for Date Range search type');
+                }
+                searchParams.append('SelectedStartDate', params.selectedStartDate);
+                searchParams.append('SelectedEndDate', params.selectedEndDate);
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+
+        const queryString = searchParams.toString();
+        logger.info(`Settlement Summary report request with query string: ${queryString}`);
+
+        try {
+            // Use GET method with query parameters
+            return await this.get<SettlementSummaryItem[]>(`/SettlementSummary?${queryString}`);
+        } catch (error) {
+            logger.error('Error fetching settlement summary report', error);
             throw error;
         }
     }

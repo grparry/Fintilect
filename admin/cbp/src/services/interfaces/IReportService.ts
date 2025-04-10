@@ -83,6 +83,10 @@ import {
     SuspendedPaymentRequest,
     SuspendedPaymentItemPagedResponse
 } from '../../utils/reports/suspendedPayment';
+import {
+    SettlementSummaryParams,
+    SettlementSummaryItem
+} from '../../utils/reports/settlementSummary';
 
 /**
  * Interface for report management
@@ -235,4 +239,11 @@ export interface IReportService extends IBaseService {
      * @returns Paged response with suspended payment report items
      */
     getSuspendedPaymentReport(params: SuspendedPaymentRequest): Promise<SuspendedPaymentItemPagedResponse>;
+
+    /**
+     * Get settlement summary report data using the dedicated endpoint
+     * @param params Settlement summary report search parameters
+     * @returns Array of settlement summary items
+     */
+    getSettlementSummaryReport(params: SettlementSummaryParams): Promise<SettlementSummaryItem[]>;
 }

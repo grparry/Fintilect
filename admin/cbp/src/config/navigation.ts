@@ -301,6 +301,13 @@ export const navigationConfig: NavigationConfig = {
               path: '/admin/bill-pay/reports/suspended-payment',
               icon: PauseCircleOutlineIcon,
               resourceId: 'route:billPay.reports.suspendedPayment' as ResourceId
+            },
+            {
+              id: 'settlement-summary-report',
+              title: 'Settlement Summary Report',
+              path: '/admin/bill-pay/reports/settlement-summary',
+              icon: AccountBalanceIcon,
+              resourceId: 'route:billPay.reports.settlementSummary' as ResourceId
             }
           ]
         },

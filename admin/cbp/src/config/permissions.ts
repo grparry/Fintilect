@@ -273,6 +273,12 @@ export const permissionRegistry: PermissionRegistry = {
     adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
     description: 'View Suspended Payment Report'
   },
+  'route:billPay.reports.settlementSummary': {
+    resourceId: 'route:billPay.reports.settlementSummary',
+    permissions: ['BillPayViewer', 'BillPayReports_Read'],
+    adminPermissions: ['ConnectSuperuser', 'ClientSuperuser'],
+    description: 'View Settlement Summary Report'
+  },
 
   // Client Management Section
   'navigation:client-management': {

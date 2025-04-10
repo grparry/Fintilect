@@ -6405,6 +6405,132 @@
         }
       }
     },
+    "/api/v1/report/settlementsummary": {
+      "get": {
+        "tags": [
+          "SettlementSummary"
+        ],
+        "summary": "Gets a list of settlement summary items",
+        "parameters": [
+          {
+            "name": "SearchType",
+            "in": "query",
+            "description": "Gets or sets the search type.",
+            "required": true,
+            "schema": {
+              "enum": [
+                "SingleDate",
+                "MonthYear",
+                "Year",
+                "DateRange"
+              ],
+              "type": "string",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SettlementSummarySearchType"
+                }
+              ]
+            }
+          },
+          {
+            "name": "SelectedSingleDate",
+            "in": "query",
+            "description": "Gets or sets the selected single date for filtering.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "MonthSelected",
+            "in": "query",
+            "description": "Gets or sets the selected month for filtering.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "YearSelected",
+            "in": "query",
+            "description": "Gets or sets the selected year for filtering.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "SelectedStartDate",
+            "in": "query",
+            "description": "Gets or sets the start date for date range filtering.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "SelectedEndDate",
+            "in": "query",
+            "description": "Gets or sets the end date for date range filtering.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SettlementSummaryItem"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SettlementSummaryItem"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SettlementSummaryItem"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/statuscode/{code}": {
       "get": {
         "tags": [
@@ -13323,6 +13449,38 @@
         ],
         "type": "string",
         "description": "SearchType. Allowed values: 'UserPayeeListId', 'MemberId', 'PaymentId', 'PayeeId', 'RecurringPaymentId', 'MemberIdAndDate', 'MemberIdAndPayeeName', 'MemberIdAndDateAndPayeeName', 'Date', 'PayeeName', 'FisPayeeId'"
+      },
+      "SettlementSummaryItem": {
+        "type": "object",
+        "properties": {
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SettlementSummarySearchType": {
+        "enum": [
+          "SingleDate",
+          "MonthYear",
+          "Year",
+          "DateRange"
+        ],
+        "type": "string",
+        "description": "Enum for the search types in the Settlement Summary report.. Allowed values: 'SingleDate', 'MonthYear', 'Year', 'DateRange'"
       },
       "SortDirection": {
         "enum": [

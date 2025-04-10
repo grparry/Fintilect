@@ -49,6 +49,7 @@ const OnUsPostingsReport = lazy(() => import('../components/bill-pay/reports/rep
 const StatusesWithNotificationsReport = lazy(() => import('../components/bill-pay/reports/reports/StatusesWithNotificationsReport'));
 const LargePaymentReport = lazy(() => import('../components/bill-pay/reports/reports/LargePaymentReport'));
 const ProcessingConfirmationReport = lazy(() => import('../components/bill-pay/reports/reports/ProcessingConfirmationReport'));
+const SettlementSummaryReport = lazy(() => import('../components/bill-pay/reports/reports/SettlementSummaryReport'));
 const ScheduledPaymentChangeHistoryReport = lazy(() => import('../components/bill-pay/reports/reports/ScheduledPaymentChangeHistoryReport'));
 const PayeeReport = lazy(() => import('../components/bill-pay/reports/reports/PayeeReport'));
 const PaymentReport = lazy(() => import('../components/bill-pay/reports/reports/PaymentReport'));
@@ -328,6 +329,15 @@ const billPayRoutes: RouteConfig[] = [
             icon: PauseCircleOutlineIcon,
             sectionId: 'billPay',
             resourceId: 'route:billPay.reports.suspendedPayment' as ResourceId
+          },
+          {
+            id: 'settlementSummaryReport',
+            path: 'settlement-summary',
+            title: 'Settlement Summary Report',
+            element: SettlementSummaryReport,
+            icon: AccountBalanceIcon,
+            sectionId: 'billPay',
+            resourceId: 'route:billPay.reports.settlementSummary' as ResourceId
           },
           {
             id: 'scheduledPaymentChangeHistoryReport',

@@ -19,6 +19,7 @@ import { RecurringPaymentParams, RecurringPaymentItemPagedResponse, RecurringPay
 import { UserPayeeParams, UserPayeeItemPagedResponse, UserPayeeSearchType } from '../../../utils/reports/userPayee';
 import { OFACExceptionsRequest, OFACExceptionsItemPagedResponse, OFACExceptionsSearchType } from '../../../utils/reports/ofacExceptions';
 import { SuspendedPaymentRequest, SuspendedPaymentItemPagedResponse } from '../../../utils/reports/suspendedPayment';
+import { SettlementSummaryParams, SettlementSummaryItem, SettlementSummarySearchType } from '../../../utils/reports/settlementSummary';
 import { IReportService } from '../../interfaces/IReportService';
 import { BaseMockService } from './BaseMockService';
 import logger from '../../../utils/logger';
@@ -1750,6 +1751,77 @@ export class MockReportService extends BaseMockService implements IReportService
             hasNext: pageNumber < totalPages,
             hasPrevious: pageNumber > 1
         };
+    }
+
+    /**
+     * Get settlement summary report data using the dedicated endpoint
+     * @param params Settlement summary report search parameters
+     * @returns Promise with settlement summary items
+     */
+    async getSettlementSummaryReport(params: SettlementSummaryParams): Promise<SettlementSummaryItem[]> {
+        await this.delay();
+        
+        if (params.searchType === undefined) {
+            throw new Error('SearchType is a required parameter');
+        }
+        
+        // Validate required parameters based on search type
+        switch (params.searchType) {
+            case SettlementSummarySearchType.SingleDate:
+                if (!params.selectedSingleDate) {
+                    throw new Error('Selected single date is required for Single Date search type');
+                }
+                break;
+            case SettlementSummarySearchType.MonthYear:
+                if (params.monthSelected === undefined || params.yearSelected === undefined) {
+                    throw new Error('Month and year are required for Month/Year search type');
+                }
+                break;
+            case SettlementSummarySearchType.Year:
+                if (params.yearSelected === undefined) {
+                    throw new Error('Year is required for Year search type');
+                }
+                break;
+            case SettlementSummarySearchType.DateRange:
+                if (!params.selectedStartDate || !params.selectedEndDate) {
+                    throw new Error('Start date and end date are required for Date Range search type');
+                }
+                break;
+            default:
+                throw new Error(`Invalid search type: ${params.searchType}`);
+        }
+        
+        // Create mock data for all three sections of the settlement summary report
+        const mockData: SettlementSummaryItem[] = [
+            // Processing Summary section
+            { categoryName: 'Processing Summary', description: 'Scheduled Payments', count: 546, amount: 278468.68 },
+            { categoryName: 'Processing Summary', description: 'Core Rejections', count: 0, amount: 0 },
+            { categoryName: 'Processing Summary', description: 'Duplicates', count: 0, amount: 0 },
+            { categoryName: 'Processing Summary', description: 'Rejections', count: 0, amount: 0 },
+            { categoryName: 'Processing Summary', description: 'Failed Processing', count: 0, amount: 0 },
+            { categoryName: 'Processing Summary', description: 'Into Settlement Account', count: 546, amount: 278468.68 },
+            { categoryName: 'Processing Summary', description: 'Net Balance', count: 0, amount: 0 },
+            
+            // Settlement Account Summary section
+            { categoryName: 'Settlement Account Summary', description: 'Into Settlement Account', count: 546, amount: 278469.68 },
+            { categoryName: 'Settlement Account Summary', description: 'On Us Successful', count: 0, amount: 0 },
+            { categoryName: 'Settlement Account Summary', description: 'On Us Exceptions', count: 3, amount: 750.00 },
+            { categoryName: 'Settlement Account Summary', description: 'Sent to Remittance Processor', count: 543, amount: 277719.68 },
+            { categoryName: 'Settlement Account Summary', description: 'Net Balance', count: 0, amount: 0 },
+            
+            // Remittance Processor Summary section
+            { categoryName: 'Remittance Processor Summary', description: 'Sent to Remittance Processor', count: 543, amount: 277719.68 },
+            { categoryName: 'Remittance Processor Summary', description: 'Processor Exceptions', count: 5, amount: 6488.32 },
+            { categoryName: 'Remittance Processor Summary', description: 'Stops & Returns', count: 0, amount: 0 },
+            { categoryName: 'Remittance Processor Summary', description: 'Stale Dated', count: 0, amount: 0 },
+            { categoryName: 'Remittance Processor Summary', description: 'Adjusted Payments', count: 0, amount: 0 },
+            { categoryName: 'Remittance Processor Summary', description: 'Payee Returns', count: 0, amount: 0 },
+            { categoryName: 'Remittance Processor Summary', description: 'Remitted to Payees', count: 538, amount: 271231.37 },
+            { categoryName: 'Remittance Processor Summary', description: 'Bad Records & Exceptions', count: 0, amount: 0 },
+            { categoryName: 'Remittance Processor Summary', description: 'Net Balance', count: 0, amount: 0 }
+        ];
+        
+        return mockData;
     }
 }
 

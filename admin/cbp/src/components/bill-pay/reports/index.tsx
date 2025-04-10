@@ -17,6 +17,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // Import report components as they are created
 import PaymentActivityReport from './reports/PaymentActivityReport';
 import ErrorRecapReport from './reports/ErrorRecapReport';
+import SettlementSummaryReport from './reports/SettlementSummaryReport';
 
 // Define the available report types
 type ReportType = 
@@ -33,7 +34,8 @@ type ReportType =
   | 'processingConfirmation'
   | 'recurringPaymentChangeHistory'
   | 'scheduledPaymentChangeHistory'
-  | 'userPayeeChangeHistory';
+  | 'userPayeeChangeHistory'
+  | 'settlementSummary';
 
 // Interface for report metadata
 interface ReportMetadata {
@@ -99,6 +101,10 @@ const reportMetadata: Record<ReportType, ReportMetadata> = {
     label: 'User Payee Change History',
     description: 'View user payee change history',
   },
+  settlementSummary: {
+    label: 'Settlement Summary',
+    description: 'View settlement summary report with processing, settlement account, and remittance processor data',
+  },
 };
 
 // Reports component
@@ -117,6 +123,8 @@ const Reports: React.FC = () => {
         return <PaymentActivityReport />;
       case 'errorRecap':
         return <ErrorRecapReport />;
+      case 'settlementSummary':
+        return <SettlementSummaryReport />;
       // Add other report components as they are created
       default:
         return (

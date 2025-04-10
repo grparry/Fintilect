@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Button, Typography, Grid, FormHelperText } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -448,17 +449,19 @@ const OFACExceptionsReport: React.FC = () => {
       case OFACExceptionsSearchType.SingleDate:
         return (
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <TextField
-              fullWidth
-              size="small"
-              margin="dense"
+            <DatePicker
               label="Date"
-              type="date"
-              value={singleDate?.format('YYYY-MM-DD') || ''}
-              onChange={(e) => setSingleDate(dayjs(e.target.value))}
-              error={!!errors.singleDate}
-              helperText={errors.singleDate}
-              InputLabelProps={{ shrink: true }}
+              value={singleDate}
+              onChange={(newDate) => setSingleDate(newDate)}
+              slotProps={{ 
+                textField: { 
+                  size: 'small', 
+                  margin: 'dense', 
+                  fullWidth: true,
+                  error: !!errors.singleDate,
+                  helperText: errors.singleDate
+                } 
+              }}
             />
           </LocalizationProvider>
         );
@@ -467,33 +470,37 @@ const OFACExceptionsReport: React.FC = () => {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  margin="dense"
+                <DatePicker
                   label="Start Date"
-                  type="date"
-                  value={startDate?.format('YYYY-MM-DD') || ''}
-                  onChange={(e) => setStartDate(dayjs(e.target.value))}
-                  error={!!errors.startDate}
-                  helperText={errors.startDate}
-                  InputLabelProps={{ shrink: true }}
+                  value={startDate}
+                  onChange={(newDate) => setStartDate(newDate)}
+                  slotProps={{ 
+                    textField: { 
+                      size: 'small', 
+                      margin: 'dense', 
+                      fullWidth: true,
+                      error: !!errors.startDate,
+                      helperText: errors.startDate
+                    } 
+                  }}
                 />
               </LocalizationProvider>
             </Grid>
             <Grid item xs={12} sm={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  margin="dense"
+                <DatePicker
                   label="End Date"
-                  type="date"
-                  value={endDate?.format('YYYY-MM-DD') || ''}
-                  onChange={(e) => setEndDate(dayjs(e.target.value))}
-                  error={!!errors.endDate}
-                  helperText={errors.endDate}
-                  InputLabelProps={{ shrink: true }}
+                  value={endDate}
+                  onChange={(newDate) => setEndDate(newDate)}
+                  slotProps={{ 
+                    textField: { 
+                      size: 'small', 
+                      margin: 'dense', 
+                      fullWidth: true,
+                      error: !!errors.endDate,
+                      helperText: errors.endDate
+                    } 
+                  }}
                 />
               </LocalizationProvider>
             </Grid>
