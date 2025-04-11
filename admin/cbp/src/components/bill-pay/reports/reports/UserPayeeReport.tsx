@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import ReportContainer from '../components/ReportContainer';
@@ -184,7 +185,7 @@ const UserPayeeReport: React.FC = () => {
       setPageNumber(page);
     } catch (err) {
       setError('Failed to load user payee data. Please try again.');
-      console.error('Error fetching user payee data:', err);
+      logger.error('Error fetching user payee data:', err);
     } finally {
       setLoading(false);
     }
@@ -204,7 +205,7 @@ const UserPayeeReport: React.FC = () => {
    * @param newSortDirection Direction to sort
    */
   const handleSortChange = (newSortColumn: UserPayeeSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -271,7 +272,7 @@ const UserPayeeReport: React.FC = () => {
         break;
     }
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPageNumber(1);
@@ -279,7 +280,7 @@ const UserPayeeReport: React.FC = () => {
     // Call API directly with new sort parameters
     getUserPayeeReport(params)
       .then((response: UserPayeeItemPagedResponse) => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -287,7 +288,7 @@ const UserPayeeReport: React.FC = () => {
         setData(response);
       })
       .catch((error: any) => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
       })
       .finally(() => {
@@ -359,7 +360,7 @@ const UserPayeeReport: React.FC = () => {
         totalCount: response.totalCount
       };
     } catch (error) {
-      console.error('Error fetching user payee data for export:', error);
+      logger.error('Error fetching user payee data for export:', error);
       throw error;
     }
   };

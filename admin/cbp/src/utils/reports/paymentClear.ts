@@ -3,6 +3,7 @@
  * Contains types, enums, and API service functions for the Payment Clear report
  */
 import { reportService } from '../../services/factory/ServiceFactory';
+import logger from '../logger';
 
 /**
  * Enum for Payment Clear search types
@@ -161,7 +162,7 @@ export const getPaymentClearReport = async (params: PaymentClearParams): Promise
     const response = await reportService.getPaymentClearReport(requestParams);
     return response;
   } catch (error) {
-    console.error('Error fetching payment clear report:', error);
+    logger.error('Error fetching payment clear report:', error);
     throw error;
   }
 };

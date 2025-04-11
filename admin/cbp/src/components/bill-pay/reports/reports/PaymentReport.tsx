@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import ReportContainer from '../components/ReportContainer';
@@ -100,7 +101,7 @@ const PaymentReport: React.FC = () => {
       setPageNumber(page);
     } catch (err) {
       setError('Failed to load payment data. Please try again.');
-      console.error('Error fetching payment data:', err);
+      logger.error('Error fetching payment data:', err);
     } finally {
       setLoading(false);
     }
@@ -116,7 +117,7 @@ const PaymentReport: React.FC = () => {
   
   // Handle sort change for ReportTableV2
   const handleSortChange = (newSortColumn: PaymentSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -206,7 +207,7 @@ const PaymentReport: React.FC = () => {
 
     }
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPageNumber(1);
@@ -214,7 +215,7 @@ const PaymentReport: React.FC = () => {
     // Call API directly with new sort parameters
     getPaymentReport(params)
       .then((response: PaymentItemPagedResponse) => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -222,7 +223,7 @@ const PaymentReport: React.FC = () => {
         setData(response);
       })
       .catch((error: any) => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
       })
       .finally(() => {
@@ -286,7 +287,7 @@ const PaymentReport: React.FC = () => {
         totalCount: response.totalCount
       };
     } catch (error) {
-      console.error('Error fetching payment data for export:', error);
+      logger.error('Error fetching payment data for export:', error);
       throw error;
     }
   };

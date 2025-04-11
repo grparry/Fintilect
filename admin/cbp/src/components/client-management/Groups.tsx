@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import logger from '../../utils/logger';
 import {
   Box,
   Typography,
@@ -100,18 +101,18 @@ export default function Groups({ clientId }: GroupsProps) {
   );
 
   const loadGroups = useCallback(async () => {
-    console.log('loadGroups called with clientId: %d', clientId);
+    logger.log('loadGroups called with clientId: %d', clientId);
     if (!clientId) return;
     try {
-      console.log('Setting loading state to true');
+      logger.log('Setting loading state to true');
       setState(prev => ({ ...prev, loading: true }));
-      console.log('About to call permissionService.getGroups');
-      console.log('permissionService object:', permissionService);
+      logger.log('About to call permissionService.getGroups');
+      logger.log('permissionService object:', permissionService);
       const response = await permissionService.getGroups({
         clientId: Number(clientId)
       });
-      console.log('Response from getGroups:', response);
-      console.log('Groups data type:', Array.isArray(response.groups) ? 'array' : typeof response.groups);
+      logger.log('Response from getGroups:', response);
+      logger.log('Groups data type:', Array.isArray(response.groups) ? 'array' : typeof response.groups);
       
       // Ensure we have an array of groups
       let groupsArray: Group[] = [];
@@ -131,26 +132,26 @@ export default function Groups({ clientId }: GroupsProps) {
           Array.isArray(typedResponse.groups.groups)) {
         // Direct access to the nested groups array
         groupsArray = typedResponse.groups.groups;
-        console.log('Extracted nested groups array with length:', groupsArray.length);
+        logger.log('Extracted nested groups array with length:', groupsArray.length);
       } else if (Array.isArray(typedResponse.groups)) {
         // Standard array handling
         groupsArray = typedResponse.groups as unknown as Group[];
-        console.log('Response groups is an array with length:', groupsArray.length);
+        logger.log('Response groups is an array with length:', groupsArray.length);
       } else if (typedResponse.groups && typeof typedResponse.groups === 'object') {
-        console.log('Response groups is an object with keys:', Object.keys(typedResponse.groups));
+        logger.log('Response groups is an object with keys:', Object.keys(typedResponse.groups));
         
         // Check if the first item is an array (as we discovered in the logs)
         const firstValue = Object.values(typedResponse.groups)[0];
         if (Array.isArray(firstValue)) {
           groupsArray = firstValue as Group[];
-          console.log('Extracted array from first value with length:', groupsArray.length);
+          logger.log('Extracted array from first value with length:', groupsArray.length);
         } else {
           // Standard object to array conversion
           groupsArray = Object.values(typedResponse.groups) as unknown as Group[];
-          console.log('Converted object to array with length:', groupsArray.length);
+          logger.log('Converted object to array with length:', groupsArray.length);
         }
       } else {
-        console.log('Could not process response.groups, defaulting to empty array');
+        logger.log('Could not process response.groups, defaulting to empty array');
       }
       
       // Check for duplicate IDs
@@ -181,29 +182,29 @@ export default function Groups({ clientId }: GroupsProps) {
       const groupsWithZeroIds = groupsArray.filter(group => group.id === 0);
       
       if (groupsWithoutIds.length > 0) {
-        console.error('Found groups without IDs:', groupsWithoutIds);
+        logger.error('Found groups without IDs:', groupsWithoutIds);
       }
       
       if (groupsWithZeroIds.length > 0) {
-        console.warn('Found groups with ID=0:', groupsWithZeroIds);
+        logger.warn('Found groups with ID=0:', groupsWithZeroIds);
       }
       
       // Log the first few items to inspect their structure
-      console.log('First 3 items in groupsArray:');
+      logger.log('First 3 items in groupsArray:');
       for (let i = 0; i < Math.min(3, groupsArray.length); i++) {
-        console.log(`Item ${i}:`, groupsArray[i]);
+        logger.log(`Item ${i}:`, groupsArray[i]);
         if (Array.isArray(groupsArray[i])) {
-          console.warn(`Item ${i} is itself an array!`);
+          logger.warn(`Item ${i} is itself an array!`);
         }
       }
       
       if (duplicateIds.length > 0) {
-        console.error('Found duplicate IDs in groups array:', duplicateIds);
+        logger.error('Found duplicate IDs in groups array:', duplicateIds);
       } else {
-        console.log('No duplicate IDs found in groups array');
+        logger.log('No duplicate IDs found in groups array');
       }
       
-      console.log('Processed groups array:', groupsArray);
+      logger.log('Processed groups array:', groupsArray);
       
       setState(prev => ({
         ...prev,
@@ -518,19 +519,19 @@ export default function Groups({ clientId }: GroupsProps) {
   };
 
   useEffect(() => {
-    console.log('useEffect called to load Groups, Users, and Roles');
+    logger.log('useEffect called to load Groups, Users, and Roles');
     
     const loadData = async () => {
       try {
-        console.log('Loading users');
+        logger.log('Loading users');
         await loadUsers();
-        console.log('Users loaded, now loading roles');
+        logger.log('Users loaded, now loading roles');
         await loadRoles();
-        console.log('Roles loaded, now loading groups');
+        logger.log('Roles loaded, now loading groups');
         await loadGroups();
-        console.log('All data loaded successfully');
+        logger.log('All data loaded successfully');
       } catch (error) {
-        console.error('Error loading data:', error);
+        logger.error('Error loading data:', error);
       }
     };
     

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Box, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import ReportContainer from '../components/ReportContainer';
@@ -100,7 +101,7 @@ const RecurringPaymentReport: React.FC = () => {
       setPageNumber(page);
     } catch (err) {
       setError('Failed to load recurring payment data. Please try again.');
-      console.error('Error fetching recurring payment data:', err);
+      logger.error('Error fetching recurring payment data:', err);
     } finally {
       setLoading(false);
     }
@@ -116,7 +117,7 @@ const RecurringPaymentReport: React.FC = () => {
   
   // Handle sort change for ReportTableV2
   const handleSortChange = (newSortColumn: RecurringPaymentSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -196,7 +197,7 @@ const RecurringPaymentReport: React.FC = () => {
 
     }
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPageNumber(1);
@@ -204,7 +205,7 @@ const RecurringPaymentReport: React.FC = () => {
     // Call API directly with new sort parameters
     getRecurringPaymentReport(params)
       .then((response: RecurringPaymentItemPagedResponse) => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -212,7 +213,7 @@ const RecurringPaymentReport: React.FC = () => {
         setData(response);
       })
       .catch((error: any) => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
       })
       .finally(() => {
@@ -276,7 +277,7 @@ const RecurringPaymentReport: React.FC = () => {
         totalCount: response.totalCount
       };
     } catch (error) {
-      console.error('Error fetching recurring payment data for export:', error);
+      logger.error('Error fetching recurring payment data for export:', error);
       throw error;
     }
   };

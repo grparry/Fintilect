@@ -6,6 +6,7 @@ import { RouteSection } from '../../types/route.types';
 import { useNavigation } from '../../context/NavigationContext';
 import { usePermissions } from '../../hooks/usePermissions';
 import { ResourceId } from '../../types/permissions.types';
+import logger from '../../utils/logger';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PaymentIcon from '@mui/icons-material/Payment';
 import GroupIcon from '@mui/icons-material/Group';
@@ -80,18 +81,18 @@ const AdminLanding: React.FC = () => {
           try {
             const result = await checkPermission(route.resourceId);
             hasAccess = result.hasAccess;
-            console.log(`[AdminLanding] Resource ID check for ${route.title}:`, {
+            logger.log(`[AdminLanding] Resource ID check for ${route.title}:`, {
               resourceId: route.resourceId,
               hasAccess
             });
           } catch (error) {
-            console.error(`Error checking permission for ${route.resourceId}:`, error);
+            logger.error(`Error checking permission for ${route.resourceId}:`, error);
           }
         }
         // Only if no resourceId is specified, fall back to direct role check
         else if (route.requiredPermission) {
           hasAccess = permissionContext.roles.includes(route.requiredPermission);
-          console.log(`[AdminLanding] Direct role check for ${route.title}:`, {
+          logger.log(`[AdminLanding] Direct role check for ${route.title}:`, {
             requiredPermission: route.requiredPermission,
             hasAccess,
             userRoles: permissionContext.roles
@@ -100,14 +101,14 @@ const AdminLanding: React.FC = () => {
         else {
           // If no permissions required, grant access
           hasAccess = true;
-          console.log(`[AdminLanding] No permission requirements for ${route.title}, granting access`);
+          logger.log(`[AdminLanding] No permission requirements for ${route.title}, granting access`);
         }
         
         if (hasAccess) {
-          console.log(`[AdminLanding] Adding accessible route: ${route.title}`);
+          logger.log(`[AdminLanding] Adding accessible route: ${route.title}`);
           filteredRoutes.push(route);
         } else {
-          console.log(`[AdminLanding] Route not accessible: ${route.title}`);
+          logger.log(`[AdminLanding] Route not accessible: ${route.title}`);
         }
       }
       

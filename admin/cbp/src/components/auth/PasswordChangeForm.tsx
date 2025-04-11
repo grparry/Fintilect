@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { ServiceFactory } from '../../services/factory/ServiceFactory';
 import { useAuth } from '../../context/AuthContext';
+import logger from '../../utils/logger';
 
 export interface PasswordChangeFormData {
   currentPassword: string;
@@ -100,7 +101,7 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
       
       // Update the auth context to ensure forcePasswordChange is false
       updateForcePasswordChange(false);
-      console.log('PasswordChangeForm: Updated forcePasswordChange flag to false');
+      logger.log('PasswordChangeForm: Updated forcePasswordChange flag to false');
       
       // Reset form
       setFormData({
@@ -116,7 +117,7 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
         }, 2000);
       }
     } catch (err) {
-      console.error('Error changing password:', err);
+      logger.error('Error changing password:', err);
       setError(err instanceof Error ? err.message : 'Failed to change password. Please check your current password and try again.');
     } finally {
       setLoading(false);

@@ -1,4 +1,5 @@
 import { RouteConfig, RouteSection, RouteSections } from '../types/route.types';
+import logger from '../utils/logger';
 import AdminLanding from '../components/admin/AdminLanding';
 import ClientManagementHeader from '../components/client-management/ClientManagementHeader';
 import BillPayHeader from '../components/bill-pay/BillPayHeader';
@@ -45,7 +46,7 @@ export const getFullPath = (basePath: string, path: string): string => {
 // Helper function to process routes recursively
 const processRoutes = (route: RouteConfig, sectionId: string, basePath: string): RouteConfig => {
   const fullPath = getFullPath(basePath, route.path);
-  console.log(`Processing route ${route.id} with path ${route.path} -> ${fullPath}`);
+  logger.log(`Processing route ${route.id} with path ${route.path} -> ${fullPath}`);
 
   const processedRoute = {
     ...route,
@@ -75,15 +76,15 @@ export const getAllRoutes = (): RouteConfig[] => {
   };
 
   const processedRoutes = Object.entries(routes).flatMap(([sectionId, section]) => {
-    console.log(`Processing section: ${sectionId}`);
-    console.log('Section routes before processing:', JSON.stringify(section.routes, null, 2));
+    logger.log(`Processing section: ${sectionId}`);
+    logger.log('Section routes before processing:', JSON.stringify(section.routes, null, 2));
     
     const sectionRoutes = section.routes.map(route => {
-      console.log('Processing route:', JSON.stringify(route, null, 2));
+      logger.log('Processing route:', JSON.stringify(route, null, 2));
       return processRoutes(route, sectionId, section.basePath);
     });
     
-    console.log('Section routes after processing:', JSON.stringify(sectionRoutes, null, 2));
+    logger.log('Section routes after processing:', JSON.stringify(sectionRoutes, null, 2));
     return sectionRoutes;
   });
 

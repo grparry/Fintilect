@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -64,7 +65,7 @@ const PaymentActivityReport: React.FC = () => {
 
   // Handle sort change for ReportTableV2
   const handleSortChange = (newSortColumn: PaymentActivitySortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -116,7 +117,7 @@ const PaymentActivityReport: React.FC = () => {
       params.endDate = endDate.format('YYYY-MM-DD');
     }
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPageNumber(1);
@@ -124,7 +125,7 @@ const PaymentActivityReport: React.FC = () => {
     // Call API directly with new sort parameters
     getPaymentActivity(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -133,7 +134,7 @@ const PaymentActivityReport: React.FC = () => {
         setTotalCount(response.totalCount);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
       })
       .finally(() => {
@@ -228,7 +229,7 @@ const PaymentActivityReport: React.FC = () => {
         setTotalCount(0);
       }
     } catch (err) {
-      console.error('Error running payment activity report:', err);
+      logger.error('Error running payment activity report:', err);
       setError('Failed to load payment activity data. Please try again.');
     } finally {
       setLoading(false);
@@ -326,7 +327,7 @@ const PaymentActivityReport: React.FC = () => {
       }
       
       // Debug log to verify parameters
-      console.log('Running report with parameters:', params);
+      logger.log('Running report with parameters:', params);
       
       // Call the payment activity API
       const result: PaymentActivityItemPagedResponse = await getPaymentActivity(params);
@@ -357,7 +358,7 @@ const PaymentActivityReport: React.FC = () => {
         setTotalCount(0);
       }
     } catch (err) {
-      console.error('Error running payment activity report:', err);
+      logger.error('Error running payment activity report:', err);
       setError('Failed to load payment activity data. Please try again.');
     } finally {
       setLoading(false);

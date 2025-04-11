@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -309,7 +310,7 @@ const SuspendedPaymentReport: React.FC = () => {
 
   // Handle sort column change directly from ReportTableV2
   const handleSortChange = (newSortColumn: SuspendedPaymentSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -326,7 +327,7 @@ const SuspendedPaymentReport: React.FC = () => {
       sortDirection: newSortDirection // Use the new sort direction directly
     };
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPage(1);
@@ -334,7 +335,7 @@ const SuspendedPaymentReport: React.FC = () => {
     // Call API directly with new sort parameters
     getSuspendedPayments(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -344,7 +345,7 @@ const SuspendedPaymentReport: React.FC = () => {
         setTotalPages(response.totalPages);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         enqueueSnackbar('Failed to sort report. Please try again.', { variant: 'error' });
       })
       .finally(() => {
@@ -366,13 +367,13 @@ const SuspendedPaymentReport: React.FC = () => {
       };
       
       // Log the parameters being sent to the API
-      console.log('Running report with params:', params);
+      logger.log('Running report with params:', params);
       
       // Call the Suspended Payment API
       const response = await getSuspendedPayments(params);
       
       // Log the response from the API
-      console.log('API response received:', { 
+      logger.log('API response received:', { 
         totalCount: response.totalCount,
         totalPages: response.totalPages,
         itemCount: response.items?.length || 0 
@@ -383,7 +384,7 @@ const SuspendedPaymentReport: React.FC = () => {
       setTotalPages(response.totalPages);
       
     } catch (error) {
-      console.error('Error running Suspended Payment report:', error);
+      logger.error('Error running Suspended Payment report:', error);
       enqueueSnackbar('Failed to run report. Please try again.', { variant: 'error' });
     } finally {
       setLoading(false);
@@ -408,7 +409,7 @@ const SuspendedPaymentReport: React.FC = () => {
   // Run report when sort parameters change
   useEffect(() => {
     // Log sort parameters for debugging
-    console.log('Sort parameters changed:', { sortColumn, sortDirection });
+    logger.log('Sort parameters changed:', { sortColumn, sortDirection });
     
     if (reportData) {
       runReport(page);

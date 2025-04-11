@@ -9,6 +9,7 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import TransformIcon from '@mui/icons-material/Transform';
 import HistoryIcon from '@mui/icons-material/History';
 import { usePermissions } from '../../../hooks/usePermissions';
+import logger from '../../../utils/logger';
 
 const PaymentManagementHeader: React.FC = () => {
   const { checkPermission } = usePermissions();
@@ -20,7 +21,7 @@ const PaymentManagementHeader: React.FC = () => {
         const result = await checkPermission('route:billPay.payments.copy-payees');
         setHasBillPayWritePermission(result.hasAccess);
       } catch (error) {
-        console.error('Error checking permissions:', error);
+        logger.error('Error checking permissions:', error);
         setHasBillPayWritePermission(false);
       }
     };

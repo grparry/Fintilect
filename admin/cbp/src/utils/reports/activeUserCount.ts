@@ -1,5 +1,6 @@
 import { reportService } from '../../services/factory/ServiceFactory';
 import { format } from 'date-fns';
+import logger from '../logger';
 
 /**
  * Search Type enum for Active User Count
@@ -135,7 +136,7 @@ export const getActiveUserCount = async (
       hasPrevious: response.hasPrevious || false
     };
   } catch (error) {
-    console.error('Error fetching active user count data:', error);
+    logger.error('Error fetching active user count data:', error);
     throw error;
   }
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../utils/logger';
 import {
   Card,
   CardContent,
@@ -119,7 +120,7 @@ const APITesting: React.FC = () => {
       const data = await response.json();
       setApiSpec(data);
     } catch (error) {
-      console.error('Error loading API spec:', error);
+      logger.error('Error loading API spec:', error);
       setError('Failed to load API specification. Please try again later.');
       setApiSpec(null);
     } finally {

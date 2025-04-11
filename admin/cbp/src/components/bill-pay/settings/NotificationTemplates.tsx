@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../utils/logger';
 import {
   Box,
   Card,
@@ -150,7 +151,7 @@ const NotificationTemplates: React.FC = () => {
   // Handle notification dialog
   const handleOpenNotificationDialog = (mode: 'create' | 'edit', notification?: NotificationResponse) => {
     if (mode === 'edit' && notification) {
-      console.log('Editing notification with matchMode:', notification.matchMode);
+      logger.log('Editing notification with matchMode:', notification.matchMode);
       setFormData({
         errorNumber: notification.errorNumber,
         statusCode: notification.statusCode || 0,
@@ -221,10 +222,10 @@ const NotificationTemplates: React.FC = () => {
 
   // Open delete confirmation dialog
   const openDeleteDialog = (notification: NotificationResponse) => {
-    console.log('Opening delete dialog with notification:', notification);
+    logger.log('Opening delete dialog with notification:', notification);
     
     if (!notification || !notification.id) {
-      console.error('Cannot open delete dialog: Missing notification or notification ID');
+      logger.error('Cannot open delete dialog: Missing notification or notification ID');
       setError('Cannot delete notification: Missing notification ID');
       return;
     }
@@ -244,7 +245,7 @@ const NotificationTemplates: React.FC = () => {
       statusCode: notification.statusCode
     });
     
-    console.log('Delete dialog state set to:', {
+    logger.log('Delete dialog state set to:', {
       notificationId: notification.id, // Using lowercase id to match API convention
       notificationName: notification.matchText || '',
       errorNumber: notification.errorNumber,
@@ -266,7 +267,7 @@ const NotificationTemplates: React.FC = () => {
   // Handle notification deletion
   const handleDelete = async (notificationId: string) => {
     try {
-      console.log('Deleting notification with ID:', notificationId);
+      logger.log('Deleting notification with ID:', notificationId);
       
       if (!notificationId) {
         setError('Cannot delete notification: Missing notification ID');
@@ -284,14 +285,14 @@ const NotificationTemplates: React.FC = () => {
       setError(null);
       
       // Log the exact API call we're about to make
-      console.log(`Calling deleteNotification with ID: "${trimmedId}"`);
+      logger.log(`Calling deleteNotification with ID: "${trimmedId}"`);
       
       await notificationService.deleteNotification(trimmedId);
       setSuccess('Notification deleted successfully');
       loadNotifications();
       setDeleteDialog({ open: false, notificationId: '', notificationName: '', errorNumber: undefined, statusCode: undefined });
     } catch (err: unknown) {
-      console.error('Delete error:', err);
+      logger.error('Delete error:', err);
       setError(err instanceof Error ? err.message : 'Failed to delete notification');
     } finally {
       setLoading(false);
@@ -513,7 +514,7 @@ const NotificationTemplates: React.FC = () => {
                         <IconButton
                           size="small"
                           onClick={() => {
-                            console.log('Delete button clicked for notification:', notification);
+                            logger.log('Delete button clicked for notification:', notification);
                             openDeleteDialog(notification);
                           }}
                         >
@@ -772,7 +773,7 @@ const NotificationTemplates: React.FC = () => {
           </Button>
           <Button 
             onClick={() => {
-              console.log('Delete button clicked with ID:', deleteDialog.notificationId);
+              logger.log('Delete button clicked with ID:', deleteDialog.notificationId);
               handleDelete(deleteDialog.notificationId);
             }} 
             color="error" 

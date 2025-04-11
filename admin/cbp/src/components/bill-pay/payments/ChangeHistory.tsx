@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { IPayeeService } from '../../../services/interfaces/IPayeeService';
+import logger from '../../../utils/logger';
 import {
   UserPayeeChangeHistoryResponse,
   GlobalPayeeChangeHistoryResponse,
@@ -210,7 +211,7 @@ const ChangeHistory: React.FC = () => {
       setUserHistories(response.histories || []);
     } catch (err) {
       setUserHistoryError('Failed to retrieve user change history. Please try again.');
-      console.error('Error retrieving user change history:', err);
+      logger.error('Error retrieving user change history:', err);
     } finally {
       setIsUserHistoryLoading(false);
     }
@@ -352,7 +353,7 @@ const ChangeHistory: React.FC = () => {
       setGlobalHistories(response.histories || []);
     } catch (err) {
       setGlobalHistoryError('Failed to retrieve global change history. Please try again.');
-      console.error('Error retrieving global change history:', err);
+      logger.error('Error retrieving global change history:', err);
     } finally {
       setIsGlobalHistoryLoading(false);
     }

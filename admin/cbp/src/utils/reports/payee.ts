@@ -1,4 +1,5 @@
 import { reportService } from '../../services/factory/ServiceFactory';
+import logger from '../logger';
 
 /**
  * Search Type enum for Payee Report
@@ -145,7 +146,7 @@ export const getPayeeReport = async (params: PayeeParams): Promise<PayeeItemPage
     // Call the dedicated endpoint through the report service
     return await reportService.getPayeeReport(requestParams);
   } catch (error) {
-    console.error('Error in getPayeeReport:', error);
+    logger.error('Error in getPayeeReport:', error);
     throw error;
   }
 };

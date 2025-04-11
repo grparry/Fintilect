@@ -1,4 +1,5 @@
 import { reportService } from '../../services/factory/ServiceFactory';
+import logger from '../logger';
 
 /**
  * Sort Column enum for Suspended Payment
@@ -95,12 +96,12 @@ export async function getSuspendedPayments(
     };
     
     // Log the parameters being sent for debugging
-    console.log('Suspended Payment request parameters:', requestParams);
+    logger.log('Suspended Payment request parameters:', requestParams);
     
     // Call the dedicated endpoint through the report service
     return await reportService.getSuspendedPaymentReport(requestParams);
   } catch (error) {
-    console.error('Error fetching suspended payment report:', error);
+    logger.error('Error fetching suspended payment report:', error);
     throw error; // Re-throw to allow component to handle the error
   }
 }

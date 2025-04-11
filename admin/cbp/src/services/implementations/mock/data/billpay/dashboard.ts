@@ -2,6 +2,7 @@ import { ChartDataPoint, TimeRangeOption, ChartViewOption } from '../../../../..
 import { BillPayStats, TransactionTrend } from '../../../../../types/bill-pay.types';
 import { PaymentStatus, PaymentMethod } from '../../../../../types/payment.types';
 import { TimeRange } from '../../../../../types/index';
+import logger from '../../../../../utils/logger';
 
 export const mockChartData: ChartDataPoint[] = [
   { date: '2024-12-10', value: 1000 },
@@ -27,7 +28,7 @@ const formatTimestamp = (date: Date): string => {
   return `${month}/${day}`;
 };
 export const mockDashboardStats = (timeframe?: 'day' | 'week' | 'month' | 'quarter' | 'year'): BillPayStats => {
-  console.log('Generating Mock Dashboard Stats:', { timeframe });
+  logger.log('Generating Mock Dashboard Stats:', { timeframe });
   const now = new Date();
   // Base activities per day with seasonal adjustments
   const getActivitiesForDate = (date: Date, baseActivities: number): number => {
@@ -70,7 +71,7 @@ export const mockDashboardStats = (timeframe?: 'day' | 'week' | 'month' | 'quart
       startDate.setMonth(startDate.getMonth() - 1);
   }
   startDate.setHours(0, 0, 0, 0);
-  console.log('Date Range:', {
+  logger.log('Date Range:', {
     startDate,
     now,
     timeframe,
@@ -153,7 +154,7 @@ export const mockDashboardStats = (timeframe?: 'day' | 'week' | 'month' | 'quart
   stats.averageTransactionSize = Number((totalAmount / totalTransactions).toFixed(2));
   // Sort recent activity by timestamp (newest first)
   stats.recentActivity.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-  console.log('Generated Stats:', {
+  logger.log('Generated Stats:', {
     timeframe,
     totalTransactions,
     totalAmount,

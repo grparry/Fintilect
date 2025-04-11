@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Box, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -213,7 +214,7 @@ const RecurringPaymentChangeHistoryReport: React.FC = () => {
    * @param newSortDirection Sort direction
    */
   const handleSortChange = (newSortColumn: RecurringPaymentChangeHistorySortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -262,7 +263,7 @@ const RecurringPaymentChangeHistoryReport: React.FC = () => {
         break;
     }
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPageNumber(1);
@@ -270,7 +271,7 @@ const RecurringPaymentChangeHistoryReport: React.FC = () => {
     // Call API directly with new sort parameters
     getRecurringPaymentChangeHistory(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -279,7 +280,7 @@ const RecurringPaymentChangeHistoryReport: React.FC = () => {
         setPageNumber(response.pageNumber);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError(error instanceof Error ? error.message : 'Failed to sort report. Please try again.');
         setData(null);
       })
@@ -336,7 +337,7 @@ const RecurringPaymentChangeHistoryReport: React.FC = () => {
         totalCount: response.totalCount
       };
     } catch (error) {
-      console.error('Error fetching recurring payment change history data for export:', error);
+      logger.error('Error fetching recurring payment change history data for export:', error);
       throw error;
     }
   };

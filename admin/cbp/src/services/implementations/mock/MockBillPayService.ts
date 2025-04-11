@@ -1,4 +1,5 @@
 import { IBillPayService } from '../../interfaces/IBillPayService';
+import logger from '../../../utils/logger';
 import {
     BillPayConfig,
     BillPayConfigUpdate,
@@ -198,7 +199,7 @@ export class MockBillPayService extends BaseMockService implements IBillPayServi
     }
 
     async sendOTP(method: string, destination: string): Promise<void> {
-        console.log(`Sending OTP via ${method} to ${destination}`);
+        logger.log(`Sending OTP via ${method} to ${destination}`);
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 500));
         return;

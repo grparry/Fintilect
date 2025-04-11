@@ -14,11 +14,11 @@ const ClientManagementWrapper: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { clientId } = useParams<{ clientId: string }>();
-  console.log('=== ClientManagementWrapper Debug Start ===');
-  console.log('Current location:', location.pathname);
-  console.log('URL params:', { clientId });
-  console.log('Search params:', location.search);
-  console.log('Route state:', location.state);
+  logger.log('=== ClientManagementWrapper Debug Start ===');
+  logger.log('Current location:', location.pathname);
+  logger.log('URL params:', { clientId });
+  logger.log('Search params:', location.search);
+  logger.log('Route state:', location.state);
   if (!clientId) {
     logger.error('No client ID provided');
     return (
@@ -29,14 +29,14 @@ const ClientManagementWrapper: React.FC = () => {
   }
   try {
     const decodedClientId = decodeId(clientId);
-    console.log('Decoded client ID:', decodedClientId);
+    logger.log('Decoded client ID:', decodedClientId);
     // Get the path after /admin/client-management/edit/:clientId/
     const basePath = `/admin/client-management/edit/${clientId}`;
     const currentPath = location.pathname;
-    console.log('Path analysis:', { basePath, currentPath });
+    logger.log('Path analysis:', { basePath, currentPath });
     // Only redirect if we're exactly at the client root
     if (currentPath === basePath) {
-      console.log('At root path, redirecting to info');
+      logger.log('At root path, redirecting to info');
       return <Navigate to={`${basePath}/info`} replace />;
     }
     return (

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import {
   Grid,
   FormControl,
@@ -77,7 +78,7 @@ const MonthlyUsersReport: React.FC = () => {
 
   // Handle sort change for ReportTableV2
   const handleSortChange = (newSortColumn: MonthlyUsersSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -100,7 +101,7 @@ const MonthlyUsersReport: React.FC = () => {
       endDate: endDate.format('YYYY-MM-DD')
     };
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPage(1);
@@ -111,7 +112,7 @@ const MonthlyUsersReport: React.FC = () => {
     
     getMonthlyUsers(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -121,7 +122,7 @@ const MonthlyUsersReport: React.FC = () => {
         setTotalPages(response.totalPages);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
         setReportData([]);
         setTotalCount(0);
@@ -174,7 +175,7 @@ const MonthlyUsersReport: React.FC = () => {
       setTotalPages(response.totalPages);
       setPage(params.pageNumber);
     } catch (err) {
-      console.error('Error fetching Monthly Users report:', err);
+      logger.error('Error fetching Monthly Users report:', err);
       setError('Failed to fetch report data. Please try again.');
       setReportData([]);
       setTotalCount(0);

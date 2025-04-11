@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import logger from '../../utils/logger';
 import {
   ListItem,
   ListItemButton,
@@ -29,7 +30,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ item, depth = 0 }) => {
 
   const isItemActive = React.useMemo(() => {
     const active = item.path === state.activePath;
-    console.log('[SidebarItem] Checking active state:', {
+    logger.log('[SidebarItem] Checking active state:', {
       itemId: item.id,
       itemPath: item.path,
       activePath: state.activePath,
@@ -39,7 +40,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ item, depth = 0 }) => {
   }, [item.path, state.activePath, item.id]);
 
   React.useEffect(() => {
-    console.log('[SidebarItem] Active state changed:', {
+    logger.log('[SidebarItem] Active state changed:', {
       id: item.id,
       path: item.path,
       isActive: isItemActive
@@ -48,7 +49,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ item, depth = 0 }) => {
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log('[SidebarItem] Item clicked:', {
+    logger.log('[SidebarItem] Item clicked:', {
       id: item.id,
       path: item.path,
       currentPath: location.pathname,

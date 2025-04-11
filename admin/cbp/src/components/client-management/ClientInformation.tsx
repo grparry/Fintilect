@@ -112,7 +112,7 @@ const ClientInformation: React.FC<ClientInformationProps> = ({ clientId }) => {
         id: Number(clientId)
       };
       
-      console.log('Updating client with data:', clientUpdate);
+      logger.log('Updating client with data:', clientUpdate);
       
       logger.info(`Updating client ${clientId} with full client data`);
       await clientService.updateClient(Number(clientId), clientUpdate);

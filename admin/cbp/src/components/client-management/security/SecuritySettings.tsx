@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import logger from '../../../utils/logger';
 import {
   Box,
   Typography,
@@ -43,7 +44,7 @@ const SecuritySettings: React.FC = () => {
       const loginSecuritySettings = await clientLoginSecurityService.getLoginSecurityByClientId(numericClientId);
       setClientLoginSettings(loginSecuritySettings);
     } catch (err) {
-      console.error('Error loading security settings:', err);
+      logger.error('Error loading security settings:', err);
       const message = err instanceof Error ? err.message : 'Failed to load security settings';
       setError(message);
     } finally {

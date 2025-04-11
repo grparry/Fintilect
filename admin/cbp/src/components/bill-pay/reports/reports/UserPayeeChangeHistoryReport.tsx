@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Box, Button, Grid, MenuItem, TextField, Typography, CircularProgress } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -185,7 +186,7 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
   const handlePageChange = (page: number, newPageSize?: number) => {
     // If page size changed, update it
     if (newPageSize !== undefined && newPageSize !== pageSize) {
-      console.log(`Page size changed from ${pageSize} to ${newPageSize}`);
+      logger.log(`Page size changed from ${pageSize} to ${newPageSize}`);
       setPageSize(newPageSize);
     }
     
@@ -308,7 +309,7 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
             sortColumn={sortColumn}
             sortDirection={sortDirection}
             onSortChange={(newColumn, newDirection) => {
-              console.log('Sort change:', { newColumn, newDirection });
+              logger.log('Sort change:', { newColumn, newDirection });
               
               // Update state
               setSortColumn(newColumn);
@@ -349,7 +350,7 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
                   break;
               }
               
-              console.log('Making API call with params:', params);
+              logger.log('Making API call with params:', params);
               
               // Reset to page 1
               setPageNumber(1);
@@ -357,7 +358,7 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
               // Call API directly with new sort parameters
               getUserPayeeChangeHistory(params)
                 .then(response => {
-                  console.log('API response received:', { 
+                  logger.log('API response received:', { 
                     totalCount: response.totalCount,
                     totalPages: response.totalPages,
                     itemCount: response.items?.length || 0 
@@ -365,7 +366,7 @@ const UserPayeeChangeHistoryReport: React.FC = () => {
                   setData(response);
                 })
                 .catch(error => {
-                  console.error('Error sorting report:', error);
+                  logger.error('Error sorting report:', error);
                   setError(error instanceof Error ? error.message : 'Failed to sort report. Please try again.');
                   setData(null);
                 })

@@ -9,40 +9,40 @@ import UserEditWrapper from './UserEditWrapper';
 import logger from '../../../utils/logger';
 
 const UsersWrapper: React.FC = () => {
-  console.log('🔄 UsersWrapper mounted');
+  logger.log('🔄 UsersWrapper mounted');
   const navigate = useNavigate();
   const location = useLocation();
   const { clientId = '', userId } = useParams<{ clientId: string; userId: string }>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [decodedClientId, setDecodedClientId] = useState<string>('');
-  console.log('=== UsersWrapper Debug Start ===');
-  console.log('Current location:', location.pathname);
-  console.log('Route params:', { clientId, userId });
+  logger.log('=== UsersWrapper Debug Start ===');
+  logger.log('Current location:', location.pathname);
+  logger.log('Route params:', { clientId, userId });
   useEffect(() => {
-    console.log('🔄 UsersWrapper location changed:', location.pathname);
+    logger.log('🔄 UsersWrapper location changed:', location.pathname);
   }, [location]);
   useEffect(() => {
-    console.log('🔄 UsersWrapper userId changed:', userId);
+    logger.log('🔄 UsersWrapper userId changed:', userId);
   }, [userId]);
   useEffect(() => {
     try {
-      console.log('🔄 UsersWrapper decoding clientId:', clientId);
+      logger.log('🔄 UsersWrapper decoding clientId:', clientId);
       const decoded = decodeId(clientId);
-      console.log('Successfully decoded clientId:', { encoded: clientId, decoded });
+      logger.log('Successfully decoded clientId:', { encoded: clientId, decoded });
       setDecodedClientId(decoded);
       setLoading(false);
     } catch (error) {
-      console.error('Failed to decode clientId:', error);
+      logger.error('Failed to decode clientId:', error);
       setError('Invalid client ID');
       setLoading(false);
       navigate('/admin/client-management');
     }
   }, [clientId, navigate]);
   const handleClose = () => {
-    console.log('🔄 UsersWrapper.handleClose - About to navigate');
-    console.log('Current URL:', window.location.href);
-    console.log('Navigating to:', `/admin/client-management/edit/${clientId}/users`);
+    logger.log('🔄 UsersWrapper.handleClose - About to navigate');
+    logger.log('Current URL:', window.location.href);
+    logger.log('Navigating to:', `/admin/client-management/edit/${clientId}/users`);
     navigate(`/admin/client-management/edit/${clientId}/users`, { replace: true });
   };
   if (loading) {
@@ -57,12 +57,12 @@ const UsersWrapper: React.FC = () => {
   }
   // If we have a userId, show the edit form
   if (userId) {
-    console.log('📝 Rendering UserEditWrapper with userId:', userId);
+    logger.log('📝 Rendering UserEditWrapper with userId:', userId);
     // Force the component to re-render when the userId changes
     return <UserEditWrapper key={userId} />;
   }
   // Otherwise show the users list
-  console.log('📋 Rendering Users list');
+  logger.log('📋 Rendering Users list');
   return (
     <Users
       clientId={decodedClientId}

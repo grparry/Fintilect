@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useClient } from '../context/ClientContext';
+import logger from '../utils/logger';
 
 /**
  * Hook to indicate that the current component uses client-specific API services.
@@ -12,14 +13,14 @@ export const useClientApi = (usesClientApi: boolean = true) => {
   
   useEffect(() => {
     // Debug: Log when the hook is called
-    console.log(`[useClientApi] Setting usesClientApi to: ${usesClientApi}`);
+    logger.log(`[useClientApi] Setting usesClientApi to: ${usesClientApi}`);
     
     // Set the flag when the component mounts
     setUsesClientApi(usesClientApi);
     
     // Clean up when the component unmounts
     return () => {
-      console.log('[useClientApi] Cleanup - setting usesClientApi to false');
+      logger.log('[useClientApi] Cleanup - setting usesClientApi to false');
       setUsesClientApi(false);
     };
   }, [usesClientApi, setUsesClientApi]);

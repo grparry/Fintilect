@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import logger from '../../../utils/logger';
 import {
   Box,
   Card,
@@ -161,7 +162,7 @@ const ManualProcessing: React.FC = () => {
       setClients(filteredClients);
     } catch (err) {
       setError('Failed to load clients');
-      console.error('Error loading clients:', err);
+      logger.error('Error loading clients:', err);
     }
   }, [clientService]);
   // Fetch payees when client changes
@@ -186,7 +187,7 @@ const ManualProcessing: React.FC = () => {
       setPayees(filteredPayees);
     } catch (err) {
       setError('Failed to load payees');
-      console.error('Error loading payees:', err);
+      logger.error('Error loading payees:', err);
     }
   }, [selectedClient, clientService]);
   // Fetch payment limits when client or payment type changes
@@ -205,7 +206,7 @@ const ManualProcessing: React.FC = () => {
       setPaymentLimits(validationConfig.maxAmounts);
     } catch (err) {
       setError('Failed to load payment limits');
-      console.error('Error loading payment limits:', err);
+      logger.error('Error loading payment limits:', err);
     }
   }, [selectedClient, form.paymentType, paymentProcessorService]);
   useEffect(() => {
@@ -415,13 +416,13 @@ const ManualProcessing: React.FC = () => {
       const response = await paymentProcessorService.schedulePayment(transaction, schedule);
       if (response) {
         // Show success message
-        console.log('Payment scheduled:', response);
+        logger.log('Payment scheduled:', response);
         setForm(initialPaymentForm);
         setSelectedClient(null);
         setSelectedPayee(null);
       }
     } catch (err) {
-      console.error('Error scheduling payment:', err);
+      logger.error('Error scheduling payment:', err);
       setError('Failed to schedule payment. Please try again.');
     } finally {
       setLoading(false);

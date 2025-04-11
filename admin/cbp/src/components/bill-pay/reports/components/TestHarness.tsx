@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { 
   Box, 
   Typography, 
@@ -106,23 +107,23 @@ const TestHarness: React.FC = () => {
   
   // Add log message
   const addLog = (message: string) => {
-    console.log(`Adding log: ${message}`);
+    logger.log(`Adding log: ${message}`);
     setLogMessages(prevMessages => {
       const newMessages = [`${new Date().toLocaleTimeString()}: ${message}`, ...prevMessages.slice(0, 9)];
-      console.log('Updated log messages:', newMessages);
+      logger.log('Updated log messages:', newMessages);
       return newMessages;
     });
   };
   
   // Initialize with a log message
   useEffect(() => {
-    console.log('Initializing test harness');
+    logger.log('Initializing test harness');
     addLog('Test harness initialized');
   }, []);
   
   // Handle sort change
   const handleSortChange = (newSortColumn: TestSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log(`Sort changed to ${newSortColumn} ${newSortDirection}`);
+    logger.log(`Sort changed to ${newSortColumn} ${newSortDirection}`);
     addLog(`Sort changed to ${newSortColumn} ${newSortDirection}`);
     
     // Simulate an API call to fetch sorted data
@@ -150,7 +151,7 @@ const TestHarness: React.FC = () => {
   
   // Helper function to sort data by column and direction
   const sortDataBy = (column: TestSortColumn, direction: 'ASC' | 'DESC') => {
-    console.log(`Sorting data by ${column} ${direction}`);
+    logger.log(`Sorting data by ${column} ${direction}`);
     
     // Create a new array to avoid reference issues
     const sorted = [...testData].sort((a, b) => {
@@ -189,7 +190,7 @@ const TestHarness: React.FC = () => {
       return 0;
     });
     
-    console.log('Sorted data:', sorted);
+    logger.log('Sorted data:', sorted);
     // Force a new array reference to trigger React re-render
     setSortedData([...sorted]);
     
@@ -211,14 +212,14 @@ const TestHarness: React.FC = () => {
   
   // Apply controlled values
   const handleApply = () => {
-    console.log(`Applying controlled values: ${sortColumn} ${sortDirection}`);
+    logger.log(`Applying controlled values: ${sortColumn} ${sortDirection}`);
     addLog(`Applying controlled values: ${sortColumn} ${sortDirection}`);
     sortData();
   };
   
   // Combined handler for page and page size changes
   const handlePageChange = (newPage: number, newPageSize: number) => {
-    console.log(`Page/size changed to page=${newPage}, size=${newPageSize}`, { 
+    logger.log(`Page/size changed to page=${newPage}, size=${newPageSize}`, { 
       currentPage: page, 
       newPage, 
       currentPageSize: pageSize, 
@@ -237,17 +238,17 @@ const TestHarness: React.FC = () => {
     setPageSize(newPageSize);
     
     // Update the paginated data with the new values
-    console.log('Updating paginated data with new page/size');
+    logger.log('Updating paginated data with new page/size');
     updatePaginatedData(sortedData, newPage, newPageSize);
   };
   
   // Update paginated data based on current page and page size
   const updatePaginatedData = (data: typeof testData, currentPage: number, currentPageSize: number) => {
-    console.log('updatePaginatedData called with:', { currentPage, currentPageSize, dataLength: data.length });
+    logger.log('updatePaginatedData called with:', { currentPage, currentPageSize, dataLength: data.length });
     const startIndex = (currentPage - 1) * currentPageSize;
     const endIndex = startIndex + currentPageSize;
     const paginatedItems = data.slice(startIndex, endIndex);
-    console.log(`Paginating data: page ${currentPage}, size ${currentPageSize}, items ${paginatedItems.length}`, {
+    logger.log(`Paginating data: page ${currentPage}, size ${currentPageSize}, items ${paginatedItems.length}`, {
       startIndex,
       endIndex,
       paginatedItemsLength: paginatedItems.length
@@ -315,7 +316,7 @@ const TestHarness: React.FC = () => {
               }}
               /* Debug props */
               // The following comment shows what's being passed to ReportTableV2
-              // {console.log('Rendering ReportTableV2 with:', { 
+              // {logger.log('Rendering ReportTableV2 with:', { 
               //   paginatedDataLength: paginatedData.length,
               //   page,
               //   totalCount,

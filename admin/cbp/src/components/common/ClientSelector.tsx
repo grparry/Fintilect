@@ -1,5 +1,6 @@
 import React from 'react';
 import { useClient } from '../../context/ClientContext';
+import logger from '../../utils/logger';
 import { FormControl, InputLabel, Select, MenuItem, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -19,7 +20,7 @@ const ClientSelector: React.FC = () => {
   const { selectedClient, availableClients, setSelectedClient, isAdmin, usesClientApi } = useClient();
 
   // Debug: Log client selector state
-  console.log('[ClientSelector] Rendering with:', {
+  logger.log('[ClientSelector] Rendering with:', {
     isAdmin,
     usesClientApi,
     selectedClientId: selectedClient?.clientId,
@@ -28,9 +29,9 @@ const ClientSelector: React.FC = () => {
 
   // Debug: Log available clients
   if (Object.keys(availableClients).length === 0) {
-    console.log('[ClientSelector] WARNING: No available clients to display in dropdown');
+    logger.log('[ClientSelector] WARNING: No available clients to display in dropdown');
   } else {
-    console.log('[ClientSelector] Available clients:', 
+    logger.log('[ClientSelector] Available clients:', 
       Object.values(availableClients).map(c => ({ 
         id: c.clientId, 
         name: c.name, 
@@ -41,13 +42,13 @@ const ClientSelector: React.FC = () => {
 
   // Only render the selector if the user is an admin AND the current view uses client API
   if (!isAdmin || !usesClientApi) {
-    console.log('[ClientSelector] Not rendering because:', { isAdmin, usesClientApi });
+    logger.log('[ClientSelector] Not rendering because:', { isAdmin, usesClientApi });
     return null;
   }
 
   const handleClientChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const clientId = event.target.value as number;
-    console.log(`[ClientSelector] Selected client changed to ID: ${clientId}`);
+    logger.log(`[ClientSelector] Selected client changed to ID: ${clientId}`);
     setSelectedClient(clientId);
   };
 

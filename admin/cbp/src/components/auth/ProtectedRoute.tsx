@@ -6,6 +6,7 @@ import { usePermissions } from '../../hooks/usePermissions';
 import { CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ResourceId } from '../../types/permissions.types';
+import logger from '../../utils/logger';
 
 const LoaderContainer = styled('div')({
   display: 'flex',
@@ -46,7 +47,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         const result = await checkPermission(resourceId);
         setHasPermission(result.hasAccess);
       } catch (error) {
-        console.error('Error checking permissions:', error);
+        logger.error('Error checking permissions:', error);
         setHasPermission(false);
       }
     };
@@ -54,9 +55,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     checkAccess();
   }, [resourceId, checkPermission]);
 
-  console.log('=== ProtectedRoute Debug ===');
-  console.log('Current Path:', location.pathname);
-  console.log('Auth State:', { 
+  logger.log('=== ProtectedRoute Debug ===');
+  logger.log('Current Path:', location.pathname);
+  logger.log('Auth State:', { 
     isAuthenticated, 
     loading,
     resourceId,
@@ -65,22 +66,22 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   });
 
   if (loading || hasPermission === null) {
-    console.log('ProtectedRoute - Loading auth state or checking permissions');
+    logger.log('ProtectedRoute - Loading auth state or checking permissions');
     return <LoadingFallback />;
   }
 
   if (!isAuthenticated) {
-    console.log('ProtectedRoute - Not authenticated, redirecting to login');
+    logger.log('ProtectedRoute - Not authenticated, redirecting to login');
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   // Check if required permissions are met
   if (resourceId && !hasPermission) {
-    console.log('ProtectedRoute - Permission denied for resource:', resourceId);
+    logger.log('ProtectedRoute - Permission denied for resource:', resourceId);
     return <Navigate to="/unauthorized" replace />;
   }
 
-  console.log('ProtectedRoute - Access granted');
+  logger.log('ProtectedRoute - Access granted');
   return <>{children}</>;
 };
 

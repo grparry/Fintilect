@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Grid, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -153,7 +154,7 @@ const PendingPaymentsReport: React.FC = () => {
    * @param newSortDirection Sort direction
    */
   const handleSortChange = (newSortColumn: PendingPaymentsSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -172,7 +173,7 @@ const PendingPaymentsReport: React.FC = () => {
       sortDirection: newSortDirection // Use the new sort direction directly
     };
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPageNumber(1);
@@ -180,7 +181,7 @@ const PendingPaymentsReport: React.FC = () => {
     // Call API directly with new sort parameters
     getPendingPayments(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -189,7 +190,7 @@ const PendingPaymentsReport: React.FC = () => {
         setPageNumber(response.pageNumber);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError(error instanceof Error ? error.message : 'Failed to sort report. Please try again.');
         setData(null);
       })
@@ -222,7 +223,7 @@ const PendingPaymentsReport: React.FC = () => {
         totalCount: response.totalCount
       };
     } catch (error) {
-      console.error('Error fetching pending payments data for export:', error);
+      logger.error('Error fetching pending payments data for export:', error);
       throw error;
     }
   };

@@ -3,6 +3,7 @@
  * Contains types, enums, and API service functions for the Pending Payments report
  */
 import { reportService } from '../../services/factory/ServiceFactory';
+import logger from '../logger';
 
 /**
  * Search Type enum for Pending Payments
@@ -92,7 +93,7 @@ export const getPendingPayments = async (params: PendingPaymentsParams): Promise
     const response = await reportService.getPendingPayments(params);
     return response;
   } catch (error) {
-    console.error('Error fetching pending payments data:', error);
+    logger.error('Error fetching pending payments data:', error);
     throw error;
   }
 };

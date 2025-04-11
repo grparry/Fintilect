@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import logger from '../../../utils/logger';
 import {
   Box,
   Button,
@@ -132,7 +133,7 @@ export const ManagePayments: React.FC = () => {
   });
 
   const handleError = (err: unknown, message?: string) => {
-    console.error(message || 'An error occurred', err);
+    logger.error(message || 'An error occurred', err);
     setError(message || 'An error occurred');
   };
 
@@ -384,7 +385,7 @@ export const ManagePayments: React.FC = () => {
           }))
       });
     } catch (error) {
-      console.error('Error fetching payment history:', error);
+      logger.error('Error fetching payment history:', error);
       setError('Failed to fetch payment history');
     } finally {
       setLoading(false);

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { ServiceFactory } from '../../../services/factory/ServiceFactory';
 import { IFISExceptionService } from '../../../services/interfaces/IFISExceptionService';
+import logger from '../../../utils/logger';
 import {
   FISException,
   FISExceptionStatus,
@@ -159,7 +160,7 @@ const FISExceptionHandling: React.FC = () => {
       setError(null);
     } catch (err) {
       setError('An error occurred while fetching exceptions');
-      console.error('Error fetching exceptions:', err);
+      logger.error('Error fetching exceptions:', err);
     } finally {
       setLoading(false);
     }
@@ -179,7 +180,7 @@ const FISExceptionHandling: React.FC = () => {
         avgRetryCount: 0
       });
     } catch (err) {
-      console.error('Error fetching exception stats:', err);
+      logger.error('Error fetching exception stats:', err);
     }
   }, [fisExceptionService, exceptions]);
 
@@ -188,7 +189,7 @@ const FISExceptionHandling: React.FC = () => {
       const history = await fisExceptionService.getFISResponseHistory(serviceRequestNumber);
       setResponseHistory(history);
     } catch (err) {
-      console.error('Error fetching response history:', err);
+      logger.error('Error fetching response history:', err);
     }
   }, [fisExceptionService]);
 
@@ -198,7 +199,7 @@ const FISExceptionHandling: React.FC = () => {
       setDialogState({ open: false, exception: null, action: null });
       await loadExceptions();
     } catch (err) {
-      console.error('Error retrying exception:', err);
+      logger.error('Error retrying exception:', err);
       setError('Failed to retry exception');
     }
   }, [fisExceptionService, loadExceptions]);
@@ -209,7 +210,7 @@ const FISExceptionHandling: React.FC = () => {
       setSelectedIds([]);
       await loadExceptions();
     } catch (err) {
-      console.error('Error bulk retrying exceptions:', err);
+      logger.error('Error bulk retrying exceptions:', err);
     }
   }, [fisExceptionService, selectedIds, loadExceptions]);
 
@@ -219,7 +220,7 @@ const FISExceptionHandling: React.FC = () => {
       setSelectedIds([]);
       await loadExceptions();
     } catch (err) {
-      console.error('Error bulk deleting exceptions:', err);
+      logger.error('Error bulk deleting exceptions:', err);
     }
   }, [fisExceptionService, selectedIds, loadExceptions]);
 
@@ -236,7 +237,7 @@ const FISExceptionHandling: React.FC = () => {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (err) {
-      console.error('Error exporting exceptions:', err);
+      logger.error('Error exporting exceptions:', err);
     }
   }, [fisExceptionService]);
 

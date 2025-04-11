@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../utils/logger';
 import {
   Box,
   Card,
@@ -77,7 +78,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
         onResolutionComplete();
       }
     } catch (err) {
-      console.error('Failed to load exception:', err);
+      logger.error('Failed to load exception:', err);
       setError('Failed to load exception');
     }
   };
@@ -101,7 +102,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
         })));
       }
     } catch (err) {
-      console.error('Failed to load resolution history:', err);
+      logger.error('Failed to load resolution history:', err);
       setError('Failed to load resolution history');
     }
   };
@@ -121,7 +122,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
       await loadException();
       onResolutionComplete();
     } catch (err) {
-      console.error('Failed to resolve exception:', err);
+      logger.error('Failed to resolve exception:', err);
       setError('Failed to resolve exception');
     } finally {
       setLoading(false);
@@ -140,7 +141,7 @@ const ExceptionDetails: React.FC<ExceptionDetailsProps> = ({
         onResolutionComplete();
       }
     } catch (err) {
-      console.error('Failed to retry exception:', err);
+      logger.error('Failed to retry exception:', err);
       setError('Failed to retry exception');
     } finally {
       setLoading(false);

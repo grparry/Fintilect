@@ -15,8 +15,8 @@ const UserEditWrapper: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [groups, setGroups] = useState<UserGroup[]>([]);
   const [saving, setSaving] = useState(false);
-  console.log('=== UserEditWrapper Debug Start ===');
-  console.log('Route params:', { clientId, userId });
+  logger.log('=== UserEditWrapper Debug Start ===');
+  logger.log('Route params:', { clientId, userId });
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -27,7 +27,7 @@ const UserEditWrapper: React.FC = () => {
         }
         const decodedClientId = decodeId(clientId);
         const decodedUserId = decodeId(userId);
-        console.log('Loading user data:', { decodedClientId, decodedUserId });
+        logger.log('Loading user data:', { decodedClientId, decodedUserId });
         // Load user and groups in parallel
         const [userData, groupsData] = await Promise.all([
           userService.getUser(Number(decodedUserId)),
@@ -75,7 +75,7 @@ const UserEditWrapper: React.FC = () => {
     }
   };
   const handleClose = useCallback(() => {
-    console.log('Navigating back to users list');
+    logger.log('Navigating back to users list');
     navigate(`/admin/client-management/edit/${clientId}/users`);
   }, [navigate, clientId]);
   if (loading) {

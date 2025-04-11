@@ -3,6 +3,7 @@
  * Contains types, enums, and API service functions for the Recurring Payment Change History report
  */
 import { reportService } from '../../services/factory/ServiceFactory';
+import logger from '../logger';
 
 /**
  * Search types for Recurring Payment Change History Report
@@ -107,7 +108,7 @@ export const getRecurringPaymentChangeHistory = async (
         const response = await reportService.getRecurringPaymentChangeHistory(params);
         return response;
     } catch (error) {
-        console.error('Error fetching recurring payment change history data:', error);
+        logger.error('Error fetching recurring payment change history data:', error);
         throw error;
     }
 };

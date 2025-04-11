@@ -1,4 +1,5 @@
 import React, { MouseEvent, useState } from 'react';
+import logger from '../../utils/logger';
 import {
   AppBar,
   Toolbar,
@@ -56,7 +57,7 @@ const Navbar: React.FC<NavbarProps> = ({
       handleProfileMenuClose();
       navigate('/login');
     } catch (error) {
-      console.error('Logout failed:', error);
+      logger.error('Logout failed:', error);
     }
   };
   return (

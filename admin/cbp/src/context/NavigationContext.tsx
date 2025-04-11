@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { useNavigate, useLocation } from 'react-router-dom';
 import { NavigationConfig, NavigationSection, NavigationItem } from '../types/section-navigation.types';
 import { usePermissions } from '../hooks/usePermissions';
+import logger from '../utils/logger';
 
 interface NavigationState {
   sidebarOpen: boolean;
@@ -52,7 +53,7 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
   const getAccessibleSections = useCallback(async (): Promise<NavigationSection[]> => {
     const accessibleSections: NavigationSection[] = [];
     
-    console.log('[NavigationContext] Getting accessible sections with roles:', permissionContext.roles);
+    logger.log('[NavigationContext] Getting accessible sections with roles:', permissionContext.roles);
 
     for (const section of config.sections) {
       // If the section has a resourceId, use that for permission check (includes admin permissions)
@@ -62,7 +63,7 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
       if (section.resourceId) {
         // This will properly check both regular permissions and admin permissions
         hasAccess = await hasPermission(section);
-        console.log(`[NavigationContext] Section ${section.title} resourceId check:`, {
+        logger.log(`[NavigationContext] Section ${section.title} resourceId check:`, {
           resourceId: section.resourceId,
           hasAccess
         });
@@ -70,7 +71,7 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
       else if (section.requiredPermission) {
         // Only do direct role check if no resourceId is specified
         hasAccess = permissionContext.roles.includes(section.requiredPermission);
-        console.log(`[NavigationContext] Section ${section.title} direct role check:`, {
+        logger.log(`[NavigationContext] Section ${section.title} direct role check:`, {
           requiredPermission: section.requiredPermission,
           hasAccess
         });
@@ -78,18 +79,18 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
       else {
         // If no permissions required, grant access
         hasAccess = true;
-        console.log(`[NavigationContext] Section ${section.title} has no permission requirements, granting access`);
+        logger.log(`[NavigationContext] Section ${section.title} has no permission requirements, granting access`);
       }
       
       if (hasAccess) {
-        console.log(`[NavigationContext] Adding accessible section: ${section.title}`);
+        logger.log(`[NavigationContext] Adding accessible section: ${section.title}`);
         accessibleSections.push(section);
       } else {
-        console.log(`[NavigationContext] Section not accessible: ${section.title}`);
+        logger.log(`[NavigationContext] Section not accessible: ${section.title}`);
       }
     }
 
-    console.log('[NavigationContext] Accessible sections:', accessibleSections.map(s => s.title));
+    logger.log('[NavigationContext] Accessible sections:', accessibleSections.map(s => s.title));
     return accessibleSections;
   }, [config.sections, hasPermission, permissionContext]);
 
@@ -147,7 +148,7 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
       }
     });
 
-    console.log('[findParentItems] Best match found:', {
+    logger.log('[findParentItems] Best match found:', {
       path,
       bestMatch,
       chain: bestMatch.chain
@@ -165,7 +166,7 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
 
   useEffect(() => {
     const activeChain = findParentItems(location.pathname);
-    console.log('[Navigation] Updating active items:', activeChain);
+    logger.log('[Navigation] Updating active items:', activeChain);
     
     setState(prev => ({
       ...prev,
@@ -175,17 +176,17 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
   }, [location.pathname, findParentItems]);
 
   const toggleSection = useCallback((sectionId: string): void => {
-    console.log('[toggleSection] Called with:', sectionId);
+    logger.log('[toggleSection] Called with:', sectionId);
     setState(prev => {
       // If we're already processing this section, don't update
       if (prev.processingSection === sectionId) {
-        console.log('[toggleSection] Already processing section:', sectionId);
+        logger.log('[toggleSection] Already processing section:', sectionId);
         return prev;
       }
 
       // First try to find it in the sections
       const section = config.sections.find(s => s.id === sectionId);
-      console.log('[toggleSection] Found section:', section?.id);
+      logger.log('[toggleSection] Found section:', section?.id);
 
       // If not found in sections, look through all items recursively
       const findInItems = (items: NavigationItem[]): NavigationItem | null => {
@@ -217,7 +218,7 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
             };
             const result = findInSection(s.items, 1);
             if (result) {
-              console.log('[toggleSection] Found item in section hierarchy:', {
+              logger.log('[toggleSection] Found item in section hierarchy:', {
                 section: s.id,
                 depth: result.depth,
                 parentChain: result.chain
@@ -231,12 +232,12 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
 
       const { parentSection, depth, parentChain } = findParentAndDepth();
       const isGrandChild = depth > 1;
-      console.log('[toggleSection] Item depth:', depth, 'isGrandChild:', isGrandChild);
-      console.log('[toggleSection] Parent chain:', parentChain);
+      logger.log('[toggleSection] Item depth:', depth, 'isGrandChild:', isGrandChild);
+      logger.log('[toggleSection] Parent chain:', parentChain);
       
       // If this is a grandchild item, don't modify the expanded state
       if (isGrandChild) {
-        console.log('[toggleSection] Skipping state update for grandchild');
+        logger.log('[toggleSection] Skipping state update for grandchild');
         return {
           ...prev,
           activePath: findInItems(config.sections.flatMap(s => s.items || []))?.path || prev.activePath
@@ -244,15 +245,15 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
       }
 
       const isExpanded = prev.expandedItems.includes(sectionId);
-      console.log('[toggleSection] Current expanded state:', isExpanded);
-      console.log('[toggleSection] Current expandedItems:', prev.expandedItems);
+      logger.log('[toggleSection] Current expanded state:', isExpanded);
+      logger.log('[toggleSection] Current expandedItems:', prev.expandedItems);
       
       let newExpandedItems: string[];
 
       if (isExpanded) {
         // If we're collapsing, only remove this item and keep its children
         newExpandedItems = prev.expandedItems.filter(id => id !== sectionId);
-        console.log('[toggleSection] Collapsing - new expandedItems:', newExpandedItems);
+        logger.log('[toggleSection] Collapsing - new expandedItems:', newExpandedItems);
       } else {
         // For parent items (depth === 1), close other parent items
         if (depth === 1) {
@@ -262,14 +263,14 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
             .filter(item => item.id !== sectionId)
             .map(item => item.id);
             
-          console.log('[toggleSection] Other parents to close:', otherParents);
+          logger.log('[toggleSection] Other parents to close:', otherParents);
           
           // Keep only items that aren't other parents
           newExpandedItems = prev.expandedItems.filter(id => !otherParents.includes(id));
         } 
         // Special handling for report section headers (checking by ID pattern)
         else if (sectionId.includes('-reports')) {
-          console.log('[toggleSection] Detected report section header:', sectionId);
+          logger.log('[toggleSection] Detected report section header:', sectionId);
           
           // Find all report section headers in the navigation config
           const reportSectionIds: string[] = [];
@@ -290,7 +291,7 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
             }
           });
           
-          console.log('[toggleSection] Other report sections to close:', reportSectionIds);
+          logger.log('[toggleSection] Other report sections to close:', reportSectionIds);
           
           // Keep only items that aren't other report section headers
           newExpandedItems = prev.expandedItems.filter(id => !reportSectionIds.includes(id));
@@ -319,7 +320,7 @@ export const NavigationProvider: React.FC<{ config: NavigationConfig; children: 
           newExpandedItems.push(parentSection.id);
         }
         
-        console.log('[toggleSection] Expanding - new expandedItems:', newExpandedItems);
+        logger.log('[toggleSection] Expanding - new expandedItems:', newExpandedItems);
       }
 
       const targetItem = findInItems(config.sections.flatMap(s => s.items || []));

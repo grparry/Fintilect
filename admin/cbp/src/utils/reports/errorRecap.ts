@@ -1,4 +1,5 @@
 import { reportService } from '../../services/factory/ServiceFactory';
+import logger from '../logger';
 
 /**
  * Search Type enum for Error Recap
@@ -142,12 +143,12 @@ export async function getErrorRecap(
     };
     
     // Log the parameters being sent for debugging
-    console.log('ErrorRecap request parameters:', requestParams);
+    logger.log('ErrorRecap request parameters:', requestParams);
     
     // Call the dedicated endpoint through the report service
     return await reportService.getErrorRecap(requestParams);
   } catch (error) {
-    console.error('Error fetching error recap report:', error);
+    logger.error('Error fetching error recap report:', error);
     throw error; // Re-throw to allow component to handle the error
   }
 }

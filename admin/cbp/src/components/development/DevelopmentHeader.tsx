@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
+import logger from '../../utils/logger';
 import { Box, Typography, Grid, Paper, Link } from '@mui/material';
 import { getAllRoutes } from '../../routes';
 import ApiIcon from '@mui/icons-material/Api';
@@ -14,15 +15,15 @@ const getRouteIcon = (title: string) => {
 };
 const DevelopmentHeader: React.FC = () => {
   const allRoutes = getAllRoutes();
-  console.log("All routes:", allRoutes);
+  logger.log("All routes:", allRoutes);
   const devRoutes = allRoutes.filter(route => {
-    console.log("Checking route:", route);
+    logger.log("Checking route:", route);
     return route.sectionId === 'development' && 
       !route.hideFromSidebar &&
       route.path !== 'development' &&
       (!route.id || !route.id.endsWith('-header'));
   });
-  console.log("Development routes:", devRoutes);
+  logger.log("Development routes:", devRoutes);
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 4 }}>

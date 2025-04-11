@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Box, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -140,7 +141,7 @@ const OnUsPostingsReport: React.FC = () => {
       const formattedStartDate = formatDate(startDate);
       const formattedEndDate = formatDate(endDate);
       
-      console.log('Date parameters:', {
+      logger.log('Date parameters:', {
         startDate: formattedStartDate,
         endDate: formattedEndDate
       });
@@ -235,7 +236,7 @@ const OnUsPostingsReport: React.FC = () => {
    * @param newSortDirection Direction to sort
    */
   const handleSortChange = (newSortColumn: OnUsPostingsSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -269,7 +270,7 @@ const OnUsPostingsReport: React.FC = () => {
       params.endDate = endDate.format('YYYY-MM-DD');
     }
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPageNumber(1);
@@ -277,7 +278,7 @@ const OnUsPostingsReport: React.FC = () => {
     // Call API directly with new sort parameters
     getOnUsPostings(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -285,7 +286,7 @@ const OnUsPostingsReport: React.FC = () => {
         setData(response);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
       })
       .finally(() => {

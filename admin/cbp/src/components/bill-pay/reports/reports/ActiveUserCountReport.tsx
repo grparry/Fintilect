@@ -4,6 +4,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
+import logger from '../../../../utils/logger';
 
 import ReportContainer from '../components/ReportContainer';
 import ReportTableV2 from '../components/ReportTableV2';
@@ -65,7 +66,7 @@ const ActiveUserCountReport: React.FC = () => {
 
   // Handle sort change
   const handleSortChange = (newColumn: ActiveUserCountSortColumn, newDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newColumn, newDirection });
+    logger.log('Sort change:', { newColumn, newDirection });
     
     // Update state
     setSortColumn(newColumn);
@@ -94,7 +95,7 @@ const ActiveUserCountReport: React.FC = () => {
     params.startDate = startDate ? startDate.format('YYYY-MM-DD') : undefined;
     params.endDate = endDate ? endDate.format('YYYY-MM-DD') : undefined;
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPage(1);
@@ -102,7 +103,7 @@ const ActiveUserCountReport: React.FC = () => {
     // Call API directly with new sort parameters
     getActiveUserCount(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -112,7 +113,7 @@ const ActiveUserCountReport: React.FC = () => {
         setTotalCount(response.totalCount);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
         setReportData(null);
       })
@@ -152,7 +153,7 @@ const ActiveUserCountReport: React.FC = () => {
       setTotalCount(response.totalCount);
       setPage(pageNumber);
     } catch (err) {
-      console.error('Error fetching Active User Count data:', err);
+      logger.error('Error fetching Active User Count data:', err);
       setError(err instanceof Error ? err.message : 'An error occurred while fetching the report');
       setReportData(null);
     } finally {

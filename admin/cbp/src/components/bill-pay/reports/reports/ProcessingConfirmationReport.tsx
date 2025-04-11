@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import {
   Grid,
   Typography,
@@ -82,7 +83,7 @@ const ProcessingConfirmationReport: React.FC = () => {
       setPageNumber(page);
     } catch (err) {
       setError('Failed to load processing confirmation data. Please try again.');
-      console.error('Error fetching processing confirmation data:', err);
+      logger.error('Error fetching processing confirmation data:', err);
     } finally {
       setLoading(false);
     }
@@ -98,7 +99,7 @@ const ProcessingConfirmationReport: React.FC = () => {
   
   // Handle sort change for ReportTableV2
   const handleSortChange = (newSortColumn: ProcessingConfirmationSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -129,7 +130,7 @@ const ProcessingConfirmationReport: React.FC = () => {
       sortDirection: newSortDirection // Use the new sort direction directly
     };
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPageNumber(1);
@@ -137,7 +138,7 @@ const ProcessingConfirmationReport: React.FC = () => {
     // Call API directly with new sort parameters
     getProcessingConfirmation(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -145,7 +146,7 @@ const ProcessingConfirmationReport: React.FC = () => {
         setData(response);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
         setData(null);
       })
@@ -188,7 +189,7 @@ const ProcessingConfirmationReport: React.FC = () => {
         totalCount: response.totalCount
       };
     } catch (error) {
-      console.error('Error fetching processing confirmation data for export:', error);
+      logger.error('Error fetching processing confirmation data for export:', error);
       throw error;
     }
   };

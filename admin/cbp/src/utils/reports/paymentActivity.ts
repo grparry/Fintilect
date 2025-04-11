@@ -1,5 +1,6 @@
 import { reportService } from '../../services/factory/ServiceFactory';
 import { format } from 'date-fns';
+import logger from '../logger';
 
 /**
  * Search Type enum for Payment Activity
@@ -175,8 +176,8 @@ export const getPaymentActivity = async (
   }
 
   // Log the request for debugging
-  console.log('Payment Activity Request:', request);
-  console.log('Sort parameters being sent to API:', { 
+  logger.log('Payment Activity Request:', request);
+  logger.log('Sort parameters being sent to API:', { 
     sortColumn: request.sortColumn, 
     sortDirection: request.sortDirection 
   });

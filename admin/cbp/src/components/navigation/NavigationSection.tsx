@@ -14,6 +14,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useNavigation } from '../../context/NavigationContext';
 import { NavigationSection as NavigationSectionType, NavigationItem } from '../../types/section-navigation.types';
 import { usePermissions } from '../../hooks/usePermissions';
+import logger from '../../utils/logger';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -41,7 +42,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
     const checkSectionAndItemPermissions = async () => {
       if (!section) return;
 
-      console.log(`[NavigationSection] Starting permission check for section: ${section.title || 'unnamed'}`, {
+      logger.log(`[NavigationSection] Starting permission check for section: ${section.title || 'unnamed'}`, {
         sectionId: section.id,
         userRoles: permissionContext.roles,
         userInfo: {
@@ -63,14 +64,14 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
         ...(section.items?.map(item => item.requiredPermission).filter(Boolean) || [])
       ];
 
-      console.log(`[NavigationSection] Resources and permissions for section: ${section.title || 'unnamed'}`, {
+      logger.log(`[NavigationSection] Resources and permissions for section: ${section.title || 'unnamed'}`, {
         resourceIds,
         requiredPermissions
       });
 
       if (resourceIds.length === 0 && requiredPermissions.length === 0) {
         // If no permissions to check, show all items
-        console.log(`[NavigationSection] No permissions to check for section: ${section.title || 'unnamed'}, showing all items`);
+        logger.log(`[NavigationSection] No permissions to check for section: ${section.title || 'unnamed'}, showing all items`);
         setVisibleItems(section.items || []);
         return;
       }
@@ -79,7 +80,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
         // Check resource IDs
         const permissions = resourceIds.length > 0 ? await checkPermissions(resourceIds) : {};
         
-        console.log(`[NavigationSection] Checking permissions for section: ${section.title}`, {
+        logger.log(`[NavigationSection] Checking permissions for section: ${section.title}`, {
           sectionId: section.id,
           resourceId: section.resourceId,
           requiredPermission: section.requiredPermission,
@@ -92,7 +93,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
         let hasAccess = true;
         if (section.resourceId) {
           hasAccess = permissions[section.resourceId]?.hasAccess === true;
-          console.log(`[NavigationSection] Resource ID check for ${section.title}:`, {
+          logger.log(`[NavigationSection] Resource ID check for ${section.title}:`, {
             resourceId: section.resourceId,
             hasAccess: hasAccess,
             permissionResult: permissions[section.resourceId]
@@ -101,7 +102,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
         // Only if no resourceId is specified, fall back to direct role check
         else if (section.requiredPermission) {
           hasAccess = permissionContext.roles.includes(section.requiredPermission);
-          console.log(`[NavigationSection] Direct role check for ${section.title}:`, {
+          logger.log(`[NavigationSection] Direct role check for ${section.title}:`, {
             requiredPermission: section.requiredPermission,
             hasAccess: hasAccess,
             userRoles: permissionContext.roles
@@ -109,12 +110,12 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
         }
 
         if (!hasAccess) {
-          console.log(`[NavigationSection] Access denied for section: ${section.title}`);
+          logger.log(`[NavigationSection] Access denied for section: ${section.title}`);
           setVisibleItems([]);
           return;
         }
         
-        console.log(`[NavigationSection] Access granted for section: ${section.title}`);
+        logger.log(`[NavigationSection] Access granted for section: ${section.title}`);
 
         // Filter items based on permissions
         const filteredItems = await Promise.all((section.items || []).map(async (item) => {
@@ -123,7 +124,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
           let hasItemAccess = true;
           if (item.resourceId) {
             hasItemAccess = permissions[item.resourceId]?.hasAccess === true;
-            console.log(`[NavigationSection] Item permission check for ${item.title} in ${section.title}:`, {
+            logger.log(`[NavigationSection] Item permission check for ${item.title} in ${section.title}:`, {
               resourceId: item.resourceId,
               hasAccess: hasItemAccess,
               permissionResult: permissions[item.resourceId]
@@ -132,7 +133,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
           // Only if no resourceId is specified, fall back to direct role check
           else if (item.requiredPermission) {
             hasItemAccess = permissionContext.roles.includes(item.requiredPermission);
-            console.log(`[NavigationSection] Item direct role check for ${item.title} in ${section.title}:`, {
+            logger.log(`[NavigationSection] Item direct role check for ${item.title} in ${section.title}:`, {
               requiredPermission: item.requiredPermission,
               hasAccess: hasItemAccess,
               userRoles: permissionContext.roles
@@ -143,14 +144,14 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
         }));
 
         const visibleItemsList = filteredItems.filter(({ hasAccess }) => hasAccess).map(({ item }) => item);
-        console.log(`[NavigationSection] Filtered items for section: ${section.title}`, {
+        logger.log(`[NavigationSection] Filtered items for section: ${section.title}`, {
           totalItems: section.items?.length || 0,
           filteredItems: filteredItems.map(({ item, hasAccess }) => ({ title: item.title, hasAccess })),
           visibleItems: visibleItemsList.map(item => item.title)
         });
         setVisibleItems(visibleItemsList);
       } catch (error) {
-        console.error('Error checking permissions:', error);
+        logger.error('Error checking permissions:', error);
         setVisibleItems([]);
       }
     };
@@ -163,12 +164,12 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
 
   // Don't render if section is undefined or if no visible items and no section path
   if (!section) {
-    console.log(`[NavigationSection] Not rendering - section is undefined`);
+    logger.log(`[NavigationSection] Not rendering - section is undefined`);
     return null;
   }
   
   if (visibleItems.length === 0 && !section.path) {
-    console.log(`[NavigationSection] Not rendering section: ${section.title || 'unnamed'}`, {
+    logger.log(`[NavigationSection] Not rendering section: ${section.title || 'unnamed'}`, {
       reason: 'No visible items and no section path',
       sectionId: section.id,
       visibleItemsCount: visibleItems.length,
@@ -177,7 +178,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
     return null;
   }
   
-  console.log(`[NavigationSection] Rendering section: ${section.title || 'unnamed'}`, {
+  logger.log(`[NavigationSection] Rendering section: ${section.title || 'unnamed'}`, {
     sectionId: section.id,
     visibleItemsCount: visibleItems.length,
     visibleItems: visibleItems.map(item => item.title)
@@ -186,7 +187,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
   const handleSectionClick = () => {
     if (!section || !section.id) return;
     
-    console.log('NavigationSection - Section clicked:', {
+    logger.log('NavigationSection - Section clicked:', {
       id: section.id,
       path: section.path,
       basePath: section.basePath,
@@ -196,7 +197,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
     toggleSection(section.id);
     
     if (section.path && location.pathname !== section.path) {
-      console.log('NavigationSection - Navigating to:', section.path);
+      logger.log('NavigationSection - Navigating to:', section.path);
       navigate(section.path);
     }
   };

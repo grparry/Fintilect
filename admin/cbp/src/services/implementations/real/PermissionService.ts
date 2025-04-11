@@ -1,4 +1,5 @@
 import { IPermissionService } from '../../interfaces/IPermissionService';
+import logger from '../../../utils/logger';
 import {
   User,
   Role,
@@ -15,7 +16,7 @@ import { BaseService } from './BaseService';
 export class PermissionService extends BaseService implements IPermissionService {
   constructor(basePath: string = '/api') {
     super(basePath);
-    console.log('PermissionService initialized with base path:', basePath);
+    logger.log('PermissionService initialized with base path:', basePath);
   }
 
   async getRoles(): Promise<RoleListResponse> {
@@ -45,12 +46,12 @@ export class PermissionService extends BaseService implements IPermissionService
     limit?: number;
   }): Promise<GroupListResponse> {
     try {
-      console.log('Calling getGroups with params:', params);
+      logger.log('Calling getGroups with params:', params);
       const groups = await this.get<Group[]>('/Group', { params });
-      console.log('Groups response:', groups);
+      logger.log('Groups response:', groups);
       return { groups };
     } catch (error) {
-      console.error('Error in getGroups:', error);
+      logger.error('Error in getGroups:', error);
       throw error;
     }
   }

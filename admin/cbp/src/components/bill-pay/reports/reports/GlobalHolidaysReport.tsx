@@ -10,6 +10,7 @@ import {
   FormHelperText,
   Paper
 } from '@mui/material';
+import logger from '../../../../utils/logger';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
@@ -87,7 +88,7 @@ const GlobalHolidaysReport: React.FC = () => {
    * @param newSortDirection Direction to sort
    */
   const handleSortChange = (newSortColumn: GlobalHolidaysSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -102,7 +103,7 @@ const GlobalHolidaysReport: React.FC = () => {
       sortDirection: newSortDirection // Use the new sort direction directly
     };
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPage(1);
@@ -113,7 +114,7 @@ const GlobalHolidaysReport: React.FC = () => {
     
     getGlobalHolidays(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -123,7 +124,7 @@ const GlobalHolidaysReport: React.FC = () => {
         setTotalPages(response.totalPages);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
         setReportData([]);
         setTotalCount(0);
@@ -168,7 +169,7 @@ const GlobalHolidaysReport: React.FC = () => {
       setTotalPages(response.totalPages);
       setPage(params.pageNumber);
     } catch (err) {
-      console.error('Error fetching Global Holidays report:', err);
+      logger.error('Error fetching Global Holidays report:', err);
       setError('Failed to fetch report data. Please try again.');
       setReportData([]);
       setTotalCount(0);
@@ -243,7 +244,7 @@ const GlobalHolidaysReport: React.FC = () => {
         totalCount: response.totalCount
       };
     } catch (error) {
-      console.error('Error fetching global holidays data for export:', error);
+      logger.error('Error fetching global holidays data for export:', error);
       throw error;
     }
   };

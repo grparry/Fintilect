@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import logger from '../../../utils/logger';
 import {
   Box,
   Card,
@@ -189,7 +190,7 @@ const Dashboard: React.FC = () => {
   }, [timeRange, billPayService, processorService]);
 
   useEffect(() => {
-    console.log('Loading Dashboard Data:', {
+    logger.log('Loading Dashboard Data:', {
       timeRange,
       billPayStats: state.billPayStats ? {
         totalTransactions: state.billPayStats.totalTransactions,
@@ -254,7 +255,7 @@ const Dashboard: React.FC = () => {
       count: stats.transactionsByStatus[status] || 0
     }));
     const pendingCount = pendingCounts.reduce((total, { count }) => total + count, 0);
-    console.log('Getting Pending Transactions:', {
+    logger.log('Getting Pending Transactions:', {
       transactionsByStatus: stats.transactionsByStatus,
       pendingStatuses,
       pendingCounts,
@@ -276,7 +277,7 @@ const Dashboard: React.FC = () => {
       count: stats.transactionsByStatus[status] || 0
     }));
     const failedCount = failedCounts.reduce((total, { count }) => total + count, 0);
-    console.log('Getting Failed Transactions:', {
+    logger.log('Getting Failed Transactions:', {
       transactionsByStatus: stats.transactionsByStatus,
       failedStatuses,
       failedCounts,
@@ -308,7 +309,7 @@ const Dashboard: React.FC = () => {
         value = getFailedTransactions(state.billPayStats);
         break;
       default:
-        console.warn(`Unknown metric key: ${key}`);
+        logger.warn(`Unknown metric key: ${key}`);
         value = 0;
     }
     return value;
@@ -316,7 +317,7 @@ const Dashboard: React.FC = () => {
 
   const getChartData = useCallback(() => {
     const filteredActivity = getFilteredActivity();
-    console.log('Filtered Activity:', {
+    logger.log('Filtered Activity:', {
       timeRange,
       totalActivities: filteredActivity.length,
       dateRange: filteredActivity.length > 0 ? {
@@ -357,7 +358,7 @@ const Dashboard: React.FC = () => {
       }
       return acc;
     }, {} as Record<string, { date: string; value: number; count: number; amount: number }>);
-    console.log('Grouped Data:', {
+    logger.log('Grouped Data:', {
       timeRange,
       groupKeys: Object.keys(groupedData),
       totalGroups: Object.keys(groupedData).length
@@ -440,7 +441,7 @@ const Dashboard: React.FC = () => {
   const renderMetricCards = () => {
     const cards = DASHBOARD_CARDS.map(card => {
       const value = getMetricValue(card.dataKey);
-      console.log(`Rendering metric card:`, {
+      logger.log(`Rendering metric card:`, {
         id: card.id,
         title: card.title,
         dataKey: card.dataKey,
@@ -470,7 +471,7 @@ const Dashboard: React.FC = () => {
         </Grid>
       );
     });
-    console.log('Rendering all metric cards:', {
+    logger.log('Rendering all metric cards:', {
       cardCount: cards.length,
       billPayStats: state.billPayStats ? {
         totalTransactions: state.billPayStats.totalTransactions,

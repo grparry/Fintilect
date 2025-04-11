@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Box, Grid, Typography, Tooltip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import dayjs from 'dayjs';
 import ReportContainer from '../components/ReportContainer';
@@ -180,7 +181,7 @@ const StatusesWithNotificationsReport: React.FC = () => {
    * @param newSortDirection Direction to sort
    */
   const handleSortChange = (newSortColumn: StatusesWithNotificationsSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -198,7 +199,7 @@ const StatusesWithNotificationsReport: React.FC = () => {
       sortDirection: newSortDirection // Use the new sort direction directly
     };
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPageNumber(1);
@@ -206,7 +207,7 @@ const StatusesWithNotificationsReport: React.FC = () => {
     // Call API directly with new sort parameters
     getStatusesWithNotifications(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -214,7 +215,7 @@ const StatusesWithNotificationsReport: React.FC = () => {
         setData(response);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError(error instanceof Error ? error.message : 'Failed to sort report. Please try again.');
         setData(null);
       })
@@ -245,7 +246,7 @@ const StatusesWithNotificationsReport: React.FC = () => {
         totalCount: response.totalCount
       };
     } catch (error) {
-      console.error('Error fetching statuses with notifications data for export:', error);
+      logger.error('Error fetching statuses with notifications data for export:', error);
       throw error;
     }
   };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import logger from '../../../utils/logger';
 
 // Import landing pages
 import ReportsLanding from './ReportsLanding';
@@ -40,7 +41,7 @@ const Reports: React.FC = () => {
   const location = useLocation();
   const path = location.pathname;
   
-  console.log('Current path:', path);
+  logger.log('Current path:', path);
   
   // Helper function to check if path matches a pattern
   const matchPath = (pattern: string): boolean => {
@@ -52,16 +53,16 @@ const Reports: React.FC = () => {
   
   // Category landing pages
   if (matchPath('/admin/bill-pay/reports/payment-reports')) {
-    console.log('Rendering PaymentReportsLanding');
+    logger.log('Rendering PaymentReportsLanding');
     return <PaymentReportsLanding />;
   } else if (matchPath('/admin/bill-pay/reports/recurring-payment-reports')) {
-    console.log('Rendering RecurringPaymentReportsLanding');
+    logger.log('Rendering RecurringPaymentReportsLanding');
     return <RecurringPaymentReportsLanding />;
   } else if (matchPath('/admin/bill-pay/reports/user-payee-reports')) {
-    console.log('Rendering UserPayeeReportsLanding');
+    logger.log('Rendering UserPayeeReportsLanding');
     return <UserPayeeReportsLanding />;
   } else if (matchPath('/admin/bill-pay/reports/system-compliance-reports')) {
-    console.log('Rendering SystemComplianceReportsLanding');
+    logger.log('Rendering SystemComplianceReportsLanding');
     return <SystemComplianceReportsLanding />;
   }
   
@@ -113,7 +114,7 @@ const Reports: React.FC = () => {
   }
   
   // Default to the main reports landing page
-  console.log('Rendering default ReportsLanding');
+  logger.log('Rendering default ReportsLanding');
   return <ReportsLanding />;
 };
 

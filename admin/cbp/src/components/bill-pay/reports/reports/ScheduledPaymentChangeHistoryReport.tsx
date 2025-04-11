@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import {
   Box,
   Grid,
@@ -109,7 +110,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
       setPageNumber(page);
     } catch (err) {
       setError('Failed to load scheduled payment change history data. Please try again.');
-      console.error('Error fetching scheduled payment change history data:', err);
+      logger.error('Error fetching scheduled payment change history data:', err);
     } finally {
       setLoading(false);
     }
@@ -125,7 +126,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
   
   // Handle sort change for ReportTableV2
   const handleSortChange = (newSortColumn: ScheduledPaymentChangeHistorySortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -171,7 +172,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
       params.recurringPaymentID = recurringPaymentID;
     }
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPageNumber(1);
@@ -179,7 +180,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
     // Call API directly with new sort parameters
     getScheduledPaymentChangeHistory(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -187,7 +188,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
         setData(response);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
         setData(null);
       })
@@ -249,7 +250,7 @@ const ScheduledPaymentChangeHistoryReport: React.FC = () => {
         totalCount: response.totalCount
       };
     } catch (error) {
-      console.error('Error fetching scheduled payment change history data for export:', error);
+      logger.error('Error fetching scheduled payment change history data for export:', error);
       throw error;
     }
   };

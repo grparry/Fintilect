@@ -1,0 +1,423 @@
+# Query: logger.log
+# Flags: CaseSensitive WordMatch
+# Including: ./admin/cbp/src/
+# Excluding: *.md,*.js
+
+303 results - 57 files
+
+admin/cbp/src/index.tsx:
+  20: // to log results (for example: reportWebVitals(logger.log))
+
+admin/cbp/src/components/auth/LoginPage.tsx:
+  49:     logger.log('LoginPage: Starting login process');
+  50:     logger.log('LoginPage: Form data:', { ...data, password: '[REDACTED]' });
+  54:       logger.log('LoginPage: Getting tenant ID from hostname:', window.location.hostname);
+  56:       logger.log('LoginPage: Raw tenant ID from hostname:', tenantId);
+  60:       logger.log('LoginPage: Converting tenant ID to number:', { raw: tenantId, parsed: parseInt(tenantId) });
+  66:       logger.log('LoginPage: Prepared credentials:', { ...credentials, password: '[REDACTED]' });
+  67:       logger.log('LoginPage: Calling login function');
+  69:       logger.log('LoginPage: Login successful, forcePasswordChange:', forcePasswordChange);
+  73:         logger.log('LoginPage: User must change password, redirecting to password change page');
+  76:         logger.log('LoginPage: Navigating to: /admin');
+  88:       logger.log('LoginPage: Login process complete');
+
+admin/cbp/src/components/auth/PasswordChangeForm.tsx:
+  103:       logger.log('PasswordChangeForm: Updated forcePasswordChange flag to false');
+
+admin/cbp/src/components/auth/ProtectedRoute.tsx:
+  57:   logger.log('=== ProtectedRoute Debug ===');
+  58:   logger.log('Current Path:', location.pathname);
+  59:   logger.log('Auth State:', { 
+  68:     logger.log('ProtectedRoute - Loading auth state or checking permissions');
+  73:     logger.log('ProtectedRoute - Not authenticated, redirecting to login');
+  79:     logger.log('ProtectedRoute - Permission denied for resource:', resourceId);
+  83:   logger.log('ProtectedRoute - Access granted');
+
+admin/cbp/src/components/bill-pay/payments/ManualProcessing.tsx:
+  418:         logger.log('Payment scheduled:', response);
+
+admin/cbp/src/components/bill-pay/reports/index.tsx:
+   43:   logger.log('Current path:', path);
+   55:     logger.log('Rendering PaymentReportsLanding');
+   58:     logger.log('Rendering RecurringPaymentReportsLanding');
+   61:     logger.log('Rendering UserPayeeReportsLanding');
+   64:     logger.log('Rendering SystemComplianceReportsLanding');
+  116:   logger.log('Rendering default ReportsLanding');
+
+admin/cbp/src/components/bill-pay/reports/components/ReportTableV2.tsx:
+  131:     logger.log('ReportTableV2 props updated:', { 
+  153:         logger.log('Sort operation complete with data update, setting isSorting to false');
+  166:         logger.log('Sort timeout reached, forcing isSorting to false');
+  172:         logger.log('Click captured during sorting, preventing default');
+  197:     logger.log('Component mount effect running, setting isInitialized to true');
+  200:       logger.log('Component unmounting');
+  206:     logger.log('pageSize changed to:', pageSize);
+  210:     logger.log('isInitialized changed to:', isInitialized);
+  215:     logger.log('Pagination state updated:', { pageSize, isInitialized, hasPagination: !!pagination });
+  227:       logger.log('Sort operation already in progress, ignoring click');
+  231:     logger.log('Starting sort operation for column:', columnKey);
+  248:       logger.log('Set isSorting to true, latestSortRef updated:', latestSortRef.current);
+  365:         logger.log(`Fetching page ${page} of ${totalPages} for export`);
+  367:           logger.log('Export cancelled by user');
+  434:   logger.log('ReportTableV2 render:', { 
+  449:     logger.log('handleChangeRowsPerPage called with new size:', newPageSize);
+  456:       logger.log('Page size changed, resetting to page 1 with new size:', newPageSize);
+  487:           logger.log('Fetching all data for CSV export...');
+  489:           logger.log(`Received ${allData.length} records for export`);
+  494:             logger.log(`Limiting export to ${exportOptions.maxRecords} records`);
+  502:           logger.log('Falling back to current page data for export');
+  751:           {logger.log('Rendering TablePagination with:', { 
+
+admin/cbp/src/components/bill-pay/reports/components/TestHarness.tsx:
+  109:     logger.log(`Adding log: ${message}`);
+  112:       logger.log('Updated log messages:', newMessages);
+  119:     logger.log('Initializing test harness');
+  125:     logger.log(`Sort changed to ${newSortColumn} ${newSortDirection}`);
+  153:     logger.log(`Sorting data by ${column} ${direction}`);
+  192:     logger.log('Sorted data:', sorted);
+  214:     logger.log(`Applying controlled values: ${sortColumn} ${sortDirection}`);
+  221:     logger.log(`Page/size changed to page=${newPage}, size=${newPageSize}`, { 
+  240:     logger.log('Updating paginated data with new page/size');
+  246:     logger.log('updatePaginatedData called with:', { currentPage, currentPageSize, dataLength: data.length });
+  250:     logger.log(`Paginating data: page ${currentPage}, size ${currentPageSize}, items ${paginatedItems.length}`, {
+  318:               // {logger.log('Rendering ReportTableV2 with:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/ActiveUserCountReport.tsx:
+   68:     logger.log('Sort change:', { newColumn, newDirection });
+   97:     logger.log('Making API call with params:', params);
+  105:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/ErrorRecapReport.tsx:
+   61:     logger.log('Sort change:', { newSortColumn, newDirection });
+  176:     logger.log('Making API call with params:', params);
+  184:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/FailedOnUsReport.tsx:
+   88:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  129:     logger.log('Making API call with params:', params);
+  137:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/GlobalHolidaysReport.tsx:
+   90:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  105:     logger.log('Making API call with params:', params);
+  116:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/LargePaymentReport.tsx:
+  132:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  157:     logger.log('Making API call with params:', params);
+  165:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/MonthlyUsersReport.tsx:
+   80:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  103:     logger.log('Making API call with params:', params);
+  114:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/OFACExceptionsReport.tsx:
+  285:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  316:     logger.log('Making API call with params:', params);
+  324:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/OnUsPostingsReport.tsx:
+  143:       logger.log('Date parameters:', {
+  238:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  272:     logger.log('Making API call with params:', params);
+  280:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/PayeeReport.tsx:
+   92:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  149:     logger.log('Making API call with params:', params);
+  157:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/PaymentActivityReport.tsx:
+   67:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  119:     logger.log('Making API call with params:', params);
+  127:         logger.log('API response received:', { 
+  329:       logger.log('Running report with parameters:', params);
+
+admin/cbp/src/components/bill-pay/reports/reports/PaymentClearReport.tsx:
+  117:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  174:     logger.log('Making API call with params:', params);
+  182:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/PaymentReport.tsx:
+  119:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  209:     logger.log('Making API call with params:', params);
+  217:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/PendingPaymentsReport.tsx:
+  156:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  175:     logger.log('Making API call with params:', params);
+  183:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/ProcessingConfirmationReport.tsx:
+  101:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  132:     logger.log('Making API call with params:', params);
+  140:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/RecurringPaymentChangeHistoryReport.tsx:
+  216:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  265:     logger.log('Making API call with params:', params);
+  273:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/RecurringPaymentReport.tsx:
+  119:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  199:     logger.log('Making API call with params:', params);
+  207:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/ScheduledPaymentChangeHistoryReport.tsx:
+  128:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  174:     logger.log('Making API call with params:', params);
+  182:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/StatusesWithNotificationsReport.tsx:
+  183:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  201:     logger.log('Making API call with params:', params);
+  209:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/SuspendedPaymentReport.tsx:
+  312:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  329:     logger.log('Making API call with params:', params);
+  337:         logger.log('API response received:', { 
+  369:       logger.log('Running report with params:', params);
+  375:       logger.log('API response received:', { 
+  411:     logger.log('Sort parameters changed:', { sortColumn, sortDirection });
+
+admin/cbp/src/components/bill-pay/reports/reports/UserPayeeChangeHistoryReport.tsx:
+  188:       logger.log(`Page size changed from ${pageSize} to ${newPageSize}`);
+  311:               logger.log('Sort change:', { newColumn, newDirection });
+  352:               logger.log('Making API call with params:', params);
+  360:                   logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/reports/reports/UserPayeeReport.tsx:
+  207:     logger.log('Sort change:', { newSortColumn, newSortDirection });
+  274:     logger.log('Making API call with params:', params);
+  282:         logger.log('API response received:', { 
+
+admin/cbp/src/components/bill-pay/settings/NotificationTemplates.tsx:
+  153:       logger.log('Editing notification with matchMode:', notification.matchMode);
+  224:     logger.log('Opening delete dialog with notification:', notification);
+  247:     logger.log('Delete dialog state set to:', {
+  269:       logger.log('Deleting notification with ID:', notificationId);
+  287:       logger.log(`Calling deleteNotification with ID: "${trimmedId}"`);
+  516:                             logger.log('Delete button clicked for notification:', notification);
+  775:               logger.log('Delete button clicked with ID:', deleteDialog.notificationId);
+
+admin/cbp/src/components/client-management/ClientInformation.tsx:
+  115:       logger.log('Updating client with data:', clientUpdate);
+
+admin/cbp/src/components/client-management/ClientManagement.tsx:
+   85:   logger.log('=== ClientManagement Debug Start ===');
+   86:   logger.log('Props:', { clientId });
+   87:   logger.log('Current location:', location.pathname);
+   88:   logger.log('Current tab:', activeTab);
+  115:     logger.log('Getting current tab for path:', path);
+  118:     logger.log('Path analysis:', { segments });
+  139:     logger.log('Tab change:', { newValue, basePath });
+
+admin/cbp/src/components/client-management/Groups.tsx:
+  103:     logger.log('loadGroups called with clientId: %d', clientId);
+  106:       logger.log('Setting loading state to true');
+  108:       logger.log('About to call permissionService.getGroups');
+  109:       logger.log('permissionService object:', permissionService);
+  113:       logger.log('Response from getGroups:', response);
+  114:       logger.log('Groups data type:', Array.isArray(response.groups) ? 'array' : typeof response.groups);
+  134:         logger.log('Extracted nested groups array with length:', groupsArray.length);
+  138:         logger.log('Response groups is an array with length:', groupsArray.length);
+  140:         logger.log('Response groups is an object with keys:', Object.keys(typedResponse.groups));
+  146:           logger.log('Extracted array from first value with length:', groupsArray.length);
+  150:           logger.log('Converted object to array with length:', groupsArray.length);
+  153:         logger.log('Could not process response.groups, defaulting to empty array');
+  192:       logger.log('First 3 items in groupsArray:');
+  194:         logger.log(`Item ${i}:`, groupsArray[i]);
+  203:         logger.log('No duplicate IDs found in groups array');
+  206:       logger.log('Processed groups array:', groupsArray);
+  521:     logger.log('useEffect called to load Groups, Users, and Roles');
+  525:         logger.log('Loading users');
+  527:         logger.log('Users loaded, now loading roles');
+  529:         logger.log('Roles loaded, now loading groups');
+  531:         logger.log('All data loaded successfully');
+
+admin/cbp/src/components/client-management/wrappers/ClientManagementWrapper.tsx:
+  17:   logger.log('=== ClientManagementWrapper Debug Start ===');
+  18:   logger.log('Current location:', location.pathname);
+  19:   logger.log('URL params:', { clientId });
+  20:   logger.log('Search params:', location.search);
+  21:   logger.log('Route state:', location.state);
+  32:     logger.log('Decoded client ID:', decodedClientId);
+  36:     logger.log('Path analysis:', { basePath, currentPath });
+  39:       logger.log('At root path, redirecting to info');
+
+admin/cbp/src/components/client-management/wrappers/UserEditWrapper.tsx:
+  18:   logger.log('=== UserEditWrapper Debug Start ===');
+  19:   logger.log('Route params:', { clientId, userId });
+  30:         logger.log('Loading user data:', { decodedClientId, decodedUserId });
+  78:     logger.log('Navigating back to users list');
+
+admin/cbp/src/components/client-management/wrappers/UsersWrapper.tsx:
+  12:   logger.log('🔄 UsersWrapper mounted');
+  19:   logger.log('=== UsersWrapper Debug Start ===');
+  20:   logger.log('Current location:', location.pathname);
+  21:   logger.log('Route params:', { clientId, userId });
+  23:     logger.log('🔄 UsersWrapper location changed:', location.pathname);
+  26:     logger.log('🔄 UsersWrapper userId changed:', userId);
+  30:       logger.log('🔄 UsersWrapper decoding clientId:', clientId);
+  32:       logger.log('Successfully decoded clientId:', { encoded: clientId, decoded });
+  43:     logger.log('🔄 UsersWrapper.handleClose - About to navigate');
+  44:     logger.log('Current URL:', window.location.href);
+  45:     logger.log('Navigating to:', `/admin/client-management/edit/${clientId}/users`);
+  60:     logger.log('📝 Rendering UserEditWrapper with userId:', userId);
+  65:   logger.log('📋 Rendering Users list');
+
+admin/cbp/src/components/common/ClientSelector.tsx:
+  22:   logger.log('[ClientSelector] Rendering with:', {
+  31:     logger.log('[ClientSelector] WARNING: No available clients to display in dropdown');
+  33:     logger.log('[ClientSelector] Available clients:', 
+  44:     logger.log('[ClientSelector] Not rendering because:', { isAdmin, usesClientApi });
+  50:     logger.log(`[ClientSelector] Selected client changed to ID: ${clientId}`);
+
+admin/cbp/src/components/development/DevelopmentHeader.tsx:
+  17:   logger.log("All routes:", allRoutes);
+  19:     logger.log("Checking route:", route);
+  25:   logger.log("Development routes:", devRoutes);
+
+admin/cbp/src/components/navigation/SidebarItem.tsx:
+  32:     logger.log('[SidebarItem] Checking active state:', {
+  42:     logger.log('[SidebarItem] Active state changed:', {
+  51:     logger.log('[SidebarItem] Item clicked:', {
+
+admin/cbp/src/config/api.config.ts:
+  72:   logger.log(`[shouldUseMockService] Checking if ${serviceName} should use mock:`, {
+
+admin/cbp/src/config/host.config.ts:
+   46:       logger.log(`Using hostname override: ${hostnameParam}`);
+   52:   logger.log('[getCurrentHostname] Raw hostname:', currentHostname);
+   53:   logger.log('[getCurrentHostname] Full URL:', window.location.href);
+   54:   logger.log('[getCurrentHostname] Protocol:', window.location.protocol);
+   65:     logger.log('[initializeClientConfigs] Environment:', process.env.NODE_ENV);
+   66:     logger.log('[initializeClientConfigs] Base URL:', window.location.origin);
+   67:     logger.log('[initializeClientConfigs] Full URL:', window.location.href);
+   72:     logger.log('[initializeClientConfigs] Loading from:', window.location.origin + configPath);
+   84:     logger.log('[initializeClientConfigs] Successfully loaded client configuration');
+   88:       logger.log('[initializeClientConfigs] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
+  129:   logger.log('[getCurrentClientConfig] Looking up config for hostname:', hostname);
+  150:   logger.log('[getCurrentClientConfig] Found config:', {
+  180:     logger.log('[getTenantFromHostname] Current client config:', {
+  213:   logger.log('[getAdminApiUrl] Getting admin API URL...');
+  215:   logger.log('[getAdminApiUrl] Using config:', {
+  221:   logger.log('[getAdminApiUrl] Resolved admin API URL:', config.adminApiUrl);
+  229:   logger.log('[getClientApiUrl] Getting client API URL...');
+  239:     logger.log(`[getClientApiUrl] Found selected client ID: ${clientId}, looking for key: ${key}`);
+  243:       logger.log('[getClientApiUrl] Using selected client config:', {
+  248:       logger.log('[getClientApiUrl] Resolved client API URL:', selectedClientConfig.clientApiUrl);
+  255:   logger.log('[getClientApiUrl] Using hostname-based config:', {
+  260:   logger.log('[getClientApiUrl] Resolved client API URL:', config.clientApiUrl);
+  295:       logger.log(`[getSponsorId] No client configuration found for ID ${clientId} in environment ${currentEnvironment}`);
+  301:   logger.log(`[getSponsorId] Using configuration from ${source}:`, {
+
+admin/cbp/src/context/AuthContext.tsx:
+   39:       logger.log('AuthContext: Processing roles from login response:', {
+   47:       logger.log('AuthContext: Setting forcePasswordChange flag:', forcePasswordChange);
+  151:     logger.log('AuthContext: Updating forcePasswordChange flag to:', value);
+
+admin/cbp/src/context/ClientContext.tsx:
+   38:     logger.log(`[Client Context] Admin status: ${adminStatus}`);
+   42:     logger.log('[Client Context] Current client config:', {
+   53:       logger.log(`[Client Context] Current environment: ${currentEnvironment}`);
+   56:       logger.log(`[Client Context] Total available clients before filtering: ${Object.keys(CLIENT_CONFIGS_BY_HOSTNAME).length}`);
+   63:       logger.log('[Client Context] Available environments:', Array.from(environments));
+   69:         logger.log(`[Client Context] Evaluating client: ${client.name}`, {
+   89:           logger.log(`[Client Context] Added client to filtered list: ${client.name} with key ${key}`);
+   93:       logger.log(`[Client Context] Filtered ${Object.keys(filteredClients).length} clients for environment: ${currentEnvironment}`);
+   96:       logger.log('[Client Context] Filtered clients:', Object.values(filteredClients).map(c => ({ 
+  108:         logger.log('[Client Context] Using persisted client ID:', persistedClientId);
+  117:           logger.log('[Client Context] Using saved client ID from sessionStorage:', clientId);
+  122:           logger.log('[Client Context] Using default client ID from hostname:', currentClient.clientId);
+  130:       logger.log('[Client Context] Client user - using host client ID:', currentClient.clientId);
+  135:     logger.log(`[Client Context] Setting selected client ID: ${clientId}`);
+  149:         logger.log(`[Client Context] Selected client with environment match: ${client.name}, Environment: ${client.environment}`);
+  154:         logger.log(`[Client Context] Selected client from available clients: ${client.name}, Environment: ${client.environment}`);
+  157:         logger.log(`[Client Context] Warning: Selected client ID ${clientId} not found in available clients or environment-specific lookup`);
+  161:       logger.log('[Client Context] Cleared selected client');
+
+admin/cbp/src/hooks/useClientApi.ts:
+  15:     logger.log(`[useClientApi] Setting usesClientApi to: ${usesClientApi}`);
+  22:       logger.log('[useClientApi] Cleanup - setting usesClientApi to false');
+
+admin/cbp/src/hooks/usePermissions.ts:
+  126:       logger.log(`[usePermissions] Checking admin permissions for ${resourceId}:`, {
+  133:         logger.log(`[usePermissions] Admin access granted for ${resourceId} via role:`, 
+  167:       logger.log(`[usePermissions] Checking regular permissions for ${resourceId}:`, {
+  175:         logger.log(`[usePermissions] Access denied for ${resourceId} - missing all required permissions`);
+  186:         logger.log(`[usePermissions] Access denied for ${resourceId} - missing any required permission`);
+  196:       logger.log(`[usePermissions] Regular permission access granted for ${resourceId}`);
+
+admin/cbp/src/routes/index.tsx:
+  48:   logger.log(`Processing route ${route.id} with path ${route.path} -> ${fullPath}`);
+  78:     logger.log(`Processing section: ${sectionId}`);
+  79:     logger.log('Section routes before processing:', JSON.stringify(section.routes, null, 2));
+  82:       logger.log('Processing route:', JSON.stringify(route, null, 2));
+  86:     logger.log('Section routes after processing:', JSON.stringify(sectionRoutes, null, 2));
+
+admin/cbp/src/services/factory/ServiceFactory.ts:
+   65:     logger.log('ServiceFactory initialized - services will be created on demand');
+   84:     logger.log('[ServiceFactory] Creating UserService instance');
+   91:     logger.log('[ServiceFactory] Creating ClientService instance');
+   98:     logger.log('[ServiceFactory] Creating BillPayService instance');
+  105:     logger.log('[ServiceFactory] Creating AuthService instance');
+  112:     logger.log('[ServiceFactory] Creating SecurityService instance');
+  119:     logger.log('[ServiceFactory] Creating NotificationService instance');
+  126:     logger.log('[ServiceFactory] Creating ExceptionService instance');
+  133:     logger.log('[ServiceFactory] Creating FISExceptionService instance');
+  140:     logger.log('[ServiceFactory] Creating GlobalPayeeService instance');
+  147:     logger.log('[ServiceFactory] Creating PayeeService instance');
+  154:     logger.log('[ServiceFactory] Creating PaymentProcessorService instance');
+  161:     logger.log('[ServiceFactory] Creating PaymentService instance');
+  168:     logger.log('[ServiceFactory] Creating ReportService instance');
+  175:     logger.log('[ServiceFactory] Creating CalendarService instance with URL:', ServiceFactory.getAdminCuEndpoint('/api/v1/Calendar'));
+  182:     logger.log('[ServiceFactory] Creating PermissionService instance');
+  189:     logger.log('[ServiceFactory] Creating DashboardService instance');
+  196:     logger.log('[ServiceFactory] Creating ConfigurationService instance');
+  203:     logger.log('[ServiceFactory] Creating ClientLoginSecurityService instance');
+
+admin/cbp/src/services/implementations/mock/MockBillPayService.ts:
+  201:         logger.log(`Sending OTP via ${method} to ${destination}`);
+
+admin/cbp/src/services/implementations/mock/MockNotificationService.ts:
+  78:         logger.log(`Mock: Sending notification for status code ${request.statusCode}`);
+  84:         logger.log(`Mock: Sending customer notification for payment ${request.paymentID} with status code ${request.statusCode}`);
+
+admin/cbp/src/services/implementations/mock/MockSecurityService.ts:
+   9:         logger.log('MockSecurityService initialized with path:', basePath);
+  15:         logger.log('MockSecurityService.getSecuritySettings called');
+  16:         logger.log('Returning settings:', this.settings);
+  21:         logger.log('MockSecurityService.updateSecuritySettings called with:', settings);
+  26:         logger.log('Updated settings:', this.settings);
+
+admin/cbp/src/services/implementations/mock/data/billpay/dashboard.ts:
+   30:   logger.log('Generating Mock Dashboard Stats:', { timeframe });
+   73:   logger.log('Date Range:', {
+  156:   logger.log('Generated Stats:', {
+
+admin/cbp/src/services/implementations/real/PermissionService.ts:
+  18:     logger.log('PermissionService initialized with base path:', basePath);
+  48:       logger.log('Calling getGroups with params:', params);
+  50:       logger.log('Groups response:', groups);
+
+admin/cbp/src/utils/logger.ts:
+  39:           logger.log(`Logger initialized with IP: ${Logger.userIP}, logging enabled: ${Logger.loggingEnabled}`);
+  86:    * @param args Arguments to log, same as logger.log
+  94:       logger.log(...args);
+  95:       logger.log(this.formatLogEntry(args));
+
+admin/cbp/src/utils/reports/errorRecap.ts:
+  145:     logger.log('ErrorRecap request parameters:', requestParams);
+
+admin/cbp/src/utils/reports/ofacExceptions.ts:
+  159:     logger.log('OFAC Exceptions request parameters:', requestParams);
+
+admin/cbp/src/utils/reports/paymentActivity.ts:
+  178:   logger.log('Payment Activity Request:', request);
+  179:   logger.log('Sort parameters being sent to API:', { 
+
+admin/cbp/src/utils/reports/suspendedPayment.ts:
+  98:     logger.log('Suspended Payment request parameters:', requestParams);

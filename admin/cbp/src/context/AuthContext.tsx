@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         expiresIn: response.expiresIn
       }));
       
-      console.log('AuthContext: Processing roles from login response:', {
+      logger.log('AuthContext: Processing roles from login response:', {
         rawRoles: response.roles,
         transformedRoles: (response.roles || []).map(roleName => ({
           id: 0,
@@ -44,7 +44,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }))
       });
       const forcePasswordChange = response.user?.forcePasswordChange === true;
-      console.log('AuthContext: Setting forcePasswordChange flag:', forcePasswordChange);
+      logger.log('AuthContext: Setting forcePasswordChange flag:', forcePasswordChange);
       
       // Transform roles for state
       const roles = (response.roles || []).map(roleName => ({
@@ -148,7 +148,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const updateForcePasswordChange = useCallback((value: boolean) => {
-    console.log('AuthContext: Updating forcePasswordChange flag to:', value);
+    logger.log('AuthContext: Updating forcePasswordChange flag to:', value);
     setState(prev => {
       if (prev.user) {
         return {

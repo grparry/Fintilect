@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import logger from '../../../utils/logger';
 import { 
   Box, 
   Button, 
@@ -93,7 +94,7 @@ const FisPayeeCheck: React.FC = () => {
         setTabValue(1);
       }
     } catch (error: any) {
-      console.error('FIS payee search failed:', error);
+      logger.error('FIS payee search failed:', error);
       
       // Display the error message from the service
       setSearchResult({

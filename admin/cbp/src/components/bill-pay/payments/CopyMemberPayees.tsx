@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logger from '../../../utils/logger';
 import {
   Box,
   Card,
@@ -69,7 +70,7 @@ const CopyMemberPayees: React.FC = () => {
       setSearchSuccess(true);
     } catch (err) {
       setSearchError('Failed to retrieve member payees. Please try again.');
-      console.error('Error retrieving member payees:', err);
+      logger.error('Error retrieving member payees:', err);
     } finally {
       setSearchLoading(false);
     }
@@ -145,7 +146,7 @@ const CopyMemberPayees: React.FC = () => {
       await handleSearch();
     } catch (err) {
       setCopyError(`Failed to copy member payees: ${err instanceof Error ? err.message : 'Unknown error'}`);
-      console.error('Error copying member payees:', err);
+      logger.error('Error copying member payees:', err);
     } finally {
       setCopyLoading(false);
     }

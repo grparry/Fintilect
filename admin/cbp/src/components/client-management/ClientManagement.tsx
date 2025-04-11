@@ -82,10 +82,10 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState(0);
-  console.log('=== ClientManagement Debug Start ===');
-  console.log('Props:', { clientId });
-  console.log('Current location:', location.pathname);
-  console.log('Current tab:', activeTab);
+  logger.log('=== ClientManagement Debug Start ===');
+  logger.log('Props:', { clientId });
+  logger.log('Current location:', location.pathname);
+  logger.log('Current tab:', activeTab);
   // Load client data
   const loadClientData = useCallback(async () => {
     try {
@@ -112,10 +112,10 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
   }, [loadClientData]);
   const getCurrentTab = () => {
     const path = location.pathname;
-    console.log('Getting current tab for path:', path);
+    logger.log('Getting current tab for path:', path);
     // Extract the segments of the path
     const segments = path.split('/');
-    console.log('Path analysis:', { segments });
+    logger.log('Path analysis:', { segments });
     
     // Check if the path contains 'users' segment
     if (segments.includes('users')) {
@@ -136,7 +136,7 @@ const ClientManagement: React.FC<ClientManagementProps> = ({ clientId, children 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     const encodedId = encodeId(clientId);
     const basePath = `/admin/client-management/edit/${encodedId}`;
-    console.log('Tab change:', { newValue, basePath });
+    logger.log('Tab change:', { newValue, basePath });
     switch (newValue) {
       case 0:
         navigate(`${basePath}/info`);

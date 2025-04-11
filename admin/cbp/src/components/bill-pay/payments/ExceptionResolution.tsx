@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logger from '../../../utils/logger';
 import {
   Box,
   Card,
@@ -62,7 +63,7 @@ const ExceptionResolution: React.FC<ExceptionResolutionProps> = ({
       onResolutionComplete();
     } catch (err) {
       setError('Failed to resolve exception');
-      console.error(err);
+      logger.error(err);
     } finally {
       setLoading(false);
     }

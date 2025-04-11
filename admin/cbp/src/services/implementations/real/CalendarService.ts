@@ -2,6 +2,7 @@ import { HolidayType, HolidayStatus, Holiday, HolidayInput, HolidayValidation, H
 import { ICalendarService } from '../../interfaces/ICalendarService';
 import { BaseService } from './BaseService';
 import { getSponsorId } from '../../../config/host.config';
+import logger from '../../../utils/logger';
 
 /**
  * Implementation of the Calendar Service
@@ -121,7 +122,7 @@ export class CalendarService extends BaseService implements ICalendarService {
         holiday.date.split('T')[0] === date.split('T')[0]
       );
     } catch (error) {
-      console.error('Error checking if date is a holiday:', error);
+      logger.error('Error checking if date is a holiday:', error);
       return false;
     }
   }

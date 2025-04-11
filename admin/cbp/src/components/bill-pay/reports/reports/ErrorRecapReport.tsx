@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -58,7 +59,7 @@ const ErrorRecapReport: React.FC = () => {
 
   // Handle sort change
   const handleSortChange = (newSortColumn: ErrorRecapSortColumn, newDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newDirection });
+    logger.log('Sort change:', { newSortColumn, newDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -173,7 +174,7 @@ const ErrorRecapReport: React.FC = () => {
         break;
     }
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPage(1);
@@ -181,7 +182,7 @@ const ErrorRecapReport: React.FC = () => {
     // Call API directly with new sort parameters
     getErrorRecap(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -191,7 +192,7 @@ const ErrorRecapReport: React.FC = () => {
         setTotalPages(response.totalPages);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
       })
       .finally(() => {
@@ -310,7 +311,7 @@ const ErrorRecapReport: React.FC = () => {
         setTotalCount(0);
       }
     } catch (err) {
-      console.error('Error running error recap report:', err);
+      logger.error('Error running error recap report:', err);
       setError('Failed to load error recap data. Please try again.');
     } finally {
       setLoading(false);

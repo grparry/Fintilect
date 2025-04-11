@@ -1,4 +1,4 @@
-
+import logger from '../../../../../utils/logger';
 
 /**
  * Type validation utilities for mock data
@@ -23,7 +23,7 @@ export const validateMockData = <T>(data: T, schema: Schema<T>): boolean => {
     const value = data[key];
     // Check required fields
     if (rules.required && value === undefined) {
-      console.error(`Required field ${String(key)} is missing`);
+      logger.error(`Required field ${String(key)} is missing`);
       return false;
     }
     // Skip validation for optional undefined fields
@@ -31,12 +31,12 @@ export const validateMockData = <T>(data: T, schema: Schema<T>): boolean => {
     // Type checking
     const actualType = Array.isArray(value) ? 'array' : typeof value;
     if (actualType !== rules.type) {
-      console.error(`Field ${String(key)} has wrong type. Expected ${rules.type}, got ${actualType}`);
+      logger.error(`Field ${String(key)} has wrong type. Expected ${rules.type}, got ${actualType}`);
       return false;
     }
     // Custom validation
     if (rules.validate && !rules.validate(value)) {
-      console.error(`Field ${String(key)} failed custom validation`);
+      logger.error(`Field ${String(key)} failed custom validation`);
       return false;
     }
   }

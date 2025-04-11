@@ -1,5 +1,6 @@
 import { INotificationService } from '../../interfaces/INotificationService';
 import { BaseMockService } from './BaseMockService';
+import logger from '../../../utils/logger';
 import {
     NotificationCreateRequest,
     NotificationUpdateRequest,
@@ -75,13 +76,13 @@ export class MockNotificationService extends BaseMockService implements INotific
 
     async sendNotification(request: NotificationSendRequest): Promise<void> {
         // Simulate sending a notification
-        console.log(`Mock: Sending notification for status code ${request.statusCode}`);
+        logger.log(`Mock: Sending notification for status code ${request.statusCode}`);
         return Promise.resolve();
     }
 
     async sendCustomerNotification(request: NotificationSendCustomerRequest): Promise<void> {
         // Simulate sending a customer notification
-        console.log(`Mock: Sending customer notification for payment ${request.paymentID} with status code ${request.statusCode}`);
+        logger.log(`Mock: Sending customer notification for payment ${request.paymentID} with status code ${request.statusCode}`);
         return Promise.resolve();
     }
 

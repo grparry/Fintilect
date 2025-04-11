@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { 
   Box, 
   FormControl, 
@@ -181,7 +182,7 @@ const SettlementSummaryReport: React.FC = () => {
       const data = await getSettlementSummary(params);
       setReportData(data);
     } catch (error) {
-      console.error('Error fetching settlement summary report:', error);
+      logger.error('Error fetching settlement summary report:', error);
       enqueueSnackbar('Failed to fetch settlement summary report. Please try again.', { variant: 'error' });
     } finally {
       setLoading(false);

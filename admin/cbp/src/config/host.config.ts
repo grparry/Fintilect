@@ -1,4 +1,5 @@
 // Host-based configuration
+import logger from '../utils/logger';
 
 /**
  * Client configuration interface
@@ -43,15 +44,15 @@ export const getCurrentHostname = (): string => {
     
     // Only use the override if it exists in our configuration
     if (hostnameParam && CLIENT_CONFIGS_BY_HOSTNAME[hostnameParam]) {
-      console.log(`Using hostname override: ${hostnameParam}`);
+      logger.log(`Using hostname override: ${hostnameParam}`);
       return hostnameParam;
     }
   }
   
   const currentHostname = window.location.hostname;
-  console.log('[getCurrentHostname] Raw hostname:', currentHostname);
-  console.log('[getCurrentHostname] Full URL:', window.location.href);
-  console.log('[getCurrentHostname] Protocol:', window.location.protocol);
+  logger.log('[getCurrentHostname] Raw hostname:', currentHostname);
+  logger.log('[getCurrentHostname] Full URL:', window.location.href);
+  logger.log('[getCurrentHostname] Protocol:', window.location.protocol);
   return currentHostname;
 };
 
@@ -62,32 +63,32 @@ export const getCurrentHostname = (): string => {
  */
 const initializeClientConfigs = (): void => {
   try {
-    console.log('[initializeClientConfigs] Environment:', process.env.NODE_ENV);
-    console.log('[initializeClientConfigs] Base URL:', window.location.origin);
-    console.log('[initializeClientConfigs] Full URL:', window.location.href);
+    logger.log('[initializeClientConfigs] Environment:', process.env.NODE_ENV);
+    logger.log('[initializeClientConfigs] Base URL:', window.location.origin);
+    logger.log('[initializeClientConfigs] Full URL:', window.location.href);
     
     // Use XMLHttpRequest for synchronous loading
     const xhr = new XMLHttpRequest();
     const configPath = '/config/client-config.json';
-    console.log('[initializeClientConfigs] Loading from:', window.location.origin + configPath);
+    logger.log('[initializeClientConfigs] Loading from:', window.location.origin + configPath);
     
     xhr.open('GET', configPath, false); // false = synchronous
     xhr.send();
     
     if (xhr.status !== 200) {
-      console.error('[initializeClientConfigs] Failed to load client configuration');
-      console.error('Status:', xhr.status, xhr.statusText);
-      console.error('Response:', xhr.responseText);
+      logger.error('[initializeClientConfigs] Failed to load client configuration');
+      logger.error('Status:', xhr.status, xhr.statusText);
+      logger.error('Response:', xhr.responseText);
       throw new Error(`Failed to load client configuration: ${xhr.status} ${xhr.statusText}`);
     }
     
-    console.log('[initializeClientConfigs] Successfully loaded client configuration');
+    logger.log('[initializeClientConfigs] Successfully loaded client configuration');
     const config = JSON.parse(xhr.responseText);
     if (config && config.clientConfigs) {
       CLIENT_CONFIGS_BY_HOSTNAME = config.clientConfigs;
-      console.log('[initializeClientConfigs] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
+      logger.log('[initializeClientConfigs] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
     } else {
-      console.error('[initializeClientConfigs] Invalid configuration format');
+      logger.error('[initializeClientConfigs] Invalid configuration format');
       throw new Error('Invalid client configuration format');
     }
     
@@ -100,7 +101,7 @@ const initializeClientConfigs = (): void => {
         return acc;
       }, {} as Record<string, ClientConfig>);
   } catch (error) {
-    console.error('[initializeClientConfigs] Error loading client configuration:', error);
+    logger.error('[initializeClientConfigs] Error loading client configuration:', error);
     // Display critical error to user
     document.body.innerHTML = `
       <div style="font-family: sans-serif; padding: 20px; text-align: center;">
@@ -118,7 +119,7 @@ const initializeClientConfigs = (): void => {
 try {
   initializeClientConfigs();
 } catch (error) {
-  console.error('Failed to initialize client configuration:', error);
+  logger.error('Failed to initialize client configuration:', error);
 }
 
 /**
@@ -126,13 +127,13 @@ try {
  */
 export const getCurrentClientConfig = (): ClientConfig => {
   const hostname = getCurrentHostname();
-  console.log('[getCurrentClientConfig] Looking up config for hostname:', hostname);
+  logger.log('[getCurrentClientConfig] Looking up config for hostname:', hostname);
   const config = CLIENT_CONFIGS_BY_HOSTNAME[hostname];
   
   if (!config) {
     const errorMessage = `No configuration found for hostname: ${hostname}`;
-    console.error('[getCurrentClientConfig] Error:', errorMessage);
-    console.error('[getCurrentClientConfig] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
+    logger.error('[getCurrentClientConfig] Error:', errorMessage);
+    logger.error('[getCurrentClientConfig] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
     
     // Display critical error to user
     document.body.innerHTML = `
@@ -147,7 +148,7 @@ export const getCurrentClientConfig = (): ClientConfig => {
     throw new Error(errorMessage);
   }
   
-  console.log('[getCurrentClientConfig] Found config:', {
+  logger.log('[getCurrentClientConfig] Found config:', {
     name: config.name,
     environment: config.environment,
     hostname: config.hostname,
@@ -177,7 +178,7 @@ export const isClientHostname = (): boolean => {
 export const getTenantFromHostname = (): string => {
   try {
     const config = getCurrentClientConfig();
-    console.log('[getTenantFromHostname] Current client config:', {
+    logger.log('[getTenantFromHostname] Current client config:', {
       hostname: config.hostname,
       name: config.name,
       tenantId: config.tenantId,
@@ -186,15 +187,15 @@ export const getTenantFromHostname = (): string => {
     });
     
     if (config.tenantId === undefined || config.tenantId === null) {
-      console.error('[getTenantFromHostname] No tenant ID found in client configuration');
-      console.error('[getTenantFromHostname] Full config:', config);
+      logger.error('[getTenantFromHostname] No tenant ID found in client configuration');
+      logger.error('[getTenantFromHostname] Full config:', config);
       throw new Error('No tenant ID found in client configuration');
     }
     
     return config.tenantId.toString();
   } catch (error) {
-    console.error('[getTenantFromHostname] Error getting tenant ID:', error);
-    console.error('[getTenantFromHostname] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
+    logger.error('[getTenantFromHostname] Error getting tenant ID:', error);
+    logger.error('[getTenantFromHostname] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
     throw error;
   }
 };
@@ -210,15 +211,15 @@ export const getEnvironment = (): 'production' | 'test' | 'development' => {
  * Get admin API URL for the current hostname
  */
 export const getAdminApiUrl = (): string => {
-  console.log('[getAdminApiUrl] Getting admin API URL...');
+  logger.log('[getAdminApiUrl] Getting admin API URL...');
   const config = getCurrentClientConfig();
-  console.log('[getAdminApiUrl] Using config:', {
+  logger.log('[getAdminApiUrl] Using config:', {
     name: config.name,
     environment: config.environment,
     hostname: config.hostname,
     adminApiUrl: config.adminApiUrl
   });
-  console.log('[getAdminApiUrl] Resolved admin API URL:', config.adminApiUrl);
+  logger.log('[getAdminApiUrl] Resolved admin API URL:', config.adminApiUrl);
   return config.adminApiUrl;
 };
 
@@ -226,7 +227,7 @@ export const getAdminApiUrl = (): string => {
  * Get client API URL for the current hostname or selected client
  */
 export const getClientApiUrl = (): string => {
-  console.log('[getClientApiUrl] Getting client API URL...');
+  logger.log('[getClientApiUrl] Getting client API URL...');
   
   // Check if we have a selected client in sessionStorage
   const selectedClientId = sessionStorage.getItem('selectedClientId');
@@ -236,28 +237,28 @@ export const getClientApiUrl = (): string => {
     const currentEnvironment = getCurrentClientConfig().environment;
     const key = `${clientId}_${currentEnvironment}`;
     
-    console.log(`[getClientApiUrl] Found selected client ID: ${clientId}, looking for key: ${key}`);
+    logger.log(`[getClientApiUrl] Found selected client ID: ${clientId}, looking for key: ${key}`);
     
     if (CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT[key]) {
       const selectedClientConfig = CLIENT_CONFIGS_BY_ID_AND_ENVIRONMENT[key];
-      console.log('[getClientApiUrl] Using selected client config:', {
+      logger.log('[getClientApiUrl] Using selected client config:', {
         name: selectedClientConfig.name,
         environment: selectedClientConfig.environment,
         clientApiUrl: selectedClientConfig.clientApiUrl
       });
-      console.log('[getClientApiUrl] Resolved client API URL:', selectedClientConfig.clientApiUrl);
+      logger.log('[getClientApiUrl] Resolved client API URL:', selectedClientConfig.clientApiUrl);
       return selectedClientConfig.clientApiUrl;
     }
   }
   
   // Fall back to hostname-based config if no selected client
   const config = getCurrentClientConfig();
-  console.log('[getClientApiUrl] Using hostname-based config:', {
+  logger.log('[getClientApiUrl] Using hostname-based config:', {
     hostname: config.hostname,
     environment: config.environment,
     clientApiUrl: config.clientApiUrl
   });
-  console.log('[getClientApiUrl] Resolved client API URL:', config.clientApiUrl);
+  logger.log('[getClientApiUrl] Resolved client API URL:', config.clientApiUrl);
   return config.clientApiUrl;
 };
 
@@ -292,13 +293,13 @@ export const getSponsorId = (): number => {
     }
     else {
       config = getCurrentClientConfig();
-      console.log(`[getSponsorId] No client configuration found for ID ${clientId} in environment ${currentEnvironment}`);
+      logger.log(`[getSponsorId] No client configuration found for ID ${clientId} in environment ${currentEnvironment}`);
     }
   } else {
     config = getCurrentClientConfig();
   }
   
-  console.log(`[getSponsorId] Using configuration from ${source}:`, {
+  logger.log(`[getSponsorId] Using configuration from ${source}:`, {
     name: config.name,
     clientId: config.clientId,
     sponsorId: config.sponsorId || 0,

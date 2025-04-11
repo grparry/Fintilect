@@ -1,0 +1,1065 @@
+# Query: console.
+# Flags: CaseSensitive WordMatch
+# Including: ./admin/cbp/src/
+# Excluding: *.md,*.js
+# ContextLines: 1
+
+457 results - 63 files
+
+admin/cbp/src/components/auth/LoginPage.tsx:
+  79      } catch (err) {
+  80:       console.error('LoginPage: Login failed with error:', err);
+  81:       console.error('LoginPage: Error details:', {
+  82          name: err.name,
+
+admin/cbp/src/components/auth/PasswordChangeForm.tsx:
+  119      } catch (err) {
+  120:       console.error('Error changing password:', err);
+  121        setError(err instanceof Error ? err.message : 'Failed to change password. Please check your current password and try again.');
+
+admin/cbp/src/components/auth/ProtectedRoute.tsx:
+  49        } catch (error) {
+  50:         console.error('Error checking permissions:', error);
+  51          setHasPermission(false);
+
+admin/cbp/src/components/bill-pay/dashboard/Dashboard.tsx:
+  311        default:
+  312:         console.warn(`Unknown metric key: ${key}`);
+  313          value = 0;
+
+admin/cbp/src/components/bill-pay/payments/ChangeHistory.tsx:
+  212        setUserHistoryError('Failed to retrieve user change history. Please try again.');
+  213:       console.error('Error retrieving user change history:', err);
+  214      } finally {
+
+  354        setGlobalHistoryError('Failed to retrieve global change history. Please try again.');
+  355:       console.error('Error retrieving global change history:', err);
+  356      } finally {
+
+admin/cbp/src/components/bill-pay/payments/CopyMemberPayees.tsx:
+   71        setSearchError('Failed to retrieve member payees. Please try again.');
+   72:       console.error('Error retrieving member payees:', err);
+   73      } finally {
+
+  147        setCopyError(`Failed to copy member payees: ${err instanceof Error ? err.message : 'Unknown error'}`);
+  148:       console.error('Error copying member payees:', err);
+  149      } finally {
+
+admin/cbp/src/components/bill-pay/payments/ExceptionDetails.tsx:
+   79      } catch (err) {
+   80:       console.error('Failed to load exception:', err);
+   81        setError('Failed to load exception');
+
+  103      } catch (err) {
+  104:       console.error('Failed to load resolution history:', err);
+  105        setError('Failed to load resolution history');
+
+  123      } catch (err) {
+  124:       console.error('Failed to resolve exception:', err);
+  125        setError('Failed to resolve exception');
+
+  142      } catch (err) {
+  143:       console.error('Failed to retry exception:', err);
+  144        setError('Failed to retry exception');
+
+admin/cbp/src/components/bill-pay/payments/ExceptionResolution.tsx:
+  64        setError('Failed to resolve exception');
+  65:       console.error(err);
+  66      } finally {
+
+admin/cbp/src/components/bill-pay/payments/ExceptionTool.tsx:
+  163        setError('Failed to fetch exceptions');
+  164:       console.error(err);
+  165      } finally {
+
+  185        setError('Failed to resolve exception');
+  186:       console.error(err);
+  187      } finally {
+
+  258        setError('Failed to apply correction');
+  259:       console.error(err);
+  260      } finally {
+
+admin/cbp/src/components/bill-pay/payments/FISExceptionHandling.tsx:
+  161        setError('An error occurred while fetching exceptions');
+  162:       console.error('Error fetching exceptions:', err);
+  163      } finally {
+
+  181      } catch (err) {
+  182:       console.error('Error fetching exception stats:', err);
+  183      }
+
+  190      } catch (err) {
+  191:       console.error('Error fetching response history:', err);
+  192      }
+
+  200      } catch (err) {
+  201:       console.error('Error retrying exception:', err);
+  202        setError('Failed to retry exception');
+
+  211      } catch (err) {
+  212:       console.error('Error bulk retrying exceptions:', err);
+  213      }
+
+  221      } catch (err) {
+  222:       console.error('Error bulk deleting exceptions:', err);
+  223      }
+
+  238      } catch (err) {
+  239:       console.error('Error exporting exceptions:', err);
+  240      }
+
+admin/cbp/src/components/bill-pay/payments/FisPayeeCheck.tsx:
+  95      } catch (error: any) {
+  96:       console.error('FIS payee search failed:', error);
+  97        
+
+admin/cbp/src/components/bill-pay/payments/ManagePayments.tsx:
+  134    const handleError = (err: unknown, message?: string) => {
+  135:     console.error(message || 'An error occurred', err);
+  136      setError(message || 'An error occurred');
+
+  386      } catch (error) {
+  387:       console.error('Error fetching payment history:', error);
+  388        setError('Failed to fetch payment history');
+
+admin/cbp/src/components/bill-pay/payments/ManualProcessing.tsx:
+  163        setError('Failed to load clients');
+  164:       console.error('Error loading clients:', err);
+  165      }
+
+  188        setError('Failed to load payees');
+  189:       console.error('Error loading payees:', err);
+  190      }
+
+  207        setError('Failed to load payment limits');
+  208:       console.error('Error loading payment limits:', err);
+  209      }
+
+  423      } catch (err) {
+  424:       console.error('Error scheduling payment:', err);
+  425        setError('Failed to schedule payment. Please try again.');
+
+admin/cbp/src/components/bill-pay/payments/PaymentManagementHeader.tsx:
+  22        } catch (error) {
+  23:         console.error('Error checking permissions:', error);
+  24          setHasBillPayWritePermission(false);
+
+admin/cbp/src/components/bill-pay/reports/components/ReportTableV2.tsx:
+  315      } catch (error) {
+  316:       console.error('Error during CSV export:', error);
+  317      } finally {
+
+  340        if (typeof enableExport !== 'object' || !enableExport.getPagedData) {
+  341:         console.error('getPagedData function is required for exporting all pages');
+  342          return;
+
+  386      } catch (error) {
+  387:       console.error('Error during paged CSV export:', error);
+  388      } finally {
+
+  499          } catch (error) {
+  500:           console.error('Error fetching all data for export:', error);
+  501            // Fallback to current page data
+
+  549      } catch (error) {
+  550:       console.error('Error during CSV export:', error);
+  551      } finally {
+
+admin/cbp/src/components/bill-pay/reports/reports/ActiveUserCountReport.tsx:
+  115        .catch(error => {
+  116:         console.error('Error sorting report:', error);
+  117          setError('Failed to sort report. Please try again.');
+
+  155      } catch (err) {
+  156:       console.error('Error fetching Active User Count data:', err);
+  157        setError(err instanceof Error ? err.message : 'An error occurred while fetching the report');
+
+admin/cbp/src/components/bill-pay/reports/reports/console_log.code-search.txt:
+    1: # Query: console.log
+    2  # Flags: CaseSensitive WordMatch
+
+    8  admin/cbp/src/index.tsx:
+    9:   20: // to log results (for example: reportWebVitals(console.log))
+   10  
+   11  admin/cbp/src/components/auth/LoginPage.tsx:
+   12:   49:     console.log('LoginPage: Starting login process');
+   13:   50:     console.log('LoginPage: Form data:', { ...data, password: '[REDACTED]' });
+   14:   54:       console.log('LoginPage: Getting tenant ID from hostname:', window.location.hostname);
+   15:   56:       console.log('LoginPage: Raw tenant ID from hostname:', tenantId);
+   16:   60:       console.log('LoginPage: Converting tenant ID to number:', { raw: tenantId, parsed: parseInt(tenantId) });
+   17:   66:       console.log('LoginPage: Prepared credentials:', { ...credentials, password: '[REDACTED]' });
+   18:   67:       console.log('LoginPage: Calling login function');
+   19:   69:       console.log('LoginPage: Login successful, forcePasswordChange:', forcePasswordChange);
+   20:   73:         console.log('LoginPage: User must change password, redirecting to password change page');
+   21:   76:         console.log('LoginPage: Navigating to: /admin');
+   22:   88:       console.log('LoginPage: Login process complete');
+   23  
+   24  admin/cbp/src/components/auth/PasswordChangeForm.tsx:
+   25:   103:       console.log('PasswordChangeForm: Updated forcePasswordChange flag to false');
+   26  
+   27  admin/cbp/src/components/auth/ProtectedRoute.tsx:
+   28:   57:   console.log('=== ProtectedRoute Debug ===');
+   29:   58:   console.log('Current Path:', location.pathname);
+   30:   59:   console.log('Auth State:', { 
+   31:   68:     console.log('ProtectedRoute - Loading auth state or checking permissions');
+   32:   73:     console.log('ProtectedRoute - Not authenticated, redirecting to login');
+   33:   79:     console.log('ProtectedRoute - Permission denied for resource:', resourceId);
+   34:   83:   console.log('ProtectedRoute - Access granted');
+   35  
+   36  admin/cbp/src/components/bill-pay/payments/ManualProcessing.tsx:
+   37:   418:         console.log('Payment scheduled:', response);
+   38  
+   39  admin/cbp/src/components/bill-pay/reports/index.tsx:
+   40:    43:   console.log('Current path:', path);
+   41:    55:     console.log('Rendering PaymentReportsLanding');
+   42:    58:     console.log('Rendering RecurringPaymentReportsLanding');
+   43:    61:     console.log('Rendering UserPayeeReportsLanding');
+   44:    64:     console.log('Rendering SystemComplianceReportsLanding');
+   45:   116:   console.log('Rendering default ReportsLanding');
+   46  
+   47  admin/cbp/src/components/bill-pay/reports/components/ReportTableV2.tsx:
+   48:   131:     console.log('ReportTableV2 props updated:', { 
+   49:   153:         console.log('Sort operation complete with data update, setting isSorting to false');
+   50:   166:         console.log('Sort timeout reached, forcing isSorting to false');
+   51:   172:         console.log('Click captured during sorting, preventing default');
+   52:   197:     console.log('Component mount effect running, setting isInitialized to true');
+   53:   200:       console.log('Component unmounting');
+   54:   206:     console.log('pageSize changed to:', pageSize);
+   55:   210:     console.log('isInitialized changed to:', isInitialized);
+   56:   215:     console.log('Pagination state updated:', { pageSize, isInitialized, hasPagination: !!pagination });
+   57:   227:       console.log('Sort operation already in progress, ignoring click');
+   58:   231:     console.log('Starting sort operation for column:', columnKey);
+   59:   248:       console.log('Set isSorting to true, latestSortRef updated:', latestSortRef.current);
+   60:   365:         console.log(`Fetching page ${page} of ${totalPages} for export`);
+   61:   367:           console.log('Export cancelled by user');
+   62:   434:   console.log('ReportTableV2 render:', { 
+   63:   449:     console.log('handleChangeRowsPerPage called with new size:', newPageSize);
+   64:   456:       console.log('Page size changed, resetting to page 1 with new size:', newPageSize);
+   65:   487:           console.log('Fetching all data for CSV export...');
+   66:   489:           console.log(`Received ${allData.length} records for export`);
+   67:   494:             console.log(`Limiting export to ${exportOptions.maxRecords} records`);
+   68:   502:           console.log('Falling back to current page data for export');
+   69:   751:           {console.log('Rendering TablePagination with:', { 
+   70  
+   71  admin/cbp/src/components/bill-pay/reports/components/TestHarness.tsx:
+   72:   109:     console.log(`Adding log: ${message}`);
+   73:   112:       console.log('Updated log messages:', newMessages);
+   74:   119:     console.log('Initializing test harness');
+   75:   125:     console.log(`Sort changed to ${newSortColumn} ${newSortDirection}`);
+   76:   153:     console.log(`Sorting data by ${column} ${direction}`);
+   77:   192:     console.log('Sorted data:', sorted);
+   78:   214:     console.log(`Applying controlled values: ${sortColumn} ${sortDirection}`);
+   79:   221:     console.log(`Page/size changed to page=${newPage}, size=${newPageSize}`, { 
+   80:   240:     console.log('Updating paginated data with new page/size');
+   81:   246:     console.log('updatePaginatedData called with:', { currentPage, currentPageSize, dataLength: data.length });
+   82:   250:     console.log(`Paginating data: page ${currentPage}, size ${currentPageSize}, items ${paginatedItems.length}`, {
+   83:   318:               // {console.log('Rendering ReportTableV2 with:', { 
+   84  
+   85  admin/cbp/src/components/bill-pay/reports/reports/ActiveUserCountReport.tsx:
+   86:    68:     console.log('Sort change:', { newColumn, newDirection });
+   87:    97:     console.log('Making API call with params:', params);
+   88:   105:         console.log('API response received:', { 
+   89  
+   90  admin/cbp/src/components/bill-pay/reports/reports/ErrorRecapReport.tsx:
+   91:    61:     console.log('Sort change:', { newSortColumn, newDirection });
+   92:   176:     console.log('Making API call with params:', params);
+   93:   184:         console.log('API response received:', { 
+   94  
+   95  admin/cbp/src/components/bill-pay/reports/reports/FailedOnUsReport.tsx:
+   96:    88:     console.log('Sort change:', { newSortColumn, newSortDirection });
+   97:   129:     console.log('Making API call with params:', params);
+   98:   137:         console.log('API response received:', { 
+   99  
+  100  admin/cbp/src/components/bill-pay/reports/reports/GlobalHolidaysReport.tsx:
+  101:    90:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  102:   105:     console.log('Making API call with params:', params);
+  103:   116:         console.log('API response received:', { 
+  104  
+  105  admin/cbp/src/components/bill-pay/reports/reports/LargePaymentReport.tsx:
+  106:   132:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  107:   157:     console.log('Making API call with params:', params);
+  108:   165:         console.log('API response received:', { 
+  109  
+  110  admin/cbp/src/components/bill-pay/reports/reports/MonthlyUsersReport.tsx:
+  111:    80:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  112:   103:     console.log('Making API call with params:', params);
+  113:   114:         console.log('API response received:', { 
+  114  
+  115  admin/cbp/src/components/bill-pay/reports/reports/OFACExceptionsReport.tsx:
+  116:   285:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  117:   316:     console.log('Making API call with params:', params);
+  118:   324:         console.log('API response received:', { 
+  119  
+  120  admin/cbp/src/components/bill-pay/reports/reports/OnUsPostingsReport.tsx:
+  121:   143:       console.log('Date parameters:', {
+  122:   238:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  123:   272:     console.log('Making API call with params:', params);
+  124:   280:         console.log('API response received:', { 
+  125  
+  126  admin/cbp/src/components/bill-pay/reports/reports/PayeeReport.tsx:
+  127:    92:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  128:   149:     console.log('Making API call with params:', params);
+  129:   157:         console.log('API response received:', { 
+  130  
+  131  admin/cbp/src/components/bill-pay/reports/reports/PaymentActivityReport.tsx:
+  132:    67:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  133:   119:     console.log('Making API call with params:', params);
+  134:   127:         console.log('API response received:', { 
+  135:   329:       console.log('Running report with parameters:', params);
+  136  
+  137  admin/cbp/src/components/bill-pay/reports/reports/PaymentClearReport.tsx:
+  138:   117:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  139:   174:     console.log('Making API call with params:', params);
+  140:   182:         console.log('API response received:', { 
+  141  
+  142  admin/cbp/src/components/bill-pay/reports/reports/PaymentReport.tsx:
+  143:   119:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  144:   209:     console.log('Making API call with params:', params);
+  145:   217:         console.log('API response received:', { 
+  146  
+  147  admin/cbp/src/components/bill-pay/reports/reports/PendingPaymentsReport.tsx:
+  148:   156:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  149:   175:     console.log('Making API call with params:', params);
+  150:   183:         console.log('API response received:', { 
+  151  
+  152  admin/cbp/src/components/bill-pay/reports/reports/ProcessingConfirmationReport.tsx:
+  153:   101:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  154:   132:     console.log('Making API call with params:', params);
+  155:   140:         console.log('API response received:', { 
+  156  
+  157  admin/cbp/src/components/bill-pay/reports/reports/RecurringPaymentChangeHistoryReport.tsx:
+  158:   216:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  159:   265:     console.log('Making API call with params:', params);
+  160:   273:         console.log('API response received:', { 
+  161  
+  162  admin/cbp/src/components/bill-pay/reports/reports/RecurringPaymentReport.tsx:
+  163:   119:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  164:   199:     console.log('Making API call with params:', params);
+  165:   207:         console.log('API response received:', { 
+  166  
+  167  admin/cbp/src/components/bill-pay/reports/reports/ScheduledPaymentChangeHistoryReport.tsx:
+  168:   128:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  169:   174:     console.log('Making API call with params:', params);
+  170:   182:         console.log('API response received:', { 
+  171  
+  172  admin/cbp/src/components/bill-pay/reports/reports/StatusesWithNotificationsReport.tsx:
+  173:   183:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  174:   201:     console.log('Making API call with params:', params);
+  175:   209:         console.log('API response received:', { 
+  176  
+  177  admin/cbp/src/components/bill-pay/reports/reports/SuspendedPaymentReport.tsx:
+  178:   312:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  179:   329:     console.log('Making API call with params:', params);
+  180:   337:         console.log('API response received:', { 
+  181:   369:       console.log('Running report with params:', params);
+  182:   375:       console.log('API response received:', { 
+  183:   411:     console.log('Sort parameters changed:', { sortColumn, sortDirection });
+  184  
+  185  admin/cbp/src/components/bill-pay/reports/reports/UserPayeeChangeHistoryReport.tsx:
+  186:   188:       console.log(`Page size changed from ${pageSize} to ${newPageSize}`);
+  187:   311:               console.log('Sort change:', { newColumn, newDirection });
+  188:   352:               console.log('Making API call with params:', params);
+  189:   360:                   console.log('API response received:', { 
+  190  
+  191  admin/cbp/src/components/bill-pay/reports/reports/UserPayeeReport.tsx:
+  192:   207:     console.log('Sort change:', { newSortColumn, newSortDirection });
+  193:   274:     console.log('Making API call with params:', params);
+  194:   282:         console.log('API response received:', { 
+  195  
+  196  admin/cbp/src/components/bill-pay/settings/NotificationTemplates.tsx:
+  197:   153:       console.log('Editing notification with matchMode:', notification.matchMode);
+  198:   224:     console.log('Opening delete dialog with notification:', notification);
+  199:   247:     console.log('Delete dialog state set to:', {
+  200:   269:       console.log('Deleting notification with ID:', notificationId);
+  201:   287:       console.log(`Calling deleteNotification with ID: "${trimmedId}"`);
+  202:   516:                             console.log('Delete button clicked for notification:', notification);
+  203:   775:               console.log('Delete button clicked with ID:', deleteDialog.notificationId);
+  204  
+  205  admin/cbp/src/components/client-management/ClientInformation.tsx:
+  206:   115:       console.log('Updating client with data:', clientUpdate);
+  207  
+  208  admin/cbp/src/components/client-management/ClientManagement.tsx:
+  209:    85:   console.log('=== ClientManagement Debug Start ===');
+  210:    86:   console.log('Props:', { clientId });
+  211:    87:   console.log('Current location:', location.pathname);
+  212:    88:   console.log('Current tab:', activeTab);
+  213:   115:     console.log('Getting current tab for path:', path);
+  214:   118:     console.log('Path analysis:', { segments });
+  215:   139:     console.log('Tab change:', { newValue, basePath });
+  216  
+  217  admin/cbp/src/components/client-management/Groups.tsx:
+  218:   103:     console.log('loadGroups called with clientId: %d', clientId);
+  219:   106:       console.log('Setting loading state to true');
+  220:   108:       console.log('About to call permissionService.getGroups');
+  221:   109:       console.log('permissionService object:', permissionService);
+  222:   113:       console.log('Response from getGroups:', response);
+  223:   114:       console.log('Groups data type:', Array.isArray(response.groups) ? 'array' : typeof response.groups);
+  224:   134:         console.log('Extracted nested groups array with length:', groupsArray.length);
+  225:   138:         console.log('Response groups is an array with length:', groupsArray.length);
+  226:   140:         console.log('Response groups is an object with keys:', Object.keys(typedResponse.groups));
+  227:   146:           console.log('Extracted array from first value with length:', groupsArray.length);
+  228:   150:           console.log('Converted object to array with length:', groupsArray.length);
+  229:   153:         console.log('Could not process response.groups, defaulting to empty array');
+  230:   192:       console.log('First 3 items in groupsArray:');
+  231:   194:         console.log(`Item ${i}:`, groupsArray[i]);
+  232:   203:         console.log('No duplicate IDs found in groups array');
+  233:   206:       console.log('Processed groups array:', groupsArray);
+  234:   521:     console.log('useEffect called to load Groups, Users, and Roles');
+  235:   525:         console.log('Loading users');
+  236:   527:         console.log('Users loaded, now loading roles');
+  237:   529:         console.log('Roles loaded, now loading groups');
+  238:   531:         console.log('All data loaded successfully');
+  239  
+  240  admin/cbp/src/components/client-management/wrappers/ClientManagementWrapper.tsx:
+  241:   17:   console.log('=== ClientManagementWrapper Debug Start ===');
+  242:   18:   console.log('Current location:', location.pathname);
+  243:   19:   console.log('URL params:', { clientId });
+  244:   20:   console.log('Search params:', location.search);
+  245:   21:   console.log('Route state:', location.state);
+  246:   32:     console.log('Decoded client ID:', decodedClientId);
+  247:   36:     console.log('Path analysis:', { basePath, currentPath });
+  248:   39:       console.log('At root path, redirecting to info');
+  249  
+  250  admin/cbp/src/components/client-management/wrappers/UserEditWrapper.tsx:
+  251:   18:   console.log('=== UserEditWrapper Debug Start ===');
+  252:   19:   console.log('Route params:', { clientId, userId });
+  253:   30:         console.log('Loading user data:', { decodedClientId, decodedUserId });
+  254:   78:     console.log('Navigating back to users list');
+  255  
+  256  admin/cbp/src/components/client-management/wrappers/UsersWrapper.tsx:
+  257:   12:   console.log('🔄 UsersWrapper mounted');
+  258:   19:   console.log('=== UsersWrapper Debug Start ===');
+  259:   20:   console.log('Current location:', location.pathname);
+  260:   21:   console.log('Route params:', { clientId, userId });
+  261:   23:     console.log('🔄 UsersWrapper location changed:', location.pathname);
+  262:   26:     console.log('🔄 UsersWrapper userId changed:', userId);
+  263:   30:       console.log('🔄 UsersWrapper decoding clientId:', clientId);
+  264:   32:       console.log('Successfully decoded clientId:', { encoded: clientId, decoded });
+  265:   43:     console.log('🔄 UsersWrapper.handleClose - About to navigate');
+  266:   44:     console.log('Current URL:', window.location.href);
+  267:   45:     console.log('Navigating to:', `/admin/client-management/edit/${clientId}/users`);
+  268:   60:     console.log('📝 Rendering UserEditWrapper with userId:', userId);
+  269:   65:   console.log('📋 Rendering Users list');
+  270  
+  271  admin/cbp/src/components/common/ClientSelector.tsx:
+  272:   22:   console.log('[ClientSelector] Rendering with:', {
+  273:   31:     console.log('[ClientSelector] WARNING: No available clients to display in dropdown');
+  274:   33:     console.log('[ClientSelector] Available clients:', 
+  275:   44:     console.log('[ClientSelector] Not rendering because:', { isAdmin, usesClientApi });
+  276:   50:     console.log(`[ClientSelector] Selected client changed to ID: ${clientId}`);
+  277  
+  278  admin/cbp/src/components/development/DevelopmentHeader.tsx:
+  279:   17:   console.log("All routes:", allRoutes);
+  280:   19:     console.log("Checking route:", route);
+  281:   25:   console.log("Development routes:", devRoutes);
+  282  
+  283  admin/cbp/src/components/navigation/SidebarItem.tsx:
+  284:   32:     console.log('[SidebarItem] Checking active state:', {
+  285:   42:     console.log('[SidebarItem] Active state changed:', {
+  286:   51:     console.log('[SidebarItem] Item clicked:', {
+  287  
+  288  admin/cbp/src/config/api.config.ts:
+  289:   72:   console.log(`[shouldUseMockService] Checking if ${serviceName} should use mock:`, {
+  290  
+  291  admin/cbp/src/config/host.config.ts:
+  292:    46:       console.log(`Using hostname override: ${hostnameParam}`);
+  293:    52:   console.log('[getCurrentHostname] Raw hostname:', currentHostname);
+  294:    53:   console.log('[getCurrentHostname] Full URL:', window.location.href);
+  295:    54:   console.log('[getCurrentHostname] Protocol:', window.location.protocol);
+  296:    65:     console.log('[initializeClientConfigs] Environment:', process.env.NODE_ENV);
+  297:    66:     console.log('[initializeClientConfigs] Base URL:', window.location.origin);
+  298:    67:     console.log('[initializeClientConfigs] Full URL:', window.location.href);
+  299:    72:     console.log('[initializeClientConfigs] Loading from:', window.location.origin + configPath);
+  300:    84:     console.log('[initializeClientConfigs] Successfully loaded client configuration');
+  301:    88:       console.log('[initializeClientConfigs] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
+  302:   129:   console.log('[getCurrentClientConfig] Looking up config for hostname:', hostname);
+  303:   150:   console.log('[getCurrentClientConfig] Found config:', {
+  304:   180:     console.log('[getTenantFromHostname] Current client config:', {
+  305:   213:   console.log('[getAdminApiUrl] Getting admin API URL...');
+  306:   215:   console.log('[getAdminApiUrl] Using config:', {
+  307:   221:   console.log('[getAdminApiUrl] Resolved admin API URL:', config.adminApiUrl);
+  308:   229:   console.log('[getClientApiUrl] Getting client API URL...');
+  309:   239:     console.log(`[getClientApiUrl] Found selected client ID: ${clientId}, looking for key: ${key}`);
+  310:   243:       console.log('[getClientApiUrl] Using selected client config:', {
+  311:   248:       console.log('[getClientApiUrl] Resolved client API URL:', selectedClientConfig.clientApiUrl);
+  312:   255:   console.log('[getClientApiUrl] Using hostname-based config:', {
+  313:   260:   console.log('[getClientApiUrl] Resolved client API URL:', config.clientApiUrl);
+  314:   295:       console.log(`[getSponsorId] No client configuration found for ID ${clientId} in environment ${currentEnvironment}`);
+  315:   301:   console.log(`[getSponsorId] Using configuration from ${source}:`, {
+  316  
+  317  admin/cbp/src/context/AuthContext.tsx:
+  318:    39:       console.log('AuthContext: Processing roles from login response:', {
+  319:    47:       console.log('AuthContext: Setting forcePasswordChange flag:', forcePasswordChange);
+  320:   151:     console.log('AuthContext: Updating forcePasswordChange flag to:', value);
+  321  
+  322  admin/cbp/src/context/ClientContext.tsx:
+  323:    38:     console.log(`[Client Context] Admin status: ${adminStatus}`);
+  324:    42:     console.log('[Client Context] Current client config:', {
+  325:    53:       console.log(`[Client Context] Current environment: ${currentEnvironment}`);
+  326:    56:       console.log(`[Client Context] Total available clients before filtering: ${Object.keys(CLIENT_CONFIGS_BY_HOSTNAME).length}`);
+  327:    63:       console.log('[Client Context] Available environments:', Array.from(environments));
+  328:    69:         console.log(`[Client Context] Evaluating client: ${client.name}`, {
+  329:    89:           console.log(`[Client Context] Added client to filtered list: ${client.name} with key ${key}`);
+  330:    93:       console.log(`[Client Context] Filtered ${Object.keys(filteredClients).length} clients for environment: ${currentEnvironment}`);
+  331:    96:       console.log('[Client Context] Filtered clients:', Object.values(filteredClients).map(c => ({ 
+  332:   108:         console.log('[Client Context] Using persisted client ID:', persistedClientId);
+  333:   117:           console.log('[Client Context] Using saved client ID from sessionStorage:', clientId);
+  334:   122:           console.log('[Client Context] Using default client ID from hostname:', currentClient.clientId);
+  335:   130:       console.log('[Client Context] Client user - using host client ID:', currentClient.clientId);
+  336:   135:     console.log(`[Client Context] Setting selected client ID: ${clientId}`);
+  337:   149:         console.log(`[Client Context] Selected client with environment match: ${client.name}, Environment: ${client.environment}`);
+  338:   154:         console.log(`[Client Context] Selected client from available clients: ${client.name}, Environment: ${client.environment}`);
+  339:   157:         console.log(`[Client Context] Warning: Selected client ID ${clientId} not found in available clients or environment-specific lookup`);
+  340:   161:       console.log('[Client Context] Cleared selected client');
+  341  
+  342  admin/cbp/src/hooks/useClientApi.ts:
+  343:   15:     console.log(`[useClientApi] Setting usesClientApi to: ${usesClientApi}`);
+  344:   22:       console.log('[useClientApi] Cleanup - setting usesClientApi to false');
+  345  
+  346  admin/cbp/src/hooks/usePermissions.ts:
+  347:   126:       console.log(`[usePermissions] Checking admin permissions for ${resourceId}:`, {
+  348:   133:         console.log(`[usePermissions] Admin access granted for ${resourceId} via role:`, 
+  349:   167:       console.log(`[usePermissions] Checking regular permissions for ${resourceId}:`, {
+  350:   175:         console.log(`[usePermissions] Access denied for ${resourceId} - missing all required permissions`);
+  351:   186:         console.log(`[usePermissions] Access denied for ${resourceId} - missing any required permission`);
+  352:   196:       console.log(`[usePermissions] Regular permission access granted for ${resourceId}`);
+  353  
+  354  admin/cbp/src/routes/index.tsx:
+  355:   48:   console.log(`Processing route ${route.id} with path ${route.path} -> ${fullPath}`);
+  356:   78:     console.log(`Processing section: ${sectionId}`);
+  357:   79:     console.log('Section routes before processing:', JSON.stringify(section.routes, null, 2));
+  358:   82:       console.log('Processing route:', JSON.stringify(route, null, 2));
+  359:   86:     console.log('Section routes after processing:', JSON.stringify(sectionRoutes, null, 2));
+  360  
+  361  admin/cbp/src/services/factory/ServiceFactory.ts:
+  362:    65:     console.log('ServiceFactory initialized - services will be created on demand');
+  363:    84:     console.log('[ServiceFactory] Creating UserService instance');
+  364:    91:     console.log('[ServiceFactory] Creating ClientService instance');
+  365:    98:     console.log('[ServiceFactory] Creating BillPayService instance');
+  366:   105:     console.log('[ServiceFactory] Creating AuthService instance');
+  367:   112:     console.log('[ServiceFactory] Creating SecurityService instance');
+  368:   119:     console.log('[ServiceFactory] Creating NotificationService instance');
+  369:   126:     console.log('[ServiceFactory] Creating ExceptionService instance');
+  370:   133:     console.log('[ServiceFactory] Creating FISExceptionService instance');
+  371:   140:     console.log('[ServiceFactory] Creating GlobalPayeeService instance');
+  372:   147:     console.log('[ServiceFactory] Creating PayeeService instance');
+  373:   154:     console.log('[ServiceFactory] Creating PaymentProcessorService instance');
+  374:   161:     console.log('[ServiceFactory] Creating PaymentService instance');
+  375:   168:     console.log('[ServiceFactory] Creating ReportService instance');
+  376:   175:     console.log('[ServiceFactory] Creating CalendarService instance with URL:', ServiceFactory.getAdminCuEndpoint('/api/v1/Calendar'));
+  377:   182:     console.log('[ServiceFactory] Creating PermissionService instance');
+  378:   189:     console.log('[ServiceFactory] Creating DashboardService instance');
+  379:   196:     console.log('[ServiceFactory] Creating ConfigurationService instance');
+  380:   203:     console.log('[ServiceFactory] Creating ClientLoginSecurityService instance');
+  381  
+  382  admin/cbp/src/services/implementations/mock/MockBillPayService.ts:
+  383:   201:         console.log(`Sending OTP via ${method} to ${destination}`);
+  384  
+  385  admin/cbp/src/services/implementations/mock/MockNotificationService.ts:
+  386:   78:         console.log(`Mock: Sending notification for status code ${request.statusCode}`);
+  387:   84:         console.log(`Mock: Sending customer notification for payment ${request.paymentID} with status code ${request.statusCode}`);
+  388  
+  389  admin/cbp/src/services/implementations/mock/MockSecurityService.ts:
+  390:    9:         console.log('MockSecurityService initialized with path:', basePath);
+  391:   15:         console.log('MockSecurityService.getSecuritySettings called');
+  392:   16:         console.log('Returning settings:', this.settings);
+  393:   21:         console.log('MockSecurityService.updateSecuritySettings called with:', settings);
+  394:   26:         console.log('Updated settings:', this.settings);
+  395  
+  396  admin/cbp/src/services/implementations/mock/data/billpay/dashboard.ts:
+  397:    30:   console.log('Generating Mock Dashboard Stats:', { timeframe });
+  398:    73:   console.log('Date Range:', {
+  399:   156:   console.log('Generated Stats:', {
+  400  
+  401  admin/cbp/src/services/implementations/real/PermissionService.ts:
+  402:   18:     console.log('PermissionService initialized with base path:', basePath);
+  403:   48:       console.log('Calling getGroups with params:', params);
+  404:   50:       console.log('Groups response:', groups);
+  405  
+  406  admin/cbp/src/utils/logger.ts:
+  407:   39:           console.log(`Logger initialized with IP: ${Logger.userIP}, logging enabled: ${Logger.loggingEnabled}`);
+  408:   86:    * @param args Arguments to log, same as console.log
+  409:   94:       console.log(...args);
+  410:   95:       console.log(this.formatLogEntry(args));
+  411  
+  412  admin/cbp/src/utils/reports/errorRecap.ts:
+  413:   145:     console.log('ErrorRecap request parameters:', requestParams);
+  414  
+  415  admin/cbp/src/utils/reports/ofacExceptions.ts:
+  416:   159:     console.log('OFAC Exceptions request parameters:', requestParams);
+  417  
+  418  admin/cbp/src/utils/reports/paymentActivity.ts:
+  419:   178:   console.log('Payment Activity Request:', request);
+  420:   179:   console.log('Sort parameters being sent to API:', { 
+  421  
+  422  admin/cbp/src/utils/reports/suspendedPayment.ts:
+  423:   98:     console.log('Suspended Payment request parameters:', requestParams);
+
+admin/cbp/src/components/bill-pay/reports/reports/ErrorRecapReport.tsx:
+  193        .catch(error => {
+  194:         console.error('Error sorting report:', error);
+  195          setError('Failed to sort report. Please try again.');
+
+  312      } catch (err) {
+  313:       console.error('Error running error recap report:', err);
+  314        setError('Failed to load error recap data. Please try again.');
+
+admin/cbp/src/components/bill-pay/reports/reports/FailedOnUsReport.tsx:
+  146        .catch(error => {
+  147:         console.error('Error sorting report:', error);
+  148          setError('Failed to sort report. Please try again.');
+
+  198      } catch (err) {
+  199:       console.error('Error fetching Failed On Us data:', err);
+  200        setError(err instanceof Error ? err.message : 'An error occurred while fetching the report');
+
+admin/cbp/src/components/bill-pay/reports/reports/GlobalHolidaysReport.tsx:
+  126        .catch(error => {
+  127:         console.error('Error sorting report:', error);
+  128          setError('Failed to sort report. Please try again.');
+
+  171      } catch (err) {
+  172:       console.error('Error fetching Global Holidays report:', err);
+  173        setError('Failed to fetch report data. Please try again.');
+
+  246      } catch (error) {
+  247:       console.error('Error fetching global holidays data for export:', error);
+  248        throw error;
+
+admin/cbp/src/components/bill-pay/reports/reports/LargePaymentReport.tsx:
+  172        .catch(error => {
+  173:         console.error('Error sorting report:', error);
+  174          setError(error instanceof Error ? error.message : 'Failed to sort report. Please try again.');
+
+admin/cbp/src/components/bill-pay/reports/reports/MonthlyUsersReport.tsx:
+  123        .catch(error => {
+  124:         console.error('Error sorting report:', error);
+  125          setError('Failed to sort report. Please try again.');
+
+  176      } catch (err) {
+  177:       console.error('Error fetching Monthly Users report:', err);
+  178        setError('Failed to fetch report data. Please try again.');
+
+admin/cbp/src/components/bill-pay/reports/reports/OFACExceptionsReport.tsx:
+  333        .catch(error => {
+  334:         console.error('Error sorting report:', error);
+  335          enqueueSnackbar('Failed to sort report. Please try again.', { variant: 'error' });
+
+  416      } catch (error) {
+  417:       console.error('Error running OFAC exceptions report:', error);
+  418        enqueueSnackbar('Failed to run report. Please try again.', { variant: 'error' });
+
+admin/cbp/src/components/bill-pay/reports/reports/OnUsPostingsReport.tsx:
+  287        .catch(error => {
+  288:         console.error('Error sorting report:', error);
+  289          setError('Failed to sort report. Please try again.');
+
+admin/cbp/src/components/bill-pay/reports/reports/PayeeReport.tsx:
+  166        .catch((error: any) => {
+  167:         console.error('Error sorting report:', error);
+  168          setError('Failed to sort report. Please try again.');
+
+  248      } catch (err) {
+  249:       console.error('Error fetching payee report:', err);
+  250        setError('Failed to fetch payee report. Please try again.');
+
+admin/cbp/src/components/bill-pay/reports/reports/PaymentActivityReport.tsx:
+  135        .catch(error => {
+  136:         console.error('Error sorting report:', error);
+  137          setError('Failed to sort report. Please try again.');
+
+  230      } catch (err) {
+  231:       console.error('Error running payment activity report:', err);
+  232        setError('Failed to load payment activity data. Please try again.');
+
+  359      } catch (err) {
+  360:       console.error('Error running payment activity report:', err);
+  361        setError('Failed to load payment activity data. Please try again.');
+
+admin/cbp/src/components/bill-pay/reports/reports/PaymentClearReport.tsx:
+  100        setError('Failed to load payment clear data. Please try again.');
+  101:       console.error('Error fetching payment clear data:', err);
+  102      } finally {
+
+  189        .catch((error: any) => {
+  190:         console.error('Error sorting report:', error);
+  191          setError('Failed to sort report. Please try again.');
+
+admin/cbp/src/components/bill-pay/reports/reports/PaymentReport.tsx:
+  102        setError('Failed to load payment data. Please try again.');
+  103:       console.error('Error fetching payment data:', err);
+  104      } finally {
+
+  224        .catch((error: any) => {
+  225:         console.error('Error sorting report:', error);
+  226          setError('Failed to sort report. Please try again.');
+
+  288      } catch (error) {
+  289:       console.error('Error fetching payment data for export:', error);
+  290        throw error;
+
+admin/cbp/src/components/bill-pay/reports/reports/PendingPaymentsReport.tsx:
+  191        .catch(error => {
+  192:         console.error('Error sorting report:', error);
+  193          setError(error instanceof Error ? error.message : 'Failed to sort report. Please try again.');
+
+  224      } catch (error) {
+  225:       console.error('Error fetching pending payments data for export:', error);
+  226        throw error;
+
+admin/cbp/src/components/bill-pay/reports/reports/ProcessingConfirmationReport.tsx:
+   84        setError('Failed to load processing confirmation data. Please try again.');
+   85:       console.error('Error fetching processing confirmation data:', err);
+   86      } finally {
+
+  147        .catch(error => {
+  148:         console.error('Error sorting report:', error);
+  149          setError('Failed to sort report. Please try again.');
+
+  190      } catch (error) {
+  191:       console.error('Error fetching processing confirmation data for export:', error);
+  192        throw error;
+
+admin/cbp/src/components/bill-pay/reports/reports/RecurringPaymentChangeHistoryReport.tsx:
+  281        .catch(error => {
+  282:         console.error('Error sorting report:', error);
+  283          setError(error instanceof Error ? error.message : 'Failed to sort report. Please try again.');
+
+  338      } catch (error) {
+  339:       console.error('Error fetching recurring payment change history data for export:', error);
+  340        throw error;
+
+admin/cbp/src/components/bill-pay/reports/reports/RecurringPaymentReport.tsx:
+  102        setError('Failed to load recurring payment data. Please try again.');
+  103:       console.error('Error fetching recurring payment data:', err);
+  104      } finally {
+
+  214        .catch((error: any) => {
+  215:         console.error('Error sorting report:', error);
+  216          setError('Failed to sort report. Please try again.');
+
+  278      } catch (error) {
+  279:       console.error('Error fetching recurring payment data for export:', error);
+  280        throw error;
+
+admin/cbp/src/components/bill-pay/reports/reports/ScheduledPaymentChangeHistoryReport.tsx:
+  111        setError('Failed to load scheduled payment change history data. Please try again.');
+  112:       console.error('Error fetching scheduled payment change history data:', err);
+  113      } finally {
+
+  189        .catch(error => {
+  190:         console.error('Error sorting report:', error);
+  191          setError('Failed to sort report. Please try again.');
+
+  251      } catch (error) {
+  252:       console.error('Error fetching scheduled payment change history data for export:', error);
+  253        throw error;
+
+admin/cbp/src/components/bill-pay/reports/reports/SettlementSummaryReport.tsx:
+  183      } catch (error) {
+  184:       console.error('Error fetching settlement summary report:', error);
+  185        enqueueSnackbar('Failed to fetch settlement summary report. Please try again.', { variant: 'error' });
+
+admin/cbp/src/components/bill-pay/reports/reports/StatusesWithNotificationsReport.tsx:
+  216        .catch(error => {
+  217:         console.error('Error sorting report:', error);
+  218          setError(error instanceof Error ? error.message : 'Failed to sort report. Please try again.');
+
+  247      } catch (error) {
+  248:       console.error('Error fetching statuses with notifications data for export:', error);
+  249        throw error;
+
+admin/cbp/src/components/bill-pay/reports/reports/SuspendedPaymentReport.tsx:
+  346        .catch(error => {
+  347:         console.error('Error sorting report:', error);
+  348          enqueueSnackbar('Failed to sort report. Please try again.', { variant: 'error' });
+
+  385      } catch (error) {
+  386:       console.error('Error running Suspended Payment report:', error);
+  387        enqueueSnackbar('Failed to run report. Please try again.', { variant: 'error' });
+
+admin/cbp/src/components/bill-pay/reports/reports/UserPayeeChangeHistoryReport.tsx:
+  367                  .catch(error => {
+  368:                   console.error('Error sorting report:', error);
+  369                    setError(error instanceof Error ? error.message : 'Failed to sort report. Please try again.');
+
+admin/cbp/src/components/bill-pay/reports/reports/UserPayeeReport.tsx:
+  186        setError('Failed to load user payee data. Please try again.');
+  187:       console.error('Error fetching user payee data:', err);
+  188      } finally {
+
+  289        .catch((error: any) => {
+  290:         console.error('Error sorting report:', error);
+  291          setError('Failed to sort report. Please try again.');
+
+  361      } catch (error) {
+  362:       console.error('Error fetching user payee data for export:', error);
+  363        throw error;
+
+admin/cbp/src/components/bill-pay/settings/Holidays.tsx:
+  111      } catch (error) {
+  112:       console.error('Error deleting holiday:', error);
+  113        setError('Failed to delete holiday. Please try again.');
+
+admin/cbp/src/components/bill-pay/settings/NotificationTemplates.tsx:
+  226      if (!notification || !notification.id) {
+  227:       console.error('Cannot open delete dialog: Missing notification or notification ID');
+  228        setError('Cannot delete notification: Missing notification ID');
+
+  293      } catch (err: unknown) {
+  294:       console.error('Delete error:', err);
+  295        setError(err instanceof Error ? err.message : 'Failed to delete notification');
+
+admin/cbp/src/components/client-management/Groups.tsx:
+  183        if (groupsWithoutIds.length > 0) {
+  184:         console.error('Found groups without IDs:', groupsWithoutIds);
+  185        }
+
+  187        if (groupsWithZeroIds.length > 0) {
+  188:         console.warn('Found groups with ID=0:', groupsWithZeroIds);
+  189        }
+
+  195          if (Array.isArray(groupsArray[i])) {
+  196:           console.warn(`Item ${i} is itself an array!`);
+  197          }
+
+  200        if (duplicateIds.length > 0) {
+  201:         console.error('Found duplicate IDs in groups array:', duplicateIds);
+  202        } else {
+
+  532        } catch (error) {
+  533:         console.error('Error loading data:', error);
+  534        }
+
+admin/cbp/src/components/client-management/security/SecuritySettings.tsx:
+  45      } catch (err) {
+  46:       console.error('Error loading security settings:', err);
+  47        const message = err instanceof Error ? err.message : 'Failed to load security settings';
+
+admin/cbp/src/components/client-management/users/UserForm.tsx:
+  134      } catch (error: any) {
+  135:       console.error('Error saving user:', error);
+  136        
+
+  189            } catch (parseError) {
+  190:             console.error('Error parsing payload:', parseError);
+  191            }
+
+  199        } catch (parseError) {
+  200:         console.error('Error parsing error response:', parseError);
+  201        }
+
+admin/cbp/src/components/client-management/wrappers/UsersWrapper.tsx:
+  35      } catch (error) {
+  36:       console.error('Failed to decode clientId:', error);
+  37        setError('Invalid client ID');
+
+admin/cbp/src/components/development/APITesting.tsx:
+  121      } catch (error) {
+  122:       console.error('Error loading API spec:', error);
+  123        setError('Failed to load API specification. Please try again later.');
+
+admin/cbp/src/components/layout/Navbar.tsx:
+  58      } catch (error) {
+  59:       console.error('Logout failed:', error);
+  60      }
+
+admin/cbp/src/components/navigation/NavigationSection.tsx:
+  153        } catch (error) {
+  154:         console.error('Error checking permissions:', error);
+  155          setVisibleItems([]);
+
+admin/cbp/src/config/host.config.ts:
+   77      if (xhr.status !== 200) {
+   78:       console.error('[initializeClientConfigs] Failed to load client configuration');
+   79:       console.error('Status:', xhr.status, xhr.statusText);
+   80:       console.error('Response:', xhr.responseText);
+   81        throw new Error(`Failed to load client configuration: ${xhr.status} ${xhr.statusText}`);
+
+   89      } else {
+   90:       console.error('[initializeClientConfigs] Invalid configuration format');
+   91        throw new Error('Invalid client configuration format');
+
+  102    } catch (error) {
+  103:     console.error('[initializeClientConfigs] Error loading client configuration:', error);
+  104      // Display critical error to user
+
+  120  } catch (error) {
+  121:   console.error('Failed to initialize client configuration:', error);
+  122  }
+
+  133      const errorMessage = `No configuration found for hostname: ${hostname}`;
+  134:     console.error('[getCurrentClientConfig] Error:', errorMessage);
+  135:     console.error('[getCurrentClientConfig] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
+  136      
+
+  188      if (config.tenantId === undefined || config.tenantId === null) {
+  189:       console.error('[getTenantFromHostname] No tenant ID found in client configuration');
+  190:       console.error('[getTenantFromHostname] Full config:', config);
+  191        throw new Error('No tenant ID found in client configuration');
+
+  195    } catch (error) {
+  196:     console.error('[getTenantFromHostname] Error getting tenant ID:', error);
+  197:     console.error('[getTenantFromHostname] Available hostnames:', Object.keys(CLIENT_CONFIGS_BY_HOSTNAME));
+  198      throw error;
+
+admin/cbp/src/hooks/useRecordName.ts:
+  25        if (!isValidEncodedId(encodedId)) {
+  26:         console.warn('Invalid encoded ID format:', encodedId);
+  27          return null;
+
+  31        if (!clientId) {
+  32:         console.warn('Failed to decode client ID:', encodedId);
+  33          return null;
+
+  46  
+  47:       console.warn('Client not found:', clientId);
+  48        return null;
+  49      } catch (error) {
+  50:       console.error('Error fetching client name:', error);
+  51        setCachedNames(prev => ({
+
+  61        if (!isValidEncodedId(encodedId)) {
+  62:         console.warn('Invalid encoded user ID format:', encodedId);
+  63          return null;
+
+  67        if (!userId) {
+  68:         console.warn('Failed to decode user ID:', encodedId);
+  69          return null;
+
+  82  
+  83:       console.warn('User not found:', userId);
+  84        return null;
+  85      } catch (error) {
+  86:       console.error('Error fetching user name:', error);
+  87        setCachedNames(prev => ({
+
+admin/cbp/src/services/implementations/mock/data/shared/mockValidation.ts:
+  25      if (rules.required && value === undefined) {
+  26:       console.error(`Required field ${String(key)} is missing`);
+  27        return false;
+
+  33      if (actualType !== rules.type) {
+  34:       console.error(`Field ${String(key)} has wrong type. Expected ${rules.type}, got ${actualType}`);
+  35        return false;
+
+  38      if (rules.validate && !rules.validate(value)) {
+  39:       console.error(`Field ${String(key)} failed custom validation`);
+  40        return false;
+
+admin/cbp/src/services/implementations/real/CalendarService.ts:
+  123      } catch (error) {
+  124:       console.error('Error checking if date is a holiday:', error);
+  125        return false;
+
+admin/cbp/src/services/implementations/real/PermissionService.ts:
+  52      } catch (error) {
+  53:       console.error('Error in getGroups:', error);
+  54        throw error;
+
+admin/cbp/src/utils/logger.ts:
+   41        } catch (error) {
+   42:         console.error('Error getting IP address:', error);
+   43          Logger.loggingEnabled = false;
+
+   45      } catch (error) {
+   46:       console.error('Error loading logging configuration:', error);
+   47        Logger.config = { enabledIPs: [], logLevel: 'error' };
+
+   96      } catch (error) {
+   97:       console.error('Error in log method:', error);
+   98      }
+
+  102     * Log a message at the 'error' level
+  103:    * @param args Arguments to log, same as console.error
+  104     */
+
+  110      try {
+  111:       console.error(...args);
+  112:       console.error(this.formatLogEntry(args));
+  113      } catch (error) {
+  114:       console.error('Error in error method:', error);
+  115      }
+
+  119     * Log a message at the 'warn' level
+  120:    * @param args Arguments to log, same as console.warn
+  121     */
+
+  127      try {
+  128:       console.warn(...args);
+  129:       console.warn(this.formatLogEntry(args));
+  130      } catch (error) {
+  131:       console.error('Error in warn method:', error);
+  132      }
+
+  136     * Log a message at the 'info' level
+  137:    * @param args Arguments to log, same as console.info
+  138     */
+
+  144      try {
+  145:       console.info(...args);
+  146:       console.info(this.formatLogEntry(args));
+  147      } catch (error) {
+  148:       console.error('Error in info method:', error);
+  149      }
+
+admin/cbp/src/utils/performance.ts:
+  15    if (duration > 16) { // 16ms = 60fps threshold
+  16:     console.warn(`[Performance Warning] Operation '${name}' took ${duration.toFixed(2)}ms`);
+  17    }
+
+  33        if (lastMeasurement.duration > 16) {
+  34:         console.warn(`[Performance Warning] Marker '${markerId}' duration: ${lastMeasurement.duration.toFixed(2)}ms`);
+  35        }
+
+  50    const PerformanceTrackedComponent: React.FC<P> = (props) => {
+  51:     console.time(`render-${componentName}`);
+  52      const result = React.createElement(WrappedComponent, props);
+  53:     console.timeEnd(`render-${componentName}`);
+  54      return result;
+
+admin/cbp/src/utils/reports/activeUserCount.ts:
+  137    } catch (error) {
+  138:     console.error('Error fetching active user count data:', error);
+  139      throw error;
+
+admin/cbp/src/utils/reports/errorRecap.ts:
+  149    } catch (error) {
+  150:     console.error('Error fetching error recap report:', error);
+  151      throw error; // Re-throw to allow component to handle the error
+
+admin/cbp/src/utils/reports/ofacExceptions.ts:
+  163    } catch (error) {
+  164:     console.error('Error fetching OFAC exceptions report:', error);
+  165      throw error; // Re-throw to allow component to handle the error
+
+admin/cbp/src/utils/reports/payee.ts:
+  147    } catch (error) {
+  148:     console.error('Error in getPayeeReport:', error);
+  149      throw error;
+
+admin/cbp/src/utils/reports/payment.ts:
+  164    } catch (error) {
+  165:     console.error('Error fetching payment report:', error);
+  166      throw error;
+
+admin/cbp/src/utils/reports/paymentClear.ts:
+  163    } catch (error) {
+  164:     console.error('Error fetching payment clear report:', error);
+  165      throw error;
+
+admin/cbp/src/utils/reports/pendingPayments.ts:
+  94    } catch (error) {
+  95:     console.error('Error fetching pending payments data:', error);
+  96      throw error;
+
+admin/cbp/src/utils/reports/recurringPaymentChangeHistory.ts:
+  109      } catch (error) {
+  110:         console.error('Error fetching recurring payment change history data:', error);
+  111          throw error;
+
+admin/cbp/src/utils/reports/suspendedPayment.ts:
+  102    } catch (error) {
+  103:     console.error('Error fetching suspended payment report:', error);
+  104      throw error; // Re-throw to allow component to handle the error

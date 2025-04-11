@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import {
   Grid,
   TextField,
@@ -89,7 +90,7 @@ const PayeeReport: React.FC = () => {
 
   // Handle sort column change for ReportTableV2
   const handleSortChange = (newSortColumn: PayeeSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -146,7 +147,7 @@ const PayeeReport: React.FC = () => {
         break;
     }
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPage(1);
@@ -154,7 +155,7 @@ const PayeeReport: React.FC = () => {
     // Call API directly with new sort parameters
     getPayeeReport(params)
       .then((response: PayeeItemPagedResponse) => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -164,7 +165,7 @@ const PayeeReport: React.FC = () => {
         setTotalPages(response.totalPages);
       })
       .catch((error: any) => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
       })
       .finally(() => {
@@ -246,7 +247,7 @@ const PayeeReport: React.FC = () => {
       setTotalPages(response.totalPages);
       setPage(response.pageNumber);
     } catch (err) {
-      console.error('Error fetching payee report:', err);
+      logger.error('Error fetching payee report:', err);
       setError('Failed to fetch payee report. Please try again.');
       setReportData([]);
     } finally {

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ServiceFactory } from '../services/factory/ServiceFactory';
 import { decodeId, isValidEncodedId } from '../utils/idEncoder';
+import logger from '../utils/logger';
 
 interface CachedNames {
   clients: Record<string, string | null>;
@@ -23,13 +24,13 @@ export function useRecordName(): UseRecordNameResult {
   const fetchClientName = async (encodedId: string): Promise<string | null> => {
     try {
       if (!isValidEncodedId(encodedId)) {
-        console.warn('Invalid encoded ID format:', encodedId);
+        logger.warn('Invalid encoded ID format:', encodedId);
         return null;
       }
 
       const clientId = decodeId(encodedId);
       if (!clientId) {
-        console.warn('Failed to decode client ID:', encodedId);
+        logger.warn('Failed to decode client ID:', encodedId);
         return null;
       }
 
@@ -44,10 +45,10 @@ export function useRecordName(): UseRecordNameResult {
         return name;
       }
 
-      console.warn('Client not found:', clientId);
+      logger.warn('Client not found:', clientId);
       return null;
     } catch (error) {
-      console.error('Error fetching client name:', error);
+      logger.error('Error fetching client name:', error);
       setCachedNames(prev => ({
         ...prev,
         clients: { ...prev.clients, [encodedId]: null }
@@ -59,13 +60,13 @@ export function useRecordName(): UseRecordNameResult {
   const fetchUserName = async (encodedId: string, clientId: string): Promise<string | null> => {
     try {
       if (!isValidEncodedId(encodedId)) {
-        console.warn('Invalid encoded user ID format:', encodedId);
+        logger.warn('Invalid encoded user ID format:', encodedId);
         return null;
       }
 
       const userId = decodeId(encodedId);
       if (!userId) {
-        console.warn('Failed to decode user ID:', encodedId);
+        logger.warn('Failed to decode user ID:', encodedId);
         return null;
       }
 
@@ -80,10 +81,10 @@ export function useRecordName(): UseRecordNameResult {
         return name;
       }
 
-      console.warn('User not found:', userId);
+      logger.warn('User not found:', userId);
       return null;
     } catch (error) {
-      console.error('Error fetching user name:', error);
+      logger.error('Error fetching user name:', error);
       setCachedNames(prev => ({
         ...prev,
         users: { ...prev.users, [encodedId]: null }

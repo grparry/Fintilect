@@ -3,6 +3,7 @@
  * Contains types, enums, and API service functions for the Payment report
  */
 import { reportService } from '../../services/factory/ServiceFactory';
+import logger from '../logger';
 
 /**
  * Enum for Payment search types
@@ -162,7 +163,7 @@ export const getPaymentReport = async (params: PaymentParams): Promise<PaymentIt
     const response = await reportService.getPaymentReport(requestParams);
     return response;
   } catch (error) {
-    console.error('Error fetching payment report:', error);
+    logger.error('Error fetching payment report:', error);
     throw error;
   }
 };

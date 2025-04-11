@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../utils/logger';
 import {
   Box,
   Card,
@@ -161,7 +162,7 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
       setExceptions(response.exceptions || []);
     } catch (err) {
       setError('Failed to fetch exceptions');
-      console.error(err);
+      logger.error(err);
     } finally {
       setLoading(false);
     }
@@ -183,7 +184,7 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
       setSelectedException(null);
     } catch (err) {
       setError('Failed to resolve exception');
-      console.error(err);
+      logger.error(err);
     } finally {
       setLoading(false);
     }
@@ -256,7 +257,7 @@ const ExceptionTool: React.FC<ExceptionToolProps> = ({ onClose }) => {
       setSelectedException(null);
     } catch (err) {
       setError('Failed to apply correction');
-      console.error(err);
+      logger.error(err);
     } finally {
       setLoading(false);
     }

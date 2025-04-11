@@ -1,4 +1,5 @@
 import { reportService } from '../../services/factory/ServiceFactory';
+import logger from '../logger';
 
 /**
  * Search Type enum for OFAC Exceptions
@@ -156,12 +157,12 @@ export async function getOFACExceptions(
     };
     
     // Log the parameters being sent for debugging
-    console.log('OFAC Exceptions request parameters:', requestParams);
+    logger.log('OFAC Exceptions request parameters:', requestParams);
     
     // Call the dedicated endpoint through the report service
     return await reportService.getOFACExceptionsReport(requestParams);
   } catch (error) {
-    console.error('Error fetching OFAC exceptions report:', error);
+    logger.error('Error fetching OFAC exceptions report:', error);
     throw error; // Re-throw to allow component to handle the error
   }
 }

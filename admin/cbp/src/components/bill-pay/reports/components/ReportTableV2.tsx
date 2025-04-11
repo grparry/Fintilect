@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import logger from '../../../../utils/logger';
 import {
   TableContainer,
   Paper,
@@ -128,7 +129,7 @@ function ReportTableV2<T, S extends string>({
   
   // Debug logging for props
   React.useEffect(() => {
-    console.log('ReportTableV2 props updated:', { 
+    logger.log('ReportTableV2 props updated:', { 
       sortColumn, 
       sortDirection,
       dataLength: data?.length ?? 0
@@ -150,7 +151,7 @@ function ReportTableV2<T, S extends string>({
       
       if (sortColumn === column && sortDirection === direction && dataVersion !== sortStartVersion) {
         // The parent has processed our sort request, updated props, and data has changed
-        console.log('Sort operation complete with data update, setting isSorting to false');
+        logger.log('Sort operation complete with data update, setting isSorting to false');
         setIsSorting(false);
         latestSortRef.current = null;
       }
@@ -163,13 +164,13 @@ function ReportTableV2<T, S extends string>({
     
     if (isSorting) {
       timeoutId = setTimeout(() => {
-        console.log('Sort timeout reached, forcing isSorting to false');
+        logger.log('Sort timeout reached, forcing isSorting to false');
         setIsSorting(false);
       }, 10000); // 10 second timeout as a safety measure
       
       // Add a global click capture handler while sorting
       const captureClicks = (e: MouseEvent) => {
-        console.log('Click captured during sorting, preventing default');
+        logger.log('Click captured during sorting, preventing default');
         e.stopPropagation();
         e.preventDefault();
       };
@@ -194,25 +195,25 @@ function ReportTableV2<T, S extends string>({
   
   // Initialize component on mount
   useEffect(() => {
-    console.log('Component mount effect running, setting isInitialized to true');
+    logger.log('Component mount effect running, setting isInitialized to true');
     setIsInitialized(true);
     return () => {
-      console.log('Component unmounting');
+      logger.log('Component unmounting');
     };
   }, []);
   
   // Debug: Log when state changes
   useEffect(() => {
-    console.log('pageSize changed to:', pageSize);
+    logger.log('pageSize changed to:', pageSize);
   }, [pageSize]);
   
   useEffect(() => {
-    console.log('isInitialized changed to:', isInitialized);
+    logger.log('isInitialized changed to:', isInitialized);
   }, [isInitialized]);
   
   // Monitor pageSize changes for debugging only
   useEffect(() => {
-    console.log('Pagination state updated:', { pageSize, isInitialized, hasPagination: !!pagination });
+    logger.log('Pagination state updated:', { pageSize, isInitialized, hasPagination: !!pagination });
     // No longer notifying parent here to avoid circular updates
     // Notification happens only in handleChangeRowsPerPage
   }, [pageSize, pagination, isInitialized]);
@@ -224,11 +225,11 @@ function ReportTableV2<T, S extends string>({
   const handleSort = (columnKey: string) => {
     // Prevent multiple sort operations while previous is in progress
     if (isSorting) {
-      console.log('Sort operation already in progress, ignoring click');
+      logger.log('Sort operation already in progress, ignoring click');
       return;
     }
     
-    console.log('Starting sort operation for column:', columnKey);
+    logger.log('Starting sort operation for column:', columnKey);
     
     const columnDef = columns.find(col => col.key === columnKey);
     if (columnDef && columnDef.sortKey) {
@@ -245,7 +246,7 @@ function ReportTableV2<T, S extends string>({
         direction: newSortDirection,
         dataVersion: dataVersion // Store current data version
       };
-      console.log('Set isSorting to true, latestSortRef updated:', latestSortRef.current);
+      logger.log('Set isSorting to true, latestSortRef updated:', latestSortRef.current);
       
       // Notify parent of sort change
       onSortChange(newSortColumn, newSortDirection);
@@ -313,7 +314,7 @@ function ReportTableV2<T, S extends string>({
       // Download the CSV file
       downloadCsv(csvContent, exportFileName);
     } catch (error) {
-      console.error('Error during CSV export:', error);
+      logger.error('Error during CSV export:', error);
     } finally {
       setIsExporting(false);
     }
@@ -338,7 +339,7 @@ function ReportTableV2<T, S extends string>({
       
       // Get export options
       if (typeof enableExport !== 'object' || !enableExport.getPagedData) {
-        console.error('getPagedData function is required for exporting all pages');
+        logger.error('getPagedData function is required for exporting all pages');
         return;
       }
       
@@ -362,9 +363,9 @@ function ReportTableV2<T, S extends string>({
           sortDirection
         };
         
-        console.log(`Fetching page ${page} of ${totalPages} for export`);
+        logger.log(`Fetching page ${page} of ${totalPages} for export`);
         if (exportCancelRef.current) {
-          console.log('Export cancelled by user');
+          logger.log('Export cancelled by user');
           return;
         }
 
@@ -384,7 +385,7 @@ function ReportTableV2<T, S extends string>({
       // Download the CSV file
       downloadCsv(csvContent, exportFileName);
     } catch (error) {
-      console.error('Error during paged CSV export:', error);
+      logger.error('Error during paged CSV export:', error);
     } finally {
       setIsExporting(false);
     }
@@ -431,7 +432,7 @@ function ReportTableV2<T, S extends string>({
   };
   
   // Debug: Log component props on render
-  console.log('ReportTableV2 render:', { 
+  logger.log('ReportTableV2 render:', { 
     dataLength: data.length, 
     sortColumn, 
     sortDirection,
@@ -446,14 +447,14 @@ function ReportTableV2<T, S extends string>({
   // Handle rows per page change
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newPageSize = parseInt(event.target.value, 10);
-    console.log('handleChangeRowsPerPage called with new size:', newPageSize);
+    logger.log('handleChangeRowsPerPage called with new size:', newPageSize);
     
     // First, update the local state
     setPageSize(newPageSize);
     
     if (pagination) {
       // When page size changes, we should reset to page 1 and pass the new page size
-      console.log('Page size changed, resetting to page 1 with new size:', newPageSize);
+      logger.log('Page size changed, resetting to page 1 with new size:', newPageSize);
       pagination.onPageChange(1, newPageSize);
     }
   };
@@ -484,22 +485,22 @@ function ReportTableV2<T, S extends string>({
       // If full data set export is requested and we have a way to get it
       if (!currentPageOnly && exportOptions.getAllData) {
         try {
-          console.log('Fetching all data for CSV export...');
+          logger.log('Fetching all data for CSV export...');
           const allData = await exportOptions.getAllData();
-          console.log(`Received ${allData.length} records for export`);
+          logger.log(`Received ${allData.length} records for export`);
           
           // Apply maximum records limit if specified
           if (exportOptions.maxRecords && exportOptions.maxRecords > 0 && 
               allData.length > exportOptions.maxRecords) {
-            console.log(`Limiting export to ${exportOptions.maxRecords} records`);
+            logger.log(`Limiting export to ${exportOptions.maxRecords} records`);
             dataToExport = allData.slice(0, exportOptions.maxRecords);
           } else {
             dataToExport = allData;
           }
         } catch (error) {
-          console.error('Error fetching all data for export:', error);
+          logger.error('Error fetching all data for export:', error);
           // Fallback to current page data
-          console.log('Falling back to current page data for export');
+          logger.log('Falling back to current page data for export');
         }
       }
       
@@ -547,7 +548,7 @@ function ReportTableV2<T, S extends string>({
     link.click();
     document.body.removeChild(link);
     } catch (error) {
-      console.error('Error during CSV export:', error);
+      logger.error('Error during CSV export:', error);
     } finally {
       setIsExporting(false);
     }
@@ -748,7 +749,7 @@ function ReportTableV2<T, S extends string>({
       
       {pagination && isInitialized && (
         <>
-          {console.log('Rendering TablePagination with:', { 
+          {logger.log('Rendering TablePagination with:', { 
             pageNumber: pagination.pageNumber, 
             totalCount: pagination.totalCount,
             pageSize,

@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Button, Typography, Grid, FormHelperText } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -282,7 +283,7 @@ const OFACExceptionsReport: React.FC = () => {
 
   // Handle sort column change directly from ReportTableV2
   const handleSortChange = (newSortColumn: OFACExceptionsSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -313,7 +314,7 @@ const OFACExceptionsReport: React.FC = () => {
       params.yearSelected = year;
     }
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPage(1);
@@ -321,7 +322,7 @@ const OFACExceptionsReport: React.FC = () => {
     // Call API directly with new sort parameters
     getOFACExceptions(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -331,7 +332,7 @@ const OFACExceptionsReport: React.FC = () => {
         setTotalPages(response.totalPages);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         enqueueSnackbar('Failed to sort report. Please try again.', { variant: 'error' });
       })
       .finally(() => {
@@ -414,7 +415,7 @@ const OFACExceptionsReport: React.FC = () => {
       setTotalPages(response.totalPages);
       
     } catch (error) {
-      console.error('Error running OFAC exceptions report:', error);
+      logger.error('Error running OFAC exceptions report:', error);
       enqueueSnackbar('Failed to run report. Please try again.', { variant: 'error' });
     } finally {
       setLoading(false);

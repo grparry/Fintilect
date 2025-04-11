@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../utils/logger';
 import {
   Box,
   Grid,
@@ -132,7 +133,7 @@ const UserForm: React.FC<UserFormProps> = ({
       }
       await onSubmit(userData);
     } catch (error: any) {
-      console.error('Error saving user:', error);
+      logger.error('Error saving user:', error);
       
       // Try to extract validation errors from the API response
       let errorMessage = 'An unexpected error occurred while saving the user';
@@ -187,7 +188,7 @@ const UserForm: React.FC<UserFormProps> = ({
               }
             }
           } catch (parseError) {
-            console.error('Error parsing payload:', parseError);
+            logger.error('Error parsing payload:', parseError);
           }
         }
         // Fallback to standard error message
@@ -197,7 +198,7 @@ const UserForm: React.FC<UserFormProps> = ({
           errorMessage = error;
         }
       } catch (parseError) {
-        console.error('Error parsing error response:', parseError);
+        logger.error('Error parsing error response:', parseError);
       }
       
       setError(errorMessage);

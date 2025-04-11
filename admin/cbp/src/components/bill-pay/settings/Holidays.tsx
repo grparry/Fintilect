@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../../../utils/logger';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, FormControl, InputLabel, FormHelperText, IconButton, Alert } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
@@ -109,7 +110,7 @@ const Holidays: React.FC = () => {
       // Refresh the holidays list
       loadHolidays();
     } catch (error) {
-      console.error('Error deleting holiday:', error);
+      logger.error('Error deleting holiday:', error);
       setError('Failed to delete holiday. Please try again.');
     }
   };

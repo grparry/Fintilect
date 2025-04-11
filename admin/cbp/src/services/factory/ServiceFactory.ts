@@ -1,4 +1,5 @@
 import { IBaseService } from '../interfaces/IBaseService';
+import logger from '../../utils/logger';
 import { IUserService } from '../interfaces/IUserService';
 import { IClientService } from '../interfaces/IClientService';
 import { IBillPayService } from '../interfaces/IBillPayService';
@@ -62,7 +63,7 @@ export class ServiceFactory {
   private static instance: ServiceFactory;
 
   private constructor() {
-    console.log('ServiceFactory initialized - services will be created on demand');
+    logger.log('ServiceFactory initialized - services will be created on demand');
   }
 
   static getInstance(): ServiceFactory {
@@ -81,126 +82,126 @@ export class ServiceFactory {
   }
 
   getUserService(): IUserService {
-    console.log('[ServiceFactory] Creating UserService instance');
+    logger.log('[ServiceFactory] Creating UserService instance');
     return shouldUseMockService('user')
       ? new MockUserService(ServiceFactory.getAdminEndpoint('/api'))
       : new UserService(ServiceFactory.getAdminEndpoint('/api'));
   }
 
   getClientService(): IClientService {
-    console.log('[ServiceFactory] Creating ClientService instance');
+    logger.log('[ServiceFactory] Creating ClientService instance');
     return shouldUseMockService('client')
       ? new MockClientService(ServiceFactory.getAdminEndpoint('/api'))
       : new ClientService(ServiceFactory.getAdminEndpoint('/api'));
   }
 
   getBillPayService(): IBillPayService {
-    console.log('[ServiceFactory] Creating BillPayService instance');
+    logger.log('[ServiceFactory] Creating BillPayService instance');
     return shouldUseMockService('billPay')
       ? new MockBillPayService(ServiceFactory.getAdminEndpoint('/api'))
       : new BillPayService(ServiceFactory.getAdminEndpoint('/api'));
   }
 
   getAuthService(): IAuthService {
-    console.log('[ServiceFactory] Creating AuthService instance');
+    logger.log('[ServiceFactory] Creating AuthService instance');
     return shouldUseMockService('auth')
       ? new MockAuthService(ServiceFactory.getAdminEndpoint('/api'))
       : new AuthService(ServiceFactory.getAdminEndpoint('/api'));
   }
 
   getSecurityService(): ISecurityService {
-    console.log('[ServiceFactory] Creating SecurityService instance');
+    logger.log('[ServiceFactory] Creating SecurityService instance');
     return shouldUseMockService('security')
       ? new MockSecurityService(ServiceFactory.getAdminEndpoint('/api'))
       : new SecurityService(ServiceFactory.getAdminEndpoint('/api'));
   }
 
   getNotificationService(): INotificationService {
-    console.log('[ServiceFactory] Creating NotificationService instance');
+    logger.log('[ServiceFactory] Creating NotificationService instance');
     return shouldUseMockService('notification')
       ? new MockNotificationService(ServiceFactory.getAdminCuEndpoint('/api/v1/Notification'))
       : new NotificationService(ServiceFactory.getAdminCuEndpoint('/api/v1/Notification'));
   }
 
   getExceptionService(): IExceptionService {
-    console.log('[ServiceFactory] Creating ExceptionService instance');
+    logger.log('[ServiceFactory] Creating ExceptionService instance');
     return shouldUseMockService('exception')
       ? new MockExceptionService(ServiceFactory.getAdminEndpoint('/api'))
       : new ExceptionService(ServiceFactory.getAdminEndpoint('/api/v1/Exception'));
   }
 
   getFISExceptionService(): IFISExceptionService {
-    console.log('[ServiceFactory] Creating FISExceptionService instance');
+    logger.log('[ServiceFactory] Creating FISExceptionService instance');
     return shouldUseMockService('fisException')
       ? new MockFISExceptionService(ServiceFactory.getAdminEndpoint('/api'))
       : new FISExceptionService(ServiceFactory.getAdminEndpoint('/api'));
   }
 
   getGlobalPayeeService(): IGlobalPayeeService {
-    console.log('[ServiceFactory] Creating GlobalPayeeService instance');
+    logger.log('[ServiceFactory] Creating GlobalPayeeService instance');
     return shouldUseMockService('globalPayee')
       ? new MockGlobalPayeeService(ServiceFactory.getAdminEndpoint('/api'))
       : new GlobalPayeeService(ServiceFactory.getAdminEndpoint('/api/v1/Payee'));
   }
 
   getPayeeService(): IPayeeService {
-    console.log('[ServiceFactory] Creating PayeeService instance');
+    logger.log('[ServiceFactory] Creating PayeeService instance');
     return shouldUseMockService('payee')
       ? new MockPayeeService(ServiceFactory.getAdminEndpoint('/payees'))
       : new PayeeService(ServiceFactory.getAdminCuEndpoint('/api/v1/Payee'));
   }
 
   getPaymentProcessorService(): IPaymentProcessorService {
-    console.log('[ServiceFactory] Creating PaymentProcessorService instance');
+    logger.log('[ServiceFactory] Creating PaymentProcessorService instance');
     return shouldUseMockService('paymentProcessor')
       ? new MockPaymentProcessorService(ServiceFactory.getAdminEndpoint('/api'))
       : new PaymentProcessorService(ServiceFactory.getAdminEndpoint('/api'));
   }
 
   getPaymentService(): IPaymentService {
-    console.log('[ServiceFactory] Creating PaymentService instance');
+    logger.log('[ServiceFactory] Creating PaymentService instance');
     return shouldUseMockService('payment')
       ? new MockPaymentService(ServiceFactory.getAdminEndpoint('/payments'))
       : new PaymentService(ServiceFactory.getAdminCuEndpoint('/api/v1/Payment'));
   }
 
   getReportService(): IReportService {
-    console.log('[ServiceFactory] Creating ReportService instance');
+    logger.log('[ServiceFactory] Creating ReportService instance');
     return shouldUseMockService('report')
       ? new MockReportService(ServiceFactory.getAdminEndpoint('/reports'))
       : new ReportService(ServiceFactory.getAdminCuEndpoint('/api/v1/Report'));
   }
 
   getCalendarService(): ICalendarService {
-    console.log('[ServiceFactory] Creating CalendarService instance with URL:', ServiceFactory.getAdminCuEndpoint('/api/v1/Calendar'));
+    logger.log('[ServiceFactory] Creating CalendarService instance with URL:', ServiceFactory.getAdminCuEndpoint('/api/v1/Calendar'));
     return shouldUseMockService('calendar')
       ? new MockCalendarService(ServiceFactory.getAdminCuEndpoint('/api/v1/Calendar'))
       : new CalendarService(ServiceFactory.getAdminCuEndpoint('/api/v1/Calendar'));
   }
 
   getPermissionService(): IPermissionService {
-    console.log('[ServiceFactory] Creating PermissionService instance');
+    logger.log('[ServiceFactory] Creating PermissionService instance');
     return shouldUseMockService('permission')
       ? new MockPermissionService(ServiceFactory.getAdminEndpoint('/api'))
       : new PermissionService(ServiceFactory.getAdminEndpoint('/api'));
   }
 
   getDashboardService(): IDashboardService {
-    console.log('[ServiceFactory] Creating DashboardService instance');
+    logger.log('[ServiceFactory] Creating DashboardService instance');
     return shouldUseMockService('dashboard')
       ? new MockDashboardService(ServiceFactory.getAdminEndpoint('/api'))
       : new DashboardService(ServiceFactory.getAdminEndpoint('/api'));
   }
 
   getConfigurationService(): IConfigurationService {
-    console.log('[ServiceFactory] Creating ConfigurationService instance');
+    logger.log('[ServiceFactory] Creating ConfigurationService instance');
     return shouldUseMockService('configuration')
       ? new MockConfigurationService()
       : new ConfigurationService();
   }
 
   getClientLoginSecurityService(): IClientLoginSecurityService {
-    console.log('[ServiceFactory] Creating ClientLoginSecurityService instance');
+    logger.log('[ServiceFactory] Creating ClientLoginSecurityService instance');
     return shouldUseMockService('clientLoginSecurity')
       ? new MockClientLoginSecurityService(ServiceFactory.getAdminEndpoint('/api'))
       : new ClientLoginSecurityService(ServiceFactory.getAdminEndpoint('/api'));

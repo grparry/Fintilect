@@ -1,4 +1,5 @@
 import React, { ComponentType } from 'react';
+import logger from './logger';
 
 type PerformanceFunction<T> = () => T;
 type MarkerEndFunction = () => void;
@@ -13,7 +14,7 @@ export const measurePerformance = <T>(name: string, fn: PerformanceFunction<T>):
   const result = fn();
   const duration = performance.now() - start;
   if (duration > 16) { // 16ms = 60fps threshold
-    console.warn(`[Performance Warning] Operation '${name}' took ${duration.toFixed(2)}ms`);
+    logger.warn(`[Performance Warning] Operation '${name}' took ${duration.toFixed(2)}ms`);
   }
   return result;
 };
@@ -31,7 +32,7 @@ export const createPerformanceMarker = (markerId: string): MarkerEndFunction => 
       const measurements = window.performance.getEntriesByName(markerId);
       const lastMeasurement = measurements[measurements.length - 1];
       if (lastMeasurement.duration > 16) {
-        console.warn(`[Performance Warning] Marker '${markerId}' duration: ${lastMeasurement.duration.toFixed(2)}ms`);
+        logger.warn(`[Performance Warning] Marker '${markerId}' duration: ${lastMeasurement.duration.toFixed(2)}ms`);
       }
     };
   }
@@ -48,9 +49,13 @@ export function withPerformanceTracking<P extends object>(
   componentName: string
 ): React.FC<P> {
   const PerformanceTrackedComponent: React.FC<P> = (props) => {
-    console.time(`render-${componentName}`);
+    // Use performance measurement
+    const startTime = performance.now();
     const result = React.createElement(WrappedComponent, props);
-    console.timeEnd(`render-${componentName}`);
+    const endTime = performance.now();
+    const duration = endTime - startTime;
+    // Log the performance information through our logger
+    logger.log(`Component ${componentName} rendered in ${duration.toFixed(2)}ms`);
     return result;
   };
   PerformanceTrackedComponent.displayName = `WithPerformanceTracking(${componentName})`;

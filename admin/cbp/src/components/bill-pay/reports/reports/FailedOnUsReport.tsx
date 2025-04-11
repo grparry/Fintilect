@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import logger from '../../../../utils/logger';
 import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Typography, Box } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -85,7 +86,7 @@ const FailedOnUsReport: React.FC = () => {
 
   // Handle sort change
   const handleSortChange = (newSortColumn: FailedOnUsSortColumn, newSortDirection: 'ASC' | 'DESC') => {
-    console.log('Sort change:', { newSortColumn, newSortDirection });
+    logger.log('Sort change:', { newSortColumn, newSortDirection });
     
     // Update state
     setSortColumn(newSortColumn);
@@ -126,7 +127,7 @@ const FailedOnUsReport: React.FC = () => {
       params.endDate = endDate ? endDate.toISOString() : undefined;
     }
     
-    console.log('Making API call with params:', params);
+    logger.log('Making API call with params:', params);
     
     // Reset to page 1
     setPage(1);
@@ -134,7 +135,7 @@ const FailedOnUsReport: React.FC = () => {
     // Call API directly with new sort parameters
     getFailedOnUs(params)
       .then(response => {
-        console.log('API response received:', { 
+        logger.log('API response received:', { 
           totalCount: response.totalCount,
           totalPages: response.totalPages,
           itemCount: response.items?.length || 0 
@@ -144,7 +145,7 @@ const FailedOnUsReport: React.FC = () => {
         setTotalCount(response.totalCount);
       })
       .catch(error => {
-        console.error('Error sorting report:', error);
+        logger.error('Error sorting report:', error);
         setError('Failed to sort report. Please try again.');
         setReportData(null);
       })
@@ -196,7 +197,7 @@ const FailedOnUsReport: React.FC = () => {
       setTotalCount(response.totalCount);
       setPage(pageNumber);
     } catch (err) {
-      console.error('Error fetching Failed On Us data:', err);
+      logger.error('Error fetching Failed On Us data:', err);
       setError(err instanceof Error ? err.message : 'An error occurred while fetching the report');
       setReportData(null);
     } finally {

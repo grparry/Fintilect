@@ -1,4 +1,5 @@
 import { getAdminApiUrl, getClientApiUrl } from './host.config';
+import logger from '../utils/logger';
 
 // API Configuration
 export const API_CONFIG = {
@@ -69,7 +70,7 @@ export const getConfig = () => {
 
 // Export a helper to determine if a specific service should use mock implementation
 export const shouldUseMockService = (serviceName: keyof typeof API_CONFIG.services.mockOverrides) => {
-  console.log(`[shouldUseMockService] Checking if ${serviceName} should use mock:`, {
+  logger.log(`[shouldUseMockService] Checking if ${serviceName} should use mock:`, {
     globalSetting: API_CONFIG.services.useMockServices,
     serviceSetting: API_CONFIG.services.mockOverrides[serviceName]
   });

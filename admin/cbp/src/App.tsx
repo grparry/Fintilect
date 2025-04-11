@@ -9,6 +9,7 @@ import { NavigationProvider } from './context/NavigationContext';
 import { HostProvider, useHost } from './context/HostContext';
 import { ClientProvider } from './context/ClientContext';
 import { ServiceProvider } from './providers/ServiceProvider';
+import logger from './utils/logger';
 import MainLayout from './components/layout/MainLayout';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import LoginPage from './components/auth/LoginPage';
@@ -35,7 +36,7 @@ interface PublicRouteProps {
 const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
-  console.log('PublicRoute - Checking auth');
+  logger.log('PublicRoute - Checking auth');
 
   if (loading) {
     return <LoadingFallback />;
@@ -61,8 +62,8 @@ const ProtectedRouteWrapper: React.FC<{
   Component: React.ComponentType<any>;
   resourceId?: ResourceId;
 }> = memo(({ Component, resourceId }) => {
-  console.log('=== ProtectedRouteWrapper Debug ===');
-  console.log('Received resourceId:', resourceId);
+  logger.log('=== ProtectedRouteWrapper Debug ===');
+  logger.log('Received resourceId:', resourceId);
   
   return (
     <ProtectedRoute resourceId={resourceId}>
@@ -124,17 +125,17 @@ const App: React.FC = () => {
   const renderRoutes = useCallback((routes: RouteConfig[], parentPath: string = '') => {
     if (!routes?.length) return null;
 
-    console.log("=== Route Rendering Debug ===");
-    console.log("Parent path:", parentPath);
-    console.log("Routes to render:", routes);
+    logger.log("=== Route Rendering Debug ===");
+    logger.log("Parent path:", parentPath);
+    logger.log("Routes to render:", routes);
     
     return routes.map((route) => {
       if (!route?.path && route.path !== '') return null;
 
       const Component = route.element;
       
-      console.log(`=== Route Configuration ===`);
-      console.log(`Route ${route.id}:`, {
+      logger.log(`=== Route Configuration ===`);
+      logger.log(`Route ${route.id}:`, {
         path: route.path,
         resourceId: route.resourceId,
         component: Component?.name || 'Anonymous',
