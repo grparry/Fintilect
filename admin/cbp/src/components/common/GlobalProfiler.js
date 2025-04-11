@@ -1,4 +1,5 @@
 import React, { Profiler } from 'react';
+import logger from '../../utils/logger';
 
 const GlobalProfiler = ({ id, children }) => {
   const onRenderCallback = (
@@ -13,7 +14,7 @@ const GlobalProfiler = ({ id, children }) => {
     // Performance threshold (16ms = 60fps)
     const PERFORMANCE_THRESHOLD = 16;
     if (actualDuration > PERFORMANCE_THRESHOLD) {
-      console.warn(`[Performance Warning] Slow render detected in ${profilerId}:`, {
+      logger.warn(`[Performance Warning] Slow render detected in ${profilerId}:`, {
         phase,
         actualDuration: `${actualDuration.toFixed(2)}ms`,
         baseDuration: `${baseDuration.toFixed(2)}ms`,

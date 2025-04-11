@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Button } from '@mui/material';
 import { Warning as WarningIcon } from '@mui/icons-material';
+import logger from '../../utils/logger';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class ErrorBoundary extends React.Component {
   }
   componentDidCatch(error, errorInfo) {
     // Log error to error reporting service
-    console.error('Error caught by boundary:', error, errorInfo);
+    logger.error('Error caught by boundary:', error, errorInfo);
   }
   render() {
     if (this.state.hasError) {
